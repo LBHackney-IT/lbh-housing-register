@@ -1,4 +1,4 @@
-type HeadingOneProps = {
+interface HeadingOneProps {
   content: string
 }
 

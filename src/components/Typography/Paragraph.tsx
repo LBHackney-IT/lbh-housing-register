@@ -1,4 +1,4 @@
-type ParagraphProps = {
+interface ParagraphProps {
   content: string
 }
 

@@ -1,6 +1,6 @@
 import "./InsetText.scss"
 
-type InsetTextProps = {
+interface InsetTextProps {
   content: string
 }
 

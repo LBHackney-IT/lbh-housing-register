@@ -1,0 +1,134 @@
+{
+  "title": "Housing Register",
+  "sections": [
+    {
+      "active": true,
+      "id": "section-1",
+      "legend": "Section 1",
+      "fields": [
+        {
+          "hint": "Example hint text",
+          "label": "Field 1 - Input",
+          "name": "step-1__1",
+          "placeholder": "I have a placeholder",
+          "type": "input"
+        },
+        {
+          "label": "Field 2 - Input with default value",
+          "name": "step-1__2",
+          "value": "And I have a value",
+          "type": "input"
+        },
+        {
+          "hint": "This select field has some hint text",
+          "label": "Field 3 - Select/Dropdown",
+          "name": "step-1__3",
+          "type": "select",
+          "value": "Item 3",
+          "options": [
+            {
+              "value": "Item 1"
+            },
+            {
+              "value": "Item 2"
+            },
+            {
+              "label": "Item 3 - with custom label",
+              "value": "Item 3"
+            }
+          ]
+        },
+        {
+          "hint": "Textarea with hint text",
+          "label": "Field 4 - Textarea",
+          "name": "step-1__4",
+          "placeholder": "I have a placeholder",
+          "type": "textarea"
+        },
+        {
+          "label": "Field 5 - Textarea with default value",
+          "name": "step-1__5",
+          "type": "textarea",
+          "value": "textarea default value"
+        },
+        {
+          "hint": "Example checkbox with hint",
+          "label": "Field 6 - Checkbox",
+          "name": "step-1__6",
+          "type": "checkbox",
+          "value": "yes"
+        },
+        {
+          "hint": "Example checkbox group with hint",
+          "label": "Field 7 - Checkboxes",
+          "name": "step-1__7",
+          "type": "checkbox",
+          "options": [
+            {
+              "value": "item-1"
+            },
+            {
+              "hint": "Item 2 has a hint also",
+              "label": "Item 2 - with custom label",
+              "value": "item-1"
+            }
+          ]
+        },
+        {
+          "hint": "This is actually a number field",
+          "label": "Field 8 - Number",
+          "name": "step-1__8",
+          "type": "number"
+        },
+        {
+          "hint": "This is actually a file upload field",
+          "label": "Field 9 - File upload",
+          "name": "step-1__9",
+          "type": "file"
+        },
+        {
+          "hint": "Date field with hint",
+          "label": "Field 10 - Date field",
+          "name": "step-1__10",
+          "type": "date"
+        },
+        {
+          "hint": "Example radio button group with hint",
+          "label": "Field 11 - Radio buttons",
+          "name": "step-1__11",
+          "type": "radio",
+          "options": [
+            {
+              "value": "item-1"
+            },
+            {
+              "hint": "Item 2 has a hint also",
+              "label": "Item 2 - with custom label",
+              "value": "item-1"
+            },
+            {
+              "value": "item-3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "active": false,
+      "id": "section-2",
+      "legend": "Section 2",
+      "fields": [
+        {
+          "label": "Field 1 - Checkbox",
+          "name": "step-2__1",
+          "type": "checkboxes"
+        },
+        {
+          "label": "Field 2 - Conditionally display if checkbox is ticked",
+          "name": "step-2__2",
+          "type": "input"
+        }
+      ]
+    }
+  ]
+}

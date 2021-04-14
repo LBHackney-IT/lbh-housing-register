@@ -1,6 +1,6 @@
 import { StatusCode } from "react-http-status-code";
 
-type ErrorPageProps = {
+interface ErrorPageProps {
   children: JSX.Element
   statusCode?: number
 }

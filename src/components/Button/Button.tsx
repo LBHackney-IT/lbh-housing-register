@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import "./Button.scss"
 
-type ButtonProps = {
+interface ButtonProps {
   children: string
   to: string
 }

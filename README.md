@@ -1,14 +1,14 @@
 # Hackney: Housing register
 
-**A new tool for Hackney residents to check their eligibility, and if certain criteria is met, they may continue through the process to submit a housing application form.**
+**A new tool for Hackney residents to check if they qualify to be on the housing register, and if certain criteria is met, they may continue through the process to submit a housing application form.**
 
 This app will form part of the user journey, with an multi-step questionnaire which determines the users' eligibility before being able to continue and submit their application, this breaks down into the following steps:
 
 - Article detailing advice and process which signposts the user to the housing registration app
-- Qualifyng quiz (`/apply/qualify`): Which checks at a basic level if the user and their immediate family are eligible for social housing within Hackney
+- Qualifying quiz (`/apply/qualify`): Which checks at a basic level if the user and their immediate family are eligible for social housing within Hackney
 - Registration form: *needs more detail around steps*
 - Documentation: *needs more detail - uploads required*
-- Submit: Ability to submit the application via the housing registeration API
+- Submit: Ability to submit the application via the housing registration API
 
 ## Development
 

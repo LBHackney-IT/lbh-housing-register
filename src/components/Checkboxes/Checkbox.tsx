@@ -11,20 +11,22 @@ interface RadioProps {
 }
 
 const Radio = ({ index, hint, label, name, value }: RadioProps): JSX.Element => {
+  let id = name
+  
   if (index !== undefined) {
-    name += `__${index}`
+    id += `__${index}`
   }
 
   return (
     <div className="govuk-checkboxes__item">
       <input
         className="govuk-checkboxes__input"
-        id={name}
+        id={id}
         name={name}
         value={value}
         type="checkbox"
       />
-      <Label className="govuk-checkboxes__label" content={label || value} htmlFor={name} />
+      <Label className="govuk-checkboxes__label" content={label || value} htmlFor={id} />
 
       {hint && <Hint className="govuk-checkboxes__hint" content={hint} />}
     </div>

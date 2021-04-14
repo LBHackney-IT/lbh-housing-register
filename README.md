@@ -39,7 +39,7 @@ As a prerequisite to run this app you will need to install [Node.js](https://nod
 
 ```
 npm install
-npm start
+npm run dev
 ```
 
 The app will attempt to start on port `3000` and should be available on local: `localhost:3000`

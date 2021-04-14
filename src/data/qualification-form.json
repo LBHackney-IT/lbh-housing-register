@@ -85,6 +85,12 @@
           "label": "Field 9 - File upload",
           "name": "step-1__9",
           "type": "file"
+        },
+        {
+          "hint": "Date field with hint",
+          "label": "Field 10 - Date field",
+          "name": "step-1__10",
+          "type": "date"
         }
       ]
     },

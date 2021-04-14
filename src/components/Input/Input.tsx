@@ -5,16 +5,17 @@ import { FormField } from "../../types/form-types"
 import "./Input.scss"
 
 interface InputProps {
+  className?: string
   field: FormField
 }
 
-const Input = ({ field }: InputProps): JSX.Element => (
+const Input = ({ className, field }: InputProps): JSX.Element => (
   <FormGroup>
     {field.label && <Label content={field.label} htmlFor={field.name} />}
     {field.hint && <Hint content={field.hint} />}
 
     <input
-      className="govuk-input lbh-input"
+      className={`${className} govuk-input lbh-input`}
       id={field.name}
       name={field.name}
       defaultValue={field.value}

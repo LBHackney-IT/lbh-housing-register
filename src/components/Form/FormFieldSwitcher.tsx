@@ -1,4 +1,5 @@
 import Checkboxes from "../Checkboxes/Checkboxes"
+import DateInput from "../DateInput/DateInput"
 import Input from "../Input/Input"
 import Select from "../Select/Select"
 import Textarea from "../Textarea/Textarea"
@@ -13,6 +14,10 @@ const FormFieldSwitcher = ({ field }: FormFieldSwitcherProps): JSX.Element => {
     case "checkbox":
     case "checkboxes":
       return <Checkboxes field={field} />
+
+    case "date":
+    case "datetime":
+      return <DateInput field={field} />
 
     case "select":
       return <Select field={field} />

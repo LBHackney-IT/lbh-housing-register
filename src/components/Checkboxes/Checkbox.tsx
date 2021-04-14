@@ -2,7 +2,7 @@ import Hint from "../Hint/Hint"
 import Label from "../Label/Label"
 import "./Checkbox.scss"
 
-interface CheckboxProps {
+interface RadioProps {
   index?: number
   hint?: string
   label?: string
@@ -10,7 +10,7 @@ interface CheckboxProps {
   value: string
 }
 
-const Checkbox = ({ index, hint, label, name, value }: CheckboxProps): JSX.Element => {
+const Radio = ({ index, hint, label, name, value }: RadioProps): JSX.Element => {
   if (index !== undefined) {
     name += `__${index}`
   }
@@ -31,4 +31,4 @@ const Checkbox = ({ index, hint, label, name, value }: CheckboxProps): JSX.Eleme
   )
 }
 
-export default Checkbox
+export default Radio

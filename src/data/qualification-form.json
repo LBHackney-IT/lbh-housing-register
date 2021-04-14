@@ -91,6 +91,25 @@
           "label": "Field 10 - Date field",
           "name": "step-1__10",
           "type": "date"
+        },
+        {
+          "hint": "Example radio button group with hint",
+          "label": "Field 11 - Radio buttons",
+          "name": "step-1__11",
+          "type": "radio",
+          "options": [
+            {
+              "value": "item-1"
+            },
+            {
+              "hint": "Item 2 has a hint also",
+              "label": "Item 2 - with custom label",
+              "value": "item-1"
+            },
+            {
+              "value": "item-3"
+            }
+          ]
         }
       ]
     },

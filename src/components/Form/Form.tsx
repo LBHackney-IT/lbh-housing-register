@@ -1,6 +1,8 @@
 import Fieldset from "../Fieldset/Fieldset"
 import FormFieldSwitcher from "./FormFieldSwitcher"
+import Legend from "../Legend/Legend"
 import { FormSection } from "../../types/form-types"
+import HeadingTwo from "../Typography/HeadingTwo"
 
 interface FormProps {
   section: FormSection
@@ -17,7 +19,13 @@ const Form = ({ section, sectionIndex, totalSections }: FormProps): JSX.Element 
 
   return (
     <form method="post">
-      <Fieldset legend={legend}>
+      <Fieldset>
+        {legend && 
+          <Legend>
+            <HeadingTwo content={legend} />
+          </Legend>
+        }
+
         {section.fields.map(((field, index) =>
             <FormFieldSwitcher key={index} field={field} />
         ))}

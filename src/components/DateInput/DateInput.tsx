@@ -3,6 +3,7 @@ import Hint from "../Hint/Hint"
 import Input from "../Input/Input"
 import { FormField } from "../../types/form-types"
 import "./DateInput.scss"
+import Legend from "../Legend/Legend"
 
 interface DateInputProps {
   field: FormField
@@ -30,7 +31,8 @@ const DateInput = ({ field }: DateInputProps): JSX.Element => {
   const fields = [dayField, monthField, yearField]
 
   return (
-    <Fieldset legend={field.label}>
+    <Fieldset >
+      {field.label && <Legend>{field.label}</Legend>}
       {field.hint && <Hint content={field.hint} />}
 
       {fields.map((field, index) => {

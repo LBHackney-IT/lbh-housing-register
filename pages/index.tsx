@@ -1,6 +1,6 @@
 import Button from "../components/button"
 import InsetText from "../components/inset-text"
-import HeadingOne from "../components/heading-one"
+import { HeadingOne } from "../components/headings"
 import Paragraph from "../components/paragraph"
 
 const Home = (): JSX.Element => (

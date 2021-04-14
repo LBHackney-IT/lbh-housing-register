@@ -1,6 +1,6 @@
 import Fieldset from "./fieldset"
 import FormFieldSwitcher from "./form-field-switcher"
-import HeadingTwo from "./heading-two"
+import { HeadingTwo } from "./headings"
 import Legend from "./legend"
 import { FormSection } from "../lib/types/form"
 

@@ -1,7 +1,7 @@
 import Hint from "./hint"
 import Label from "./label"
 
-interface CheckboxProps {
+interface RadioProps {
   index?: number
   hint?: string
   label?: string
@@ -9,7 +9,7 @@ interface CheckboxProps {
   value: string
 }
 
-const Radio = ({ index, hint, label, name, value }: CheckboxProps): JSX.Element => {
+const Radio = ({ index, hint, label, name, value }: RadioProps): JSX.Element => {
   let id = name
 
   if (index !== undefined) {

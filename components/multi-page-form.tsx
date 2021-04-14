@@ -1,5 +1,5 @@
 import Form from "./form"
-import HeadingOne from "./heading-one"
+import { HeadingOne } from "./headings"
 import { MultiPageFormData } from "../lib/types/form"
 
 interface MultiPageFormProps {

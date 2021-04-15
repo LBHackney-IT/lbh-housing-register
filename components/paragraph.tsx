@@ -2,8 +2,8 @@ interface ParagraphProps {
   content: string
 }
 
-const Paragraph = ({ content }: ParagraphProps): JSX.Element => (
-  <p className="lbh-body-m" dangerouslySetInnerHTML={{ __html: content }} />
-)
-
-export default Paragraph
+export default function Paragraph({ content }: ParagraphProps): JSX.Element {
+  return (
+    <p className="lbh-body-m" dangerouslySetInnerHTML={{ __html: content }} />
+  )
+}

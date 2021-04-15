@@ -10,7 +10,7 @@ interface FormFieldSwitcherProps {
   field: FormField
 }
 
-const FormFieldSwitcher = ({ field }: FormFieldSwitcherProps): JSX.Element => {
+export default function FormFieldSwitcher({ field }: FormFieldSwitcherProps): JSX.Element {
   switch(field.type.toLowerCase()) {
     case "checkbox":
     case "checkboxes":
@@ -33,5 +33,3 @@ const FormFieldSwitcher = ({ field }: FormFieldSwitcherProps): JSX.Element => {
       return <Input field={field} />
   }
 }
-
-export default FormFieldSwitcher

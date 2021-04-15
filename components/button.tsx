@@ -5,12 +5,12 @@ interface ButtonProps {
   to: string
 }
 
-const Button = ({ children, to }: ButtonProps): JSX.Element => (
-  <Link href={to}>
-    <button className="govuk-button lbh-button">
-      {children}
-    </button>
-  </Link>
-)
-
-export default Button
+export default function Button ({ children, to }: ButtonProps): JSX.Element {
+  return (
+    <Link href={to}>
+      <button className="govuk-button lbh-button">
+        {children}
+      </button>
+    </Link>
+  )
+}

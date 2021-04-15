@@ -10,7 +10,7 @@ interface FormProps {
   totalSections?: number
 }
 
-const Form = ({ section, sectionIndex, totalSections }: FormProps): JSX.Element => {
+export default function Form({ section, sectionIndex, totalSections }: FormProps): JSX.Element {
   let legend: string = section.legend
 
   if (sectionIndex !== undefined && sectionIndex > 0 && totalSections !== undefined && totalSections > 1) {
@@ -35,5 +35,3 @@ const Form = ({ section, sectionIndex, totalSections }: FormProps): JSX.Element 
     </form>
   )
 }
-
-export default Form

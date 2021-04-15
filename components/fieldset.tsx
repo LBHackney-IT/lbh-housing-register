@@ -2,10 +2,10 @@ interface FieldsetProps {
   children: any
 }
 
-const Fieldset = ({ children }: FieldsetProps): JSX.Element => (
-  <div className="govuk-fieldset lbh-fieldset">
-    {children}
-  </div>
-)
-
-export default Fieldset
+export default function Fieldset({ children }: FieldsetProps): JSX.Element {
+  return (
+    <div className="govuk-fieldset lbh-fieldset">
+      {children}
+    </div>
+  )
+}

@@ -15,7 +15,7 @@ interface RadiosProps {
   field: FormField
 }
 
-export const Radio = ({ index, hint, label, name, value }: RadioProps): JSX.Element => {
+export function Radio({ index, hint, label, name, value }: RadioProps): JSX.Element {
   let id = name
 
   if (index !== undefined) {
@@ -38,7 +38,7 @@ export const Radio = ({ index, hint, label, name, value }: RadioProps): JSX.Elem
   )
 }
 
-const Radios = ({ field }: RadiosProps): JSX.Element => {
+export default function Radios({ field }: RadiosProps): JSX.Element {
   const radios = field.options || [field as FormOption]
   const hasMultipleOptions: boolean = radios.length > 1
 
@@ -55,5 +55,3 @@ const Radios = ({ field }: RadiosProps): JSX.Element => {
     </FormGroup>
   )
 }
-
-export default Radios

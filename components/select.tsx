@@ -7,7 +7,7 @@ interface SelectProps {
   field: FormField
 }
 
-const Select = ({ field }: SelectProps): JSX.Element => {
+export default function Select({ field }: SelectProps): JSX.Element {
   field.options = field.options || []
 
   return (
@@ -25,5 +25,3 @@ const Select = ({ field }: SelectProps): JSX.Element => {
     </FormGroup>
   )
 }
-
-export default Select

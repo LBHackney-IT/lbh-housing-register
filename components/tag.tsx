@@ -3,10 +3,10 @@ interface TagProps {
   content: string 
 }
 
-const Tag = ({ className, content }: TagProps): JSX.Element => (
-  <span className={className + " govuk-tag lbh-tag"}>
-    {content}
-  </span>
-)
-
-export default Tag
+export default function Tag({ className, content }: TagProps): JSX.Element {
+  return (
+    <span className={className + " govuk-tag lbh-tag"}>
+      {content}
+    </span>
+  )
+}

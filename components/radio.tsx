@@ -9,7 +9,7 @@ interface RadioProps {
   value: string
 }
 
-const Radio = ({ index, hint, label, name, value }: RadioProps): JSX.Element => {
+export default function Radio({ index, hint, label, name, value }: RadioProps): JSX.Element {
   let id = name
 
   if (index !== undefined) {
@@ -31,5 +31,3 @@ const Radio = ({ index, hint, label, name, value }: RadioProps): JSX.Element => 
     </div>
   )
 }
-
-export default Radio

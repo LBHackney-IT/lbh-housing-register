@@ -7,19 +7,19 @@ interface TextareaProps {
   field: FormField
 }
 
-const Textarea = ({ field }: TextareaProps): JSX.Element => (
-  <FormGroup>
-    {field.label && <Label content={field.label} htmlFor={field.name} />}
-    {field.hint && <Hint content={field.hint} />}
+export default function Textarea({ field }: TextareaProps): JSX.Element {
+  return (
+    <FormGroup>
+      {field.label && <Label content={field.label} htmlFor={field.name} />}
+      {field.hint && <Hint content={field.hint} />}
 
-    <textarea
-      className="govuk-textarea lbh-textarea"
-      id={field.name}
-      name={field.name}
-      defaultValue={field.value} 
-      placeholder={field.placeholder}
-      rows={5} />
-  </FormGroup>
-)
-
-export default Textarea
+      <textarea
+        className="govuk-textarea lbh-textarea"
+        id={field.name}
+        name={field.name}
+        defaultValue={field.value} 
+        placeholder={field.placeholder}
+        rows={5} />
+    </FormGroup>
+  )
+}

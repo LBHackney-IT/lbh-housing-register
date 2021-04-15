@@ -8,7 +8,7 @@ interface DateInputProps {
   field: FormField
 }
 
-const DateInput = ({ field }: DateInputProps): JSX.Element => {
+export default function DateInput({ field }: DateInputProps): JSX.Element {
   const dayField: FormField = {
     label: "Day",
     name: `${field.name}__day`,
@@ -46,8 +46,6 @@ const DateInput = ({ field }: DateInputProps): JSX.Element => {
     </Fieldset>
   )
 }
-
-export default DateInput
 
 // TODO
 // Maximum day = 31

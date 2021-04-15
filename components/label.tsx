@@ -4,10 +4,10 @@ interface LabelProps {
   htmlFor?: string
 }
 
-const Label = ({ className, content, htmlFor }: LabelProps): JSX.Element => (
-  <label className={`${className} govuk-label lbh-label`} htmlFor={htmlFor}>
-    {content}
-  </label>
-)
-
-export default Label
+export default function Label({ className, content, htmlFor }: LabelProps): JSX.Element {
+  return (
+    <label className={`${className} govuk-label lbh-label`} htmlFor={htmlFor}>
+      {content}
+    </label>
+  )
+}

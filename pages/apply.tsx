@@ -1,7 +1,7 @@
 import FormsManager from "../lib/forms-manager"
 import MultiPageForm from "../components/multi-page-form"
 
-const Apply = (): JSX.Element => {
+export default function Apply(): JSX.Element {
   const formsManager = new FormsManager();
   const formData = formsManager.getQualificationFormData();
 
@@ -9,8 +9,6 @@ const Apply = (): JSX.Element => {
     <MultiPageForm data={formData} />
   )
 }
-
-export default Apply
 
 
 // TODO

@@ -15,7 +15,7 @@ interface CheckboxesProp {
   field: FormField
 }
 
-export const Checkbox = ({ index, hint, label, name, value }: CheckboxProps): JSX.Element => {
+export function Checkbox({ index, hint, label, name, value }: CheckboxProps): JSX.Element {
   let id = name
   
   if (index !== undefined) {
@@ -38,7 +38,7 @@ export const Checkbox = ({ index, hint, label, name, value }: CheckboxProps): JS
   )
 }
 
-const Checkboxes = ({ field }: CheckboxesProp): JSX.Element => {
+export default function Checkboxes({ field }: CheckboxesProp): JSX.Element {
   const checkboxes = field.options || [field as FormOption]
   const hasMultipleOptions: boolean = checkboxes.length > 1
 
@@ -55,5 +55,3 @@ const Checkboxes = ({ field }: CheckboxesProp): JSX.Element => {
     </FormGroup>
   )
 }
-
-export default Checkboxes

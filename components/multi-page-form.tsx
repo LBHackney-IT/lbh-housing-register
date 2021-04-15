@@ -6,7 +6,7 @@ interface MultiPageFormProps {
   data: MultiPageFormData
 }
 
-const MultiPageForm = ({ data }: MultiPageFormProps): JSX.Element => {
+export default function MultiPageForm({ data }: MultiPageFormProps): JSX.Element {
   const totalSections: number = data.sections.length;
 
   return (
@@ -19,5 +19,3 @@ const MultiPageForm = ({ data }: MultiPageFormProps): JSX.Element => {
     </>
   );
 }
-
-export default MultiPageForm

@@ -1,11 +1,12 @@
 import Header from "../components/header"
 import PhaseBanner from "../components/phase-banner"
 import SkipLink from "../components/skip-link"
+import type { AppProps } from 'next/app'
 import Head from "next/head"
 import "../styles/global.scss"
 
-function HousingRegisterApp({ Component, pageProps }) {
-  const hasPhaseBanner = parseFloat(process.env.NEXT_PUBLIC_VERSION) < 1
+export default function HousingRegisterApp({ Component, pageProps }: AppProps): JSX.Element {
+  const hasPhaseBanner = parseFloat(process.env.NEXT_PUBLIC_VERSION!) < 1
 
   return (
     <>
@@ -27,5 +28,3 @@ function HousingRegisterApp({ Component, pageProps }) {
     </>
   )
 }
-
-export default HousingRegisterApp

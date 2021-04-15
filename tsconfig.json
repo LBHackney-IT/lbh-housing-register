@@ -18,9 +18,19 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "preserve"
   },
   "include": [
-    "src"
+    "next-env.d.ts",
+    "components",
+    "lib",
+    "pages"
+  ],
+  "exclude": [
+    ".next",
+    "data",
+    "public",
+    "node_modules",
+    "styles"
   ]
 }

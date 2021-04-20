@@ -127,7 +127,71 @@
           "name": "step-2__1"
         },
         {
+          "conditionalDisplay": [
+            {
+              "field": "step-2__1",
+              "is": true
+            }
+          ],
           "label": "Field 2 - Conditionally display if checkbox is ticked",
+          "name": "step-2__2"
+        },
+        {
+          "as": "radios",
+          "hint": "Show additional field when item 3 is not selected",
+          "initialValue": "item-1",
+          "label": "Field 3 - Conditional radio buttons",
+          "name": "step-2__3",
+          "options": [
+            {
+              "value": "item-1"
+            },
+            {
+              "value": "item-2"
+            },
+            {
+              "value": "item-3"
+            }
+          ]
+        },
+        {
+          "conditionalDisplay": [
+            {
+              "field": "step-2__3",
+              "isNot": "item-3"
+            }
+          ],
+          "label": "Field 4 - Conditionally display if radio item 1 or 2 checked",
+          "name": "step-2__4"
+        }
+      ]
+    },
+    {
+      "id": "section-3",
+      "legend": "Section 3",
+      "fields": [
+        {
+          "as": "checkbox",
+          "label": "Field 1 - Checkbox",
+          "name": "step-3__1"
+        },
+        {
+          "as": "checkbox",
+          "label": "Field 2 - Checkbox",
+          "name": "step-3__2"
+        },
+        {
+          "conditionalDisplay": [
+            {
+              "field": "step-3__1",
+              "is": true
+            },
+            {
+              "field": "step-3__2",
+              "is": true
+            }
+          ],
+          "label": "Field 3 - Conditionally display if checkbox 1 and 2 are ticked",
           "name": "step-2__2"
         }
       ]

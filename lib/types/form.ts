@@ -1,5 +1,6 @@
 export type FormField = {
   as?: string
+  conditionalDisplay?: FormFieldDisplayCriteria[]
   hint?: string
   initialValue?: boolean | number | string
   label: string
@@ -8,6 +9,12 @@ export type FormField = {
   placeholder?: string
   type?: string
   value?: string
+}
+
+export type FormFieldDisplayCriteria = {
+  field: string
+  is?: boolean | number | string
+  isNot?: boolean | number | string
 }
 
 export type FormOption = {

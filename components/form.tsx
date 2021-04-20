@@ -26,6 +26,7 @@ export default function Form({ section, sectionIndex, totalSections }: FormProps
       initialValues={initialValues}
       onSubmit={values => console.log(values)}
     >
+      { formik => (
       <FormikForm>
         <Fieldset>
           {legend && 
@@ -34,15 +35,32 @@ export default function Form({ section, sectionIndex, totalSections }: FormProps
             </Legend>
           }
 
-          {section.fields.map(((field, index) =>
-            <DynamicField key={index} field={field} />
-          ))}
+          {section.fields.map(((field, index) => {
+            let display = true
+
+            if (field.conditionalDisplay) {
+              field.conditionalDisplay.map(condition => {
+                if (display && condition.is) {
+                  display = formik.values[condition.field] == condition.is;
+                }
+
+                if (display && condition.isNot) {
+                  display = formik.values[condition.field] != condition.isNot;
+                }
+              })
+            }
+
+            if (display) {
+              return <DynamicField key={index} field={field} />
+            }
+          }))}
         </Fieldset>
 
         <Button type="submit">
           Save and continue
         </Button>
       </FormikForm>
+      )}
     </Formik>
   )
 }

@@ -6,12 +6,12 @@ import Select from "./select"
 import Textarea from "./textarea"
 import { FormField } from "../lib/types/form"
 
-interface FormFieldSwitcherProps {
+interface DynamicFieldProps {
   field: FormField
 }
 
-export default function FormFieldSwitcher({ field }: FormFieldSwitcherProps): JSX.Element {
-  switch(field.type.toLowerCase()) {
+export default function DynamicField({ field }: DynamicFieldProps): JSX.Element {
+  switch(field.as?.toLowerCase()) {
     case "checkbox":
     case "checkboxes":
       return <Checkboxes field={field} />
@@ -19,8 +19,8 @@ export default function FormFieldSwitcher({ field }: FormFieldSwitcherProps): JS
     case "date":
     case "datetime":
       return <DateInput field={field} />
-
-    case "radio":
+    
+    case "radios":
       return <Radios field={field} />
 
     case "select":

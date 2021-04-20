@@ -2,10 +2,11 @@ import FormGroup from "./form-group"
 import Hint from "./hint"
 import Label from "./label"
 import { FormField, FormOption } from "../lib/types/form"
+import { Field, FieldArray } from "formik"
 
 interface CheckboxProps {
-  index?: number
   hint?: string
+  index?: number
   label?: string
   name: string
   value: string
@@ -15,21 +16,21 @@ interface CheckboxesProp {
   field: FormField
 }
 
-export function Checkbox({ index, hint, label, name, value }: CheckboxProps): JSX.Element {
+export function Checkbox({ hint, index, label, name, value }: CheckboxProps): JSX.Element {
   let id = name
-  
-  if (index !== undefined) {
-    id += `__${index}`
+
+  if (index) {
+    id += `.${index}`
   }
 
   return (
     <div className="govuk-checkboxes__item">
-      <input
+      <Field
         className="govuk-checkboxes__input"
+        type="checkbox"
         id={id}
         name={name}
         value={value}
-        type="checkbox"
       />
       <Label className="govuk-checkboxes__label" content={label || value} htmlFor={id} />
 
@@ -47,10 +48,17 @@ export default function Checkboxes({ field }: CheckboxesProp): JSX.Element {
       {hasMultipleOptions && field.label && <Label content={field.label} />}
       {hasMultipleOptions && field.hint && <Hint content={field.hint} />}
 
-      <div className="govuk-checkboxes lbh-checkboxes">
-        {checkboxes.map((checkbox, index) => 
-          <Checkbox key={index} index={index} hint={checkbox.hint} label={checkbox.label} name={field.name} value={checkbox.value} />
-        )}
+      <div className="govuk-checkboxes lbh-checkboxes" role="group" aria-labelledby="checkbox-group">
+        <FieldArray
+          name={field.name}
+          render={() => (
+            <>
+              {checkboxes.map((checkbox, index) => (
+                <Checkbox key={index} index={index} hint={checkbox.hint} label={checkbox.label} name={field.name} value={checkbox.value} />
+              ))}
+            </>
+          )}
+        />
       </div>
     </FormGroup>
   )

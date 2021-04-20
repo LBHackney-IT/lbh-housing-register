@@ -3,6 +3,7 @@ import Hint from "./hint"
 import Input from "./input"
 import Legend from "./legend"
 import { FormField } from "../lib/types/form"
+import { FieldArray } from "formik"
 
 interface DateInputProps {
   field: FormField
@@ -11,19 +12,22 @@ interface DateInputProps {
 export default function DateInput({ field }: DateInputProps): JSX.Element {
   const dayField: FormField = {
     label: "Day",
-    name: `${field.name}__day`,
+    name: `${field.name}.day`,
+    placeholder: "DD",
     type: "number",
   }
 
   const monthField: FormField = {
     label: "Month",
-    name: `${field.name}__month`,
+    name: `${field.name}.month`,
+    placeholder: "MM",
     type: "number",
   }
 
   const yearField: FormField = {
     label: "Year",
-    name: `${field.name}__year`,
+    name: `${field.name}.year`,
+    placeholder: "YYYY",
     type: "number",
   }
 
@@ -34,15 +38,22 @@ export default function DateInput({ field }: DateInputProps): JSX.Element {
       {field.label && <Legend>{field.label}</Legend>}
       {field.hint && <Hint content={field.hint} />}
 
-      {fields.map((field, index) => {
-        const className = "govuk-date-input__input govuk-input--width-" + (field.label === "Year" ? "4" : "2")
+      <FieldArray
+        name={field.name}
+        render={() => (
+          <>
+          {fields.map((field, index) => {
+            const className = "govuk-date-input__input govuk-input--width-" + (field.label === "Year" ? "3" : "2")
 
-        return (
-          <div key={index} className="govuk-date-input__item">
-            <Input className={className} field={field} />
-          </div>
-        )
-      })}
+            return (
+              <div key={index} className="govuk-date-input__item">
+                <Input className={className} field={field} />
+              </div>
+            )
+          })}
+          </>
+        )}
+      />
     </Fieldset>
   )
 }

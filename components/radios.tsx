@@ -2,6 +2,7 @@ import FormGroup from "./form-group"
 import Hint from "./hint"
 import Label from "./label"
 import { FormField, FormOption } from "../lib/types/form"
+import { Field } from "formik"
 
 interface RadioProps {
   index?: number
@@ -19,17 +20,17 @@ export function Radio({ index, hint, label, name, value }: RadioProps): JSX.Elem
   let id = name
 
   if (index !== undefined) {
-    id += `__${index}`
+    id += `.${index}`
   }
 
   return (
     <div className="govuk-radios__item">
-      <input
+      <Field
         className="govuk-radios__input"
+        type="radio"
         id={id}
         name={name}
         value={value}
-        type="radio"
       />
       <Label className="govuk-radios__label" content={label || value} htmlFor={id} />
 

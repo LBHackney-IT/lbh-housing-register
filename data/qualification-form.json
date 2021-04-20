@@ -2,7 +2,6 @@
   "title": "Housing Register",
   "sections": [
     {
-      "active": true,
       "id": "section-1",
       "legend": "Section 1",
       "fields": [
@@ -10,21 +9,19 @@
           "hint": "Example hint text",
           "label": "Field 1 - Input",
           "name": "step-1__1",
-          "placeholder": "I have a placeholder",
-          "type": "input"
+          "placeholder": "I have a placeholder"
         },
         {
+          "initialValue": "And I have a value",
           "label": "Field 2 - Input with default value",
-          "name": "step-1__2",
-          "value": "And I have a value",
-          "type": "input"
+          "name": "step-1__2"
         },
         {
+          "as": "select",
           "hint": "This select field has some hint text",
+          "initialValue": "Item 3",
           "label": "Field 3 - Select/Dropdown",
           "name": "step-1__3",
-          "type": "select",
-          "value": "Item 3",
           "options": [
             {
               "value": "Item 1"
@@ -39,30 +36,31 @@
           ]
         },
         {
+          "as": "textarea",
           "hint": "Textarea with hint text",
           "label": "Field 4 - Textarea",
           "name": "step-1__4",
-          "placeholder": "I have a placeholder",
-          "type": "textarea"
+          "placeholder": "I have a placeholder"
         },
         {
+          "as": "textarea",
+          "initialValue": "textarea default value",
           "label": "Field 5 - Textarea with default value",
-          "name": "step-1__5",
-          "type": "textarea",
-          "value": "textarea default value"
+          "name": "step-1__5"
         },
         {
+          "as": "checkbox",
           "hint": "Example checkbox with hint",
+          "initialValue": true,
           "label": "Field 6 - Checkbox",
-          "name": "step-1__6",
-          "type": "checkbox",
-          "value": "yes"
+          "name": "step-1__6"
         },
         {
+          "as": "checkboxes",
           "hint": "Example checkbox group with hint",
+          "initialValue": ["item-2"],
           "label": "Field 7 - Checkboxes",
           "name": "step-1__7",
-          "type": "checkbox",
           "options": [
             {
               "value": "item-1"
@@ -70,7 +68,7 @@
             {
               "hint": "Item 2 has a hint also",
               "label": "Item 2 - with custom label",
-              "value": "item-1"
+              "value": "item-2"
             }
           ]
         },
@@ -87,16 +85,22 @@
           "type": "file"
         },
         {
+          "as": "date",
           "hint": "Date field with hint",
+          "initialValue": {
+            "day": "",
+            "month": "",
+            "year": ""
+          },
           "label": "Field 10 - Date field",
-          "name": "step-1__10",
-          "type": "date"
+          "name": "step-1__10"
         },
         {
+          "as": "radios",
           "hint": "Example radio button group with hint",
+          "initialValue": "item-1",
           "label": "Field 11 - Radio buttons",
           "name": "step-1__11",
-          "type": "radio",
           "options": [
             {
               "value": "item-1"
@@ -104,7 +108,7 @@
             {
               "hint": "Item 2 has a hint also",
               "label": "Item 2 - with custom label",
-              "value": "item-1"
+              "value": "item-2"
             },
             {
               "value": "item-3"
@@ -114,19 +118,17 @@
       ]
     },
     {
-      "active": false,
       "id": "section-2",
       "legend": "Section 2",
       "fields": [
         {
+          "as": "checkbox",
           "label": "Field 1 - Checkbox",
-          "name": "step-2__1",
-          "type": "checkboxes"
+          "name": "step-2__1"
         },
         {
           "label": "Field 2 - Conditionally display if checkbox is ticked",
-          "name": "step-2__2",
-          "type": "input"
+          "name": "step-2__2"
         }
       ]
     }

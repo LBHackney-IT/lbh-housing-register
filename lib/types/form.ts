@@ -1,10 +1,12 @@
 export type FormField = {
+  as?: string
   hint?: string
+  initialValue?: boolean | number | string
   label: string
   name: string
   options?: FormOption[]
   placeholder?: string
-  type: string
+  type?: string
   value?: string
 }
 

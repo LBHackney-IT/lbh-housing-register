@@ -6,7 +6,7 @@ interface ButtonProps {
   type?: "button" | "reset" | "submit"
 }
 
-export default function Button ({ children, href, type }: ButtonProps): JSX.Element {
+export default function Button({ children, href, type }: ButtonProps): JSX.Element {
   const button = (
     <button className="govuk-button lbh-button" type={type}>
       {children}

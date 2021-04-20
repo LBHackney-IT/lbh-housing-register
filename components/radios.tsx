@@ -1,7 +1,7 @@
 import FormGroup from "./form-group"
 import Hint from "./hint"
 import Label from "./label"
-import { FormField, FormOption } from "../lib/types/form"
+import { FormField, FormFieldOption } from "../lib/types/form"
 import { Field } from "formik"
 
 interface RadioProps {
@@ -40,7 +40,7 @@ export function Radio({ index, hint, label, name, value }: RadioProps): JSX.Elem
 }
 
 export default function Radios({ field }: RadiosProps): JSX.Element {
-  const radios = field.options || [field as FormOption]
+  const radios = field.options || [field as FormFieldOption]
   const hasMultipleOptions: boolean = radios.length > 1
 
   return (

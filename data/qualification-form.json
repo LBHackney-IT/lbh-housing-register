@@ -3,64 +3,45 @@
   "sections": [
     {
       "id": "section-1",
-      "legend": "Section 1",
+      "legend": "Standard fields",
       "fields": [
         {
-          "hint": "Example hint text",
-          "label": "Field 1 - Input",
+          "hint": "Is required, must be 2-10 characters",
+          "initialValue": "this is the default value",
+          "label": "Field 1 - Standard text input",
           "name": "step-1__1",
-          "placeholder": "I have a placeholder"
+          "placeholder": "I have a placeholder",
+          "validation": {
+            "required": true,
+            "min": 2,
+            "max": 10
+          }
         },
         {
-          "initialValue": "And I have a value",
-          "label": "Field 2 - Input with default value",
-          "name": "step-1__2"
+          "hint": "Must be a valid email",
+          "label": "Field 2 - Email field",
+          "name": "step-1__2",
+          "type": "email"
         },
         {
-          "as": "select",
-          "hint": "This select field has some hint text",
-          "initialValue": "Item 3",
-          "label": "Field 3 - Select/Dropdown",
+          "hint": "Must be a valid number",
+          "label": "Field 3 - Number field",
           "name": "step-1__3",
-          "options": [
-            {
-              "value": "Item 1"
-            },
-            {
-              "value": "Item 2"
-            },
-            {
-              "label": "Item 3 - with custom label",
-              "value": "Item 3"
-            }
-          ]
-        },
-        {
-          "as": "textarea",
-          "hint": "Textarea with hint text",
-          "label": "Field 4 - Textarea",
-          "name": "step-1__4",
-          "placeholder": "I have a placeholder"
-        },
-        {
-          "as": "textarea",
-          "initialValue": "textarea default value",
-          "label": "Field 5 - Textarea with default value",
-          "name": "step-1__5"
+          "type": "number"
         },
         {
           "as": "checkbox",
-          "hint": "Example checkbox with hint",
+          "hint": "Example checkbox",
           "initialValue": true,
-          "label": "Field 6 - Checkbox",
-          "name": "step-1__6"
+          "label": "Field 4 - Checkbox",
+          "name": "step-1__4"
         },
         {
           "as": "checkboxes",
-          "hint": "Example checkbox group with hint",
+          "hint": "Example checkbox group",
           "initialValue": ["item-2"],
-          "label": "Field 7 - Checkboxes",
-          "name": "step-1__7",
+          "label": "Field 5 - Checkboxes",
+          "name": "step-1__5",
           "options": [
             {
               "value": "item-1"
@@ -73,34 +54,18 @@
           ]
         },
         {
-          "hint": "This is actually a number field",
-          "label": "Field 8 - Number",
-          "name": "step-1__8",
-          "type": "number"
-        },
-        {
-          "hint": "This is actually a file upload field",
-          "label": "Field 9 - File upload",
-          "name": "step-1__9",
-          "type": "file"
-        },
-        {
-          "as": "date",
-          "hint": "Date field with hint",
-          "initialValue": {
-            "day": "",
-            "month": "",
-            "year": ""
-          },
-          "label": "Field 10 - Date field",
-          "name": "step-1__10"
+          "hint": "Example date field",
+          "initialValue": "2021-01-01",
+          "label": "Field 6 - Date field",
+          "name": "step-1__6",
+          "type": "date"
         },
         {
           "as": "radios",
-          "hint": "Example radio button group with hint",
+          "hint": "Example radio button group",
           "initialValue": "item-1",
-          "label": "Field 11 - Radio buttons",
-          "name": "step-1__11",
+          "label": "Field 7 - Radio buttons",
+          "name": "step-1__7",
           "options": [
             {
               "value": "item-1"
@@ -114,16 +79,25 @@
               "value": "item-3"
             }
           ]
+        },
+        {
+          "as": "textarea",
+          "hint": "Textarea with no validation",
+          "label": "Field 8 - Textarea",
+          "name": "step-1__8",
+          "placeholder": "I have a placeholder"
         }
       ]
     },
     {
       "id": "section-2",
-      "legend": "Section 2",
+      "legend": "Conditional fields",
       "fields": [
         {
           "as": "checkbox",
-          "label": "Field 1 - Checkbox",
+          "initialValue": true,
+          "hint": "Will show 'Field 2' if selected",
+          "label": "Field 1",
           "name": "step-2__1"
         },
         {
@@ -133,14 +107,15 @@
               "is": true
             }
           ],
-          "label": "Field 2 - Conditionally display if checkbox is ticked",
+          "hint": "Will only display if 'Field 1' is selected",
+          "label": "Field 2",
           "name": "step-2__2"
         },
         {
           "as": "radios",
-          "hint": "Show additional field when item 3 is not selected",
+          "hint": "Will show 'Field 4' when 'item-3' is not selected",
           "initialValue": "item-1",
-          "label": "Field 3 - Conditional radio buttons",
+          "label": "Field 3",
           "name": "step-2__3",
           "options": [
             {
@@ -161,38 +136,52 @@
               "isNot": "item-3"
             }
           ],
-          "label": "Field 4 - Conditionally display if radio item 1 or 2 checked",
+          "hint": "Will only show if 'Field 3' is not 'item-3'",
+          "label": "Field 4",
           "name": "step-2__4"
-        }
-      ]
-    },
-    {
-      "id": "section-3",
-      "legend": "Section 3",
-      "fields": [
-        {
-          "as": "checkbox",
-          "label": "Field 1 - Checkbox",
-          "name": "step-3__1"
         },
         {
-          "as": "checkbox",
-          "label": "Field 2 - Checkbox",
-          "name": "step-3__2"
+          "hint": "Shows 'Field 6' when populated",
+          "label": "Field 5",
+          "name": "step-2__5"
         },
         {
           "conditionalDisplay": [
             {
-              "field": "step-3__1",
+              "field": "step-2__5",
+              "isNot": ""
+            }
+          ],
+          "hint": "Will only show when 'Field 5' has a value",
+          "label": "Field 6",
+          "name": "step-2__6"
+        },
+        {
+          "as": "checkbox",
+          "hint": "If 'Field 7' and 'Field 8' have both been ticked, then 'Field 9' will be shown",
+          "label": "Field 7",
+          "name": "step-2__7"
+        },
+        {
+          "as": "checkbox",
+          "hint": "If 'Field 7' and 'Field 8' have both been ticked, then 'Field 9' will be shown",
+          "label": "Field 8",
+          "name": "step-2__8"
+        },
+        {
+          "conditionalDisplay": [
+            {
+              "field": "step-2__7",
               "is": true
             },
             {
-              "field": "step-3__2",
+              "field": "step-2__8",
               "is": true
             }
           ],
-          "label": "Field 3 - Conditionally display if checkbox 1 and 2 are ticked",
-          "name": "step-2__2"
+          "hint": "Shows when both 'Field 7' and 'Field 8' have been selected",
+          "label": "Field 9",
+          "name": "step-2__9"
         }
       ]
     }

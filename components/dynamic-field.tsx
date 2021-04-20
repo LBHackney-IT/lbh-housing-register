@@ -1,5 +1,4 @@
 import Checkboxes from "./checkboxes"
-import DateInput from "./date-input"
 import Input from "./input"
 import Radios from "./radios"
 import Select from "./select"
@@ -15,10 +14,6 @@ export default function DynamicField({ field }: DynamicFieldProps): JSX.Element 
     case "checkbox":
     case "checkboxes":
       return <Checkboxes field={field} />
-
-    case "date":
-    case "datetime":
-      return <DateInput field={field} />
     
     case "radios":
       return <Radios field={field} />
@@ -30,6 +25,6 @@ export default function DynamicField({ field }: DynamicFieldProps): JSX.Element 
       return <Textarea field={field} />
 
     default:
-      return <Input field={field} />
+      return <Input {...field} />
   }
 }

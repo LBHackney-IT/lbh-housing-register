@@ -1,10 +1,11 @@
 interface FormGroupProps {
   children: any
+  error?: boolean
 }
 
-export default function FormGroup({ children }: FormGroupProps): JSX.Element {
+export default function FormGroup({ children, error }: FormGroupProps): JSX.Element {
   return (
-    <div className="govuk-form-group lbh-form-group">
+    <div className={`${error && "govuk-form-group--error"} govuk-form-group lbh-form-group`}>
       {children}
     </div>
   )

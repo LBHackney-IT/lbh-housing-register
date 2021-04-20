@@ -1,7 +1,7 @@
 import FormGroup from "./form-group"
 import Hint from "./hint"
 import Label from "./label"
-import { FormField, FormOption } from "../lib/types/form"
+import { FormField, FormFieldOption } from "../lib/types/form"
 import { Field, FieldArray } from "formik"
 
 interface CheckboxProps {
@@ -40,7 +40,7 @@ export function Checkbox({ hint, index, label, name, value }: CheckboxProps): JS
 }
 
 export default function Checkboxes({ field }: CheckboxesProp): JSX.Element {
-  const checkboxes = field.options || [field as FormOption]
+  const checkboxes = field.options || [field as FormFieldOption]
   const hasMultipleOptions: boolean = checkboxes.length > 1
 
   return (

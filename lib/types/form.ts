@@ -5,9 +5,10 @@ export type FormField = {
   initialValue?: boolean | number | string
   label: string
   name: string
-  options?: FormOption[]
+  options?: FormFieldOption[]
   placeholder?: string
   type?: string
+  validation?: FormFieldValidation
   value?: string
 }
 
@@ -17,14 +18,19 @@ export type FormFieldDisplayCriteria = {
   isNot?: boolean | number | string
 }
 
-export type FormOption = {
+export type FormFieldOption = {
   hint?: string
   label?: string
   value: string
 }
 
+export type FormFieldValidation = {
+  required?: boolean
+  min?: number
+  max?: number
+}
+
 export type FormSection = {
-  active: boolean
   fields: FormField[]
   id: string
   legend: string

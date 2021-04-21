@@ -1,10 +1,12 @@
 import Link from "next/link"
+import { Application } from "../domain/application"
 
 interface TableProps {
   caption?: string
+  applications: Array<Application>
 }
 
-export default function ApplicationTable({ caption }: TableProps): JSX.Element {
+export default function ApplicationTable({ caption, applications }: TableProps): JSX.Element {
   return (
     <table className="govuk-table lbh-table">
       {caption && (
@@ -29,36 +31,18 @@ export default function ApplicationTable({ caption }: TableProps): JSX.Element {
         </tr>
       </thead>
       <tbody className="govuk-table__body">
-        <tr className="govuk-table__row">
-          <th scope="row" className="govuk-table__header">#LBH-12345</th>
-          <td className="govuk-table__cell">
-            <Link href="/applications/LBH-12345">
-              <a className="govuk-link govuk-custom-text-color">Test applicant</a>
-            </Link>
-          </td>
-          <td className="govuk-table__cell">Pending</td>
-          <td className="govuk-table__cell">1 day ago</td>
-        </tr>
-        <tr className="govuk-table__row">
-          <th scope="row" className="govuk-table__header">#LBH-12345</th>
-          <td className="govuk-table__cell">
-            <Link href="/applications/LBH-12345">
-              <a className="govuk-link govuk-custom-text-color">Test applicant</a>
-            </Link>
-          </td>
-          <td className="govuk-table__cell">Pending</td>
-          <td className="govuk-table__cell">1 day ago</td>
-        </tr>
-        <tr className="govuk-table__row">
-          <th scope="row" className="govuk-table__header">#LBH-12345</th>
-          <td className="govuk-table__cell">
-            <Link href="/applications/LBH-12345">
-              <a className="govuk-link govuk-custom-text-color">Test applicant</a>
-            </Link>
-          </td>
-          <td className="govuk-table__cell">Pending</td>
-          <td className="govuk-table__cell">1 day ago</td>
-        </tr>
+        {applications.map((application) => (
+          <tr className="govuk-table__row">
+            <th scope="row" className="govuk-table__header">#{application.id}</th>
+            <td className="govuk-table__cell">
+              <Link href={`/applications/${application.id}`}>
+                <a className="govuk-link govuk-custom-text-color">{application.applicant.name}</a>
+              </Link>
+            </td>
+            <td className="govuk-table__cell">{application.status}</td>
+            <td className="govuk-table__cell">{application.createdAt}</td>
+          </tr>
+        ))}
       </tbody>
     </table>
   )

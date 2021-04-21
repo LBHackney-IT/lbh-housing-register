@@ -1,3 +1,4 @@
+import Layout from '../components/layout/resident-layout';
 import FormsManager from "../lib/forms-manager"
 import MultiPageForm from "../components/multi-page-form"
 
@@ -6,7 +7,9 @@ export default function Apply(): JSX.Element {
   const formData = formsManager.getQualificationFormData();
 
   return (
-    <MultiPageForm data={formData} />
+    <Layout>
+      <MultiPageForm data={formData} />
+    </Layout>
   )
 }
 

@@ -1,7 +1,11 @@
 import Image from "next/image"
 import Link from "next/link"
 
-export default function Header(): JSX.Element {
+interface HeaderProps {
+  userName?: string;
+}
+
+export default function Header({ userName }: HeaderProps): JSX.Element {
   return (
     <header className="lbh-header ">
       <div className="lbh-header__main">
@@ -15,6 +19,12 @@ export default function Header(): JSX.Element {
               </a>
             </Link>
           </h1>
+          {userName && (
+            <div className="lbh-header__links">
+              <p>{userName}</p>
+              <a href="/">Sign out</a>
+            </div>
+          )}
         </div>
       </div>
     </header>

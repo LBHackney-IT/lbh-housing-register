@@ -98,10 +98,36 @@
           }
         },
         {
+          "as": "select",
+          "hint": "Required select field",
+          "initialValue": "item-3",
+          "label": "Field 8 - Select",
+          "name": "step-1__8",
+          "options": [
+            {
+              "label": "Default",
+              "value": ""
+            },
+            {
+              "value": "item-1"
+            },
+            {
+              "value": "item-2"
+            },
+            {
+              "label": "item-3 - with custom label",
+              "value": "item-3"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
           "as": "textarea",
           "hint": "Textarea with no validation",
-          "label": "Field 8 - Textarea",
-          "name": "step-1__8",
+          "label": "Field 9 - Textarea",
+          "name": "step-1__9",
           "placeholder": "I have a placeholder"
         }
       ]

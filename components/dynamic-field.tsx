@@ -19,7 +19,7 @@ export default function DynamicField({ field }: DynamicFieldProps): JSX.Element 
       return <Radios {...field} />
 
     case "select":
-      return <Select field={field} />
+      return <Select {...field} />
 
     case "textarea":
       return <Textarea field={field} />

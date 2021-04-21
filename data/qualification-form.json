@@ -68,11 +68,16 @@
           }
         },
         {
-          "hint": "Example date field",
+          "hint": "Date field - required, and must be a valid date within January 2021",
           "initialValue": "2021-01-01",
           "label": "Field 6 - Date field",
           "name": "step-1__6",
-          "type": "date"
+          "type": "date",
+          "validation": {
+            "required": true,
+            "min": "2021-01-01",
+            "max": "2021-01-31"
+          }
         },
         {
           "as": "radios",

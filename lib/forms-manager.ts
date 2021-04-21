@@ -1,8 +1,6 @@
 import qualificationFormData from "../data/qualification-form.json"
 import { FormField, MultiPageFormData } from "./types/form"
 import * as Yup from "yup"
-import { isYieldExpression } from "typescript"
-import { yupToFormErrors } from "formik"
 
 export default class FormsManager {
   static getConditionalDisplayStateOfField(field: FormField, values: {[key: string]: any}): boolean {
@@ -49,6 +47,10 @@ export default class FormsManager {
           case "checkboxes":
             yup = Yup.array().of(Yup.string())
             break;
+          
+          case "date":
+            yup = Yup.date()
+            break;
 
           case "email":
             yup = Yup.string().email(`${field.label} must be a valid email`)
@@ -85,6 +87,10 @@ export default class FormsManager {
             case "checkboxes":
               errorMessage = `No more than ${field.validation.max} item${field.validation.max > 1 ? "s" : ""} can be selected`
               break;
+            
+            case "date":
+              errorMessage = `${field.label} must be before ${field.validation.max}`
+              break;
 
             case "number":
               errorMessage = `${field.label} must be no more than ${field.validation.max}`
@@ -104,6 +110,10 @@ export default class FormsManager {
             case "checkboxes":
               errorMessage = `At least ${field.validation.min} item${field.validation.min > 1 ? "s" : ""} must be selected`
               break;
+            
+              case "date":
+                errorMessage = `${field.label} must be after ${field.validation.min}`
+                break;
 
             case "number":
               errorMessage = `${field.label} must be no less than ${field.validation.min}`

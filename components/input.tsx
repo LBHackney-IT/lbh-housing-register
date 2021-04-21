@@ -16,7 +16,6 @@ export default function Input({ className, hint, label, name, placeholder, type 
         <FormGroup error={!!meta.touched && !!meta.error}>
           {label && <Label content={label} htmlFor={name} />}
           {hint && <Hint content={hint} />}
-
           {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 
           <input

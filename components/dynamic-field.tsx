@@ -13,10 +13,10 @@ export default function DynamicField({ field }: DynamicFieldProps): JSX.Element 
   switch(field.as?.toLowerCase()) {
     case "checkbox":
     case "checkboxes":
-      return <Checkboxes field={field} />
+      return <Checkboxes {...field} />
     
     case "radios":
-      return <Radios field={field} />
+      return <Radios {...field} />
 
     case "select":
       return <Select field={field} />

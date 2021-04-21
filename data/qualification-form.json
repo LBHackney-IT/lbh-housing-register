@@ -34,14 +34,17 @@
         },
         {
           "as": "checkbox",
-          "hint": "Example checkbox",
+          "hint": "Required checkbox - must be selected",
           "initialValue": true,
           "label": "Field 4 - Checkbox",
-          "name": "step-1__4"
+          "name": "step-1__4",
+          "validation": {
+            "required": true
+          }
         },
         {
           "as": "checkboxes",
-          "hint": "Example checkbox group",
+          "hint": "Checkbox group - at least one must be selected, and no more than two",
           "initialValue": ["item-2"],
           "label": "Field 5 - Checkboxes",
           "name": "step-1__5",
@@ -53,8 +56,16 @@
               "hint": "Item 2 has a hint also",
               "label": "Item 2 - with custom label",
               "value": "item-2"
+            },
+            {
+              "value": "item-3"
             }
-          ]
+          ],
+          "validation": {
+            "required": true,
+            "min": 1,
+            "max": 2
+          }
         },
         {
           "hint": "Example date field",
@@ -65,7 +76,7 @@
         },
         {
           "as": "radios",
-          "hint": "Example radio button group",
+          "hint": "Radio button group - required",
           "initialValue": "item-1",
           "label": "Field 7 - Radio buttons",
           "name": "step-1__7",
@@ -81,7 +92,10 @@
             {
               "value": "item-3"
             }
-          ]
+          ],
+          "validation": {
+            "required": true
+          }
         },
         {
           "as": "textarea",

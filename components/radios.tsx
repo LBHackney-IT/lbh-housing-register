@@ -1,8 +1,9 @@
+import ErrorMessage from "./error-message"
 import FormGroup from "./form-group"
 import Hint from "./hint"
 import Label from "./label"
 import { FormField, FormFieldOption } from "../lib/types/form"
-import { Field } from "formik"
+import { Field, FieldInputProps, FieldMetaProps } from "formik"
 
 interface RadioProps {
   index?: number
@@ -10,10 +11,6 @@ interface RadioProps {
   label?: string
   name: string
   value: string
-}
-
-interface RadiosProps {
-  field: FormField
 }
 
 export function Radio({ index, hint, label, name, value }: RadioProps): JSX.Element {
@@ -39,20 +36,25 @@ export function Radio({ index, hint, label, name, value }: RadioProps): JSX.Elem
   )
 }
 
-export default function Radios({ field }: RadiosProps): JSX.Element {
-  const radios = field.options || [field as FormFieldOption]
-  const hasMultipleOptions: boolean = radios.length > 1
+interface RadiosProps extends FormField {
+}
 
+export default function Radios({ hint, label, name, options }: RadiosProps): JSX.Element {
   return (
-    <FormGroup>
-      {hasMultipleOptions && field.label && <Label content={field.label} />}
-      {hasMultipleOptions && field.hint && <Hint content={field.hint} />}
+    <Field name={name}>
+      {({ field, meta }: { field: FieldInputProps<string>, meta: FieldMetaProps<string> }) => (
+        <FormGroup error={!!meta.touched && !!meta.error}>
+          {label && <Label content={label} />}
+          {hint && <Hint content={hint} />}
+          {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 
-      <div className="govuk-radios lbh-radios">
-        {radios.map((radio, index) => 
-          <Radio key={index} index={index} hint={radio.hint} label={radio.label} name={field.name} value={radio.value} />
-        )}
-      </div>
-    </FormGroup>
+          <div className="govuk-radios lbh-radios">
+            {options?.map((radio, index) => 
+              <Radio key={index} index={index} hint={radio.hint} label={radio.label} name={field.name} value={radio.value} />
+            )}
+          </div>
+        </FormGroup>
+      )}
+    </Field>
   )
 }

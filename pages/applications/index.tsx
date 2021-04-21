@@ -1,14 +1,30 @@
 import Layout from '../../components/layout/staff-layout';
-import Button from "../../components/button"
+import Stats from "../../components/stats"
 import { HeadingOne } from "../../components/headings"
-import Paragraph from "../../components/paragraph"
 import ApplicationTable from "../../components/application-table"
 
 export default function ApplicationList(): JSX.Element {
+
+  // TODO: use real data
+  const stats = [
+    {
+      'value': '12',
+      'caption': 'New applications'
+    },
+    {
+      'value': '3',
+      'caption': 'Awaiting evidence'
+    },
+    {
+      'value': '99',
+      'caption': 'Problems'
+    },
+  ];
+
   return (
     <Layout>
       <HeadingOne content="Staff dashboard" />
-      <Paragraph content="<strong>Lorem ipsum</strong> dolor sit amet, consectetur adipiscing elit. Pellentesque mi ex, maximus tempus condimentum eget, volutpat eu nunc. Mauris tincidunt, neque quis viverra ultricies, tellus lacus fringilla tortor, at blandit purus diam et augue." />
+      <Stats className="govuk-grid-column-one-third" stats={stats} />
       <ApplicationTable caption="Applications" />
     </Layout>
   )

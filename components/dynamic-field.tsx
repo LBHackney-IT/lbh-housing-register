@@ -22,7 +22,7 @@ export default function DynamicField({ field }: DynamicFieldProps): JSX.Element 
       return <Select {...field} />
 
     case "textarea":
-      return <Textarea field={field} />
+      return <Textarea {...field} />
 
     default:
       return <Input {...field} />

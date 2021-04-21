@@ -130,10 +130,16 @@
         },
         {
           "as": "textarea",
-          "hint": "Textarea with no validation",
+          "hint": "Textarea - required, must be between 10-200 characters",
+          "initialValue": "Default value",
           "label": "Field 9 - Textarea",
           "name": "step-1__9",
-          "placeholder": "I have a placeholder"
+          "placeholder": "I have a placeholder",
+          "validation": {
+            "required": true,
+            "min": 10,
+            "max": 200
+          }
         }
       ]
     },

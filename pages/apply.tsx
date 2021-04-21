@@ -4,16 +4,11 @@ import { MultiPageForm } from "../components/form"
 export default function Apply(): JSX.Element {
   const formData = FormsManager.getQualificationFormData();
 
-  return (
-    <MultiPageForm data={formData} />
-  )
+  return <MultiPageForm formData={formData} />
 }
 
 
 // TODO
-
-// Sections
-// - hide section unless active
 
 // User data
 // - save (automatically?)

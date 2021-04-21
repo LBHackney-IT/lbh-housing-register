@@ -1,5 +1,5 @@
 interface ErrorMessageProps {
-  message: string | object
+  message: string
 }
 
 export default function ErrorMessage({ message }: ErrorMessageProps): JSX.Element | null {

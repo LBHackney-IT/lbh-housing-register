@@ -36,9 +36,10 @@ export default class FormsManager {
 
     fields.map(field => {
       if (field.validation || field.type) {
+        const fieldType = field.type?.toLowerCase()
         let yup;
 
-        switch(field.type?.toLowerCase()) {
+        switch(fieldType) {
           case "email":
             yup = Yup.string().email(`${field.label} must be a valid email`)
             break;
@@ -57,12 +58,32 @@ export default class FormsManager {
         }
 
         if (field.validation?.max) {
-          const errorMessage: string = `${field.label} must be at most ${field.validation.max} character${field.validation.max > 1 && "s"}`
+          let errorMessage: string;
+          switch (fieldType) {
+            case "number":
+              errorMessage = `${field.label} must be no more than ${field.validation.max}`
+              break;
+            
+            default:
+              errorMessage = `${field.label} must be at most ${field.validation.max} character${field.validation.max > 1 && "s"}`
+              break;
+          }
+
           yup = yup.max(field.validation.max, errorMessage)
         }
 
         if (field.validation?.min) {
-          const errorMessage: string = `${field.label} must be at least ${field.validation.min} character${field.validation.min > 1 && "s"}`
+          let errorMessage: string;
+          switch (fieldType) {
+            case "number":
+              errorMessage = `${field.label} must be no less than ${field.validation.min}`
+              break;
+            
+            default:
+              errorMessage = `${field.label} must be at least ${field.validation.min} character${field.validation.min > 1 && "s"}`
+              break;
+          }
+
           yup = yup.min(field.validation.min, errorMessage)
         }
 

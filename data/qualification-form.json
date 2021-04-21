@@ -24,10 +24,13 @@
           "type": "email"
         },
         {
-          "hint": "Must be a valid number",
+          "hint": "Must be a valid number, less than or equal to 10",
           "label": "Field 3 - Number field",
           "name": "step-1__3",
-          "type": "number"
+          "type": "number",
+          "validation": {
+            "max": 10
+          }
         },
         {
           "as": "checkbox",

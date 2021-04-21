@@ -38,12 +38,10 @@ export default function Form({ section, sectionIndex, totalSections }: FormProps
           }
 
           {section.fields.map(((field, index) => {
-            const display = FormsManager.getConditionalDisplayStateOfField(field, values)
+            const display: boolean = FormsManager.getConditionalDisplayStateOfField(field, values)
 
             if (display) {
-              return (
-                <DynamicField key={index} field={field} />
-              )
+              return <DynamicField key={index} field={field} />
             }
           }))}
         </Fieldset>
@@ -62,17 +60,17 @@ export default function Form({ section, sectionIndex, totalSections }: FormProps
 }
 
 interface MultiPageFormProps {
-  data: MultiPageFormData
+  formData: MultiPageFormData
 }
 
-export function MultiPageForm({ data }: MultiPageFormProps): JSX.Element {
-  const totalSections: number = data.sections.length;
+export function MultiPageForm({ formData }: MultiPageFormProps): JSX.Element {
+  const totalSections: number = formData.sections.length;
 
   return (
     <>
-      {data.title && <HeadingOne content={data.title} />}
+      {formData.title && <HeadingOne content={formData.title} />}
 
-      {data.sections.map(((section, index) =>
+      {formData.sections.map(((section, index) =>
         <Form key={index} section={section} sectionIndex={index + 1} totalSections={totalSections} />
       ))}
     </>

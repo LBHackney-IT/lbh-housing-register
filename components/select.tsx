@@ -1,27 +1,31 @@
+import ErrorMessage from "./error-message"
 import FormGroup from "./form-group"
 import Hint from "./hint"
 import Label from "./label"
 import { FormField } from "../lib/types/form"
+import { Field, FieldInputProps, FieldMetaProps } from "formik"
 
-interface SelectProps {
-  field: FormField
+interface SelectProps extends FormField {
 }
 
-export default function Select({ field }: SelectProps): JSX.Element {
-  field.options = field.options || []
-
+export default function Select({ hint, label, name, options }: SelectProps): JSX.Element {
   return (
-    <FormGroup>
-      {field.label && <Label content={field.label} htmlFor={field.name} />}
-      {field.hint && <Hint content={field.hint} />}
+    <Field name={name}>
+      {({ field, meta }: { field: FieldInputProps<string>, meta: FieldMetaProps<string> }) => (
+        <FormGroup error={!!meta.touched && !!meta.error}>
+          {label && <Label content={label} htmlFor={field.name} />}
+          {hint && <Hint content={hint} />}
+          {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 
-      <select className="govuk-select lbh-select" id={field.name} name={field.name} defaultValue={field.value}>
-        {field.options.map((option, index) => (
-          <option key={index} value={option.value}>
-            {option.label || option.value}
-          </option>
-        ))}
-      </select>
-    </FormGroup>
+          <select className={`${!!meta.touched && !!meta.error ? "govuk-select--error" : ""} govuk-select lbh-select`} id={field.name} {...field}>
+            {options?.map((option, index) => (
+              <option key={index} value={option.value}>
+                {option.label || option.value}
+              </option>
+            ))}
+          </select>
+        </FormGroup>
+      )}
+    </Field>
   )
 }

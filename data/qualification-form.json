@@ -7,7 +7,7 @@
       "fields": [
         {
           "hint": "Is required, must be 2-10 characters",
-          "initialValue": "this is the default value",
+          "initialValue": "default",
           "label": "Field 1 - Standard text input",
           "name": "step-1__1",
           "placeholder": "I have a placeholder",

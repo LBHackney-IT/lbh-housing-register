@@ -15,17 +15,16 @@
 @import "node_modules/lbh-frontend/lbh/components/lbh-phase-banner/phase-banner";
 @import "node_modules/lbh-frontend/lbh/components/lbh-radios/radios";
 @import "node_modules/lbh-frontend/lbh/components/lbh-select/select";
+@import "node_modules/lbh-frontend/lbh/components/lbh-simple-pagination/simple-pagination";
 @import "node_modules/lbh-frontend/lbh/components/lbh-skip-link/skip-link";
 @import "node_modules/lbh-frontend/lbh/components/lbh-stat/stat";
 @import "node_modules/lbh-frontend/lbh/components/lbh-table/table";
 @import "node_modules/lbh-frontend/lbh/components/lbh-tag/tag";
 @import "node_modules/lbh-frontend/lbh/components/lbh-textarea/textarea";
 
-// Overrides
-body {
-  margin-top: 0;
-}
+// Objects
+@import "objects/flex";
+@import "objects/text-alignment";
 
-.lbh-header__service-name {
-  margin-left: 1em;
-}
+// Overrides
+@import "generic/overrides";

@@ -11,25 +11,27 @@ interface FormProps {
   onSubmit: (values: {}, bag: any) => void
 }
 
-// TODO: The ability to reset the form (apply/reset maybe?)
+// TODO: The ability to reset the form (apply/reset or /reset maybe?)
 
 export default function Form({ formData, onSubmit }: FormProps): JSX.Element {
   const [stepNumber, setStepNumber] = useState(0)
   const [snapshot, setSnapshot] = useState(FormsManager.getInitialValuesFromMultiPageFormData(formData))
 
-  const step = formData.steps[stepNumber] // TODO: load requested step, if previous steps are valid that is
-  const totalSteps = formData.steps.length
-  const hasMultipleSteps = totalSteps > 1
-  const isLastStep = stepNumber === totalSteps - 1
+  const step: FormStep = formData.steps[stepNumber] // TODO: load requested step, if previous steps are valid that is
+  const totalSteps: number = formData.steps.length
+  const hasMultipleSteps: boolean = totalSteps > 1
+  const isLastStep: boolean = stepNumber === totalSteps - 1
 
   const next = (values: {[key: string]: any}): void => {
     // TODO: Update URL with step
+    // TODO: Scroll to top + set focus to first field
     setSnapshot(values);
     setStepNumber(Math.min(stepNumber + 1, totalSteps - 1));
   };
 
   const previous = (values: {[key: string]: any}): void => {
     // TODO: Update URL with step
+    // TODO: Scroll to top + set focus to first field
     setSnapshot(values);
     setStepNumber(Math.max(stepNumber - 1, 0));
   };
@@ -67,16 +69,19 @@ export default function Form({ formData, onSubmit }: FormProps): JSX.Element {
                 }
             })}
 
-            <div style={{ display: 'flex' }}>
+            <div className="c-flex lbh-simple-pagination">
               {stepNumber > 0 && (
-                <button onClick={() => previous(values)} type="button">
-                  Back
-                </button>
+                <div className="c-flex__1">
+                  <Button onClick={() => previous(values)} secondary={true} type="button">
+                    Previous
+                  </Button>
+                </div>
               )}
-              <div>
-                <button disabled={isSubmitting} type="submit">
+
+              <div className="c-flex__1 text-right">
+                <Button disabled={isSubmitting} type="submit">
                   {isLastStep ? 'Submit' : 'Next'}
-                </button>
+                </Button>
               </div>
             </div>
           </FormikForm>

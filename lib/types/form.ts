@@ -2,14 +2,13 @@ export type FormField = {
   as?: string
   conditionalDisplay?: FormFieldDisplayCriteria[]
   hint?: string
-  initialValue?: boolean | number | string
+  initialValue?: boolean | number | string | string[]
   label: string
   name: string
   options?: FormFieldOption[]
   placeholder?: string
   type?: string
   validation?: FormFieldValidation
-  value?: string
 }
 
 export type FormFieldDisplayCriteria = {
@@ -26,8 +25,8 @@ export type FormFieldOption = {
 
 export type FormFieldValidation = {
   required?: boolean
-  min?: number
-  max?: number
+  min?: number | string
+  max?: number | string
 }
 
 export type FormStep = {

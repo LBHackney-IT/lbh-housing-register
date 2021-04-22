@@ -1,27 +1,31 @@
+import ErrorMessage from "./error-message"
 import FormGroup from "./form-group"
 import Hint from "./hint"
 import Label from "./label"
 import { FormField } from "../lib/types/form"
+import { Field, FieldInputProps, FieldMetaProps } from "formik"
 
-interface InputProps {
+interface InputProps extends FormField {
   className?: string
-  field: FormField
 }
 
-export default function Input({ className, field }: InputProps): JSX.Element {
+export default function Input({ className, hint, label, name, placeholder, type }: InputProps): JSX.Element {
   return (
-    <FormGroup>
-      {field.label && <Label content={field.label} htmlFor={field.name} />}
-      {field.hint && <Hint content={field.hint} />}
+    <Field name={name}>
+      {({ field, meta }: { field: FieldInputProps<string>, meta: FieldMetaProps<string> }) => (
+        <FormGroup error={!!meta.touched && !!meta.error}>
+          {label && <Label content={label} htmlFor={name} />}
+          {hint && <Hint content={hint} />}
+          {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 
-      <input
-        className={`${className} govuk-input lbh-input`}
-        id={field.name}
-        name={field.name}
-        defaultValue={field.value}
-        placeholder={field.placeholder}
-        type={field.type}
-      />
-    </FormGroup>
+          <input
+            className={`${className} ${meta.touched && meta.error && "govuk-input--error"} govuk-input lbh-input`}
+            id={name}
+            placeholder={placeholder}
+            type={type}
+            {...field} />
+        </FormGroup>
+      )}
+    </Field>
   )
 }

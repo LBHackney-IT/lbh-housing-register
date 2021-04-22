@@ -1,27 +1,14 @@
 import FormsManager from "../lib/forms-manager"
-import MultiPageForm from "../components/multi-page-form"
+import { MultiPageForm } from "../components/form"
 
 export default function Apply(): JSX.Element {
-  const formsManager = new FormsManager();
-  const formData = formsManager.getQualificationFormData();
+  const formData = FormsManager.getQualificationFormData();
 
-  return (
-    <MultiPageForm data={formData} />
-  )
+  return <MultiPageForm formData={formData} />
 }
 
 
 // TODO
-
-// Form fields
-// - conditional form fields
-// - validation (required, min, max)
-// -- checkbox group required weirdness
-// -- radio group required weirdness
-// -- character count
-
-// Sections
-// - hide section unless active
 
 // User data
 // - save (automatically?)

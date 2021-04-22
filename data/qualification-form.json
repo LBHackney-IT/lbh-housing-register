@@ -1,8 +1,8 @@
 {
   "title": "Housing Register",
-  "sections": [
+  "steps": [
     {
-      "id": "section-1",
+      "id": "standard-fields",
       "legend": "Standard fields",
       "fields": [
         {
@@ -144,7 +144,7 @@
       ]
     },
     {
-      "id": "section-2",
+      "id": "conditional-fields",
       "legend": "Conditional fields",
       "fields": [
         {

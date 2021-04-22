@@ -30,13 +30,13 @@ export type FormFieldValidation = {
   max?: number
 }
 
-export type FormSection = {
+export type FormStep = {
   fields: FormField[]
   id: string
   legend: string
 }
 
 export type MultiPageFormData = {
-  sections: FormSection[]
+  steps: FormStep[]
   title: string | undefined
 }

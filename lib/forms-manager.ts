@@ -21,9 +21,15 @@ export default class FormsManager {
     return display;
   }
 
-  static getInitialValuesFromFields(fields: FormField[]): { [key: string]: boolean | number | object | string } {
-    const initialValues: {[key: string]: boolean | number | object | string } = {}
+  static getInitialValuesFromFields(fields: FormField[]): { [key: string]: boolean | number | string } {
+    const initialValues: {[key: string]: boolean | number | string } = {}
     fields.map(field => initialValues[field.name] = field.initialValue || "")
+    return initialValues
+  }
+
+  static getInitialValuesFromMultiPageFormData(data: MultiPageFormData): { [key: string]: boolean | number | string } {
+    let initialValues: {[key: string]: boolean | number | string } = {}
+    data.steps.map(step => initialValues = Object.assign(initialValues, this.getInitialValuesFromFields(step.fields)));
     return initialValues
   }
 

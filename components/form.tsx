@@ -1,78 +1,87 @@
 import Button from "./button"
 import DynamicField from "./dynamic-field"
-import Fieldset from "./fieldset"
 import { HeadingOne, HeadingTwo } from "./headings"
-import Legend from "./legend"
 import FormsManager from "../lib/forms-manager"
-import { FormSection, MultiPageFormData } from "../lib/types/form"
+import { FormStep, MultiPageFormData } from "../lib/types/form"
 import { Form as FormikForm, Formik } from "formik"
+import { useState } from "react"
 
 interface FormProps {
-  section: FormSection
-  sectionIndex?: number
-  totalSections?: number
-}
-
-export default function Form({ section, sectionIndex, totalSections }: FormProps): JSX.Element {
-  const initialValues = FormsManager.getInitialValuesFromFields(section.fields)
-  const validationSchema = FormsManager.getValidationSchemaFromFields(section.fields)
-
-  let legend: string = section.legend
-  if (sectionIndex !== undefined && sectionIndex > 0 && totalSections !== undefined && totalSections > 1) {
-    legend = `Step ${sectionIndex} of ${totalSections}: ${legend}`
-  }
-
-  return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={values => console.log(values)}
-    >
-      { ({ values }) => (
-      <FormikForm>
-        <Fieldset>
-          {legend && 
-            <Legend>
-              <HeadingTwo content={legend} />
-            </Legend>
-          }
-
-          {section.fields.map(((field, index) => {
-            const display: boolean = FormsManager.getConditionalDisplayStateOfField(field, values)
-
-            if (display) {
-              return <DynamicField key={index} field={field} />
-            }
-          }))}
-        </Fieldset>
-
-        <Button type="submit">
-          {sectionIndex == totalSections ?
-            "Finish"
-            :
-            "Save and continue"
-          }
-        </Button>
-      </FormikForm>
-      )}
-    </Formik>
-  )
-}
-
-interface MultiPageFormProps {
   formData: MultiPageFormData
+  onSubmit: (values: {}, bag: any) => void
 }
 
-export function MultiPageForm({ formData }: MultiPageFormProps): JSX.Element {
-  const totalSections: number = formData.sections.length;
+// TODO: The ability to reset the form (apply/reset maybe?)
+
+export default function Form({ formData, onSubmit }: FormProps): JSX.Element {
+  const [stepNumber, setStepNumber] = useState(0)
+  const [snapshot, setSnapshot] = useState(FormsManager.getInitialValuesFromMultiPageFormData(formData))
+
+  const step = formData.steps[stepNumber] // TODO: load requested step, if previous steps are valid that is
+  const totalSteps = formData.steps.length
+  const hasMultipleSteps = totalSteps > 1
+  const isLastStep = stepNumber === totalSteps - 1
+
+  const next = (values: {[key: string]: any}): void => {
+    // TODO: Update URL with step
+    setSnapshot(values);
+    setStepNumber(Math.min(stepNumber + 1, totalSteps - 1));
+  };
+
+  const previous = (values: {[key: string]: any}): void => {
+    // TODO: Update URL with step
+    setSnapshot(values);
+    setStepNumber(Math.max(stepNumber - 1, 0));
+  };
+
+  const handleSubmit = async (values: {[key: string]: any}, bag: any) => {
+    // TODO: Save users' data
+    // TODO: Validate current step (still eligible?)
+    // - boot process if not eligible, ?reason=...
+
+    if (isLastStep) {
+      return onSubmit(values, bag);
+    }
+    else {
+      bag.setTouched({});
+      next(values);
+    }
+  };
 
   return (
     <>
       {formData.title && <HeadingOne content={formData.title} />}
 
-      {formData.sections.map(((section, index) =>
-        <Form key={index} section={section} sectionIndex={index + 1} totalSections={totalSections} />
-      ))}
+      <Formik
+        initialValues={snapshot}
+        onSubmit={handleSubmit}
+        validationSchema={FormsManager.getValidationSchemaFromFields(step.fields)}
+      >
+        {({isSubmitting, values}) => (
+          <FormikForm>
+            <HeadingTwo content={hasMultipleSteps ? `Step ${stepNumber + 1} of ${totalSteps}: ${step.legend}` : step.legend} />
+            {step.fields.map((field, index) => {
+                const display: boolean = FormsManager.getConditionalDisplayStateOfField(field, values)
+                if (display) {
+                  return <DynamicField key={index} field={field} />
+                }
+            })}
+
+            <div style={{ display: 'flex' }}>
+              {stepNumber > 0 && (
+                <button onClick={() => previous(values)} type="button">
+                  Back
+                </button>
+              )}
+              <div>
+                <button disabled={isSubmitting} type="submit">
+                  {isLastStep ? 'Submit' : 'Next'}
+                </button>
+              </div>
+            </div>
+          </FormikForm>
+        )}
+      </Formik>
     </>
   );
-}
+};

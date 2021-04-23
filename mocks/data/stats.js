@@ -1,16 +1,14 @@
-import { StatProps } from "../components/stat"
-
-export const stats = new Array<StatProps>(
+module.exports = [
   {
-    value: "12",
+    value: "34",
     caption: "New applications"
   },
   {
-    value: "3",
+    value: "5",
     caption: "Awaiting evidence"
   },
   {
     value: "99",
     caption: "Problems"
   }
-)
+];

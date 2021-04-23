@@ -4,6 +4,8 @@
     "routesVariants": [
       "get-applications:success",
       "get-application:success",
+      "add-application:success",
+      "update-application:success",
       "get-stats:success"
     ]
   },
@@ -11,7 +13,8 @@
     "id": "simulate",
     "from": "base",
     "routesVariants": [
-      "get-application:simulate"
+      "get-application:simulate",
+      "update-application:simulate"
     ]
   }
 ]

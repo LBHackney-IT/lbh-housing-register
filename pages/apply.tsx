@@ -5,7 +5,11 @@ import { MultiPageForm } from "../components/form"
 export default function Apply(): JSX.Element {
   const formData = FormsManager.getQualificationFormData();
 
-  return <MultiPageForm formData={formData} />
+  return (
+    <Layout>
+      <MultiPageForm formData={formData} />
+    </Layout>
+  )
 }
 
 

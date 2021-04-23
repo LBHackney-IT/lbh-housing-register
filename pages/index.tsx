@@ -12,6 +12,6 @@ export default function Home(): JSX.Element {
       <Paragraph content="Phasellus tempor in orci dapibus rhoncus. Cras sit amet venenatis velit. Donec iaculis lorem eu convallis venenatis. Ut scelerisque ac lacus non sodales." />
       <InsetText content="Nulla facilisi. In at nulla congue tellus ultrices porttitor. Sed eget nibh consectetur, gravida neque non, placerat nulla. Donec eros sapien, elementum ac dolor non, sodales tempor risus. Pellentesque vitae neque fermentum, iaculis nibh sit amet, fermentum metus." />
       <Button href="/apply">Get Started</Button>
-    </>
+    </Layout>
   )
 }

@@ -8,7 +8,7 @@ export default function Login(): JSX.Element {
     <Layout>
       <HeadingOne content="Staff login" />
       <Paragraph content="<strong>Lorem ipsum</strong> dolor sit amet, consectetur adipiscing elit. Pellentesque mi ex, maximus tempus condimentum eget, volutpat eu nunc. Mauris tincidunt, neque quis viverra ultricies, tellus lacus fringilla tortor, at blandit purus diam et augue." />
-      <Button to="/applications">Login</Button>
+      <Button href="/applications">Login</Button>
     </Layout>
   )
 }

@@ -6,7 +6,7 @@ import { Stat } from '../../domain/stat';
 import { HeadingOne } from "../../components/headings"
 import Paragraph from "../../components/paragraph"
 import { Stats } from "../../components/stats"
-import ApplicationTable from "../../components/application-table"
+import ApplicationTable from "../../components/applications/application-table"
 
 interface PageProps {
   applications: Array<Application>

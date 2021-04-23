@@ -1,0 +1,17 @@
+[
+  {
+    "id": "base",
+    "routesVariants": [
+      "add-headers:enabled",
+      "get-applications:success",
+      "get-application:success"
+    ]
+  },
+  {
+    "id": "simulate",
+    "from": "base",
+    "routesVariants": [
+      "get-application:simulate"
+    ]
+  }
+]

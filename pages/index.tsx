@@ -1,3 +1,4 @@
+import Layout from '../components/layout/resident-layout';
 import Button from "../components/button"
 import InsetText from "../components/inset-text"
 import { HeadingOne } from "../components/headings"
@@ -5,7 +6,7 @@ import Paragraph from "../components/paragraph"
 
 export default function Home(): JSX.Element {
   return (
-    <>
+    <Layout>
       <HeadingOne content={process.env.NEXT_PUBLIC_NAME!} />
       <Paragraph content="<strong>Lorem ipsum</strong> dolor sit amet, consectetur adipiscing elit. Pellentesque mi ex, maximus tempus condimentum eget, volutpat eu nunc. Mauris tincidunt, neque quis viverra ultricies, tellus lacus fringilla tortor, at blandit purus diam et augue." />
       <Paragraph content="Phasellus tempor in orci dapibus rhoncus. Cras sit amet venenatis velit. Donec iaculis lorem eu convallis venenatis. Ut scelerisque ac lacus non sodales." />

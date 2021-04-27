@@ -1,13 +1,13 @@
 {
   "title": "Housing Register",
-  "sections": [
+  "steps": [
     {
-      "id": "section-1",
+      "id": "standard-fields",
       "legend": "Standard fields",
       "fields": [
         {
           "hint": "Is required, must be 2-10 characters",
-          "initialValue": "this is the default value",
+          "initialValue": "default",
           "label": "Field 1 - Standard text input",
           "name": "step-1__1",
           "placeholder": "I have a placeholder",
@@ -144,7 +144,7 @@
       ]
     },
     {
-      "id": "section-2",
+      "id": "conditional-fields",
       "legend": "Conditional fields",
       "fields": [
         {

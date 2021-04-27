@@ -2,7 +2,7 @@ import ErrorMessage from "./error-message"
 import FormGroup from "./form-group"
 import Hint from "./hint"
 import Label from "./label"
-import { FormField, FormFieldOption } from "../lib/types/form"
+import { FormField, FormFieldOption } from "../../lib/types/form"
 import { Field, FieldInputProps, FieldMetaProps } from "formik"
 
 interface RadioProps extends FormField {
@@ -33,7 +33,7 @@ export function Radio({ index, hint, label, name, value }: RadioProps): JSX.Elem
   )
 }
 
-interface RadiosProps extends FormField {
+export interface RadiosProps extends FormField {
   value: string
 }
 

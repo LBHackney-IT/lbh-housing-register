@@ -2,7 +2,7 @@ import ErrorMessage from "./error-message"
 import FormGroup from "./form-group"
 import Hint from "./hint"
 import Label from "./label"
-import { FormField } from "../lib/types/form"
+import { FormField } from "../../lib/types/form"
 import { Field, FieldInputProps, FieldMetaProps } from "formik"
 
 interface SelectProps extends FormField {

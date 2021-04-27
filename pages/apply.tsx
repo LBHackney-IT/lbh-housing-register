@@ -1,9 +1,9 @@
-import Form from "../components/form"
+import Form from "../components/form/form"
 import Layout from '../components/layout/resident-layout'
-import FormsManager from "../lib/forms-manager"
+import { getQualificationFormData } from "../lib/utils/form"
 
 export default function Apply(): JSX.Element {
-  const formData = FormsManager.getQualificationFormData();
+  const formData = getQualificationFormData();
 
   return (
     <Layout>

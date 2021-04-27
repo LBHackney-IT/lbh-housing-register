@@ -1,8 +1,9 @@
-import Button from "./button"
+import Button from "../button"
 import DynamicField from "./dynamic-field"
-import { HeadingOne, HeadingTwo } from "./headings"
-import FormsManager from "../lib/forms-manager"
-import { FormStep, MultiPageFormData } from "../lib/types/form"
+import { HeadingOne, HeadingTwo } from "../headings"
+import { FormStep, MultiPageFormData } from "../../lib/types/form"
+import { getDisplayStateOfField, getInitialValuesFromMultiPageFormData } from "../../lib/utils/form"
+import { buildValidationSchema } from "../../lib/utils/validation"
 import { Form as FormikForm, Formik } from "formik"
 import { useState } from "react"
 
@@ -15,7 +16,7 @@ interface FormProps {
 
 export default function Form({ formData, onSubmit }: FormProps): JSX.Element {
   const [stepNumber, setStepNumber] = useState(0)
-  const [snapshot, setSnapshot] = useState(FormsManager.getInitialValuesFromMultiPageFormData(formData))
+  const [snapshot, setSnapshot] = useState(getInitialValuesFromMultiPageFormData(formData))
 
   const step: FormStep = formData.steps[stepNumber] // TODO: load requested step, if previous steps are valid that is
   const totalSteps: number = formData.steps.length
@@ -57,13 +58,13 @@ export default function Form({ formData, onSubmit }: FormProps): JSX.Element {
       <Formik
         initialValues={snapshot}
         onSubmit={handleSubmit}
-        validationSchema={FormsManager.getValidationSchemaFromFields(step.fields)}
+        validationSchema={buildValidationSchema(step.fields)}
       >
         {({isSubmitting, values}) => (
           <FormikForm>
             <HeadingTwo content={hasMultipleSteps ? `Step ${stepNumber + 1} of ${totalSteps}: ${step.legend}` : step.legend} />
             {step.fields.map((field, index) => {
-                const display: boolean = FormsManager.getConditionalDisplayStateOfField(field, values)
+                const display: boolean = getDisplayStateOfField(field, values)
                 if (display) {
                   return <DynamicField key={index} field={field} />
                 }

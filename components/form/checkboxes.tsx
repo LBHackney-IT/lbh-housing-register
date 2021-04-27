@@ -2,7 +2,7 @@ import ErrorMessage from "./error-message"
 import FormGroup from "./form-group"
 import Hint from "./hint"
 import Label from "./label"
-import { FormField, FormFieldOption } from "../lib/types/form"
+import { FormField, FormFieldOption } from "../../lib/types/form"
 import { Field, FieldArray, FieldInputProps, FieldMetaProps } from "formik"
 
 interface CheckboxProps extends FormField {
@@ -34,11 +34,11 @@ export function Checkbox({ hint, index, label, name, value }: CheckboxProps): JS
 }
 
 
-interface CheckboxesProp extends FormField {
+export interface CheckboxesProps extends FormField {
   value: string
 }
 
-export default function Checkboxes({ hint, label, options, name, value }: CheckboxesProp): JSX.Element {
+export default function Checkboxes({ hint, label, options, name, value }: CheckboxesProps): JSX.Element {
   const checkboxes: FormFieldOption[] = options || [{ hint, label, value }]
   const hasMultipleOptions: boolean = checkboxes.length > 1
 

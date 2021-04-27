@@ -32,8 +32,8 @@ export default function ApplicationTable({ caption, applications }: TableProps):
         </tr>
       </thead>
       <tbody className="govuk-table__body">
-        {applications.map((application) => (
-          <tr className="govuk-table__row">
+        {applications.map((application, index) => (
+          <tr key={index} className="govuk-table__row">
             <th scope="row" className="govuk-table__header">#{application.id}</th>
             <td className="govuk-table__cell">
               <Link href={`/applications/${application.id}`}>

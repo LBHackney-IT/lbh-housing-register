@@ -5,11 +5,8 @@ import Label from "./label"
 import { FormField, FormFieldOption } from "../lib/types/form"
 import { Field, FieldArray, FieldInputProps, FieldMetaProps } from "formik"
 
-interface CheckboxProps {
-  hint?: string
+interface CheckboxProps extends FormField {
   index?: number
-  label?: string
-  name: string
   value: string
 }
 
@@ -38,10 +35,11 @@ export function Checkbox({ hint, index, label, name, value }: CheckboxProps): JS
 
 
 interface CheckboxesProp extends FormField {
+  value: string
 }
 
 export default function Checkboxes({ hint, label, options, name, value }: CheckboxesProp): JSX.Element {
-  const checkboxes: FormFieldOption[] = options || [{ hint, label, value: value! }]
+  const checkboxes: FormFieldOption[] = options || [{ hint, label, value }]
   const hasMultipleOptions: boolean = checkboxes.length > 1
 
   return (
@@ -58,7 +56,7 @@ export default function Checkboxes({ hint, label, options, name, value }: Checkb
               render={() => (
                 <>
                   {checkboxes.map((checkbox, index) => (
-                    <Checkbox key={index} index={index} hint={checkbox.hint} label={checkbox.label} name={field.name} value={checkbox.value} />
+                    <Checkbox key={index} index={index} hint={checkbox.hint} label={checkbox.label!} name={field.name} value={checkbox.value} />
                   ))}
                 </>
               )}

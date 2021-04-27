@@ -5,11 +5,8 @@ import Label from "./label"
 import { FormField, FormFieldOption } from "../lib/types/form"
 import { Field, FieldInputProps, FieldMetaProps } from "formik"
 
-interface RadioProps {
+interface RadioProps extends FormField {
   index?: number
-  hint?: string
-  label?: string
-  name: string
   value: string
 }
 
@@ -37,6 +34,7 @@ export function Radio({ index, hint, label, name, value }: RadioProps): JSX.Elem
 }
 
 interface RadiosProps extends FormField {
+  value: string
 }
 
 export default function Radios({ hint, label, name, options }: RadiosProps): JSX.Element {
@@ -50,7 +48,7 @@ export default function Radios({ hint, label, name, options }: RadiosProps): JSX
 
           <div className="govuk-radios lbh-radios">
             {options?.map((radio, index) => 
-              <Radio key={index} index={index} hint={radio.hint} label={radio.label} name={field.name} value={radio.value} />
+              <Radio key={index} index={index} hint={radio.hint} label={radio.label!} name={field.name} value={radio.value} />
             )}
           </div>
         </FormGroup>

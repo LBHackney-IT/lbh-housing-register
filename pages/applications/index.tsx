@@ -1,35 +1,36 @@
 import Layout from '../../components/layout/staff-layout';
 import { GetServerSideProps } from 'next';
-import { getApplications } from '../../lib/gateways/applications-api';
+import { getApplications, getStats } from '../../lib/gateways/applications-api';
 import { Application } from '../../domain/application';
+import { Stat } from '../../domain/stat';
 import { HeadingOne } from "../../components/headings"
-import Stats from "../../components/stats"
-import ApplicationTable from "../../components/application-table"
-
-// TODO: use real data
-import { stats } from "../../data/stats"
+import Paragraph from "../../components/paragraph"
+import { Stats } from "../../components/stats"
+import ApplicationTable from "../../components/applications/application-table"
 
 interface PageProps {
-  data: Array<Application>
+  applications: Array<Application>
+  stats: Array<Stat>
 }
 
-export default function ApplicationList({ data }: PageProps): JSX.Element {
+export default function ApplicationList({ applications, stats }: PageProps): JSX.Element {
   return (
     <Layout>
       <HeadingOne content="Staff dashboard" />
-      <Stats className="govuk-grid-column-one-third" stats={stats} />
-      <ApplicationTable caption="Applications" applications={data} />
+      {stats && (
+        <Stats className="govuk-grid-column-one-third" stats={stats} />
+      )}
+      {applications.length > 0
+        ? <ApplicationTable caption="Applications" applications={applications} />
+        : <Paragraph content="No applications to show" />
+      }
     </Layout>
   )
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const data = await getApplications()
-  if (!data) {
-    return {
-      notFound: true,
-    }
-  }
+  const applications = await getApplications()
+  const stats = await getStats()
 
-  return { props: { data } }
+  return { props: { applications, stats } }
 }

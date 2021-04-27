@@ -10,15 +10,10 @@ This application has two sides: the _officer dashboard_ side, for council office
 
 This app will form part of the user journey, with an multi-step questionnaire which determines the users' eligibility before being able to continue and submit their application, this breaks down into the following steps:
 
-- Article detailing advice and process which signposts the user to the housing registration app
-- Qualifying quiz (`/apply`): Which checks at a basic level if the user and their immediate family are eligible for social housing within Hackney
-- Registration form: *needs more detail around steps*
-- Submit: Ability to submit the application via the housing registration API
-
-- **`/`** - Entry point, provide starting information
-- **`/apply`** - Start a new application
-  - **`/apply/:id`** - Continue with a particular application  
-  - **`/apply/:id/confirmation`** - Confirmation of an application submission
+- **`/`** - Entry point, provide starting information and signposts the user to the housing registration application
+- **`/apply`** - Start a new application, qualify if the resident and their immediate family are eligible for social housing within Hackney
+  - **`/apply/:id`** - Continue with a particular application, *needs more detail around steps*  
+  - **`/apply/:id/confirmation`** - Confirmation of an application submission, added via the housing registration API
   - **TBC** - Further pages and steps to be confirmed
 
 ### Staff Dashboard
@@ -30,6 +25,8 @@ This app will form part of the user journey, with an multi-step questionnaire wh
 ## 🧱 How it's made
 
 This app has been built using [Next.js](https://nextjs.org), with components built out using the [Hackney design system](https://design-system.hackney.gov.uk/developing/react) as reference.
+
+Forms are using [Formik](https://formik.org/), a React library to make building forms easier.
 
 ### Components
 

@@ -24,7 +24,7 @@ export default function Button({ children, disabled, onClick, secondary, type }:
       className={className}
       onClick={onClick}
       type={type}
-      {...disabled && `disabled aria-disabled="true"`}>
+      disabled={disabled} aria-disabled={disabled}>
       {children}
     </button>
   )

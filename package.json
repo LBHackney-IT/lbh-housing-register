@@ -14,7 +14,7 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "build": "next build && next export",
+    "build": "next build",
     "dev": "concurrently -k \"npm:mocks\" \"next dev\"",
     "start": "next start",
     "test": "next test",

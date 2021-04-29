@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { ApplicationList } from "../../domain/application"
+import { getStatusTag } from "../../lib/utils/tag"
 import Tag from "../tag"
 
 interface TableProps {
@@ -43,7 +44,7 @@ export default function ApplicationTable({ caption, applications }: TableProps):
               </Link>
             </td>
             <td className="govuk-table__cell">
-              <Tag content={application.status} className={getTagClass(application.status)} />
+              <Tag content={application.status} className={getStatusTag(application.status)} />
             </td>
             <td className="govuk-table__cell">{application.createdAt}</td>
           </tr>
@@ -53,15 +54,3 @@ export default function ApplicationTable({ caption, applications }: TableProps):
   )
 }
 
-export function getTagClass(status: string) {
-  let colour
-  switch (status) {
-    case 'In review':
-      return "lbh-tag--yellow"
-    case 'Overdue':
-      return "lbh-tag--red"
-    case 'Approved':
-      return "lbh-tag--green"
-  }
-  return colour
-}

@@ -7,6 +7,8 @@ import Paragraph from "../../../components/paragraph"
 import PersonalDetails from "../../../components/applications/personal-details"
 import AddressDetails from "../../../components/applications/address-details"
 import ContactDetails from "../../../components/applications/contact-details"
+import Tag from "../../../components/tag"
+import { getStatusTag } from '../../../lib/utils/tag'
 
 interface PageProps {
   data: Application
@@ -16,6 +18,7 @@ export default function ApplicationPage({ data }: PageProps): JSX.Element {
   return (
     <Layout>
       <HeadingOne content={`Application #${data.id}`} />
+      <Tag content={data.status} className={getStatusTag(data.status)} />
 
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-two-thirds">

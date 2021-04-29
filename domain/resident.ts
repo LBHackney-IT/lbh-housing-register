@@ -1,19 +1,32 @@
-import { Address } from "./address"
-
-export interface Resident extends IPerson {
-  email: string;
-  phoneNumber: string;
-  address: Address;
-}
-
+// this matches the 'person' api
 export interface IPerson {
   id: string;
   title: string;
-  firstname: string;
+  firstName: string;
   middleName: string;
   surname: string;
+  ethnicity: string;
   nationality: string;
   placeOfBirth: string;
   dateOfBirth: string;
   gender: string;
+}
+
+// extra properties for our purpose
+export interface Resident extends IPerson {
+  contactInformation: ContactInformation;
+  address: Address;
+}
+
+export interface ContactInformation {
+  emailAddress: string;
+  phoneNumber: string;
+  preferredMethodOfContact: string;
+}
+
+export interface Address {
+  addressLine1: string;
+  addressLine2: string;
+  addressLine3: string;
+  postCode: string;
 }

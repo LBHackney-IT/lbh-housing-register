@@ -4,15 +4,19 @@ module.exports = [
     applicant: {
       id: "123",
       title: "Miss",
-      firstname: "Test",
+      firstName: "Test",
       middleName: "",
       surname: "Person",
+      ethnicity: "Christian",
       nationality: "British",
       placeOfBirth: "London",
       dateOfBirth: "1990-02-19",
       gender: "F",
-      email: "test@email.com",
-      phoneNumber: "+447123456780",
+      contactInformation: {
+        emailAddress: "test@email.com",
+        phoneNumber: "+447123456780",
+        preferredMethodOfContact: "email"
+      },
       address: {
         addressLine1: "123 Hillman Street",
         addressLine2: "Hackney",
@@ -28,15 +32,19 @@ module.exports = [
     applicant: {
       id: "1234",
       title: "Mrs",
-      firstname: "Test",
+      firstName: "Test",
       middleName: "",
       surname: "Person",
+      ethnicity: "Christian",
       nationality: "British",
       placeOfBirth: "London",
       dateOfBirth: "1952-08-19",
       gender: "F",
-      email: "test@email.com",
-      phoneNumber: "+447123456780",
+      contactInformation: {
+        emailAddress: "test@email.com",
+        phoneNumber: "+447123456780",
+        preferredMethodOfContact: "email"
+      },
       address: {
         addressLine1: "1234 Hillman Street",
         addressLine2: "Hackney",
@@ -52,15 +60,19 @@ module.exports = [
     applicant: {
       id: "12345",
       title: "Mr",
-      firstname: "Test",
+      firstName: "Test",
       middleName: "",
       surname: "Person",
+      ethnicity: "Christian",
       nationality: "British",
       placeOfBirth: "London",
       dateOfBirth: "1982-02-20",
       gender: "M",
-      email: "test@email.com",
-      phoneNumber: "+447123456780",
+      contactInformation: {
+        emailAddress: "test@email.com",
+        phoneNumber: "+447123456780",
+        preferredMethodOfContact: "email"
+      },
       address: {
         addressLine1: "12345 Hillman Street",
         addressLine2: "Hackney",
@@ -76,15 +88,19 @@ module.exports = [
     applicant: {
       id: "123456",
       title: "Mr",
-      firstname: "Test",
+      firstName: "Test",
       middleName: "",
       surname: "Person",
+      ethnicity: "Christian",
       nationality: "British",
       placeOfBirth: "London",
       dateOfBirth: "1988-02-20",
       gender: "M",
-      email: "test@email.com",
-      phoneNumber: "+447123456780",
+      contactInformation: {
+        emailAddress: "test@email.com",
+        phoneNumber: "+447123456780",
+        preferredMethodOfContact: "email"
+      },
       address: {
         addressLine1: "12345 Hillman Street",
         addressLine2: "Hackney",

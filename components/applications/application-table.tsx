@@ -40,6 +40,9 @@ export default function ApplicationTable({ caption, applications }: TableProps):
               <Link href={`/applications/${application.id}`}>
                 <a className="govuk-link govuk-custom-text-color">
                   {application.applicant.title} {application.applicant.firstName} {application.applicant.surname}
+                  {application.otherMembers &&
+                    <span> + {application.otherMembers.length}</span>
+                  }
                 </a>
               </Link>
             </td>

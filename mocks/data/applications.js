@@ -7,7 +7,7 @@ module.exports = [
       firstName: "Test",
       middleName: "",
       surname: "Person",
-      ethnicity: "Christian",
+      ethnicity: "White",
       nationality: "British",
       placeOfBirth: "London",
       dateOfBirth: "1990-02-19",
@@ -24,6 +24,29 @@ module.exports = [
         postCode: "E8 1DY"
       }
     },
+    otherMembers: [{
+      id: "12345",
+      title: "Mrs",
+      firstName: "Other",
+      middleName: "",
+      surname: "Person",
+      ethnicity: "Black Caribbean",
+      nationality: "British",
+      placeOfBirth: "London",
+      dateOfBirth: "1982-02-20",
+      gender: "F",
+      contactInformation: {
+        emailAddress: "test@email.com",
+        phoneNumber: "+447123456780",
+        preferredMethodOfContact: "email"
+      },
+      address: {
+        addressLine1: "12345 Hillman Street",
+        addressLine2: "Hackney",
+        addressLine3: "London",
+        postCode: "E8 1DY"
+      }
+    }],
     status: "Pending",
     createdAt: "1 day ago"
   },
@@ -35,7 +58,7 @@ module.exports = [
       firstName: "Test",
       middleName: "",
       surname: "Person",
-      ethnicity: "Christian",
+      ethnicity: "Black African",
       nationality: "British",
       placeOfBirth: "London",
       dateOfBirth: "1952-08-19",
@@ -63,7 +86,7 @@ module.exports = [
       firstName: "Test",
       middleName: "",
       surname: "Person",
-      ethnicity: "Christian",
+      ethnicity: "Black Caribbean",
       nationality: "British",
       placeOfBirth: "London",
       dateOfBirth: "1982-02-20",
@@ -91,7 +114,7 @@ module.exports = [
       firstName: "Test",
       middleName: "",
       surname: "Person",
-      ethnicity: "Christian",
+      ethnicity: "Prefer not to say",
       nationality: "British",
       placeOfBirth: "London",
       dateOfBirth: "1988-02-20",

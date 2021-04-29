@@ -7,6 +7,7 @@ export interface ApplicationList {
 export interface Application {
   id: string;
   applicant: Resident;
+  otherMembers: Array<Resident>;
   status: string;
   createdAt: string;
 }

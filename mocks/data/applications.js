@@ -25,7 +25,7 @@ module.exports = [
       }
     },
     otherMembers: [{
-      id: "12345",
+      id: "123",
       title: "Mrs",
       firstName: "Other",
       middleName: "",
@@ -46,6 +46,12 @@ module.exports = [
         addressLine3: "London",
         postCode: "E8 1DY"
       }
+    },
+    {
+      id: "123",
+      title: "Mr",
+      firstName: "Sample",
+      surname: "Person"
     }],
     status: "Pending",
     createdAt: "1 day ago"

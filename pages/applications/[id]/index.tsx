@@ -9,6 +9,7 @@ import AddressDetails from "../../../components/applications/address-details"
 import ContactDetails from "../../../components/applications/contact-details"
 import Tag from "../../../components/tag"
 import { getStatusTag } from '../../../lib/utils/tag'
+import OtherMembers from '../../../components/applications/other-members';
 
 interface PageProps {
   data: Application
@@ -27,6 +28,9 @@ export default function ApplicationPage({ data }: PageProps): JSX.Element {
           <AddressDetails heading="Current accommodation" address={data.applicant.address} />
         </div>
         <div className="govuk-grid-column-one-third">
+          {data.otherMembers &&
+            <OtherMembers heading="Other Members" others={data.otherMembers} />
+          }
           <HeadingTwo content="Some other info" />
           <Paragraph content="<strong>Lorem ipsum</strong> dolor sit amet, consectetur adipiscing elit. Pellentesque mi ex, maximus tempus condimentum eget, volutpat eu nunc. Mauris tincidunt, neque quis viverra ultricies, tellus lacus fringilla tortor, at blandit purus diam et augue." />
         </div>

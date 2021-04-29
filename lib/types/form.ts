@@ -31,11 +31,9 @@ export type FormFieldValidation = {
 
 export type FormStep = {
   fields: FormField[]
-  id: string
-  legend: string
+  heading?: string
 }
 
 export type MultiPageFormData = {
   steps: FormStep[]
-  title: string | undefined
 }

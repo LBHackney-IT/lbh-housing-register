@@ -18,6 +18,7 @@ export function buildValidationSchema(fields: FormField[]) {
         case "checkbox":
           const oneOf = field.validation?.required ? [true] : [true, false];
           yup = Yup.boolean().oneOf(oneOf, `${field.label} is required`)
+          yup = checkRequired(yup, field, `${field.label} must be selected`)
           break;
         
         case "checkboxes":

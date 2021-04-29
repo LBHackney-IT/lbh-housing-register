@@ -1,13 +1,11 @@
 {
-  "title": "Housing Register",
   "steps": [
     {
-      "id": "standard-fields",
-      "legend": "Standard fields",
+      "heading": "Standard fields",
       "fields": [
         {
           "hint": "Is required, must be 2-10 characters",
-          "initialValue": "default",
+          "initialValue": "something",
           "label": "Field 1 - Standard text input",
           "name": "step-1__1",
           "placeholder": "I have a placeholder",
@@ -144,8 +142,7 @@
       ]
     },
     {
-      "id": "conditional-fields",
-      "legend": "Conditional fields",
+      "heading": "Conditional fields",
       "fields": [
         {
           "as": "checkbox",

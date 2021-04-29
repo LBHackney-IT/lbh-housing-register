@@ -3,8 +3,8 @@ import { GetServerSideProps } from 'next';
 import { getApplications, getStats } from '../../lib/gateways/applications-api';
 import { ApplicationList } from '../../domain/application';
 import { Stat } from '../../domain/stat';
-import { HeadingOne } from "../../components/headings"
-import Paragraph from "../../components/paragraph"
+import { HeadingOne } from "../../components/content/headings"
+import Paragraph from "../../components/content/paragraph"
 import { Stats } from "../../components/stats"
 import ApplicationTable from "../../components/applications/application-table"
 
@@ -22,7 +22,7 @@ export default function ApplicationListPage({ applications, stats }: PageProps):
       )}
       {applications.results.length > 0
         ? <ApplicationTable caption="Applications" applications={applications} />
-        : <Paragraph content="No applications to show" />
+        : <Paragraph>No applications to show</Paragraph>
       }
     </Layout>
   )

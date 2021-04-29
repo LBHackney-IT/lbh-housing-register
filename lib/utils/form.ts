@@ -1,4 +1,4 @@
-import qualificationFormData from "../../data/qualification-form.json"
+import immigrationStatusFormData from "../../data/_test-form.json"
 import { FormField, MultiPageFormData } from "../types/form"
 
 /**
@@ -53,6 +53,6 @@ export function getInitialValuesFromMultiPageFormData(data: MultiPageFormData): 
  * Get the form data object that makes up the qualifications form
  * @returns {MultiPageFormData}
  */
-export function getQualificationFormData(): MultiPageFormData {
-  return qualificationFormData
+export function getImmigrationStatusFormData(): MultiPageFormData {
+  return immigrationStatusFormData
 }

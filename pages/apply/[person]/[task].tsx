@@ -6,14 +6,28 @@ import { useRouter } from 'next/router'
 export default function Apply(): JSX.Element {
   const formData = getImmigrationStatusFormData()
   const router = useRouter()
-  const returnTo = router.asPath.substr(0, router.asPath.lastIndexOf("/"))
+
+  let { person } = router.query
+  person = person as string
+  const returnTo = `/apply/${person}`
+
+  const breadcrumbs = [
+    {
+      href: "/apply/overview",
+      name: "Application"
+    },
+    {
+      href: returnTo,
+      name: person
+    }
+  ]
   
   const updateUsersImmigrationStatus = (values: {[key: string]: any}) => {
     console.info(values)
   }
 
   return (
-    <Layout>
+    <Layout breadcrumbs={breadcrumbs}>
       <Form formData={formData} onSave={updateUsersImmigrationStatus} onSubmit={() => router.push(returnTo)} />
     </Layout>
   )

@@ -1,5 +1,7 @@
+import { ReactNode, ReactNodeArray } from "react";
+
 interface ParagraphProps {
-  children: any
+  children: ReactNode | ReactNodeArray | string
 }
 
 export default function Paragraph({ children }: ParagraphProps): JSX.Element {

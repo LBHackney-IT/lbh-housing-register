@@ -2,32 +2,16 @@ import Form from '../../components/form/form'
 import { HeadingOne } from '../../components/content/headings'
 import Paragraph from "../../components/content/paragraph"
 import Layout from '../../components/layout/resident-layout'
-import { MultiPageFormData } from '../../lib/types/form'
+import { getAgreementFormData } from '../../lib/utils/form-data'
 import { useRouter } from 'next/router'
 
 export default function Apply(): JSX.Element {
   const router = useRouter()
-  const agreementFormData: MultiPageFormData = {
-    steps: [
-      {
-        fields: [
-          {
-            as: "checkbox",
-            initialValue: false,
-            label: "I understand and accept",
-            name: "agreement",
-            validation: {
-              required: true
-            }
-          }
-        ]
-      }
-    ]
-  }
+  const agreementFormData = getAgreementFormData()
 
   const onSave = (values: {[key: string]: any}) => {
     // TODO: Bypass step if user has already agreed
-    console.log('agreement form', values)
+    console.info('agreement form', values)
   }
 
   const onSubmit = () => {
@@ -51,7 +35,7 @@ export default function Apply(): JSX.Element {
         If I do not allow entry, my application may be declined.
       </Paragraph>
 
-      <Form formData={agreementFormData} onSubmit={onSubmit} />
+      <Form formData={agreementFormData} onSave={onSave} onSubmit={onSubmit} />
     </Layout>
   )
 }

@@ -30,6 +30,7 @@ export type FormFieldValidation = {
 }
 
 export type FormStep = {
+  copy?: string
   fields: FormField[]
   heading?: string
 }

@@ -1,4 +1,3 @@
-import immigrationStatusFormData from "../../data/_test-form.json"
 import { FormField, MultiPageFormData } from "../types/form"
 
 /**
@@ -47,12 +46,4 @@ export function getInitialValuesFromMultiPageFormData(data: MultiPageFormData): 
   let initialValues: {[key: string]: any } = {}
   data.steps.map(step => initialValues = Object.assign(initialValues, getInitialValuesFromFields(step.fields)));
   return initialValues
-}
-
-/**
- * Get the form data object that makes up the qualifications form
- * @returns {MultiPageFormData}
- */
-export function getImmigrationStatusFormData(): MultiPageFormData {
-  return immigrationStatusFormData
 }

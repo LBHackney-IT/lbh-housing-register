@@ -1,15 +1,15 @@
 import Form from "../../../components/form/form"
 import Layout from '../../../components/layout/resident-layout'
-import { getImmigrationStatusFormData } from "../../../lib/utils/form"
+import { getFormData } from "../../../lib/utils/form-data"
 import { useRouter } from 'next/router'
 
-export default function Apply(): JSX.Element {
-  const formData = getImmigrationStatusFormData()
+export default function Step(): JSX.Element {
+  const formData = getFormData('test')
   const router = useRouter()
 
   let { person } = router.query
   person = person as string
-  const returnTo = `/apply/${person}`
+  const returnHref = `/apply/${person}`
 
   const breadcrumbs = [
     {
@@ -17,7 +17,7 @@ export default function Apply(): JSX.Element {
       name: "Application"
     },
     {
-      href: returnTo,
+      href: returnHref,
       name: person
     }
   ]
@@ -28,7 +28,7 @@ export default function Apply(): JSX.Element {
 
   return (
     <Layout breadcrumbs={breadcrumbs}>
-      <Form formData={formData} onSave={updateUsersImmigrationStatus} onSubmit={() => router.push(returnTo)} />
+      <Form formData={formData} onSave={updateUsersImmigrationStatus} onSubmit={() => router.push(returnHref)} />
     </Layout>
   )
 }

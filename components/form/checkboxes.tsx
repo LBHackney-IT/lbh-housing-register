@@ -46,7 +46,7 @@ export default function Checkboxes({ hint, label, options, name, value }: Checkb
     <Field name={name}>
       {({ field, meta }: { field: FieldInputProps<string>, meta: FieldMetaProps<string> }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
-          {hasMultipleOptions && label && <Label content={label} />}
+          {hasMultipleOptions && label && <Label content={label} strong={true} />}
           {hasMultipleOptions && hint && <Hint content={hint} />}
           {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 

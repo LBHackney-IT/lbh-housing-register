@@ -15,7 +15,7 @@ export function getDisplayStateOfField(field: FormField, values: {[key: string]:
         display = values[condition.field] === condition.is;
       }
 
-      if (display) {
+      if (display && condition.isNot) {
         display = values[condition.field] !== condition.isNot;
       }
     })

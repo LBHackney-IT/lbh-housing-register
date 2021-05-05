@@ -35,6 +35,6 @@ export type FormStep = {
   heading?: string
 }
 
-export type MultiPageFormData = {
+export type MultiStepForm = {
   steps: FormStep[]
 }

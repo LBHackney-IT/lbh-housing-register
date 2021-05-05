@@ -2,6 +2,7 @@
   "steps": [
     {
       "heading": "Standard fields",
+      "copy": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam gravida, est eget imperdiet ornare, ipsum turpis interdum leo, ut eleifend purus justo nec sapien.",
       "fields": [
         {
           "hint": "Is required, must be 2-10 characters",
@@ -143,6 +144,7 @@
     },
     {
       "heading": "Conditional fields",
+      "copy": "In hac habitasse platea dictumst. Proin gravida ligula vel tellus semper, sed aliquet libero aliquet. Nulla sit amet dui eget erat scelerisque vulputate vel vitae lacus.",
       "fields": [
         {
           "as": "checkbox",

@@ -1,15 +1,15 @@
 import Button from "../button"
 import DynamicField from "./dynamic-field"
 import { HeadingOne } from "../content/headings"
-import { FormStep, MultiPageFormData } from "../../lib/types/form"
-import { getDisplayStateOfField, getInitialValuesFromMultiPageFormData } from "../../lib/utils/form"
+import { FormStep, MultiStepForm } from "../../lib/types/form"
+import { getDisplayStateOfField, getInitialValuesFromMultiStepForm } from "../../lib/utils/form"
 import { buildValidationSchema } from "../../lib/utils/validation"
 import { Form as FormikForm, Formik } from "formik"
 import { useState } from "react"
 import Paragraph from "../content/paragraph"
 
 interface FormProps {
-  formData: MultiPageFormData
+  formData: MultiStepForm
   onSave?: (values: {}) => void
   onSubmit: (values: {}, bag: any) => void
 }
@@ -17,7 +17,7 @@ interface FormProps {
 export default function Form({ formData, onSave, onSubmit }: FormProps): JSX.Element {
   const [formDataSnapshot] = useState(formData)
   const [stepNumber, setStepNumber] = useState(0)
-  const [snapshot, setSnapshot] = useState(getInitialValuesFromMultiPageFormData(formDataSnapshot))
+  const [snapshot, setSnapshot] = useState(getInitialValuesFromMultiStepForm(formDataSnapshot))
 
   const step: FormStep = formDataSnapshot.steps[stepNumber]
   const totalSteps: number = formDataSnapshot.steps.length
@@ -87,5 +87,5 @@ export default function Form({ formData, onSave, onSubmit }: FormProps): JSX.Ele
         )}
       </Formik>
     </>
-  );
-};
+  )
+}

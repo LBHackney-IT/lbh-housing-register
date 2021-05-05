@@ -2,14 +2,14 @@ import agreementFormData from "../../data/forms/agreement.json"
 import immigrationStatusFormData from "../../data/forms/immigration-status.json"
 import testFormData from "../../data/forms/_test-form.json"
 import yourSituationFormData from "../../data/forms/your-situation.json"
-import { MultiPageFormData } from "../types/form"
+import { MultiStepForm } from "../types/form"
 
 /**
  * Get the form data that makes up the requested form
  * @param {string} form - The requested form data
- * @returns {MultiPageFormData}
+ * @returns {MultiStepForm}
  */
- export function getFormData(form: string): MultiPageFormData {
+ export function getFormData(form: string): MultiStepForm {
   switch(form.toLowerCase()) {
     case "immigration-status":
       return getImmigrationStatusFormData()
@@ -24,32 +24,32 @@ import { MultiPageFormData } from "../types/form"
 
 /**
  * Get the form data that makes up the agreement form
- * @returns {MultiPageFormData}
+ * @returns {MultiStepForm}
  */
- export function getAgreementFormData(): MultiPageFormData {
+ export function getAgreementFormData(): MultiStepForm {
   return agreementFormData
 }
 
 /**
  * Get the form data that makes up the immigration status form
- * @returns {MultiPageFormData}
+ * @returns {MultiStepForm}
  */
- export function getImmigrationStatusFormData(): MultiPageFormData {
+ export function getImmigrationStatusFormData(): MultiStepForm {
   return immigrationStatusFormData
 }
 
 /**
  * Get the form data that makes up the test form
- * @returns {MultiPageFormData}
+ * @returns {MultiStepForm}
  */
- export function getTestFormData(): MultiPageFormData {
+ export function getTestFormData(): MultiStepForm {
   return testFormData
 }
 
 /**
  * Get the form data that makes up the 'your situation' form
- * @returns {MultiPageFormData}
+ * @returns {MultiStepForm}
  */
- export function getYourSituationFormData(): MultiPageFormData {
+ export function getYourSituationFormData(): MultiStepForm {
   return yourSituationFormData
 }

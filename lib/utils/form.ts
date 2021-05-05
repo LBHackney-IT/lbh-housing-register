@@ -1,4 +1,4 @@
-import { FormField, MultiPageFormData } from "../types/form"
+import { FormField, MultiStepForm } from "../types/form"
 
 /**
  * Determines if the field should be displayed based on the values passed in
@@ -39,10 +39,10 @@ export function getInitialValuesFromFields(fields: FormField[]): {[key: string]:
 /**
  * Get the initial state / values from the multi page form data/
  * This checks to see if `field.initialValue` is set, otherwise an empty string is returned.
- * @param {MultiPageFormData} data - The multi page form data
+ * @param {MultiStepForm} data - The multi page form data
  * @returns {{[key: string]: any}} - An object of form values, where the key is the name of the field
  */
-export function getInitialValuesFromMultiPageFormData(data: MultiPageFormData): {[key: string]: any} {
+export function getInitialValuesFromMultiStepForm(data: MultiStepForm): {[key: string]: any} {
   let initialValues: {[key: string]: any } = {}
   data.steps.map(step => initialValues = Object.assign(initialValues, getInitialValuesFromFields(step.fields)));
   return initialValues

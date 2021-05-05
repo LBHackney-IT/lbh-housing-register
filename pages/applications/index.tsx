@@ -1,7 +1,7 @@
 import Layout from '../../components/layout/staff-layout';
 import { GetServerSideProps } from 'next';
 import { getApplications, getStats } from '../../lib/gateways/applications-api';
-import { Application } from '../../domain/application';
+import { ApplicationList } from '../../domain/application';
 import { Stat } from '../../domain/stat';
 import { HeadingOne } from "../../components/headings"
 import Paragraph from "../../components/paragraph"
@@ -9,18 +9,18 @@ import { Stats } from "../../components/stats"
 import ApplicationTable from "../../components/applications/application-table"
 
 interface PageProps {
-  applications: Array<Application>
+  applications: ApplicationList
   stats: Array<Stat>
 }
 
-export default function ApplicationList({ applications, stats }: PageProps): JSX.Element {
+export default function ApplicationListPage({ applications, stats }: PageProps): JSX.Element {
   return (
     <Layout>
       <HeadingOne content="Staff dashboard" />
       {stats && (
         <Stats className="govuk-grid-column-one-third" stats={stats} />
       )}
-      {applications.length > 0
+      {applications.results.length > 0
         ? <ApplicationTable caption="Applications" applications={applications} />
         : <Paragraph content="No applications to show" />
       }

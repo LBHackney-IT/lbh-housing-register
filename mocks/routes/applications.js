@@ -12,7 +12,9 @@ const getApplications = {
       id: "success",
       response: {
         status: 200,
-        body: applications,
+        body: {
+          results: applications
+        },
       },
     }
   ]

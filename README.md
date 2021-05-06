@@ -19,6 +19,7 @@ This app will form part of the user journey, with an multi-step questionnaire wh
 ### Staff Dashboard
 
 - **`/login`** - Login to the staff dashboard
+- **`/access-denied`** - Active user logged in, but without access to required page
 - **`/applications`** - The homepage for officers, which displays applications
   - **`/applications/:id`** - View all information relating to a particular application  
 
@@ -28,7 +29,7 @@ This app has been built using [Next.js](https://nextjs.org), with components bui
 
 Forms are using [Formik](https://formik.org/), a React library to make building forms easier.
 
-### Components
+### Components
 
 The components are taken from the [design system](https://design-system.hackney.gov.uk), with only the relevant mark-up being copied into the react components. You may find for this reason that not all variants of each component exists within this app, this is because not everything is entirely relevant to the housing register; we should add only those components and the required variants as and when they are needed to reduce down maintenance of this tool.
 
@@ -41,22 +42,40 @@ Unlike the mark-up, the styling and javascript are available as a package and ea
 
 *Imports the button styling from the lbh-frontend library*
 
-### TypeScript
+### TypeScript
 
 The React components are built using the [TypeScript](https://www.typescriptlang.org) template, and we should follow the functional approach for consistency.
 
 > TypeScript provides a way to describe the shape of a javascript object, providing better documentation, and allowing TypeScript to validate that your code is working correctly.
 
-## 💻 Running it locally
+## 💻 Getting started
 
 As a prerequisite to run this app you will need to install [Node.js](https://nodejs.org/en/download) and [npm](https://docs.npmjs.com/cli/v7/commands/npm-install):
+
+### Running locally
 
 ```
 npm install
 npm run dev
 ```
 
-The app will attempt to start on port `3000` and should be available on localhost: `http://localhost:3000`
+The app will attempt to start on port `3000` and should be available on localhost: [http://localhost:3000](http://localhost:3000)
+
+### Logging in
+
+The staff dashboard is using [LBH Google Auth](https://github.com/LBHackney-IT/LBH-Google-auth) for authentication. Permissions to what a user is authorised to do, is managed by mapping Google groups.
+
+You need a **@hackney.gov.uk** Google account to sign in. Speak to Hackney IT if you don't have this.
+
+Next, you need to tell your computer to run the app from a hackney.gov.uk domain. Add this line to your hosts file (Windows: `C:\Windows\System32\drivers\etc\hosts`, Mac: `/etc/hosts`):
+
+```
+127.0.0.1   localdev.hackney.gov.uk
+```
+
+Update the `APP_URL` variable in the `.env` file to match. When you next launch the app, it should be on `http://localdev.hackney.gov.uk:3000`.
+
+If you have the right configuration setup within the `.env` file, you should be able to access the staff dashboard.
 
 ### Mock Server
 

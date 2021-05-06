@@ -5,8 +5,12 @@ import PhaseBanner from '../phase-banner';
 import SkipLink from '../skip-link';
 import Header from '../header';
 import { hasPhaseBanner } from "../../lib/utils/phase-banner";
+import { useUser } from '../../lib/contexts/user-context';
 
 const StaffLayout: FunctionComponent = (props) => {
+  const { user } = useUser();
+  if (!user) return <></>;
+
   const router = useRouter();
   const { id } = router.query as {
     id: string;
@@ -15,7 +19,7 @@ const StaffLayout: FunctionComponent = (props) => {
   return (
     <>
       <SkipLink />
-      <Header />
+      <Header userName={user.name} />
       {hasPhaseBanner() && <PhaseBanner />}
 
       {id && (

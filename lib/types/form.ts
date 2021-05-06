@@ -1,3 +1,7 @@
+export type FormData = {
+  [key: string]: any
+}
+
 export type FormField = {
   as?: string
   conditionalDisplay?: FormFieldDisplayCriteria[]

@@ -1,8 +1,11 @@
-import type { AppProps } from 'next/app'
+import { wrapper } from "../lib/store"
+import type { AppProps } from "next/app"
 import Head from "next/head"
+import { FC } from "react"
 import "../styles/global.scss"
 
-export default function HousingRegisterApp({ Component, pageProps }: AppProps): JSX.Element {
+//export default function HousingRegisterApp({ Component, pageProps }: AppProps): JSX.Element {
+const WrappedApp: FC<AppProps> = ({Component, pageProps}) => {
   return (
     <>
       <Head>
@@ -15,3 +18,5 @@ export default function HousingRegisterApp({ Component, pageProps }: AppProps): 
     </>
   )
 }
+
+export default wrapper.withRedux(WrappedApp)

@@ -1,7 +1,8 @@
-import Form from '../../components/form/form'
-import { HeadingOne } from '../../components/content/headings'
+import Form from "../../components/form/form"
+import { HeadingOne } from "../../components/content/headings"
 import Paragraph from "../../components/content/paragraph"
-import Layout from '../../components/layout/resident-layout'
+import Layout from "../../components/layout/resident-layout"
+import { FormData } from "../../lib/types/form"
 import { getAgreementFormData } from '../../lib/utils/form-data'
 import { useRouter } from 'next/router'
 
@@ -9,7 +10,7 @@ export default function Apply(): JSX.Element {
   const router = useRouter()
   const agreementFormData = getAgreementFormData()
 
-  const onSave = (values: {[key: string]: any}) => {
+  const onSave = (values: FormData) => {
     // TODO: Bypass step if user has already agreed
     console.info('agreement form', values)
   }

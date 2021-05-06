@@ -1,4 +1,4 @@
-import { FormField } from "../types/form"
+import { FormData, FormField } from "../types/form"
 import * as Yup from "yup"
 
 /**
@@ -7,7 +7,7 @@ import * as Yup from "yup"
  * @returns ObjectShapeSchema
  */
 export function buildValidationSchema(fields: FormField[]) {
-  const validationSchema: { [key: string]: any } = {};
+  const validationSchema: FormData = {};
 
   fields.map(field => {
     if (field.validation || field.type) {

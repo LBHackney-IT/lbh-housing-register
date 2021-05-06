@@ -1,9 +1,9 @@
-import React, { ReactNode } from 'react';
-import PhaseBanner from '../phase-banner';
-import SkipLink from '../skip-link';
-import Header from '../header';
-import { hasPhaseBanner } from "../../lib/utils/phase-banner";
-import Breadcrumbs from '../breadcrumbs';
+import PhaseBanner from "../phase-banner"
+import Breadcrumbs from "../breadcrumbs"
+import SkipLink from "../skip-link"
+import Header from "../header"
+import { hasPhaseBanner } from "../../lib/utils/phase-banner"
+import React, { ReactNode } from "react"
 
 interface ResidentLayoutProps {
   breadcrumbs?: { href: string, name: string}[]
@@ -16,6 +16,7 @@ export default function ResidentLayout({ breadcrumbs, children }: ResidentLayout
       <SkipLink />
       <Header />
       {hasPhaseBanner() && <PhaseBanner />}
+      
       {breadcrumbs && breadcrumbs.length > 0 && <Breadcrumbs items={breadcrumbs} />}
 
       <main id="main-content" className="lbh-main-wrapper">

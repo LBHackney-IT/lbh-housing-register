@@ -8,8 +8,8 @@ export default function ApplicationStep(): JSX.Element {
   person = person as string
 
   const baseHref = `/apply/${person}`
-  const steps: string[] = ["test-data"]
-  const activeStep = router.query.step ? router.query.step[0] : undefined
+  const steps: string[] = ["test-data", "immigration-status"]
+  const activeStep = step ? step[0] : undefined
 
   const breadcrumbs = [
     {

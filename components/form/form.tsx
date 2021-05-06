@@ -1,7 +1,7 @@
 import Button from "../button"
 import DynamicField from "./dynamic-field"
 import { HeadingOne } from "../content/headings"
-import { FormStep, MultiStepForm } from "../../lib/types/form"
+import { FormData, FormStep, MultiStepForm } from "../../lib/types/form"
 import { getDisplayStateOfField, getInitialValuesFromMultiStepForm } from "../../lib/utils/form"
 import { buildValidationSchema } from "../../lib/utils/validation"
 import { Form as FormikForm, Formik } from "formik"
@@ -23,19 +23,19 @@ export default function Form({ formData, onSave, onSubmit }: FormProps): JSX.Ele
   const totalSteps: number = formDataSnapshot.steps.length
   const isLastStep: boolean = stepNumber === totalSteps - 1
 
-  const next = (values: {[key: string]: any}): void => {
+  const next = (values: FormData): void => {
     // TODO: Scroll to top + set focus to first field
     setSnapshot(values);
     setStepNumber(Math.min(stepNumber + 1, totalSteps - 1));
   };
 
-  const previous = (values: {[key: string]: any}): void => {
+  const previous = (values: FormData): void => {
     // TODO: Scroll to top + set focus to first field
     setSnapshot(values);
     setStepNumber(Math.max(stepNumber - 1, 0));
   };
 
-  const handleSubmit = async (values: {[key: string]: any}, bag: any) => {
+  const handleSubmit = async (values: FormData, bag: any) => {
     if (onSave) {
       onSave(values);
     }

@@ -1,12 +1,12 @@
-import { FormField, MultiStepForm } from "../types/form"
+import { FormData, FormField, MultiStepForm } from "../types/form"
 
 /**
  * Determines if the field should be displayed based on the values passed in
  * @param {FormField} field - The field
- * @param {{[key: string]: any}} values - The form values
+ * @param {FormData} values - The form values
  * @returns {boolean} - should the field be displayed?
  */
-export function getDisplayStateOfField(field: FormField, values: {[key: string]: any}): boolean {
+export function getDisplayStateOfField(field: FormField, values: FormData): boolean {
   let display = true
 
   if (field.conditionalDisplay) {
@@ -28,10 +28,10 @@ export function getDisplayStateOfField(field: FormField, values: {[key: string]:
  * Get the initial state / values.
  * This checks to see if `field.initialValue` is set, otherwise an empty string is returned.
  * @param {FormField[]} fields - The fields
- * @returns {{[key: string]: any}} - An object of form values, where the key is the name of the field
+ * @returns {FormData} - An object of form values, where the key is the name of the field
  */
-export function getInitialValuesFromFields(fields: FormField[]): {[key: string]: any} {
-  const initialValues: {[key: string]: any } = {}
+export function getInitialValuesFromFields(fields: FormField[]): FormData {
+  const initialValues: FormData = {}
   fields.map(field => initialValues[field.name] = field.initialValue || "")
   return initialValues
 }
@@ -40,10 +40,10 @@ export function getInitialValuesFromFields(fields: FormField[]): {[key: string]:
  * Get the initial state / values from the multi page form data/
  * This checks to see if `field.initialValue` is set, otherwise an empty string is returned.
  * @param {MultiStepForm} data - The multi page form data
- * @returns {{[key: string]: any}} - An object of form values, where the key is the name of the field
+ * @returns {FormData} - An object of form values, where the key is the name of the field
  */
-export function getInitialValuesFromMultiStepForm(data: MultiStepForm): {[key: string]: any} {
-  let initialValues: {[key: string]: any } = {}
+export function getInitialValuesFromMultiStepForm(data: MultiStepForm): FormData {
+  let initialValues: FormData = {}
   data.steps.map(step => initialValues = Object.assign(initialValues, getInitialValuesFromFields(step.fields)));
   return initialValues
 }

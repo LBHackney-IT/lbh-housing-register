@@ -2,7 +2,17 @@ import agreementFormData from "../../data/forms/agreement.json"
 import immigrationStatusFormData from "../../data/forms/immigration-status.json"
 import testFormData from "../../data/forms/_test-form.json"
 import yourSituationFormData from "../../data/forms/your-situation.json"
-import { MultiStepForm } from "../types/form"
+import { EligibilityCriteria, MultiStepForm } from "../types/form"
+
+/**
+ * Get the eligibility criteria from the requested form
+ * @param {string} formId - The requested eligibility criteria
+ * @returns {EligibilityCriteria}
+ */
+ export function getEligibilityCriteria(formId: string): EligibilityCriteria[] | undefined {
+  const formData = getFormData(formId)
+  return formData?.eligibility
+}
 
 /**
  * Get the form data that makes up the requested form

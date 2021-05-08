@@ -4,6 +4,7 @@ import { getFormData } from "../../lib/utils/form-data"
 import { FormData } from "../../lib/types/form"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { useState } from "react"
 import { useDispatch } from "react-redux"
 
 interface ApplicationFormsProps {
@@ -23,23 +24,28 @@ interface ApplicationFormsProps {
 export default function ApplicationForms({ activeStep, baseHref, onCompletion, steps }: ApplicationFormsProps): JSX.Element {
   const dispatch = useDispatch()
   const router = useRouter()
+  const [applicationData, setApplicationData] = useState({})
 
   if (steps.includes(activeStep!)) {
-    const next = (values: FormData) => {
+    const next = () => {
       const index = steps.indexOf(activeStep!) + 1;
-      if (index == steps.length) {
-        onCompletion(values)
-      }
-      else {
-        router.push(`${baseHref}/${steps[1]}`)
+      if (index < steps.length) {
+        activeStep = steps[index]
+        router.replace(`${baseHref}/${steps[index]}`)
       }
     }
 
-    const onSave = (values: {}) => {
-      const data: {[key: string]: FormData} = {}
+    const onSave = (values: FormData) => {
+      const data: {[key: string]: FormData} = {...applicationData}
       data[activeStep!] = values
 
+      setApplicationData(data)
       dispatch(updateFormData(data))
+
+      const index = steps.indexOf(activeStep!) + 1;
+      if (index == steps.length) {
+        onCompletion(data)
+      }
     }
 
     return (

@@ -3,22 +3,21 @@
     {
       "field": "uk-studying",
       "isNot": "yes",
-      "reasoning": "Sorry, it's unlikely that you will qualify for social housing when in the UK studying"
+      "reasoning": "It's unlikely that you will qualify for social housing when in the UK studying"
     },
     {
       "field": "work-or-study-visa",
       "isNot": "yes",
-      "reasoning": "Sorry, it's unlikely that you will qualify for social housing when in the UK to work or study"
+      "reasoning": "It's unlikely that you will qualify for social housing when in the UK to work or study"
     },
     {
       "field": "receiving-sponsorship",
       "isNot": "yes",
-      "reasoning": "Sorry, it's unlikely that you will qualify for social housing while receiving sponsorship to be in the UK"
+      "reasoning": "It's unlikely that you will qualify for social housing while receiving sponsorship to be in the UK"
     },
     {
       "field": "legal-status",
-      "isNot": "limited-leave-to-remain-no-public-funds",
-      "reasoning": "Sorry, it's unlikely that you will qualify for social housing"
+      "isNot": "limited-leave-to-remain-no-public-funds"
     }
   ],
   "steps": [

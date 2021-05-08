@@ -1,3 +1,10 @@
+export type EligibilityCriteria = {
+  field: string
+  is?: string
+  isNot?: string
+  reasoning?: string
+}
+
 export type FormData = {
   [key: string]: any
 }
@@ -40,5 +47,6 @@ export type FormStep = {
 }
 
 export type MultiStepForm = {
+  eligibility?: EligibilityCriteria[]
   steps: FormStep[]
 }

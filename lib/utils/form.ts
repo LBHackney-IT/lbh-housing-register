@@ -1,3 +1,4 @@
+import { getEligibilityCriteria } from "./form-data";
 import { FormData, FormField, MultiStepForm } from "../types/form"
 
 /**
@@ -46,4 +47,39 @@ export function getInitialValuesFromMultiStepForm(data: MultiStepForm): FormData
   let initialValues: FormData = {}
   data.steps.map(step => initialValues = Object.assign(initialValues, getInitialValuesFromFields(step.fields)));
   return initialValues
+}
+
+/**
+ * Is the form data passed in eligible?
+ * @param formData The multi form data
+ * @returns {[boolean, string[]]} - A tuple of state (isValid) and error message
+ */
+export function isEligible(formData: {[key: string]: FormData}): [boolean, string[]] {
+  let isValid = true
+  let reasons: string[] = []
+
+  const setInvalid = (reasoning?: string): void => {
+    isValid = false
+
+    if (reasoning) {
+      reasons.push(reasoning)
+    }
+  }
+
+  for (const [form, values] of Object.entries(formData)) {
+    const eligibilityCriteria = getEligibilityCriteria(form)
+    eligibilityCriteria?.forEach(criteria => {
+      const fieldValue = values[criteria.field]
+
+      if (criteria.is && criteria.is !== fieldValue) {
+        setInvalid(criteria.reasoning)
+      }
+
+      if (criteria.isNot && criteria.isNot === fieldValue) {
+        setInvalid(criteria.reasoning)
+      }
+    })
+  }
+
+  return [isValid, reasons]
 }

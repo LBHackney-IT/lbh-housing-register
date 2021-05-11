@@ -1,11 +1,13 @@
+import EligibilityOutcome from "../eligibility"
 import Form from "../form/form"
+import { Store } from "../../lib/store"
 import { updateFormData } from "../../lib/store/user"
 import { getFormData } from "../../lib/utils/form-data"
 import { FormData } from "../../lib/types/form"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useState } from "react"
-import { useDispatch } from "react-redux"
+import { useStore } from "react-redux"
 
 interface ApplicationFormsProps {
   activeStep?: string
@@ -22,16 +24,21 @@ interface ApplicationFormsProps {
  * @returns {JSX.Element}
  */
 export default function ApplicationForms({ activeStep, baseHref, onCompletion, steps }: ApplicationFormsProps): JSX.Element {
-  const dispatch = useDispatch()
   const router = useRouter()
+  const store = useStore<Store>()
   const [applicationData, setApplicationData] = useState({})
+  const isEligible = store.getState().user.isEligible
+
+  if (isEligible === false) {
+    return <EligibilityOutcome />
+  }
 
   if (steps.includes(activeStep!)) {
     const next = () => {
       const index = steps.indexOf(activeStep!) + 1;
       if (index < steps.length) {
         activeStep = steps[index]
-        router.replace(`${baseHref}/${steps[index]}`)
+        router.replace(`${baseHref}/${activeStep}`)
       }
     }
 
@@ -40,7 +47,7 @@ export default function ApplicationForms({ activeStep, baseHref, onCompletion, s
       data[activeStep!] = values
 
       setApplicationData(data)
-      dispatch(updateFormData(data))
+      store.dispatch(updateFormData(data))
 
       const index = steps.indexOf(activeStep!) + 1;
       if (index == steps.length) {

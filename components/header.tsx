@@ -22,7 +22,7 @@ export default function Header(): JSX.Element {
               </a>
             </Link>
           </h1>
-          {user.loggedIn ? (
+          {user.isLoggedIn ? (
             <div className="lbh-header__links">
               <p>[username]</p>
               <button onClick={() => dispatch(logOut())}>Sign out</button>

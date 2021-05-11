@@ -7,6 +7,8 @@ import { getAgreementFormData } from '../../lib/utils/form-data'
 import { useRouter } from 'next/router'
 
 export default function Apply(): JSX.Element {
+  // TODO! Check if eligible, before continuing
+
   const router = useRouter()
   const agreementFormData = getAgreementFormData()
 

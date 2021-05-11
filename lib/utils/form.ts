@@ -54,7 +54,7 @@ export function getInitialValuesFromMultiStepForm(data: MultiStepForm): FormData
  * @param formData The multi form data
  * @returns {[boolean, string[]]} - A tuple of state (isValid) and error message
  */
-export function isEligible(formData: {[key: string]: FormData}): [boolean, string[]] {
+export function checkEligible(formData: {[key: string]: FormData}): [boolean, string[]] {
   let isValid = true
   let reasons: string[] = []
 

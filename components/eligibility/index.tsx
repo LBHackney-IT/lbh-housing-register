@@ -7,6 +7,5 @@ export default function EligibilityOutcome(): JSX.Element {
   const store = useStore<Store>()
   const isEligible = store.getState().user.isEligible
 
-
   return isEligible ? <Eligible /> : <NotEligible />
 }

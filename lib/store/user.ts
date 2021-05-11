@@ -1,9 +1,10 @@
-import { User } from "../types/user";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { checkEligible } from "../utils/form"
+import { User } from "../types/user"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 const initialState: User = {
   formData: {},
-  loggedIn: false
+  isLoggedIn: false
 }
 
 const slice = createSlice({
@@ -18,7 +19,7 @@ const slice = createSlice({
     logIn: (state: User): User => {
       return {
         ...state,
-        loggedIn: true
+        isLoggedIn: true
       }
 
       // TODO: user's name, id, ...
@@ -50,12 +51,19 @@ const slice = createSlice({
      * Update user's form data
      * @param {User} state The current state
      * @param {PayloadAction<{}>} action The form data
+     * @returns {User} Updated user state
      */
-    updateFormData: (state: User, action: PayloadAction<{}>) => {
+    updateFormData: (state: User, action: PayloadAction<{}>): User => {
       state.formData = {
         ...state.formData,
         ...action.payload
       }
+
+      const eligibility = checkEligible(state.formData)
+      state.isEligible = eligibility[0]
+      state.ineligibilityReasons = eligibility[1]
+
+      return state
     }
   }
 })

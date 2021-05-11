@@ -46,11 +46,6 @@ export default function NotEligible(): JSX.Element {
       <ButtonLink href="https://hackney.gov.uk/housing-application">
         Contact us for advice
       </ButtonLink>
-
-      <HeadingThree content="Your rights" />
-      <Paragraph>
-        If you feel this information is incorrect, please refer to <Link href="#">our lettings policy</Link> before you <Link href="/apply">continue to make an application</Link>.
-      </Paragraph>
     </>
   )
 }

@@ -27,7 +27,7 @@ export default function ApplicationListPage({ user, applications, stats }: PageP
         )}
         {applications.results.length > 0
           ? <ApplicationTable caption="Applications" applications={applications} />
-          : <Paragraph content="No applications to show" />
+          : <Paragraph>No applications to show</Paragraph>
         }
       </Layout>
     </UserContext.Provider>

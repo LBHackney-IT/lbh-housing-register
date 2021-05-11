@@ -37,20 +37,12 @@ export default function ApplicationPage({ user, data }: PageProps): JSX.Element 
               <OtherMembers heading="Other Members" others={data.otherMembers} />
             }
             <HeadingTwo content="Some other info" />
-            <Paragraph content="<strong>Lorem ipsum</strong> dolor sit amet, consectetur adipiscing elit. Pellentesque mi ex, maximus tempus condimentum eget, volutpat eu nunc. Mauris tincidunt, neque quis viverra ultricies, tellus lacus fringilla tortor, at blandit purus diam et augue." />
+            <Paragraph>
+              <strong>Lorem ipsum</strong> dolor sit amet, consectetur adipiscing elit. Pellentesque mi ex, maximus tempus condimentum eget, volutpat eu nunc. Mauris tincidunt, neque quis viverra ultricies, tellus lacus fringilla tortor, at blandit purus diam et augue.
+            </Paragraph>
           </div>
         </div>
-        <div className="govuk-grid-column-one-third">
-          {data.otherMembers &&
-            <OtherMembers heading="Other Members" others={data.otherMembers} />
-          }
-          <HeadingTwo content="Some other info" />
-          <Paragraph>
-            <strong>Lorem ipsum</strong> dolor sit amet, consectetur adipiscing elit. Pellentesque mi ex, maximus tempus condimentum eget, volutpat eu nunc. Mauris tincidunt, neque quis viverra ultricies, tellus lacus fringilla tortor, at blandit purus diam et augue.
-          </Paragraph>
-        </div>
-      </div>
-    </Layout>
+      </Layout>
     </UserContext.Provider>
   )
 }

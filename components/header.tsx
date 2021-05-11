@@ -1,14 +1,11 @@
-import { Store } from "../lib/store"
-import { logIn, logOut } from "../lib/store/user"
 import Image from "next/image"
 import Link from "next/link"
-import { useDispatch, useSelector } from "react-redux"
 
+interface HeaderProps {
+  username?: string
+}
 
-export default function Header(): JSX.Element {
-  let { user } = useSelector<Store, Store>(state => state)
-  const dispatch = useDispatch()
-
+export default function Header({ username }: HeaderProps): JSX.Element {
   return (
     <header className="lbh-header ">
       <div className="lbh-header__main">
@@ -22,13 +19,10 @@ export default function Header(): JSX.Element {
               </a>
             </Link>
           </h1>
-          {user.isLoggedIn ? (
+          {username && (
             <div className="lbh-header__links">
-              <p>[username]</p>
-              <button onClick={() => dispatch(logOut())}>Sign out</button>
+              <p>{username}</p>
             </div>
-          ) : (
-            <button onClick={() => dispatch(logIn())}>Sign in</button>
           )}
         </div>
       </div>

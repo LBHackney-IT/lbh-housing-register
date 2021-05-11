@@ -19,7 +19,7 @@ const StaffLayout: FunctionComponent = (props) => {
   return (
     <>
       <SkipLink />
-      <Header userName={user.name} />
+      <Header username={user.name} />
       {hasPhaseBanner() && <PhaseBanner />}
 
       {id && (

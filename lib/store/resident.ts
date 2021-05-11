@@ -1,8 +1,9 @@
 import { checkEligible } from "../utils/form"
-import { Resident } from "../types/resident"
+import { MainResident } from "../types/resident"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-const initialState: Resident = {
+const initialState: MainResident = {
+  hasAgreed: false,
   formData: {},
   isLoggedIn: false
 }
@@ -12,11 +13,24 @@ const slice = createSlice({
   initialState,
   reducers: {
     /**
-     * Log the resident in
-     * @param {Resident} state The current state
-     * @returns {Resident} Updated resident state
+     * Agree to terms and conditions
+     * @param {MainResident} state The current state
+     * @param {PayloadAction<boolean>} action The agreement state
+     * @returns {MainResident} Updated resident state
      */
-    logIn: (state: Resident): Resident => {
+    agree: (state: MainResident, action: PayloadAction<boolean>) => {
+      return {
+        ...state,
+        hasAgreed: action.payload
+      }
+    },
+
+    /**
+     * Log the resident in
+     * @param {MainResident} state The current state
+     * @returns {MainResident} Updated resident state
+     */
+    logIn: (state: MainResident): MainResident => {
       return {
         ...state,
         isLoggedIn: true
@@ -27,33 +41,19 @@ const slice = createSlice({
 
     /**
      * Log the resident out
-     * @returns {Resident} Initial resident state
+     * @returns {MainResident} Initial resident state
      */
-    logOut: (): Resident => {
+    logOut: (): MainResident => {
       return initialState
     },
 
     /**
-     * Update resident's eligibility status
-     * @param {Resident} state The current state
-     * @param {PayloadAction<[boolean, string[]]>} action Is the resident eligible?
-     * @returns {Resident} Updated resident state
-     */
-    updateEligibility: (state: Resident, action: PayloadAction<[boolean, string[]]>): Resident => {
-      return {
-        ...state,
-        isEligible: action.payload[0],
-        ineligibilityReasons: action.payload[1]
-      }
-    },
-
-    /**
      * Update resident's form data
-     * @param {Resident} state The current state
+     * @param {MainResident} state The current state
      * @param {PayloadAction<{}>} action The form data
-     * @returns {Resident} Updated resident state
+     * @returns {MainResident} Updated resident state
      */
-    updateFormData: (state: Resident, action: PayloadAction<{}>): Resident => {
+    updateFormData: (state: MainResident, action: PayloadAction<{}>): MainResident => {
       state.formData = {
         ...state.formData,
         ...action.payload
@@ -69,4 +69,4 @@ const slice = createSlice({
 })
 
 export default slice
-export const { logIn, logOut, updateEligibility, updateFormData } = slice.actions
+export const { agree, logIn, logOut, updateFormData } = slice.actions

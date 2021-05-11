@@ -2,6 +2,7 @@ import Form from "../../components/form/form"
 import { HeadingOne } from "../../components/content/headings"
 import Paragraph from "../../components/content/paragraph"
 import Layout from "../../components/layout/resident-layout"
+import whenEligible from "../../lib/hoc/whenEligible"
 import { Store } from "../../lib/store"
 import { agree } from "../../lib/store/resident"
 import { FormData } from "../../lib/types/form"
@@ -9,7 +10,7 @@ import { getAgreementFormData } from "../../lib/utils/form-data"
 import { useRouter } from "next/router"
 import { useStore } from "react-redux"
 
-export default function Apply(): JSX.Element {
+const Apply = (): JSX.Element => {
   const router = useRouter()
   const store = useStore<Store>()
   const resident = store.getState().resident
@@ -48,3 +49,5 @@ export default function Apply(): JSX.Element {
     </Layout>
   )
 }
+
+export default whenEligible(Apply)

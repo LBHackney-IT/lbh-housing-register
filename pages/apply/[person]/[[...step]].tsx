@@ -1,8 +1,9 @@
 import ApplicationForms from "../../../components/application/application-forms"
 import Layout from "../../../components/layout/resident-layout"
-import { useRouter } from 'next/router'
+import whenEligible from "../../../lib/hoc/whenEligible"
+import { useRouter } from "next/router"
 
-export default function ApplicationStep(): JSX.Element {
+const ApplicationStep = (): JSX.Element => {
   const router = useRouter()
   let { person, step } = router.query
   person = person as string
@@ -36,3 +37,5 @@ export default function ApplicationStep(): JSX.Element {
     </Layout>
   )
 }
+
+export default whenEligible(ApplicationStep)

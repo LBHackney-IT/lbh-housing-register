@@ -10,7 +10,7 @@ interface RadioProps extends FormField {
   value: string
 }
 
-export function Radio({ index, hint, label, name, value }: RadioProps): JSX.Element {
+export function Radio({ focus, hint, index, label, name, value }: RadioProps): JSX.Element {
   let id = name
 
   if (index !== undefined) {
@@ -20,6 +20,7 @@ export function Radio({ index, hint, label, name, value }: RadioProps): JSX.Elem
   return (
     <div className="govuk-radios__item">
       <Field
+        autoFocus={focus}
         className="govuk-radios__input"
         type="radio"
         id={id}
@@ -37,7 +38,7 @@ export interface RadiosProps extends FormField {
   value: string
 }
 
-export default function Radios({ hint, label, name, options }: RadiosProps): JSX.Element {
+export default function Radios({ focus, hint, label, name, options }: RadiosProps): JSX.Element {
   return (
     <Field name={name}>
       {({ field, meta }: { field: FieldInputProps<string>, meta: FieldMetaProps<string> }) => (
@@ -48,7 +49,7 @@ export default function Radios({ hint, label, name, options }: RadiosProps): JSX
 
           <div className="govuk-radios lbh-radios">
             {options?.map((radio, index) => 
-              <Radio key={index} index={index} hint={radio.hint} label={radio.label!} name={field.name} value={radio.value} />
+              <Radio key={index} index={index} focus={focus} hint={radio.hint} label={radio.label!} name={field.name} value={radio.value} />
             )}
           </div>
         </FormGroup>

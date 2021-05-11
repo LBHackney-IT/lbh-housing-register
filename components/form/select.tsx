@@ -8,7 +8,7 @@ import { Field, FieldInputProps, FieldMetaProps } from "formik"
 interface SelectProps extends FormField {
 }
 
-export default function Select({ hint, label, name, options }: SelectProps): JSX.Element {
+export default function Select({ focus, hint, label, name, options }: SelectProps): JSX.Element {
   return (
     <Field name={name}>
       {({ field, meta }: { field: FieldInputProps<string>, meta: FieldMetaProps<string> }) => (
@@ -17,7 +17,7 @@ export default function Select({ hint, label, name, options }: SelectProps): JSX
           {hint && <Hint content={hint} />}
           {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 
-          <select className={`${!!meta.touched && !!meta.error ? "govuk-select--error" : ""} govuk-select lbh-select`} id={field.name} {...field}>
+          <select autoFocus={focus} className={`${!!meta.touched && !!meta.error ? "govuk-select--error" : ""} govuk-select lbh-select`} id={field.name} {...field}>
             {options?.map((option, index) => (
               <option key={index} value={option.value}>
                 {option.label || option.value}

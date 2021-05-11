@@ -12,6 +12,7 @@ export type FormData = {
 export type FormField = {
   as?: string
   conditionalDisplay?: FormFieldDisplayCriteria[]
+  focus?: boolean
   hint?: string
   initialValue?: boolean | number | string | string[]
   label: string

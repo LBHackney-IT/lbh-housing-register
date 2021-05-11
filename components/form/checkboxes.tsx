@@ -10,7 +10,7 @@ interface CheckboxProps extends FormField {
   value: string
 }
 
-export function Checkbox({ hint, index, label, name, value }: CheckboxProps): JSX.Element {
+export function Checkbox({ focus, hint, index, label, name, value }: CheckboxProps): JSX.Element {
   let id = name
 
   if (index) {
@@ -20,6 +20,7 @@ export function Checkbox({ hint, index, label, name, value }: CheckboxProps): JS
   return (
     <div className="govuk-checkboxes__item">
       <Field
+        autoFocus={focus}
         className="govuk-checkboxes__input"
         type="checkbox"
         id={id}
@@ -38,7 +39,7 @@ export interface CheckboxesProps extends FormField {
   value: string
 }
 
-export default function Checkboxes({ hint, label, options, name, value }: CheckboxesProps): JSX.Element {
+export default function Checkboxes({ focus, hint, label, options, name, value }: CheckboxesProps): JSX.Element {
   const checkboxes: FormFieldOption[] = options || [{ hint, label, value }]
   const hasMultipleOptions: boolean = checkboxes.length > 1
 
@@ -56,7 +57,7 @@ export default function Checkboxes({ hint, label, options, name, value }: Checkb
               render={() => (
                 <>
                   {checkboxes.map((checkbox, index) => (
-                    <Checkbox key={index} index={index} hint={checkbox.hint} label={checkbox.label!} name={field.name} value={checkbox.value} />
+                    <Checkbox key={index} index={index} focus={focus} hint={checkbox.hint} label={checkbox.label!} name={field.name} value={checkbox.value} />
                   ))}
                 </>
               )}

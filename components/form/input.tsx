@@ -9,7 +9,7 @@ interface InputProps extends FormField {
   className?: string
 }
 
-export default function Input({ className, hint, label, name, placeholder, type }: InputProps): JSX.Element {
+export default function Input({ className, focus, hint, label, name, placeholder, type }: InputProps): JSX.Element {
   return (
     <Field name={name}>
       {({ field, meta }: { field: FieldInputProps<string>, meta: FieldMetaProps<string> }) => (
@@ -19,6 +19,7 @@ export default function Input({ className, hint, label, name, placeholder, type 
           {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 
           <input
+            autoFocus={focus}
             className={`${className} ${meta.touched && meta.error && "govuk-input--error"} govuk-input lbh-input`}
             id={name}
             placeholder={placeholder}

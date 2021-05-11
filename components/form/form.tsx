@@ -24,13 +24,11 @@ export default function Form({ formData, onSave, onSubmit }: FormProps): JSX.Ele
   const isLastStep: boolean = stepNumber === totalSteps - 1
 
   const next = (values: FormData): void => {
-    // TODO: Scroll to top + set focus to first field
     setSnapshot(values);
     setStepNumber(Math.min(stepNumber + 1, totalSteps - 1));
   };
 
   const previous = (values: FormData): void => {
-    // TODO: Scroll to top + set focus to first field
     setSnapshot(values);
     setStepNumber(Math.max(stepNumber - 1, 0));
   };
@@ -64,6 +62,7 @@ export default function Form({ formData, onSave, onSubmit }: FormProps): JSX.Ele
             {step.fields.map((field, index) => {
                 const display: boolean = getDisplayStateOfField(field, values)
                 if (display) {
+                  field.focus = index == 0
                   return <DynamicField key={index} field={field} />
                 }
             })}

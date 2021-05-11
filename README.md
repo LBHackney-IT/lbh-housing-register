@@ -11,10 +11,11 @@ This application has two sides: the _officer dashboard_ side, for council office
 This app will form part of the user journey, with an multi-step questionnaire which determines the users' eligibility before being able to continue and submit their application, this breaks down into the following steps:
 
 - **`/`** - Entry point, provide starting information and signposts the user to the housing registration application
-- **`/apply`** - Start a new application, qualify if the resident and their immediate family are eligible for social housing within Hackney
-  - **`/apply/:id`** - Continue with a particular application, *needs more detail around steps*  
-  - **`/apply/:id/confirmation`** - Confirmation of an application submission, added via the housing registration API
-  - **TBC** - Further pages and steps to be confirmed
+- **`/eligibility-checker/[step]`** - Standalone eligibility checker tool
+- **`/apply`** - Start a new application
+  - **`/apply/overview`** - Continue with a particular application, display a list of people within the current request
+  - **`/apply/[person]`** - Overall of the `person`s application progress
+    - **`/apply/[person]/[step]`** - Step of the application form
 
 ### Staff Dashboard
 

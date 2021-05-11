@@ -1,6 +1,6 @@
 import { FormData } from "./form"
 
-export type User = {
+export type Resident = {
   formData: {[key: string]: FormData}
   ineligibilityReasons?: string[]
   isEligible?: boolean

@@ -1,22 +1,22 @@
 import { checkEligible } from "../utils/form"
-import { User } from "../types/user"
+import { Resident } from "../types/resident"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-const initialState: User = {
+const initialState: Resident = {
   formData: {},
   isLoggedIn: false
 }
 
 const slice = createSlice({
-  name: 'user',
+  name: 'resident',
   initialState,
   reducers: {
     /**
-     * Log the user in
-     * @param {User} state The current state
-     * @returns {User} Updated user state
+     * Log the resident in
+     * @param {Resident} state The current state
+     * @returns {Resident} Updated resident state
      */
-    logIn: (state: User): User => {
+    logIn: (state: Resident): Resident => {
       return {
         ...state,
         isLoggedIn: true
@@ -26,20 +26,20 @@ const slice = createSlice({
     },
 
     /**
-     * Log the user out
-     * @returns {User} Initial user state
+     * Log the resident out
+     * @returns {Resident} Initial resident state
      */
-    logOut: (): User => {
+    logOut: (): Resident => {
       return initialState
     },
 
     /**
-     * Update user's eligibility status
-     * @param {User} state The current state
-     * @param {PayloadAction<[boolean, string[]]>} action Is the user eligible?
-     * @returns {User} Updated user state
+     * Update resident's eligibility status
+     * @param {Resident} state The current state
+     * @param {PayloadAction<[boolean, string[]]>} action Is the resident eligible?
+     * @returns {Resident} Updated resident state
      */
-    updateEligibility: (state: User, action: PayloadAction<[boolean, string[]]>): User => {
+    updateEligibility: (state: Resident, action: PayloadAction<[boolean, string[]]>): Resident => {
       return {
         ...state,
         isEligible: action.payload[0],
@@ -48,12 +48,12 @@ const slice = createSlice({
     },
 
     /**
-     * Update user's form data
-     * @param {User} state The current state
+     * Update resident's form data
+     * @param {Resident} state The current state
      * @param {PayloadAction<{}>} action The form data
-     * @returns {User} Updated user state
+     * @returns {Resident} Updated resident state
      */
-    updateFormData: (state: User, action: PayloadAction<{}>): User => {
+    updateFormData: (state: Resident, action: PayloadAction<{}>): Resident => {
       state.formData = {
         ...state.formData,
         ...action.payload

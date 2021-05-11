@@ -1,7 +1,7 @@
 import EligibilityOutcome from "../eligibility"
 import Form from "../form/form"
 import { Store } from "../../lib/store"
-import { updateFormData } from "../../lib/store/user"
+import { updateFormData } from "../../lib/store/resident"
 import { getFormData } from "../../lib/utils/form-data"
 import { FormData } from "../../lib/types/form"
 import Link from "next/link"
@@ -27,7 +27,7 @@ export default function ApplicationForms({ activeStep, baseHref, onCompletion, s
   const router = useRouter()
   const store = useStore<Store>()
   const [applicationData, setApplicationData] = useState({})
-  const isEligible = store.getState().user.isEligible
+  const isEligible = store.getState().resident.isEligible
 
   if (isEligible === false) {
     return <EligibilityOutcome />

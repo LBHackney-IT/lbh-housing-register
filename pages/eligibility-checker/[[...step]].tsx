@@ -7,8 +7,8 @@ import { useSelector } from "react-redux"
 import EligibilityOutcome from "../../components/eligibility"
 
 export default function EligibilityChecker(): JSX.Element {
-  let { user } = useSelector<Store, Store>(state => state)
-  const [isComplete, complete] = useState(user.isEligible)
+  let { resident } = useSelector<Store, Store>(state => state)
+  const [isComplete, complete] = useState(resident.isEligible)
 
   if (isComplete) {
     return (

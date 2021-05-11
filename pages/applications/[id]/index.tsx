@@ -2,7 +2,8 @@ import Layout from '../../../components/layout/staff-layout';
 import { GetServerSideProps } from 'next'
 import { getApplication } from "../../../lib/gateways/applications-api"
 import { Application } from '../../../domain/application';
-import { HeadingOne } from "../../../components/content/headings"
+import { HeadingOne, HeadingTwo } from "../../../components/content/headings"
+import Paragraph from "../../../components/content/paragraph"
 import PersonalDetails from "../../../components/applications/personal-details"
 import AddressDetails from "../../../components/applications/address-details"
 import ContactDetails from "../../../components/applications/contact-details"

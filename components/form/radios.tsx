@@ -42,7 +42,7 @@ export default function Radios({ hint, label, name, options }: RadiosProps): JSX
     <Field name={name}>
       {({ field, meta }: { field: FieldInputProps<string>, meta: FieldMetaProps<string> }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
-          {label && <Label content={label} />}
+          {label && <Label content={label} strong={true} />}
           {hint && <Hint content={hint} />}
           {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 

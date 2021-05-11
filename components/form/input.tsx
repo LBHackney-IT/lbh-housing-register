@@ -14,7 +14,7 @@ export default function Input({ className, hint, label, name, placeholder, type 
     <Field name={name}>
       {({ field, meta }: { field: FieldInputProps<string>, meta: FieldMetaProps<string> }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
-          {label && <Label content={label} htmlFor={name} />}
+          {label && <Label content={label} htmlFor={name} strong={true} />}
           {hint && <Hint content={hint} />}
           {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 

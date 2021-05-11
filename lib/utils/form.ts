@@ -1,13 +1,13 @@
-import qualificationFormData from "../../data/qualification-form.json"
-import { FormField, MultiPageFormData } from "../types/form"
+import { getEligibilityCriteria } from "./form-data";
+import { FormData, FormField, MultiStepForm } from "../types/form"
 
 /**
  * Determines if the field should be displayed based on the values passed in
  * @param {FormField} field - The field
- * @param {{[key: string]: any}} values - The form values
+ * @param {FormData} values - The form values
  * @returns {boolean} - should the field be displayed?
  */
-export function getDisplayStateOfField(field: FormField, values: {[key: string]: any}): boolean {
+export function getDisplayStateOfField(field: FormField, values: FormData): boolean {
   let display = true
 
   if (field.conditionalDisplay) {
@@ -16,7 +16,7 @@ export function getDisplayStateOfField(field: FormField, values: {[key: string]:
         display = values[condition.field] === condition.is;
       }
 
-      if (display) {
+      if (display && condition.isNot) {
         display = values[condition.field] !== condition.isNot;
       }
     })
@@ -29,10 +29,10 @@ export function getDisplayStateOfField(field: FormField, values: {[key: string]:
  * Get the initial state / values.
  * This checks to see if `field.initialValue` is set, otherwise an empty string is returned.
  * @param {FormField[]} fields - The fields
- * @returns {{[key: string]: any}} - An object of form values, where the key is the name of the field
+ * @returns {FormData} - An object of form values, where the key is the name of the field
  */
-export function getInitialValuesFromFields(fields: FormField[]): {[key: string]: any} {
-  const initialValues: {[key: string]: any } = {}
+export function getInitialValuesFromFields(fields: FormField[]): FormData {
+  const initialValues: FormData = {}
   fields.map(field => initialValues[field.name] = field.initialValue || "")
   return initialValues
 }
@@ -40,19 +40,46 @@ export function getInitialValuesFromFields(fields: FormField[]): {[key: string]:
 /**
  * Get the initial state / values from the multi page form data/
  * This checks to see if `field.initialValue` is set, otherwise an empty string is returned.
- * @param {MultiPageFormData} data - The multi page form data
- * @returns {{[key: string]: any}} - An object of form values, where the key is the name of the field
+ * @param {MultiStepForm} data - The multi page form data
+ * @returns {FormData} - An object of form values, where the key is the name of the field
  */
-export function getInitialValuesFromMultiPageFormData(data: MultiPageFormData): {[key: string]: any} {
-  let initialValues: {[key: string]: any } = {}
+export function getInitialValuesFromMultiStepForm(data: MultiStepForm): FormData {
+  let initialValues: FormData = {}
   data.steps.map(step => initialValues = Object.assign(initialValues, getInitialValuesFromFields(step.fields)));
   return initialValues
 }
 
 /**
- * Get the form data object that makes up the qualifications form
- * @returns {MultiPageFormData}
+ * Is the form data passed in eligible?
+ * @param formData The multi form data
+ * @returns {[boolean, string[]]} - A tuple of state (isValid) and error message
  */
-export function getQualificationFormData(): MultiPageFormData {
-  return qualificationFormData
+export function checkEligible(formData: {[key: string]: FormData}): [boolean, string[]] {
+  let isValid = true
+  let reasons: string[] = []
+
+  const setInvalid = (reasoning?: string): void => {
+    isValid = false
+
+    if (reasoning) {
+      reasons.push(reasoning)
+    }
+  }
+
+  for (const [form, values] of Object.entries(formData)) {
+    const eligibilityCriteria = getEligibilityCriteria(form)
+    eligibilityCriteria?.forEach(criteria => {
+      const fieldValue = values[criteria.field]
+
+      if (criteria.is && criteria.is !== fieldValue) {
+        setInvalid(criteria.reasoning)
+      }
+
+      if (criteria.isNot && criteria.isNot === fieldValue) {
+        setInvalid(criteria.reasoning)
+      }
+    })
+  }
+
+  return [isValid, reasons]
 }

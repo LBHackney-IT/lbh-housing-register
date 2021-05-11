@@ -1,5 +1,7 @@
+import { ReactNodeArray } from "react";
+
 interface FormGroupProps {
-  children: any
+  children: ReactNodeArray
   error?: boolean
 }
 

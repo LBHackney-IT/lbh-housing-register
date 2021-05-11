@@ -1,0 +1,17 @@
+{
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "checkbox",
+          "initialValue": false,
+          "label": "I understand and accept",
+          "name": "agreement",
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ]
+}

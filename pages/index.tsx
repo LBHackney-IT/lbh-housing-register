@@ -1,17 +1,32 @@
 import { ButtonLink } from "../components/button"
+import { HeadingOne, HeadingTwo } from "../components/content/headings"
 import Layout from '../components/layout/resident-layout'
-import InsetText from "../components/inset-text"
-import { HeadingOne } from "../components/headings"
-import Paragraph from "../components/paragraph"
+import Paragraph from "../components/content/paragraph"
 
 export default function Home(): JSX.Element {
   return (
     <Layout>
-      <HeadingOne content={process.env.NEXT_PUBLIC_NAME!} />
-      <Paragraph content="<strong>Lorem ipsum</strong> dolor sit amet, consectetur adipiscing elit. Pellentesque mi ex, maximus tempus condimentum eget, volutpat eu nunc. Mauris tincidunt, neque quis viverra ultricies, tellus lacus fringilla tortor, at blandit purus diam et augue." />
-      <Paragraph content="Phasellus tempor in orci dapibus rhoncus. Cras sit amet venenatis velit. Donec iaculis lorem eu convallis venenatis. Ut scelerisque ac lacus non sodales." />
-      <InsetText content="Nulla facilisi. In at nulla congue tellus ultrices porttitor. Sed eget nibh consectetur, gravida neque non, placerat nulla. Donec eros sapien, elementum ac dolor non, sodales tempor risus. Pellentesque vitae neque fermentum, iaculis nibh sit amet, fermentum metus." />
-      <ButtonLink href="/apply">Get Started</ButtonLink>
+      <HeadingOne content={`Apply to the ${process.env.NEXT_PUBLIC_NAME!}`} />
+
+      <HeadingTwo content="What to expect" />
+      <Paragraph>
+        It may take up to one hour to complete your application.
+        You will need to supply personal details for each person in your application, and information about your current accommodation, income and any benefits received.
+      </Paragraph>
+
+      <HeadingTwo content="What you'll need to provide" />
+      <Paragraph>
+        You will need to upload proof of identity, address, income, savings, benefits for each person in your application.
+      </Paragraph>
+
+      <HeadingTwo content="What happens afterwards?" />
+      <Paragraph>
+        The information you provide will be verified with third parties.
+        This will help us to assess you suitability for social housing in Hackney.
+        If you application is successful, you may still wait many years until a housing offer is made.
+      </Paragraph>
+
+      <ButtonLink href="/apply">Start now</ButtonLink>
     </Layout>
   )
 }

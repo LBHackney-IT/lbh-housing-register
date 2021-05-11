@@ -1,3 +1,14 @@
+export type EligibilityCriteria = {
+  field: string
+  is?: string
+  isNot?: string
+  reasoning?: string
+}
+
+export type FormData = {
+  [key: string]: any
+}
+
 export type FormField = {
   as?: string
   conditionalDisplay?: FormFieldDisplayCriteria[]
@@ -30,12 +41,12 @@ export type FormFieldValidation = {
 }
 
 export type FormStep = {
+  copy?: string
   fields: FormField[]
-  id: string
-  legend: string
+  heading?: string
 }
 
-export type MultiPageFormData = {
+export type MultiStepForm = {
+  eligibility?: EligibilityCriteria[]
   steps: FormStep[]
-  title: string | undefined
 }

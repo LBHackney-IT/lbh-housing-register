@@ -13,7 +13,7 @@ export default function Select({ hint, label, name, options }: SelectProps): JSX
     <Field name={name}>
       {({ field, meta }: { field: FieldInputProps<string>, meta: FieldMetaProps<string> }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
-          {label && <Label content={label} htmlFor={field.name} />}
+          {label && <Label content={label} htmlFor={field.name} strong={true} />}
           {hint && <Hint content={hint} />}
           {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 

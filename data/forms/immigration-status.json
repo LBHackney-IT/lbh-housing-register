@@ -1,0 +1,190 @@
+{
+  "eligibility": [
+    {
+      "field": "uk-studying",
+      "isNot": "yes",
+      "reasoning": "It's unlikely that you will qualify for social housing when in the UK studying"
+    },
+    {
+      "field": "work-or-study-visa",
+      "isNot": "yes",
+      "reasoning": "It's unlikely that you will qualify for social housing when in the UK to work or study"
+    },
+    {
+      "field": "receiving-sponsorship",
+      "isNot": "yes",
+      "reasoning": "It's unlikely that you will qualify for social housing while receiving sponsorship to be in the UK"
+    },
+    {
+      "field": "legal-status",
+      "isNot": "limited-leave-to-remain-no-public-funds"
+    }
+  ],
+  "steps": [
+    {
+      "heading": "Immigration status",
+      "fields": [
+        {
+          "as": "radios",
+          "label": "What nationality are you?",
+          "name": "nationality",
+          "options": [
+            {
+              "label": "British",
+              "value": "british"
+            },
+            {
+              "label": "European",
+              "value": "european"
+            },
+            {
+              "label": "Other",
+              "value": "other"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+
+        {
+          "as": "radios",
+          "label": "Are you in the UK to study?",
+          "name": "uk-studying",
+          "options": [
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          },
+          "conditionalDisplay": [
+            {
+              "field": "nationality",
+              "is": "european"
+            }
+          ]
+        },
+
+        {
+          "as": "radios",
+          "label": "Do you have a work or study visa?",
+          "name": "work-or-study-visa",
+          "options": [
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          },
+          "conditionalDisplay": [
+            {
+              "field": "nationality",
+              "is": "other"
+            }
+          ]
+        },
+        {
+          "as": "radios",
+          "label": "Are you a family member of an EEA national?",
+          "name": "eea-national",
+          "options": [
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          },
+          "conditionalDisplay": [
+            {
+              "field": "work-or-study-visa",
+              "is": "no"
+            }
+          ]
+        },
+        {
+          "as": "radios",
+          "label": "Are you receiving sponsorship to stay in the UK?",
+          "name": "receiving-sponsorship",
+          "options": [
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          },
+          "conditionalDisplay": [
+            {
+              "field": "eea-national",
+              "is": "no"
+            }
+          ]
+        },
+        {
+          "as": "radios",
+          "label": "What is your legal status?",
+          "name": "legal-status",
+          "options": [
+            {
+              "label": "I have Indefinitely Leave to Remain",
+              "value": "indefinite-leave-to-remain"
+            },
+            {
+              "label": "I have Discretionary Leave to Remain",
+              "value": "discretionary-leave-to-remain"
+            },
+            {
+              "label": "I have Exceptional Leave to Remain",
+              "value": "exceptional-leave-to-remain"
+            },
+            {
+              "label": "I have been granted refugee status",
+              "value": "refugee-status"
+            },
+            {
+              "label": "I have been granted humanitarian protection",
+              "value": "humanitarian-protection"
+            },
+            {
+              "label": "I have limited Leave to Remain with no recourse to public funds",
+              "value": "limited-leave-to-remain-no-public-funds"
+            }
+          ],
+          "validation": {
+            "required": true
+          },
+          "conditionalDisplay": [
+            {
+              "field": "receiving-sponsorship",
+              "is": "no"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

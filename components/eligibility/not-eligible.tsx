@@ -9,7 +9,7 @@ import { useStore } from "react-redux"
 
 export default function NotEligible(): JSX.Element {
   const store = useStore<Store>()
-  const reasons = store.getState().user.ineligibilityReasons
+  const reasons = store.getState().resident.ineligibilityReasons
 
   return (
     <>

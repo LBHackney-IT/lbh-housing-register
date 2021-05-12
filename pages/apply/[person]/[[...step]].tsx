@@ -1,6 +1,7 @@
 import ApplicationForms from "../../../components/application/application-forms"
 import Layout from "../../../components/layout/resident-layout"
 import whenEligible from "../../../lib/hoc/whenEligible"
+import { IMMIGRATION_STATUS, YOUR_SITUATION } from "../../../lib/utils/form-data"
 import { useRouter } from "next/router"
 
 const ApplicationStep = (): JSX.Element => {
@@ -9,7 +10,7 @@ const ApplicationStep = (): JSX.Element => {
   person = person as string
 
   const baseHref = `/apply/${person}`
-  const steps: string[] = ["test-data", "immigration-status"]
+  const steps = [YOUR_SITUATION, IMMIGRATION_STATUS]
   const activeStep = step ? step[0] : undefined
 
   const breadcrumbs = [

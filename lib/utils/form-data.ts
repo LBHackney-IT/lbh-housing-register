@@ -4,6 +4,10 @@ import testFormData from "../../data/forms/_test-form.json"
 import yourSituationFormData from "../../data/forms/your-situation.json"
 import { EligibilityCriteria, MultiStepForm } from "../types/form"
 
+export const AGREEMENT = "agreement"
+export const IMMIGRATION_STATUS = "immigration-status"
+export const YOUR_SITUATION = "your-situation"
+
 /**
  * Get the eligibility criteria from the requested form
  * @param {string} formId - The requested eligibility criteria
@@ -21,6 +25,9 @@ import { EligibilityCriteria, MultiStepForm } from "../types/form"
  */
  export function getFormData(form: string): MultiStepForm {
   switch(form.toLowerCase()) {
+    case "agreement":
+      return getAgreementFormData()
+
     case "immigration-status":
       return getImmigrationStatusFormData()
     

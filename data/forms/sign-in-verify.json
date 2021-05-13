@@ -1,0 +1,24 @@
+{
+  "steps": [
+    {
+      "fields": [
+        {
+          "label": "Username",
+          "name": "username",
+          "hint": "This should already be known, so can be removed after testing",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "Code",
+          "name": "code",
+          "validation": {
+            "required": true,
+            "min": 6
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -4,10 +4,12 @@ import personalDetailsFormData from "../../data/forms/person-details.json"
 import testFormData from "../../data/forms/_test-form.json"
 import yourSituationFormData from "../../data/forms/your-situation.json"
 import signInDetailsFormData from "../../data/forms/sign-in-details.json"
+import signInVerifyFormData from "../../data/forms/sign-in-verify.json"
 import { EligibilityCriteria, MultiStepForm } from "../types/form"
 
 export const AGREEMENT = "agreement"
 export const SIGN_IN_DETAILS = "sign-in-details"
+export const SIGN_IN_VERIFY = "sign-in-verify"
 export const IMMIGRATION_STATUS = "immigration-status"
 export const PERSONAL_DETAILS = "personal-details"
 export const YOUR_SITUATION = "your-situation"
@@ -43,6 +45,9 @@ export function getFormData(form: string): MultiStepForm {
 
     case "sign-in-details":
       return getSignInDetailsFormData()
+
+    case "sign-in-verify":
+      return getSignInVerifyFormData()
 
     default:
       return getTestFormData()
@@ -90,9 +95,17 @@ export function getYourSituationFormData(): MultiStepForm {
 }
 
 /**
- * Get the form data that makes up the 'your situation' form
+ * Get the form data that makes up the 'sign in details' form
  * @returns {MultiStepForm}
  */
 export function getSignInDetailsFormData(): MultiStepForm {
   return signInDetailsFormData
+}
+
+/**
+ * Get the form data that makes up the 'sign in verify' form
+ * @returns {MultiStepForm}
+ */
+export function getSignInVerifyFormData(): MultiStepForm {
+  return signInVerifyFormData
 }

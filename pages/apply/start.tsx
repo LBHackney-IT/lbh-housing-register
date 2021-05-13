@@ -23,7 +23,7 @@ const ApplicationStartPage = (): JSX.Element => {
       console.log(user);
 
       // TODO: save user to store
-      //router.push("/apply/verify")
+      router.push("/apply/verify")
     } catch (error) {
       // TODO: handle error
       console.log('error signing up:', error);

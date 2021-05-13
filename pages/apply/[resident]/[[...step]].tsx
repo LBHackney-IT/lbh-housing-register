@@ -2,8 +2,9 @@ import ApplicationForms from "../../../components/application/application-forms"
 import Layout from "../../../components/layout/resident-layout"
 import whenEligible from "../../../lib/hoc/whenEligible"
 import { Store } from "../../../lib/store"
+import { deleteResident } from "../../../lib/store/additionalResidents"
 import { IMMIGRATION_STATUS, PERSONAL_DETAILS } from "../../../lib/utils/form-data"
-import { getResident } from "../../../lib/utils/resident"
+import { getResident, isMainResident } from "../../../lib/utils/resident"
 import { useRouter } from "next/router"
 import { useStore } from "react-redux"
 import Custom404 from "../../404"
@@ -22,12 +23,13 @@ const ApplicationStep = (): JSX.Element => {
   }
 
   const baseHref = `/apply/${currentResident.slug}`
+  const returnHref = "/apply/overview"
   const steps = [IMMIGRATION_STATUS, PERSONAL_DETAILS]
   const activeStep = step ? step[0] : undefined
 
   const breadcrumbs = [
     {
-      href: "/apply/overview",
+      href: returnHref,
       name: "Application"
     },
     {
@@ -35,6 +37,11 @@ const ApplicationStep = (): JSX.Element => {
       name: currentResident.name
     }
   ]
+
+  const deleteResidentFromStore = () => {
+    store.dispatch(deleteResident(currentResident))
+    router.push(returnHref)
+  }
 
   const onCompletion = () => {
     router.push(baseHref)
@@ -48,6 +55,12 @@ const ApplicationStep = (): JSX.Element => {
         onCompletion={onCompletion}
         resident={currentResident!}
         steps={steps} />
+      
+      {!activeStep && !isMainResident(currentResident) && (
+        <a onClick={deleteResidentFromStore}>
+          Delete this information
+        </a>
+      )}
     </Layout>
   )
 }

@@ -50,6 +50,23 @@ const slice = createSlice({
       ]
     },
 
+    /**
+     * Delete resident
+     * @param {Resident[]} state The current state 
+     * @param {PayloadAction<Resident>} action The resident we wish to delete
+     * @returns {Resident[]} New state with resident removed
+     */
+    deleteResident: (state: Resident[], action: PayloadAction<Resident>): Resident[] => {
+      const newState = state.filter(resident => resident.slug != action.payload.slug)
+      return [...newState]
+    },
+
+    /**
+     * Update residents record
+     * @param {Resident[]} state The current state 
+     * @param {PayloadAction<Resident>} action The resident we wish to update
+     * @returns {Resident[]} New state with updated resident
+     */
     updateFormDataForResident: (state: Resident[], action: PayloadAction<Resident>): Resident[] => {
       let index = 0
       const newState = [...state]
@@ -68,4 +85,4 @@ const slice = createSlice({
 })
 
 export default slice
-export const { addResident, addResidentFromFormData, updateFormDataForResident } = slice.actions
+export const { addResident, addResidentFromFormData, deleteResident, updateFormDataForResident } = slice.actions

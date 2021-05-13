@@ -9,6 +9,7 @@ import whenEligible from "../../lib/hoc/whenEligible"
 import { Store } from "../../lib/store"
 import { MAIN_RESIDENT_KEY } from "../../lib/store/resident"
 import { applicationStepsRemaining } from "../../lib/utils/resident"
+import { AmplifySignOut } from '@aws-amplify/ui-react';
 import Link from "next/link"
 import { useStore } from "react-redux"
 
@@ -25,6 +26,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
 
   return (
     <Layout breadcrumbs={breadcrumbs}>
+      <AmplifySignOut />
       <HeadingOne content="People in this application" />
       
       <SummaryList>

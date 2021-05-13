@@ -1,0 +1,76 @@
+{
+  "steps": [
+    {
+      "fields": [
+        {
+          "label": "Username",
+          "name": "username",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "Password",
+          "name": "password",
+          "type": "password",
+          "validation": {
+            "required": true,
+            "min": 8
+          }
+        },
+        {
+          "label": "Email",
+          "name": "email",
+          "type": "email",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "Mobile number",
+          "name": "phone_number",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "radios",
+          "label": "How do you want to sign in?",
+          "name": "sign_in_method",
+          "hint": "To keep your application secure, we’ll send you a link to continue your application.",
+          "options": [
+            {
+              "label": "Sign in by text message",
+              "value": "phone_number"
+            },
+            {
+              "label": "Sign in by email",
+              "value": "email"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "radios",
+          "label": "Who is this application for?",
+          "name": "application_for",
+          "options": [
+            {
+              "label": "I’m applying for myself or my household",
+              "value": "myself"
+            },
+            {
+              "label": "I’m applying for housing on behalf of someone else",
+              "value": "someone_else"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ]
+}

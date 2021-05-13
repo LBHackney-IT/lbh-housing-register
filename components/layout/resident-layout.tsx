@@ -4,14 +4,13 @@ import SkipLink from "../skip-link"
 import Header from "../header"
 import { hasPhaseBanner } from "../../lib/utils/phase-banner"
 import React, { ReactNode } from "react"
-import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
 
 interface ResidentLayoutProps {
   breadcrumbs?: { href: string, name: string }[]
   children: ReactNode
 }
 
-const ResidentLayout = ({ breadcrumbs, children }: ResidentLayoutProps): JSX.Element => {
+export default function ResidentLayout({ breadcrumbs, children }: ResidentLayoutProps): JSX.Element {
   return (
     <>
       <SkipLink />
@@ -22,12 +21,9 @@ const ResidentLayout = ({ breadcrumbs, children }: ResidentLayoutProps): JSX.Ele
 
       <main id="main-content" className="lbh-main-wrapper">
         <div className="lbh-container">
-          <AmplifySignOut />
           {children}
         </div>
       </main>
     </>
   )
 }
-
-export default withAuthenticator(ResidentLayout)

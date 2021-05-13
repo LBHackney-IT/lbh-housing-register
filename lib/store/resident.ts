@@ -2,12 +2,14 @@ import { checkEligible } from "../utils/form"
 import { MainResident } from "../types/resident"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
+export const MAIN_RESIDENT_KEY = "you"
+
 const initialState: MainResident = {
   hasAgreed: false,
   formData: {},
   isLoggedIn: false,
   name: "You",
-  slug: "you"
+  slug: MAIN_RESIDENT_KEY
 }
 
 const slice = createSlice({
@@ -52,10 +54,10 @@ const slice = createSlice({
     /**
      * Update resident's form data
      * @param {MainResident} state The current state
-     * @param {PayloadAction<{}>} action The form data
+     * @param {PayloadAction<{[key: string]: FormData}>} action The form data
      * @returns {MainResident} Updated resident state
      */
-    updateFormData: (state: MainResident, action: PayloadAction<{}>): MainResident => {
+    updateFormData: (state: MainResident, action: PayloadAction<{[key: string]: FormData}>): MainResident => {
       state.formData = {
         ...state.formData,
         ...action.payload

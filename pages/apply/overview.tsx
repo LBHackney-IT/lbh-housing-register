@@ -6,6 +6,7 @@ import SummaryList, { SummaryListActions as Actions, SummaryListKey as Key, Summ
 import Tag from "../../components/tag"
 import whenEligible from "../../lib/hoc/whenEligible"
 import { Store } from "../../lib/store"
+import { MAIN_RESIDENT_KEY } from "../../lib/store/resident"
 import Link from "next/link"
 import { useStore } from "react-redux"
 
@@ -29,7 +30,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
           <Row key={index} verticalAlign="middle">
             <Key>
               <>
-                <Hint content={`Person ${index + 1}`} />
+                <Hint content={`Person ${index + 1}` + (users.length > 1 && user.slug == MAIN_RESIDENT_KEY ? " (you)" : "")} />
                 <Link href={`/apply/${user.slug}`}>{user.name}</Link>
               </>
             </Key>
@@ -48,9 +49,3 @@ const ApplicationPersonsOverview = (): JSX.Element => {
 }
 
 export default whenEligible(ApplicationPersonsOverview)
-
-// TODO!
-// (You) on Person X
-// Work out how many steps are required
-
-// Add additional user

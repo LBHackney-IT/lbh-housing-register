@@ -34,7 +34,9 @@ const slice = createSlice({
         name: action.payload.name,
         slug: generateSlug(action.payload.name)
       }
-      resident.formData = action.payload
+      resident.formData = {
+        "personal-details": action.payload
+      }
 
       // Prevent duplicates
       const duplicates = state.filter(item => item.slug.match(new RegExp(`^${resident.slug}|(${resident.slug}_\d+)`)))
@@ -46,9 +48,24 @@ const slice = createSlice({
         ...state,
         resident
       ]
+    },
+
+    updateFormDataForResident: (state: Resident[], action: PayloadAction<Resident>): Resident[] => {
+      let index = 0
+      const newState = [...state]
+
+      newState.forEach((resident, i) => {
+        if (resident.slug == action.payload.slug) {
+          index = i
+        }
+      })
+
+      newState[index] = action.payload
+
+      return newState
     }
   }
 })
 
 export default slice
-export const { addResident, addResidentFromFormData } = slice.actions
+export const { addResident, addResidentFromFormData, updateFormDataForResident } = slice.actions

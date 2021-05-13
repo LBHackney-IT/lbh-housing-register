@@ -1,11 +1,11 @@
 import { HeadingOne } from "../content/headings"
 import Paragraph from "../content/paragraph"
-import EligibilityOutcome from "../eligibility"
 import Form from "../form/form"
 import { Store } from "../../lib/store"
-import { updateFormData } from "../../lib/store/resident"
-import { getFormData } from "../../lib/utils/form-data"
 import { FormData } from "../../lib/types/form"
+import { Resident } from "../../lib/types/resident"
+import { getFormData } from "../../lib/utils/form-data"
+import { updateResidentsFormData } from "../../lib/utils/resident"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useState } from "react"
@@ -15,6 +15,7 @@ interface ApplicationFormsProps {
   activeStep?: string
   baseHref: string
   onCompletion: (values: FormData) => void
+  resident: Resident
   steps: string[]
 }
 
@@ -25,15 +26,10 @@ interface ApplicationFormsProps {
  * @param {ApplicationFormsProps} param0 - Property object of the application
  * @returns {JSX.Element}
  */
-export default function ApplicationForms({ activeStep, baseHref, onCompletion, steps }: ApplicationFormsProps): JSX.Element {
+export default function ApplicationForms({ activeStep, baseHref, onCompletion, resident, steps }: ApplicationFormsProps): JSX.Element {
   const router = useRouter()
   const store = useStore<Store>()
   const [applicationData, setApplicationData] = useState({})
-  const isEligible = store.getState().resident.isEligible
-
-  if (isEligible === false) {
-    return <EligibilityOutcome />
-  }
 
   if (steps.includes(activeStep!)) {
     const next = () => {
@@ -49,7 +45,7 @@ export default function ApplicationForms({ activeStep, baseHref, onCompletion, s
       data[activeStep!] = values
 
       setApplicationData(data)
-      store.dispatch(updateFormData(data))
+      updateResidentsFormData(store, resident, data)
 
       const index = steps.indexOf(activeStep!) + 1;
       if (index == steps.length) {
@@ -64,11 +60,11 @@ export default function ApplicationForms({ activeStep, baseHref, onCompletion, s
             const formData = getFormData(step)
 
             return (
-              <>
+              <div key={index}>
                 {formData.heading && <HeadingOne content={formData.heading} />}
                 {formData.copy && <Paragraph>{formData.copy}</Paragraph>}
-                <Form buttonText="Save and continue" key={index} formData={formData} onSave={onSave} onSubmit={next} />
-              </>
+                <Form buttonText="Save and continue" formData={formData} onSave={onSave} onSubmit={next} />
+              </div>
             )
           }
         })}

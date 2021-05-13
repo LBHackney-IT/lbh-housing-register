@@ -8,6 +8,7 @@ import { getResident, isMainResident } from "../../../lib/utils/resident"
 import { useRouter } from "next/router"
 import { useStore } from "react-redux"
 import Custom404 from "../../404"
+import DeleteLink from "../../../components/delete-link"
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter()
@@ -38,7 +39,7 @@ const ApplicationStep = (): JSX.Element => {
     }
   ]
 
-  const deleteResidentFromStore = () => {
+  const onDelete = () => {
     store.dispatch(deleteResident(currentResident))
     router.push(returnHref)
   }
@@ -57,9 +58,7 @@ const ApplicationStep = (): JSX.Element => {
         steps={steps} />
       
       {!activeStep && !isMainResident(currentResident) && (
-        <a onClick={deleteResidentFromStore}>
-          Delete this information
-        </a>
+        <DeleteLink content="Delete this information" onDelete={onDelete} />
       )}
     </Layout>
   )

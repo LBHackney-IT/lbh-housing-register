@@ -3,13 +3,7 @@ import { Resident } from "../types/resident"
 import { generateSlug } from "../utils/resident"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-const initialState: Resident[] = [
-  {
-    "formData": {},
-    "name": "test user",
-    "slug": "test-user"
-  }
-]
+const initialState: Resident[] = []
 
 const slice = createSlice({
   name: 'additionalResidents',

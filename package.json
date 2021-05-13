@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@aws-amplify/ui-react": "^1.1.0",
     "@reduxjs/toolkit": "^1.5.1",
+    "aws-amplify": "^4.0.0",
     "axios": "^0.21.1",
     "cookie": "^0.4.1",
     "formik": "^2.2.6",

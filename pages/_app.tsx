@@ -9,9 +9,9 @@ import Amplify, { Auth } from 'aws-amplify';
 const WrappedApp: FC<AppProps> = ({ Component, pageProps }) => {
   Amplify.configure({
     Auth: {
-      region: 'eu-west-2',
-      userPoolId: 'eu-west-2_Zvje6WnHM',
-      userPoolWebClientId: '523t1n3k7tmu22la4eunnarhij',
+      region: process.env.NEXT_PUBLIC_AWS_REGION,
+      userPoolId: process.env.NEXT_PUBLIC_COGNITO_USERPOOL_ID,
+      userPoolWebClientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID
     }
   });
 

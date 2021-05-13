@@ -29,18 +29,22 @@ const slice = createSlice({
      * @returns {Resident[]} Updated residents state
      */
      addResidentFromFormData: (state: Resident[], action: PayloadAction<FormData>): Resident[] => {
-      const newResident: Resident = {
+      const resident: Resident = {
         formData: action.payload,
         name: action.payload.name,
         slug: generateSlug(action.payload.name)
       }
-      newResident.formData = action.payload
+      resident.formData = action.payload
 
-      console.log(newResident)
+      // Prevent duplicates
+      const duplicates = state.filter(item => item.slug.match(new RegExp(`^${resident.slug}|(${resident.slug}_\d+)`)))
+      if (duplicates.length > 0) {
+        resident.slug += `_${duplicates.length}`
+      }
 
       return [
         ...state,
-        newResident
+        resident
       ]
     }
   }

@@ -35,7 +35,3 @@ const AddPersonToApplication = (): JSX.Element => {
 }
 
 export default whenEligible(AddPersonToApplication)
-
-// TODO!
-// > onSubmit
-//   - what if there is a clash?

@@ -1,16 +1,16 @@
 import ApplicationForms from "../../../components/application/application-forms"
 import Layout from "../../../components/layout/resident-layout"
 import whenEligible from "../../../lib/hoc/whenEligible"
-import { IMMIGRATION_STATUS, YOUR_SITUATION } from "../../../lib/utils/form-data"
+import { IMMIGRATION_STATUS, PERSONAL_DETAILS } from "../../../lib/utils/form-data"
 import { useRouter } from "next/router"
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter()
-  let { person, step } = router.query
-  person = person as string
+  let { resident, step } = router.query
+  resident = resident as string
 
-  const baseHref = `/apply/${person}`
-  const steps = [YOUR_SITUATION, IMMIGRATION_STATUS]
+  const baseHref = `/apply/${resident}`
+  const steps = [IMMIGRATION_STATUS, PERSONAL_DETAILS]
   const activeStep = step ? step[0] : undefined
 
   const breadcrumbs = [
@@ -20,7 +20,7 @@ const ApplicationStep = (): JSX.Element => {
     },
     {
       href: baseHref,
-      name: person
+      name: resident
     }
   ]
 

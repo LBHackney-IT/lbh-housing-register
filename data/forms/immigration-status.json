@@ -1,4 +1,5 @@
 {
+  "heading": "Immigration status",
   "eligibility": [
     {
       "field": "uk-studying",
@@ -22,7 +23,6 @@
   ],
   "steps": [
     {
-      "heading": "Immigration status",
       "fields": [
         {
           "as": "radios",

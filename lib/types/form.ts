@@ -47,6 +47,8 @@ export type FormStep = {
 }
 
 export type MultiStepForm = {
+  copy?: string
   eligibility?: EligibilityCriteria[]
+  heading?: string
   steps: FormStep[]
 }

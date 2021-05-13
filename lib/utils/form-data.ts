@@ -1,11 +1,13 @@
 import agreementFormData from "../../data/forms/agreement.json"
 import immigrationStatusFormData from "../../data/forms/immigration-status.json"
+import personalDetailsFormData from "../../data/forms/person-details.json"
 import testFormData from "../../data/forms/_test-form.json"
 import yourSituationFormData from "../../data/forms/your-situation.json"
 import { EligibilityCriteria, MultiStepForm } from "../types/form"
 
 export const AGREEMENT = "agreement"
 export const IMMIGRATION_STATUS = "immigration-status"
+export const PERSONAL_DETAILS = "personal-details"
 export const YOUR_SITUATION = "your-situation"
 
 /**
@@ -30,6 +32,9 @@ export const YOUR_SITUATION = "your-situation"
 
     case "immigration-status":
       return getImmigrationStatusFormData()
+
+    case "personal-details":
+        return getPersonalDetailsFormData()
     
     case "your-situation":
       return getYourSituationFormData()
@@ -53,6 +58,14 @@ export const YOUR_SITUATION = "your-situation"
  */
  export function getImmigrationStatusFormData(): MultiStepForm {
   return immigrationStatusFormData
+}
+
+/**
+ * Get the form data that makes up the personal details form
+ * @returns {MultiStepForm}
+ */
+ export function getPersonalDetailsFormData(): MultiStepForm {
+  return personalDetailsFormData
 }
 
 /**

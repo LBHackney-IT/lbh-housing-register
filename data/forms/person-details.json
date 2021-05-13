@@ -1,0 +1,16 @@
+{
+  "heading": "Personal details",
+  "steps": [
+    {
+      "fields": [
+        {
+          "label": "Name",
+          "name": "name",
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ]
+}

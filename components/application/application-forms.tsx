@@ -1,3 +1,5 @@
+import { HeadingOne } from "../content/headings"
+import Paragraph from "../content/paragraph"
 import EligibilityOutcome from "../eligibility"
 import Form from "../form/form"
 import { Store } from "../../lib/store"
@@ -59,7 +61,15 @@ export default function ApplicationForms({ activeStep, baseHref, onCompletion, s
       <>
         {steps.map((step, index) => {
           if (step == activeStep) {
-            return <Form key={index} formData={getFormData(step)} onSave={onSave} onSubmit={next} />
+            const formData = getFormData(step)
+
+            return (
+              <>
+                {formData.heading && <HeadingOne content={formData.heading} />}
+                {formData.copy && <Paragraph>{formData.copy}</Paragraph>}
+                <Form buttonText="Save and continue" key={index} formData={formData} onSave={onSave} onSubmit={next} />
+              </>
+            )
           }
         })}
       </>

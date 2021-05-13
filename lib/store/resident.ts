@@ -5,7 +5,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 const initialState: MainResident = {
   hasAgreed: false,
   formData: {},
-  isLoggedIn: false
+  isLoggedIn: false,
+  name: "You",
+  slug: "you"
 }
 
 const slice = createSlice({

@@ -1,12 +1,13 @@
 import { getFormIdsFromApplicationSteps } from "./application-forms"
 import { Store as ReduxStore } from "../store"
-import { updateFormDataForResident } from "../store/additionalResidents"
+import { updateResident } from "../store/additionalResidents"
 import { MAIN_RESIDENT_KEY, updateFormData } from "../store/resident"
 import { ApplicationSteps } from "../types/application"
 import { FormData } from "../types/form"
 import { Resident } from "../types/resident"
 import { Store } from "redux"
 import { IMMIGRATION_STATUS, PERSONAL_DETAILS, YOUR_SITUATION } from "./form-data"
+import { checkEligible } from "./form"
 
 export const applicationStepsRemaining = (resident: Resident): number => {
   const steps = getFormIdsFromApplicationSteps(getApplicationStepsForResident(resident))
@@ -127,6 +128,11 @@ export const updateResidentsFormData = (store: Store, resident: Resident, data: 
   else {
     resident = { ...resident }
     resident.formData = { ...resident.formData, ...data }
-    store.dispatch(updateFormDataForResident(resident))
+
+    const eligibility = checkEligible(resident.formData)
+    resident.isEligible = eligibility[0]
+    resident.ineligibilityReasons = eligibility[1]
+
+    store.dispatch(updateResident(resident))
   }
 }

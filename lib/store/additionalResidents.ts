@@ -67,7 +67,7 @@ const slice = createSlice({
      * @param {PayloadAction<Resident>} action The resident we wish to update
      * @returns {Resident[]} New state with updated resident
      */
-    updateFormDataForResident: (state: Resident[], action: PayloadAction<Resident>): Resident[] => {
+    updateResident: (state: Resident[], action: PayloadAction<Resident>): Resident[] => {
       let index = 0
       const newState = [...state]
 
@@ -85,4 +85,4 @@ const slice = createSlice({
 })
 
 export default slice
-export const { addResident, addResidentFromFormData, deleteResident, updateFormDataForResident } = slice.actions
+export const { addResident, addResidentFromFormData, deleteResident, updateResident } = slice.actions

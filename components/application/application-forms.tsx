@@ -7,7 +7,9 @@ import { FormData } from "../../lib/types/form"
 import { Resident } from "../../lib/types/resident"
 import { getFormIdsFromApplicationSteps } from "../../lib/utils/application-forms"
 import { getFormData } from "../../lib/utils/form-data"
-import { updateResidentsFormData } from "../../lib/utils/resident"
+import { hasResidentAnsweredForm, updateResidentsFormData } from "../../lib/utils/resident"
+import SummaryList, { SummaryListActions, SummaryListRow, SummaryListValue } from "../summary-list"
+import Tag from "../tag"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useState } from "react"
@@ -81,11 +83,23 @@ export default function ApplicationForms({ activeStep, baseHref, onCompletion, r
         {steps.map((step, index) => (
           <div key={index}>
             <HeadingTwo content={step.heading} />
-            {step.steps.map((formStep, i) => (
-              <div key={i}>
-                <Link href={`${baseHref}/${formStep.id}`}>{formStep.heading}</Link>
-              </div>
-            ))}
+            <SummaryList>
+              {step.steps.map((formStep, i) => (
+                <SummaryListRow key={i}>
+                  <SummaryListValue>
+                    <Link href={`${baseHref}/${formStep.id}`}>
+                      {formStep.heading}
+                    </Link>
+                  </SummaryListValue>
+                  <SummaryListActions>
+                    {hasResidentAnsweredForm(resident, formStep.id) ?
+                      <Tag content="Check answers" /> :
+                      <Tag content="Todo" variant="grey" />
+                    }
+                  </SummaryListActions>
+                </SummaryListRow>
+              ))}
+            </SummaryList>
           </div>
         ))}
       </>

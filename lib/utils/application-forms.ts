@@ -1,6 +1,10 @@
 import { ApplicationSteps } from "../types/application"
 import { IMMIGRATION_STATUS, YOUR_SITUATION } from "./form-data"
 
+/**
+ * Eligibility form steps
+ * @returns {ApplicationSteps[]}
+ */
 export const getEligibilitySteps = (): ApplicationSteps[] => {
   return [
     {

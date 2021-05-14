@@ -1,11 +1,19 @@
 interface TagProps {
   className?: string
-  content: string 
+  content: string
+  variant?: "green" | "grey" | "red" | "yellow"
 }
 
-export default function Tag({ className, content }: TagProps): JSX.Element {
+export default function Tag({ className, content, variant }: TagProps): JSX.Element {
+  className = className || ""
+  className += " govuk-tag lbh-tag"
+
+  if (variant) {
+    className += " lbh-tag--" + variant
+  }
+
   return (
-    <span className={className + " govuk-tag lbh-tag"}>
+    <span className={className}>
       {content}
     </span>
   )

@@ -1,7 +1,7 @@
 import { Store as ReduxStore } from "../store"
 import { updateFormDataForResident } from "../store/additionalResidents"
 import { MAIN_RESIDENT_KEY, updateFormData } from "../store/resident"
-import { ApplicationStep, ApplicationSteps } from "../types/application"
+import { ApplicationSteps } from "../types/application"
 import { FormData } from "../types/form"
 import { Resident } from "../types/resident"
 import { Store } from "redux"
@@ -34,6 +34,11 @@ export const getResident = (slug: string, store: ReduxStore): Resident | undefin
   }
 }
 
+/**
+ * Get the application form steps required by this resident
+ * @param {Resident} resident The resident we wish to get the steps for
+ * @returns {ApplicationSteps[]} An object of steps, grouped
+ */
 export const getApplicationStepsForResident = (resident: Resident): ApplicationSteps[] => {
   if (isMainResident(resident)) {
     return [
@@ -78,6 +83,16 @@ export const getApplicationStepsForResident = (resident: Resident): ApplicationS
       }
     ]
   }
+}
+
+/**
+ * Has the user answered any of the questions from the form data / section?
+ * @param {Resident} resident The resident
+ * @param {string} form ID of the form data / section
+ * @returns {boolean}
+ */
+export const hasResidentAnsweredForm = (resident: Resident, form: string): boolean => {
+  return resident.formData[form] != undefined
 }
 
 /**

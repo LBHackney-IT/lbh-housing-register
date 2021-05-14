@@ -116,7 +116,7 @@ export const updateResidentsFormData = (store: Store, resident: Resident, data: 
   }
   else {
     resident = { ...resident }
-    resident.formData = { ... resident.formData, data }
+    resident.formData = { ...resident.formData, ...data }
     store.dispatch(updateFormDataForResident(resident))
   }
 }

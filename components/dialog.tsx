@@ -11,20 +11,22 @@ interface DialogProps {
 
 export default function Dialog({ copy, title, onCancel, onConfirmation }: DialogProps) {
   return (
-    <div className="lbh-dialog" aria-modal="true" aria-label="Are you sure?" role="dialog">
-      {title && <HeadingTwo content={title} />}
-      {copy && <Paragraph>{copy}</Paragraph>}
+    <div data-reach-dialog-overlay>
+      <div className="lbh-dialog" aria-modal="true" aria-label="Are you sure?" role="dialog">
+        {title && <HeadingTwo content={title} />}
+        {copy && <Paragraph>{copy}</Paragraph>}
 
-      <div className="lbh-dialog__actions">
-        <a onClick={onConfirmation} className="govuk-button lbh-button">
-          Yes
-        </a>
-        
-        {onCancel && 
-          <Button className="lbh-link lbh-link--no-visited-state" onClick={onCancel}>
-            No, cancel
-          </Button>
-        }
+        <div className="lbh-dialog__actions">
+          <a onClick={onConfirmation} className="govuk-button lbh-button">
+            Yes
+          </a>
+          
+          {onCancel && 
+            <Button className="lbh-link lbh-link--no-visited-state" onClick={onCancel}>
+              No, cancel
+            </Button>
+          }
+        </div>
       </div>
     </div>
   )

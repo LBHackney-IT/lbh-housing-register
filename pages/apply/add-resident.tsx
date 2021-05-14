@@ -1,6 +1,7 @@
 import { HeadingOne } from "../../components/content/headings"
 import Form from "../../components/form/form"
 import Layout from "../../components/layout/resident-layout"
+import whenAgreed from "../../lib/hoc/whenAgreed"
 import whenEligible from "../../lib/hoc/whenEligible"
 import { Store } from "../../lib/store"
 import { addResidentFromFormData } from "../../lib/store/additionalResidents"
@@ -34,4 +35,4 @@ const AddPersonToApplication = (): JSX.Element => {
   )
 }
 
-export default whenEligible(AddPersonToApplication)
+export default whenAgreed(whenEligible(AddPersonToApplication))

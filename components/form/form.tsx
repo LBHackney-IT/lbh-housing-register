@@ -11,45 +11,54 @@ import Paragraph from "../content/paragraph"
 interface FormProps {
   buttonText?: string
   formData: MultiStepForm
+  onExit?: () => void
   onSave?: (values: FormData) => void
   onSubmit: (values: FormData, bag: any) => void
   residentsPreviousAnswers?: FormData
 }
 
-export default function Form({ buttonText, formData, onSave, onSubmit, residentsPreviousAnswers }: FormProps): JSX.Element {
+export default function Form({ buttonText, formData, onExit, onSave, onSubmit, residentsPreviousAnswers }: FormProps): JSX.Element {
   const [formDataSnapshot] = useState(formData)
   const [stepNumber, setStepNumber] = useState(0)
   const [snapshot, setSnapshot] = useState(residentsPreviousAnswers ?? getInitialValuesFromMultiStepForm(formDataSnapshot))
 
+  let exit = false
   const step: FormStep = formDataSnapshot.steps[stepNumber]
   const totalSteps: number = formDataSnapshot.steps.length
   const isLastStep: boolean = stepNumber === totalSteps - 1
 
   const next = (values: FormData): void => {
     // TODO: Scroll to top + set focus to first field
-    setSnapshot(values);
-    setStepNumber(Math.min(stepNumber + 1, totalSteps - 1));
-  };
+    setSnapshot(values)
+    setStepNumber(Math.min(stepNumber + 1, totalSteps - 1))
+  }
 
   const previous = (values: FormData): void => {
     // TODO: Scroll to top + set focus to first field
-    setSnapshot(values);
-    setStepNumber(Math.max(stepNumber - 1, 0));
-  };
+    setSnapshot(values)
+    setStepNumber(Math.max(stepNumber - 1, 0))
+  }
 
   const handleSubmit = async (values: FormData, bag: any) => {
     if (onSave) {
-      onSave(values);
+      onSave(values)
     }
 
     if (isLastStep) {
-      return onSubmit(values, bag);
+      onSubmit(values, bag)
+
+      if (exit && onExit) {
+        onExit()
+      }
+    }
+    else if (exit && onExit) {
+      onExit()
     }
     else {
-      bag.setTouched({});
-      next(values);
+      bag.setTouched({})
+      next(values)
     }
-  };
+  }
 
   return (
     <>
@@ -80,11 +89,19 @@ export default function Form({ buttonText, formData, onSave, onSubmit, residents
               )}
 
               <div className="c-flex__1 text-right">
-                <Button disabled={isSubmitting} type="submit">
+                <Button onClick={() => exit = false} disabled={isSubmitting} type="submit">
                   {buttonText ? buttonText : "Save"}
                 </Button>
               </div>
             </div>
+
+            {onExit && (
+              <div className="text-right">
+                <Button onClick={() => exit = true} disabled={isSubmitting} type="submit" secondary={true}>
+                  Save and exit
+                </Button>
+              </div>
+            )}
           </FormikForm>
         )}
       </Formik>

@@ -1,3 +1,4 @@
+import { getFormIdsFromApplicationSteps } from "./application-forms"
 import { Store as ReduxStore } from "../store"
 import { updateFormDataForResident } from "../store/additionalResidents"
 import { MAIN_RESIDENT_KEY, updateFormData } from "../store/resident"
@@ -6,6 +7,15 @@ import { FormData } from "../types/form"
 import { Resident } from "../types/resident"
 import { Store } from "redux"
 import { IMMIGRATION_STATUS, PERSONAL_DETAILS, YOUR_SITUATION } from "./form-data"
+
+export const applicationStepsRemaining = (resident: Resident): number => {
+  const steps = getFormIdsFromApplicationSteps(getApplicationStepsForResident(resident))
+  let completeSteps = 0
+
+  steps.map(step => hasResidentAnsweredForm(resident, step) ? completeSteps++ : null)
+
+  return steps.length - completeSteps
+}
 
 /**
  * Generate a slug from an input

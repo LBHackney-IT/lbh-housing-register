@@ -7,6 +7,7 @@ import Tag from "../../components/tag"
 import whenEligible from "../../lib/hoc/whenEligible"
 import { Store } from "../../lib/store"
 import { MAIN_RESIDENT_KEY } from "../../lib/store/resident"
+import { applicationStepsRemaining } from "../../lib/utils/resident"
 import Link from "next/link"
 import { useStore } from "react-redux"
 
@@ -26,19 +27,26 @@ const ApplicationPersonsOverview = (): JSX.Element => {
       <HeadingOne content="People in this application" />
       
       <SummaryList>
-        {users.map((user, index) => (
-          <Row key={index} verticalAlign="middle">
-            <Key>
-              <>
-                <Hint content={`Person ${index + 1}` + (users.length > 1 && user.slug == MAIN_RESIDENT_KEY ? " (you)" : "")} />
-                <Link href={`/apply/${user.slug}`}>{user.name}</Link>
-              </>
-            </Key>
-            <Actions>
-              <Tag content="X tasks to do" />
-            </Actions>
-          </Row>
-        ))}
+        {users.map((user, index) => {
+          const tasksRemaining = applicationStepsRemaining(user)
+
+          return (
+            <Row key={index} verticalAlign="middle">
+              <Key>
+                <>
+                  <Hint content={`Person ${index + 1}` + (users.length > 1 && user.slug == MAIN_RESIDENT_KEY ? " (you)" : "")} />
+                  <Link href={`/apply/${user.slug}`}>{user.name}</Link>
+                </>
+              </Key>
+              <Actions>
+                {tasksRemaining == 0 ? 
+                  <Tag content="Done" variant="green" /> :
+                  <Tag content={`${tasksRemaining} task${(tasksRemaining > 1 ? "s" : "")} to do`} />
+                }
+              </Actions>
+            </Row>
+          )
+        })}
       </SummaryList>
 
       <ButtonLink href="/apply/add-resident" secondary={true}>

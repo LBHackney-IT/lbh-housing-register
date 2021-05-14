@@ -40,7 +40,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
               </Key>
               <Actions>
                 {tasksRemaining == 0 ? 
-                  <Tag content="Done" variant="green" /> :
+                  <Tag content="Completed" variant="green" /> :
                   <Tag content={`${tasksRemaining} task${(tasksRemaining > 1 ? "s" : "")} to do`} />
                 }
               </Actions>

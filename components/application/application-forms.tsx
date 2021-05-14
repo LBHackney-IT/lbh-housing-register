@@ -64,12 +64,13 @@ export default function ApplicationForms({ activeStep, baseHref, onCompletion, r
         {formSteps.map((step, index) => {
           if (step == activeStep) {
             const formData = getFormData(step)
+            const residentsPreviousAnswers = resident.formData[step]
 
             return (
               <div key={index}>
                 {formData.heading && <HeadingOne content={formData.heading} />}
                 {formData.copy && <Paragraph>{formData.copy}</Paragraph>}
-                <Form buttonText="Save and continue" formData={formData} onSave={onSave} onSubmit={next} />
+                <Form buttonText="Save and continue" formData={formData} onSave={onSave} onSubmit={next} residentsPreviousAnswers={residentsPreviousAnswers} />
               </div>
             )
           }

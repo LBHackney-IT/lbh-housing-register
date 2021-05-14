@@ -39,10 +39,11 @@ const ApplicationPersonsOverview = (): JSX.Element => {
                 </>
               </Key>
               <Actions>
-                {tasksRemaining == 0 ? 
-                  <Tag content="Completed" variant="green" /> :
-                  <Tag content={`${tasksRemaining} task${(tasksRemaining > 1 ? "s" : "")} to do`} />
-                }
+                {user.isEligible === false ? <Tag content="Not eligible" variant="red" /> : (
+                  tasksRemaining == 0 ? 
+                    <Tag content="Completed" variant="green" /> :
+                    <Tag content={`${tasksRemaining} task${(tasksRemaining > 1 ? "s" : "")} to do`} />
+                )}
               </Actions>
             </Row>
           )

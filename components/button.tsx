@@ -2,14 +2,15 @@ import Link from "next/link"
 
 interface ButtonProps {
   children: string
+  className?: string
   disabled?: boolean
   onClick?: () => void
   secondary?: boolean
   type?: "button" | "reset" | "submit"
 }
 
-export default function Button({ children, disabled, onClick, secondary, type }: ButtonProps): JSX.Element {
-  let className = "govuk-button lbh-button"
+export default function Button({ children, className, disabled, onClick, secondary, type }: ButtonProps): JSX.Element {
+  className += " govuk-button lbh-button"
 
   if (disabled) {
     className += " govuk-button--disabled lbh-button--disabled"

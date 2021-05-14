@@ -1,5 +1,17 @@
-import { ApplicationSteps } from "../types/application"
+import { ApplicationStep, ApplicationSteps } from "../types/application"
 import { IMMIGRATION_STATUS, YOUR_SITUATION } from "./form-data"
+
+/**
+ * Get application step model from ID
+ * @param {string} id The ID of the form step
+ * @param {ApplicationSteps[]} steps The steps to check against
+ * @returns {ApplicationStep}
+ */
+export const getApplicationStepFromId = (id: string, steps: ApplicationSteps[]): ApplicationStep | undefined => {
+  const activeSection = steps.filter(step => step.steps.filter(s => s.id == id).length > 0)[0]?.steps
+  const activeStepModel = activeSection?.filter(step => step.id == id)[0]
+  return activeStepModel
+}
 
 /**
  * Eligibility form steps

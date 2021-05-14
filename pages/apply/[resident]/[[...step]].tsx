@@ -5,6 +5,7 @@ import Layout from "../../../components/layout/resident-layout"
 import whenEligible from "../../../lib/hoc/whenEligible"
 import { Store } from "../../../lib/store"
 import { deleteResident } from "../../../lib/store/additionalResidents"
+import { getApplicationStepFromId } from "../../../lib/utils/application-forms"
 import { getApplicationStepsForResident, getResident, isMainResident } from "../../../lib/utils/resident"
 import { useRouter } from "next/router"
 import { useStore } from "react-redux"
@@ -39,6 +40,17 @@ const ApplicationStep = (): JSX.Element => {
       name: currentResident.name
     }
   ]
+
+  if (activeStep) {
+    const applicationStep = getApplicationStepFromId(activeStep, steps)
+    if (applicationStep) {
+      breadcrumbs.push({
+        href: `${baseHref}/${applicationStep.id}`,
+        name: applicationStep.heading
+      })
+    }
+  }
+
 
   const onDelete = () => {
     store.dispatch(deleteResident(currentResident))

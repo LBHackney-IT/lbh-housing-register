@@ -1,20 +1,51 @@
+import { ButtonLink } from "../../components/button"
 import { HeadingOne } from "../../components/content/headings"
+import Hint from "../../components/form/hint"
 import Layout from "../../components/layout/resident-layout"
+import SummaryList, { SummaryListActions as Actions, SummaryListKey as Key, SummaryListRow as Row } from "../../components/summary-list"
+import Tag from "../../components/tag"
 import whenEligible from "../../lib/hoc/whenEligible"
+import { Store } from "../../lib/store"
+import { MAIN_RESIDENT_KEY } from "../../lib/store/resident"
 import Link from "next/link"
+import { useStore } from "react-redux"
 
 const ApplicationPersonsOverview = (): JSX.Element => {
+  const store = useStore<Store>()
+  const users = [store.getState().resident, ...store.getState().additionalResidents]
+
+  const breadcrumbs = [
+    {
+      href: "/apply/overview",
+      name: "Application"
+    }
+  ]
+
   return (
-    <Layout>
+    <Layout breadcrumbs={breadcrumbs}>
       <HeadingOne content="People in this application" />
       
-      <Link href={`/apply/person-one`}>
-        You
-      </Link>
+      <SummaryList>
+        {users.map((user, index) => (
+          <Row key={index} verticalAlign="middle">
+            <Key>
+              <>
+                <Hint content={`Person ${index + 1}` + (users.length > 1 && user.slug == MAIN_RESIDENT_KEY ? " (you)" : "")} />
+                <Link href={`/apply/${user.slug}`}>{user.name}</Link>
+              </>
+            </Key>
+            <Actions>
+              <Tag content="X tasks to do" />
+            </Actions>
+          </Row>
+        ))}
+      </SummaryList>
+
+      <ButtonLink href="/apply/add-resident" secondary={true}>
+        Add a person
+      </ButtonLink>
     </Layout>
   )
 }
-
-// TODO: list of people
 
 export default whenEligible(ApplicationPersonsOverview)

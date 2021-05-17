@@ -1,8 +1,8 @@
 {
+  "heading": "Your situation",
+  "copy": "Help us determine if you need alternative support from the Council",
   "steps": [
     {
-      "heading": "Your situation",
-      "copy": "Help us determine if you need alternative support from the Council",
       "fields": [
         {
           "as": "checkboxes",

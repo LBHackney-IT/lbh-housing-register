@@ -1,0 +1,7 @@
+@import "node_modules/lbh-frontend/lbh/components/lbh-summary-list/summary-list";
+
+@each $position in bottom middle {
+  .govuk-summary-list__row__#{$position} > * {
+    vertical-align: $position;
+  }
+}

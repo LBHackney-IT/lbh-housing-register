@@ -45,7 +45,7 @@ const Apply = (): JSX.Element => {
         If I do not allow entry, my application may be declined.
       </Paragraph>
 
-      <Form formData={agreementFormData} onSave={onSave} onSubmit={onSubmit} />
+      <Form buttonText="Save and continue" formData={agreementFormData} onSave={onSave} onSubmit={onSubmit} />
     </Layout>
   )
 }

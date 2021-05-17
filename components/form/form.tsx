@@ -1,6 +1,6 @@
 import Button from "../button"
 import DynamicField from "./dynamic-field"
-import { HeadingOne } from "../content/headings"
+import { HeadingTwo } from "../content/headings"
 import { FormData, FormStep, MultiStepForm } from "../../lib/types/form"
 import { getDisplayStateOfField, getInitialValuesFromMultiStepForm } from "../../lib/utils/form"
 import { buildValidationSchema } from "../../lib/utils/validation"
@@ -9,12 +9,13 @@ import { useState } from "react"
 import Paragraph from "../content/paragraph"
 
 interface FormProps {
+  buttonText?: string
   formData: MultiStepForm
-  onSave?: (values: {}) => void
-  onSubmit: (values: {}, bag: any) => void
+  onSave?: (values: FormData) => void
+  onSubmit: (values: FormData, bag: any) => void
 }
 
-export default function Form({ formData, onSave, onSubmit }: FormProps): JSX.Element {
+export default function Form({ buttonText, formData, onSave, onSubmit }: FormProps): JSX.Element {
   const [formDataSnapshot] = useState(formData)
   const [stepNumber, setStepNumber] = useState(0)
   const [snapshot, setSnapshot] = useState(getInitialValuesFromMultiStepForm(formDataSnapshot))
@@ -58,7 +59,7 @@ export default function Form({ formData, onSave, onSubmit }: FormProps): JSX.Ele
       >
         {({ isSubmitting, values }) => (
           <FormikForm>
-            {step.heading && <HeadingOne content={step.heading} />}
+            {step.heading && <HeadingTwo content={step.heading} />}
             {step.copy && <Paragraph>{step.copy}</Paragraph>}
             
             {step.fields.map((field, index) => {
@@ -79,7 +80,7 @@ export default function Form({ formData, onSave, onSubmit }: FormProps): JSX.Ele
 
               <div className="c-flex__1 text-right">
                 <Button disabled={isSubmitting} type="submit">
-                  Save and continue
+                  {buttonText ? buttonText : "Save"}
                 </Button>
               </div>
             </div>

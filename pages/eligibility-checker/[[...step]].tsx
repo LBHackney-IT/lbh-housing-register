@@ -35,6 +35,7 @@ export default function EligibilityChecker(): JSX.Element {
         activeStep={activeStep}
         baseHref={baseHref}
         onCompletion={onCompletion}
+        resident={resident}
         steps={steps}
         />
     </Layout>

@@ -22,16 +22,17 @@ const ApplicationStartPage = (): JSX.Element => {
   const signUp = async (values: FormData) => {
     try {
       const { user } = await Auth.signUp({
-        username: values.username,
+        username: values.email,
         password: values.password,
         attributes: {
-          email: values.email,
+          given_name: values.first_name,
+          family_name: values.last_name,
           phone_number: values.phone_number, // E.164 number convention
         }
       });
 
       // TODO: save user to store
-      store.dispatch(createUser(values.username))
+      store.dispatch(createUser(values.email))
       router.push("/apply/verify")
 
     } catch (error) {

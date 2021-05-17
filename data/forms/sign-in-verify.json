@@ -3,8 +3,9 @@
     {
       "fields": [
         {
-          "label": "Username",
-          "name": "username",
+          "label": "Email",
+          "name": "email",
+          "type": "email",
           "validation": {
             "required": true
           }

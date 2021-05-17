@@ -3,21 +3,17 @@
     {
       "fields": [
         {
-          "label": "Username",
-          "name": "username",
+          "label": "First name",
+          "name": "first_name",
           "validation": {
             "required": true
           }
         },
         {
-          "label": "Password",
-          "name": "password",
-          "type": "password",
-          "hint": "Testing123!",
-          "initialValue": "Testing123!",
+          "label": "Last name",
+          "name": "last_name",
           "validation": {
-            "required": true,
-            "min": 8
+            "required": true
           }
         },
         {
@@ -33,6 +29,17 @@
           "name": "phone_number",
           "validation": {
             "required": true
+          }
+        },
+        {
+          "label": "Password",
+          "name": "password",
+          "type": "password",
+          "hint": "Testing123!",
+          "initialValue": "Testing123!",
+          "validation": {
+            "required": true,
+            "min": 8
           }
         },
         {

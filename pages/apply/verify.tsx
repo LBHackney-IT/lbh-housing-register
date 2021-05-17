@@ -22,15 +22,15 @@ const ApplicationVerifyPage = (): JSX.Element => {
   }
 
   const providedUsername: FormData = {
-    "username": resident.username
+    "email": resident.username
   }
 
   const confirmSignUp = async (values: FormData) => {
     try {
-      await Auth.confirmSignUp(values.username, values.code)
+      await Auth.confirmSignUp(values.email, values.code)
 
       // TODO: turns out we also need to sign in at this point!
-      await Auth.signIn(values.username, "Testing123!")
+      await Auth.signIn(values.email, "Testing123!")
 
       // TODO: update store
       store.dispatch(logIn())

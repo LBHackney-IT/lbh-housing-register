@@ -18,7 +18,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
   const resident = store.getState().resident
 
   if (resident.isLoggedIn) {
-    router.push("/apply/overview")
+    router.push("/apply/agree-terms")
   }
 
   const providedUsername: FormData = {

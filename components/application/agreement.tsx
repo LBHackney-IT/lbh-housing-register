@@ -14,7 +14,7 @@ export default function ApplicationAgreement() {
   const resident = store.getState().resident
 
   const onSubmit = () => {
-    router.push("/apply/start")
+    router.push("/apply/overview")
   }
 
   if (resident.hasAgreed) {

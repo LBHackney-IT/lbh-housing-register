@@ -8,32 +8,46 @@ import Button from "../../components/button"
 import { FormData } from "../../lib/types/form"
 import { getSignInVerifyFormData } from "../../lib/utils/form-data"
 import { useRouter } from "next/router";
+import { Store } from "../../lib/store";
+import { useStore } from "react-redux";
+import { logIn } from "../../lib/store/resident";
 
 const ApplicationVerifyPage = (): JSX.Element => {
   const router = useRouter()
+  const store = useStore<Store>()
+  const resident = store.getState().resident
+
+  if (resident.isLoggedIn) {
+    router.push("/apply/overview")
+  }
+
+  const providedUsername: FormData = {
+    "username": resident.username
+  }
 
   const confirmSignUp = async (values: FormData) => {
     try {
       await Auth.confirmSignUp(values.username, values.code)
 
       // TODO: turns out we also need to sign in at this point!
-      let signin = await Auth.signIn(values.username, "Testing123!")
-      console.log(signin)
+      await Auth.signIn(values.username, "Testing123!")
 
       // TODO: update store
-      //router.push("/apply/overview")
+      store.dispatch(logIn())
+      router.push("/apply/overview")
 
     } catch (error) {
       console.log('error confirming sign up', error)
     }
   }
 
-  const resendCode = async () => {
+  const resendCode = async (username: string) => {
     try {
-      let response = await Auth.resendSignUp('testing');
-      console.log(response)
+      await Auth.resendSignUp(username)
 
+      // TODO: provide UI update
     } catch (error) {
+      // TODO: handle error
       console.log('error sending code', error)
     }
   }
@@ -41,13 +55,18 @@ const ApplicationVerifyPage = (): JSX.Element => {
   return (
     <Layout>
       <HeadingOne content="Sign in to continue" />
-      <Paragraph>
-        We've sent a code to <strong>placeholder@email.com</strong> to confirm your account. Enter it below.
-      </Paragraph>
-      <Button onClick={resendCode} secondary>
-        Send again
-      </Button>
-      <Form formData={getSignInVerifyFormData()} onSubmit={confirmSignUp} />
+      {resident.username &&
+        <div>
+          <Paragraph>
+            We've sent a code to <strong>{resident.username}</strong> to confirm your account. Enter it below.
+          </Paragraph>
+          <Button onClick={() => resendCode(resident.username)} secondary>
+            Send again
+          </Button>
+        </div>
+      }
+
+      <Form formData={getSignInVerifyFormData()} residentsPreviousAnswers={providedUsername} onSubmit={confirmSignUp} />
     </Layout>
   )
 }

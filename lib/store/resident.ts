@@ -8,6 +8,7 @@ const initialState: MainResident = {
   hasAgreed: false,
   formData: {},
   isLoggedIn: false,
+  username: "",
   name: "You",
   slug: MAIN_RESIDENT_KEY
 }
@@ -26,6 +27,18 @@ const slice = createSlice({
       return {
         ...state,
         hasAgreed: action.payload
+      }
+    },
+
+    /**
+     * Register the resident
+     * @param {MainResident} state The current state
+     * @returns {MainResident} Updated resident state
+     */
+    createUser: (state: MainResident, action: PayloadAction<string>): MainResident => {
+      return {
+        ...state,
+        username: action.payload
       }
     },
 
@@ -57,7 +70,7 @@ const slice = createSlice({
      * @param {PayloadAction<{[key: string]: FormData}>} action The form data
      * @returns {MainResident} Updated resident state
      */
-    updateFormData: (state: MainResident, action: PayloadAction<{[key: string]: FormData}>): MainResident => {
+    updateFormData: (state: MainResident, action: PayloadAction<{ [key: string]: FormData }>): MainResident => {
       state.formData = {
         ...state.formData,
         ...action.payload
@@ -73,4 +86,4 @@ const slice = createSlice({
 })
 
 export default slice
-export const { agree, logIn, logOut, updateFormData } = slice.actions
+export const { agree, createUser, logIn, logOut, updateFormData } = slice.actions

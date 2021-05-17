@@ -5,8 +5,6 @@
         {
           "label": "Username",
           "name": "username",
-          "initialValue": "testing",
-          "hint": "This should already be known, so can be removed after testing",
           "validation": {
             "required": true
           }

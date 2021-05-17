@@ -6,9 +6,18 @@ import { useRouter } from "next/router"
 import Form from "../../components/form/form"
 import { FormData } from "../../lib/types/form"
 import { getSignInDetailsFormData } from "../../lib/utils/form-data"
+import { useStore } from "react-redux"
+import { Store } from "../../lib/store"
+import { createUser } from "../../lib/store/resident"
 
 const ApplicationStartPage = (): JSX.Element => {
   const router = useRouter()
+  const store = useStore<Store>()
+  const resident = store.getState().resident
+
+  if (resident.isLoggedIn) {
+    router.push("/apply/overview")
+  }
 
   const signUp = async (values: FormData) => {
     try {
@@ -20,10 +29,11 @@ const ApplicationStartPage = (): JSX.Element => {
           phone_number: values.phone_number, // E.164 number convention
         }
       });
-      console.log(user);
 
       // TODO: save user to store
+      store.dispatch(createUser(values.username))
       router.push("/apply/verify")
+
     } catch (error) {
       // TODO: handle error
       console.log('error signing up:', error);

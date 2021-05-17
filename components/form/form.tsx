@@ -13,12 +13,13 @@ interface FormProps {
   formData: MultiStepForm
   onSave?: (values: FormData) => void
   onSubmit: (values: FormData, bag: any) => void
+  residentsPreviousAnswers?: FormData
 }
 
-export default function Form({ buttonText, formData, onSave, onSubmit }: FormProps): JSX.Element {
+export default function Form({ buttonText, formData, onSave, onSubmit, residentsPreviousAnswers }: FormProps): JSX.Element {
   const [formDataSnapshot] = useState(formData)
   const [stepNumber, setStepNumber] = useState(0)
-  const [snapshot, setSnapshot] = useState(getInitialValuesFromMultiStepForm(formDataSnapshot))
+  const [snapshot, setSnapshot] = useState(residentsPreviousAnswers ?? getInitialValuesFromMultiStepForm(formDataSnapshot))
 
   const step: FormStep = formDataSnapshot.steps[stepNumber]
   const totalSteps: number = formDataSnapshot.steps.length

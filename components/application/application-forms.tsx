@@ -1,11 +1,15 @@
-import { HeadingOne } from "../content/headings"
+import { HeadingOne, HeadingTwo } from "../content/headings"
 import Paragraph from "../content/paragraph"
 import Form from "../form/form"
 import { Store } from "../../lib/store"
+import { ApplicationSteps } from "../../lib/types/application"
 import { FormData } from "../../lib/types/form"
 import { Resident } from "../../lib/types/resident"
+import { getFormIdsFromApplicationSteps } from "../../lib/utils/application-forms"
 import { getFormData } from "../../lib/utils/form-data"
-import { updateResidentsFormData } from "../../lib/utils/resident"
+import { hasResidentAnsweredForm, updateResidentsFormData } from "../../lib/utils/resident"
+import SummaryList, { SummaryListActions, SummaryListRow, SummaryListValue } from "../summary-list"
+import Tag from "../tag"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useState } from "react"
@@ -16,7 +20,7 @@ interface ApplicationFormsProps {
   baseHref: string
   onCompletion: (values: FormData) => void
   resident: Resident
-  steps: string[]
+  steps: ApplicationSteps[]
 }
 
 /**
@@ -31,11 +35,13 @@ export default function ApplicationForms({ activeStep, baseHref, onCompletion, r
   const store = useStore<Store>()
   const [applicationData, setApplicationData] = useState({})
 
-  if (steps.includes(activeStep!)) {
+  const formSteps = getFormIdsFromApplicationSteps(steps)
+
+  if (formSteps.includes(activeStep!)) {
     const next = () => {
-      const index = steps.indexOf(activeStep!) + 1;
-      if (index < steps.length) {
-        activeStep = steps[index]
+      const index = formSteps.indexOf(activeStep!) + 1;
+      if (index < formSteps.length) {
+        activeStep = formSteps[index]
         router.replace(`${baseHref}/${activeStep}`)
       }
     }
@@ -47,23 +53,24 @@ export default function ApplicationForms({ activeStep, baseHref, onCompletion, r
       setApplicationData(data)
       updateResidentsFormData(store, resident, data)
 
-      const index = steps.indexOf(activeStep!) + 1;
-      if (index == steps.length) {
+      const index = formSteps.indexOf(activeStep!) + 1;
+      if (index == formSteps.length) {
         onCompletion(data)
       }
     }
 
     return (
       <>
-        {steps.map((step, index) => {
+        {formSteps.map((step, index) => {
           if (step == activeStep) {
             const formData = getFormData(step)
+            const residentsPreviousAnswers = resident.formData[step]
 
             return (
               <div key={index}>
                 {formData.heading && <HeadingOne content={formData.heading} />}
                 {formData.copy && <Paragraph>{formData.copy}</Paragraph>}
-                <Form buttonText="Save and continue" formData={formData} onSave={onSave} onSubmit={next} />
+                <Form buttonText="Save and continue" formData={formData} onSave={onSave} onSubmit={next} residentsPreviousAnswers={residentsPreviousAnswers} />
               </div>
             )
           }
@@ -74,13 +81,28 @@ export default function ApplicationForms({ activeStep, baseHref, onCompletion, r
   else {
     return (
       <>
-        {steps.map((step, index) => {
-          return (
-            <div key={index}>
-              <Link href={`${baseHref}/${step}`}>{step}</Link>
-            </div>
-          )
-        })}
+        {steps.map((step, index) => (
+          <div key={index}>
+            <HeadingTwo content={step.heading} />
+            <SummaryList>
+              {step.steps.map((formStep, i) => (
+                <SummaryListRow key={i}>
+                  <SummaryListValue>
+                    <Link href={`${baseHref}/${formStep.id}`}>
+                      {formStep.heading}
+                    </Link>
+                  </SummaryListValue>
+                  <SummaryListActions>
+                    {hasResidentAnsweredForm(resident, formStep.id) ?
+                      <Tag content="Check answers" /> :
+                      <Tag content="Todo" variant="grey" />
+                    }
+                  </SummaryListActions>
+                </SummaryListRow>
+              ))}
+            </SummaryList>
+          </div>
+        ))}
       </>
     )
   }

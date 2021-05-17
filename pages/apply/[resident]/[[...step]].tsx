@@ -52,12 +52,16 @@ const ApplicationStep = (): JSX.Element => {
   }
 
 
+  const onCompletion = () => {
+    router.push(baseHref)
+  }
+
   const onDelete = () => {
     store.dispatch(deleteResident(currentResident))
     router.push(returnHref)
   }
 
-  const onCompletion = () => {
+  const onExit = () => {
     router.push(baseHref)
   }
 
@@ -76,6 +80,7 @@ const ApplicationStep = (): JSX.Element => {
         activeStep={activeStep}
         baseHref={baseHref}
         onCompletion={onCompletion}
+        onExit={onExit}
         resident={currentResident!}
         steps={steps} />
       

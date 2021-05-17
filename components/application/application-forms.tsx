@@ -19,6 +19,7 @@ interface ApplicationFormsProps {
   activeStep?: string
   baseHref: string
   onCompletion: (values: FormData) => void
+  onExit?: () => void
   resident: Resident
   steps: ApplicationSteps[]
 }
@@ -30,7 +31,7 @@ interface ApplicationFormsProps {
  * @param {ApplicationFormsProps} param0 - Property object of the application
  * @returns {JSX.Element}
  */
-export default function ApplicationForms({ activeStep, baseHref, onCompletion, resident, steps }: ApplicationFormsProps): JSX.Element {
+export default function ApplicationForms({ activeStep, baseHref, onCompletion, onExit, resident, steps }: ApplicationFormsProps): JSX.Element {
   const router = useRouter()
   const store = useStore<Store>()
   const [applicationData, setApplicationData] = useState({})
@@ -70,7 +71,13 @@ export default function ApplicationForms({ activeStep, baseHref, onCompletion, r
               <div key={index}>
                 {formData.heading && <HeadingOne content={formData.heading} />}
                 {formData.copy && <Paragraph>{formData.copy}</Paragraph>}
-                <Form buttonText="Save and continue" formData={formData} onSave={onSave} onSubmit={next} residentsPreviousAnswers={residentsPreviousAnswers} />
+                <Form
+                  buttonText="Save and continue"
+                  formData={formData}
+                  onExit={onExit}
+                  onSave={onSave}
+                  onSubmit={next}
+                  residentsPreviousAnswers={residentsPreviousAnswers} />
               </div>
             )
           }

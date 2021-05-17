@@ -4,6 +4,7 @@ import Hint from "../../components/form/hint"
 import Layout from "../../components/layout/resident-layout"
 import SummaryList, { SummaryListActions as Actions, SummaryListKey as Key, SummaryListRow as Row } from "../../components/summary-list"
 import Tag from "../../components/tag"
+import whenAgreed from "../../lib/hoc/whenAgreed"
 import whenEligible from "../../lib/hoc/whenEligible"
 import { Store } from "../../lib/store"
 import { MAIN_RESIDENT_KEY } from "../../lib/store/resident"
@@ -57,4 +58,4 @@ const ApplicationPersonsOverview = (): JSX.Element => {
   )
 }
 
-export default whenEligible(ApplicationPersonsOverview)
+export default whenAgreed(whenEligible(ApplicationPersonsOverview))

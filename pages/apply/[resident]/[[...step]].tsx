@@ -2,6 +2,7 @@ import ApplicationForms from "../../../components/application/application-forms"
 import { HeadingOne } from "../../../components/content/headings"
 import Hint from "../../../components/form/hint"
 import Layout from "../../../components/layout/resident-layout"
+import whenAgreed from "../../../lib/hoc/whenAgreed"
 import whenEligible from "../../../lib/hoc/whenEligible"
 import { Store } from "../../../lib/store"
 import { deleteResident } from "../../../lib/store/additionalResidents"
@@ -91,4 +92,4 @@ const ApplicationStep = (): JSX.Element => {
   )
 }
 
-export default whenEligible(ApplicationStep)
+export default whenAgreed(whenEligible(ApplicationStep))

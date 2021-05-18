@@ -3,11 +3,15 @@ import Breadcrumbs from "../breadcrumbs"
 import SkipLink from "../skip-link"
 import Header from "../header"
 import { hasPhaseBanner } from "../../lib/utils/phase-banner"
-import React, { ReactNode } from "react"
-import { Auth } from 'aws-amplify';
+import React, { ReactNode, useEffect } from "react"
+import { Auth } from 'aws-amplify'
+import { CognitoUser } from '@aws-amplify/auth'
 import Button from "../../components/button";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { logIn, logOut } from "../../lib/store/resident"
+import { Store } from "../../lib/store"
+import { useStore } from "react-redux"
 
 interface ResidentLayoutProps {
   breadcrumbs?: { href: string, name: string }[]
@@ -17,19 +21,25 @@ interface ResidentLayoutProps {
 export default function ResidentLayout({ breadcrumbs, children }: ResidentLayoutProps): JSX.Element {
 
   const router = useRouter()
-  const [isLoggedIn, setLoggedIn] = useState(false)
+  const store = useStore<Store>()
+  const resident = store.getState().resident
 
-  // TODO: use store
-  Auth.currentAuthenticatedUser()
-    .then(user => setLoggedIn(true))
-    .catch(err => console.log(err));
+  useEffect(() => {
+    Auth.currentSession().then((session) => {
+      if (session && session.isValid()) {
+        Auth.currentAuthenticatedUser().then((user: CognitoUser) => {
+          store.dispatch(logIn())
+        })
+      }
+    })
+  }, [])
 
   const signOut = async () => {
     try {
       await Auth.signOut()
 
-      // TODO: update store
-      router.push("/apply")
+      store.dispatch(logOut())
+      router.push("/")
     } catch (error) {
       console.log('error signing out: ', error)
     }
@@ -46,7 +56,7 @@ export default function ResidentLayout({ breadcrumbs, children }: ResidentLayout
       <main id="main-content" className="lbh-main-wrapper">
         <div className="lbh-container">
 
-          {isLoggedIn &&
+          {resident.isLoggedIn &&
             <Button onClick={signOut} secondary>
               Sign out
             </Button>

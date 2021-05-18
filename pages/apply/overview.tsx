@@ -24,9 +24,9 @@ const ApplicationPersonsOverview = (): JSX.Element => {
   ]
 
   return (
-    <Layout>
+    <Layout breadcrumbs={breadcrumbs}>
       <HeadingOne content="People in this application" />
-      
+
       <SummaryList>
         {users.map((user, index) => {
           const tasksRemaining = applicationStepsRemaining(user)
@@ -41,7 +41,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
               </Key>
               <Actions>
                 {user.isEligible === false ? <Tag content="Not eligible" variant="red" /> : (
-                  tasksRemaining == 0 ? 
+                  tasksRemaining == 0 ?
                     <Tag content="Completed" variant="green" /> :
                     <Tag content={`${tasksRemaining} task${(tasksRemaining > 1 ? "s" : "")} to do`} />
                 )}

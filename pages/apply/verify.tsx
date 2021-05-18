@@ -18,7 +18,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
   const resident = store.getState().resident
 
   if (resident.isLoggedIn) {
-    router.push("/apply/agree-terms")
+    router.push("/apply/overview")
   }
 
   const providedUsername: FormData = {
@@ -56,14 +56,14 @@ const ApplicationVerifyPage = (): JSX.Element => {
     <Layout>
       <HeadingOne content="Sign in to continue" />
       {resident.username &&
-        <div>
+        <>
           <Paragraph>
             We've sent a code to <strong>{resident.username}</strong> to confirm your account. Enter it below.
           </Paragraph>
           <Button onClick={() => resendCode(resident.username)} secondary>
             Send again
           </Button>
-        </div>
+        </>
       }
 
       <Form formData={getSignInVerifyFormData()} residentsPreviousAnswers={providedUsername} onSubmit={confirmSignUp} />

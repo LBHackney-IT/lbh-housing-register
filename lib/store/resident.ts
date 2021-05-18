@@ -33,6 +33,7 @@ const slice = createSlice({
     /**
      * Register the resident
      * @param {MainResident} state The current state
+     * @param {PayloadAction<string>} action The residents name
      * @returns {MainResident} Updated resident state
      */
     createUser: (state: MainResident, action: PayloadAction<string>): MainResident => {
@@ -52,8 +53,6 @@ const slice = createSlice({
         ...state,
         isLoggedIn: true
       }
-
-      // TODO: user's name, id, ...
     },
 
     /**

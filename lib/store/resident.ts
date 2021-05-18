@@ -46,11 +46,13 @@ const slice = createSlice({
     /**
      * Log the resident in
      * @param {MainResident} state The current state
+     * @param {PayloadAction<string>} action The residents name
      * @returns {MainResident} Updated resident state
      */
-    logIn: (state: MainResident): MainResident => {
+    logIn: (state: MainResident, action: PayloadAction<string>): MainResident => {
       return {
         ...state,
+        username: action.payload,
         isLoggedIn: true
       }
     },

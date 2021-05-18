@@ -33,7 +33,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
       await Auth.signIn(values.email, "Testing123!")
 
       // TODO: update store
-      store.dispatch(logIn())
+      store.dispatch(logIn(values.email))
       router.push("/apply/overview")
 
     } catch (error) {

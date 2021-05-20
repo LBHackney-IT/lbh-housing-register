@@ -14,6 +14,10 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import { useStore } from "react-redux"
+import { addApplication } from "../../lib/gateways/applications-api"
+import { Application } from "../../domain/application"
+
+const applicationsMockData = require("../../mocks/data/applications")
 
 interface ApplicationFormsProps {
   activeStep?: string
@@ -35,6 +39,8 @@ export default function ApplicationForms({ activeStep, baseHref, onCompletion, o
   const router = useRouter()
   const store = useStore<Store>()
   const [applicationData, setApplicationData] = useState({})
+  const [status, setStatus] = useState({isComplete: false})
+
 
   const formSteps = getFormIdsFromApplicationSteps(steps)
 
@@ -50,7 +56,7 @@ export default function ApplicationForms({ activeStep, baseHref, onCompletion, o
     const onSave = (values: FormData) => {
       const data: {[key: string]: FormData} = {...applicationData}
       data[activeStep!] = values
-
+      saveToAPI(applicationsMockData[0]);
       setApplicationData(data)
       updateResidentsFormData(store, resident, data)
 
@@ -60,6 +66,15 @@ export default function ApplicationForms({ activeStep, baseHref, onCompletion, o
       }
     }
 
+    const saveToAPI = async (data: Application) => {
+      const apiResp = await addApplication(data)
+
+      if (!apiResp.statusCode) {
+        // We can then use this state for communicating error messages to the user
+        setStatus({isComplete: true})
+      }
+    }
+    
     return (
       <>
         {formSteps.map((step, index) => {

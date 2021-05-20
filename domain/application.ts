@@ -11,3 +11,9 @@ export interface Application {
   status: string;
   createdAt: string;
 }
+
+export interface ApplicationWithError extends Application {
+  statusCode?: number;
+  error?: string;
+  message?: string;
+}

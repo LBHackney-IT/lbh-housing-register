@@ -12,7 +12,6 @@ import { useRouter } from "next/router"
 import { useStore } from "react-redux"
 import Custom404 from "../../404"
 import DeleteLink from "../../../components/delete-link"
-import { Application } from "../../../domain/application"
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter()

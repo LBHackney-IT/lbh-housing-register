@@ -4,18 +4,47 @@
     {
       "fields": [
         {
-          "label": "Name",
+          "label": "First name",
           "name": "firstName",
           "validation": {
             "required": true
           }
         },
         {
-          "label": "Last Name",
+          "label": "Last name",
           "name": "surname",
           "validation": {
             "required": true
           }
+        },
+        {
+          "label": "Date of birth",
+          "name": "dateOfBirth",
+          "type": "date",
+          "validation": {
+            "required": true,
+            "min": "1900-01-01",
+            "max": "2100-01-01"
+          }
+        },
+        {
+          "as": "radios",
+          "label": "Sex",
+          "name": "gender",
+          "options": [
+            {
+              "label": "Male",
+              "value": "M"
+            },
+            {
+              "label": "Female",
+              "value": "F"
+            },
+            {
+              "label": "Prefer not to say",
+              "value": ""
+            }
+          ]
         }
       ]
     }

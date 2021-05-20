@@ -5,7 +5,14 @@
       "fields": [
         {
           "label": "Name",
-          "name": "name",
+          "name": "firstName",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "Last Name",
+          "name": "surname",
           "validation": {
             "required": true
           }

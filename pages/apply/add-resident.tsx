@@ -23,6 +23,7 @@ const AddPersonToApplication = (): JSX.Element => {
   ]
 
   const onSubmit = (values: FormData) => {
+    // TODO: call API with patch
     store.dispatch(addResidentFromFormData(values))
     router.push(returnHref)
   }

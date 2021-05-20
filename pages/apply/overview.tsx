@@ -13,7 +13,7 @@ import { applicationStepsRemaining } from "../../lib/utils/resident"
 import Link from "next/link"
 import { useStore } from "react-redux"
 import { useRouter } from "next/router"
-import { exampleApplication } from "../../domain/application"
+import { createApplication } from "../../lib/gateways/internal-api"
 
 const ApplicationPersonsOverview = (): JSX.Element => {
   const router = useRouter()
@@ -29,17 +29,12 @@ const ApplicationPersonsOverview = (): JSX.Element => {
 
   const handleSubmit = async (): Promise<void> => {
     try {
-      const res = await fetch("/api/applications",
-        {
-          method: "POST",
-          body: JSON.stringify(exampleApplication),
-        }
-      )
-      const data = await res.json()
+      const data = await createApplication(users)
       console.log(data)
-
       //router.push("/apply/confirmation")
-    } catch (e) {
+
+    } catch (err) {
+      console.log(err)
       // TODO: handle error
     }
   }
@@ -76,7 +71,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
         Add a person
       </ButtonLink>
 
-      {users.filter(resident => applicationStepsRemaining(resident) == 0).length > 0 &&
+      {users.every(resident => applicationStepsRemaining(resident) == 0) &&
         <>
           <Paragraph>The button below only shows when all tasks are complete.</Paragraph>
           <Button onClick={handleSubmit}>

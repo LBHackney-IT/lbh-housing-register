@@ -15,7 +15,7 @@ const slice = createSlice({
      * @param {PayloadAction<{Resident}>} action The new resident
      * @returns {Resident[]} Updated residents state
      */
-     addResident: (state: Resident[], action: PayloadAction<Resident>): Resident[] => {
+    addResident: (state: Resident[], action: PayloadAction<Resident>): Resident[] => {
       return [
         ...state,
         action.payload
@@ -28,11 +28,11 @@ const slice = createSlice({
      * @param {PayloadAction<FormData>} action The new resident
      * @returns {Resident[]} Updated residents state
      */
-     addResidentFromFormData: (state: Resident[], action: PayloadAction<FormData>): Resident[] => {
+    addResidentFromFormData: (state: Resident[], action: PayloadAction<FormData>): Resident[] => {
       const resident: Resident = {
         formData: action.payload,
-        name: action.payload.name,
-        slug: generateSlug(action.payload.name)
+        name: action.payload.firstName,
+        slug: generateSlug(action.payload.firstName)
       }
       resident.formData = {
         "personal-details": action.payload
@@ -52,7 +52,7 @@ const slice = createSlice({
 
     /**
      * Delete resident
-     * @param {Resident[]} state The current state 
+     * @param {Resident[]} state The current state
      * @param {PayloadAction<Resident>} action The resident we wish to delete
      * @returns {Resident[]} New state with resident removed
      */
@@ -63,7 +63,7 @@ const slice = createSlice({
 
     /**
      * Update residents record
-     * @param {Resident[]} state The current state 
+     * @param {Resident[]} state The current state
      * @param {PayloadAction<Resident>} action The resident we wish to update
      * @returns {Resident[]} New state with updated resident
      */

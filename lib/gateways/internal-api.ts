@@ -8,10 +8,23 @@ import { Resident } from "../types/resident"
  */
 export const createApplication = async (applicants: Resident[]): Promise<any> => {
   try {
+
     // TODO: update mapping of data
+    const personal = applicants[0].formData["personal-details"]
+    const address = applicants[0].formData["address-details"]
+    const applicant = {
+      personal,
+      address: address,
+      contactInformation: {
+        emailAddress: "test@email.com",
+        phoneNumber: "+447123456780",
+        preferredMethodOfContact: "email"
+      }
+    }
+
     const application: CreateApplicationRequest = {
       status: "Pending",
-      applicant: applicants[0].formData["personal-details"],
+      applicant: applicant,
       otherMembers: applicants.length > 1
         ? applicants.slice(1).map((resident) => resident?.formData["personal-details"])
         : []

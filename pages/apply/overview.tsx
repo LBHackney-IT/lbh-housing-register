@@ -18,7 +18,7 @@ import { createApplication } from "../../lib/gateways/internal-api"
 const ApplicationPersonsOverview = (): JSX.Element => {
   const router = useRouter()
   const store = useStore<Store>()
-  const users = [store.getState().resident, ...store.getState().additionalResidents]
+  const applicants = [store.getState().resident, ...store.getState().additionalResidents]
 
   const breadcrumbs = [
     {
@@ -29,7 +29,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
 
   const handleSubmit = async (): Promise<void> => {
     try {
-      const data = await createApplication(users)
+      const data = await createApplication(applicants)
       console.log(data)
       //router.push("/apply/confirmation")
 
@@ -44,19 +44,19 @@ const ApplicationPersonsOverview = (): JSX.Element => {
       <HeadingOne content="People in this application" />
 
       <SummaryList>
-        {users.map((user, index) => {
-          const tasksRemaining = applicationStepsRemaining(user)
+        {applicants.map((resident, index) => {
+          const tasksRemaining = applicationStepsRemaining(resident)
 
           return (
             <Row key={index} verticalAlign="middle">
               <Key>
                 <>
-                  <Hint content={`Person ${index + 1}` + (users.length > 1 && user.slug == MAIN_RESIDENT_KEY ? " (you)" : "")} />
-                  <Link href={`/apply/${user.slug}`}>{user.name}</Link>
+                  <Hint content={`Person ${index + 1}` + (applicants.length > 1 && resident.slug == MAIN_RESIDENT_KEY ? " (you)" : "")} />
+                  <Link href={`/apply/${resident.slug}`}>{resident.name}</Link>
                 </>
               </Key>
               <Actions>
-                {user.isEligible === false ? <Tag content="Not eligible" variant="red" /> : (
+                {resident.isEligible === false ? <Tag content="Not eligible" variant="red" /> : (
                   tasksRemaining == 0 ?
                     <Tag content="Completed" variant="green" /> :
                     <Tag content={`${tasksRemaining} task${(tasksRemaining > 1 ? "s" : "")} to do`} />
@@ -71,7 +71,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
         Add a person
       </ButtonLink>
 
-      {users.every(resident => applicationStepsRemaining(resident) == 0) &&
+      {applicants.every(resident => applicationStepsRemaining(resident) == 0) &&
         <>
           <Paragraph>The button below only shows when all tasks are complete.</Paragraph>
           <Button onClick={handleSubmit}>

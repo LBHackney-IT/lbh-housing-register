@@ -14,8 +14,8 @@ export interface IPerson {
 
 // extra properties for our purpose
 export interface Resident extends IPerson {
-  contactInformation?: ContactInformation;
-  address?: Address;
+  contactInformation: ContactInformation;
+  address: Address;
 }
 
 export interface ContactInformation {

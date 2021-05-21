@@ -80,10 +80,10 @@ export const getApplicationStepsForResident = (resident: Resident): ApplicationS
         ]
       },
       {
-        heading: "Accomodation",
+        heading: "Accommodation",
         steps: [
           {
-            heading: "Accomodation details",
+            heading: "Accommodation details",
             id: ADDRESS_DETAILS
           }
         ]

@@ -52,8 +52,8 @@ const ApplicationStep = (): JSX.Element => {
     }
   }
 
-
   const onCompletion = () => {
+    // TODO: call API with patch
     router.push(baseHref)
   }
 
@@ -63,6 +63,7 @@ const ApplicationStep = (): JSX.Element => {
   }
 
   const onExit = () => {
+    // TODO: call API with patch
     router.push(baseHref)
   }
 
@@ -73,7 +74,7 @@ const ApplicationStep = (): JSX.Element => {
           <Hint content="Complete information for:" />
           <HeadingOne content={currentResident.name} />
         </>
-      ) : 
+      ) :
         <Hint content={currentResident.name} />
       }
 
@@ -84,7 +85,7 @@ const ApplicationStep = (): JSX.Element => {
         onExit={onExit}
         resident={currentResident!}
         steps={steps} />
-      
+
       {!activeStep && !isMainResident(currentResident) && (
         <DeleteLink content="Delete this information" onDelete={onDelete} />
       )}

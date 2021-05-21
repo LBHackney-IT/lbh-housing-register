@@ -1,0 +1,16 @@
+{
+  "heading": "Accommodation details",
+  "steps": [
+    {
+      "fields": [
+        {
+          "label": "Postcode",
+          "name": "postCode",
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ]
+}

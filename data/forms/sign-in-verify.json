@@ -1,0 +1,24 @@
+{
+  "steps": [
+    {
+      "fields": [
+        {
+          "label": "Email",
+          "name": "email",
+          "type": "email",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "Code",
+          "name": "code",
+          "validation": {
+            "required": true,
+            "min": 6
+          }
+        }
+      ]
+    }
+  ]
+}

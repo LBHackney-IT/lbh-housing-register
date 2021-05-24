@@ -15,7 +15,7 @@ export default function Home(): JSX.Element {
       <Paragraph>
         It may take up to one hour to complete your application.
         You will need to supply personal details for each person in your application.
-        You can save your progress and return to your application within 30 days before submitting. 
+        You can save your progress and return to your application within 30 days before submitting.
       </Paragraph>
 
       <HeadingTwo content="What documents you'll need to provide" />
@@ -72,7 +72,7 @@ export default function Home(): JSX.Element {
       </Announcement>
 
       <HeadingTwo content="I still want to apply" />
-      <ButtonLink href="/apply">Start now</ButtonLink>
+      <ButtonLink href="/apply/start">Start now</ButtonLink>
     </Layout>
   )
 }

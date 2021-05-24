@@ -16,11 +16,11 @@ export default function ApplicationAgreement() {
   const onSubmit = () => {
     router.push("/apply/overview")
   }
-  
+
   if (resident.hasAgreed) {
     onSubmit()
   }
-  
+
   const agreementFormData = getAgreementFormData()
   const onSave = (values: FormData) => {
     store.dispatch(agree(values.agreement))

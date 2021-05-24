@@ -8,6 +8,7 @@ const initialState: MainResident = {
   hasAgreed: false,
   formData: {},
   isLoggedIn: false,
+  username: "",
   name: "You",
   slug: MAIN_RESIDENT_KEY
 }
@@ -30,17 +31,30 @@ const slice = createSlice({
     },
 
     /**
-     * Log the resident in
+     * Register the resident
      * @param {MainResident} state The current state
+     * @param {PayloadAction<string>} action The residents name
      * @returns {MainResident} Updated resident state
      */
-    logIn: (state: MainResident): MainResident => {
+    createUser: (state: MainResident, action: PayloadAction<string>): MainResident => {
       return {
         ...state,
+        username: action.payload
+      }
+    },
+
+    /**
+     * Log the resident in
+     * @param {MainResident} state The current state
+     * @param {PayloadAction<string>} action The residents name
+     * @returns {MainResident} Updated resident state
+     */
+    logIn: (state: MainResident, action: PayloadAction<string>): MainResident => {
+      return {
+        ...state,
+        username: action.payload,
         isLoggedIn: true
       }
-
-      // TODO: user's name, id, ...
     },
 
     /**
@@ -57,7 +71,7 @@ const slice = createSlice({
      * @param {PayloadAction<{[key: string]: FormData}>} action The form data
      * @returns {MainResident} Updated resident state
      */
-    updateFormData: (state: MainResident, action: PayloadAction<{[key: string]: FormData}>): MainResident => {
+    updateFormData: (state: MainResident, action: PayloadAction<{ [key: string]: FormData }>): MainResident => {
       state.formData = {
         ...state.formData,
         ...action.payload
@@ -73,4 +87,4 @@ const slice = createSlice({
 })
 
 export default slice
-export const { agree, logIn, logOut, updateFormData } = slice.actions
+export const { agree, createUser, logIn, logOut, updateFormData } = slice.actions

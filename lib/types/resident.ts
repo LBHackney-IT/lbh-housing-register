@@ -1,7 +1,7 @@
 import { FormData } from "./form"
 
 export interface Resident {
-  formData: {[key: string]: FormData}
+  formData: { [key: string]: FormData }
   ineligibilityReasons?: string[]
   isEligible?: boolean
   name: string
@@ -11,4 +11,5 @@ export interface Resident {
 export interface MainResident extends Resident {
   hasAgreed: boolean
   isLoggedIn: boolean
+  username: string
 }

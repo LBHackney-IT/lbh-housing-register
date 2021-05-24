@@ -12,6 +12,7 @@ import { useRouter } from "next/router"
 import { useStore } from "react-redux"
 import Custom404 from "../../404"
 import DeleteLink from "../../../components/delete-link"
+import { updateApplication } from "../../../lib/gateways/internal-api"
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter()
@@ -52,9 +53,16 @@ const ApplicationStep = (): JSX.Element => {
     }
   }
 
-  const onCompletion = () => {
-    // TODO: call API with patch
-    router.push(baseHref)
+  const onCompletion = async () => {
+    try {
+      // Below line currently returns a 404
+      // const data = await updateApplication([currentResident])
+      router.push(baseHref)
+
+    } catch (err) {
+      console.log(err)
+      // TODO: handle error
+    }
   }
 
   const onDelete = () => {
@@ -63,8 +71,12 @@ const ApplicationStep = (): JSX.Element => {
   }
 
   const onExit = () => {
-    // TODO: call API with patch
-    router.push(baseHref)
+    try {
+      // const data = await updateApplication([currentResident])
+      router.push(baseHref)
+    } catch (err) {
+      // TODO: handle error
+    }
   }
 
   return (

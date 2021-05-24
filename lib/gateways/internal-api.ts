@@ -51,7 +51,7 @@ export const createApplication = async (applicants: Resident[]): Promise<any> =>
  * @param {Resident[]} applicants The applicant information
  * @returns {any} The updated application
  */
-export const updateApplication = async (applicants: Resident[], id: string): Promise<any> => {
+export const updateApplication = async (applicants: Resident[]): Promise<any> => {
   try {
     const personal = applicants[0].formData["personal-details"]
     const address = applicants[0].formData["address-details"]
@@ -66,7 +66,7 @@ export const updateApplication = async (applicants: Resident[], id: string): Pro
       address,
       contactInformation
     }
-
+    
     const application: CreateApplicationRequest = {
       status: "Pending",
       applicant,
@@ -81,7 +81,6 @@ export const updateApplication = async (applicants: Resident[], id: string): Pro
         body: JSON.stringify(application),
       }
     )
-
     return await res.json()
   } catch (err) {
     throw new Error('Unable to update application')

@@ -27,6 +27,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
     }
   ]
 
+  // How to differentiate new application from an update one?
   const handleSubmit = async (): Promise<void> => {
     try {
       const data = await createApplication(applicants)

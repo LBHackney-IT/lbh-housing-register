@@ -1,15 +1,15 @@
 // this matches the 'person' api
 export interface IPerson {
-  id: string;
-  title: string;
+  id?: string;
+  title?: string;
   firstName: string;
-  middleName: string;
+  middleName?: string;
   surname: string;
-  ethnicity: string;
-  nationality: string;
-  placeOfBirth: string;
-  dateOfBirth: string;
-  gender: string;
+  ethnicity?: string;
+  nationality?: string;
+  placeOfBirth?: string;
+  dateOfBirth?: string;
+  gender?: string;
 }
 
 // extra properties for our purpose

@@ -1,6 +1,7 @@
 import agreementFormData from "../../data/forms/agreement.json"
 import immigrationStatusFormData from "../../data/forms/immigration-status.json"
 import personalDetailsFormData from "../../data/forms/person-details.json"
+import addressDetailsFormData from "../../data/forms/address-details.json"
 import testFormData from "../../data/forms/_test-form.json"
 import yourSituationFormData from "../../data/forms/your-situation.json"
 import signInDetailsFormData from "../../data/forms/sign-in-details.json"
@@ -12,6 +13,7 @@ export const SIGN_IN_DETAILS = "sign-in-details"
 export const SIGN_IN_VERIFY = "sign-in-verify"
 export const IMMIGRATION_STATUS = "immigration-status"
 export const PERSONAL_DETAILS = "personal-details"
+export const ADDRESS_DETAILS = "address-details"
 export const YOUR_SITUATION = "your-situation"
 
 /**
@@ -34,14 +36,17 @@ export function getFormData(form: string): MultiStepForm {
     case "agreement":
       return getAgreementFormData()
 
+    case "your-situation":
+      return getYourSituationFormData()
+
     case "immigration-status":
       return getImmigrationStatusFormData()
 
     case "personal-details":
-        return getPersonalDetailsFormData()
-    
-    case "your-situation":
-      return getYourSituationFormData()
+      return getPersonalDetailsFormData()
+
+    case "address-details":
+      return getAddressDetailsFormData()
 
     case "sign-in-details":
       return getSignInDetailsFormData()
@@ -74,8 +79,16 @@ export function getImmigrationStatusFormData(): MultiStepForm {
  * Get the form data that makes up the personal details form
  * @returns {MultiStepForm}
  */
- export function getPersonalDetailsFormData(): MultiStepForm {
+export function getPersonalDetailsFormData(): MultiStepForm {
   return personalDetailsFormData
+}
+
+/**
+ * Get the form data that makes up the personal details form
+ * @returns {MultiStepForm}
+ */
+export function getAddressDetailsFormData(): MultiStepForm {
+  return addressDetailsFormData
 }
 
 /**
@@ -95,7 +108,7 @@ export function getYourSituationFormData(): MultiStepForm {
 }
 
 /**
- * Get the form data that makes up the 'sign in details' form
+ * Get the form data that makes up the sign in details form
  * @returns {MultiStepForm}
  */
 export function getSignInDetailsFormData(): MultiStepForm {
@@ -103,7 +116,7 @@ export function getSignInDetailsFormData(): MultiStepForm {
 }
 
 /**
- * Get the form data that makes up the 'sign in verify' form
+ * Get the form data that makes up the sign in verify form
  * @returns {MultiStepForm}
  */
 export function getSignInVerifyFormData(): MultiStepForm {

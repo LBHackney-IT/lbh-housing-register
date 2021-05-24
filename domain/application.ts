@@ -11,3 +11,9 @@ export interface Application {
   status: string;
   createdAt: string;
 }
+
+export interface CreateApplicationRequest {
+  applicant: any;
+  otherMembers: any;
+  status: string;
+}

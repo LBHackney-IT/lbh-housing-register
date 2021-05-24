@@ -3,7 +3,7 @@ import { Application, ApplicationList } from '../../domain/application';
 import { Stat } from '../../domain/stat';
 
 const headersWithKey = {
-  'x-api-key': process.env.AWS_KEY,
+  'x-api-key': process.env.AWS_KEY
 };
 
 export const getApplications = async (): Promise<ApplicationList | null> => {
@@ -26,6 +26,24 @@ export const getApplication = async (id: string): Promise<Application | null> =>
       `${process.env.ENDPOINT_API}/applications/${id}`,
       {
         headers: headersWithKey
+      }
+    );
+    return data;
+  } catch (err) {
+    return null;
+  }
+}
+
+export const addApplication = async (application: any): Promise<Application | null> => {
+  try {
+    const headers = {
+      'x-api-key': process.env.AWS_KEY,
+      'Content-Type': 'application/json',
+    }
+    const { data } = await axios.post(
+      `${process.env.ENDPOINT_API}/applications`, application,
+      {
+        headers: headers
       }
     );
     return data;

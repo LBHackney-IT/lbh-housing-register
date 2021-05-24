@@ -6,7 +6,7 @@ import { ApplicationSteps } from "../types/application"
 import { FormData } from "../types/form"
 import { Resident } from "../types/resident"
 import { Store } from "redux"
-import { IMMIGRATION_STATUS, PERSONAL_DETAILS, YOUR_SITUATION } from "./form-data"
+import { ADDRESS_DETAILS, IMMIGRATION_STATUS, PERSONAL_DETAILS, YOUR_SITUATION } from "./form-data"
 import { checkEligible } from "./form"
 
 export const applicationStepsRemaining = (resident: Resident): number => {
@@ -53,9 +53,22 @@ export const getResident = (slug: string, store: ReduxStore): Resident | undefin
 export const getApplicationStepsForResident = (resident: Resident): ApplicationSteps[] => {
   if (isMainResident(resident)) {
     return [
+      // {
+      //   heading: "Testing",
+      //   steps: [
+      //     {
+      //       heading: "Test form",
+      //       id: "test-form"
+      //     }
+      //   ]
+      // },
       {
         heading: "Identity",
         steps: [
+          {
+            heading: "Your situation",
+            id: YOUR_SITUATION
+          },
           {
             heading: "Immigration status",
             id: IMMIGRATION_STATUS
@@ -67,11 +80,11 @@ export const getApplicationStepsForResident = (resident: Resident): ApplicationS
         ]
       },
       {
-        heading: "Test",
+        heading: "Accommodation",
         steps: [
           {
-            heading: "Your situation",
-            id: YOUR_SITUATION
+            heading: "Accommodation details",
+            id: ADDRESS_DETAILS
           }
         ]
       }

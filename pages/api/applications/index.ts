@@ -23,7 +23,7 @@ const endpoint: NextApiHandler = async (req: NextApiRequest, res: NextApiRespons
     case 'PATCH':
       try {
         const application = JSON.parse(req.body)
-        const id = '161621af-03bc-47ff-86d9-ada7862aa00a' // Placeholder
+        const id = "161621af-03bc-47ff-86d9-ada7862aa00a" // Placeholder
         const data = await updateApplication(application, id)
         res
           .status(StatusCodes.OK)

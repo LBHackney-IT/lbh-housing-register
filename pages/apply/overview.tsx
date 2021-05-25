@@ -27,17 +27,16 @@ const ApplicationPersonsOverview = (): JSX.Element => {
     }
   ]
 
-  // How to differentiate new application from an update one?
   const handleSubmit = async (): Promise<void> => {
     try {
       const data = await createApplication(applicants)
       console.log(data)
-      //router.push("/apply/confirmation")
-
+      
     } catch (err) {
       console.log(err)
       // TODO: handle error
     }
+    router.push("/apply/confirmation")
   }
 
   return (

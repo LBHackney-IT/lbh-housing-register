@@ -9,6 +9,8 @@ import { FormData } from "../../lib/types/form"
 import { getPersonalDetailsFormData } from "../../lib/utils/form-data"
 import { useStore } from "react-redux"
 import { useRouter } from "next/router"
+import { updateApplication } from "../../lib/gateways/internal-api"
+
 
 const AddPersonToApplication = (): JSX.Element => {
   const returnHref = "/apply/overview"
@@ -22,9 +24,14 @@ const AddPersonToApplication = (): JSX.Element => {
     }
   ]
 
-  const onSubmit = (values: FormData) => {
-    // TODO: call API with patch
-    store.dispatch(addResidentFromFormData(values))
+  const onSubmit = async (values: FormData) => {
+    try {
+      store.dispatch(addResidentFromFormData(values))
+      const applicants = [store.getState().resident, ...store.getState().additionalResidents]
+      await updateApplication(applicants)
+    } catch (err) {
+      // TODO: Error handling
+    }
     router.push(returnHref)
   }
 

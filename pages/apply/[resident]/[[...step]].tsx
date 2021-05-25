@@ -56,7 +56,7 @@ const ApplicationStep = (): JSX.Element => {
   const onCompletion = async () => {
     try {
       // Below line currently returns a 404
-      // const data = await updateApplication([currentResident])
+      // await updateApplication([currentResident])
       router.push(baseHref)
 
     } catch (err) {

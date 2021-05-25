@@ -66,7 +66,6 @@ export const updateApplication = async (applicants: Resident[]): Promise<any> =>
       address,
       contactInformation
     }
-    
     const application: CreateApplicationRequest = {
       status: "Pending",
       applicant,

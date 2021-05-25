@@ -87,7 +87,6 @@ const updateApplication = {
             return true
           }
         })
-        console.log('what is application', application);
         if (application) {
           res.status(200);
           res.send(application);

@@ -55,14 +55,13 @@ const ApplicationStep = (): JSX.Element => {
 
   const onCompletion = async () => {
     try {
-      // Below line currently returns a 404
-      // await updateApplication([currentResident])
-      router.push(baseHref)
-
+      // Below line currently returns a 404 as the endpoints arent ready yet
+      await updateApplication([currentResident])
     } catch (err) {
       console.log(err)
       // TODO: handle error
     }
+    router.push(baseHref)
   }
 
   const onDelete = () => {
@@ -70,13 +69,13 @@ const ApplicationStep = (): JSX.Element => {
     router.push(returnHref)
   }
 
-  const onExit = () => {
+  const onExit = async () => {
     try {
-      // const data = await updateApplication([currentResident])
-      router.push(baseHref)
+      await updateApplication([currentResident])
     } catch (err) {
       // TODO: handle error
     }
+    router.push(baseHref)
   }
 
   return (

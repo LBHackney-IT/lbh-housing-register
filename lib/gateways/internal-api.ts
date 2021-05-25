@@ -73,8 +73,9 @@ export const updateApplication = async (applicants: Resident[]): Promise<any> =>
         ? applicants.slice(1).map((resident) => resident?.formData["personal-details"])
         : []
     }
-
-    const res = await fetch("/api/applications",
+    
+    const id = "161621af-03bc-47ff-86d9-ada7862aa00a"
+    const res = await fetch(`/api/applications/${id}`,
       {
         method: "PATCH",
         body: JSON.stringify(application),

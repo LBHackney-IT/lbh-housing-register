@@ -1,14 +1,14 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
-import { addApplication, updateApplication } from '../../../lib/gateways/applications-api';
+import { updateApplication } from '../../../lib/gateways/applications-api';
 
 const endpoint: NextApiHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-
   switch (req.method) {
-    case 'POST':
+    case 'PATCH':
       try {
         const application = JSON.parse(req.body)
-        const data = await addApplication(application)
+        const id = req.query.id
+        const data = await updateApplication(application, id)
         res
           .status(StatusCodes.OK)
           .json(data)
@@ -16,7 +16,7 @@ const endpoint: NextApiHandler = async (req: NextApiRequest, res: NextApiRespons
       } catch (error) {
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Unable to add application' })
+          .json({ message: 'Unable to update application' })
       }
       break;
 

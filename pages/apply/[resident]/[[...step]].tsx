@@ -55,8 +55,9 @@ const ApplicationStep = (): JSX.Element => {
 
   const onCompletion = async () => {
     try {
+      const applicants = [store.getState().resident, ...store.getState().additionalResidents]
       // Below line currently returns a 404 as the endpoints arent ready yet
-      await updateApplication([currentResident])
+      await updateApplication(applicants)
     } catch (err) {
       console.log(err)
       // TODO: handle error

@@ -52,7 +52,7 @@ export const addApplication = async (application: any): Promise<Application | nu
   }
 }
 
-export const updateApplication = async (application: any, id: string): Promise<Application | null> => {
+export const updateApplication = async (application: any, id: string | string[]): Promise<Application | null> => {
   try {
     const headers = {
       'x-api-key': process.env.AWS_KEY,

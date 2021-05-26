@@ -45,6 +45,21 @@
               "value": ""
             }
           ]
+        },
+        {
+          "label": "Mobile number",
+          "name": "phoneNumber",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "Email",
+          "name": "emailAddress",
+          "type": "email",
+          "validation": {
+            "required": true
+          }
         }
       ]
     }

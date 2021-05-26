@@ -4,28 +4,28 @@
       "fields": [
         {
           "label": "First name",
-          "name": "first_name",
+          "name": "firstName",
           "validation": {
             "required": true
           }
         },
         {
           "label": "Last name",
-          "name": "last_name",
+          "name": "surname",
           "validation": {
             "required": true
           }
         },
         {
           "label": "Mobile number",
-          "name": "phone_number",
+          "name": "phoneNumber",
           "validation": {
             "required": true
           }
         },
         {
           "label": "Email",
-          "name": "email",
+          "name": "emailAddress",
           "type": "email",
           "hint": "We’ll email you a verification code to continue your application",
           "validation": {

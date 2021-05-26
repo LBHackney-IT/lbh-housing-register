@@ -37,6 +37,12 @@ const slice = createSlice({
      * @returns {MainResident} Updated resident state
      */
     createUser: (state: MainResident, action: PayloadAction<string>): MainResident => {
+
+      // TODO: attach sign up data to personal details for the resident
+      // state.formData = {
+      //   "personal-details": action.payload
+      // }
+
       return {
         ...state,
         username: action.payload

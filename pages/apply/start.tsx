@@ -23,17 +23,17 @@ const ApplicationStartPage = (): JSX.Element => {
   const signUp = async (values: FormData) => {
     try {
       const { user } = await Auth.signUp({
-        username: values.email,
+        username: values.emailAddress,
         password: values.password,
         attributes: {
-          given_name: values.first_name,
-          family_name: values.last_name,
-          phone_number: values.phone_number, // E.164 number convention
+          given_name: values.firstName,
+          family_name: values.surname,
+          phone_number: values.phoneNumber, // E.164 number convention
         }
       });
 
-      // TODO: save user to store
-      store.dispatch(createUser(values.email))
+      // TODO: save user to store, map personal details with form data
+      store.dispatch(createUser(values.emailAddress))
 
       // TODO: create application for the new user, status 'In Progress'?
       //const application = await createApplication()

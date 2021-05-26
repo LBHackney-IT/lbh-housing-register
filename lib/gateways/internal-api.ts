@@ -1,5 +1,6 @@
 import { CreateApplicationRequest } from "../../domain/application"
 import { Resident } from "../types/resident"
+import { constructApplication } from "../utils/helper"
 
 /**
  * Create new application
@@ -8,30 +9,7 @@ import { Resident } from "../types/resident"
  */
 export const createApplication = async (applicants: Resident[]): Promise<any> => {
   try {
-    // TODO: update mapping of data
-    const personal = applicants[0].formData["personal-details"]
-    const address = applicants[0].formData["address-details"]
-    const contactInformation = {
-      contactInformation: {
-      emailAddress: "",
-      phoneNumber: "",
-      preferredMethodOfContact: ""
-      }
-    }
-
-    const applicant = {
-      personal,
-      address,
-      contactInformation
-    }
-
-    const application: CreateApplicationRequest = {
-      status: "Pending",
-      applicant,
-      otherMembers: applicants.length > 1
-        ? applicants.slice(1).map((resident) => resident?.formData["personal-details"])
-        : []
-    }
+    const application = constructApplication(applicants)
 
     const res = await fetch("/api/applications",
       {
@@ -53,26 +31,7 @@ export const createApplication = async (applicants: Resident[]): Promise<any> =>
  */
 export const updateApplication = async (applicants: Resident[]): Promise<any> => {
   try {
-    const personal = applicants[0].formData["personal-details"]
-    const address = applicants[0].formData["address-details"]
-    const contactInformation = {
-      emailAddress: applicants[0].formData[""],
-      phoneNumber: "",
-      preferredMethodOfContact: ""
-    }
-
-    const applicant = {
-      personal,
-      address,
-      contactInformation
-    }
-    const application: CreateApplicationRequest = {
-      status: "Pending",
-      applicant,
-      otherMembers: applicants.length > 1
-        ? applicants.slice(1).map((resident) => resident?.formData["personal-details"])
-        : []
-    }
+    const application = constructApplication(applicants)
     
     const id = "161621af-03bc-47ff-86d9-ada7862aa00a"
     const res = await fetch(`/api/applications/${id}`,

@@ -72,7 +72,8 @@ const ApplicationStep = (): JSX.Element => {
 
   const onExit = async () => {
     try {
-      await updateApplication([currentResident])
+      const applicants = [store.getState().resident, ...store.getState().additionalResidents]
+      await updateApplication(applicants)
     } catch (err) {
       // TODO: handle error
     }

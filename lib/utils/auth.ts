@@ -25,6 +25,11 @@ export function getSession(req: any) {
   }
 }
 
+export const signOut = (): void => {
+  // TODO: clear cookie
+  window.location.href = "/login"
+}
+
 export const hasUserGroup = (group: string, user: User): boolean => {
   return user?.groups?.includes(group)
 }

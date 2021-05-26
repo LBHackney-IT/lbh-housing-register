@@ -6,6 +6,7 @@ import SkipLink from '../skip-link';
 import Header from '../header';
 import { hasPhaseBanner } from "../../lib/utils/phase-banner";
 import { useUser } from '../../lib/contexts/user-context';
+import { signOut } from '../../lib/utils/auth';
 
 const StaffLayout: FunctionComponent = (props) => {
   const { user } = useUser();
@@ -19,7 +20,7 @@ const StaffLayout: FunctionComponent = (props) => {
   return (
     <>
       <SkipLink />
-      <Header username={user.name} />
+      <Header username={user.name} onSignOut={signOut} />
       {hasPhaseBanner() && <PhaseBanner />}
 
       {id && (

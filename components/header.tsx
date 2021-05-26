@@ -3,9 +3,10 @@ import Link from "next/link"
 
 interface HeaderProps {
   username?: string
+  onSignOut?: () => void
 }
 
-export default function Header({ username }: HeaderProps): JSX.Element {
+export default function Header({ username, onSignOut }: HeaderProps): JSX.Element {
   return (
     <header className="lbh-header ">
       <div className="lbh-header__main">
@@ -22,6 +23,7 @@ export default function Header({ username }: HeaderProps): JSX.Element {
           {username && (
             <div className="lbh-header__links">
               <p>{username}</p>
+              <a href="#" onClick={onSignOut}>Sign out</a>
             </div>
           )}
         </div>

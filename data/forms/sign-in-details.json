@@ -1,0 +1,49 @@
+{
+  "steps": [
+    {
+      "fields": [
+        {
+          "label": "First name",
+          "name": "first_name",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "Last name",
+          "name": "last_name",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "Mobile number",
+          "name": "phone_number",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "Email",
+          "name": "email",
+          "type": "email",
+          "hint": "We’ll email you a verification code to continue your application",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "Password",
+          "name": "password",
+          "type": "password",
+          "hint": "Testing123!",
+          "initialValue": "Testing123!",
+          "validation": {
+            "required": true,
+            "min": 8
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -54,7 +54,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
 
   return (
     <Layout>
-      <HeadingOne content="Sign in to continue" />
+      <HeadingOne content="Enter your verification code" />
       {resident.username &&
         <>
           <Paragraph>

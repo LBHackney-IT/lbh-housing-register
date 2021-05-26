@@ -11,7 +11,7 @@
           }
         },
         {
-          "label": "Code",
+          "label": "Verification code",
           "name": "code",
           "validation": {
             "required": true,

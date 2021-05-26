@@ -12,6 +12,7 @@ import { useRouter } from "next/router"
 import { useStore } from "react-redux"
 import Custom404 from "../../404"
 import DeleteLink from "../../../components/delete-link"
+import { updateApplication } from "../../../lib/gateways/internal-api"
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter()
@@ -52,8 +53,15 @@ const ApplicationStep = (): JSX.Element => {
     }
   }
 
-  const onCompletion = () => {
-    // TODO: call API with patch
+  const onCompletion = async () => {
+    try {
+      const applicants = [store.getState().resident, ...store.getState().additionalResidents]
+      // Below line currently returns a 404 as the endpoints arent ready yet
+      await updateApplication(applicants)
+    } catch (err) {
+      console.log(err)
+      // TODO: handle error
+    }
     router.push(baseHref)
   }
 
@@ -62,8 +70,13 @@ const ApplicationStep = (): JSX.Element => {
     router.push(returnHref)
   }
 
-  const onExit = () => {
-    // TODO: call API with patch
+  const onExit = async () => {
+    try {
+      const applicants = [store.getState().resident, ...store.getState().additionalResidents]
+      await updateApplication(applicants)
+    } catch (err) {
+      // TODO: handle error
+    }
     router.push(baseHref)
   }
 

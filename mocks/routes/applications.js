@@ -75,16 +75,20 @@ const updateApplication = {
       id: "success",
       response: {
         status: 204,
-        body: applications[0],
+        body: applications[4],
       },
     },
     {
       id: "simulate",
       response: (req, res) => {
         const applicationId = req.params.id;
-        const application = applications.find((applicationData) => applicationData.id === applicationId);
+        const application = applications.find((applicationData) => {
+          if (applicationData.id === applicationId) {
+            return true
+          }
+        })
         if (application) {
-          res.status(204);
+          res.status(200);
           res.send(application);
         } else {
           res.status(404);

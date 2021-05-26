@@ -139,5 +139,33 @@ module.exports = [
     },
     status: "Overdue",
     createdAt: "2 weeks ago"
+  },
+  {
+    id: "161621af-03bc-47ff-86d9-ada7862aa00a",
+    applicant: {
+      id: "123456",
+      title: "Mr",
+      firstName: "Rashid",
+      middleName: "Aden",
+      surname: "Omar",
+      ethnicity: "Prefer not to say",
+      nationality: "British",
+      placeOfBirth: "London",
+      dateOfBirth: "1988-02-20",
+      gender: "M",
+      contactInformation: {
+        emailAddress: "test@email.com",
+        phoneNumber: "+447123456780",
+        preferredMethodOfContact: "email"
+      },
+      address: {
+        addressLine1: "12345 Hillman Street",
+        addressLine2: "Hackney",
+        addressLine3: "London",
+        postCode: "E8 1DY"
+      }
+    },
+    status: "Overdue",
+    createdAt: "2 weeks ago"
   }
 ];

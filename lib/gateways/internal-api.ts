@@ -1,5 +1,6 @@
 import { CreateApplicationRequest } from "../../domain/application"
 import { Resident } from "../types/resident"
+import { constructApplication } from "../utils/helper"
 
 /**
  * Create new application
@@ -8,27 +9,7 @@ import { Resident } from "../types/resident"
  */
 export const createApplication = async (applicants: Resident[]): Promise<any> => {
   try {
-
-    // TODO: update mapping of data
-    const personal = applicants[0].formData["personal-details"]
-    const address = applicants[0].formData["address-details"]
-    const applicant = {
-      personal,
-      address: address,
-      contactInformation: {
-        emailAddress: "test@email.com",
-        phoneNumber: "+447123456780",
-        preferredMethodOfContact: "email"
-      }
-    }
-
-    const application: CreateApplicationRequest = {
-      status: "Pending",
-      applicant: applicant,
-      otherMembers: applicants.length > 1
-        ? applicants.slice(1).map((resident) => resident?.formData["personal-details"])
-        : []
-    }
+    const application = constructApplication(applicants)
 
     const res = await fetch("/api/applications",
       {
@@ -43,4 +24,24 @@ export const createApplication = async (applicants: Resident[]): Promise<any> =>
   }
 }
 
-// TODO: update application
+/**
+ * Update application
+ * @param {Resident[]} applicants The applicant information
+ * @returns {any} The updated application
+ */
+export const updateApplication = async (applicants: Resident[]): Promise<any> => {
+  try {
+    const application = constructApplication(applicants)
+    
+    const id = "161621af-03bc-47ff-86d9-ada7862aa00a"
+    const res = await fetch(`/api/applications/${id}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify(application),
+      }
+    )
+    return await res.json()
+  } catch (err) {
+    throw new Error('Unable to update application')
+  }
+}

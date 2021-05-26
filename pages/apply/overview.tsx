@@ -31,12 +31,12 @@ const ApplicationPersonsOverview = (): JSX.Element => {
     try {
       const data = await createApplication(applicants)
       console.log(data)
-      //router.push("/apply/confirmation")
-
+      
     } catch (err) {
       console.log(err)
       // TODO: handle error
     }
+    router.push("/apply/confirmation")
   }
 
   return (

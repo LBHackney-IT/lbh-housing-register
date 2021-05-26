@@ -29,9 +29,10 @@ const ApplicationPersonsOverview = (): JSX.Element => {
 
   const handleSubmit = async (): Promise<void> => {
     try {
+      // TODO: this should become updateApplication, change status to reflect submission
       const data = await createApplication(applicants)
       console.log(data)
-      
+
     } catch (err) {
       console.log(err)
       // TODO: handle error

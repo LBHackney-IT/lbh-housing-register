@@ -9,6 +9,7 @@ import { getSignInDetailsFormData } from "../../lib/utils/form-data"
 import { useStore } from "react-redux"
 import { Store } from "../../lib/store"
 import { createUser } from "../../lib/store/resident"
+import { createApplication } from "../../lib/gateways/internal-api"
 
 const ApplicationStartPage = (): JSX.Element => {
   const router = useRouter()
@@ -33,6 +34,13 @@ const ApplicationStartPage = (): JSX.Element => {
 
       // TODO: save user to store
       store.dispatch(createUser(values.email))
+
+      // TODO: create application for the new user, status 'In Progress'?
+      //const application = await createApplication()
+
+      // TODO: use id from newly created application and save to store
+      //store.dispatch(startApplication(application.id))
+
       router.push("/apply/verify")
 
     } catch (error) {

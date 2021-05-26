@@ -32,7 +32,8 @@ export const createApplication = async (applicants: Resident[]): Promise<any> =>
 export const updateApplication = async (applicants: Resident[]): Promise<any> => {
   try {
     const application = constructApplication(applicants)
-    
+
+    // TODO: pass the id in via params
     const id = "161621af-03bc-47ff-86d9-ada7862aa00a"
     const res = await fetch(`/api/applications/${id}`,
       {

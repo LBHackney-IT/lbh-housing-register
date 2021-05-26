@@ -5,13 +5,14 @@ import { createStore, combineReducers } from "redux"
 import { createWrapper, Context } from "next-redux-wrapper"
 
 export interface Store {
-  additionalResidents: Resident[]
+  applicationId: string
   resident: MainResident
+  additionalResidents: Resident[]
 }
 
 const reducer = combineReducers({
-  additionalResidents: additionalResidents.reducer,
-  resident: resident.reducer
+  resident: resident.reducer,
+  additionalResidents: additionalResidents.reducer
 })
 
 // Store function

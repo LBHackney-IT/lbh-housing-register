@@ -5,14 +5,14 @@ import addressDetailsFormData from "../../data/forms/address-details.json"
 import testFormData from "../../data/forms/_test-form.json"
 import yourSituationFormData from "../../data/forms/your-situation.json"
 import signInFormData from "../../data/forms/sign-in.json"
-import signInDetailsFormData from "../../data/forms/sign-in-details.json"
 import signInVerifyFormData from "../../data/forms/sign-in-verify.json"
+import signUpDetailsFormData from "../../data/forms/sign-up-details.json"
 import { EligibilityCriteria, MultiStepForm } from "../types/form"
 
 export const AGREEMENT = "agreement"
 export const SIGN_IN = "sign-in"
-export const SIGN_IN_DETAILS = "sign-in-details"
 export const SIGN_IN_VERIFY = "sign-in-verify"
+export const SIGN_UP_DETAILS = "sign-up-details"
 export const IMMIGRATION_STATUS = "immigration-status"
 export const PERSONAL_DETAILS = "personal-details"
 export const ADDRESS_DETAILS = "address-details"
@@ -53,11 +53,11 @@ export function getFormData(form: string): MultiStepForm {
     case "sign-in":
       return getSignInFormData()
 
-    case "sign-in-details":
-      return getSignInDetailsFormData()
-
     case "sign-in-verify":
       return getSignInVerifyFormData()
+
+    case "sign-up-details":
+      return getSignUpDetailsFormData()
 
     default:
       return getTestFormData()
@@ -113,15 +113,7 @@ export function getYourSituationFormData(): MultiStepForm {
 }
 
 /**
- * Get the form data that makes up the sign in details form
- * @returns {MultiStepForm}
- */
-export function getSignInDetailsFormData(): MultiStepForm {
-  return signInDetailsFormData
-}
-
-/**
- * Get the form data that makes up the sign in details form
+ * Get the form data that makes up the sign in form
  * @returns {MultiStepForm}
  */
 export function getSignInFormData(): MultiStepForm {
@@ -134,4 +126,12 @@ export function getSignInFormData(): MultiStepForm {
  */
 export function getSignInVerifyFormData(): MultiStepForm {
   return signInVerifyFormData
+}
+
+/**
+ * Get the form data that makes up the sign up details form
+ * @returns {MultiStepForm}
+ */
+export function getSignUpDetailsFormData(): MultiStepForm {
+  return signUpDetailsFormData
 }

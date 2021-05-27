@@ -13,7 +13,7 @@ export default function NotEligible(): JSX.Element {
 
   return (
     <>
-      <HeadingOne content="You won't be able to join the housing register" />
+      <HeadingOne content="You may not be able to join the housing register" />
 
       {reasons && reasons.length > 0 && (
         <>
@@ -46,6 +46,10 @@ export default function NotEligible(): JSX.Element {
       <ButtonLink href="https://hackney.gov.uk/housing-application">
         Contact us for advice
       </ButtonLink>
+      <Paragraph>
+        If you feel this information is incorrect, please refer to our lettings policy before
+        you <Link href="/apply">continue to make an application</Link>.
+      </Paragraph>
     </>
   )
 }

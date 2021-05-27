@@ -35,103 +35,31 @@ export function getEligibilityCriteria(formId: string): EligibilityCriteria[] | 
  */
 export function getFormData(form: string): MultiStepForm {
   switch (form.toLowerCase()) {
-    case "agreement":
-      return getAgreementFormData()
+    case AGREEMENT:
+      return agreementFormData
 
-    case "your-situation":
-      return getYourSituationFormData()
+    case SIGN_IN:
+      return signInFormData
 
-    case "immigration-status":
-      return getImmigrationStatusFormData()
+    case SIGN_IN_VERIFY:
+      return signInVerifyFormData
 
-    case "personal-details":
-      return getPersonalDetailsFormData()
+    case SIGN_UP_DETAILS:
+      return signUpDetailsFormData
 
-    case "address-details":
-      return getAddressDetailsFormData()
+    case IMMIGRATION_STATUS:
+      return immigrationStatusFormData
 
-    case "sign-in":
-      return getSignInFormData()
+    case PERSONAL_DETAILS:
+      return personalDetailsFormData
 
-    case "sign-in-verify":
-      return getSignInVerifyFormData()
+    case ADDRESS_DETAILS:
+      return addressDetailsFormData
 
-    case "sign-up-details":
-      return getSignUpDetailsFormData()
+    case YOUR_SITUATION:
+      return yourSituationFormData
 
     default:
-      return getTestFormData()
+      return testFormData
   }
-}
-
-/**
- * Get the form data that makes up the agreement form
- * @returns {MultiStepForm}
- */
-export function getAgreementFormData(): MultiStepForm {
-  return agreementFormData
-}
-
-/**
- * Get the form data that makes up the immigration status form
- * @returns {MultiStepForm}
- */
-export function getImmigrationStatusFormData(): MultiStepForm {
-  return immigrationStatusFormData
-}
-
-/**
- * Get the form data that makes up the personal details form
- * @returns {MultiStepForm}
- */
-export function getPersonalDetailsFormData(): MultiStepForm {
-  return personalDetailsFormData
-}
-
-/**
- * Get the form data that makes up the personal details form
- * @returns {MultiStepForm}
- */
-export function getAddressDetailsFormData(): MultiStepForm {
-  return addressDetailsFormData
-}
-
-/**
- * Get the form data that makes up the test form
- * @returns {MultiStepForm}
- */
-export function getTestFormData(): MultiStepForm {
-  return testFormData
-}
-
-/**
- * Get the form data that makes up the 'your situation' form
- * @returns {MultiStepForm}
- */
-export function getYourSituationFormData(): MultiStepForm {
-  return yourSituationFormData
-}
-
-/**
- * Get the form data that makes up the sign in form
- * @returns {MultiStepForm}
- */
-export function getSignInFormData(): MultiStepForm {
-  return signInFormData
-}
-
-/**
- * Get the form data that makes up the sign in verify form
- * @returns {MultiStepForm}
- */
-export function getSignInVerifyFormData(): MultiStepForm {
-  return signInVerifyFormData
-}
-
-/**
- * Get the form data that makes up the sign up details form
- * @returns {MultiStepForm}
- */
-export function getSignUpDetailsFormData(): MultiStepForm {
-  return signUpDetailsFormData
 }

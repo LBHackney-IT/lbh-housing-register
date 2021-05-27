@@ -5,7 +5,7 @@ import { Auth } from "aws-amplify"
 import { useRouter } from "next/router"
 import Form from "../../components/form/form"
 import { FormData } from "../../lib/types/form"
-import { getSignInFormData } from "../../lib/utils/form-data"
+import { getFormData, SIGN_IN } from "../../lib/utils/form-data"
 import { useStore } from "react-redux"
 import { Store } from "../../lib/store"
 import { logIn } from "../../lib/store/resident"
@@ -36,7 +36,7 @@ const ApplicationSignInPage = (): JSX.Element => {
   return (
     <Layout>
       <HeadingOne content="Sign in to your application" />
-      <Form formData={getSignInFormData()} buttonText="Continue" onSubmit={signIn} />
+      <Form formData={getFormData(SIGN_IN)} buttonText="Continue" onSubmit={signIn} />
     </Layout>
   )
 }

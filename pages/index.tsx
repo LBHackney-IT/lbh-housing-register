@@ -15,6 +15,13 @@ export default function Home(): JSX.Element {
         This will take a few minutes.
       </Paragraph>
       <ButtonLink href="/eligibility-checker">Start now</ButtonLink>
+
+      <HeadingTwo content="Already started an application?" />
+      <Link href="/apply/sign-in">
+        <a className="govuk-link">
+          Sign in
+        </a>
+      </Link>
     </Layout>
   )
 }

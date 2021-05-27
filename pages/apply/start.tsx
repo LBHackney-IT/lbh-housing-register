@@ -44,7 +44,7 @@ const ApplicationStartPage = (): JSX.Element => {
   return (
     <Layout>
       <HeadingOne content="Start your application" />
-      <Form formData={getSignInDetailsFormData()} onSubmit={signUp} />
+      <Form formData={getSignInDetailsFormData()} buttonText="Save and continue" onSubmit={signUp} />
     </Layout>
   )
 }

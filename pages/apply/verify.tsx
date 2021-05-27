@@ -66,7 +66,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
         </>
       }
 
-      <Form formData={getSignInVerifyFormData()} residentsPreviousAnswers={providedUsername} onSubmit={confirmSignUp} />
+      <Form formData={getSignInVerifyFormData()} residentsPreviousAnswers={providedUsername} buttonText="Continue" onSubmit={confirmSignUp} />
     </Layout>
   )
 }

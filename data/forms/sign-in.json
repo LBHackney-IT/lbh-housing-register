@@ -3,24 +3,6 @@
     {
       "fields": [
         {
-          "label": "First name",
-          "name": "first_name",
-          "validation": {
-            "required": true
-          }
-        },
-        {
-          "label": "Last name",
-          "name": "last_name",
-          "validation": {
-            "required": true
-          }
-        },
-        {
-          "label": "Mobile number",
-          "name": "phone_number"
-        },
-        {
           "label": "Email",
           "name": "email",
           "type": "email",

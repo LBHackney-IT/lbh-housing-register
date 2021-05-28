@@ -4,7 +4,7 @@ import Form from "../form/form"
 import { Store } from "../../lib/store"
 import { agree } from "../../lib/store/resident"
 import { FormData } from "../../lib/types/form"
-import { getAgreementFormData } from "../../lib/utils/form-data"
+import { AGREEMENT, getFormData } from "../../lib/utils/form-data"
 import { useRouter } from "next/router"
 import { useStore } from "react-redux"
 
@@ -17,13 +17,12 @@ export default function ApplicationAgreement() {
     router.push("/apply/overview")
   }
 
-  if (resident.hasAgreed) {
-    onSubmit()
-  }
-
-  const agreementFormData = getAgreementFormData()
   const onSave = (values: FormData) => {
     store.dispatch(agree(values.agreement))
+  }
+
+  if (resident.hasAgreed) {
+    onSubmit()
   }
 
   return (
@@ -43,7 +42,7 @@ export default function ApplicationAgreement() {
         If I do not allow entry, my application may be declined.
       </Paragraph>
 
-      <Form buttonText="Save and continue" formData={agreementFormData} onSave={onSave} onSubmit={onSubmit} />
+      <Form buttonText="Save and continue" formData={getFormData(AGREEMENT)} onSave={onSave} onSubmit={onSubmit} />
     </>
   )
 }

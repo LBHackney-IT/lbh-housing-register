@@ -11,10 +11,11 @@ This application has two sides: the _officer dashboard_ side, for council office
 This app will form part of the user journey, with an multi-step questionnaire which determines the users' eligibility before being able to continue and submit their application, this breaks down into the following steps:
 
 - **`/`** - Entry point, provide starting information and signposts the user to the housing registration application
-- **`/eligibility-checker/[step]`** - Standalone eligibility checker tool
+- **`/eligibility/[step]`** - Check eligibility status before applying
 - **`/apply`** - Start a new application
-  - **`/apply/overview`** - Continue with a particular application, display a list of people within the current request
-  - **`/apply/[person]`** - Overall of the `person`s application progress
+  - **`/apply/sign-in`** - Return to an active application
+  - **`/apply/overview`** - Overall view of the application, display a list of people and current progress
+  - **`/apply/[person]`** - Overall view of each person involved with the application
     - **`/apply/[person]/[step]`** - Step of the application form
 
 ### Staff Dashboard

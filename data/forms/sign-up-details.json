@@ -18,10 +18,7 @@
         },
         {
           "label": "Mobile number",
-          "name": "phone_number",
-          "validation": {
-            "required": true
-          }
+          "name": "phone_number"
         },
         {
           "label": "Email",

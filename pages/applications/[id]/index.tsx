@@ -28,9 +28,9 @@ export default function ApplicationPage({ user, data }: PageProps): JSX.Element 
 
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-two-thirds">
-            <PersonalDetails heading="Personal details" applicant={data.applicant} />
-            <ContactDetails heading="Contact details" contact={data.applicant.contactInformation} />
-            <AddressDetails heading="Current accommodation" address={data.applicant.address} />
+            <PersonalDetails heading="Personal details" applicant={data.mainApplicant} />
+            <ContactDetails heading="Contact details" contact={data.mainApplicant.contactInformation} />
+            <AddressDetails heading="Current accommodation" address={data.mainApplicant.address} />
           </div>
           <div className="govuk-grid-column-one-third">
             {data.otherMembers &&

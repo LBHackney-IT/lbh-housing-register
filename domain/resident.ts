@@ -1,5 +1,5 @@
 // this matches the 'person' api
-export interface IPerson {
+export interface Person {
   id?: string;
   title?: string;
   firstName: string;
@@ -13,7 +13,8 @@ export interface IPerson {
 }
 
 // extra properties for our purpose
-export interface Resident extends IPerson {
+export interface Resident {
+  person: Person;
   contactInformation: ContactInformation;
   address: Address;
 }

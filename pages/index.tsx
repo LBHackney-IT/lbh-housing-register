@@ -14,7 +14,7 @@ export default function Home(): JSX.Element {
       <Paragraph>
         This will take a few minutes.
       </Paragraph>
-      <ButtonLink href="/eligibility-checker">Start now</ButtonLink>
+      <ButtonLink href="/eligibility">Start now</ButtonLink>
 
       <HeadingTwo content="Already started an application?" />
       <Link href="/apply/sign-in">

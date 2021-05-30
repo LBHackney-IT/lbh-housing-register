@@ -56,11 +56,8 @@ const ApplicationStep = (): JSX.Element => {
   const onCompletion = async () => {
     try {
       const applicants = [store.getState().resident, ...store.getState().additionalResidents]
-      // TODO: get application id and pass to function
-      // const applicationId = store.getState().applicationId
-
-      // Below line currently returns a 404 as the endpoints arent ready yet
-      await updateApplication(applicants)
+      const applicationId = applicants[0].applicationId
+      await updateApplication(applicants, applicationId)
     } catch (err) {
       console.log(err)
       // TODO: handle error
@@ -76,7 +73,8 @@ const ApplicationStep = (): JSX.Element => {
   const onExit = async () => {
     try {
       const applicants = [store.getState().resident, ...store.getState().additionalResidents]
-      await updateApplication(applicants)
+      const applicationId = applicants[0].applicationId
+      await updateApplication(applicants, applicationId)
     } catch (err) {
       // TODO: handle error
     }

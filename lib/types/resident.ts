@@ -6,6 +6,7 @@ export interface Resident {
   isEligible?: boolean
   name: string
   slug: string
+  applicationId?: string
 }
 
 export interface MainResident extends Resident {

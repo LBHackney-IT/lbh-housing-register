@@ -1,8 +1,10 @@
 import { checkEligible } from "../utils/form"
 import { MainResident } from "../types/resident"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { generateSlug } from "../utils/resident"
+import { MAIN_RESIDENT_KEY } from "../utils/constants"
+import ApplicationAgreement from "../../components/application/agreement"
 
-export const MAIN_RESIDENT_KEY = "you"
 
 const initialState: MainResident = {
   hasAgreed: false,
@@ -10,7 +12,8 @@ const initialState: MainResident = {
   isLoggedIn: false,
   username: "",
   name: "You",
-  slug: MAIN_RESIDENT_KEY
+  slug: MAIN_RESIDENT_KEY,
+  applicationId: ""
 }
 
 const slice = createSlice({
@@ -36,16 +39,23 @@ const slice = createSlice({
      * @param {PayloadAction<string>} action The residents name
      * @returns {MainResident} Updated resident state
      */
-    createUser: (state: MainResident, action: PayloadAction<string>): MainResident => {
-
+    createUser: (state: MainResident, action: any): any => {
       // TODO: attach sign up data to personal details for the resident
-      // state.formData = {
-      //   "personal-details": action.payload
-      // }
+      const resident: MainResident = {
+        hasAgreed: false,
+        isLoggedIn: false,
+        username: action.payload.emailAddress, 
+        formData: {
+          "personal-details": action.payload
+        },
+        name: action.payload.firstName,
+        slug: generateSlug(action.payload.firstName)
+      }
 
       return {
         ...state,
-        username: action.payload
+        username: action.payload.emailAddress, 
+        formData: resident
       }
     },
 
@@ -88,9 +98,17 @@ const slice = createSlice({
       state.ineligibilityReasons = eligibility[1]
 
       return state
-    }
-  }
+    },
+
+    startApplication: (state: MainResident, action: PayloadAction<{ [key: string]: FormData }>): any => {
+      console.log('what is payload', action.payload)
+      return {
+        ...state, 
+        applicationId: action.payload
+      }
+    },
+  },
 })
 
 export default slice
-export const { agree, createUser, logIn, logOut, updateFormData } = slice.actions
+export const { agree, createUser, logIn, logOut, updateFormData, startApplication } = slice.actions

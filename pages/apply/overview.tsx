@@ -8,12 +8,12 @@ import Tag from "../../components/tag"
 import whenAgreed from "../../lib/hoc/whenAgreed"
 import whenEligible from "../../lib/hoc/whenEligible"
 import { Store } from "../../lib/store"
-import { MAIN_RESIDENT_KEY } from "../../lib/store/resident"
+import { MAIN_RESIDENT_KEY } from "../../lib/utils/constants"
 import { applicationStepsRemaining } from "../../lib/utils/resident"
 import Link from "next/link"
 import { useStore } from "react-redux"
 import { useRouter } from "next/router"
-import { createApplication } from "../../lib/gateways/internal-api"
+import { updateApplication } from "../../lib/gateways/internal-api"
 
 const ApplicationPersonsOverview = (): JSX.Element => {
   const router = useRouter()
@@ -29,8 +29,8 @@ const ApplicationPersonsOverview = (): JSX.Element => {
 
   const handleSubmit = async (): Promise<void> => {
     try {
-      // TODO: this should become updateApplication, change status to reflect submission
-      const data = await createApplication(applicants)
+      const applicationId = applicants[0].applicationId
+      const data = await updateApplication(applicants, applicationId)
       console.log(data)
 
     } catch (err) {

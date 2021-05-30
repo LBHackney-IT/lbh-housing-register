@@ -8,8 +8,9 @@ import { FormData } from "../../lib/types/form"
 import { getSignInDetailsFormData } from "../../lib/utils/form-data"
 import { useStore } from "react-redux"
 import { Store } from "../../lib/store"
-import { createUser } from "../../lib/store/resident"
+import { createUser, startApplication } from "../../lib/store/resident"
 import { createApplication } from "../../lib/gateways/internal-api"
+import { APPLICATION_STATUS_IN_PROGRESS } from "../../lib/utils/constants"
 
 const ApplicationStartPage = (): JSX.Element => {
   const router = useRouter()
@@ -33,13 +34,14 @@ const ApplicationStartPage = (): JSX.Element => {
       });
 
       // TODO: save user to store, map personal details with form data
-      store.dispatch(createUser(values.emailAddress))
+      store.dispatch(createUser(values))
 
       // TODO: create application for the new user, status 'In Progress'?
-      //const application = await createApplication()
+      const applicants = [store.getState().resident]
+      const application = await createApplication(applicants, APPLICATION_STATUS_IN_PROGRESS)
 
       // TODO: use id from newly created application and save to store
-      //store.dispatch(startApplication(application.id))
+      store.dispatch(startApplication(application.id))
 
       router.push("/apply/verify")
 

@@ -33,14 +33,11 @@ const ApplicationStartPage = (): JSX.Element => {
         }
       });
 
-      // TODO: save user to store, map personal details with form data
       store.dispatch(createUser(values))
 
-      // TODO: create application for the new user, status 'In Progress'?
       const applicants = [store.getState().resident]
       const application = await createApplication(applicants, APPLICATION_STATUS_IN_PROGRESS)
 
-      // TODO: use id from newly created application and save to store
       store.dispatch(startApplication(application.id))
 
       router.push("/apply/verify")

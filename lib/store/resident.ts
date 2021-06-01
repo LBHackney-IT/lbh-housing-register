@@ -40,7 +40,6 @@ const slice = createSlice({
      * @returns {MainResident} Updated resident state
      */
     createUser: (state: MainResident, action: any): any => {
-      // TODO: attach sign up data to personal details for the resident
       const resident: MainResident = {
         hasAgreed: false,
         isLoggedIn: false,

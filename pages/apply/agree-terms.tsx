@@ -2,7 +2,7 @@ import Layout from "../../components/layout/resident-layout"
 import whenEligible from "../../lib/hoc/whenEligible"
 import ApplicationAgreement from "../../components/application/agreement"
 
-const Apply = (): JSX.Element => {
+const ApplicationTermsPage = (): JSX.Element => {
   return (
     <Layout>
       <ApplicationAgreement />
@@ -10,4 +10,4 @@ const Apply = (): JSX.Element => {
   )
 }
 
-export default whenEligible(Apply)
+export default whenEligible(ApplicationTermsPage)

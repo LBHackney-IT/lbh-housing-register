@@ -4,13 +4,15 @@ import personalDetailsFormData from "../../data/forms/person-details.json"
 import addressDetailsFormData from "../../data/forms/address-details.json"
 import testFormData from "../../data/forms/_test-form.json"
 import yourSituationFormData from "../../data/forms/your-situation.json"
-import signInDetailsFormData from "../../data/forms/sign-in-details.json"
+import signInFormData from "../../data/forms/sign-in.json"
 import signInVerifyFormData from "../../data/forms/sign-in-verify.json"
+import signUpDetailsFormData from "../../data/forms/sign-up-details.json"
 import { EligibilityCriteria, MultiStepForm } from "../types/form"
 
 export const AGREEMENT = "agreement"
-export const SIGN_IN_DETAILS = "sign-in-details"
+export const SIGN_IN = "sign-in"
 export const SIGN_IN_VERIFY = "sign-in-verify"
+export const SIGN_UP_DETAILS = "sign-up-details"
 export const IMMIGRATION_STATUS = "immigration-status"
 export const PERSONAL_DETAILS = "personal-details"
 export const ADDRESS_DETAILS = "address-details"
@@ -33,92 +35,31 @@ export function getEligibilityCriteria(formId: string): EligibilityCriteria[] | 
  */
 export function getFormData(form: string): MultiStepForm {
   switch (form.toLowerCase()) {
-    case "agreement":
-      return getAgreementFormData()
+    case AGREEMENT:
+      return agreementFormData
 
-    case "your-situation":
-      return getYourSituationFormData()
+    case SIGN_IN:
+      return signInFormData
 
-    case "immigration-status":
-      return getImmigrationStatusFormData()
+    case SIGN_IN_VERIFY:
+      return signInVerifyFormData
 
-    case "personal-details":
-      return getPersonalDetailsFormData()
+    case SIGN_UP_DETAILS:
+      return signUpDetailsFormData
 
-    case "address-details":
-      return getAddressDetailsFormData()
+    case IMMIGRATION_STATUS:
+      return immigrationStatusFormData
 
-    case "sign-in-details":
-      return getSignInDetailsFormData()
+    case PERSONAL_DETAILS:
+      return personalDetailsFormData
 
-    case "sign-in-verify":
-      return getSignInVerifyFormData()
+    case ADDRESS_DETAILS:
+      return addressDetailsFormData
+
+    case YOUR_SITUATION:
+      return yourSituationFormData
 
     default:
-      return getTestFormData()
+      return testFormData
   }
-}
-
-/**
- * Get the form data that makes up the agreement form
- * @returns {MultiStepForm}
- */
-export function getAgreementFormData(): MultiStepForm {
-  return agreementFormData
-}
-
-/**
- * Get the form data that makes up the immigration status form
- * @returns {MultiStepForm}
- */
-export function getImmigrationStatusFormData(): MultiStepForm {
-  return immigrationStatusFormData
-}
-
-/**
- * Get the form data that makes up the personal details form
- * @returns {MultiStepForm}
- */
-export function getPersonalDetailsFormData(): MultiStepForm {
-  return personalDetailsFormData
-}
-
-/**
- * Get the form data that makes up the personal details form
- * @returns {MultiStepForm}
- */
-export function getAddressDetailsFormData(): MultiStepForm {
-  return addressDetailsFormData
-}
-
-/**
- * Get the form data that makes up the test form
- * @returns {MultiStepForm}
- */
-export function getTestFormData(): MultiStepForm {
-  return testFormData
-}
-
-/**
- * Get the form data that makes up the 'your situation' form
- * @returns {MultiStepForm}
- */
-export function getYourSituationFormData(): MultiStepForm {
-  return yourSituationFormData
-}
-
-/**
- * Get the form data that makes up the sign in details form
- * @returns {MultiStepForm}
- */
-export function getSignInDetailsFormData(): MultiStepForm {
-  return signInDetailsFormData
-}
-
-/**
- * Get the form data that makes up the sign in verify form
- * @returns {MultiStepForm}
- */
-export function getSignInVerifyFormData(): MultiStepForm {
-  return signInVerifyFormData
 }

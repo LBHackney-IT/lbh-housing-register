@@ -6,7 +6,7 @@ import { Auth } from 'aws-amplify';
 import Form from "../../components/form/form"
 import Button from "../../components/button"
 import { FormData } from "../../lib/types/form"
-import { getSignInVerifyFormData } from "../../lib/utils/form-data"
+import { getFormData, SIGN_IN_VERIFY } from "../../lib/utils/form-data"
 import { useRouter } from "next/router";
 import { Store } from "../../lib/store";
 import { useStore } from "react-redux";
@@ -66,7 +66,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
         </>
       }
 
-      <Form formData={getSignInVerifyFormData()} residentsPreviousAnswers={providedUsername} onSubmit={confirmSignUp} />
+      <Form formData={getFormData(SIGN_IN_VERIFY)} residentsPreviousAnswers={providedUsername} buttonText="Continue" onSubmit={confirmSignUp} />
     </Layout>
   )
 }

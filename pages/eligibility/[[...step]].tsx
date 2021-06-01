@@ -19,7 +19,7 @@ export default function EligibilityChecker(): JSX.Element {
     )
   }
 
-  const baseHref = "/eligibility-checker"
+  const baseHref = "/eligibility"
   const router = useRouter()
   const steps = getEligibilitySteps()
   const activeStep = router.query.step ? router.query.step[0] : steps[0].steps[0].id
@@ -37,7 +37,7 @@ export default function EligibilityChecker(): JSX.Element {
         onCompletion={onCompletion}
         resident={resident}
         steps={steps}
-        />
+      />
     </Layout>
   )
 }

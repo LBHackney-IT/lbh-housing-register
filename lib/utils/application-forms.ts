@@ -1,5 +1,5 @@
 import { ApplicationStep, ApplicationSteps } from "../types/application"
-import { IMMIGRATION_STATUS, YOUR_SITUATION } from "./form-data"
+import { IMMIGRATION_STATUS } from "./form-data"
 
 /**
  * Get application step model from ID
@@ -22,10 +22,6 @@ export const getEligibilitySteps = (): ApplicationSteps[] => {
     {
       "heading": "Eligibility",
       "steps": [
-        {
-          "heading": "Your situation",
-          "id": YOUR_SITUATION
-        },
         {
           "heading": "Immigration status",
           "id": IMMIGRATION_STATUS

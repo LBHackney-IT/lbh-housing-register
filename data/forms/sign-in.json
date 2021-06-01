@@ -1,0 +1,28 @@
+{
+  "steps": [
+    {
+      "fields": [
+        {
+          "label": "Email",
+          "name": "email",
+          "type": "email",
+          "hint": "We’ll email you a verification code to continue your application",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "Password",
+          "name": "password",
+          "type": "password",
+          "hint": "Testing123!",
+          "initialValue": "Testing123!",
+          "validation": {
+            "required": true,
+            "min": 8
+          }
+        }
+      ]
+    }
+  ]
+}

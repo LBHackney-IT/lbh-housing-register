@@ -11,10 +11,11 @@ This application has two sides: the _officer dashboard_ side, for council office
 This app will form part of the user journey, with an multi-step questionnaire which determines the users' eligibility before being able to continue and submit their application, this breaks down into the following steps:
 
 - **`/`** - Entry point, provide starting information and signposts the user to the housing registration application
-- **`/eligibility-checker/[step]`** - Standalone eligibility checker tool
+- **`/eligibility/[step]`** - Check eligibility status before applying
 - **`/apply`** - Start a new application
-  - **`/apply/overview`** - Continue with a particular application, display a list of people within the current request
-  - **`/apply/[person]`** - Overall of the `person`s application progress
+  - **`/apply/sign-in`** - Return to an active application
+  - **`/apply/overview`** - Overall view of the application, display a list of people and current progress
+  - **`/apply/[person]`** - Overall view of each person involved with the application
     - **`/apply/[person]/[step]`** - Step of the application form
 
 ### Staff Dashboard
@@ -85,3 +86,50 @@ The app comes with a [mock server](http://mocks-server.org) for mock requests to
 e.g. `http://localhost:5000/api/applications` will return a list of applications.
 
 To connect directly to an external API, update the `ENDPOINT_API` variable in the `.env` file.
+
+## Concepts
+
+### APIs
+
+We've defined a couple of gateways to interact with our API. These are set up as follows:
+
+- **`internal-api.ts`**
+  - This acts as a means of routing client side requests, for example form submissions, to a proxy endpoint on the Next.js server.
+  - Requests are sent via [API routes](https://nextjs.org/docs/api-routes/introduction) which run server side
+
+- **`applications-api.ts`**
+  - This acts as a means of sending server side requests to the Housing Register API.
+  - This is currently used within the staff portal and we are using `getServerSideProps` to preload the data
+
+### Forms
+
+As mentioned above we are using [Formik](https://formik.org/) to help create and handle forms.
+
+This has been extended to be used in a more generic way, which means forms can be created from JSON files. These are stored within `data/forms`. To add a new form, create a JSON file with the necessary configuration for the fields required and then reference it within the helper function `getFormData`. Example below...
+
+```
+{
+  "heading": "Accommodation details",
+  "steps": [
+    {
+      "fields": [
+        {
+          "label": "Postcode",
+          "name": "postCode",
+          "validation": {
+            "required": true
+          }
+        },
+        ...
+      ]
+    }
+  ]
+}
+```
+
+### Higher order components
+
+[Higher order components](https://reactjs.org/docs/higher-order-components.html) are used to wrap existing components with some logic about the current application, allowing for code re-use.
+
+- `whenEligible` - ensure that the applicant is eligible for completing an application
+- `whenAgreed` - ensure that the applicant has agreed to the terms and conditions

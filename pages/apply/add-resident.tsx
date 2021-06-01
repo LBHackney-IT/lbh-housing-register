@@ -6,7 +6,7 @@ import whenEligible from "../../lib/hoc/whenEligible"
 import { Store } from "../../lib/store"
 import { addResidentFromFormData } from "../../lib/store/additionalResidents"
 import { FormData } from "../../lib/types/form"
-import { getPersonalDetailsFormData } from "../../lib/utils/form-data"
+import { getFormData, PERSONAL_DETAILS } from "../../lib/utils/form-data"
 import { useStore } from "react-redux"
 import { useRouter } from "next/router"
 import { updateApplication } from "../../lib/gateways/internal-api"
@@ -38,7 +38,7 @@ const AddPersonToApplication = (): JSX.Element => {
   return (
     <Layout breadcrumbs={breadcrumbs}>
       <HeadingOne content="Add a person" />
-      <Form buttonText="Add person" formData={getPersonalDetailsFormData()} onSubmit={onSubmit} />
+      <Form buttonText="Add person" formData={getFormData(PERSONAL_DETAILS)} onSubmit={onSubmit} />
     </Layout>
   )
 }

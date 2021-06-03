@@ -1,4 +1,4 @@
-import { Resident } from "./resident";
+import { Resident } from './resident';
 
 export interface ApplicationList {
   results: Array<Application>;

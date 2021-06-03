@@ -4,9 +4,9 @@
 
 module.exports = {
   options: {
-    mock: "simulate",
-    path: "mocks",
+    mock: 'simulate',
+    path: 'mocks',
     cli: false,
-    port: 5000
-  }
+    port: 5000,
+  },
 };

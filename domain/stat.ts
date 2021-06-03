@@ -1,4 +1,4 @@
 export interface Stat {
-  value: string
-  caption: string
+  value: string;
+  caption: string;
 }

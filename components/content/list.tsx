@@ -1,23 +1,15 @@
 interface ListProps {
-  children: JSX.Element | JSX.Element[]
+  children: JSX.Element | JSX.Element[];
 }
 
 export default function List({ children }: ListProps): JSX.Element {
-  return (
-    <ul className="lbh-list lbh-list--bullet">
-      {children}
-    </ul>
-  )
+  return <ul className="lbh-list lbh-list--bullet">{children}</ul>;
 }
 
 interface ListItemProps {
-  children: any
+  children: any;
 }
 
 export function ListItem({ children }: ListItemProps): JSX.Element {
-  return (
-    <li>
-      {children}
-    </li>
-  )
+  return <li>{children}</li>;
 }

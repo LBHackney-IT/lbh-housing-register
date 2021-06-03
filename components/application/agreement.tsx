@@ -1,28 +1,28 @@
-import { HeadingOne } from "../content/headings"
-import Paragraph from "../content/paragraph"
-import Form from "../form/form"
-import { Store } from "../../lib/store"
-import { agree } from "../../lib/store/resident"
-import { FormData } from "../../lib/types/form"
-import { AGREEMENT, getFormData } from "../../lib/utils/form-data"
-import { useRouter } from "next/router"
-import { useStore } from "react-redux"
+import { HeadingOne } from '../content/headings';
+import Paragraph from '../content/paragraph';
+import Form from '../form/form';
+import { Store } from '../../lib/store';
+import { agree } from '../../lib/store/resident';
+import { FormData } from '../../lib/types/form';
+import { AGREEMENT, getFormData } from '../../lib/utils/form-data';
+import { useRouter } from 'next/router';
+import { useStore } from 'react-redux';
 
 export default function ApplicationAgreement() {
-  const router = useRouter()
-  const store = useStore<Store>()
-  const resident = store.getState().resident
+  const router = useRouter();
+  const store = useStore<Store>();
+  const resident = store.getState().resident;
 
   const onSubmit = () => {
-    router.push("/apply/overview")
-  }
+    router.push('/apply/overview');
+  };
 
   const onSave = (values: FormData) => {
-    store.dispatch(agree(values.agreement))
-  }
+    store.dispatch(agree(values.agreement));
+  };
 
   if (resident.hasAgreed) {
-    onSubmit()
+    onSubmit();
   }
 
   return (
@@ -30,19 +30,27 @@ export default function ApplicationAgreement() {
       <HeadingOne content="Before you continue" />
 
       <Paragraph>
-        I understand that the information I provide will be verified by Hackney Council to assess my level of housing need.
+        I understand that the information I provide will be verified by Hackney
+        Council to assess my level of housing need.
       </Paragraph>
 
       <Paragraph>
-        The answers and evidence I provide may be referred to credit agencies, other local authorities, medical professionals and HMRC.
+        The answers and evidence I provide may be referred to credit agencies,
+        other local authorities, medical professionals and HMRC.
       </Paragraph>
 
       <Paragraph>
-        I agree to allow a Housing Officer to conduct a home visit to assess my current living situation without advance notice.
-        If I do not allow entry, my application may be declined.
+        I agree to allow a Housing Officer to conduct a home visit to assess my
+        current living situation without advance notice. If I do not allow
+        entry, my application may be declined.
       </Paragraph>
 
-      <Form buttonText="Save and continue" formData={getFormData(AGREEMENT)} onSave={onSave} onSubmit={onSubmit} />
+      <Form
+        buttonText="Save and continue"
+        formData={getFormData(AGREEMENT)}
+        onSave={onSave}
+        onSubmit={onSubmit}
+      />
     </>
-  )
+  );
 }

@@ -23,7 +23,7 @@ This app will form part of the user journey, with an multi-step questionnaire wh
 - **`/login`** - Login to the staff dashboard
 - **`/access-denied`** - Active user logged in, but without access to required page
 - **`/applications`** - The homepage for officers, which displays applications
-  - **`/applications/:id`** - View all information relating to a particular application  
+  - **`/applications/:id`** - View all information relating to a particular application
 
 ## 🧱 How it's made
 
@@ -38,11 +38,11 @@ The components are taken from the [design system](https://design-system.hackney.
 Unlike the mark-up, the styling and javascript are available as a package and easily imported from the [lbh-frontend](https://github.com/LBHackney-IT/LBH-frontend) library (using `npm`). We should continue to support this approach, for example:
 
 ```scss
-@import "node_modules/lbh-frontend/lbh/base";
-@import "node_modules/lbh-frontend/lbh/components/lbh-button/button";
+@import 'node_modules/lbh-frontend/lbh/base';
+@import 'node_modules/lbh-frontend/lbh/components/lbh-button/button';
 ```
 
-*Imports the button styling from the lbh-frontend library*
+_Imports the button styling from the lbh-frontend library_
 
 ### TypeScript
 
@@ -94,6 +94,7 @@ To connect directly to an external API, update the `ENDPOINT_API` variable in th
 We've defined a couple of gateways to interact with our API. These are set up as follows:
 
 - **`internal-api.ts`**
+
   - This acts as a means of routing client side requests, for example form submissions, to a proxy endpoint on the Next.js server.
   - Requests are sent via [API routes](https://nextjs.org/docs/api-routes/introduction) which run server side
 

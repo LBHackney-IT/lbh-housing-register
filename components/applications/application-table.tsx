@@ -1,14 +1,17 @@
-import Link from "next/link"
-import { ApplicationList } from "../../domain/application"
-import { getStatusTag } from "../../lib/utils/tag"
-import Tag from "../tag"
+import Link from 'next/link';
+import { ApplicationList } from '../../domain/application';
+import { getStatusTag } from '../../lib/utils/tag';
+import Tag from '../tag';
 
 interface TableProps {
-  caption?: string
-  applications: ApplicationList
+  caption?: string;
+  applications: ApplicationList;
 }
 
-export default function ApplicationTable({ caption, applications }: TableProps): JSX.Element {
+export default function ApplicationTable({
+  caption,
+  applications,
+}: TableProps): JSX.Element {
   return (
     <table className="govuk-table lbh-table">
       {caption && (
@@ -35,25 +38,31 @@ export default function ApplicationTable({ caption, applications }: TableProps):
       <tbody className="govuk-table__body">
         {applications.results.map((application, index) => (
           <tr key={index} className="govuk-table__row">
-            <th scope="row" className="govuk-table__header">#{application.id}</th>
+            <th scope="row" className="govuk-table__header">
+              #{application.id}
+            </th>
             <td className="govuk-table__cell">
               <Link href={`/applications/${application.id}`}>
                 <a className="govuk-link govuk-custom-text-color">
-                  {application.applicant.title} {application.applicant.firstName} {application.applicant.surname}
-                  {application.otherMembers &&
+                  {application.applicant.title}{' '}
+                  {application.applicant.firstName}{' '}
+                  {application.applicant.surname}
+                  {application.otherMembers && (
                     <span> + {application.otherMembers.length}</span>
-                  }
+                  )}
                 </a>
               </Link>
             </td>
             <td className="govuk-table__cell">
-              <Tag content={application.status} className={getStatusTag(application.status)} />
+              <Tag
+                content={application.status}
+                className={getStatusTag(application.status)}
+              />
             </td>
             <td className="govuk-table__cell">{application.createdAt}</td>
           </tr>
         ))}
       </tbody>
     </table>
-  )
+  );
 }
-

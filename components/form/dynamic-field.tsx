@@ -1,30 +1,32 @@
-import Checkboxes, { CheckboxesProps } from "./checkboxes"
-import Input from "./input"
-import Radios, { RadiosProps } from "./radios"
-import Select from "./select"
-import Textarea from "./textarea"
-import { FormField } from "../../lib/types/form"
+import Checkboxes, { CheckboxesProps } from './checkboxes';
+import Input from './input';
+import Radios, { RadiosProps } from './radios';
+import Select from './select';
+import Textarea from './textarea';
+import { FormField } from '../../lib/types/form';
 
 interface DynamicFieldProps {
-  field: FormField
+  field: FormField;
 }
 
-export default function DynamicField({ field }: DynamicFieldProps): JSX.Element {
-  switch(field.as?.toLowerCase()) {
-    case "checkbox":
-    case "checkboxes":
-      return <Checkboxes {...field as CheckboxesProps} />
-    
-    case "radios":
-      return <Radios {...field as RadiosProps} />
+export default function DynamicField({
+  field,
+}: DynamicFieldProps): JSX.Element {
+  switch (field.as?.toLowerCase()) {
+    case 'checkbox':
+    case 'checkboxes':
+      return <Checkboxes {...(field as CheckboxesProps)} />;
 
-    case "select":
-      return <Select {...field} />
+    case 'radios':
+      return <Radios {...(field as RadiosProps)} />;
 
-    case "textarea":
-      return <Textarea {...field} />
+    case 'select':
+      return <Select {...field} />;
+
+    case 'textarea':
+      return <Textarea {...field} />;
 
     default:
-      return <Input {...field} />
+      return <Input {...field} />;
   }
 }

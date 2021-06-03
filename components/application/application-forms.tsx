@@ -1,27 +1,34 @@
-import { HeadingOne, HeadingTwo } from "../content/headings"
-import Paragraph from "../content/paragraph"
-import Form from "../form/form"
-import { Store } from "../../lib/store"
-import { ApplicationSteps } from "../../lib/types/application"
-import { FormData } from "../../lib/types/form"
-import { Resident } from "../../lib/types/resident"
-import { getFormIdsFromApplicationSteps } from "../../lib/utils/application-forms"
-import { getFormData } from "../../lib/utils/form-data"
-import { hasResidentAnsweredForm, updateResidentsFormData } from "../../lib/utils/resident"
-import SummaryList, { SummaryListActions, SummaryListRow, SummaryListValue } from "../summary-list"
-import Tag from "../tag"
-import Link from "next/link"
-import { useRouter } from "next/router"
-import { useState } from "react"
-import { useStore } from "react-redux"
+import { HeadingOne, HeadingTwo } from '../content/headings';
+import Paragraph from '../content/paragraph';
+import Form from '../form/form';
+import { Store } from '../../lib/store';
+import { ApplicationSteps } from '../../lib/types/application';
+import { FormData } from '../../lib/types/form';
+import { Resident } from '../../lib/types/resident';
+import { getFormIdsFromApplicationSteps } from '../../lib/utils/application-forms';
+import { getFormData } from '../../lib/utils/form-data';
+import {
+  hasResidentAnsweredForm,
+  updateResidentsFormData,
+} from '../../lib/utils/resident';
+import SummaryList, {
+  SummaryListActions,
+  SummaryListRow,
+  SummaryListValue,
+} from '../summary-list';
+import Tag from '../tag';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { useStore } from 'react-redux';
 
 interface ApplicationFormsProps {
-  activeStep?: string
-  baseHref: string
-  onCompletion: (values: FormData) => void
-  onExit?: () => void
-  resident: Resident
-  steps: ApplicationSteps[]
+  activeStep?: string;
+  baseHref: string;
+  onCompletion: (values: FormData) => void;
+  onExit?: () => void;
+  resident: Resident;
+  steps: ApplicationSteps[];
 }
 
 /**
@@ -31,41 +38,48 @@ interface ApplicationFormsProps {
  * @param {ApplicationFormsProps} param0 - Property object of the application
  * @returns {JSX.Element}
  */
-export default function ApplicationForms({ activeStep, baseHref, onCompletion, onExit, resident, steps }: ApplicationFormsProps): JSX.Element {
-  const router = useRouter()
-  const store = useStore<Store>()
-  const [applicationData, setApplicationData] = useState({})
+export default function ApplicationForms({
+  activeStep,
+  baseHref,
+  onCompletion,
+  onExit,
+  resident,
+  steps,
+}: ApplicationFormsProps): JSX.Element {
+  const router = useRouter();
+  const store = useStore<Store>();
+  const [applicationData, setApplicationData] = useState({});
 
-  const formSteps = getFormIdsFromApplicationSteps(steps)
+  const formSteps = getFormIdsFromApplicationSteps(steps);
 
   if (formSteps.includes(activeStep!)) {
     const next = () => {
       const index = formSteps.indexOf(activeStep!) + 1;
       if (index < formSteps.length) {
-        activeStep = formSteps[index]
-        router.replace(`${baseHref}/${activeStep}`)
+        activeStep = formSteps[index];
+        router.replace(`${baseHref}/${activeStep}`);
       }
-    }
+    };
 
     const onSave = (values: FormData) => {
-      const data: {[key: string]: FormData} = {...applicationData}
-      data[activeStep!] = values
+      const data: { [key: string]: FormData } = { ...applicationData };
+      data[activeStep!] = values;
 
-      setApplicationData(data)
-      updateResidentsFormData(store, resident, data)
+      setApplicationData(data);
+      updateResidentsFormData(store, resident, data);
 
       const index = formSteps.indexOf(activeStep!) + 1;
       if (index == formSteps.length) {
-        onCompletion(data)
+        onCompletion(data);
       }
-    }
+    };
 
     return (
       <>
         {formSteps.map((step, index) => {
           if (step == activeStep) {
-            const formData = getFormData(step)
-            const residentsPreviousAnswers = resident.formData[step]
+            const formData = getFormData(step);
+            const residentsPreviousAnswers = resident.formData[step];
 
             return (
               <div key={index}>
@@ -77,15 +91,15 @@ export default function ApplicationForms({ activeStep, baseHref, onCompletion, o
                   onExit={onExit}
                   onSave={onSave}
                   onSubmit={next}
-                  residentsPreviousAnswers={residentsPreviousAnswers} />
+                  residentsPreviousAnswers={residentsPreviousAnswers}
+                />
               </div>
-            )
+            );
           }
         })}
       </>
-    )
-  }
-  else {
+    );
+  } else {
     return (
       <>
         {steps.map((step, index) => (
@@ -100,10 +114,11 @@ export default function ApplicationForms({ activeStep, baseHref, onCompletion, o
                     </Link>
                   </SummaryListValue>
                   <SummaryListActions>
-                    {hasResidentAnsweredForm(resident, formStep.id) ?
-                      <Tag content="Check answers" /> :
+                    {hasResidentAnsweredForm(resident, formStep.id) ? (
+                      <Tag content="Check answers" />
+                    ) : (
                       <Tag content="Todo" variant="grey" />
-                    }
+                    )}
                   </SummaryListActions>
                 </SummaryListRow>
               ))}
@@ -111,6 +126,6 @@ export default function ApplicationForms({ activeStep, baseHref, onCompletion, o
           </div>
         ))}
       </>
-    )
+    );
   }
 }

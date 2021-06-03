@@ -1,12 +1,12 @@
-import { Stat } from "../domain/stat";
+import { Stat } from '../domain/stat';
 
 interface StatsProps {
-  className: string
-  stats: Array<Stat>
+  className: string;
+  stats: Array<Stat>;
 }
 
 interface StatItemProps extends Stat {
-  index?: number
+  index?: number;
 }
 
 export function Stats({ className, stats }: StatsProps): JSX.Element {
@@ -18,18 +18,25 @@ export function Stats({ className, stats }: StatsProps): JSX.Element {
         </div>
       ))}
     </div>
-  )
+  );
 }
 
-export function StatItem({ index, value, caption }: StatItemProps): JSX.Element {
+export function StatItem({
+  index,
+  value,
+  caption,
+}: StatItemProps): JSX.Element {
   return (
     <div className="lbh-stat">
-      <strong className="lbh-stat__value" aria-labelledby={`stat-${index}-caption`}>
+      <strong
+        className="lbh-stat__value"
+        aria-labelledby={`stat-${index}-caption`}
+      >
         {value}
       </strong>
       <span className="lbh-stat__caption" id={`stat-${index}-caption`}>
         {caption}
       </span>
     </div>
-  )
+  );
 }

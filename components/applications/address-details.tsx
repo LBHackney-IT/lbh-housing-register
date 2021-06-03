@@ -1,12 +1,15 @@
-import { Address } from "../../domain/resident"
-import Collapsible from "../collapsible"
+import { Address } from '../../domain/resident';
+import Collapsible from '../collapsible';
 
 interface SummaryProps {
-  heading: string
-  address: Address
+  heading: string;
+  address: Address;
 }
 
-export default function AddressDetails({ heading, address }: SummaryProps): JSX.Element {
+export default function AddressDetails({
+  heading,
+  address,
+}: SummaryProps): JSX.Element {
   return (
     <Collapsible heading={heading}>
       <dl className="govuk-summary-list lbh-summary-list">
@@ -14,9 +17,12 @@ export default function AddressDetails({ heading, address }: SummaryProps): JSX.
           <dt className="govuk-summary-list__key">Address</dt>
           <dd className="govuk-summary-list__value">
             <p className="govuk-body">
-              {address.addressLine1}<br />
-              {address.addressLine2}<br />
-              {address.addressLine3}<br />
+              {address.addressLine1}
+              <br />
+              {address.addressLine2}
+              <br />
+              {address.addressLine3}
+              <br />
               {address.postCode}
             </p>
           </dd>
@@ -24,5 +30,5 @@ export default function AddressDetails({ heading, address }: SummaryProps): JSX.
         </div>
       </dl>
     </Collapsible>
-  )
+  );
 }

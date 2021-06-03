@@ -1,12 +1,15 @@
-import { Resident } from "../../domain/resident"
-import Collapsible from "../collapsible"
+import { Resident } from '../../domain/resident';
+import Collapsible from '../collapsible';
 
 interface SummaryProps {
-  heading: string
-  others: Array<Resident>
+  heading: string;
+  others: Array<Resident>;
 }
 
-export default function OtherMembers({ heading, others }: SummaryProps): JSX.Element {
+export default function OtherMembers({
+  heading,
+  others,
+}: SummaryProps): JSX.Element {
   return (
     <Collapsible heading={heading}>
       <dl className="govuk-summary-list lbh-summary-list">
@@ -22,5 +25,5 @@ export default function OtherMembers({ heading, others }: SummaryProps): JSX.Ele
         ))}
       </dl>
     </Collapsible>
-  )
+  );
 }

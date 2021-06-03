@@ -1,12 +1,12 @@
 export function getStatusTag(status: string) {
-  let colour
+  let colour;
   switch (status) {
     case 'In review':
-      return "lbh-tag--yellow"
+      return 'lbh-tag--yellow';
     case 'Overdue':
-      return "lbh-tag--red"
+      return 'lbh-tag--red';
     case 'Approved':
-      return "lbh-tag--green"
+      return 'lbh-tag--green';
   }
-  return colour
+  return colour;
 }

@@ -1,20 +1,26 @@
-import ErrorMessage from "./error-message"
-import FormGroup from "./form-group"
-import Hint from "./hint"
-import Label from "./label"
-import { FormField, FormFieldOption } from "../../lib/types/form"
-import { Field, FieldInputProps, FieldMetaProps } from "formik"
+import ErrorMessage from './error-message';
+import FormGroup from './form-group';
+import Hint from './hint';
+import Label from './label';
+import { FormField, FormFieldOption } from '../../lib/types/form';
+import { Field, FieldInputProps, FieldMetaProps } from 'formik';
 
 interface RadioProps extends FormField {
-  index?: number
-  value: string
+  index?: number;
+  value: string;
 }
 
-export function Radio({ index, hint, label, name, value }: RadioProps): JSX.Element {
-  let id = name
+export function Radio({
+  index,
+  hint,
+  label,
+  name,
+  value,
+}: RadioProps): JSX.Element {
+  let id = name;
 
   if (index !== undefined) {
-    id += `.${index}`
+    id += `.${index}`;
   }
 
   return (
@@ -26,33 +32,55 @@ export function Radio({ index, hint, label, name, value }: RadioProps): JSX.Elem
         name={name}
         value={value}
       />
-      <Label className="govuk-radios__label" content={label || value} htmlFor={id} />
+      <Label
+        className="govuk-radios__label"
+        content={label || value}
+        htmlFor={id}
+      />
 
       {hint && <Hint className="govuk-radios__hint" content={hint} />}
     </div>
-  )
+  );
 }
 
 export interface RadiosProps extends FormField {
-  value: string
+  value: string;
 }
 
-export default function Radios({ hint, label, name, options }: RadiosProps): JSX.Element {
+export default function Radios({
+  hint,
+  label,
+  name,
+  options,
+}: RadiosProps): JSX.Element {
   return (
     <Field name={name}>
-      {({ field, meta }: { field: FieldInputProps<string>, meta: FieldMetaProps<string> }) => (
+      {({
+        field,
+        meta,
+      }: {
+        field: FieldInputProps<string>;
+        meta: FieldMetaProps<string>;
+      }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
           {label && <Label content={label} strong={true} />}
           {hint && <Hint content={hint} />}
           {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 
           <div className="govuk-radios lbh-radios">
-            {options?.map((radio, index) => 
-              <Radio key={index} index={index} hint={radio.hint} label={radio.label!} name={field.name} value={radio.value} />
-            )}
+            {options?.map((radio, index) => (
+              <Radio
+                key={index}
+                index={index}
+                hint={radio.hint}
+                label={radio.label!}
+                name={field.name}
+                value={radio.value}
+              />
+            ))}
           </div>
         </FormGroup>
       )}
     </Field>
-  )
+  );
 }

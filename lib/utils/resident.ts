@@ -6,7 +6,7 @@ import { ApplicationSteps } from "../types/application"
 import { FormData } from "../types/form"
 import { Resident } from "../types/resident"
 import { Store } from "redux"
-import { ADDRESS_DETAILS, IMMIGRATION_STATUS, PERSONAL_DETAILS, YOUR_SITUATION } from "./form-data"
+import { ADDRESS_DETAILS, IMMIGRATION_STATUS, PERSONAL_DETAILS, YOUR_SITUATION, RESIDENTIAL_STATUS } from "./form-data"
 import { checkEligible } from "./form"
 
 export const applicationStepsRemaining = (resident: Resident): number => {
@@ -82,6 +82,10 @@ export const getApplicationStepsForResident = (resident: Resident): ApplicationS
       {
         heading: "Accommodation",
         steps: [
+          {
+            heading: "Residential Status",
+            id: RESIDENTIAL_STATUS
+          },
           {
             heading: "Accommodation details",
             id: ADDRESS_DETAILS

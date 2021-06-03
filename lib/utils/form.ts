@@ -84,7 +84,11 @@ export function checkEligible(formData: {
     eligibilityCriteria?.forEach((criteria) => {
       const fieldValue = values[criteria.field];
 
-      if (criteria.is && criteria.is !== fieldValue) {
+      if (Array.isArray(fieldValue) && fieldValue.indexOf(criteria.is) !== -1) {
+        setInvalid(criteria.reasoning);
+      }
+
+      if (criteria.is && criteria.is === fieldValue) {
         setInvalid(criteria.reasoning);
       }
 

@@ -3,7 +3,6 @@ import { HeadingOne } from '../../../components/content/headings';
 import Hint from '../../../components/form/hint';
 import Layout from '../../../components/layout/resident-layout';
 import whenAgreed from '../../../lib/hoc/whenAgreed';
-import whenEligible from '../../../lib/hoc/whenEligible';
 import { Store } from '../../../lib/store';
 import { deleteResident } from '../../../lib/store/additionalResidents';
 import { getApplicationStepFromId } from '../../../lib/utils/application-forms';
@@ -117,4 +116,4 @@ const ApplicationStep = (): JSX.Element => {
   );
 };
 
-export default whenAgreed(whenEligible(ApplicationStep));
+export default whenAgreed(ApplicationStep);

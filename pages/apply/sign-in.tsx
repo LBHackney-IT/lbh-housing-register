@@ -1,6 +1,5 @@
 import { HeadingOne } from '../../components/content/headings';
 import Layout from '../../components/layout/resident-layout';
-import whenEligible from '../../lib/hoc/whenEligible';
 import { Auth } from 'aws-amplify';
 import { useRouter } from 'next/router';
 import Form from '../../components/form/form';
@@ -44,4 +43,4 @@ const ApplicationSignInPage = (): JSX.Element => {
   );
 };
 
-export default whenEligible(ApplicationSignInPage);
+export default ApplicationSignInPage;

@@ -27,7 +27,6 @@ export default function EligibilityChecker(): JSX.Element {
     : steps[0].steps[0].id;
 
   const onCompletion = () => {
-    router.push(`${baseHref}/outcome`);
     complete(true);
   };
 

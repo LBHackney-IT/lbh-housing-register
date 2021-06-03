@@ -2,7 +2,6 @@ import { HeadingOne } from '../../components/content/headings';
 import Form from '../../components/form/form';
 import Layout from '../../components/layout/resident-layout';
 import whenAgreed from '../../lib/hoc/whenAgreed';
-import whenEligible from '../../lib/hoc/whenEligible';
 import { Store } from '../../lib/store';
 import { addResidentFromFormData } from '../../lib/store/additionalResidents';
 import { FormData } from '../../lib/types/form';
@@ -49,4 +48,4 @@ const AddPersonToApplication = (): JSX.Element => {
   );
 };
 
-export default whenAgreed(whenEligible(AddPersonToApplication));
+export default whenAgreed(AddPersonToApplication);

@@ -1,6 +1,5 @@
 import { HeadingOne } from '../../components/content/headings';
 import Layout from '../../components/layout/resident-layout';
-import whenEligible from '../../lib/hoc/whenEligible';
 import Paragraph from '../../components/content/paragraph';
 import { Auth } from 'aws-amplify';
 import Form from '../../components/form/form';
@@ -76,4 +75,4 @@ const ApplicationVerifyPage = (): JSX.Element => {
   );
 };
 
-export default whenEligible(ApplicationVerifyPage);
+export default ApplicationVerifyPage;

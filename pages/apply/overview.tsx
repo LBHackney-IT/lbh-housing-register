@@ -10,7 +10,6 @@ import SummaryList, {
 } from '../../components/summary-list';
 import Tag from '../../components/tag';
 import whenAgreed from '../../lib/hoc/whenAgreed';
-import whenEligible from '../../lib/hoc/whenEligible';
 import { Store } from '../../lib/store';
 import { MAIN_RESIDENT_KEY } from '../../lib/store/resident';
 import { applicationStepsRemaining } from '../../lib/utils/resident';
@@ -105,4 +104,4 @@ const ApplicationPersonsOverview = (): JSX.Element => {
   );
 };
 
-export default whenAgreed(whenEligible(ApplicationPersonsOverview));
+export default whenAgreed(ApplicationPersonsOverview);

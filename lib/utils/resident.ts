@@ -12,6 +12,7 @@ import {
   PERSONAL_DETAILS,
   YOUR_SITUATION,
   RESIDENTIAL_STATUS,
+  ADDRESS_HISTORY,
 } from './form-data';
 import { checkEligible } from './form';
 
@@ -103,7 +104,11 @@ export const getApplicationStepsForResident = (
             id: RESIDENTIAL_STATUS,
           },
           {
-            heading: 'Accommodation details',
+            heading: 'Address history',
+            id: ADDRESS_HISTORY
+          },
+          {
+            heading: 'Current accommodation',
             id: ADDRESS_DETAILS,
           },
         ],

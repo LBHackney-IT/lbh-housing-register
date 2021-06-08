@@ -1,11 +1,61 @@
 {
-  "heading": "Accommodation details",
+  "heading": "Current accommodation",
   "steps": [
     {
       "fields": [
         {
-          "label": "Postcode",
-          "name": "postCode",
+          "as": "radios",
+          "label": "What best describes your current living situation?",
+          "name": "current-acommodation",
+          "options": [
+            {
+              "label": "Living with parents",
+              "value": "living-with-parents"
+            },
+            {
+              "label": "Living with friends",
+              "value": "living-with-friends"
+            },
+            {
+              "label": "Living with relatives",
+              "value": "living-with-relatives"
+            },
+            {
+              "label": "Temporary accommodation",
+              "value": "temp-accomodation"
+            },
+            {
+              "label": "Privat rental",
+              "value": "privat-rental"
+            },{
+              "label": "Owner occupier",
+              "value": "owner-occupier"
+            },
+            {
+              "label": "No fixed abode",
+              "value": "no-fixed-abode"
+            },
+            {
+              "label": "Squatter",
+              "value": "squatter"
+            },
+            {
+              "label": "B&B, Hotel or Hostel",
+              "value": "b&b-hotel-hostel"
+            },
+            {
+              "label": "Lodger",
+              "value": "lodger"
+            },
+            {
+              "label": "Unauthorised occupant",
+              "value": "unauthorised-occupant"
+            },
+            {
+              "label": "Tied accommodation",
+              "value": "tied-accommodation"
+            }
+          ],
           "validation": {
             "required": true
           }

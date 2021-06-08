@@ -1,8 +1,9 @@
 import additionalResidents from './additionalResidents';
 import resident from './resident';
 import { MainResident, Resident } from '../types/resident';
-import { createStore, combineReducers } from 'redux';
+import { combineReducers } from 'redux';
 import { createWrapper, Context } from 'next-redux-wrapper';
+import { configureStore } from '@reduxjs/toolkit';
 
 export interface Store {
   additionalResidents: Resident[];
@@ -14,7 +15,7 @@ const reducer = combineReducers({
   resident: resident.reducer,
 });
 
-// Store function
-const store = (context: Context) => createStore(reducer);
+const store = () => configureStore({ reducer });
+
 export const wrapper = createWrapper(store);
 export default store;

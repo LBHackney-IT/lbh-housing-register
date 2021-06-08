@@ -33,15 +33,15 @@ export default function ApplicationPage({
           <div className="govuk-grid-column-two-thirds">
             <PersonalDetails
               heading="Personal details"
-              applicant={data.applicant}
+              applicant={data.mainApplicant}
             />
             <ContactDetails
               heading="Contact details"
-              contact={data.applicant.contactInformation}
+              contact={data.mainApplicant.contactInformation}
             />
             <AddressDetails
               heading="Current accommodation"
-              address={data.applicant.address}
+              address={data.mainApplicant.address}
             />
           </div>
           <div className="govuk-grid-column-one-third">

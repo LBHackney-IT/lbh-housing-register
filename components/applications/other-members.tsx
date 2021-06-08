@@ -13,12 +13,12 @@ export default function OtherMembers({
   return (
     <Collapsible heading={heading}>
       <dl className="govuk-summary-list lbh-summary-list">
-        {others.map((person, index) => (
+        {others.map((applicant, index) => (
           <div key={index} className="govuk-summary-list__row">
-            <dt className="govuk-summary-list__key">{person.id}</dt>
+            <dt className="govuk-summary-list__key">{applicant.person.id}</dt>
             <dd className="govuk-summary-list__value">
               <a className="govuk-link" href="#">
-                {person.title} {person.firstName} {person.surname}
+                {applicant.person.title} {applicant.person.firstName} {applicant.person.surname}
               </a>
             </dd>
           </div>

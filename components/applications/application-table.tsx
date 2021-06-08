@@ -44,9 +44,9 @@ export default function ApplicationTable({
             <td className="govuk-table__cell">
               <Link href={`/applications/${application.id}`}>
                 <a className="govuk-link govuk-custom-text-color">
-                  {application.applicant.title}{' '}
-                  {application.applicant.firstName}{' '}
-                  {application.applicant.surname}
+                  {application.mainApplicant.person.title}{' '}
+                  {application.mainApplicant.person.firstName}{' '}
+                  {application.mainApplicant.person.surname}
                   {application.otherMembers && (
                     <span> + {application.otherMembers.length}</span>
                   )}

@@ -4,6 +4,7 @@ import Radios, { RadiosProps } from './radios';
 import Select from './select';
 import Textarea from './textarea';
 import { FormField } from '../../lib/types/form';
+import DateInput from './dateinput';
 
 interface DynamicFieldProps {
   field: FormField;
@@ -25,6 +26,9 @@ export default function DynamicField({
 
     case 'textarea':
       return <Textarea {...field} />;
+
+    case 'dateinput':
+      return <DateInput {...field} />;
 
     default:
       return <Input {...field} />;

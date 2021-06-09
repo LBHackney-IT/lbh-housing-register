@@ -9,6 +9,7 @@ import signInVerifyFormData from '../../data/forms/sign-in-verify.json';
 import signUpDetailsFormData from '../../data/forms/sign-up-details.json';
 import { EligibilityCriteria, MultiStepForm } from '../types/form';
 import residentialStatusFormData from '../../data/forms/residential-status.json';
+import addressHistory from '../../data/forms/address-history.json';
 
 export const AGREEMENT = 'agreement';
 export const SIGN_IN = 'sign-in';
@@ -19,6 +20,7 @@ export const PERSONAL_DETAILS = 'personal-details';
 export const ADDRESS_DETAILS = 'address-details';
 export const YOUR_SITUATION = 'your-situation';
 export const RESIDENTIAL_STATUS = 'residential-status';
+export const ADDRESS_HISTORY = 'address-history';
 
 /**
  * Get the eligibility criteria from the requested form
@@ -65,6 +67,9 @@ export function getFormData(form: string): MultiStepForm {
 
     case RESIDENTIAL_STATUS:
       return residentialStatusFormData;
+
+    case ADDRESS_HISTORY:
+      return addressHistory;
 
     default:
       return testFormData;

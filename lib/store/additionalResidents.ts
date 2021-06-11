@@ -2,12 +2,25 @@ import { FormData } from '../types/form';
 import { Resident } from '../types/resident';
 import { generateSlug } from '../utils/resident';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { loadApplicaiton } from './application';
+import { extractFormData } from '../utils/helper';
 
 const initialState: Resident[] = [];
 
 const slice = createSlice({
   name: 'additionalResidents',
   initialState,
+
+  extraReducers: (builder) => {
+    builder.addCase(loadApplicaiton.fulfilled, (state, action) => {
+      return action.payload.otherMembers.map<Resident>((resident) => ({
+        name: '',
+        slug: '',
+        formData: extractFormData(resident),
+      }));
+    });
+  },
+
   reducers: {
     /**
      * Add additional resident to store

@@ -59,7 +59,7 @@ export const addApplication = async (
 
 export const updateApplication = async (
   application: any,
-  id: string | string[]
+  id: string
 ): Promise<Application | null> => {
   try {
     const headers = {

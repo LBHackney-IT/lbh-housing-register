@@ -1,6 +1,8 @@
 import { checkEligible } from '../utils/form';
-import { MainResident } from '../types/resident';
+import { MainResident, Resident } from '../types/resident';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { loadApplicaiton } from './application';
+import { extractFormData } from '../utils/helper';
 
 export const MAIN_RESIDENT_KEY = 'you';
 
@@ -15,7 +17,12 @@ const initialState: MainResident = {
 
 const slice = createSlice({
   name: 'resident',
-  initialState,
+  initialState: initialState as Resident,
+  extraReducers: (builder) => {
+    builder.addCase(loadApplicaiton.fulfilled, (state, action) => {
+      state.formData = extractFormData(action.payload.mainApplicant);
+    });
+  },
   reducers: {
     /**
      * Agree to terms and conditions

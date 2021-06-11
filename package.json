@@ -26,7 +26,7 @@
     "build": "next build",
     "dev": "concurrently -k \"npm:mocks\" \"next dev\"",
     "start": "next start -p $PORT",
-    "test": "next test",
+    "test": "jest --watch",
     "mocks": "mocks-server",
     "lint": "eslint . --max-warnings 0 --ext .js,.jsx,.ts,.tsx",
     "prettier:test": "npx prettier -c .",
@@ -36,7 +36,10 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "env": {
+      "jest": true
+    }
   },
   "browserslist": {
     "production": [
@@ -53,10 +56,13 @@
   "devDependencies": {
     "@mocks-server/main": "^2.3.1",
     "@types/cookie": "^0.4.0",
+    "@types/jest": "^26.0.23",
     "@types/jsonwebtoken": "^8.5.1",
     "@types/react": "^17.0.5",
     "@types/react-redux": "^7.1.16",
     "@types/yup": "^0.29.11",
-    "concurrently": "^6.1.0"
+    "babel-jest": "^27.0.2",
+    "concurrently": "^6.1.0",
+    "jest": "^27.0.4"
   }
 }

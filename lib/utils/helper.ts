@@ -1,6 +1,13 @@
-import { CreateApplicationRequest } from '../../domain/application';
-import { Resident } from '../types/resident';
+import app from 'next/app';
+import {
+  CreateApplicationRequest,
+  Application,
+} from '../../domain/application';
+import { Resident as DomainResident } from '../../domain/resident';
+import { Store } from '../store';
+import { MainResident, Resident } from '../types/resident';
 
+// convert an application in react state into an application for the api
 export const constructApplication = (applicants: Resident[]) => {
   const personal = applicants[0].formData['personal-details'];
   const address = applicants[0].formData['address-details'];
@@ -28,3 +35,14 @@ export const constructApplication = (applicants: Resident[]) => {
 
   return application;
 };
+
+export function extractFormData(
+  applicant: DomainResident
+): Resident['formData'] {
+  console.log(applicant);
+  return {
+    // TODO This mapping of one data type to another needs removing.
+    'personal-details': applicant.person,
+    'address-details': applicant.address,
+  };
+}

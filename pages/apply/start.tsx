@@ -10,6 +10,21 @@ import { useStore } from 'react-redux';
 import { Store } from '../../lib/store';
 import { createUser } from '../../lib/store/resident';
 
+export function processPhonenumber(input: string): string {
+  const chars = input.match(/[\+0-9]/g);
+
+  if (!chars) {
+    return '';
+  }
+  if (chars[0] === '0') {
+    return ['+44', ...chars.slice(1)].join('');
+  }
+  if (chars[0] !== '+') {
+    return ['+44', ...chars].join('');
+  }
+  return chars.join('');
+}
+
 const ApplicationStartPage = (): JSX.Element => {
   const router = useRouter();
   const store = useStore<Store>();
@@ -23,11 +38,13 @@ const ApplicationStartPage = (): JSX.Element => {
     try {
       const { user } = await Auth.signUp({
         username: values.email,
+        // See https://aws.amazon.com/blogs/mobile/implementing-passwordless-email-authentication-with-amazon-cognito/
+        // on how to generate a random password securely.
         password: values.password,
         attributes: {
           given_name: values.first_name,
           family_name: values.last_name,
-          phone_number: values.phone_number, // E.164 number convention
+          phone_number: processPhonenumber(values.phone_number), // E.164 number convention
         },
       });
 

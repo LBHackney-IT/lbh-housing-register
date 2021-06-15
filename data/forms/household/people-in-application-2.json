@@ -1,0 +1,84 @@
+{
+  "heading": "People in this application",
+  "copy": "Tell us how many people you want to include in your new household.",
+  "steps": [
+    {
+      "fields": [
+        {
+          "label": "First name",
+          "person": "Person 1",
+          "name": "firstName",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "Last name",
+          "name": "lastName",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "radios",
+          "label": "Sex",
+          "name": "sex",
+          "options": [
+            {
+              "label": "Female",
+              "value": "female"
+            },
+            {
+              "label": "Intersex",
+              "value": "intersex"
+            },
+            {
+              "label": "Male",
+              "value": "male"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "First name",
+          "person": "Person 2",
+          "name": "firstName-additional-1",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "Last name",
+          "name": "lastName-additional-1",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "radios",
+          "label": "Sex",
+          "name": "sex-additional-1",
+          "options": [
+            {
+              "label": "Female",
+              "value": "female"
+            },
+            {
+              "label": "Intersex",
+              "value": "intersex"
+            },
+            {
+              "label": "Male",
+              "value": "male"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ]
+}

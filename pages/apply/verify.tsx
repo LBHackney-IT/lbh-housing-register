@@ -17,8 +17,11 @@ const ApplicationVerifyPage = (): JSX.Element => {
   const store = useStore<Store>();
   const resident = store.getState().resident;
 
+  // TODO: We also need to check if household section has been filled out and then forward the user to /overview
   if (resident.isLoggedIn) {
-    router.push('/apply/overview');
+    // router.push('/apply/overview');
+    router.push('/apply/household');
+
   }
 
   const providedUsername: FormData = {
@@ -34,7 +37,10 @@ const ApplicationVerifyPage = (): JSX.Element => {
 
       // TODO: update store
       store.dispatch(logIn(values.email));
-      router.push('/apply/overview');
+      // router.push('/apply/overview');
+      console.log('are we not here?')
+      router.push('/apply/household');
+
     } catch (error) {
       console.log('error confirming sign up', error);
     }

@@ -12,6 +12,7 @@ interface DynamicFieldProps {
 export default function DynamicField({
   field,
 }: DynamicFieldProps): JSX.Element {
+  // console.log('what is dynamic-field:field:', field)
   switch (field.as?.toLowerCase()) {
     case 'checkbox':
     case 'checkboxes':

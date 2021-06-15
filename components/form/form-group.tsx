@@ -2,7 +2,7 @@ import { ReactNodeArray } from 'react';
 
 interface FormGroupProps {
   children: ReactNodeArray;
-  error?: boolean;
+  error?: any;
 }
 
 export default function FormGroup({

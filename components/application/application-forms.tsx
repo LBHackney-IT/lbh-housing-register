@@ -21,6 +21,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useStore } from 'react-redux';
+import Details from '../../components/form/details';
 
 interface ApplicationFormsProps {
   activeStep?: string;
@@ -84,7 +85,9 @@ export default function ApplicationForms({
             return (
               <div key={index}>
                 {formData.heading && <HeadingOne content={formData.heading} />}
+                {activeStep === 'address-history' && <Details />}
                 {formData.copy && <Paragraph>{formData.copy}</Paragraph>}
+              
                 <Form
                   buttonText="Save and continue"
                   formData={formData}

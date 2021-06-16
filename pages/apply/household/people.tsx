@@ -29,7 +29,6 @@ const PeoplePage = ({
   const router = useRouter();
   const store = useStore<Store>();
   const resident = store.getState().resident;
-  console.log('what is resident', resident)
 
   const providedUsername: FormData = {
     email: resident.username,
@@ -67,8 +66,7 @@ const PeoplePage = ({
 
     store.dispatch(updateFormData(values));
     const resident = store.getState().resident;
-    console.log('yes sir', resident)
-
+    // console.log('yes sir', resident)
 
     // router.push('/apply/overview');
   };
@@ -101,7 +99,7 @@ const PeoplePage = ({
                 disabled={isSubmitting}
                 type="submit"
               >
-                {'Save'}
+                {'Save and continue'}
               </Button>
             </div>
 

@@ -40,6 +40,28 @@
           "validation": {
             "required": true
           }
+        },
+        {
+          "as": "birthdayinput",
+          "label":"Date of birth",
+          "name": "birthday",
+          "options": [
+            {
+              "label": "Day",
+              "value": "day"
+            },
+            {
+              "label": "Month",
+              "value": "month"
+            },
+            {
+              "label": "Year",
+              "value": "year"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
         }
       ]
     }

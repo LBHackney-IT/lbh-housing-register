@@ -7,14 +7,14 @@
         {
           "label": "First name",
           "person": "Person 1",
-          "name": "firstName",
+          "name": "firstName-resident",
           "validation": {
             "required": true
           }
         },
         {
           "label": "Last name",
-          "name": "lastName",
+          "name": "lastName-resident",
           "validation": {
             "required": true
           }
@@ -22,7 +22,7 @@
         {
           "as": "radios",
           "label": "Sex",
-          "name": "sex",
+          "name": "sex-resident",
           "options": [
             {
               "label": "Female",
@@ -35,6 +35,28 @@
             {
               "label": "Male",
               "value": "male"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "birthdayinput",
+          "label":"Date of birth",
+          "name": "birthday",
+          "options": [
+            {
+              "label": "Day",
+              "value": "day"
+            },
+            {
+              "label": "Month",
+              "value": "month"
+            },
+            {
+              "label": "Year",
+              "value": "year"
             }
           ],
           "validation": {
@@ -79,6 +101,28 @@
           }
         },
         {
+          "as": "birthdayinput",
+          "label":"Date of birth",
+          "name": "birthday-additional-1",
+          "options": [
+            {
+              "label": "Day",
+              "value": "day"
+            },
+            {
+              "label": "Month",
+              "value": "month"
+            },
+            {
+              "label": "Year",
+              "value": "year"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
           "label": "First name",
           "person": "Person 3",
           "name": "firstName-additional-2",
@@ -116,6 +160,28 @@
           }
         },
         {
+          "as": "birthdayinput",
+          "label":"Date of birth",
+          "name": "birthday-additional-2",
+          "options": [
+            {
+              "label": "Day",
+              "value": "day"
+            },
+            {
+              "label": "Month",
+              "value": "month"
+            },
+            {
+              "label": "Year",
+              "value": "year"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
           "label": "First name",
           "person": "Person 4",
           "name": "firstName-additional-3",
@@ -146,6 +212,28 @@
             {
               "label": "Male",
               "value": "male"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "birthdayinput",
+          "label":"Date of birth",
+          "name": "birthday-additional-3",
+          "options": [
+            {
+              "label": "Day",
+              "value": "day"
+            },
+            {
+              "label": "Month",
+              "value": "month"
+            },
+            {
+              "label": "Year",
+              "value": "year"
             }
           ],
           "validation": {

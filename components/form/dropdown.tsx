@@ -10,7 +10,6 @@ export default function Dropdown({
   label,
   name,
 }: any): JSX.Element {
-
   return (
     <Field name={name}>
       {({
@@ -26,11 +25,11 @@ export default function Dropdown({
           {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 
           <div className="govuk-form-group lbh-form-group">
-            <select className="govuk-select lbh-select" id="select-1" name={name}>
-              <option value="1">Parent</option>
-              <option value="2" selected>Husband/Wife</option>
-              <option value="3" disabled>Child</option>
-            </select>
+            <Field as="select" name={name} className="govuk-select lbh-select">
+              <option value="parent">Parent</option>
+              <option value="married-to">Husband/Wife</option>
+              <option value="child">Child</option>
+            </Field>
           </div>
 
         </FormGroup>

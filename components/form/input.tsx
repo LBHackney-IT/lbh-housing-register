@@ -23,7 +23,6 @@ export default function Input({
   person,
 }: InputProps): JSX.Element {
   const [postCode, setPostCode] = useState();
-  console.log('what is person', person)
 
   const onClick = () => {
     // TODO: Invoke Address Finder Hackney API call
@@ -49,7 +48,7 @@ export default function Input({
         meta: FieldMetaProps<string>;
       }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
-          {person && <Paragraph>{person}</Paragraph>}
+          {person && <Paragraph><strong>{person}</strong></Paragraph>}
           {label && <Label content={label} htmlFor={name} strong={true} />}
           {hint && <Hint content={hint} />}
           {meta.touched && meta.error && <ErrorMessage message={meta.error} />}

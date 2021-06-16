@@ -42,16 +42,38 @@
           }
         },
         {
+          "as": "birthdayinput",
+          "label":"Date of birth",
+          "name": "birthday",
+          "options": [
+            {
+              "label": "Day",
+              "value": "day"
+            },
+            {
+              "label": "Month",
+              "value": "month"
+            },
+            {
+              "label": "Year",
+              "value": "year"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
           "label": "First name",
           "person": "Person 2",
-          "name": "firstName-additional",
+          "name": "firstName-additional-1",
           "validation": {
             "required": true
           }
         },
         {
           "label": "Last name",
-          "name": "lastName-additional",
+          "name": "lastName-additional-1",
           "validation": {
             "required": true
           }
@@ -59,7 +81,7 @@
         {
           "as": "radios",
           "label": "Sex",
-          "name": "sex-additional",
+          "name": "sex-additional-1",
           "options": [
             {
               "label": "Female",
@@ -72,6 +94,264 @@
             {
               "label": "Male",
               "value": "male"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "birthdayinput",
+          "label":"Date of birth",
+          "name": "birthday-additional-1",
+          "options": [
+            {
+              "label": "Day",
+              "value": "day"
+            },
+            {
+              "label": "Month",
+              "value": "month"
+            },
+            {
+              "label": "Year",
+              "value": "year"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "First name",
+          "person": "Person 3",
+          "name": "firstName-additional-2",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "Last name",
+          "name": "lastName-additional-2",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "radios",
+          "label": "Sex",
+          "name": "sex-additional-2",
+          "options": [
+            {
+              "label": "Female",
+              "value": "female"
+            },
+            {
+              "label": "Intersex",
+              "value": "intersex"
+            },
+            {
+              "label": "Male",
+              "value": "male"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "birthdayinput",
+          "label":"Date of birth",
+          "name": "birthday-additional-2",
+          "options": [
+            {
+              "label": "Day",
+              "value": "day"
+            },
+            {
+              "label": "Month",
+              "value": "month"
+            },
+            {
+              "label": "Year",
+              "value": "year"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "First name",
+          "person": "Person 4",
+          "name": "firstName-additional-3",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "Last name",
+          "name": "lastName-additional-3",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "radios",
+          "label": "Sex",
+          "name": "sex-additional-3",
+          "options": [
+            {
+              "label": "Female",
+              "value": "female"
+            },
+            {
+              "label": "Intersex",
+              "value": "intersex"
+            },
+            {
+              "label": "Male",
+              "value": "male"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "birthdayinput",
+          "label":"Date of birth",
+          "name": "birthday-additional-3",
+          "options": [
+            {
+              "label": "Day",
+              "value": "day"
+            },
+            {
+              "label": "Month",
+              "value": "month"
+            },
+            {
+              "label": "Year",
+              "value": "year"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "First name",
+          "person": "Person 5",
+          "name": "firstName-additional-4",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "Last name",
+          "name": "lastName-additional-4",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "radios",
+          "label": "Sex",
+          "name": "sex-additional-4",
+          "options": [
+            {
+              "label": "Female",
+              "value": "female"
+            },
+            {
+              "label": "Intersex",
+              "value": "intersex"
+            },
+            {
+              "label": "Male",
+              "value": "male"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "birthdayinput",
+          "label":"Date of birth",
+          "name": "birthday-additional-4",
+          "options": [
+            {
+              "label": "Day",
+              "value": "day"
+            },
+            {
+              "label": "Month",
+              "value": "month"
+            },
+            {
+              "label": "Year",
+              "value": "year"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "First name",
+          "person": "Person 6",
+          "name": "firstName-additional-5",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "Last name",
+          "name": "lastName-additional-5",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "radios",
+          "label": "Sex",
+          "name": "sex-additional-5",
+          "options": [
+            {
+              "label": "Female",
+              "value": "female"
+            },
+            {
+              "label": "Intersex",
+              "value": "intersex"
+            },
+            {
+              "label": "Male",
+              "value": "male"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "birthdayinput",
+          "label":"Date of birth",
+          "name": "birthday-additional-5",
+          "options": [
+            {
+              "label": "Day",
+              "value": "day"
+            },
+            {
+              "label": "Month",
+              "value": "month"
+            },
+            {
+              "label": "Year",
+              "value": "year"
             }
           ],
           "validation": {

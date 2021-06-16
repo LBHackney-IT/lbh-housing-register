@@ -38,7 +38,6 @@ const ApplicationVerifyPage = (): JSX.Element => {
       // TODO: update store
       store.dispatch(logIn(values.email));
       // router.push('/apply/overview');
-      console.log('are we not here?')
       router.push('/apply/household');
 
     } catch (error) {

@@ -72,13 +72,6 @@ export default function Form({
       next(values);
     }
   };
-  console.log('inside components/form/form.tsx', step)
-  console.log('what is countOfApplicants', countOfApplicants)
-  const arrLength = [0,1,2];
-  console.log('what is step', step)
-  // console.log('formDataSnapshot', formDataSnapshot['dynamic-fields'])
-
-  // Do we modify this existing form or create another standalone which will be capable of handling complicated logic?
 
   return (
     <>
@@ -93,7 +86,6 @@ export default function Form({
             {step.copy && <Paragraph>{step.copy}</Paragraph>}
 
               {step.fields.map((field, index) => {
-                console.log('was los', field)
                 const display: boolean = getDisplayStateOfField(field, values);
                 if (display) {
                   return <DynamicField key={index} field={field} />

@@ -50,6 +50,7 @@ const PeoplePage = ({
   const [snapshot] = useState(getInitialValuesFromMultiStepForm(formDataSnapshot));
   
   const step: any = formDataSnapshot.steps[stepNumber];
+  console.log('what is step', step)
   
 
   const handleSubmission = async (values: FormData) => {

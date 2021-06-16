@@ -6,9 +6,11 @@ import Label from './label';
 import { FormField } from '../../lib/types/form';
 import { Field, FieldInputProps, FieldMetaProps } from 'formik';
 import Button from '../button';
+import Paragraph from '../content/paragraph';
 
 interface InputProps extends FormField {
   className?: string;
+  person?: string;
 }
 
 export default function Input({
@@ -18,9 +20,10 @@ export default function Input({
   name,
   placeholder,
   type,
+  person,
 }: InputProps): JSX.Element {
   const [postCode, setPostCode] = useState();
-
+  console.log('what is person', person)
 
   const onClick = () => {
     // TODO: Invoke Address Finder Hackney API call
@@ -46,6 +49,7 @@ export default function Input({
         meta: FieldMetaProps<string>;
       }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
+          {person && <Paragraph>{person}</Paragraph>}
           {label && <Label content={label} htmlFor={name} strong={true} />}
           {hint && <Hint content={hint} />}
           {meta.touched && meta.error && <ErrorMessage message={meta.error} />}

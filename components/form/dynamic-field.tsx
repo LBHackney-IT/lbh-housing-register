@@ -5,6 +5,8 @@ import Select from './select';
 import Textarea from './textarea';
 import { FormField } from '../../lib/types/form';
 import DateInput from './dateinput';
+import BirthdayInput from './birthdayinput';
+import Dropdown from './dropdown';
 
 interface DynamicFieldProps {
   field: FormField;
@@ -13,7 +15,7 @@ interface DynamicFieldProps {
 export default function DynamicField({
   field,
 }: DynamicFieldProps): JSX.Element {
-  // console.log('what is dynamic-field:field:', field)
+  console.log('what is dynamic-field:field:', field)
   switch (field.as?.toLowerCase()) {
     case 'checkbox':
     case 'checkboxes':
@@ -30,6 +32,12 @@ export default function DynamicField({
 
     case 'dateinput':
       return <DateInput {...field} />;
+
+    case 'birthdayinput': 
+      return <BirthdayInput {...field} />;
+
+    case 'dropdown':
+      return <Dropdown {...field} />;
 
     default:
       return <Input {...field} />;

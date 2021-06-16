@@ -42,6 +42,11 @@
           }
         },
         {
+          "as": "birthdayinput",
+          "label":"Date of birth",
+          "name": "birthday"
+        },
+        {
           "label": "First name",
           "person": "Person 2",
           "name": "firstName-additional-1",
@@ -55,6 +60,10 @@
           "validation": {
             "required": true
           }
+        },{
+          "as": "dropdown", 
+          "label": "Relationship to you",
+          "name": "relationship-additional-1"
         },
         {
           "as": "radios",
@@ -77,6 +86,11 @@
           "validation": {
             "required": true
           }
+        },
+        {
+          "as": "birthdayinput",
+          "label":"Date of birth",
+          "name": "birthday-additional-1"
         }
       ]
     }

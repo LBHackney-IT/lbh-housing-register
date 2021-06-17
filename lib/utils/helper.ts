@@ -75,5 +75,3 @@ export const extractMainResidentFromData = (data:any) => {
   }
   return mainResident
 }
-
-

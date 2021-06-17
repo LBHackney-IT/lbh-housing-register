@@ -34,8 +34,6 @@ const ApplicationPersonsOverview = (): JSX.Element => {
     },
   ];
 
-  console.log('applicants', applicants)
-
   const handleSubmit = async (): Promise<void> => {
     try {
       const data = await createApplication(applicants);

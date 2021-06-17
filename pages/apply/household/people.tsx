@@ -6,6 +6,8 @@ import { useRouter } from 'next/router';
 import { Store } from '../../../lib/store';
 import { useStore } from 'react-redux';
 import { updateFormData } from '../../../lib/store/resident';
+import { addResidentFromFormData } from '../../../lib/store/additionalResidents';
+
 import { buildValidationSchema } from '../../../lib/utils/validation';
 import { Form as FormikForm, Formik } from 'formik';
 import Button from '../../../components/button';
@@ -38,8 +40,8 @@ const PeoplePage = ({
   let exit = false;
   const onExit = false;
   
-  // const countOfPeopleInApplication:any = resident.formData.household;
-  const countOfPeopleInApplication:any = 2;
+  const countOfPeopleInApplication:any = resident.formData.household;
+  // const countOfPeopleInApplication:any = 2;
 
   const formData = getHouseHoldData(countOfPeopleInApplication);
   
@@ -53,32 +55,28 @@ const PeoplePage = ({
   
 
   const handleSubmission = async (values: FormData) => {
-    console.log('confirmPeopleInApplication', values)
+    // console.log('confirmPeopleInApplication', values)
 
     if (countOfPeopleInApplication > 1) {
-      // We could invoke the store update once and do all transformations over there
       const mainResident = extractMainResidentFromData(values);
-      console.log('mainResident', mainResident)
       store.dispatch(updateFormData(mainResident))
 
 
       const additionalResident = extractAdditionalResidentFromData(values, countOfPeopleInApplication - 1);
-      console.log('additionalResident', additionalResident)
 
 
-      const resident = store.getState().resident;
-      console.log('Checking resident values', resident)
+      for(let x = 1; x <= Object.keys(additionalResident).length; x++) {
+        store.dispatch(addResidentFromFormData(additionalResident[`person${x}`]));
+      }
+
+
+      const resident = store.getState().additionalResidents;
     } else {
       store.dispatch(updateFormData(values));
       const resident = store.getState().resident;
-      console.log('yes sir', resident)
     }
 
-    // store.dispatch(updateFormData(values));
-    // const resident = store.getState().resident;
-    // console.log('yes sir', resident)
-
-    // router.push('/apply/overview');
+    router.push('/apply/overview');
   };
 
   return (

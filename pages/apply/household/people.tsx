@@ -38,8 +38,8 @@ const PeoplePage = ({
   let exit = false;
   const onExit = false;
   
-  // const countOfPeopleInApplication:any = resident.formData.household;
-  const countOfPeopleInApplication:any = 2;
+  const countOfPeopleInApplication:any = resident.formData.household;
+  // const countOfPeopleInApplication:any = 2;
 
   const formData = getHouseHoldData(countOfPeopleInApplication);
   
@@ -56,9 +56,9 @@ const PeoplePage = ({
     console.log('confirmPeopleInApplication', values)
 
     if (countOfPeopleInApplication > 1) {
-      // const mainResident = extractMainResidentFromData(values);
+      const mainResident = extractMainResidentFromData(values);
       // console.log('mainResident', mainResident)
-      // store.dispatch(updateFormData(mainResident))
+      store.dispatch(updateFormData(mainResident))
       const additionalResident = extractAdditionalResidentFromData(values, countOfPeopleInApplication - 1);
       // console.log('additionalResident', additionalResident)
 
@@ -68,7 +68,7 @@ const PeoplePage = ({
     const resident = store.getState().resident;
     // console.log('yes sir', resident)
 
-    // router.push('/apply/overview');
+    router.push('/apply/overview');
   };
 
   return (

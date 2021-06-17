@@ -31,6 +31,7 @@ export const YOUR_SITUATION = 'your-situation';
 export const RESIDENTIAL_STATUS = 'residential-status';
 export const HOUSEHOLD_OVERVIEW = 'household-overview';
 export const PEOPLE_IN_APPLICATION = 'people-in-application';
+export const ADDRESS_HISTORY = 'address-history'
 
 /**
  * Get the eligibility criteria from the requested form

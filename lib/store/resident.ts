@@ -90,6 +90,9 @@ const slice = createSlice({
       state.isEligible = eligibility[0];
       state.ineligibilityReasons = eligibility[1];
 
+      // Update name to reflect on the main overview page
+      state.name = state.formData.firstName + ' ' + state.formData.lastName
+
       return state;
     },
   },

@@ -27,7 +27,7 @@ export default function Dropdown({
           <div className="govuk-form-group lbh-form-group">
             <Field as="select" name={name} className="govuk-select lbh-select">
               <option value="parent">Parent</option>
-              <option value="married-to">Husband/Wife</option>
+              <option value="spouse">Spouse</option>
               <option value="child">Child</option>
             </Field>
           </div>

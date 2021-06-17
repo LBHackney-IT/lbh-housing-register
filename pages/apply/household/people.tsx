@@ -38,37 +38,47 @@ const PeoplePage = ({
   let exit = false;
   const onExit = false;
   
-  const countOfPeopleInApplication:any = resident.formData.household;
-  // const countOfPeopleInApplication:any = 2;
+  // const countOfPeopleInApplication:any = resident.formData.household;
+  const countOfPeopleInApplication:any = 2;
 
   const formData = getHouseHoldData(countOfPeopleInApplication);
   
   const [formDataSnapshot] = useState(formData);
   const [stepNumber] = useState(0);
+
   
   const [snapshot] = useState(getInitialValuesFromMultiStepForm(formDataSnapshot));
   
   const step: any = formDataSnapshot.steps[stepNumber];
-  console.log('what is step', step)
   
 
   const handleSubmission = async (values: FormData) => {
     console.log('confirmPeopleInApplication', values)
 
     if (countOfPeopleInApplication > 1) {
+      // We could invoke the store update once and do all transformations over there
       const mainResident = extractMainResidentFromData(values);
-      // console.log('mainResident', mainResident)
+      console.log('mainResident', mainResident)
       store.dispatch(updateFormData(mainResident))
-      const additionalResident = extractAdditionalResidentFromData(values, countOfPeopleInApplication - 1);
-      // console.log('additionalResident', additionalResident)
 
+
+      const additionalResident = extractAdditionalResidentFromData(values, countOfPeopleInApplication - 1);
+      console.log('additionalResident', additionalResident)
+
+
+      const resident = store.getState().resident;
+      console.log('Checking resident values', resident)
+    } else {
+      store.dispatch(updateFormData(values));
+      const resident = store.getState().resident;
+      console.log('yes sir', resident)
     }
 
-    store.dispatch(updateFormData(values));
-    const resident = store.getState().resident;
+    // store.dispatch(updateFormData(values));
+    // const resident = store.getState().resident;
     // console.log('yes sir', resident)
 
-    router.push('/apply/overview');
+    // router.push('/apply/overview');
   };
 
   return (

@@ -31,52 +31,42 @@ export const constructApplication = (applicants: Resident[]) => {
 
 
 export const extractAdditionalResidentFromData = (data:any, countOfApplicants:any) => {
-  console.log('extractAdditionalResidentFromData:', data)
-  const fields = ['firstName', 'lastName', 'sex'];
+  const fields = ['firstName', 'lastName', 'sex', 'birthday'];
 
+  // 1. Remove main resident from object
+  // 2. Combine person data that belong together
+  // 3. Remove the 'additional-x' from names
+  // 4. Return || update store accordingly
+
+
+  // 1
   let additionalResidents:any = {};
-  
   for (const [key, value] of Object.entries(data)) {
     if (!fields.includes(key)) {
       additionalResidents[key] = value;
     }
   }
 
-  console.log('additionalResidents', additionalResidents)
-
-  // then remove the 'additional-x' from the key name
+  // 2 & 3
   let orderResidentsTogether:any = {};
-  let includedFields = [];
+  let includedFields:any = {};
   for (let x = 1; x <= countOfApplicants; x++) {
     for(const [key, value] of Object.entries(additionalResidents)) {
       if(key.indexOf(x.toString())) {
-        console.log('key', key)
-        // console.log('value', value)
-        // removal of additional-x has to happen here
-        // only then populate orderResidentsTogether
-
-        // it is overwritten because person-1 happens once and the loop 3 times...hence why
-        orderResidentsTogether = {
-          [key]: value,
-          'person': x
-        }
-
-
-        // orderResidentsTogether[key] = value;
+        includedFields[key.split('-')[0]] = value;
+        orderResidentsTogether[`person${x}`] = includedFields;
       }
     }
   }
-  
-  console.log('orderResidentsTogether', orderResidentsTogether)
-
-  return additionalResidents
+  // 4
+  return orderResidentsTogether
 }
 
 
 export const extractMainResidentFromData = (data:any) => {
 
   let mainResident:any = {};
-  const expectedFields = ['firstName', 'lastName', 'sex'];
+  const expectedFields = ['firstName', 'lastName', 'sex', 'birthday'];
 
   for (const [key, value] of Object.entries(data)) {
     if (expectedFields.includes(key)) {
@@ -85,3 +75,5 @@ export const extractMainResidentFromData = (data:any) => {
   }
   return mainResident
 }
+
+

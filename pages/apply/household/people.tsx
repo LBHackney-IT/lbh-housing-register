@@ -61,16 +61,12 @@ const PeoplePage = ({
       const mainResident = extractMainResidentFromData(values);
       store.dispatch(updateFormData(mainResident))
 
-
       const additionalResident = extractAdditionalResidentFromData(values, countOfPeopleInApplication - 1);
-
 
       for(let x = 1; x <= Object.keys(additionalResident).length; x++) {
         store.dispatch(addResidentFromFormData(additionalResident[`person${x}`]));
       }
 
-
-      const resident = store.getState().additionalResidents;
     } else {
       store.dispatch(updateFormData(values));
       const resident = store.getState().resident;

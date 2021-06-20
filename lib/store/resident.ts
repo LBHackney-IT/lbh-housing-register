@@ -2,7 +2,7 @@ import { checkEligible } from '../utils/form';
 import { MainResident } from '../types/resident';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export const MAIN_RESIDENT_KEY = 'you';
+export const MAIN_RESIDENT_KEY = 'you'; // Why is this the main resident key?
 
 const initialState: MainResident = {
   hasAgreed: false,
@@ -91,7 +91,7 @@ const slice = createSlice({
       state.ineligibilityReasons = eligibility[1];
 
       // Update name to reflect on the main overview page
-      state.name = state.formData.firstName + ' ' + state.formData.lastName
+      state.name = (state.formData.firstName && state.formData.lastName) ? state.formData.firstName + ' ' + state.formData.lastName : 'You'
 
       return state;
     },

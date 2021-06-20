@@ -18,7 +18,6 @@ interface FormProps {
   onSave?: (values: FormData) => void;
   onSubmit: (values: FormData, bag: any) => void;
   residentsPreviousAnswers?: FormData;
-  countOfApplicants?: any;
 }
 
 export default function Form({
@@ -28,7 +27,6 @@ export default function Form({
   onSave,
   onSubmit,
   residentsPreviousAnswers,
-  countOfApplicants
 }: FormProps): JSX.Element {
   const [formDataSnapshot] = useState(formData);
   const [stepNumber, setStepNumber] = useState(0);

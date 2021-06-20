@@ -27,6 +27,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
     ...store.getState().additionalResidents,
   ];
 
+  console.log('applicants', applicants)
   const breadcrumbs = [
     {
       href: '/apply/overview',
@@ -47,7 +48,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
 
   return (
     <Layout breadcrumbs={breadcrumbs}>
-      <HeadingOne content="People in this application" />
+      <HeadingOne content="My household" />
 
       <SummaryList>
         {applicants.map((resident, index) => {

@@ -20,7 +20,7 @@ export function BirthdayInputFields({
 
   return (
     <div style={{display: "inline-block", "padding": "0 20px 0 0"}}>
-      <label className="govuk-label govuk-date-input__label" htmlFor="dob-day">
+      <label className="govuk-label govuk-date-input__label" htmlFor={id}>
         {label}
       </label>
       <Field

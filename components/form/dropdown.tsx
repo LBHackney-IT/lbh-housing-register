@@ -5,10 +5,12 @@ import { Field, FieldInputProps, FieldMetaProps } from 'formik';
 import ErrorMessage from './error-message';
 
 
+// This is not dynamic at the moment, values have to be passed via json ideally(options)
 export default function Dropdown({
   hint,
   label,
   name,
+  options,
 }: any): JSX.Element {
   return (
     <Field name={name}>

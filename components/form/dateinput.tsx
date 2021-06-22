@@ -3,16 +3,14 @@ import Hint from './hint';
 import Label from './label';
 import { Field, FieldInputProps, FieldMetaProps } from 'formik';
 import ErrorMessage from './error-message';
-// import { useState } from 'react';
 
 
-
-export function Input({
+export function DateInputs({
   index,
-  hint,
   label,
   name,
   value,
+  timeAtAdress
 }: any): JSX.Element {
   let id = name;
 
@@ -20,31 +18,37 @@ export function Input({
     id += `.${index}`;
   }
 
+  // const onChangeHandler = (e:any) => {
+  //   console.log('hello', e.target.value)
+  //   timeAtAdress(e.target.value)
+  // }
+
   return (
-    <input
-      className="govuk-input govuk-date-input__input govuk-input--width-2"
-      id={name}
-      type="text"
-      pattern="[0-9]*"
-      inputMode="numeric"
-    />
+    <div style={{display: "inline-block", "padding": "0 20px 0 0"}}>
+      <label className="govuk-label govuk-date-input__label" htmlFor={value}>
+        {label}
+      </label>
+      <Field
+        className="govuk-input govuk-date-input__input govuk-input--width-2"
+        id={id}
+        name={id}
+        type="text"
+        pattern="[0-9]*"
+        inputMode="numeric"
+        // onChange={onChangeHandler}
+      />
+    </div>
   );
 }
-
 
 
 export default function DateInput({
   hint,
   label,
   name,
+  options,
+  timeAtAdress,
 }: any): JSX.Element {
-  // const [months, setMonths] = useState()
-
-  // const onMonthChange = (e:any) => {
-  //   console.log('yo', e.target.value)
-  //   setMonths(e.target.value)
-  // }
-
   return (
     <Field name={name}>
       {({
@@ -66,38 +70,17 @@ export default function DateInput({
               </span>
               <div className="govuk-date-input lbh-date-input" id="current-address">
                 <div className="govuk-date-input__item">
-              
                   <div className="govuk-form-group">
-                    <label className="govuk-label govuk-date-input__label" htmlFor="years">
-                      Years
-                    </label>
-                    <input
-                      className="govuk-input govuk-date-input__input govuk-input--width-2"
-                      id={name}
-                      type="text"
-                      // pattern="[0-9]*"
-                      inputMode="numeric"
-                      {...field}
-                      value="03"
-                    />
-                  </div>
-                </div>
-                
-                <div className="govuk-date-input__item">
-                  <div className="govuk-form-group">
-                    <label className="govuk-label govuk-date-input__label" htmlFor="months">
-                      Months
-                    </label>
-                    <input
-                      className="govuk-input govuk-date-input__input govuk-input--width-2"
-                      id={name}
-                      type="text"
-                      // pattern="[0-9]"
-                      inputMode="numeric"
-                      {...field}
-                      value="02"
-                      // onChange={onMonthChange}
-                    />
+                    {options?.map((options:any, index:number) => (
+                      <DateInputs
+                        key={index}
+                        index={index}
+                        label={options.label!}
+                        name={field.name}
+                        value={options.value}
+                        timeAtAdress={timeAtAdress}
+                      />
+                    ))}
                   </div>
                 </div>
               </div>

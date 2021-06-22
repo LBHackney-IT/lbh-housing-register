@@ -18,6 +18,8 @@ interface FormProps {
   onSave?: (values: FormData) => void;
   onSubmit: (values: FormData, bag: any) => void;
   residentsPreviousAnswers?: FormData;
+  onAddressLookup?: any;
+  timeAtAdress?: any;
 }
 
 export default function Form({
@@ -27,6 +29,8 @@ export default function Form({
   onSave,
   onSubmit,
   residentsPreviousAnswers,
+  onAddressLookup,
+  timeAtAdress,
 }: FormProps): JSX.Element {
   const [formDataSnapshot] = useState(formData);
   const [stepNumber, setStepNumber] = useState(0);
@@ -53,6 +57,7 @@ export default function Form({
   };
 
   const handleSubmit = async (values: FormData, bag: any) => {
+    console.log('what is values bruh', values)
     if (onSave) {
       onSave(values);
     }
@@ -86,7 +91,7 @@ export default function Form({
               {step.fields.map((field, index) => {
                 const display: boolean = getDisplayStateOfField(field, values);
                 if (display) {
-                  return <DynamicField key={index} field={field} />
+                  return <DynamicField key={index} field={field} onAddressLookup={onAddressLookup} timeAtAdress={timeAtAdress}/>
                 }
               })}
 

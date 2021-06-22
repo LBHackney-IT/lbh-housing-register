@@ -22,6 +22,9 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useStore } from 'react-redux';
 import Details from '../../components/form/details';
+import { lookUpAddress } from '../../lib/gateways/internal-api';
+import AddressSelector from '../../components/form/selectaddress';
+
 
 interface ApplicationFormsProps {
   activeStep?: string;
@@ -51,6 +54,12 @@ export default function ApplicationForms({
   const store = useStore<Store>();
   const [applicationData, setApplicationData] = useState({});
 
+  const [spinner, setSpinner] = useState(false);
+
+  const [addresses, setAddresses] = useState();
+
+  const [currentAddress, setCurrentAddress] = useState();
+
   const formSteps = getFormIdsFromApplicationSteps(steps);
 
   if (formSteps.includes(activeStep!)) {
@@ -75,6 +84,29 @@ export default function ApplicationForms({
       }
     };
 
+    const onAddressLookup = async (postcode: string) => {
+      // console.log('what is spinner', spinner)
+      try {
+        setSpinner(true)
+        lookUpAddress(postcode)
+          .then(data => {
+            setSpinner(false)
+            setAddresses(data.address)
+          });
+      } catch (err) {
+        // TODO: error handling
+      }
+    }
+
+    const addressSelectorHandler = (e:any) => {
+      setCurrentAddress(e.target.value);
+      setAddresses(undefined)
+    }
+
+    const timeAtAdress = (value:any) => {
+      console.log('timeAtAddress', value)
+    }
+
     return (
       <>
         {formSteps.map((step, index) => {
@@ -87,13 +119,17 @@ export default function ApplicationForms({
                 {formData.heading && <HeadingOne content={formData.heading} />}
                 {activeStep === 'address-history' && <Details />}
                 {formData.copy && <Paragraph>{formData.copy}</Paragraph>}
-              
+                {currentAddress && activeStep === 'address-history' && <Paragraph><strong>{currentAddress}</strong></Paragraph>}
+                {addresses && <AddressSelector addresses={addresses} addressSelectorHandler={addressSelectorHandler} /> }
+
                 <Form
                   buttonText="Save and continue"
                   formData={formData}
                   onExit={onExit}
                   onSave={onSave}
                   onSubmit={next}
+                  onAddressLookup={onAddressLookup}
+                  timeAtAdress={timeAtAdress}
                   residentsPreviousAnswers={residentsPreviousAnswers}
                 />
               </div>

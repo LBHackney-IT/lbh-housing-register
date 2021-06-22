@@ -7,10 +7,12 @@ import { FormField } from '../../lib/types/form';
 import { Field, FieldInputProps, FieldMetaProps } from 'formik';
 import Button from '../button';
 import Paragraph from '../content/paragraph';
+import { lookUpAddress } from '../../lib/gateways/internal-api';
 
 interface InputProps extends FormField {
   className?: string;
   person?: string;
+  onAddressLookup?: any;
 }
 
 export default function Input({
@@ -21,14 +23,13 @@ export default function Input({
   placeholder,
   type,
   person,
+  onAddressLookup
 }: InputProps): JSX.Element {
   const [postCode, setPostCode] = useState();
 
-  const onClick = () => {
-    // TODO: Invoke Address Finder Hackney API call
-    try {
-    } catch (err) {
-      // TODO: error handling
+  const onClick = async () => {
+    if(onAddressLookup) {
+      onAddressLookup(postCode)
     }
   }
   
@@ -61,9 +62,9 @@ export default function Input({
               id={name}
               placeholder={placeholder}
               type={type}
-              {...field}
-              // onChange={onChange}
-              // value={postCode}
+              // {...field}
+              onChange={onChange}
+              value={postCode}
             /> :
             <input
               className={`${className} ${

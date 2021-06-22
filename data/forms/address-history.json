@@ -8,15 +8,25 @@
           "label": "Postcode",
           "name": "address-finder",
           "validation": {
-            "required": true
+            "required": false
           }
         }, 
         {
           "as": "dateinput",
           "label": "Time at address",
-          "name": "time-at-address", 
+          "name": "time-at-address",
+          "options": [
+            {
+              "label": "Years",
+              "value": "years"
+            },
+            {
+              "label": "Month",
+              "value": "month"
+            }
+          ],
           "validation": {
-            "required": true
+            "required": false
           }
         }
       ]

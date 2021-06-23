@@ -64,6 +64,13 @@
           }
         },
         {
+          "label": "National Insurance",
+          "name": "national-insurance",
+          "validation": {
+            "required": true
+          }
+        },
+        {
           "label": "First name",
           "person": "Person 2",
           "name": "firstName-additional-1",
@@ -185,6 +192,13 @@
               "value": "year"
             }
           ], 
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "National Insurance",
+          "name": "national-insurance-additional-1",
           "validation": {
             "required": true
           }

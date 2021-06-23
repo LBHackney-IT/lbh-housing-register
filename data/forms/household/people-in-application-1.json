@@ -62,6 +62,13 @@
           "validation": {
             "required": true
           }
+        },
+        {
+          "label": "National Insurance",
+          "name": "national-insurance",
+          "validation": {
+            "required": true
+          }
         }
       ]
     }

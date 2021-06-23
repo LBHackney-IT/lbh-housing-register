@@ -64,6 +64,13 @@
           }
         },
         {
+          "label": "National Insurance",
+          "name": "national-insurance",
+          "validation": {
+            "required": true
+          }
+        },
+        {
           "label": "First name",
           "person": "Person 2",
           "name": "firstName-additional-1",
@@ -118,6 +125,13 @@
               "value": "year"
             }
           ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "National Insurance",
+          "name": "national-insurance-additional-1",
           "validation": {
             "required": true
           }
@@ -182,6 +196,13 @@
           }
         },
         {
+          "label": "National Insurance",
+          "name": "national-insurance-additional-2",
+          "validation": {
+            "required": true
+          }
+        },
+        {
           "label": "First name",
           "person": "Person 4",
           "name": "firstName-additional-3",
@@ -241,6 +262,13 @@
           }
         },
         {
+          "label": "National Insurance",
+          "name": "national-insurance-additional-3",
+          "validation": {
+            "required": true
+          }
+        },
+        {
           "label": "First name",
           "person": "Person 5",
           "name": "firstName-additional-4",
@@ -295,6 +323,13 @@
               "value": "year"
             }
           ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "National Insurance",
+          "name": "national-insurance-additional-4",
           "validation": {
             "required": true
           }

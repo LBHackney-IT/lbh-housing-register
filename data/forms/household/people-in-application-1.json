@@ -65,10 +65,8 @@
         },
         {
           "label": "National Insurance",
-          "name": "national-insurance",
-          "validation": {
-            "required": true
-          }
+          "hint": "For example, AB 12 34 56 C",
+          "name": "national-insurance"
         }
       ]
     }

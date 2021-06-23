@@ -65,10 +65,8 @@
         },
         {
           "label": "National Insurance",
-          "name": "national-insurance",
-          "validation": {
-            "required": true
-          }
+          "hint": "For example, AB 12 34 56 C",
+          "name": "national-insurance"
         },
         {
           "label": "First name",
@@ -198,10 +196,8 @@
         },
         {
           "label": "National Insurance",
-          "name": "national-insurance-additional-1",
-          "validation": {
-            "required": true
-          }
+          "hint": "For example, AB 12 34 56 C",
+          "name": "national-insurance-additional-1"
         },
         {
           "label": "First name",
@@ -331,10 +327,8 @@
         },
         {
           "label": "National Insurance",
-          "name": "national-insurance-additional-2",
-          "validation": {
-            "required": true
-          }
+          "hint": "For example, AB 12 34 56 C",
+          "name": "national-insurance-additional-2"
         }
       ]
     }

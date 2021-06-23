@@ -65,10 +65,8 @@
         },
         {
           "label": "National Insurance",
-          "name": "national-insurance",
-          "validation": {
-            "required": true
-          }
+          "hint": "For example, AB 12 34 56 C",
+          "name": "national-insurance"
         },
         {
           "label": "First name",
@@ -131,10 +129,8 @@
         },
         {
           "label": "National Insurance",
-          "name": "national-insurance-additional-1",
-          "validation": {
-            "required": true
-          }
+          "hint": "For example, AB 12 34 56 C",
+          "name": "national-insurance-additional-1"
         },
         {
           "label": "First name",
@@ -197,10 +193,8 @@
         },
         {
           "label": "National Insurance",
-          "name": "national-insurance-additional-2",
-          "validation": {
-            "required": true
-          }
+          "hint": "For example, AB 12 34 56 C",
+          "name": "national-insurance-additional-2"
         },
         {
           "label": "First name",
@@ -263,10 +257,8 @@
         },
         {
           "label": "National Insurance",
-          "name": "national-insurance-additional-3",
-          "validation": {
-            "required": true
-          }
+          "hint": "For example, AB 12 34 56 C",
+          "name": "national-insurance-additional-3"
         },
         {
           "label": "First name",
@@ -329,10 +321,8 @@
         },
         {
           "label": "National Insurance",
-          "name": "national-insurance-additional-4",
-          "validation": {
-            "required": true
-          }
+          "hint": "For example, AB 12 34 56 C",
+          "name": "national-insurance-additional-4"
         },
         {
           "label": "First name",
@@ -395,10 +385,8 @@
         },
         {
           "label": "National Insurance",
-          "name": "national-insurance-additional-5",
-          "validation": {
-            "required": true
-          }
+          "hint": "For example, AB 12 34 56 C",
+          "name": "national-insurance-additional-5"
         },
         {
           "label": "First name",
@@ -461,10 +449,8 @@
         },
         {
           "label": "National Insurance",
-          "name": "national-insurance-additional-6",
-          "validation": {
-            "required": true
-          }
+          "hint": "For example, AB 12 34 56 C",
+          "name": "national-insurance-additional-6"
         }
       ]
     }

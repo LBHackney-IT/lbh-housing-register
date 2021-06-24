@@ -5,7 +5,6 @@ import { Field, FieldInputProps, FieldMetaProps } from 'formik';
 import ErrorMessage from './error-message';
 
 
-// This is not dynamic at the moment, values have to be passed via json ideally(options)
 export default function Dropdown({
   hint,
   label,
@@ -28,9 +27,11 @@ export default function Dropdown({
 
           <div className="govuk-form-group lbh-form-group">
             <Field as="select" name={name} className="govuk-select lbh-select">
-              <option value="parent">Parent</option>
-              <option value="spouse">Spouse</option>
-              <option value="child">Child</option>
+              {options.map((relationship: any, index: number) => {
+                return <option value={relationship.value} key={index}>{relationship.label}</option>
+                
+              })}
+             
             </Field>
           </div>
 

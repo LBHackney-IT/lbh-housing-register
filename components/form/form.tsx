@@ -19,7 +19,7 @@ interface FormProps {
   onSubmit: (values: FormData, bag: any) => void;
   residentsPreviousAnswers?: FormData;
   onAddressLookup?: any;
-  timeAtAdress?: any;
+  timeAtAddress?: any;
 }
 
 export default function Form({
@@ -30,7 +30,7 @@ export default function Form({
   onSubmit,
   residentsPreviousAnswers,
   onAddressLookup,
-  timeAtAdress,
+  timeAtAddress,
 }: FormProps): JSX.Element {
   const [formDataSnapshot] = useState(formData);
   const [stepNumber, setStepNumber] = useState(0);
@@ -43,6 +43,9 @@ export default function Form({
   const step: FormStep = formDataSnapshot.steps[stepNumber];
   const totalSteps: number = formDataSnapshot.steps.length;
   const isLastStep: boolean = stepNumber === totalSteps - 1;
+
+  console.log('what is step', step);
+  console.log('formDataSnapshot', formDataSnapshot)
 
   const next = (values: FormData): void => {
     // TODO: Scroll to top + set focus to first field
@@ -58,6 +61,7 @@ export default function Form({
 
   const handleSubmit = async (values: FormData, bag: any) => {
     console.log('what is values bruh', values)
+    console.log('what is stepNumber', stepNumber)
     if (onSave) {
       onSave(values);
     }
@@ -83,7 +87,7 @@ export default function Form({
         onSubmit={handleSubmit}
         validationSchema={buildValidationSchema(step.fields)}
       >
-        {({ isSubmitting, values }) => (
+        {({ isSubmitting, values, handleChange }) => (
           <FormikForm>
             {step.heading && <HeadingTwo content={step.heading} />}
             {step.copy && <Paragraph>{step.copy}</Paragraph>}
@@ -91,7 +95,7 @@ export default function Form({
               {step.fields.map((field, index) => {
                 const display: boolean = getDisplayStateOfField(field, values);
                 if (display) {
-                  return <DynamicField key={index} field={field} onAddressLookup={onAddressLookup} timeAtAdress={timeAtAdress}/>
+                  return <DynamicField key={index} field={field} onAddressLookup={onAddressLookup} timeAtAddress={timeAtAddress} handleChange={handleChange} />
                 }
               })}
 

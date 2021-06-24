@@ -40,22 +40,19 @@ const PeoplePage = ({
   let exit = false;
   const onExit = false;
   
-  const countOfPeopleInApplication:any = resident.formData.household;
-  // const countOfPeopleInApplication:any = 2;
+  const countOfPeopleInApplication:any = resident.formData.household || '1';
 
   const formData = getHouseHoldData(countOfPeopleInApplication);
   
   const [formDataSnapshot] = useState(formData);
   const [stepNumber] = useState(0);
 
-  
   const [snapshot] = useState(getInitialValuesFromMultiStepForm(formDataSnapshot));
   
   const step: any = formDataSnapshot.steps[stepNumber];
   
 
   const handleSubmission = async (values: FormData) => {
-    // console.log('confirmPeopleInApplication', values)
 
     if (countOfPeopleInApplication > 1) {
       const mainResident = extractMainResidentFromData(values);

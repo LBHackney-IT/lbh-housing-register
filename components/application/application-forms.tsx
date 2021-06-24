@@ -24,6 +24,7 @@ import { useStore } from 'react-redux';
 import Details from '../../components/form/details';
 import { lookUpAddress } from '../../lib/gateways/internal-api';
 import AddressSelector from '../../components/form/selectaddress';
+import ShowAddress from '../../components/form/showaddress';
 
 
 interface ApplicationFormsProps {
@@ -61,10 +62,16 @@ export default function ApplicationForms({
   const [currentAddress, setCurrentAddress] = useState();
 
   const formSteps = getFormIdsFromApplicationSteps(steps);
+  console.log('what is formSTeps', formSteps)
 
   if (formSteps.includes(activeStep!)) {
     const next = () => {
-      const index = formSteps.indexOf(activeStep!) + 1;
+      let index = formSteps.indexOf(activeStep!) + 1;
+      console.log('what is index', index)
+      if(index === 5) {
+        // so this is working
+        index = formSteps.indexOf(activeStep!);
+      }
       if (index < formSteps.length) {
         activeStep = formSteps[index];
         router.replace(`${baseHref}/${activeStep}`);
@@ -72,6 +79,8 @@ export default function ApplicationForms({
     };
 
     const onSave = (values: FormData) => {
+      // This is how data is saved to store
+      console.log('is onSave triggered')
       const data: { [key: string]: FormData } = { ...applicationData };
       data[activeStep!] = values;
 
@@ -103,8 +112,13 @@ export default function ApplicationForms({
       setAddresses(undefined)
     }
 
-    const timeAtAdress = (value:any) => {
-      console.log('timeAtAddress', value)
+    const timeAtAddress = (value:string, name:string) => {
+      console.log('timeAtAddress value', value)
+      console.log('timeAtAddress name', name)
+      const timeAtCurrentAddress:any = {};
+      timeAtCurrentAddress[name] = value;
+      console.log('timeAtCurrentAddress', timeAtCurrentAddress);
+
     }
 
     return (
@@ -117,9 +131,9 @@ export default function ApplicationForms({
             return (
               <div key={index}>
                 {formData.heading && <HeadingOne content={formData.heading} />}
+                {formData.copy && <Paragraph><strong>{formData.copy}</strong></Paragraph>}
                 {activeStep === 'address-history' && <Details />}
-                {formData.copy && <Paragraph>{formData.copy}</Paragraph>}
-                {currentAddress && activeStep === 'address-history' && <Paragraph><strong>{currentAddress}</strong></Paragraph>}
+                {currentAddress && activeStep === 'address-history' && <ShowAddress currentAddress={currentAddress}  />}
                 {addresses && <AddressSelector addresses={addresses} addressSelectorHandler={addressSelectorHandler} /> }
 
                 <Form
@@ -129,7 +143,7 @@ export default function ApplicationForms({
                   onSave={onSave}
                   onSubmit={next}
                   onAddressLookup={onAddressLookup}
-                  timeAtAdress={timeAtAdress}
+                  timeAtAddress={timeAtAddress}
                   residentsPreviousAnswers={residentsPreviousAnswers}
                 />
               </div>

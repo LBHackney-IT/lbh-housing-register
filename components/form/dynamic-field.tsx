@@ -11,13 +11,15 @@ import Dropdown from './dropdown';
 interface DynamicFieldProps {
   field: FormField;
   onAddressLookup?: any;
-  timeAtAdress?: any;
+  timeAtAddress?: any;
+  handleChange?:any;
 }
 
 export default function DynamicField({
   field,
   onAddressLookup,
-  timeAtAdress,
+  timeAtAddress,
+  handleChange,
 }: DynamicFieldProps): JSX.Element {
   switch (field.as?.toLowerCase()) {
     case 'checkbox':
@@ -34,7 +36,7 @@ export default function DynamicField({
       return <Textarea {...field} />;
 
     case 'dateinput':
-      return <DateInput {...field} timeAtAdress={timeAtAdress}/>;
+      return <DateInput {...field} timeAtAddress={timeAtAddress} handleChange={handleChange} />;
 
     case 'birthdayinput': 
       return <BirthdayInput {...field} />;

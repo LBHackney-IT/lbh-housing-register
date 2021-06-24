@@ -10,18 +10,14 @@ export function DateInputs({
   label,
   name,
   value,
-  timeAtAdress
+  timeAtAddress,
+  handleChange,
 }: any): JSX.Element {
   let id = name;
 
   if (index !== undefined) {
     id += `.${index}`;
   }
-
-  // const onChangeHandler = (e:any) => {
-  //   console.log('hello', e.target.value)
-  //   timeAtAdress(e.target.value)
-  // }
 
   return (
     <div style={{display: "inline-block", "padding": "0 20px 0 0"}}>
@@ -30,12 +26,16 @@ export function DateInputs({
       </label>
       <Field
         className="govuk-input govuk-date-input__input govuk-input--width-2"
-        id={id}
-        name={id}
+        id={value}
+        name={value}
         type="text"
-        pattern="[0-9]*"
+        pattern="[0-9]"
         inputMode="numeric"
-        // onChange={onChangeHandler}
+        onChange={(e:any) => {
+          handleChange(e)
+          // console.log('what is e.target.value', e.target.value)
+          timeAtAddress(e.target.value, e.target.id)
+        }}
       />
     </div>
   );
@@ -47,7 +47,8 @@ export default function DateInput({
   label,
   name,
   options,
-  timeAtAdress,
+  timeAtAddress,
+  handleChange,
 }: any): JSX.Element {
   return (
     <Field name={name}>
@@ -78,7 +79,8 @@ export default function DateInput({
                         label={options.label!}
                         name={field.name}
                         value={options.value}
-                        timeAtAdress={timeAtAdress}
+                        timeAtAddress={timeAtAddress}
+                        handleChange={handleChange}
                       />
                     ))}
                   </div>

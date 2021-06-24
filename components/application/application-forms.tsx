@@ -68,10 +68,10 @@ export default function ApplicationForms({
     const next = () => {
       let index = formSteps.indexOf(activeStep!) + 1;
       console.log('what is index', index)
-      if(index === 5) {
-        // so this is working
-        index = formSteps.indexOf(activeStep!);
-      }
+      // if(index === 5) {
+      //   // so this is working
+      //   index = formSteps.indexOf(activeStep!);
+      // }
       if (index < formSteps.length) {
         activeStep = formSteps[index];
         router.replace(`${baseHref}/${activeStep}`);

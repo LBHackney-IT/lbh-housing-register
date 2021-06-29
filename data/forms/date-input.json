@@ -1,0 +1,18 @@
+{
+  "as": "dateinput",
+  "label": "Time at address",
+  "name": "time-at-address",
+  "options": [
+    {
+      "label": "Years",
+      "value": "years"
+    },
+    {
+      "label": "Month",
+      "value": "month"
+    }
+  ],
+  "validation": {
+    "required": false
+  }
+}

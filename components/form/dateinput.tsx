@@ -33,7 +33,6 @@ export function DateInputs({
         inputMode="numeric"
         onChange={(e:any) => {
           handleChange(e)
-          // console.log('what is e.target.value', e.target.value)
           timeAtAddress(e.target.value, e.target.id)
         }}
       />

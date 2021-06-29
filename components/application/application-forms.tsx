@@ -25,6 +25,7 @@ import Details from '../../components/form/details';
 import { lookUpAddress } from '../../lib/gateways/internal-api';
 import AddressSelector from '../../components/form/selectaddress';
 import ShowAddress from '../../components/form/showaddress';
+import dataInput from '../../data/forms/date-input.json';
 
 
 interface ApplicationFormsProps {
@@ -61,26 +62,43 @@ export default function ApplicationForms({
 
   const [currentAddress, setCurrentAddress] = useState();
 
+  const [previousAddress, setPreviousAddress] = useState([]);
+
+  const [showInputField, setShowInputField] = useState(false);
+
+  const [timeAtAddressMonths, setTimeAtAddressMonths] = useState({});
+  const [timeAtAddressYears, setTimeAtAddressYears] = useState({});
+
+  const [disableSubmitButton, setDisableButton] = useState(true);
+
+
+
+  //TODO: DISPLAY ALL ON ONE SCREEN:
+  //      1. Show only postcode input field - done
+  //      2. As soon as API returns addresses also display time-at-address input field - done
+  //      3. As soon as address and duration at current address is selected display it and show postcode input field with 'PREVIOUS ADDRESS' as title
+  //      4. Rinse and repeat until 5 year mark has been covered then show summary without any input fields, enable submit button again
+
+
+
   const formSteps = getFormIdsFromApplicationSteps(steps);
   console.log('what is formSTeps', formSteps)
+  // formSteps.splice(4, 0, 'address-history')
 
   if (formSteps.includes(activeStep!)) {
     const next = () => {
       let index = formSteps.indexOf(activeStep!) + 1;
-      console.log('what is index', index)
-      // if(index === 5) {
-      //   // so this is working
-      //   index = formSteps.indexOf(activeStep!);
-      // }
       if (index < formSteps.length) {
         activeStep = formSteps[index];
+        console.log('what is activeStep', activeStep)
         router.replace(`${baseHref}/${activeStep}`);
       }
     };
 
     const onSave = (values: FormData) => {
       // This is how data is saved to store
-      console.log('is onSave triggered')
+      console.log('onSave triggered', values)
+      console.log('what is applicationData', applicationData)
       const data: { [key: string]: FormData } = { ...applicationData };
       data[activeStep!] = values;
 
@@ -94,13 +112,13 @@ export default function ApplicationForms({
     };
 
     const onAddressLookup = async (postcode: string) => {
-      // console.log('what is spinner', spinner)
       try {
         setSpinner(true)
         lookUpAddress(postcode)
           .then(data => {
             setSpinner(false)
             setAddresses(data.address)
+            setShowInputField(true)
           });
       } catch (err) {
         // TODO: error handling
@@ -113,12 +131,14 @@ export default function ApplicationForms({
     }
 
     const timeAtAddress = (value:string, name:string) => {
-      console.log('timeAtAddress value', value)
-      console.log('timeAtAddress name', name)
-      const timeAtCurrentAddress:any = {};
-      timeAtCurrentAddress[name] = value;
-      console.log('timeAtCurrentAddress', timeAtCurrentAddress);
+      name === 'years' ? setTimeAtAddressYears({'years': value}) : setTimeAtAddressMonths({'months': value})
+    }
+    console.log('timeAtAddressMonths', timeAtAddressMonths);
+    console.log('timeAtAddressYears', timeAtAddressYears);
 
+
+    const calculateTotalStay = () => {
+      // If time is equal to 5 years or more then enable submit button
     }
 
     return (
@@ -126,6 +146,10 @@ export default function ApplicationForms({
         {formSteps.map((step, index) => {
           if (step == activeStep) {
             const formData = getFormData(step);
+            console.log('formData1:', formData)
+            if(showInputField && formData['heading'] === 'Address history' && formData['steps'][0]['fields'].length === 1) {
+              formData['steps'][0]['fields'].push(dataInput)
+            }
             const residentsPreviousAnswers = resident.formData[step];
 
             return (
@@ -133,7 +157,7 @@ export default function ApplicationForms({
                 {formData.heading && <HeadingOne content={formData.heading} />}
                 {formData.copy && <Paragraph><strong>{formData.copy}</strong></Paragraph>}
                 {activeStep === 'address-history' && <Details />}
-                {currentAddress && activeStep === 'address-history' && <ShowAddress currentAddress={currentAddress}  />}
+                {currentAddress && activeStep === 'address-history' && <ShowAddress currentAddress={currentAddress} duration={[timeAtAddressYears, timeAtAddressMonths]} />}
                 {addresses && <AddressSelector addresses={addresses} addressSelectorHandler={addressSelectorHandler} /> }
 
                 <Form
@@ -144,8 +168,10 @@ export default function ApplicationForms({
                   onSubmit={next}
                   onAddressLookup={onAddressLookup}
                   timeAtAddress={timeAtAddress}
+                  disableSubmit={disableSubmitButton}
                   residentsPreviousAnswers={residentsPreviousAnswers}
                 />
+
               </div>
             );
           }

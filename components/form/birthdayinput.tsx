@@ -54,7 +54,7 @@ export default function BirthdayInput({
       }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
           {label && <Label content={label} strong={true} />}
-          {hint && <Hint content={hint} />}
+          {/* {hint && <Hint content={hint} />} */}
           {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 
           <div className="govuk-form-group lbh-form-group">

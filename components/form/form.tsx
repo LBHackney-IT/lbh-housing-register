@@ -11,6 +11,7 @@ import { Form as FormikForm, Formik } from 'formik';
 import { useState } from 'react';
 import Paragraph from '../content/paragraph';
 
+
 interface FormProps {
   buttonText?: string;
   formData: MultiStepForm;
@@ -18,6 +19,9 @@ interface FormProps {
   onSave?: (values: FormData) => void;
   onSubmit: (values: FormData, bag: any) => void;
   residentsPreviousAnswers?: FormData;
+  onAddressLookup?: any;
+  timeAtAddress?: any;
+  disableSubmit?: boolean;
 }
 
 export default function Form({
@@ -27,6 +31,9 @@ export default function Form({
   onSave,
   onSubmit,
   residentsPreviousAnswers,
+  onAddressLookup,
+  timeAtAddress,
+  disableSubmit,
 }: FormProps): JSX.Element {
   const [formDataSnapshot] = useState(formData);
   const [stepNumber, setStepNumber] = useState(0);
@@ -36,9 +43,17 @@ export default function Form({
   );
 
   let exit = false;
-  const step: FormStep = formDataSnapshot.steps[stepNumber];
+  let step: FormStep = formDataSnapshot.steps[stepNumber];
   const totalSteps: number = formDataSnapshot.steps.length;
   const isLastStep: boolean = stepNumber === totalSteps - 1;
+
+  console.log('what is step', step);
+  console.log('formDataSnapshot', formDataSnapshot);
+
+
+  // modify step and hide Time At Address input field, only show it when address has been returned
+  console.log('investigating step', step)
+  // step.fields = step.fields[0]
 
   const next = (values: FormData): void => {
     // TODO: Scroll to top + set focus to first field
@@ -53,6 +68,8 @@ export default function Form({
   };
 
   const handleSubmit = async (values: FormData, bag: any) => {
+    console.log('what is values bruh', values)
+    console.log('what is stepNumber', stepNumber)
     if (onSave) {
       onSave(values);
     }
@@ -78,17 +95,17 @@ export default function Form({
         onSubmit={handleSubmit}
         validationSchema={buildValidationSchema(step.fields)}
       >
-        {({ isSubmitting, values }) => (
+        {({ isSubmitting, values, handleChange }) => (
           <FormikForm>
             {step.heading && <HeadingTwo content={step.heading} />}
             {step.copy && <Paragraph>{step.copy}</Paragraph>}
 
-            {step.fields.map((field, index) => {
-              const display: boolean = getDisplayStateOfField(field, values);
-              if (display) {
-                return <DynamicField key={index} field={field} />;
-              }
-            })}
+              {step.fields.map((field, index) => {
+                const display: boolean = getDisplayStateOfField(field, values);
+                if (display) {
+                  return <DynamicField key={index} field={field} onAddressLookup={onAddressLookup} timeAtAddress={timeAtAddress} handleChange={handleChange} />
+                }
+              })}
 
             <div className="c-flex lbh-simple-pagination">
               {stepNumber > 0 && (
@@ -106,7 +123,7 @@ export default function Form({
               <div className="c-flex__1 text-right">
                 <Button
                   onClick={() => (exit = false)}
-                  disabled={isSubmitting}
+                  disabled={disableSubmit}
                   type="submit"
                 >
                   {buttonText ? buttonText : 'Save'}
@@ -118,7 +135,7 @@ export default function Form({
               <div className="text-right">
                 <Button
                   onClick={() => (exit = true)}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || isSubmitting}
                   type="submit"
                   secondary={true}
                 >

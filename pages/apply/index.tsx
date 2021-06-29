@@ -46,27 +46,27 @@ export default function ApplicationHomePage(): JSX.Element {
 
           <TableRow>
             <TableCell>1 bedroom</TableCell>
-            <TableCell>? years</TableCell>
+            <TableCell>4 years</TableCell>
             <TableCell>1 month</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>2 bedrooms</TableCell>
-            <TableCell>? years</TableCell>
+            <TableCell>11 years</TableCell>
             <TableCell>1 month</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>3 bedrooms</TableCell>
-            <TableCell>? years</TableCell>
+            <TableCell>12 years</TableCell>
             <TableCell>1 month</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>4 bedrooms</TableCell>
-            <TableCell>? years</TableCell>
+            <TableCell>17 years</TableCell>
             <TableCell>1 month</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>5 bedrooms</TableCell>
-            <TableCell>? years</TableCell>
+            <TableCell>17 years</TableCell>
             <TableCell>2 months</TableCell>
           </TableRow>
         </Table>

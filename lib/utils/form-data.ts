@@ -9,7 +9,16 @@ import signInVerifyFormData from '../../data/forms/sign-in-verify.json';
 import signUpDetailsFormData from '../../data/forms/sign-up-details.json';
 import { EligibilityCriteria, MultiStepForm } from '../types/form';
 import residentialStatusFormData from '../../data/forms/residential-status.json';
+import houseHoldOverview from '../../data/forms/household-details.json';
+import peopleInApplication_1 from '../../data/forms/household/people-in-application-1.json';
+import peopleInApplication_2 from '../../data/forms/household/people-in-application-2.json';
+import peopleInApplication_3 from '../../data/forms/household/people-in-application-3.json';
+import peopleInApplication_4 from '../../data/forms/household/people-in-application-4.json';
+import peopleInApplication_5 from '../../data/forms/household/people-in-application-5.json';
+import peopleInApplication_6 from '../../data/forms/household/people-in-application-6.json';
+import peopleInApplication_7 from '../../data/forms/household/people-in-application-7.json';
 import addressHistory from '../../data/forms/address-history.json';
+
 
 export const AGREEMENT = 'agreement';
 export const SIGN_IN = 'sign-in';
@@ -20,7 +29,9 @@ export const PERSONAL_DETAILS = 'personal-details';
 export const ADDRESS_DETAILS = 'address-details';
 export const YOUR_SITUATION = 'your-situation';
 export const RESIDENTIAL_STATUS = 'residential-status';
-export const ADDRESS_HISTORY = 'address-history';
+export const HOUSEHOLD_OVERVIEW = 'household-overview';
+export const PEOPLE_IN_APPLICATION = 'people-in-application';
+export const ADDRESS_HISTORY = 'address-history'
 
 /**
  * Get the eligibility criteria from the requested form
@@ -68,10 +79,33 @@ export function getFormData(form: string): MultiStepForm {
     case RESIDENTIAL_STATUS:
       return residentialStatusFormData;
 
-    case ADDRESS_HISTORY:
+    case HOUSEHOLD_OVERVIEW:
+      return houseHoldOverview;
+
+    case ADDRESS_HISTORY: 
       return addressHistory;
 
     default:
       return testFormData;
+  }
+}
+
+
+export function getHouseHoldData(form: any): any {
+  switch (parseInt(form)) {
+    case 1:
+      return peopleInApplication_1;
+    case 2:
+      return peopleInApplication_2;
+    case 3:
+      return peopleInApplication_3;
+    case 4:
+      return peopleInApplication_4;
+    case 5:
+      return peopleInApplication_5;
+    case 6:
+      return peopleInApplication_6;
+    case 7:
+      return peopleInApplication_7;
   }
 }

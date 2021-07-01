@@ -44,6 +44,7 @@ export type FormStep = {
   copy?: string;
   fields: FormField[];
   heading?: string;
+  subheading?: string;
 };
 
 export type MultiStepForm = {

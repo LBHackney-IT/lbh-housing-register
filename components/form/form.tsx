@@ -10,6 +10,7 @@ import { buildValidationSchema } from '../../lib/utils/validation';
 import { Form as FormikForm, Formik } from 'formik';
 import { useState } from 'react';
 import Paragraph from '../content/paragraph';
+import Announcement from '../../components/announcement';
 
 
 interface FormProps {
@@ -21,7 +22,7 @@ interface FormProps {
   residentsPreviousAnswers?: FormData;
   onAddressLookup?: any;
   timeAtAddress?: any;
-  disableSubmit?: boolean;
+  activeStep: string;
 }
 
 export default function Form({
@@ -33,7 +34,7 @@ export default function Form({
   residentsPreviousAnswers,
   onAddressLookup,
   timeAtAddress,
-  disableSubmit,
+  activeStep,
 }: FormProps): JSX.Element {
   const [formDataSnapshot] = useState(formData);
   const [stepNumber, setStepNumber] = useState(0);
@@ -47,13 +48,6 @@ export default function Form({
   const totalSteps: number = formDataSnapshot.steps.length;
   const isLastStep: boolean = stepNumber === totalSteps - 1;
 
-  console.log('what is step', step);
-  console.log('formDataSnapshot', formDataSnapshot);
-
-
-  // modify step and hide Time At Address input field, only show it when address has been returned
-  console.log('investigating step', step)
-  // step.fields = step.fields[0]
 
   const next = (values: FormData): void => {
     // TODO: Scroll to top + set focus to first field
@@ -68,8 +62,6 @@ export default function Form({
   };
 
   const handleSubmit = async (values: FormData, bag: any) => {
-    console.log('what is values bruh', values)
-    console.log('what is stepNumber', stepNumber)
     if (onSave) {
       onSave(values);
     }
@@ -107,6 +99,14 @@ export default function Form({
                 }
               })}
 
+              {(values['medical-needs'] === 'yes' && activeStep === 'medical-needs') && 
+                <Announcement variant="success">
+                  <h3 className="lbh-heading-h3">You will need to complete a separate medical form</h3>
+                  <p className="lbh-body-m">After you have submitted this application, you will be asked to provide detailed information about your medical needs in a separate form.</p>
+                </Announcement>
+              }
+              
+
             <div className="c-flex lbh-simple-pagination">
               {stepNumber > 0 && (
                 <div className="c-flex__1">
@@ -123,7 +123,7 @@ export default function Form({
               <div className="c-flex__1 text-right">
                 <Button
                   onClick={() => (exit = false)}
-                  disabled={disableSubmit}
+                  disabled={isSubmitting}
                   type="submit"
                 >
                   {buttonText ? buttonText : 'Save'}
@@ -135,7 +135,7 @@ export default function Form({
               <div className="text-right">
                 <Button
                   onClick={() => (exit = true)}
-                  disabled={isSubmitting || isSubmitting}
+                  disabled={isSubmitting}
                   type="submit"
                   secondary={true}
                 >

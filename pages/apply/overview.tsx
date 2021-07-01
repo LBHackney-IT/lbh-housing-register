@@ -27,7 +27,6 @@ const ApplicationPersonsOverview = (): JSX.Element => {
     ...store.getState().additionalResidents,
   ];
 
-  console.log('applicants', applicants)
   const breadcrumbs = [
     {
       href: '/apply/overview',

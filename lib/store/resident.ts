@@ -22,6 +22,7 @@ const slice = createSlice({
     builder.addCase(loadApplicaiton.fulfilled, (state, action) => {
       state.formData = extractFormData(action.payload.mainApplicant);
     });
+    builder.addCase(loadApplicaiton.rejected, () => initialState);
   },
   reducers: {
     /**
@@ -98,7 +99,10 @@ const slice = createSlice({
       state.ineligibilityReasons = eligibility[1];
 
       // Update name to reflect on the main overview page
-      state.name = (state.formData.firstName && state.formData.lastName) ? state.formData.firstName + ' ' + state.formData.lastName : 'You'
+      state.name =
+        state.formData.firstName && state.formData.lastName
+          ? state.formData.firstName + ' ' + state.formData.lastName
+          : 'You';
 
       return state;
     },

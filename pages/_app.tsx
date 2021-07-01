@@ -23,17 +23,10 @@ function App({ Component, pageProps }: AppProps): ReactElement {
   }, []);
 
   const user = useAppSelector((state) => state.cognitoUser);
+  const applicationId = user?.attributes['custom:application_id'];
   useEffect(() => {
-    if (user) {
-      //     // don't do this without an effect. You just got rate limited.
-      //     Auth.currentAuthenticatedUser().then((user: CognitoUser) => {
-      //       Auth.updateUserAttributes(user, {
-      //         'custom:application_id': '0b8bf684-e3ae-499a-af05-fafcefca6f46',
-      //       });
-      //     });
-      dispatch(loadApplicaiton(user.attributes['custom:application_id']));
-    }
-  }, [user]);
+    dispatch(loadApplicaiton(applicationId));
+  }, [applicationId]);
 
   return (
     <>

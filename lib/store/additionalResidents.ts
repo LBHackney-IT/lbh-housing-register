@@ -19,6 +19,7 @@ const slice = createSlice({
         formData: extractFormData(resident),
       }));
     });
+    builder.addCase(loadApplicaiton.rejected, () => initialState);
   },
 
   reducers: {

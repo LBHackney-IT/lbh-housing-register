@@ -44,7 +44,3 @@ function App({ Component, pageProps }: AppProps): ReactElement {
 }
 
 export default wrapper.withRedux(App);
-
-/*
- * So when the page loads we'll want to retrieve anything that we know.
- */

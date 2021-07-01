@@ -1,0 +1,17 @@
+{
+  "heading": "Address history",
+  "copy": "Current Address",
+  "steps": [
+    {
+      "fields": [
+        {
+          "label": "Postcode",
+          "name": "address-finder",
+          "validation": {
+            "required": false
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -26,6 +26,7 @@ const ApplicationStep = (): JSX.Element => {
   resident = resident as string;
 
   const currentResident = getResident(resident, store.getState());
+  console.log('what is currentResident', currentResident)
 
   if (!currentResident) {
     return <Custom404 />;
@@ -63,7 +64,6 @@ const ApplicationStep = (): JSX.Element => {
         store.getState().resident,
         ...store.getState().additionalResidents,
       ];
-      // Below line currently returns a 404 as the endpoints arent ready yet
       await updateApplication(applicants);
     } catch (err) {
       console.log(err);
@@ -100,7 +100,7 @@ const ApplicationStep = (): JSX.Element => {
       ) : (
         <Hint content={currentResident.name} />
       )}
-
+  
       <ApplicationForms
         activeStep={activeStep}
         baseHref={baseHref}

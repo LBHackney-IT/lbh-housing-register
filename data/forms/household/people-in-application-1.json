@@ -1,5 +1,7 @@
 {
-  "heading": "Personal details",
+  "heading": "People in this application",
+  "copy": "Tell us how many people you want to include in your new household.",
+  "dynamic-fields": "Yes",
   "steps": [
     {
       "fields": [
@@ -12,7 +14,29 @@
         },
         {
           "label": "Last name",
-          "name": "surname",
+          "name": "lastName",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "radios",
+          "label": "Sex",
+          "name": "sex",
+          "options": [
+            {
+              "label": "Female",
+              "value": "female"
+            },
+            {
+              "label": "Intersex",
+              "value": "intersex"
+            },
+            {
+              "label": "Male",
+              "value": "male"
+            }
+          ],
           "validation": {
             "required": true
           }
@@ -40,23 +64,9 @@
           }
         },
         {
-          "as": "radios",
-          "label": "Sex",
-          "name": "gender",
-          "options": [
-            {
-              "label": "Male",
-              "value": "M"
-            },
-            {
-              "label": "Female",
-              "value": "F"
-            },
-            {
-              "label": "Prefer not to say",
-              "value": ""
-            }
-          ]
+          "label": "National Insurance",
+          "hint": "For example, AB 12 34 56 C",
+          "name": "national-insurance"
         }
       ]
     }

@@ -35,7 +35,7 @@ export const updateApplication = async (
   try {
     const application = constructApplication(applicants);
 
-    const id = '161621af-03bc-47ff-86d9-ada7862aa00a';
+    const id = '161621af-03bc-47ff-86d9-ada7862aa00a'; // why is this still here??????????
     const res = await fetch(`/api/applications/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(application),
@@ -45,3 +45,16 @@ export const updateApplication = async (
     throw new Error('Unable to update application');
   }
 };
+
+
+export const lookUpAddress = async (postCode: string | undefined | null): Promise<any> => {
+  try {
+    const res = await fetch(`/api/address/${postCode}`, {
+      method: 'GET'
+    });
+
+    return await res.json()
+  } catch (err) {
+    throw new Error(`This error: ${err}`)
+  }
+}

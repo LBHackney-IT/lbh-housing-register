@@ -99,6 +99,24 @@ export function buildValidationSchema(fields: FormField[]) {
           );
           break;
 
+        case 'birthdayinput':
+          baseType = Yup.number().integer(
+            `${field.label} must be a valid number`
+          );
+          
+          fieldValidation = baseType;
+          fieldValidation = checkRequired(fieldValidation, field);
+          break;
+
+        case 'dateinput':
+          baseType = Yup.number().integer(
+            `${field.label} must be a valid number`
+          );
+          
+          fieldValidation = baseType;
+          fieldValidation = checkRequired(fieldValidation, field);
+          break;
+
         default:
           baseType = Yup.string();
 

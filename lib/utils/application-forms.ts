@@ -30,11 +30,7 @@ export const getEligibilitySteps = (): ApplicationSteps[] => {
         {
           heading: 'Immigration status',
           id: IMMIGRATION_STATUS,
-        },
-        {
-          heading: 'Residential status',
-          id: RESIDENTIAL_STATUS,
-        },
+        }
       ],
     },
   ];

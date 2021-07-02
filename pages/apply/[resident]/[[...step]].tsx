@@ -26,7 +26,6 @@ const ApplicationStep = (): JSX.Element => {
   resident = resident as string;
 
   const currentResident = getResident(resident, store.getState());
-  console.log('what is currentResident', currentResident)
 
   if (!currentResident) {
     return <Custom404 />;

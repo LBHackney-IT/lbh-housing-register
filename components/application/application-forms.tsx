@@ -82,23 +82,18 @@ export default function ApplicationForms({
 
 
   const formSteps = getFormIdsFromApplicationSteps(steps);
-  console.log('what is formSTeps', formSteps)
-  // formSteps.splice(4, 0, 'address-history')
 
   if (formSteps.includes(activeStep!)) {
     const next = () => {
       let index = formSteps.indexOf(activeStep!) + 1;
       if (index < formSteps.length) {
         activeStep = formSteps[index];
-        console.log('what is activeStep', activeStep)
         router.replace(`${baseHref}/${activeStep}`);
       }
     };
 
     const onSave = (values: FormData) => {
       // This is how data is saved to store
-      console.log('onSave triggered', values)
-      console.log('what is applicationData', applicationData)
       const data: { [key: string]: FormData } = { ...applicationData };
       data[activeStep!] = values;
 
@@ -133,8 +128,6 @@ export default function ApplicationForms({
     const timeAtAddress = (value:string, name:string) => {
       name === 'years' ? setTimeAtAddressYears({'years': value}) : setTimeAtAddressMonths({'months': value})
     }
-    console.log('timeAtAddressMonths', timeAtAddressMonths);
-    console.log('timeAtAddressYears', timeAtAddressYears);
 
 
     const calculateTotalStay = () => {
@@ -146,7 +139,6 @@ export default function ApplicationForms({
         {formSteps.map((step, index) => {
           if (step == activeStep) {
             const formData = getFormData(step);
-            console.log('formData1:', formData)
             if(showInputField && formData['heading'] === 'Address history' && formData['steps'][0]['fields'].length === 1) {
               formData['steps'][0]['fields'].push(dataInput)
             }

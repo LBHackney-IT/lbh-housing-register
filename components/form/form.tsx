@@ -47,13 +47,6 @@ export default function Form({
   const totalSteps: number = formDataSnapshot.steps.length;
   const isLastStep: boolean = stepNumber === totalSteps - 1;
 
-  console.log('what is step', step);
-  console.log('formDataSnapshot', formDataSnapshot);
-
-
-  // modify step and hide Time At Address input field, only show it when address has been returned
-  console.log('investigating step', step)
-  // step.fields = step.fields[0]
 
   const next = (values: FormData): void => {
     // TODO: Scroll to top + set focus to first field
@@ -68,8 +61,6 @@ export default function Form({
   };
 
   const handleSubmit = async (values: FormData, bag: any) => {
-    console.log('what is values bruh', values)
-    console.log('what is stepNumber', stepNumber)
     if (onSave) {
       onSave(values);
     }
@@ -123,7 +114,7 @@ export default function Form({
               <div className="c-flex__1 text-right">
                 <Button
                   onClick={() => (exit = false)}
-                  disabled={disableSubmit}
+                  disabled={isSubmitting}
                   type="submit"
                 >
                   {buttonText ? buttonText : 'Save'}
@@ -135,7 +126,7 @@ export default function Form({
               <div className="text-right">
                 <Button
                   onClick={() => (exit = true)}
-                  disabled={isSubmitting || isSubmitting}
+                  disabled={isSubmitting}
                   type="submit"
                   secondary={true}
                 >

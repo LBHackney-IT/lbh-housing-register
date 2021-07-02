@@ -22,7 +22,7 @@ interface FormProps {
   residentsPreviousAnswers?: FormData;
   onAddressLookup?: any;
   timeAtAddress?: any;
-  activeStep: string;
+  activeStep?: string;
 }
 
 export default function Form({

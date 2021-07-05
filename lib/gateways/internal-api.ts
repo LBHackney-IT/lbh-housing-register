@@ -28,11 +28,11 @@ export const createApplication = async (applicants: Resident[], status: string =
  * @param {Resident[]} applicants The applicant information
  * @returns {any} The updated application
  */
-export const updateApplication = async (applicants: Resident[], appicationId: string | undefined, status: string = APPLICATION_STATUS_PENDING): Promise<any> => {
+export const updateApplication = async (applicants: Resident[], applicationId: string | undefined, status: string = APPLICATION_STATUS_PENDING): Promise<any> => {
   try {
     const application = constructApplication(applicants, status)
 
-    const res = await fetch(`/api/applications/${appicationId}`,
+    const res = await fetch(`/api/applications/${applicationId}`,
       {
         method: "PATCH",
         body: JSON.stringify(application),

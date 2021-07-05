@@ -30,7 +30,7 @@ const AddPersonToApplication = (): JSX.Element => {
         store.getState().resident,
         ...store.getState().additionalResidents,
       ];
-      await updateApplication(applicants);
+      await updateApplication(applicants, applicants[0].applicationId);
     } catch (err) {
       // TODO: Error handling
     }

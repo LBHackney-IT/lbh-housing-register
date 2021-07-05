@@ -1,23 +1,19 @@
-import Button, { ButtonLink } from '../../components/button';
-import { HeadingOne } from '../../components/content/headings';
-import Paragraph from '../../components/content/paragraph';
-import Hint from '../../components/form/hint';
-import Layout from '../../components/layout/resident-layout';
-import SummaryList, {
-  SummaryListActions as Actions,
-  SummaryListKey as Key,
-  SummaryListRow as Row,
-} from '../../components/summary-list';
-import Tag from '../../components/tag';
-import whenAgreed from '../../lib/hoc/whenAgreed';
-import whenEligible from '../../lib/hoc/whenEligible';
-import { Store } from '../../lib/store';
-import { MAIN_RESIDENT_KEY } from '../../lib/store/resident';
-import { applicationStepsRemaining } from '../../lib/utils/resident';
-import Link from 'next/link';
-import { useStore } from 'react-redux';
-import { useRouter } from 'next/router';
-import { createApplication } from '../../lib/gateways/internal-api';
+import Button, { ButtonLink } from "../../components/button"
+import { HeadingOne } from "../../components/content/headings"
+import Paragraph from "../../components/content/paragraph"
+import Hint from "../../components/form/hint"
+import Layout from "../../components/layout/resident-layout"
+import SummaryList, { SummaryListActions as Actions, SummaryListKey as Key, SummaryListRow as Row } from "../../components/summary-list"
+import Tag from "../../components/tag"
+import whenAgreed from "../../lib/hoc/whenAgreed"
+import whenEligible from "../../lib/hoc/whenEligible"
+import { Store } from "../../lib/store"
+import { MAIN_RESIDENT_KEY } from "../../lib/utils/constants"
+import { applicationStepsRemaining } from "../../lib/utils/resident"
+import Link from "next/link"
+import { useStore } from "react-redux"
+import { useRouter } from "next/router"
+import { updateApplication } from "../../lib/gateways/internal-api"
 
 const ApplicationPersonsOverview = (): JSX.Element => {
   const router = useRouter();
@@ -36,8 +32,10 @@ const ApplicationPersonsOverview = (): JSX.Element => {
 
   const handleSubmit = async (): Promise<void> => {
     try {
-      const data = await createApplication(applicants);
-      console.log(data);
+      const applicationId = applicants[0].applicationId
+      const data = await updateApplication(applicants, applicationId)
+      console.log(data)
+
     } catch (err) {
       console.log(err);
       // TODO: handle error

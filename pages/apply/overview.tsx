@@ -16,16 +16,19 @@ import { useRouter } from "next/router"
 import { updateApplication } from "../../lib/gateways/internal-api"
 
 const ApplicationPersonsOverview = (): JSX.Element => {
-  const router = useRouter()
-  const store = useStore<Store>()
-  const applicants = [store.getState().resident, ...store.getState().additionalResidents]
+  const router = useRouter();
+  const store = useStore<Store>();
+  const applicants = [
+    store.getState().resident,
+    ...store.getState().additionalResidents,
+  ];
 
   const breadcrumbs = [
     {
-      href: "/apply/overview",
-      name: "Application"
-    }
-  ]
+      href: '/apply/overview',
+      name: 'Application',
+    },
+  ];
 
   const handleSubmit = async (): Promise<void> => {
     try {
@@ -34,37 +37,51 @@ const ApplicationPersonsOverview = (): JSX.Element => {
       console.log(data)
 
     } catch (err) {
-      console.log(err)
+      console.log(err);
       // TODO: handle error
     }
-    router.push("/apply/confirmation")
-  }
+    router.push('/apply/confirmation');
+  };
 
   return (
     <Layout breadcrumbs={breadcrumbs}>
-      <HeadingOne content="People in this application" />
+      <HeadingOne content="My household" />
 
       <SummaryList>
         {applicants.map((resident, index) => {
-          const tasksRemaining = applicationStepsRemaining(resident)
+          const tasksRemaining = applicationStepsRemaining(resident);
 
           return (
             <Row key={index} verticalAlign="middle">
               <Key>
                 <>
-                  <Hint content={`Person ${index + 1}` + (applicants.length > 1 && resident.slug == MAIN_RESIDENT_KEY ? " (you)" : "")} />
+                  <Hint
+                    content={
+                      `Person ${index + 1}` +
+                      (applicants.length > 1 &&
+                      resident.slug == MAIN_RESIDENT_KEY
+                        ? ' (you)'
+                        : '')
+                    }
+                  />
                   <Link href={`/apply/${resident.slug}`}>{resident.name}</Link>
                 </>
               </Key>
               <Actions>
-                {resident.isEligible === false ? <Tag content="Not eligible" variant="red" /> : (
-                  tasksRemaining == 0 ?
-                    <Tag content="Completed" variant="green" /> :
-                    <Tag content={`${tasksRemaining} task${(tasksRemaining > 1 ? "s" : "")} to do`} />
+                {resident.isEligible === false ? (
+                  <Tag content="Not eligible" variant="red" />
+                ) : tasksRemaining == 0 ? (
+                  <Tag content="Completed" variant="green" />
+                ) : (
+                  <Tag
+                    content={`${tasksRemaining} task${
+                      tasksRemaining > 1 ? 's' : ''
+                    } to do`}
+                  />
                 )}
               </Actions>
             </Row>
-          )
+          );
         })}
       </SummaryList>
 
@@ -72,16 +89,18 @@ const ApplicationPersonsOverview = (): JSX.Element => {
         Add a person
       </ButtonLink>
 
-      {applicants.every(resident => applicationStepsRemaining(resident) == 0) &&
+      {applicants.every(
+        (resident) => applicationStepsRemaining(resident) == 0
+      ) && (
         <>
-          <Paragraph>The button below only shows when all tasks are complete.</Paragraph>
-          <Button onClick={handleSubmit}>
-            Submit application
-          </Button>
+          <Paragraph>
+            The button below only shows when all tasks are complete.
+          </Paragraph>
+          <Button onClick={handleSubmit}>Submit application</Button>
         </>
-      }
+      )}
     </Layout>
-  )
-}
+  );
+};
 
-export default whenAgreed(whenEligible(ApplicationPersonsOverview))
+export default whenAgreed(whenEligible(ApplicationPersonsOverview));

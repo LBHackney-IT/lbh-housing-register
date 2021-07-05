@@ -13,6 +13,7 @@
     "lbh-frontend": "^3.5.2",
     "next": "^10.2.0",
     "next-redux-wrapper": "^6.0.2",
+    "prettier": "^2.3.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.4",
@@ -26,7 +27,10 @@
     "dev": "concurrently -k \"npm:mocks\" \"next dev\"",
     "start": "next start -p $PORT",
     "test": "next test",
-    "mocks": "mocks-server"
+    "mocks": "mocks-server",
+    "lint": "eslint . --max-warnings 0 --ext .js,.jsx,.ts,.tsx",
+    "prettier:test": "npx prettier -c .",
+    "prettier:fix": "npx prettier --write ."
   },
   "eslintConfig": {
     "extends": [

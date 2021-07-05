@@ -1,0 +1,205 @@
+{
+  "heading": "People in this application",
+  "copy": "Tell us how many people you want to include in your new household.",
+  "steps": [
+    {
+      "fields": [
+        {
+          "label": "First name",
+          "person": "Person 1",
+          "name": "firstName",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "Last name",
+          "name": "lastName",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "radios",
+          "label": "Sex",
+          "name": "sex",
+          "options": [
+            {
+              "label": "Female",
+              "value": "female"
+            },
+            {
+              "label": "Intersex",
+              "value": "intersex"
+            },
+            {
+              "label": "Male",
+              "value": "male"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "birthdayinput",
+          "label":"Date of birth",
+          "name": "birthday",
+          "options": [
+            {
+              "label": "Day",
+              "value": "day"
+            },
+            {
+              "label": "Month",
+              "value": "month"
+            },
+            {
+              "label": "Year",
+              "value": "year"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "National Insurance",
+          "hint": "For example, AB 12 34 56 C",
+          "name": "national-insurance"
+        },
+        {
+          "label": "First name",
+          "person": "Person 2",
+          "name": "firstName-additional-1",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "Last name",
+          "name": "lastName-additional-1",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "dropdown", 
+          "label": "Relationship to you",
+          "name": "relationship-additional-1",
+          "options": [
+            {
+              "label": "Aunt",
+              "value": "aunt"
+            },
+            {
+              "label": "Brother",
+              "value": "brother"
+            },
+            { 
+              "label": "Cousin",
+              "value": "cousin"
+            },
+            {
+              "label": "Daughter",
+              "value": "daughter"
+            },
+            {
+              "label": "Friend",
+              "value": "friend"
+            },
+            {
+              "label": "Granchild",
+              "value": "granchild"
+            },
+            {
+              "label": "Grandparent",
+              "value": "grandparent"
+            },
+            {
+              "label": "Nephew",
+              "value": "nephew"
+            },
+            {
+              "label": "Niece",
+              "value": "niece"
+            },
+            {
+              "label": "Parent",
+              "value": "parent"
+            },
+            {
+              "label": "Partner",
+              "value": "partner"
+            },
+            {
+              "label": "Sister",
+              "value": "sister"
+            },
+            { 
+              "label": "Son",
+              "value": "son"
+            },
+            {
+              "label": "Uncle",
+              "value": "uncle"
+            },
+            {
+              "label": "Other",
+              "value": "other"
+            }
+          ]
+        },
+        {
+          "as": "radios",
+          "label": "Sex",
+          "name": "sex-additional-1",
+          "options": [
+            {
+              "label": "Female",
+              "value": "female"
+            },
+            {
+              "label": "Intersex",
+              "value": "intersex"
+            },
+            {
+              "label": "Male",
+              "value": "male"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "birthdayinput",
+          "label":"Date of birth",
+          "name": "birthday-additional-1",
+          "options": [
+            {
+              "label": "Day",
+              "value": "day"
+            },
+            {
+              "label": "Month",
+              "value": "month"
+            },
+            {
+              "label": "Year",
+              "value": "year"
+            }
+          ], 
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "National Insurance",
+          "hint": "For example, AB 12 34 56 C",
+          "name": "national-insurance-additional-1"
+        }
+      ]
+    }
+  ]
+}

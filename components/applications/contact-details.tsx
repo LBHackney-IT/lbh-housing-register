@@ -1,12 +1,15 @@
-import { ContactInformation } from "../../domain/resident"
-import Collapsible from "../collapsible"
+import { ContactInformation } from '../../domain/resident';
+import Collapsible from '../collapsible';
 
 interface SummaryProps {
-  heading: string
-  contact: ContactInformation
+  heading: string;
+  contact: ContactInformation;
 }
 
-export default function ContactDetails({ heading, contact }: SummaryProps): JSX.Element {
+export default function ContactDetails({
+  heading,
+  contact,
+}: SummaryProps): JSX.Element {
   return (
     <Collapsible heading={heading}>
       <dl className="govuk-summary-list lbh-summary-list">
@@ -22,5 +25,5 @@ export default function ContactDetails({ heading, contact }: SummaryProps): JSX.
         </div>
       </dl>
     </Collapsible>
-  )
+  );
 }

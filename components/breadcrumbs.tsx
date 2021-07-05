@@ -1,7 +1,7 @@
-import Link from "next/link"
+import Link from 'next/link';
 
 interface BreadcrumbsProps {
-  items: { href: string, name: string }[]
+  items: { href: string; name: string }[];
 }
 
 export default function Breadcrumbs({ items }: BreadcrumbsProps): JSX.Element {
@@ -11,13 +11,11 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps): JSX.Element {
         {items?.map((item, index) => (
           <li key={index} className="govuk-breadcrumbs__list-item">
             <Link href={item.href}>
-              <a className="govuk-breadcrumbs__link">
-                {item.name}
-              </a>
+              <a className="govuk-breadcrumbs__link">{item.name}</a>
             </Link>
           </li>
         ))}
       </ol>
     </div>
-  )
+  );
 }

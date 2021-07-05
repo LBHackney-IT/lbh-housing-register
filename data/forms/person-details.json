@@ -18,13 +18,25 @@
           }
         },
         {
-          "label": "Date of birth",
-          "name": "dateOfBirth",
-          "type": "date",
+          "as": "birthdayinput",
+          "label":"Date of birth",
+          "name": "birthday",
+          "options": [
+            {
+              "label": "Day",
+              "value": "day"
+            },
+            {
+              "label": "Month",
+              "value": "month"
+            },
+            {
+              "label": "Year",
+              "value": "year"
+            }
+          ],
           "validation": {
-            "required": true,
-            "min": "1900-01-01",
-            "max": "2100-01-01"
+            "required": true
           }
         },
         {

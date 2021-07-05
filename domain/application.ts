@@ -1,4 +1,4 @@
-import { Resident } from "./resident";
+import { Resident } from './resident';
 
 export interface ApplicationList {
   results: Array<Application>;
@@ -6,10 +6,10 @@ export interface ApplicationList {
 
 export interface Application {
   id: string;
-  applicant: Resident;
-  otherMembers: Array<Resident>;
   status: string;
   createdAt: string;
+  mainApplicant: Resident;
+  otherMembers: Array<Resident>;
 }
 
 export interface CreateApplicationRequest {

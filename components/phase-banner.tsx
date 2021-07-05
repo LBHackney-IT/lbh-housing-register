@@ -1,4 +1,4 @@
-import Tag from "./tag"
+import Tag from './tag';
 
 export default function PhaseBanner(): JSX.Element {
   return (
@@ -7,9 +7,15 @@ export default function PhaseBanner(): JSX.Element {
         <Tag content="Alpha" className="govuk-phase-banner__content__tag" />
         <span className="govuk-phase-banner__text">
           This is a new tool - it's work in progress. &nbsp;
-          <a href="https://hackney.gov.uk/contact-us" title="Tell us what you think">Tell us what you think</a>, your feedback will help us to improve it.
+          <a
+            href="https://hackney.gov.uk/contact-us"
+            title="Tell us what you think"
+          >
+            Tell us what you think
+          </a>
+          , your feedback will help us to improve it.
         </span>
       </p>
     </div>
-  )
+  );
 }

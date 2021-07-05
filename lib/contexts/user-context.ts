@@ -5,4 +5,4 @@ type UserContext = { user?: User };
 
 export const UserContext = createContext<UserContext>({} as UserContext);
 
-export const useUser = () => useContext(UserContext)
+export const useUser = () => useContext(UserContext);

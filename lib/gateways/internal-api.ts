@@ -12,18 +12,16 @@ export const createApplication = async (applicants: Resident[], status: string =
   try {
     const application = constructApplication(applicants, status)
 
-    const res = await fetch("/api/applications",
-      {
-        method: "POST",
-        body: JSON.stringify(application),
-      }
-    )
+    const res = await fetch('/api/applications', {
+      method: 'POST',
+      body: JSON.stringify(application),
+    });
 
-    return await res.json()
+    return await res.json();
   } catch (err) {
-    throw new Error('Unable to create application')
+    throw new Error('Unable to create application');
   }
-}
+};
 
 /**
  * Update application
@@ -42,6 +40,6 @@ export const updateApplication = async (applicants: Resident[], appicationId: st
     )
     return await res.json()
   } catch (err) {
-    throw new Error('Unable to update application')
+    throw new Error(`This error: ${err}`)
   }
 }

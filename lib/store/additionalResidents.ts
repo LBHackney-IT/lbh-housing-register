@@ -1,9 +1,9 @@
-import { FormData } from "../types/form"
-import { Resident } from "../types/resident"
-import { generateSlug } from "../utils/resident"
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { FormData } from '../types/form';
+import { Resident } from '../types/resident';
+import { generateSlug } from '../utils/resident';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-const initialState: Resident[] = []
+const initialState: Resident[] = [];
 
 const slice = createSlice({
   name: 'additionalResidents',
@@ -15,11 +15,11 @@ const slice = createSlice({
      * @param {PayloadAction<{Resident}>} action The new resident
      * @returns {Resident[]} Updated residents state
      */
-    addResident: (state: Resident[], action: PayloadAction<Resident>): Resident[] => {
-      return [
-        ...state,
-        action.payload
-      ]
+    addResident: (
+      state: Resident[],
+      action: PayloadAction<Resident>
+    ): Resident[] => {
+      return [...state, action.payload];
     },
 
     /**
@@ -28,26 +28,28 @@ const slice = createSlice({
      * @param {PayloadAction<FormData>} action The new resident
      * @returns {Resident[]} Updated residents state
      */
-    addResidentFromFormData: (state: Resident[], action: PayloadAction<FormData>): Resident[] => {
+    addResidentFromFormData: (
+      state: Resident[],
+      action: PayloadAction<FormData>
+    ): Resident[] => {
       const resident: Resident = {
         formData: action.payload,
         name: action.payload.firstName,
-        slug: generateSlug(action.payload.firstName)
-      }
+        slug: generateSlug(action.payload.firstName),
+      };
       resident.formData = {
-        "personal-details": action.payload
-      }
+        'personal-details': action.payload,
+      };
 
       // Prevent duplicates
-      const duplicates = state.filter(item => item.slug.match(new RegExp(`^${resident.slug}|(${resident.slug}_\d+)`)))
+      const duplicates = state.filter((item) =>
+        item.slug.match(new RegExp(`^${resident.slug}|(${resident.slug}_\d+)`))
+      );
       if (duplicates.length > 0) {
-        resident.slug += `_${duplicates.length}`
+        resident.slug += `_${duplicates.length}`;
       }
 
-      return [
-        ...state,
-        resident
-      ]
+      return [...state, resident];
     },
 
     /**
@@ -56,9 +58,14 @@ const slice = createSlice({
      * @param {PayloadAction<Resident>} action The resident we wish to delete
      * @returns {Resident[]} New state with resident removed
      */
-    deleteResident: (state: Resident[], action: PayloadAction<Resident>): Resident[] => {
-      const newState = state.filter(resident => resident.slug != action.payload.slug)
-      return [...newState]
+    deleteResident: (
+      state: Resident[],
+      action: PayloadAction<Resident>
+    ): Resident[] => {
+      const newState = state.filter(
+        (resident) => resident.slug != action.payload.slug
+      );
+      return [...newState];
     },
 
     /**
@@ -67,22 +74,30 @@ const slice = createSlice({
      * @param {PayloadAction<Resident>} action The resident we wish to update
      * @returns {Resident[]} New state with updated resident
      */
-    updateResident: (state: Resident[], action: PayloadAction<Resident>): Resident[] => {
-      let index = 0
-      const newState = [...state]
+    updateResident: (
+      state: Resident[],
+      action: PayloadAction<Resident>
+    ): Resident[] => {
+      let index = 0;
+      const newState = [...state];
 
       newState.forEach((resident, i) => {
         if (resident.slug == action.payload.slug) {
-          index = i
+          index = i;
         }
-      })
+      });
 
-      newState[index] = action.payload
+      newState[index] = action.payload;
 
-      return newState
-    }
-  }
-})
+      return newState;
+    },
+  },
+});
 
-export default slice
-export const { addResident, addResidentFromFormData, deleteResident, updateResident } = slice.actions
+export default slice;
+export const {
+  addResident,
+  addResidentFromFormData,
+  deleteResident,
+  updateResident,
+} = slice.actions;

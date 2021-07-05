@@ -1,18 +1,24 @@
-import { Resident } from "../../domain/resident"
-import Collapsible from "../collapsible"
+import { Resident } from '../../domain/resident';
+import Collapsible from '../collapsible';
 
 interface SummaryProps {
-  heading: string
-  applicant: Resident
+  heading: string;
+  applicant: Resident;
 }
 
-export default function PersonalDetails({ heading, applicant }: SummaryProps): JSX.Element {
+export default function PersonalDetails({
+  heading,
+  applicant,
+}: SummaryProps): JSX.Element {
   return (
     <Collapsible heading={heading}>
       <dl className="govuk-summary-list lbh-summary-list">
         <div className="govuk-summary-list__row">
           <dt className="govuk-summary-list__key">Name</dt>
-          <dd className="govuk-summary-list__value">{applicant.title} {applicant.firstName} {applicant.surname}</dd>
+          <dd className="govuk-summary-list__value">
+            {applicant.person.title} {applicant.person.firstName}{' '}
+            {applicant.person.surname}
+          </dd>
           <dd className="govuk-summary-list__actions">
             <ul className="govuk-summary-list__actions-list">
               <li className="govuk-summary-list__actions-list-item">
@@ -25,20 +31,26 @@ export default function PersonalDetails({ heading, applicant }: SummaryProps): J
         </div>
         <div className="govuk-summary-list__row">
           <dt className="govuk-summary-list__key">Gender</dt>
-          <dd className="govuk-summary-list__value">{applicant.gender}</dd>
+          <dd className="govuk-summary-list__value">
+            {applicant.person.gender}
+          </dd>
           <span className="govuk-summary-list__actions"></span>
         </div>
         <div className="govuk-summary-list__row">
           <dt className="govuk-summary-list__key">Nationality</dt>
-          <dd className="govuk-summary-list__value">{applicant.nationality}</dd>
+          <dd className="govuk-summary-list__value">
+            {applicant.person.nationality}
+          </dd>
           <span className="govuk-summary-list__actions"></span>
         </div>
         <div className="govuk-summary-list__row">
           <dt className="govuk-summary-list__key">Date of birth</dt>
-          <dd className="govuk-summary-list__value">{applicant.dateOfBirth}</dd>
+          <dd className="govuk-summary-list__value">
+            {applicant.person.dateOfBirth}
+          </dd>
           <span className="govuk-summary-list__actions"></span>
         </div>
       </dl>
     </Collapsible>
-  )
+  );
 }

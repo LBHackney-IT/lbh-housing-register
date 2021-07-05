@@ -29,8 +29,8 @@ const slice = createSlice({
     agree: (state: MainResident, action: PayloadAction<boolean>) => {
       return {
         ...state,
-        hasAgreed: action.payload
-      }
+        hasAgreed: action.payload,
+      };
     },
 
     /**
@@ -64,12 +64,15 @@ const slice = createSlice({
      * @param {PayloadAction<string>} action The residents name
      * @returns {MainResident} Updated resident state
      */
-    logIn: (state: MainResident, action: PayloadAction<string>): MainResident => {
+    logIn: (
+      state: MainResident,
+      action: PayloadAction<string>
+    ): MainResident => {
       return {
         ...state,
         username: action.payload,
-        isLoggedIn: true
-      }
+        isLoggedIn: true,
+      };
     },
 
     /**
@@ -77,7 +80,7 @@ const slice = createSlice({
      * @returns {MainResident} Initial resident state
      */
     logOut: (): MainResident => {
-      return initialState
+      return initialState;
     },
 
     /**
@@ -86,21 +89,26 @@ const slice = createSlice({
      * @param {PayloadAction<{[key: string]: FormData}>} action The form data
      * @returns {MainResident} Updated resident state
      */
-    updateFormData: (state: MainResident, action: PayloadAction<{ [key: string]: FormData }>): MainResident => {
+    updateFormData: (
+      state: MainResident,
+      action: PayloadAction<{ [key: string]: FormData }>
+    ): MainResident => {
       state.formData = {
         ...state.formData,
-        ...action.payload
-      }
+        ...action.payload,
+      };
 
-      const eligibility = checkEligible(state.formData)
-      state.isEligible = eligibility[0]
-      state.ineligibilityReasons = eligibility[1]
+      const eligibility = checkEligible(state.formData);
+      state.isEligible = eligibility[0];
+      state.ineligibilityReasons = eligibility[1];
+
+      // Update name to reflect on the main overview page
+      state.name = (state.formData.firstName && state.formData.lastName) ? state.formData.firstName + ' ' + state.formData.lastName : 'You'
 
       return state
     },
 
     startApplication: (state: MainResident, action: PayloadAction<{ [key: string]: FormData }>): any => {
-      console.log('what is payload', action.payload)
       return {
         ...state, 
         applicationId: action.payload

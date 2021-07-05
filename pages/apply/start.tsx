@@ -13,12 +13,12 @@ import { createApplication } from "../../lib/gateways/internal-api"
 import { APPLICATION_STATUS_IN_PROGRESS } from "../../lib/utils/constants"
 
 const ApplicationStartPage = (): JSX.Element => {
-  const router = useRouter()
-  const store = useStore<Store>()
-  const resident = store.getState().resident
+  const router = useRouter();
+  const store = useStore<Store>();
+  const resident = store.getState().resident;
 
   if (resident.isLoggedIn) {
-    router.push("/apply/overview")
+    router.push('/apply/overview');
   }
 
   const signUp = async (values: FormData) => {
@@ -46,14 +46,18 @@ const ApplicationStartPage = (): JSX.Element => {
       // TODO: handle error
       console.log('error signing up:', error);
     }
-  }
+  };
 
   return (
     <Layout>
       <HeadingOne content="Start your application" />
-      <Form formData={getFormData(SIGN_UP_DETAILS)} buttonText="Save and continue" onSubmit={signUp} />
+      <Form
+        formData={getFormData(SIGN_UP_DETAILS)}
+        buttonText="Save and continue"
+        onSubmit={signUp}
+      />
     </Layout>
-  )
-}
+  );
+};
 
-export default whenEligible(ApplicationStartPage)
+export default whenEligible(ApplicationStartPage);

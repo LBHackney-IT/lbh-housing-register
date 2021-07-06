@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
-import { User } from '../../domain/user';
+import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 
-type UserContext = { user?: User };
+type UserContext = { user?: HackneyGoogleUser };
 
 export const UserContext = createContext<UserContext>({} as UserContext);
 

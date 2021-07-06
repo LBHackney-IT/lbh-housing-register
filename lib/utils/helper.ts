@@ -3,7 +3,7 @@ import {
   CreateApplicationRequest,
   Application,
 } from '../../domain/application';
-import { Resident as DomainResident } from '../../domain/resident';
+import { Applicant as DomainResident } from '../../domain/applicant';
 import { Store } from '../store';
 import { MainResident, Resident } from '../types/resident';
 

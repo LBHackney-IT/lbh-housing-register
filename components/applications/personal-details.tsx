@@ -1,9 +1,9 @@
-import { Resident } from '../../domain/resident';
+import { Applicant } from '../../domain/applicant';
 import Collapsible from '../collapsible';
 
 interface SummaryProps {
   heading: string;
-  applicant: Resident;
+  applicant: Applicant;
 }
 
 export default function PersonalDetails({

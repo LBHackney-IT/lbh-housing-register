@@ -6,7 +6,7 @@ import { hasPhaseBanner } from '../../lib/utils/phase-banner';
 import React, { ReactNode } from 'react';
 import { Auth } from 'aws-amplify';
 import { useRouter } from 'next/router';
-import { logOut } from '../../lib/store/resident';
+import { logOut } from '../../lib/store/applicant';
 import { Store } from '../../lib/store';
 import { useStore } from 'react-redux';
 

@@ -6,7 +6,7 @@ import { getFormData, HOUSEHOLD_OVERVIEW } from '../../../lib/utils/form-data';
 import { useRouter } from 'next/router';
 import { Store } from '../../../lib/store';
 import { useStore } from 'react-redux';
-import { updateFormData } from '../../../lib/store/resident';
+import { updateFormData } from '../../../lib/store/applicant';
 
 const HouseHoldPage = (): JSX.Element => {
   const router = useRouter();
@@ -19,9 +19,8 @@ const HouseHoldPage = (): JSX.Element => {
 
   const confirmHouseHoldSize = async (values: FormData) => {
     store.dispatch(updateFormData(values));
-    router.push('/apply/household/people')
+    router.push('/apply/household/people');
   };
-
 
   return (
     <Layout>

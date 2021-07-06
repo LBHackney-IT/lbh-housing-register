@@ -12,10 +12,10 @@ import { getStatusTag } from '../../../lib/utils/tag';
 import OtherMembers from '../../../components/applications/other-members';
 import { getRedirect, getSession } from '../../../lib/utils/auth';
 import { UserContext } from '../../../lib/contexts/user-context';
-import { User } from '../../../domain/user';
+import { HackneyGoogleUser } from '../../../domain/HackneyGoogleUser';
 
 interface PageProps {
-  user: User;
+  user: HackneyGoogleUser;
   data: Application;
 }
 

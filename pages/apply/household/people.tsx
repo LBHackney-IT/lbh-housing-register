@@ -5,8 +5,8 @@ import { getHouseHoldData } from '../../../lib/utils/form-data';
 import { useRouter } from 'next/router';
 import { Store } from '../../../lib/store';
 import { useStore } from 'react-redux';
-import { updateFormData } from '../../../lib/store/resident';
-import { addResidentFromFormData } from '../../../lib/store/additionalResidents';
+import { updateFormData } from '../../../lib/store/applicant';
+import { addResidentFromFormData } from '../../../lib/store/otherMembers';
 
 import { buildValidationSchema } from '../../../lib/utils/validation';
 import { Form as FormikForm, Formik } from 'formik';
@@ -22,12 +22,12 @@ import { HeadingTwo } from '../../../components/content/headings';
 import Paragraph from '../../../components/content/paragraph';
 import DynamicField from '../../../components/form/dynamic-field';
 
-import { extractAdditionalResidentFromData, extractMainResidentFromData } from '../../../lib/utils/helper'
+import {
+  extractAdditionalResidentFromData,
+  extractMainResidentFromData,
+} from '../../../lib/utils/helper';
 
-
-const PeoplePage = ({
-
-}): JSX.Element => {
+const PeoplePage = ({}): JSX.Element => {
   const router = useRouter();
   const store = useStore<Store>();
   const resident = store.getState().resident;
@@ -39,31 +39,35 @@ const PeoplePage = ({
   const className = undefined;
   let exit = false;
   const onExit = false;
-  
-  const countOfPeopleInApplication:any = resident.formData.household || '1';
+
+  const countOfPeopleInApplication: any = resident.formData.household || '1';
 
   const formData = getHouseHoldData(countOfPeopleInApplication);
-  
+
   const [formDataSnapshot] = useState(formData);
   const [stepNumber] = useState(0);
 
-  const [snapshot] = useState(getInitialValuesFromMultiStepForm(formDataSnapshot));
-  
+  const [snapshot] = useState(
+    getInitialValuesFromMultiStepForm(formDataSnapshot)
+  );
+
   const step: any = formDataSnapshot.steps[stepNumber];
-  
 
   const handleSubmission = async (values: FormData) => {
-
     if (countOfPeopleInApplication > 1) {
       const mainResident = extractMainResidentFromData(values);
-      store.dispatch(updateFormData(mainResident))
+      store.dispatch(updateFormData(mainResident));
 
-      const additionalResident = extractAdditionalResidentFromData(values, countOfPeopleInApplication - 1);
+      const additionalResident = extractAdditionalResidentFromData(
+        values,
+        countOfPeopleInApplication - 1
+      );
 
-      for(let x = 1; x <= Object.keys(additionalResident).length; x++) {
-        store.dispatch(addResidentFromFormData(additionalResident[`person${x}`]));
+      for (let x = 1; x <= Object.keys(additionalResident).length; x++) {
+        store.dispatch(
+          addResidentFromFormData(additionalResident[`person${x}`])
+        );
       }
-
     } else {
       store.dispatch(updateFormData(values));
       const resident = store.getState().resident;
@@ -82,17 +86,17 @@ const PeoplePage = ({
         validationSchema={buildValidationSchema(step.fields)}
       >
         {({ isSubmitting, values }) => (
-           <FormikForm>
+          <FormikForm>
             {step.heading && <HeadingTwo content={step.heading} />}
             {step.copy && <Paragraph>{step.copy}</Paragraph>}
             {step.person && <Paragraph>{step.person}</Paragraph>}
 
-              {step.fields.map((field:any, index:any) => {
-                const display: boolean = getDisplayStateOfField(field, values);
-                if (display) {
-                  return <DynamicField key={index} field={field} />
-                }
-              })}
+            {step.fields.map((field: any, index: any) => {
+              const display: boolean = getDisplayStateOfField(field, values);
+              if (display) {
+                return <DynamicField key={index} field={field} />;
+              }
+            })}
 
             <div className="c-flex__1 text-right">
               <Button
@@ -103,7 +107,6 @@ const PeoplePage = ({
                 {'Save and continue'}
               </Button>
             </div>
-
 
             {onExit && (
               <div className="text-right">
@@ -117,7 +120,7 @@ const PeoplePage = ({
                 </Button>
               </div>
             )}
-         </FormikForm>
+          </FormikForm>
         )}
       </Formik>
     </Layout>
@@ -125,5 +128,3 @@ const PeoplePage = ({
 };
 
 export default PeoplePage;
-
-

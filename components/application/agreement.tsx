@@ -1,29 +1,18 @@
 import { HeadingOne } from '../content/headings';
 import Paragraph from '../content/paragraph';
 import Form from '../form/form';
-import { Store } from '../../lib/store';
-import { agree } from '../../lib/store/resident';
+import { agree } from '../../lib/store/applicant';
 import { FormData } from '../../lib/types/form';
 import { AGREEMENT, getFormData } from '../../lib/utils/form-data';
-import { useRouter } from 'next/router';
-import { useStore } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
+import { updateApplication } from '../../lib/store/application';
 
 export default function ApplicationAgreement() {
-  const router = useRouter();
-  const store = useStore<Store>();
-  const resident = store.getState().resident;
+  const dispatch = useAppDispatch();
 
-  const onSubmit = () => {
-    router.push('/apply/overview');
+  const onSave = () => {
+    dispatch(agree(true));
   };
-
-  const onSave = (values: FormData) => {
-    store.dispatch(agree(values.agreement));
-  };
-
-  if (resident.hasAgreed) {
-    onSubmit();
-  }
 
   return (
     <>
@@ -49,7 +38,6 @@ export default function ApplicationAgreement() {
         buttonText="Save and continue"
         formData={getFormData(AGREEMENT)}
         onSave={onSave}
-        onSubmit={onSubmit}
       />
     </>
   );

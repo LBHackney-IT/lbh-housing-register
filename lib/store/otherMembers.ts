@@ -1,26 +1,23 @@
+import { v4 as uuidv4 } from 'uuid';
+
 import { FormData } from '../types/form';
-import { Resident } from '../types/resident';
 import { generateSlug } from '../utils/resident';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { loadApplicaiton } from './application';
-import { extractFormData } from '../utils/helper';
+// import { loadApplicaiton } from './application';
+import { Applicant } from '../../domain/HousingApi';
 
-const initialState: Resident[] = [];
+const initialState: Applicant[] = [];
 
 const slice = createSlice({
-  name: 'additionalResidents',
-  initialState,
+  name: 'otherMembers',
+  initialState: initialState as Applicant[] | undefined,
 
-  extraReducers: (builder) => {
-    builder.addCase(loadApplicaiton.fulfilled, (state, action) => {
-      return action.payload.otherMembers.map<Resident>((resident) => ({
-        name: '',
-        slug: '',
-        formData: extractFormData(resident),
-      }));
-    });
-    builder.addCase(loadApplicaiton.rejected, () => initialState);
-  },
+  // extraReducers: (builder) => {
+  //   builder.addCase(loadApplicaiton.fulfilled, (state, action) => {
+  //     return action.payload.otherMembers;
+  //   });
+  //   builder.addCase(loadApplicaiton.rejected, () => initialState);
+  // },
 
   reducers: {
     /**
@@ -42,28 +39,19 @@ const slice = createSlice({
      * @param {PayloadAction<FormData>} action The new resident
      * @returns {Resident[]} Updated residents state
      */
-    addResidentFromFormData: (
-      state: Resident[],
-      action: PayloadAction<FormData>
-    ): Resident[] => {
-      const resident: Resident = {
-        formData: action.payload,
-        name: action.payload.firstName,
-        slug: generateSlug(action.payload.firstName),
-      };
-      resident.formData = {
-        'personal-details': action.payload,
+    addResidentFromFormData: (state, action: PayloadAction<FormData>) => {
+      const applicant: Applicant = {
+        person: {
+          id: uuidv4(), // TODO generate on the server instead.
+          firstName: action.payload.firstName,
+          surname: action.payload.surname,
+          gender: action.payload.gender,
+          // TODO date of birth needs to be a string.
+          // dateOfBirth: action.payload.birthday,
+        },
       };
 
-      // Prevent duplicates
-      const duplicates = state.filter((item) =>
-        item.slug.match(new RegExp(`^${resident.slug}|(${resident.slug}_\d+)`))
-      );
-      if (duplicates.length > 0) {
-        resident.slug += `_${duplicates.length}`;
-      }
-
-      return [...state, resident];
+      return [...(state || []), applicant];
     },
 
     /**

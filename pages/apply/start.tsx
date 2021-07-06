@@ -1,6 +1,5 @@
 import { HeadingOne } from '../../components/content/headings';
 import Layout from '../../components/layout/resident-layout';
-import whenEligible from '../../lib/hoc/whenEligible';
 import { Auth } from 'aws-amplify';
 import { useRouter } from 'next/router';
 import Form from '../../components/form/form';
@@ -8,7 +7,7 @@ import { FormData } from '../../lib/types/form';
 import { getFormData, SIGN_UP_DETAILS } from '../../lib/utils/form-data';
 import { useStore } from 'react-redux';
 import { Store } from '../../lib/store';
-import { createUser } from '../../lib/store/resident';
+import { createUser } from '../../lib/store/applicant';
 
 export function processPhonenumber(input: string): string {
   const chars = input.match(/[\+0-9]/g);
@@ -69,4 +68,4 @@ const ApplicationStartPage = (): JSX.Element => {
   );
 };
 
-export default whenEligible(ApplicationStartPage);
+export default ApplicationStartPage;

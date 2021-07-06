@@ -1,24 +1,41 @@
-import additionalResidents from './additionalResidents';
-import resident from './resident';
-import { MainResident, Resident } from '../types/resident';
 import { combineReducers } from 'redux';
 import { createWrapper } from 'next-redux-wrapper';
 import { configureStore } from '@reduxjs/toolkit';
 import cognitoUser, { CognitoUserInfo } from './cognitoUser';
+import { Application } from '../../domain/HousingApi';
+import application, { loadApplicaiton, updateApplication } from './application';
 
 export interface Store {
-  additionalResidents: Resident[];
-  resident: MainResident;
+  application: Application;
   cognitoUser: CognitoUserInfo | null;
 }
 
 const reducer = combineReducers<Store>({
-  additionalResidents: additionalResidents.reducer,
-  resident: resident.reducer,
+  application: application.reducer,
   cognitoUser: cognitoUser.reducer,
 });
 
-const makeStore = () => configureStore({ reducer });
+const makeStore = () =>
+  configureStore({
+    reducer,
+    middleware: (getDefaultMiddleware) => [
+      ...getDefaultMiddleware(),
+      (storeAPI) => (next) => (action) => {
+        const previousApplication = storeAPI.getState().application;
+        const newAction = next(action);
+        const newApplication = storeAPI.getState().application;
+
+        if (
+          previousApplication !== newApplication &&
+          !action.type.startsWith(loadApplicaiton.typePrefix)
+        ) {
+          storeAPI.dispatch(updateApplication(newApplication));
+        }
+
+        return newAction;
+      },
+    ],
+  });
 
 export type AppStore = ReturnType<typeof makeStore>;
 export type RootState = ReturnType<AppStore['getState']>;

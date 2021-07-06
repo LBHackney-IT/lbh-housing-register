@@ -19,7 +19,6 @@ import peopleInApplication_6 from '../../data/forms/household/people-in-applicat
 import peopleInApplication_7 from '../../data/forms/household/people-in-application-7.json';
 import addressHistory from '../../data/forms/address-history.json';
 
-
 export const AGREEMENT = 'agreement';
 export const SIGN_IN = 'sign-in';
 export const SIGN_IN_VERIFY = 'sign-in-verify';
@@ -31,7 +30,7 @@ export const YOUR_SITUATION = 'your-situation';
 export const RESIDENTIAL_STATUS = 'residential-status';
 export const HOUSEHOLD_OVERVIEW = 'household-overview';
 export const PEOPLE_IN_APPLICATION = 'people-in-application';
-export const ADDRESS_HISTORY = 'address-history'
+export const ADDRESS_HISTORY = 'address-history';
 
 /**
  * Get the eligibility criteria from the requested form
@@ -82,14 +81,13 @@ export function getFormData(form: string): MultiStepForm {
     case HOUSEHOLD_OVERVIEW:
       return houseHoldOverview;
 
-    case ADDRESS_HISTORY: 
+    case ADDRESS_HISTORY:
       return addressHistory;
 
     default:
-      return testFormData;
+      throw new Error('Unknown form step: ' + form);
   }
 }
-
 
 export function getHouseHoldData(form: any): any {
   switch (parseInt(form)) {

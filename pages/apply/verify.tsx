@@ -1,6 +1,6 @@
 import { HeadingOne } from '../../components/content/headings';
 import Layout from '../../components/layout/resident-layout';
-import whenEligible from '../../lib/hoc/whenEligible';
+
 import Paragraph from '../../components/content/paragraph';
 import { Auth } from 'aws-amplify';
 import Form from '../../components/form/form';
@@ -10,7 +10,7 @@ import { getFormData, SIGN_IN_VERIFY } from '../../lib/utils/form-data';
 import { useRouter } from 'next/router';
 import { Store } from '../../lib/store';
 import { useStore } from 'react-redux';
-import { logIn } from '../../lib/store/resident';
+import { logIn } from '../../lib/store/applicant';
 
 const ApplicationVerifyPage = (): JSX.Element => {
   const router = useRouter();
@@ -21,7 +21,6 @@ const ApplicationVerifyPage = (): JSX.Element => {
   if (resident.isLoggedIn) {
     // router.push('/apply/overview');
     router.push('/apply/household');
-
   }
 
   const providedUsername: FormData = {
@@ -39,7 +38,6 @@ const ApplicationVerifyPage = (): JSX.Element => {
       store.dispatch(logIn(values.email));
       // router.push('/apply/overview');
       router.push('/apply/household');
-
     } catch (error) {
       console.log('error confirming sign up', error);
     }
@@ -81,4 +79,4 @@ const ApplicationVerifyPage = (): JSX.Element => {
   );
 };
 
-export default whenEligible(ApplicationVerifyPage);
+export default ApplicationVerifyPage;

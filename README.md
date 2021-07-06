@@ -132,5 +132,4 @@ This has been extended to be used in a more generic way, which means forms can b
 
 [Higher order components](https://reactjs.org/docs/higher-order-components.html) are used to wrap existing components with some logic about the current application, allowing for code re-use.
 
-- `whenEligible` - ensure that the applicant is eligible for completing an application
 - `whenAgreed` - ensure that the applicant has agreed to the terms and conditions

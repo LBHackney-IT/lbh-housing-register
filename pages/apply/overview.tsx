@@ -10,24 +10,25 @@ import SummaryList, {
 } from '../../components/summary-list';
 import Tag from '../../components/tag';
 import whenAgreed from '../../lib/hoc/whenAgreed';
-import whenEligible from '../../lib/hoc/whenEligible';
-import { Store } from '../../lib/store';
-import { MAIN_RESIDENT_KEY } from '../../lib/store/resident';
 import { applicationStepsRemaining } from '../../lib/utils/resident';
 import Link from 'next/link';
-import { useStore } from 'react-redux';
 import { useRouter } from 'next/router';
-import { createApplication } from '../../lib/gateways/internal-api';
+import { useAppSelector } from '../../lib/store/hooks';
+import { Applicant } from '../../domain/HousingApi';
+import { applicantIsEligible } from '../../lib/store/applicant';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
   const router = useRouter();
-  const store = useStore<Store>();
-  const applicants = [
-    store.getState().resident,
-    ...store.getState().additionalResidents,
-  ];
 
-  console.log('applicants', applicants)
+  const applicants = useAppSelector((store) =>
+    [store.application.mainApplicant, store.application.otherMembers]
+      .filter((v): v is Applicant | Applicant[] => v !== undefined)
+      .flat()
+  );
+  const mainApplicant = useAppSelector(
+    (store) => store.application.mainApplicant
+  );
+
   const breadcrumbs = [
     {
       href: '/apply/overview',
@@ -35,24 +36,16 @@ const ApplicationPersonsOverview = (): JSX.Element => {
     },
   ];
 
-  const handleSubmit = async (): Promise<void> => {
-    try {
-      const data = await createApplication(applicants);
-      console.log(data);
-    } catch (err) {
-      console.log(err);
-      // TODO: handle error
-    }
-    router.push('/apply/confirmation');
-  };
-
   return (
     <Layout breadcrumbs={breadcrumbs}>
       <HeadingOne content="My household" />
 
       <SummaryList>
-        {applicants.map((resident, index) => {
-          const tasksRemaining = applicationStepsRemaining(resident);
+        {applicants.map((applicant, index) => {
+          const tasksRemaining = applicationStepsRemaining(
+            applicant,
+            applicant === mainApplicant
+          );
 
           return (
             <Row key={index} verticalAlign="middle">
@@ -61,17 +54,18 @@ const ApplicationPersonsOverview = (): JSX.Element => {
                   <Hint
                     content={
                       `Person ${index + 1}` +
-                      (applicants.length > 1 &&
-                      resident.slug == MAIN_RESIDENT_KEY
+                      (applicants.length > 1 && applicant === mainApplicant
                         ? ' (you)'
                         : '')
                     }
                   />
-                  <Link href={`/apply/${resident.slug}`}>{resident.name}</Link>
+                  <Link href={`/apply/${applicant.person?.id}`}>
+                    {`${applicant.person?.firstName} ${applicant.person?.surname}`}
+                  </Link>
                 </>
               </Key>
               <Actions>
-                {resident.isEligible === false ? (
+                {!applicantIsEligible(applicant) ? (
                   <Tag content="Not eligible" variant="red" />
                 ) : tasksRemaining == 0 ? (
                   <Tag content="Completed" variant="green" />
@@ -93,17 +87,18 @@ const ApplicationPersonsOverview = (): JSX.Element => {
       </ButtonLink>
 
       {applicants.every(
-        (resident) => applicationStepsRemaining(resident) == 0
+        (applicant) =>
+          applicationStepsRemaining(applicant, applicant === mainApplicant) == 0
       ) && (
         <>
           <Paragraph>
             The button below only shows when all tasks are complete.
           </Paragraph>
-          <Button onClick={handleSubmit}>Submit application</Button>
+          <Button>Submit application</Button>
         </>
       )}
     </Layout>
   );
 };
 
-export default whenAgreed(whenEligible(ApplicationPersonsOverview));
+export default whenAgreed(ApplicationPersonsOverview);

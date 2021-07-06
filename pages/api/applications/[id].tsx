@@ -4,7 +4,6 @@ import {
   getApplication,
   updateApplication,
 } from '../../../lib/gateways/applications-api';
-import AccessDeniedPage from '../../access-denied';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -24,8 +23,10 @@ const endpoint: NextApiHandler = async (
         const application = JSON.parse(req.body);
         const id = req.query.id as string;
         const data = await updateApplication(application, id);
+        console.log(data);
         res.status(StatusCodes.OK).json(data);
       } catch (error) {
+        console.error(error);
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
           .json({ message: 'Unable to update application' });

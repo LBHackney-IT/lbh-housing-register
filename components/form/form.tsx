@@ -49,7 +49,6 @@ export default function Form({
   const totalSteps: number = formDataSnapshot.steps.length;
   const isLastStep: boolean = stepNumber === totalSteps - 1;
 
-  console.log('step', step)
 
   const next = (values: FormData): void => {
     // TODO: Scroll to top + set focus to first field

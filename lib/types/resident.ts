@@ -1,11 +1,12 @@
 import { FormData } from './form';
 
 export interface Resident {
-  formData: { [key: string]: FormData };
-  ineligibilityReasons?: string[];
-  isEligible?: boolean;
-  name: string;
-  slug: string;
+  formData: { [key: string]: FormData }
+  ineligibilityReasons?: string[]
+  isEligible?: boolean
+  name: string
+  slug: string
+  applicationId?: string
 }
 
 export interface MainResident extends Resident {

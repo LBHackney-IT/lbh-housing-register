@@ -5,16 +5,17 @@ import { createStore, combineReducers } from 'redux';
 import { createWrapper, Context } from 'next-redux-wrapper';
 
 export interface Store {
-  additionalResidents: Resident[];
-  resident: MainResident;
+  applicationId: string
+  resident: MainResident
+  additionalResidents: Resident[]
 }
 
 const reducer = combineReducers({
-  additionalResidents: additionalResidents.reducer,
   resident: resident.reducer,
-});
+  additionalResidents: additionalResidents.reducer
+})
 
 // Store function
-const store = (context: Context) => createStore(reducer);
-export const wrapper = createWrapper(store);
-export default store;
+const store = (context: Context) => createStore(reducer)
+export const wrapper = createWrapper(store)
+export default store

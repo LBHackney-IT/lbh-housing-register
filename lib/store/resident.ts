@@ -1,17 +1,20 @@
-import { checkEligible } from '../utils/form';
-import { MainResident } from '../types/resident';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { checkEligible } from "../utils/form"
+import { MainResident } from "../types/resident"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { generateSlug } from "../utils/resident"
+import { MAIN_RESIDENT_KEY } from "../utils/constants"
+import ApplicationAgreement from "../../components/application/agreement"
 
-export const MAIN_RESIDENT_KEY = 'you'; // Why is this the main resident key?
 
 const initialState: MainResident = {
   hasAgreed: false,
   formData: {},
   isLoggedIn: false,
-  username: '',
-  name: 'You',
+  username: "",
+  name: "You",
   slug: MAIN_RESIDENT_KEY,
-};
+  applicationId: ""
+}
 
 const slice = createSlice({
   name: 'resident',
@@ -36,14 +39,23 @@ const slice = createSlice({
      * @param {PayloadAction<string>} action The residents name
      * @returns {MainResident} Updated resident state
      */
-    createUser: (
-      state: MainResident,
-      action: PayloadAction<string>
-    ): MainResident => {
+    createUser: (state: MainResident, action: any): any => {
+      const resident: MainResident = {
+        hasAgreed: false,
+        isLoggedIn: false,
+        username: action.payload.emailAddress, 
+        formData: {
+          "personal-details": action.payload
+        },
+        name: action.payload.firstName,
+        slug: generateSlug(action.payload.firstName)
+      }
+
       return {
         ...state,
-        username: action.payload,
-      };
+        username: action.payload.emailAddress, 
+        formData: resident
+      }
     },
 
     /**
@@ -93,11 +105,17 @@ const slice = createSlice({
       // Update name to reflect on the main overview page
       state.name = (state.formData.firstName && state.formData.lastName) ? state.formData.firstName + ' ' + state.formData.lastName : 'You'
 
-      return state;
+      return state
+    },
+
+    startApplication: (state: MainResident, action: PayloadAction<{ [key: string]: FormData }>): any => {
+      return {
+        ...state, 
+        applicationId: action.payload
+      }
     },
   },
-});
+})
 
-export default slice;
-export const { agree, createUser, logIn, logOut, updateFormData } =
-  slice.actions;
+export default slice
+export const { agree, createUser, logIn, logOut, updateFormData, startApplication } = slice.actions

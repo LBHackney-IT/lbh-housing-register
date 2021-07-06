@@ -1,9 +1,9 @@
 import { CreateApplicationRequest } from '../../domain/application';
 import { Resident } from '../types/resident';
 
-export const constructApplication = (applicants: Resident[]) => {
-  const personal = applicants[0].formData['personal-details'];
-  const address = applicants[0].formData['address-details'];
+export const constructApplication = (applicants: Resident[], status: string) => {
+  const personal = applicants[0].formData["personal-details"]
+  const address = applicants[0].formData["address-details"]
   const contactInformation = {
     emailAddress: applicants[0].formData[''],
     phoneNumber: '',

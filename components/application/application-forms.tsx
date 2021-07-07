@@ -26,6 +26,7 @@ import { lookUpAddress } from '../../lib/gateways/internal-api';
 import AddressSelector from '../../components/form/selectaddress';
 import ShowAddress from '../../components/form/showaddress';
 import dataInput from '../../data/forms/date-input.json';
+import { getResident } from '../../lib/utils/resident';
 
 
 interface ApplicationFormsProps {
@@ -54,6 +55,10 @@ export default function ApplicationForms({
 }: ApplicationFormsProps): JSX.Element {
   const router = useRouter();
   const store = useStore<Store>();
+  let thisResident = router.query.resident;
+  thisResident = thisResident as string;
+  const currentResident = getResident(thisResident, store.getState());
+
   const [applicationData, setApplicationData] = useState({});
 
   const [spinner, setSpinner] = useState(false);
@@ -70,14 +75,6 @@ export default function ApplicationForms({
   const [timeAtAddressYears, setTimeAtAddressYears] = useState({});
 
   const [disableSubmitButton, setDisableButton] = useState(true);
-
-
-
-  //TODO: DISPLAY ALL ON ONE SCREEN:
-  //      1. Show only postcode input field - done
-  //      2. As soon as API returns addresses also display time-at-address input field - done
-  //      3. As soon as address and duration at current address is selected display it and show postcode input field with 'PREVIOUS ADDRESS' as title
-  //      4. Rinse and repeat until 5 year mark has been covered then show summary without any input fields, enable submit button again
 
 
 
@@ -129,9 +126,16 @@ export default function ApplicationForms({
       name === 'years' ? setTimeAtAddressYears({'years': value}) : setTimeAtAddressMonths({'months': value})
     }
 
-
     const calculateTotalStay = () => {
-      // If time is equal to 5 years or more then enable submit button
+      // calculate total stay at all addresses combined
+    }
+
+    const etiquette = () => {
+      let addressBy = 'Do'
+      if (currentResident?.slug !== 'you') {
+        addressBy = 'Does'
+      }
+      return addressBy;
     }
 
     return (
@@ -139,6 +143,9 @@ export default function ApplicationForms({
         {formSteps.map((step, index) => {
           if (step == activeStep) {
             const formData = getFormData(step);
+            if (formData['heading']?.includes("Medical Needs") || formData['heading']?.includes("medical needs")) {
+              formData['heading'] = `${etiquette()} ${currentResident?.slug} have any significant medical needs that affect your housing requirements?`
+            }
             if(showInputField && formData['heading'] === 'Address history' && formData['steps'][0]['fields'].length === 1) {
               formData['steps'][0]['fields'].push(dataInput)
             }
@@ -160,7 +167,7 @@ export default function ApplicationForms({
                   onSubmit={next}
                   onAddressLookup={onAddressLookup}
                   timeAtAddress={timeAtAddress}
-                  disableSubmit={disableSubmitButton}
+                  activeStep={activeStep}
                   residentsPreviousAnswers={residentsPreviousAnswers}
                 />
 

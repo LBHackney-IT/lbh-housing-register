@@ -10,6 +10,7 @@ import { buildValidationSchema } from '../../lib/utils/validation';
 import { Form as FormikForm, Formik } from 'formik';
 import { useState } from 'react';
 import Paragraph from '../content/paragraph';
+import Announcement from '../../components/announcement';
 
 
 interface FormProps {
@@ -21,7 +22,7 @@ interface FormProps {
   residentsPreviousAnswers?: FormData;
   onAddressLookup?: any;
   timeAtAddress?: any;
-  disableSubmit?: boolean;
+  activeStep?: string;
 }
 
 export default function Form({
@@ -33,7 +34,7 @@ export default function Form({
   residentsPreviousAnswers,
   onAddressLookup,
   timeAtAddress,
-  disableSubmit,
+  activeStep,
 }: FormProps): JSX.Element {
   const [formDataSnapshot] = useState(formData);
   const [stepNumber, setStepNumber] = useState(0);
@@ -97,6 +98,14 @@ export default function Form({
                   return <DynamicField key={index} field={field} onAddressLookup={onAddressLookup} timeAtAddress={timeAtAddress} handleChange={handleChange} />
                 }
               })}
+
+              {(values['medical-needs'] === 'yes' && activeStep === 'medical-needs') && 
+                <Announcement variant="success">
+                  <h3 className="lbh-heading-h3">You will need to complete a separate medical form</h3>
+                  <p className="lbh-body-m">After you have submitted this application, you will be asked to provide detailed information about your medical needs in a separate form.</p>
+                </Announcement>
+              }
+              
 
             <div className="c-flex lbh-simple-pagination">
               {stepNumber > 0 && (

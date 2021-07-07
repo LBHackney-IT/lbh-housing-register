@@ -22,7 +22,7 @@ interface FormProps {
   residentsPreviousAnswers?: FormData;
   onAddressLookup?: any;
   timeAtAddress?: any;
-  activeStep: string;
+  activeStep?: string;
 }
 
 export default function Form({
@@ -110,6 +110,13 @@ export default function Form({
                 </ul>
               </Announcement>
             }
+              {(values['medical-needs'] === 'yes' && activeStep === 'medical-needs') && 
+                <Announcement variant="success">
+                  <h3 className="lbh-heading-h3">You will need to complete a separate medical form</h3>
+                  <p className="lbh-body-m">After you have submitted this application, you will be asked to provide detailed information about your medical needs in a separate form.</p>
+                </Announcement>
+              }
+              
 
             <div className="c-flex lbh-simple-pagination">
               {stepNumber > 0 && (

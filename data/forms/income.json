@@ -14,6 +14,7 @@
         {
           "as": "radios",
           "name": "income",
+          "label": "",
           "subheading": "Include all employment and benefits received from everyone in your household, and any other income",
           "options": [
             {

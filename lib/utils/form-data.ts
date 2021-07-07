@@ -18,6 +18,7 @@ import peopleInApplication_5 from '../../data/forms/household/people-in-applicat
 import peopleInApplication_6 from '../../data/forms/household/people-in-application-6.json';
 import peopleInApplication_7 from '../../data/forms/household/people-in-application-7.json';
 import addressHistory from '../../data/forms/address-history.json';
+import incomeSavings from '../../data/forms/income.json';
 import medicalNeeds from '../../data/forms/medical-needs.json';
 
 
@@ -33,6 +34,7 @@ export const RESIDENTIAL_STATUS = 'residential-status';
 export const HOUSEHOLD_OVERVIEW = 'household-overview';
 export const PEOPLE_IN_APPLICATION = 'people-in-application';
 export const ADDRESS_HISTORY = 'address-history';
+export const INCOME_SAVINGS = 'income-savings';
 export const MEDICAL_NEEDS = 'medical-needs';
 
 /**
@@ -87,6 +89,9 @@ export function getFormData(form: string): MultiStepForm {
     case ADDRESS_HISTORY: 
       return addressHistory;
 
+    case INCOME_SAVINGS:
+      return incomeSavings;
+      
     case MEDICAL_NEEDS:
       return medicalNeeds;
 

@@ -14,6 +14,7 @@ import {
   YOUR_SITUATION,
   RESIDENTIAL_STATUS,
   ADDRESS_HISTORY,
+  INCOME_SAVINGS,
   MEDICAL_NEEDS,
 } from './form-data';
 import { checkEligible } from './form';
@@ -112,6 +113,15 @@ export const getApplicationStepsForResident = (
           {
             heading: 'Current accommodation',
             id: ADDRESS_DETAILS,
+          },
+        ],
+      },
+      {
+        heading: 'Money',
+        steps: [
+          {
+            heading: 'Income & savings',
+            id: INCOME_SAVINGS,
           },
         ],
       },

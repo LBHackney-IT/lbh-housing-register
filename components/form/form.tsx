@@ -36,6 +36,7 @@ export default function Form({
   timeAtAddress,
   activeStep,
 }: FormProps): JSX.Element {
+  console.log('what is formData', formData)
   const [formDataSnapshot] = useState(formData);
   const [stepNumber, setStepNumber] = useState(0);
   const [snapshot, setSnapshot] = useState(
@@ -99,6 +100,16 @@ export default function Form({
                 }
               })}
 
+            {activeStep === 'income-savings' && 
+              <Announcement variant="success" >
+                <h3 className="lbh-heading-h3">Proof of income and savings required</h3>
+                <p className="lbh-body-m">Before submitting your application, you will be asked to upload the following:</p>
+                <ul className="lbh-list lbh-list--bullet">
+                  <li className="lbh-body-m">Bank statements covering the last two months for every account held by each working adult in your household</li>
+                  <li className="lbh-body-m">Last two months' payslips for all working adults in your household</li>
+                </ul>
+              </Announcement>
+            }
               {(values['medical-needs'] === 'yes' && activeStep === 'medical-needs') && 
                 <Announcement variant="success">
                   <h3 className="lbh-heading-h3">You will need to complete a separate medical form</h3>

@@ -90,7 +90,6 @@ export default function ApplicationForms({
     };
 
     const onSave = (values: FormData) => {
-      // This is how data is saved to store
       const data: { [key: string]: FormData } = { ...applicationData };
       data[activeStep!] = values;
 
@@ -158,6 +157,7 @@ export default function ApplicationForms({
                 {activeStep === 'address-history' && <Details />}
                 {currentAddress && activeStep === 'address-history' && <ShowAddress currentAddress={currentAddress} duration={[timeAtAddressYears, timeAtAddressMonths]} />}
                 {addresses && <AddressSelector addresses={addresses} addressSelectorHandler={addressSelectorHandler} /> }
+
 
                 <Form
                   buttonText="Save and continue"

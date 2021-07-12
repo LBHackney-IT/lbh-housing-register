@@ -8,7 +8,7 @@ import {
 } from '../../lib/utils/form';
 import { buildValidationSchema } from '../../lib/utils/validation';
 import { Form as FormikForm, Formik, FormikValues } from 'formik';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import Paragraph from '../content/paragraph';
 
 interface FormProps {
@@ -34,7 +34,6 @@ export default function Form({
   timeAtAddress,
   disableSubmit,
 }: FormProps): JSX.Element {
-  // TODO shouldn't initialValues be dependent on the step?
   const calculatedInitialValues = useMemo(
     () => initialValues || getInitialValuesFromMultiStepForm(formData),
     [initialValues, formData]
@@ -44,6 +43,8 @@ export default function Form({
   const step = formData.steps[stepNumber];
   const totalSteps = formData.steps.length;
   const isLastStep = stepNumber === totalSteps - 1;
+
+  const submitButtonRef = useRef<'submit' | 'submitExit'>();
 
   const next = () => {
     // TODO: Scroll to top + set focus to first field
@@ -56,6 +57,7 @@ export default function Form({
   };
 
   const handleSubmit = async (values: FormData, bag: any) => {
+    // TODO Do we need on save and on submit?
     if (onSave) {
       onSave && onSave(values);
     }
@@ -65,10 +67,10 @@ export default function Form({
         onSubmit(values, bag);
       }
 
-      if (exit && onExit) {
+      if (onExit && submitButtonRef.current === 'submitExit') {
         onExit();
       }
-    } else if (exit && onExit) {
+    } else if (onExit && submitButtonRef.current === 'submitExit') {
       onExit();
     } else {
       bag.setTouched({});
@@ -97,7 +99,7 @@ export default function Form({
                     field={field}
                     onAddressLookup={onAddressLookup}
                     timeAtAddress={timeAtAddress}
-                    handleChange={handleChange}
+                    handleChange={handleChange} // todo what's this for?
                   />
                 );
               }
@@ -107,7 +109,7 @@ export default function Form({
               {stepNumber > 0 && (
                 <div className="c-flex__1">
                   <Button
-                    onClick={() => previous(values)}
+                    onClick={() => previous()}
                     secondary={true}
                     type="button"
                   >
@@ -118,7 +120,9 @@ export default function Form({
 
               <div className="c-flex__1 text-right">
                 <Button
-                  onClick={() => (exit = false)}
+                  onClick={() => {
+                    submitButtonRef.current = 'submit';
+                  }}
                   disabled={disableSubmit}
                   type="submit"
                 >
@@ -130,7 +134,9 @@ export default function Form({
             {onExit && (
               <div className="text-right">
                 <Button
-                  onClick={() => (exit = true)}
+                  onClick={() => {
+                    submitButtonRef.current = 'submitExit';
+                  }}
                   disabled={isSubmitting || isSubmitting}
                   type="submit"
                   secondary={true}

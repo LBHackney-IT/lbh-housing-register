@@ -81,6 +81,8 @@ export default function Form({
   return (
     <>
       <Formik
+        // If you notice that initial values aren't working then it's probably because of the way that _app is loading state incrementally through multiple renders.
+        // A loading screen that waited for initial state to be avaialble would do the trick.
         initialValues={calculatedInitialValues}
         onSubmit={handleSubmit}
         validationSchema={buildValidationSchema(step.fields)}

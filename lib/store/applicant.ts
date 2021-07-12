@@ -1,7 +1,9 @@
 import { checkEligible } from '../utils/form';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Store } from '.';
-import { Applicant } from '../../domain/HousingApi';
+import { Applicant, Question } from '../../domain/HousingApi';
+import { FormikValues } from 'formik';
+import { a } from '@aws-amplify/ui';
 
 const initialState: Applicant = {};
 
@@ -20,38 +22,31 @@ const slice = createSlice({
       ],
     }),
 
-    /**
-     * Update resident's form data
-     */
-    updateFormData: (
-      state,
-      action: PayloadAction<{ [key: string]: FormData }>
-    ) => {
-      state.formData = {
-        ...state.formData,
-        ...action.payload,
-      };
-
-      const eligibility = checkEligible(state.formData);
-      state.isEligible = eligibility[0];
-      state.ineligibilityReasons = eligibility[1];
-
-      // Update name to reflect on the main overview page
-      state.name =
-        state.formData.firstName && state.formData.lastName
-          ? state.formData.firstName + ' ' + state.formData.lastName
-          : 'You';
-
-      return state;
-    },
+    // TODO how do we tell which applicant we'll be updating? We should maybe rename "applicant" to "mainApplicant"?
+    // TODO This function is going to get long, procedural, and will directly relate to mapApplicantToValues.
+    updateWithFormValues: (
+      applicant,
+      action: PayloadAction<{ activeStepId: string; values: FormikValues }>
+    ) => ({
+      ...(applicant || {}),
+      questions: [
+        ...(applicant?.questions?.filter(
+          (question) =>
+            !question.id?.startsWith(`${action.payload.activeStepId}/`)
+        ) || []),
+        ...Object.entries(action.payload.values).map(([id, answer]) => ({
+          id: `${action.payload.activeStepId}/${id}`,
+          answer,
+        })),
+      ],
+    }),
   },
 });
 
-export function applicantIsEligible(applicant: Applicant) {
-  // TODO
-  // checkEligible()
-  return true;
-}
+export const selectIsEligible = createSelector(
+  [(store: Store) => store.application.mainApplicant],
+  (application) => application && checkEligible(application)
+);
 
 export function selectHasAgreed(store: Store) {
   return (
@@ -62,4 +57,4 @@ export function selectHasAgreed(store: Store) {
 }
 
 export default slice;
-export const { agree, updateFormData } = slice.actions;
+export const { agree, updateWithFormValues } = slice.actions;

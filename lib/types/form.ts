@@ -1,3 +1,5 @@
+import { FormikValues } from 'formik';
+
 export type EligibilityCriteria = {
   field: string;
   is?: string;
@@ -5,9 +7,8 @@ export type EligibilityCriteria = {
   reasoning?: string;
 };
 
-export type FormData = {
-  [key: string]: any;
-};
+// @Deprecated
+export type FormData = FormikValues;
 
 export type FormField = {
   as?: string;

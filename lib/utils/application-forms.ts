@@ -60,6 +60,9 @@ export function mapApplicantToValues(
   return Object.fromEntries(
     (applicant.questions ?? [])
       .filter((question) => question.id?.startsWith(`${stepId}/`))
-      .map((question) => [question.id || '', question.answer || ''])
+      .map((question) => [
+        (question.id || '').slice(`${stepId}/`.length),
+        JSON.parse(question.answer || 'null'),
+      ])
   );
 }

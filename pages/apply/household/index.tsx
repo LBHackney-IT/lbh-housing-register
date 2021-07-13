@@ -1,24 +1,18 @@
+import { FormikValues } from 'formik';
 import { useRouter } from 'next/router';
-import { useStore } from 'react-redux';
 import { HeadingOne } from '../../../components/content/headings';
 import Form from '../../../components/form/form';
 import Layout from '../../../components/layout/resident-layout';
-import { Store } from '../../../lib/store';
-import { updateFormData } from '../../../lib/store/applicant';
-import { FormData } from '../../../lib/types/form';
+import { updateWithFormValues } from '../../../lib/store/applicant';
+import { useAppDispatch } from '../../../lib/store/hooks';
 import { getFormData, HOUSEHOLD_OVERVIEW } from '../../../lib/utils/form-data';
 
 const HouseHoldPage = (): JSX.Element => {
   const router = useRouter();
-  const store = useStore<Store>();
-  const resident = store.getState().resident;
+  const dispatch = useAppDispatch();
 
-  const providedUsername: FormData = {
-    email: resident.username,
-  };
-
-  const confirmHouseHoldSize = async (values: FormData) => {
-    store.dispatch(updateFormData(values));
+  const confirmHouseHoldSize = async (values: FormikValues) => {
+    dispatch(updateWithFormValues({activeStepId: HOUSEHOLD_OVERVIEW, values}));
     router.push('/apply/household/people');
   };
 
@@ -28,7 +22,6 @@ const HouseHoldPage = (): JSX.Element => {
 
       <Form
         formData={getFormData(HOUSEHOLD_OVERVIEW)}
-        residentsPreviousAnswers={providedUsername}
         buttonText="Continue"
         onSubmit={confirmHouseHoldSize}
       />

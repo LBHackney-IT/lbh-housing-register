@@ -1,4 +1,3 @@
-import { checkEligible } from '../utils/form';
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Store } from '.';
 import { Applicant, Question } from '../../domain/HousingApi';
@@ -41,11 +40,6 @@ const slice = createSlice({
     }),
   },
 });
-
-export const selectIsEligible = createSelector(
-  [(store: Store) => store.application.mainApplicant],
-  (application) => application && checkEligible(application)
-);
 
 export function selectHasAgreed(store: Store) {
   return (

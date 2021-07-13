@@ -15,7 +15,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAppSelector } from '../../lib/store/hooks';
 import { Applicant } from '../../domain/HousingApi';
-import { applicantIsEligible } from '../../lib/store/applicant';
+
+import { useMemo } from 'react';
+import { checkEligible } from '../../lib/utils/form';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
   const router = useRouter();
@@ -25,6 +27,14 @@ const ApplicationPersonsOverview = (): JSX.Element => {
       .filter((v): v is Applicant | Applicant[] => v !== undefined)
       .flat()
   );
+  const eligibilityMap = useMemo(
+    () =>
+      new Map(
+        applicants.map((applicant) => [applicant, checkEligible(applicant)[0]])
+      ),
+    [applicants]
+  );
+
   const mainApplicant = useAppSelector(
     (store) => store.application.mainApplicant
   );
@@ -65,7 +75,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
                 </>
               </Key>
               <Actions>
-                {!applicantIsEligible(applicant) ? (
+                {!eligibilityMap.get(applicant) ? (
                   <Tag content="Not eligible" variant="red" />
                 ) : tasksRemaining == 0 ? (
                   <Tag content="Completed" variant="green" />

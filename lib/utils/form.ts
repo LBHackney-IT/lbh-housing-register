@@ -1,5 +1,6 @@
 import { getEligibilityCriteria } from './form-data';
 import { FormData, FormField, MultiStepForm } from '../types/form';
+import { Applicant, Application } from '../../domain/HousingApi';
 
 /**
  * Determines if the field should be displayed based on the values passed in
@@ -65,38 +66,37 @@ export function getInitialValuesFromMultiStepForm(
  * @param formData The multi form data
  * @returns {[boolean, string[]]} - A tuple of state (isValid) and error message
  */
-export function checkEligible(formData: {
-  [key: string]: FormData;
-}): [boolean, string[]] {
-  let isValid = true;
-  let reasons: string[] = [];
+export function checkEligible(application: Applicant): [boolean, string[]] {
+  return [true, []];
+  // let isValid = true;
+  // let reasons: string[] = [];
 
-  const setInvalid = (reasoning?: string): void => {
-    isValid = false;
+  // const setInvalid = (reasoning?: string): void => {
+  //   isValid = false;
 
-    if (reasoning) {
-      reasons.push(reasoning);
-    }
-  };
+  //   if (reasoning) {
+  //     reasons.push(reasoning);
+  //   }
+  // };
 
-  for (const [form, values] of Object.entries(formData)) {
-    const eligibilityCriteria = getEligibilityCriteria(form);
-    eligibilityCriteria?.forEach((criteria) => {
-      const fieldValue = values[criteria.field];
+  // for (const [form, values] of Object.entries(formData)) {
+  //   const eligibilityCriteria = getEligibilityCriteria(form);
+  //   eligibilityCriteria?.forEach((criteria) => {
+  //     const fieldValue = values[criteria.field];
 
-      if (Array.isArray(fieldValue) && fieldValue.indexOf(criteria.is) !== -1) {
-        setInvalid(criteria.reasoning);
-      }
+  //     if (Array.isArray(fieldValue) && fieldValue.indexOf(criteria.is) !== -1) {
+  //       setInvalid(criteria.reasoning);
+  //     }
 
-      if (criteria.is && criteria.is === fieldValue) {
-        setInvalid(criteria.reasoning);
-      }
+  //     if (criteria.is && criteria.is === fieldValue) {
+  //       setInvalid(criteria.reasoning);
+  //     }
 
-      if (criteria.isNot && criteria.isNot === fieldValue) {
-        setInvalid(criteria.reasoning);
-      }
-    });
-  }
+  //     if (criteria.isNot && criteria.isNot === fieldValue) {
+  //       setInvalid(criteria.reasoning);
+  //     }
+  //   });
+  // }
 
-  return [isValid, reasons];
+  // return [isValid, reasons];
 }

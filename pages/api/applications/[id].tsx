@@ -15,13 +15,17 @@ const endpoint: NextApiHandler = async (
   switch (req.method) {
     case 'GET': {
       try {
-        CognitoAuthentication(req, res);
+        const validRequest = await CognitoAuthentication(req, res);
+        const id = req.query.id as string;
 
-        if (res === StatusCodes.UNAUTHORIZED) {
-          throw new Error(res.statusMessage);
+        if (!validRequest || validRequest.applicationId !== id) {
+          res
+            .status(StatusCodes.FORBIDDEN)
+            .json({ message: 'Unable to verify credentails' });
+
+          return;
         }
 
-        const id = req.query.id as string;
         const data = await getApplication(id);
         res.status(StatusCodes.OK).json(data);
       } catch (error) {

@@ -3,12 +3,17 @@ import { StatusCodes } from 'http-status-codes';
 
 //https://stackoverflow.com/questions/60958980/how-to-verify-accesstoken-in-node-express-using-aws-amplify
 
+export interface AWSUserData {
+  applicationId: string;
+}
+
 const COGNITO_URL = `https://cognito-idp.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/`;
 
-const CognitoAuthentication = async (req: any, res: any) => {
+const CognitoAuthentication = async (
+  req: any,
+  res: any
+): Promise<AWSUserData | false> => {
   try {
-    console.log('cognito auth');
-
     const accessToken = req.headers.authorization.split(' ')[1];
 
     const { data } = await axios.post(
@@ -24,13 +29,9 @@ const CognitoAuthentication = async (req: any, res: any) => {
       }
     );
 
-    req.user = data;
-
-    return res.status(StatusCodes.OK);
+    return data;
   } catch (error) {
-    return res.status(StatusCodes.UNAUTHORIZED).json({
-      message: 'Auth failed',
-    });
+    return false;
   }
 };
 

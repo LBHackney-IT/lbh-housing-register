@@ -73,46 +73,37 @@ export const getApplicationStepsForResident = (
 ): ApplicationSteps[] => {
   if (isMainResident(resident)) {
     return [
-      // {
-      //   heading: "Testing",
-      //   steps: [
-      //     {
-      //       heading: "Test form",
-      //       id: "test-form"
-      //     }
-      //   ]
-      // },
       {
         heading: 'Identity',
         steps: [
           {
-            heading: 'Your situation',
-            id: YOUR_SITUATION,
+            heading: 'Personal details',
+            id: PERSONAL_DETAILS,
           },
           {
             heading: 'Immigration status',
             id: IMMIGRATION_STATUS,
           },
-          {
-            heading: 'Personal details',
-            id: PERSONAL_DETAILS,
-          },
         ],
       },
       {
-        heading: 'Accommodation',
+        heading: 'Living Situation',
         steps: [
           {
-            heading: 'Residential Status',
+            heading: 'Residential status',
             id: RESIDENTIAL_STATUS,
           },
           {
             heading: 'Address history',
-            id: ADDRESS_HISTORY
+            id: ADDRESS_HISTORY,
           },
           {
             heading: 'Current accommodation',
             id: ADDRESS_DETAILS,
+          },
+          {
+            heading: 'Your situation',
+            id: YOUR_SITUATION,
           },
         ],
       },
@@ -120,7 +111,7 @@ export const getApplicationStepsForResident = (
         heading: 'Money',
         steps: [
           {
-            heading: 'Income & savings',
+            heading: 'Savings',
             id: INCOME_SAVINGS,
           },
         ],
@@ -129,7 +120,7 @@ export const getApplicationStepsForResident = (
         heading: 'Health',
         steps: [
           {
-            heading: 'Medical Needs',
+            heading: 'Medical needs',
             id: MEDICAL_NEEDS,
           },
         ],
@@ -141,12 +132,12 @@ export const getApplicationStepsForResident = (
         heading: 'Identity',
         steps: [
           {
-            heading: 'Immigration status',
-            id: IMMIGRATION_STATUS,
-          },
-          {
             heading: 'Personal details',
             id: PERSONAL_DETAILS,
+          },
+          {
+            heading: 'Immigration status',
+            id: IMMIGRATION_STATUS,
           },
         ],
       },
@@ -154,7 +145,7 @@ export const getApplicationStepsForResident = (
         heading: 'Health',
         steps: [
           {
-            heading: 'Medical Needs',
+            heading: 'Medical needs',
             id: MEDICAL_NEEDS,
           },
         ],

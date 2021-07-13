@@ -18,7 +18,9 @@ function App({ Component, pageProps }: AppProps): ReactElement {
   const user = useAppSelector((state) => state.cognitoUser);
   const applicationId = user?.attributes['custom:application_id'];
   useEffect(() => {
-    dispatch(loadApplicaiton(applicationId));
+    if (applicationId) {
+      dispatch(loadApplicaiton(applicationId));
+    }
   }, [applicationId]);
 
   return (

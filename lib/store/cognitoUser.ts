@@ -38,8 +38,9 @@ export const signIn = createAsyncThunk(
     { username, password }: { username: string; password: string },
     api
   ) => {
-    await Auth.signIn(username, password);
-    return api.dispatch(loadUser());
+    const promise = Auth.signIn(username, password);
+    promise.then(() => api.dispatch(loadUser()));
+    return promise;
   }
 );
 

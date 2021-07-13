@@ -27,7 +27,8 @@ const makeStore = () =>
 
         if (
           previousApplication !== newApplication &&
-          !action.type.startsWith(loadApplicaiton.typePrefix)
+          !action.type.startsWith(loadApplicaiton.typePrefix) &&
+          newApplication.id
         ) {
           storeAPI.dispatch(updateApplication(newApplication));
         }

@@ -1,19 +1,13 @@
-import {
-    createAsyncThunk,
-    createSlice
-} from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Store } from '.';
 import { Application } from '../../domain/HousingApi';
 import applicant from './applicant';
+import { signOut } from './cognitoUser';
 import otherMembers from './otherMembers';
-
 
 export const loadApplicaiton = createAsyncThunk(
   'application/load',
-  async (id?: string) => {
-    if (!id) {
-      return Promise.reject();
-    }
+  async (id: string) => {
     const r = await fetch(`/api/applications/${id}`);
     return (await r.json()) as Application;
   }
@@ -37,14 +31,13 @@ const slice = createSlice({
     submit: () => {},
   },
   extraReducers: (builder) => {
-    builder.addCase(
-      loadApplicaiton.fulfilled,
-      (state, action) => action.payload
-    );
-    builder.addDefaultCase((state, action) => {
-      state.mainApplicant = applicant.reducer(state.mainApplicant, action);
-      state.otherMembers = otherMembers.reducer(state.otherMembers, action);
-    });
+    builder
+      .addCase(loadApplicaiton.fulfilled, (state, action) => action.payload)
+      .addCase(signOut.fulfilled, (state, action) => ({}))
+      .addDefaultCase((state, action) => {
+        state.mainApplicant = applicant.reducer(state.mainApplicant, action);
+        state.otherMembers = otherMembers.reducer(state.otherMembers, action);
+      });
   },
 });
 

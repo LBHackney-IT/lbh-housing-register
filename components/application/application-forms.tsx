@@ -5,8 +5,8 @@ import { updateWithFormValues } from '../../lib/store/applicant';
 import { useAppDispatch } from '../../lib/store/hooks';
 import { ApplicationSteps } from '../../lib/types/application';
 import {
-    getFormIdsFromApplicationSteps,
-    mapApplicantToValues
+  getFormIdsFromApplicationSteps,
+  mapApplicantToValues,
 } from '../../lib/utils/application-forms';
 import { getFormData } from '../../lib/utils/form-data';
 import { HeadingOne } from '../content/headings';

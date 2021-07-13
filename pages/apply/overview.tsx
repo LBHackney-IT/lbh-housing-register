@@ -7,9 +7,9 @@ import Paragraph from '../../components/content/paragraph';
 import Hint from '../../components/form/hint';
 import Layout from '../../components/layout/resident-layout';
 import SummaryList, {
-    SummaryListActions as Actions,
-    SummaryListKey as Key,
-    SummaryListRow as Row
+  SummaryListActions as Actions,
+  SummaryListKey as Key,
+  SummaryListRow as Row,
 } from '../../components/summary-list';
 import Tag from '../../components/tag';
 import { Applicant } from '../../domain/HousingApi';
@@ -17,7 +17,6 @@ import whenAgreed from '../../lib/hoc/whenAgreed';
 import { useAppSelector } from '../../lib/store/hooks';
 import { checkEligible } from '../../lib/utils/form';
 import { applicationStepsRemaining } from '../../lib/utils/resident';
-
 
 const ApplicationPersonsOverview = (): JSX.Element => {
   const router = useRouter();

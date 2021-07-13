@@ -1,0 +1,28 @@
+{
+  "heading": "Medical Needs",
+  "copy": "This will limit the amount of properties you may be suitable for, and can increase wait times. We will discuss your needs and conduct medical checks as part of your application.",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "Medical Needs",
+          "name": "medical-needs",
+          "options": [
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ]
+}

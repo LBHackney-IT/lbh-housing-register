@@ -2,8 +2,14 @@ import { Applicant } from '../../domain/HousingApi';
 import { ApplicationSteps } from '../types/application';
 import { getFormIdsFromApplicationSteps } from './application-forms';
 import {
-  ADDRESS_DETAILS, ADDRESS_HISTORY, IMMIGRATION_STATUS,
-  PERSONAL_DETAILS, RESIDENTIAL_STATUS, YOUR_SITUATION
+  ADDRESS_DETAILS,
+  ADDRESS_HISTORY,
+  IMMIGRATION_STATUS,
+  INCOME_SAVINGS,
+  MEDICAL_NEEDS,
+  PERSONAL_DETAILS,
+  RESIDENTIAL_STATUS,
+  YOUR_SITUATION,
 } from './form-data';
 
 export const applicationStepsRemaining = (
@@ -45,24 +51,20 @@ export const getApplicationStepsForResident = (
         heading: 'Identity',
         steps: [
           {
-            heading: 'Your situation',
-            id: YOUR_SITUATION,
+            heading: 'Personal details',
+            id: PERSONAL_DETAILS,
           },
           {
             heading: 'Immigration status',
             id: IMMIGRATION_STATUS,
           },
-          {
-            heading: 'Personal details',
-            id: PERSONAL_DETAILS,
-          },
         ],
       },
       {
-        heading: 'Accommodation',
+        heading: 'Living Situation',
         steps: [
           {
-            heading: 'Residential Status',
+            heading: 'Residential status',
             id: RESIDENTIAL_STATUS,
           },
           {
@@ -73,6 +75,28 @@ export const getApplicationStepsForResident = (
             heading: 'Current accommodation',
             id: ADDRESS_DETAILS,
           },
+          {
+            heading: 'Your situation',
+            id: YOUR_SITUATION,
+          },
+        ],
+      },
+      {
+        heading: 'Money',
+        steps: [
+          {
+            heading: 'Savings',
+            id: INCOME_SAVINGS,
+          },
+        ],
+      },
+      {
+        heading: 'Health',
+        steps: [
+          {
+            heading: 'Medical needs',
+            id: MEDICAL_NEEDS,
+          },
         ],
       },
     ];
@@ -82,12 +106,21 @@ export const getApplicationStepsForResident = (
         heading: 'Identity',
         steps: [
           {
+            heading: 'Personal details',
+            id: PERSONAL_DETAILS,
+          },
+          {
             heading: 'Immigration status',
             id: IMMIGRATION_STATUS,
           },
+        ],
+      },
+      {
+        heading: 'Health',
+        steps: [
           {
-            heading: 'Personal details',
-            id: PERSONAL_DETAILS,
+            heading: 'Medical needs',
+            id: MEDICAL_NEEDS,
           },
         ],
       },

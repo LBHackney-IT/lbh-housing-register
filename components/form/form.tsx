@@ -2,14 +2,17 @@ import { Form as FormikForm, Formik, FormikValues } from 'formik';
 import { useMemo, useRef, useState } from 'react';
 import { FormData, MultiStepForm } from '../../lib/types/form';
 import {
-    getDisplayStateOfField,
-    getInitialValuesFromMultiStepForm
+  getDisplayStateOfField,
+  getInitialValuesFromMultiStepForm,
 } from '../../lib/utils/form';
 import { buildValidationSchema } from '../../lib/utils/validation';
 import Button from '../button';
 import { HeadingTwo } from '../content/headings';
 import Paragraph from '../content/paragraph';
+
 import DynamicField from './dynamic-field';
+
+import Announcement from '../../components/announcement';
 
 interface FormProps {
   buttonText?: string;
@@ -20,7 +23,7 @@ interface FormProps {
   initialValues?: FormikValues;
   onAddressLookup?: any;
   timeAtAddress?: any;
-  disableSubmit?: boolean;
+  activeStep?: string;
 }
 
 export default function Form({
@@ -32,7 +35,7 @@ export default function Form({
   initialValues,
   onAddressLookup,
   timeAtAddress,
-  disableSubmit,
+  activeStep,
 }: FormProps): JSX.Element {
   const calculatedInitialValues = useMemo(
     () => initialValues || getInitialValuesFromMultiStepForm(formData),
@@ -43,7 +46,6 @@ export default function Form({
   const step = formData.steps[stepNumber];
   const totalSteps = formData.steps.length;
   const isLastStep = stepNumber === totalSteps - 1;
-
   const submitButtonRef = useRef<'submit' | 'submitExit'>();
 
   const next = () => {
@@ -57,7 +59,7 @@ export default function Form({
   };
 
   const handleSubmit = async (values: FormData, bag: any) => {
-    // TODO Do we need on save and on submit?
+    // TODO Do we really need two handlers for onSave and onSubmit?
     if (onSave) {
       onSave && onSave(values);
     }
@@ -107,6 +109,41 @@ export default function Form({
               }
             })}
 
+            {activeStep === 'income-savings' && (
+              <Announcement variant="success">
+                <h3 className="lbh-heading-h3">
+                  Proof of income and savings required
+                </h3>
+                <p className="lbh-body-m">
+                  Before submitting your application, you will be asked to
+                  upload the following:
+                </p>
+                <ul className="lbh-list lbh-list--bullet">
+                  <li className="lbh-body-m">
+                    Bank statements covering the last two months for every
+                    account held by each working adult in your household
+                  </li>
+                  <li className="lbh-body-m">
+                    Last two months' payslips for all working adults in your
+                    household
+                  </li>
+                </ul>
+              </Announcement>
+            )}
+            {values['medical-needs'] === 'yes' &&
+              activeStep === 'medical-needs' && (
+                <Announcement variant="success">
+                  <h3 className="lbh-heading-h3">
+                    You will need to complete a separate medical form
+                  </h3>
+                  <p className="lbh-body-m">
+                    After you have submitted this application, you will be asked
+                    to provide detailed information about your medical needs in
+                    a separate form.
+                  </p>
+                </Announcement>
+              )}
+
             <div className="c-flex lbh-simple-pagination">
               {stepNumber > 0 && (
                 <div className="c-flex__1">
@@ -122,10 +159,8 @@ export default function Form({
 
               <div className="c-flex__1 text-right">
                 <Button
-                  onClick={() => {
-                    submitButtonRef.current = 'submit';
-                  }}
-                  disabled={disableSubmit}
+                  onClick={() => (submitButtonRef.current = 'submit')}
+                  disabled={isSubmitting}
                   type="submit"
                 >
                   {buttonText ? buttonText : 'Save'}
@@ -136,10 +171,8 @@ export default function Form({
             {onExit && (
               <div className="text-right">
                 <Button
-                  onClick={() => {
-                    submitButtonRef.current = 'submitExit';
-                  }}
-                  disabled={isSubmitting || isSubmitting}
+                  onClick={() => (submitButtonRef.current = 'submitExit')}
+                  disabled={isSubmitting}
                   type="submit"
                   secondary={true}
                 >

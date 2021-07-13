@@ -1,5 +1,6 @@
 import { Field, FieldInputProps, FieldMetaProps } from 'formik';
 import { FormField } from '../../lib/types/form';
+import Paragraph from '../content/paragraph';
 import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
@@ -45,6 +46,7 @@ export function Radio({
 
 export interface RadiosProps extends FormField {
   value: string;
+  subheading?: string;
 }
 
 export default function Radios({
@@ -52,6 +54,7 @@ export default function Radios({
   label,
   name,
   options,
+  subheading,
 }: RadiosProps): JSX.Element {
   return (
     <Field name={name}>
@@ -63,9 +66,12 @@ export default function Radios({
         meta: FieldMetaProps<string>;
       }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
-          {label && <Label content={label} strong={true} />}
+          {label && name !== 'medical-needs' && (
+            <Label content={label} strong={true} />
+          )}
           {hint && <Hint content={hint} />}
           {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
+          {subheading && <Paragraph>{subheading}</Paragraph>}
 
           <div className="govuk-radios lbh-radios">
             {options?.map((radio, index) => (

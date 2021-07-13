@@ -1,6 +1,5 @@
 import { HeadingOne } from '../../components/content/headings';
 import Layout from '../../components/layout/resident-layout';
-
 import Paragraph from '../../components/content/paragraph';
 import { Auth } from 'aws-amplify';
 import Form from '../../components/form/form';
@@ -8,39 +7,23 @@ import Button from '../../components/button';
 import { FormData } from '../../lib/types/form';
 import { getFormData, SIGN_IN_VERIFY } from '../../lib/utils/form-data';
 import { useRouter } from 'next/router';
-import { Store } from '../../lib/store';
-import { useStore } from 'react-redux';
-import { logIn } from '../../lib/store/applicant';
+import { useAppSelector } from '../../lib/store/hooks';
 
 const ApplicationVerifyPage = (): JSX.Element => {
   const router = useRouter();
-  const store = useStore<Store>();
-  const resident = store.getState().resident;
-
-  // TODO: We also need to check if household section has been filled out and then forward the user to /overview
-  if (resident.isLoggedIn) {
-    // router.push('/apply/overview');
-    router.push('/apply/household');
+  const isLoggedIn = useAppSelector((store) => store.cognitoUser?.username);
+  if (isLoggedIn) {
+    router.push('/apply/overview');
   }
 
-  const providedUsername: FormData = {
-    email: resident.username,
-  };
+  const username = useAppSelector((store) => store.cognitoUser?.username);
 
   const confirmSignUp = async (values: FormData) => {
-    try {
-      await Auth.confirmSignUp(values.email, values.code);
+    await Auth.confirmSignUp(values.email, values.code);
 
-      // TODO: turns out we also need to sign in at this point!
-      await Auth.signIn(values.email, 'Testing123!');
-
-      // TODO: update store
-      store.dispatch(logIn(values.email));
-      // router.push('/apply/overview');
-      router.push('/apply/household');
-    } catch (error) {
-      console.log('error confirming sign up', error);
-    }
+    // TODO: turns out we also need to sign in at this point!
+    // TODO: update store
+    router.push('/apply/household');
   };
 
   const resendCode = async (username: string) => {
@@ -57,13 +40,13 @@ const ApplicationVerifyPage = (): JSX.Element => {
   return (
     <Layout>
       <HeadingOne content="Enter your verification code" />
-      {resident.username && (
+      {username && (
         <>
           <Paragraph>
-            We've sent a code to <strong>{resident.username}</strong> to confirm
-            your account. Enter it below.
+            We've sent a code to <strong>{username}</strong> to confirm your
+            account. Enter it below.
           </Paragraph>
-          <Button onClick={() => resendCode(resident.username)} secondary>
+          <Button onClick={() => resendCode(username)} secondary>
             Send again
           </Button>
         </>
@@ -71,7 +54,6 @@ const ApplicationVerifyPage = (): JSX.Element => {
 
       <Form
         formData={getFormData(SIGN_IN_VERIFY)}
-        residentsPreviousAnswers={providedUsername}
         buttonText="Continue"
         onSubmit={confirmSignUp}
       />

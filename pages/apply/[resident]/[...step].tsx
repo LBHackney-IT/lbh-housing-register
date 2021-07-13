@@ -14,19 +14,17 @@ const ApplicationStep = (): JSX.Element => {
   const router = useRouter();
   const { resident, step } = router.query as { resident: string; step: string };
 
-  const currentResident = useAppSelector(selectApplicant(resident));
+  const applicant = useAppSelector(selectApplicant(resident));
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
 
-  if (!currentResident) {
+  if (!applicant) {
     return <Custom404 />;
   }
 
-  const baseHref = `/apply/${currentResident.person?.id}`;
+  const baseHref = `/apply/${applicant.person?.id}`;
   const returnHref = '/apply/overview';
 
-  const steps = getApplicationStepsForResident(
-    currentResident === mainResident
-  );
+  const steps = getApplicationStepsForResident(applicant === mainResident);
 
   const breadcrumbs = [
     {
@@ -35,11 +33,11 @@ const ApplicationStep = (): JSX.Element => {
     },
     {
       href: baseHref,
-      name: currentResident.person?.firstName || '',
+      name: applicant.person?.firstName || '',
     },
     {
       href: `${baseHref}/${step}`,
-      name: getApplicationStepFromId(step, steps)?.heading,
+      name: getApplicationStepFromId(step, steps)?.heading || '',
     },
   ];
 
@@ -53,8 +51,9 @@ const ApplicationStep = (): JSX.Element => {
 
   return (
     <Layout breadcrumbs={breadcrumbs}>
-      <Hint content={currentResident.person?.firstName ?? ''} />
+      <Hint content={applicant.person?.firstName ?? ''} />
       <ApplicationForms
+        applicant={applicant}
         steps={steps}
         activeStep={step}
         baseHref={baseHref}

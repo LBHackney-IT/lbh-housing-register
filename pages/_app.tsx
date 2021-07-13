@@ -17,6 +17,8 @@ function App({ Component, pageProps }: AppProps): ReactElement {
     },
   });
 
+  // TODO all these initial renders are causing the form to show before any data has
+  // loaded and that makes pre-filling impossible.
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(loadUser());

@@ -3,11 +3,9 @@ import Layout from '../../components/layout/resident-layout';
 import { Auth } from 'aws-amplify';
 import { useRouter } from 'next/router';
 import Form from '../../components/form/form';
-import { FormData } from '../../lib/types/form';
 import { getFormData, SIGN_UP_DETAILS } from '../../lib/utils/form-data';
-import { useStore } from 'react-redux';
-import { Store } from '../../lib/store';
-import { createUser } from '../../lib/store/applicant';
+import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
+import { FormikValues } from 'formik';
 
 export function processPhonenumber(input: string): string {
   const chars = input.match(/[\+0-9]/g);
@@ -26,34 +24,28 @@ export function processPhonenumber(input: string): string {
 
 const ApplicationStartPage = (): JSX.Element => {
   const router = useRouter();
-  const store = useStore<Store>();
-  const resident = store.getState().resident;
+  const isLoggedIn = useAppSelector((store) => store.cognitoUser?.username);
 
-  if (resident.isLoggedIn) {
+  if (isLoggedIn) {
     router.push('/apply/overview');
   }
 
-  const signUp = async (values: FormData) => {
-    try {
-      const { user } = await Auth.signUp({
-        username: values.email,
-        // See https://aws.amazon.com/blogs/mobile/implementing-passwordless-email-authentication-with-amazon-cognito/
-        // on how to generate a random password securely.
-        password: values.password,
-        attributes: {
-          given_name: values.first_name,
-          family_name: values.last_name,
-          phone_number: processPhonenumber(values.phone_number), // E.164 number convention
-        },
-      });
+  const signUp = async (values: FormikValues) => {
+    await Auth.signUp({
+      username: values.email,
+      // See https://aws.amazon.com/blogs/mobile/implementing-passwordless-email-authentication-with-amazon-cognito/
+      // on how to generate a random password securely.
+      password: values.password,
+      attributes: {
+        given_name: values.first_name,
+        family_name: values.last_name,
+        phone_number: processPhonenumber(values.phone_number), // E.164 number convention
+      },
+    });
 
-      // TODO: save user to store
-      store.dispatch(createUser(values.email));
-      router.push('/apply/verify');
-    } catch (error) {
-      // TODO: handle error
-      console.log('error signing up:', error);
-    }
+    // Store some context about the CognitoUser ready for verify.tsx to read it.
+
+    router.push('/apply/verify');
   };
 
   return (

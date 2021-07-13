@@ -4,7 +4,7 @@ import { FormData } from '../../../lib/types/form';
 import { getHouseHoldData } from '../../../lib/utils/form-data';
 import { useRouter } from 'next/router';
 import { Store } from '../../../lib/store';
-import { useStore } from 'react-redux';
+import { useDispatch, useStore } from 'react-redux';
 import { updateFormData } from '../../../lib/store/applicant';
 import { addResidentFromFormData } from '../../../lib/store/otherMembers';
 
@@ -26,21 +26,17 @@ import {
   extractAdditionalResidentFromData,
   extractMainResidentFromData,
 } from '../../../lib/utils/helper';
+import { useAppSelector } from '../../../lib/store/hooks';
 
 const PeoplePage = ({}): JSX.Element => {
   const router = useRouter();
-  const store = useStore<Store>();
-  const resident = store.getState().resident;
+  const dispatch = useDispatch();
+  const countOfPeopleInApplication = useAppSelector(
+    (store) => store.application.otherMembers?.length ?? 0 + 1
+  );
 
-  const providedUsername: FormData = {
-    email: resident.username,
-  };
-
-  const className = undefined;
   let exit = false;
   const onExit = false;
-
-  const countOfPeopleInApplication: any = resident.formData.household || '1';
 
   const formData = getHouseHoldData(countOfPeopleInApplication);
 
@@ -56,7 +52,7 @@ const PeoplePage = ({}): JSX.Element => {
   const handleSubmission = async (values: FormData) => {
     if (countOfPeopleInApplication > 1) {
       const mainResident = extractMainResidentFromData(values);
-      store.dispatch(updateFormData(mainResident));
+      dispatch(updateFormData(mainResident));
 
       const additionalResident = extractAdditionalResidentFromData(
         values,
@@ -64,13 +60,10 @@ const PeoplePage = ({}): JSX.Element => {
       );
 
       for (let x = 1; x <= Object.keys(additionalResident).length; x++) {
-        store.dispatch(
-          addResidentFromFormData(additionalResident[`person${x}`])
-        );
+        dispatch(addResidentFromFormData(additionalResident[`person${x}`]));
       }
     } else {
-      store.dispatch(updateFormData(values));
-      const resident = store.getState().resident;
+      dispatch(updateFormData(values));
     }
 
     router.push('/apply/overview');

@@ -1,15 +1,9 @@
-import { Store } from 'redux';
 import { Applicant } from '../../domain/HousingApi';
-import { updateFormData } from '../store/applicant';
-import { updateResident } from '../store/otherMembers';
 import { ApplicationSteps } from '../types/application';
-import { FormData } from '../types/form';
-import { Resident } from '../types/resident';
 import { getFormIdsFromApplicationSteps } from './application-forms';
-import { checkEligible } from './form';
 import {
-    ADDRESS_DETAILS, ADDRESS_HISTORY, IMMIGRATION_STATUS,
-    PERSONAL_DETAILS, RESIDENTIAL_STATUS, YOUR_SITUATION
+  ADDRESS_DETAILS, ADDRESS_HISTORY, IMMIGRATION_STATUS,
+  PERSONAL_DETAILS, RESIDENTIAL_STATUS, YOUR_SITUATION
 } from './form-data';
 
 export const applicationStepsRemaining = (
@@ -116,29 +110,4 @@ export const hasResidentAnsweredForm = (
   // You've answered the form if you've answered at least one question within it.
 
   return applicant.questions?.find((q) => q.id?.startsWith(form)) !== undefined;
-};
-
-/**
- * Update the form data for the given resident
- * @param {Store} store The redux store
- * @param {Resident} resident The resident we wish to update
- * @param {FormData} data The data we are updating
- */
-export const updateResidentsFormData = (
-  store: Store,
-  resident: Resident,
-  data: FormData
-): void => {
-  if (isMainResident(resident)) {
-    store.dispatch(updateFormData(data));
-  } else {
-    resident = { ...resident };
-    resident.formData = { ...resident.formData, ...data };
-
-    const eligibility = checkEligible(resident.formData);
-    resident.isEligible = eligibility[0];
-    resident.ineligibilityReasons = eligibility[1];
-
-    store.dispatch(updateResident(resident));
-  }
 };

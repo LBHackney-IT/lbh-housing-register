@@ -4,8 +4,8 @@ import { HeadingOne } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
 import Layout from '../../components/layout/staff-layout';
 import { Stats } from '../../components/stats';
-import { ApplicationList } from '../../domain/application';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
+import { ApplicationList } from '../../domain/HousingApi';
 import { Stat } from '../../domain/Stat';
 import { UserContext } from '../../lib/contexts/user-context';
 import { getApplications, getStats } from '../../lib/gateways/applications-api';
@@ -29,7 +29,7 @@ export default function ApplicationListPage({
         {stats && (
           <Stats className="govuk-grid-column-one-third" stats={stats} />
         )}
-        {applications.results.length > 0 ? (
+        {applications.results?.length ? (
           <ApplicationTable
             caption="Applications"
             applications={applications}

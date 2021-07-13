@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Application, ApplicationList } from '../../domain/application';
+import { Application, ApplicationList } from '../../domain/HousingApi';
 import { Stat } from '../../domain/Stat';
 
 const headersWithKey = {

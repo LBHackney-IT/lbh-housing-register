@@ -7,8 +7,8 @@ import { HeadingOne, HeadingTwo } from '../../../components/content/headings';
 import Paragraph from '../../../components/content/paragraph';
 import Layout from '../../../components/layout/staff-layout';
 import Tag from '../../../components/tag';
-import { Application } from '../../../domain/application';
 import { HackneyGoogleUser } from '../../../domain/HackneyGoogleUser';
+import { Application } from '../../../domain/HousingApi';
 import { UserContext } from '../../../lib/contexts/user-context';
 import { getApplication } from '../../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../../lib/utils/auth';
@@ -27,7 +27,7 @@ export default function ApplicationPage({
     <UserContext.Provider value={{ user }}>
       <Layout>
         <HeadingOne content={`Application #${data.id}`} />
-        <Tag content={data.status} className={getStatusTag(data.status)} />
+        <Tag content={data.status || ""} className={getStatusTag(data.status|| "")} />
 
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-two-thirds">
@@ -37,11 +37,11 @@ export default function ApplicationPage({
             />
             <ContactDetails
               heading="Contact details"
-              contact={data.mainApplicant.contactInformation}
+              contact={data.mainApplicant?.contactInformation}
             />
             <AddressDetails
               heading="Current accommodation"
-              address={data.mainApplicant.address}
+              address={data.mainApplicant?.address}
             />
           </div>
           <div className="govuk-grid-column-one-third">

@@ -1,7 +1,6 @@
-import { Auth } from 'aws-amplify';
 import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react';
-import { logout } from '../../lib/store/cognitoUser';
+import { signOut } from '../../lib/store/cognitoUser';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { hasPhaseBanner } from '../../lib/utils/phase-banner';
 import Breadcrumbs from '../breadcrumbs';
@@ -20,23 +19,17 @@ export default function ResidentLayout({
 }: ResidentLayoutProps): JSX.Element {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const username = useAppSelector(store => store.cognitoUser?.username);
+  const username = useAppSelector((store) => store.cognitoUser?.username);
 
-  const signOut = async () => {
-    try {
-      await Auth.signOut();
-
-      dispatch(logout());
-      router.push('/');
-    } catch (error) {
-      console.log('error signing out: ', error);
-    }
+  const onSignOut = async () => {
+    dispatch(signOut());
+    router.push('/');
   };
 
   return (
     <>
       <SkipLink />
-      <Header username={username} onSignOut={signOut} />
+      <Header username={username} onSignOut={onSignOut} />
       {hasPhaseBanner() && <PhaseBanner />}
 
       {breadcrumbs && breadcrumbs.length > 0 && (

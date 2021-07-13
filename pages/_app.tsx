@@ -1,4 +1,3 @@
-import Amplify from 'aws-amplify';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import React, { ReactElement, useEffect } from 'react';
@@ -9,14 +8,6 @@ import { useAppDispatch, useAppSelector } from '../lib/store/hooks';
 import '../styles/global.scss';
 
 function App({ Component, pageProps }: AppProps): ReactElement {
-  Amplify.configure({
-    Auth: {
-      region: process.env.NEXT_PUBLIC_AWS_REGION,
-      userPoolId: process.env.NEXT_PUBLIC_COGNITO_USERPOOL_ID,
-      userPoolWebClientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
-    },
-  });
-
   // TODO all these initial renders are causing the form to show before any data has
   // loaded and that makes pre-filling impossible.
   const dispatch = useAppDispatch();

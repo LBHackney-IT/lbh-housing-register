@@ -1,6 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { Auth } from 'aws-amplify';
+import Amplify, { Auth } from 'aws-amplify';
 
+Amplify.configure({
+  Auth: {
+    region: process.env.NEXT_PUBLIC_AWS_REGION,
+    userPoolId: process.env.NEXT_PUBLIC_COGNITO_USERPOOL_ID,
+    userPoolWebClientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
+  },
+});
 
 export interface CognitoUserInfo {
   username: string;
@@ -25,18 +32,31 @@ export const loadUser = createAsyncThunk('cognitoUser/loadUser', async () => {
   }
 });
 
+export const signIn = createAsyncThunk(
+  'cognitoUser/signIn',
+  async (
+    { username, password }: { username: string; password: string },
+    api
+  ) => {
+    await Auth.signIn(username, password);
+    return api.dispatch(loadUser());
+  }
+);
+
+export const signOut = createAsyncThunk('cognitoUser/signOut', async () => {
+  return (await Auth.signOut()) as void;
+});
+
 const slice = createSlice({
   name: 'user',
   initialState: null as CognitoUserInfo | null,
-  reducers: {
-    login() {},
-    register() {},
-    logout() {},
-  },
+  reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(loadUser.fulfilled, (state, action) => action.payload);
+    builder
+      .addCase(loadUser.fulfilled, (state, action) => action.payload)
+      .addCase(signOut.fulfilled, () => null);
   },
 });
 
-export const { login, register, logout } = slice.actions;
+export const {} = slice.actions;
 export default slice;

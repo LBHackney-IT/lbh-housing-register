@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
 import Button from '../../components/button';
 import { HeadingTwo } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
@@ -8,8 +9,10 @@ import Timeline, { TimelineEvent } from '../../components/timeline';
 
 const ApplicationConfirmation = (): JSX.Element => {
   const router = useRouter();
+  const dispatch = useDispatch();
+
   const signOut = () => {
-    // TODO: clear session
+    dispatch(signOut());
     router.push('/');
   };
 

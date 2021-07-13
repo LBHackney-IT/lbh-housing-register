@@ -35,10 +35,10 @@ export default function ApplicationPage({
               heading="Personal details"
               applicant={data.mainApplicant}
             />
-            <ContactDetails
+            {data.mainApplicant?.contactInformation && <ContactDetails
               heading="Contact details"
-              contact={data.mainApplicant?.contactInformation}
-            />
+              contact={data.mainApplicant.contactInformation}
+            />}
             <AddressDetails
               heading="Current accommodation"
               address={data.mainApplicant?.address}

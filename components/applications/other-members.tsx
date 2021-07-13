@@ -1,9 +1,9 @@
-import { Applicant } from '../../domain/applicant';
+import { Applicant } from '../../domain/HousingApi';
 import Collapsible from '../collapsible';
 
 interface SummaryProps {
   heading: string;
-  others: Array<Applicant>;
+  others: Applicant[]
 }
 
 export default function OtherMembers({
@@ -15,11 +15,11 @@ export default function OtherMembers({
       <dl className="govuk-summary-list lbh-summary-list">
         {others.map((applicant, index) => (
           <div key={index} className="govuk-summary-list__row">
-            <dt className="govuk-summary-list__key">{applicant.person.id}</dt>
+            <dt className="govuk-summary-list__key">{applicant.person?.id}</dt>
             <dd className="govuk-summary-list__value">
               <a className="govuk-link" href="#">
-                {applicant.person.title} {applicant.person.firstName}{' '}
-                {applicant.person.surname}
+                {applicant.person?.title} {applicant.person?.firstName}{' '}
+                {applicant.person?.surname}
               </a>
             </dd>
           </div>

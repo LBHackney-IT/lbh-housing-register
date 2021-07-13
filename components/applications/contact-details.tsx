@@ -1,4 +1,4 @@
-import { ContactInformation } from '../../domain/applicant';
+import { ContactInformation } from '../../domain/HousingApi';
 import Collapsible from '../collapsible';
 
 interface SummaryProps {

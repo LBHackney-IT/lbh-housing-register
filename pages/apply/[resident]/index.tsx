@@ -13,7 +13,7 @@ import Tag from '../../../components/tag';
 import whenAgreed from '../../../lib/hoc/whenAgreed';
 import { selectApplicant } from '../../../lib/store/application';
 import { useAppSelector } from '../../../lib/store/hooks';
-import { deleteResident } from '../../../lib/store/otherMembers';
+import { deleteApplicant } from '../../../lib/store/otherMembers';
 import {
     getApplicationStepsForResident,
     hasResidentAnsweredForm
@@ -51,7 +51,7 @@ const ApplicationStep = (): JSX.Element => {
   ];
 
   const onDelete = () => {
-    dispatch(deleteResident(currentResident));
+    dispatch(deleteApplicant(currentResident));
     router.push(returnHref);
   };
 

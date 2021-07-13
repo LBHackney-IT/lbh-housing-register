@@ -1,4 +1,3 @@
-import { CreateApplicationRequest } from '../../domain/application';
 import { Resident } from '../types/resident';
 import { constructApplication } from '../utils/helper';
 

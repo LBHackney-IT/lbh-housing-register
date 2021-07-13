@@ -1,23 +1,23 @@
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useMemo } from 'react';
 import Button, { ButtonLink } from '../../components/button';
 import { HeadingOne } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
 import Hint from '../../components/form/hint';
 import Layout from '../../components/layout/resident-layout';
 import SummaryList, {
-  SummaryListActions as Actions,
-  SummaryListKey as Key,
-  SummaryListRow as Row,
+    SummaryListActions as Actions,
+    SummaryListKey as Key,
+    SummaryListRow as Row
 } from '../../components/summary-list';
 import Tag from '../../components/tag';
-import whenAgreed from '../../lib/hoc/whenAgreed';
-import { applicationStepsRemaining } from '../../lib/utils/resident';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useAppSelector } from '../../lib/store/hooks';
 import { Applicant } from '../../domain/HousingApi';
-
-import { useMemo } from 'react';
+import whenAgreed from '../../lib/hoc/whenAgreed';
+import { useAppSelector } from '../../lib/store/hooks';
 import { checkEligible } from '../../lib/utils/form';
+import { applicationStepsRemaining } from '../../lib/utils/resident';
+
 
 const ApplicationPersonsOverview = (): JSX.Element => {
   const router = useRouter();

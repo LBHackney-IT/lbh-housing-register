@@ -1,8 +1,8 @@
+import Link from 'next/link';
 import { ButtonLink } from '../components/button';
 import { HeadingOne, HeadingTwo } from '../components/content/headings';
-import Layout from '../components/layout/resident-layout';
 import Paragraph from '../components/content/paragraph';
-import Link from 'next/link';
+import Layout from '../components/layout/resident-layout';
 
 export default function Home(): JSX.Element {
   return (

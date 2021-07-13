@@ -1,14 +1,14 @@
-import PhaseBanner from '../phase-banner';
-import Breadcrumbs from '../breadcrumbs';
-import SkipLink from '../skip-link';
-import Header from '../header';
-import { hasPhaseBanner } from '../../lib/utils/phase-banner';
-import React, { ReactNode } from 'react';
 import { Auth } from 'aws-amplify';
 import { useRouter } from 'next/router';
-import { logOut } from '../../lib/store/applicant';
-import { Store } from '../../lib/store';
+import React, { ReactNode } from 'react';
 import { useStore } from 'react-redux';
+import { Store } from '../../lib/store';
+import { logOut } from '../../lib/store/applicant';
+import { hasPhaseBanner } from '../../lib/utils/phase-banner';
+import Breadcrumbs from '../breadcrumbs';
+import Header from '../header';
+import PhaseBanner from '../phase-banner';
+import SkipLink from '../skip-link';
 
 interface ResidentLayoutProps {
   breadcrumbs?: { href: string; name: string }[];

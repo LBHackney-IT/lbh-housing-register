@@ -1,12 +1,12 @@
+import { useRouter } from 'next/router';
+import { useStore } from 'react-redux';
 import { HeadingOne } from '../../../components/content/headings';
-import Layout from '../../../components/layout/resident-layout';
 import Form from '../../../components/form/form';
+import Layout from '../../../components/layout/resident-layout';
+import { Store } from '../../../lib/store';
+import { updateFormData } from '../../../lib/store/applicant';
 import { FormData } from '../../../lib/types/form';
 import { getFormData, HOUSEHOLD_OVERVIEW } from '../../../lib/utils/form-data';
-import { useRouter } from 'next/router';
-import { Store } from '../../../lib/store';
-import { useStore } from 'react-redux';
-import { updateFormData } from '../../../lib/store/applicant';
 
 const HouseHoldPage = (): JSX.Element => {
   const router = useRouter();

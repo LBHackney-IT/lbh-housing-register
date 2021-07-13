@@ -1,12 +1,12 @@
-import { wrapper } from '../lib/store';
+import Amplify from 'aws-amplify';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import React, { ReactElement, useEffect } from 'react';
-import '../styles/global.scss';
-import Amplify from 'aws-amplify';
-import { useAppDispatch, useAppSelector } from '../lib/store/hooks';
-import { loadUser } from '../lib/store/cognitoUser';
+import { wrapper } from '../lib/store';
 import { loadApplicaiton } from '../lib/store/application';
+import { loadUser } from '../lib/store/cognitoUser';
+import { useAppDispatch, useAppSelector } from '../lib/store/hooks';
+import '../styles/global.scss';
 
 function App({ Component, pageProps }: AppProps): ReactElement {
   Amplify.configure({

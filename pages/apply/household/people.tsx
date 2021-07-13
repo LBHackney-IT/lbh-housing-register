@@ -1,32 +1,26 @@
-import { HeadingOne } from '../../../components/content/headings';
-import Layout from '../../../components/layout/resident-layout';
-import { FormData } from '../../../lib/types/form';
-import { getHouseHoldData } from '../../../lib/utils/form-data';
-import { useRouter } from 'next/router';
-import { Store } from '../../../lib/store';
-import { useDispatch, useStore } from 'react-redux';
-import { updateFormData } from '../../../lib/store/applicant';
-import { addResidentFromFormData } from '../../../lib/store/otherMembers';
-
-import { buildValidationSchema } from '../../../lib/utils/validation';
 import { Form as FormikForm, Formik } from 'formik';
-import Button from '../../../components/button';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
-
-import {
-  getDisplayStateOfField,
-  getInitialValuesFromMultiStepForm,
-} from '../../../lib/utils/form';
-
-import { HeadingTwo } from '../../../components/content/headings';
+import { useDispatch } from 'react-redux';
+import Button from '../../../components/button';
+import { HeadingOne, HeadingTwo } from '../../../components/content/headings';
 import Paragraph from '../../../components/content/paragraph';
 import DynamicField from '../../../components/form/dynamic-field';
-
+import Layout from '../../../components/layout/resident-layout';
+import { updateFormData } from '../../../lib/store/applicant';
+import { useAppSelector } from '../../../lib/store/hooks';
+import { addResidentFromFormData } from '../../../lib/store/otherMembers';
+import { FormData } from '../../../lib/types/form';
+import {
+  getDisplayStateOfField,
+  getInitialValuesFromMultiStepForm
+} from '../../../lib/utils/form';
+import { getHouseHoldData } from '../../../lib/utils/form-data';
 import {
   extractAdditionalResidentFromData,
-  extractMainResidentFromData,
+  extractMainResidentFromData
 } from '../../../lib/utils/helper';
-import { useAppSelector } from '../../../lib/store/hooks';
+import { buildValidationSchema } from '../../../lib/utils/validation';
 
 const PeoplePage = ({}): JSX.Element => {
   const router = useRouter();

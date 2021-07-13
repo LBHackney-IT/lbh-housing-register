@@ -1,12 +1,12 @@
+import { useRouter } from 'next/router';
 import { HeadingOne } from '../../components/content/headings';
 import Form from '../../components/form/form';
 import Layout from '../../components/layout/resident-layout';
 import whenAgreed from '../../lib/hoc/whenAgreed';
+import { useAppDispatch } from '../../lib/store/hooks';
 import { addResidentFromFormData } from '../../lib/store/otherMembers';
 import { FormData } from '../../lib/types/form';
 import { getFormData, PERSONAL_DETAILS } from '../../lib/utils/form-data';
-import { useRouter } from 'next/router';
-import { useAppDispatch } from '../../lib/store/hooks';
 
 const AddPersonToApplication = (): JSX.Element => {
   const returnHref = '/apply/overview';

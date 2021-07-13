@@ -1,5 +1,5 @@
-import Dialog from './dialog';
 import { useState } from 'react';
+import Dialog from './dialog';
 
 interface DeleteLinkProps {
   content: string;

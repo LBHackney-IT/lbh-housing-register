@@ -1,10 +1,9 @@
-import { v4 as uuidv4 } from 'uuid';
-
-import { FormData } from '../types/form';
-import { generateSlug } from '../utils/resident';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { v4 as uuidv4 } from 'uuid';
 // import { loadApplicaiton } from './application';
 import { Applicant } from '../../domain/HousingApi';
+import { FormData } from '../types/form';
+
 
 const initialState: Applicant[] = [];
 

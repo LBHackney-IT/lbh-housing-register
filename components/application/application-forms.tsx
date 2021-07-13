@@ -1,26 +1,17 @@
-import { HeadingOne, HeadingTwo } from '../content/headings';
-import Paragraph from '../content/paragraph';
-import Form from '../form/form';
-import { Store } from '../../lib/store';
-import { FormData } from '../../lib/types/form';
+import { FormikValues } from 'formik';
+import { useRouter } from 'next/router';
+import { Applicant } from '../../domain/HousingApi';
+import { updateWithFormValues } from '../../lib/store/applicant';
+import { useAppDispatch } from '../../lib/store/hooks';
+import { ApplicationSteps } from '../../lib/types/application';
 import {
-  getFormIdsFromApplicationSteps,
-  mapApplicantToValues,
+    getFormIdsFromApplicationSteps,
+    mapApplicantToValues
 } from '../../lib/utils/application-forms';
 import { getFormData } from '../../lib/utils/form-data';
-import { useRouter } from 'next/router';
-import { ReactElement, useState } from 'react';
-import { useDispatch, useStore } from 'react-redux';
-import Details from '../../components/form/details';
-import { lookUpAddress } from '../../lib/gateways/internal-api';
-import AddressSelector from '../../components/form/selectaddress';
-import ShowAddress from '../../components/form/showaddress';
-import dataInput from '../../data/forms/date-input.json';
-import { Applicant } from '../../domain/HousingApi';
-import { ApplicationSteps } from '../../lib/types/application';
-import { FormikValues } from 'formik';
-import { useAppDispatch } from '../../lib/store/hooks';
-import { updateWithFormValues } from '../../lib/store/applicant';
+import { HeadingOne } from '../content/headings';
+import Paragraph from '../content/paragraph';
+import Form from '../form/form';
 
 interface ApplicationFormsProps {
   activeStep?: string;

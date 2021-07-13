@@ -1,21 +1,16 @@
-import { getFormIdsFromApplicationSteps } from './application-forms';
-import { Store as ReduxStore } from '../store';
+import { Store } from 'redux';
+import { Applicant } from '../../domain/HousingApi';
+import { updateFormData } from '../store/applicant';
 import { updateResident } from '../store/otherMembers';
-import { MAIN_RESIDENT_KEY, updateFormData } from '../store/applicant';
 import { ApplicationSteps } from '../types/application';
 import { FormData } from '../types/form';
 import { Resident } from '../types/resident';
-import { Store } from 'redux';
-import {
-  ADDRESS_DETAILS,
-  IMMIGRATION_STATUS,
-  PERSONAL_DETAILS,
-  YOUR_SITUATION,
-  RESIDENTIAL_STATUS,
-  ADDRESS_HISTORY,
-} from './form-data';
+import { getFormIdsFromApplicationSteps } from './application-forms';
 import { checkEligible } from './form';
-import { Applicant } from '../../domain/HousingApi';
+import {
+    ADDRESS_DETAILS, ADDRESS_HISTORY, IMMIGRATION_STATUS,
+    PERSONAL_DETAILS, RESIDENTIAL_STATUS, YOUR_SITUATION
+} from './form-data';
 
 export const applicationStepsRemaining = (
   applicant: Applicant,

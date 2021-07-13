@@ -1,13 +1,13 @@
-import { HeadingOne } from '../../components/content/headings';
-import Layout from '../../components/layout/resident-layout';
 import { Auth } from 'aws-amplify';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { HeadingOne } from '../../components/content/headings';
 import Form from '../../components/form/form';
+import Layout from '../../components/layout/resident-layout';
+import { loadUser } from '../../lib/store/cognitoUser';
+import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { FormData } from '../../lib/types/form';
 import { getFormData, SIGN_IN } from '../../lib/utils/form-data';
-import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
-import { loadUser } from '../../lib/store/cognitoUser';
-import { useEffect } from 'react';
 
 const ApplicationSignInPage = (): JSX.Element => {
   const dispatch = useAppDispatch();

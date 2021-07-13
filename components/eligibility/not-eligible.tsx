@@ -1,11 +1,11 @@
+import Link from 'next/link';
+import { useStore } from 'react-redux';
+import { Store } from '../../lib/store';
 import { ButtonLink } from '../button';
-import { HeadingOne, HeadingThree, HeadingTwo } from '../content/headings';
+import { HeadingOne, HeadingTwo } from '../content/headings';
 import InsetText from '../content/inset-text';
 import List, { ListItem } from '../content/list';
 import Paragraph from '../content/paragraph';
-import { Store } from '../../lib/store';
-import Link from 'next/link';
-import { useStore } from 'react-redux';
 
 export default function NotEligible(): JSX.Element {
   const store = useStore<Store>();

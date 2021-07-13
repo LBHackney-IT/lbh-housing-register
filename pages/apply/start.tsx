@@ -1,11 +1,11 @@
-import { HeadingOne } from '../../components/content/headings';
-import Layout from '../../components/layout/resident-layout';
 import { Auth } from 'aws-amplify';
-import { useRouter } from 'next/router';
-import Form from '../../components/form/form';
-import { getFormData, SIGN_UP_DETAILS } from '../../lib/utils/form-data';
-import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { FormikValues } from 'formik';
+import { useRouter } from 'next/router';
+import { HeadingOne } from '../../components/content/headings';
+import Form from '../../components/form/form';
+import Layout from '../../components/layout/resident-layout';
+import { useAppSelector } from '../../lib/store/hooks';
+import { getFormData, SIGN_UP_DETAILS } from '../../lib/utils/form-data';
 
 export function processPhonenumber(input: string): string {
   const chars = input.match(/[\+0-9]/g);

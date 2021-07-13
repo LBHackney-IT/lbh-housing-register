@@ -1,13 +1,12 @@
 import {
-  combineReducers,
-  createAsyncThunk,
-  createSlice,
+    createAsyncThunk,
+    createSlice
 } from '@reduxjs/toolkit';
-import { Application } from '../../domain/HousingApi';
-
-import otherMembers from './otherMembers';
-import applicant from './applicant';
 import { Store } from '.';
+import { Application } from '../../domain/HousingApi';
+import applicant from './applicant';
+import otherMembers from './otherMembers';
+
 
 export const loadApplicaiton = createAsyncThunk(
   'application/load',

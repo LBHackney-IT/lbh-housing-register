@@ -1,5 +1,5 @@
-import { FormData, FormField } from '../types/form';
 import * as Yup from 'yup';
+import { FormData, FormField } from '../types/form';
 
 /**
  * Builds out the validation schema for the form fields that are passed in
@@ -103,7 +103,7 @@ export function buildValidationSchema(fields: FormField[]) {
           baseType = Yup.number().integer(
             `${field.label} must be a valid number`
           );
-          
+
           fieldValidation = baseType;
           fieldValidation = checkRequired(fieldValidation, field);
           break;
@@ -112,7 +112,7 @@ export function buildValidationSchema(fields: FormField[]) {
           baseType = Yup.number().integer(
             `${field.label} must be a valid number`
           );
-          
+
           fieldValidation = baseType;
           fieldValidation = checkRequired(fieldValidation, field);
           break;

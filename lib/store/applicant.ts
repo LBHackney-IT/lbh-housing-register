@@ -1,8 +1,7 @@
-import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Store } from '.';
-import { Applicant, Question } from '../../domain/HousingApi';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FormikValues } from 'formik';
-import { a } from '@aws-amplify/ui';
+import { Store } from '.';
+import { Applicant } from '../../domain/HousingApi';
 import { AGREEMENT } from '../utils/form-data';
 
 const initialState: Applicant = {};

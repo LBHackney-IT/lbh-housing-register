@@ -1,7 +1,6 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { Auth } from 'aws-amplify';
 
-import Amplify, { Auth } from 'aws-amplify';
-import { CognitoUser } from 'amazon-cognito-identity-js';
 
 export interface CognitoUserInfo {
   username: string;

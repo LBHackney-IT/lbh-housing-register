@@ -1,6 +1,5 @@
-import { getEligibilityCriteria } from './form-data';
+import { Applicant } from '../../domain/HousingApi';
 import { FormData, FormField, MultiStepForm } from '../types/form';
-import { Applicant, Application } from '../../domain/HousingApi';
 
 /**
  * Determines if the field should be displayed based on the values passed in

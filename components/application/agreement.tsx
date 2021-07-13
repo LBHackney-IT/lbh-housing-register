@@ -1,11 +1,9 @@
+import { agree } from '../../lib/store/applicant';
+import { useAppDispatch } from '../../lib/store/hooks';
+import { AGREEMENT, getFormData } from '../../lib/utils/form-data';
 import { HeadingOne } from '../content/headings';
 import Paragraph from '../content/paragraph';
 import Form from '../form/form';
-import { agree } from '../../lib/store/applicant';
-import { FormData } from '../../lib/types/form';
-import { AGREEMENT, getFormData } from '../../lib/utils/form-data';
-import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
-import { updateApplication } from '../../lib/store/application';
 
 export default function ApplicationAgreement() {
   const dispatch = useAppDispatch();

@@ -1,15 +1,15 @@
-import Button from '../button';
-import DynamicField from './dynamic-field';
-import { HeadingTwo } from '../content/headings';
-import { FormData, FormStep, MultiStepForm } from '../../lib/types/form';
-import {
-  getDisplayStateOfField,
-  getInitialValuesFromMultiStepForm,
-} from '../../lib/utils/form';
-import { buildValidationSchema } from '../../lib/utils/validation';
 import { Form as FormikForm, Formik, FormikValues } from 'formik';
 import { useMemo, useRef, useState } from 'react';
+import { FormData, MultiStepForm } from '../../lib/types/form';
+import {
+    getDisplayStateOfField,
+    getInitialValuesFromMultiStepForm
+} from '../../lib/utils/form';
+import { buildValidationSchema } from '../../lib/utils/validation';
+import Button from '../button';
+import { HeadingTwo } from '../content/headings';
 import Paragraph from '../content/paragraph';
+import DynamicField from './dynamic-field';
 
 interface FormProps {
   buttonText?: string;

@@ -1,7 +1,7 @@
 import { FormikValues } from 'formik';
 import { Applicant } from '../../domain/HousingApi';
 import { ApplicationStep, ApplicationSteps } from '../types/application';
-import { IMMIGRATION_STATUS, RESIDENTIAL_STATUS } from './form-data';
+import { IMMIGRATION_STATUS } from './form-data';
 
 /**
  * Get application step model from ID

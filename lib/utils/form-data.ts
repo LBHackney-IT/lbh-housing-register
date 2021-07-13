@@ -1,14 +1,6 @@
-import agreementFormData from '../../data/forms/agreement.json';
-import immigrationStatusFormData from '../../data/forms/immigration-status.json';
-import personalDetailsFormData from '../../data/forms/person-details.json';
 import addressDetailsFormData from '../../data/forms/address-details.json';
-import testFormData from '../../data/forms/_test-form.json';
-import yourSituationFormData from '../../data/forms/your-situation.json';
-import signInFormData from '../../data/forms/sign-in.json';
-import signInVerifyFormData from '../../data/forms/sign-in-verify.json';
-import signUpDetailsFormData from '../../data/forms/sign-up-details.json';
-import { EligibilityCriteria, MultiStepForm } from '../types/form';
-import residentialStatusFormData from '../../data/forms/residential-status.json';
+import addressHistory from '../../data/forms/address-history.json';
+import agreementFormData from '../../data/forms/agreement.json';
 import houseHoldOverview from '../../data/forms/household-details.json';
 import peopleInApplication_1 from '../../data/forms/household/people-in-application-1.json';
 import peopleInApplication_2 from '../../data/forms/household/people-in-application-2.json';
@@ -17,7 +9,14 @@ import peopleInApplication_4 from '../../data/forms/household/people-in-applicat
 import peopleInApplication_5 from '../../data/forms/household/people-in-application-5.json';
 import peopleInApplication_6 from '../../data/forms/household/people-in-application-6.json';
 import peopleInApplication_7 from '../../data/forms/household/people-in-application-7.json';
-import addressHistory from '../../data/forms/address-history.json';
+import immigrationStatusFormData from '../../data/forms/immigration-status.json';
+import personalDetailsFormData from '../../data/forms/person-details.json';
+import residentialStatusFormData from '../../data/forms/residential-status.json';
+import signInVerifyFormData from '../../data/forms/sign-in-verify.json';
+import signInFormData from '../../data/forms/sign-in.json';
+import signUpDetailsFormData from '../../data/forms/sign-up-details.json';
+import yourSituationFormData from '../../data/forms/your-situation.json';
+import { EligibilityCriteria, MultiStepForm } from '../types/form';
 
 export const AGREEMENT = 'agreement';
 export const SIGN_IN = 'sign-in';

@@ -1,11 +1,7 @@
-import app from 'next/app';
 import {
-  CreateApplicationRequest,
-  Application,
+    CreateApplicationRequest
 } from '../../domain/application';
-import { Applicant as DomainResident } from '../../domain/applicant';
-import { Store } from '../store';
-import { MainResident, Resident } from '../types/resident';
+import { Resident } from '../types/resident';
 
 // convert an application in react state into an application for the api
 export const constructApplication = (applicants: Resident[]) => {

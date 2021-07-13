@@ -1,8 +1,8 @@
 import { StatusCodes } from 'http-status-codes';
-import type { NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
+import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import {
-  getApplication,
-  updateApplication,
+    getApplication,
+    updateApplication
 } from '../../../lib/gateways/applications-api';
 
 const endpoint: NextApiHandler = async (

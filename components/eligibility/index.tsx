@@ -1,10 +1,8 @@
+import { useMemo } from 'react';
+import { useAppSelector } from '../../lib/store/hooks';
+import { checkEligible } from '../../lib/utils/form';
 import Eligible from './eligible';
 import NotEligible from './not-eligible';
-import { Store } from '../../lib/store';
-import { useStore } from 'react-redux';
-import { useAppSelector } from '../../lib/store/hooks';
-import { useMemo } from 'react';
-import { checkEligible } from '../../lib/utils/form';
 
 export default function EligibilityOutcome(): JSX.Element {
   const mainApplicant = useAppSelector(

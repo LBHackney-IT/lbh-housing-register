@@ -1,10 +1,10 @@
-import Layout from '../components/layout/resident-layout';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { ButtonLink } from '../components/button';
 import { HeadingOne } from '../components/content/headings';
 import Paragraph from '../components/content/paragraph';
+import Layout from '../components/layout/resident-layout';
 
 interface LoginProps {
   appUrl: string;

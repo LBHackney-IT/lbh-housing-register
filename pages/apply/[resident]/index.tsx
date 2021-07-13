@@ -1,25 +1,24 @@
-import { HeadingOne, HeadingTwo } from '../../../components/content/headings';
-import Hint from '../../../components/form/hint';
-import Layout from '../../../components/layout/resident-layout';
-import whenAgreed from '../../../lib/hoc/whenAgreed';
-import { deleteResident } from '../../../lib/store/otherMembers';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
-import Custom404 from '../../404';
+import { HeadingOne, HeadingTwo } from '../../../components/content/headings';
 import DeleteLink from '../../../components/delete-link';
-import { useAppSelector } from '../../../lib/store/hooks';
-import { selectApplicant } from '../../../lib/store/application';
-import {
-  getApplicationStepsForResident,
-  hasResidentAnsweredForm,
-} from '../../../lib/utils/resident';
+import Layout from '../../../components/layout/resident-layout';
 import SummaryList, {
-  SummaryListActions,
-  SummaryListRow,
-  SummaryListValue,
+    SummaryListActions,
+    SummaryListRow,
+    SummaryListValue
 } from '../../../components/summary-list';
-import Link from 'next/link';
 import Tag from '../../../components/tag';
+import whenAgreed from '../../../lib/hoc/whenAgreed';
+import { selectApplicant } from '../../../lib/store/application';
+import { useAppSelector } from '../../../lib/store/hooks';
+import { deleteResident } from '../../../lib/store/otherMembers';
+import {
+    getApplicationStepsForResident,
+    hasResidentAnsweredForm
+} from '../../../lib/utils/resident';
+import Custom404 from '../../404';
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter();

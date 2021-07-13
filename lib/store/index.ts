@@ -1,9 +1,9 @@
-import { combineReducers } from 'redux';
-import { createWrapper } from 'next-redux-wrapper';
 import { configureStore } from '@reduxjs/toolkit';
-import cognitoUser, { CognitoUserInfo } from './cognitoUser';
+import { createWrapper } from 'next-redux-wrapper';
+import { combineReducers } from 'redux';
 import { Application } from '../../domain/HousingApi';
 import application, { loadApplicaiton, updateApplication } from './application';
+import cognitoUser, { CognitoUserInfo } from './cognitoUser';
 
 export interface Store {
   application: Application;

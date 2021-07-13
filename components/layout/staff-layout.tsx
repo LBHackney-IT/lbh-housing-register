@@ -1,12 +1,12 @@
-import React, { FunctionComponent } from 'react';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
-import PhaseBanner from '../phase-banner';
-import SkipLink from '../skip-link';
-import Header from '../header';
-import { hasPhaseBanner } from '../../lib/utils/phase-banner';
+import { useRouter } from 'next/router';
+import React, { FunctionComponent } from 'react';
 import { useUser } from '../../lib/contexts/user-context';
 import { signOut } from '../../lib/utils/auth';
+import { hasPhaseBanner } from '../../lib/utils/phase-banner';
+import Header from '../header';
+import PhaseBanner from '../phase-banner';
+import SkipLink from '../skip-link';
 
 const StaffLayout: FunctionComponent = (props) => {
   const { user } = useUser();

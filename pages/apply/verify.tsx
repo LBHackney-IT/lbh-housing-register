@@ -1,13 +1,13 @@
-import { HeadingOne } from '../../components/content/headings';
-import Layout from '../../components/layout/resident-layout';
-import Paragraph from '../../components/content/paragraph';
 import { Auth } from 'aws-amplify';
-import Form from '../../components/form/form';
+import { useRouter } from 'next/router';
 import Button from '../../components/button';
+import { HeadingOne } from '../../components/content/headings';
+import Paragraph from '../../components/content/paragraph';
+import Form from '../../components/form/form';
+import Layout from '../../components/layout/resident-layout';
+import { useAppSelector } from '../../lib/store/hooks';
 import { FormData } from '../../lib/types/form';
 import { getFormData, SIGN_IN_VERIFY } from '../../lib/utils/form-data';
-import { useRouter } from 'next/router';
-import { useAppSelector } from '../../lib/store/hooks';
 
 const ApplicationVerifyPage = (): JSX.Element => {
   const router = useRouter();

@@ -1,14 +1,13 @@
+import { useRouter } from 'next/router';
 import ApplicationForms from '../../../components/application/application-forms';
 import Hint from '../../../components/form/hint';
 import Layout from '../../../components/layout/resident-layout';
 import whenAgreed from '../../../lib/hoc/whenAgreed';
+import { selectApplicant } from '../../../lib/store/application';
+import { useAppSelector } from '../../../lib/store/hooks';
 import { getApplicationStepFromId } from '../../../lib/utils/application-forms';
 import { getApplicationStepsForResident } from '../../../lib/utils/resident';
-import { useRouter } from 'next/router';
-import { useDispatch, useStore } from 'react-redux';
 import Custom404 from '../../404';
-import { useAppSelector } from '../../../lib/store/hooks';
-import { selectApplicant } from '../../../lib/store/application';
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter();

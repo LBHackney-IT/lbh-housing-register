@@ -31,18 +31,18 @@ export default function ApplicationPage({
 
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-two-thirds">
-            <PersonalDetails
+            {data.mainApplicant && <PersonalDetails
               heading="Personal details"
               applicant={data.mainApplicant}
-            />
+            />}
             {data.mainApplicant?.contactInformation && <ContactDetails
               heading="Contact details"
               contact={data.mainApplicant.contactInformation}
             />}
-            <AddressDetails
+            {data.mainApplicant?.address && <AddressDetails
               heading="Current accommodation"
               address={data.mainApplicant?.address}
-            />
+            />}
           </div>
           <div className="govuk-grid-column-one-third">
             {data.otherMembers && (

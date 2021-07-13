@@ -48,9 +48,6 @@ const slice = createSlice({
   },
 });
 
-// export const selectAllApplicants = () => (store: Store) =>
-//   [store.application.mainApplicant, ...(store.application.otherMembers || [])];
-
 export const selectApplicant =
   (applicantPersonId: string) => (store: Store) => {
     if (store.application.mainApplicant?.person?.id === applicantPersonId) {

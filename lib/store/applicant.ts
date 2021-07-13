@@ -6,9 +6,9 @@ import { AGREEMENT } from '../utils/form-data';
 
 const initialState: Applicant = {};
 
-function applyQuestions(state:  Applicant | undefined, activeStepId: string, values: FormikValues): Applicant {
+function applyQuestions(state:  Applicant | undefined = {}, activeStepId: string, values: FormikValues): Applicant {
   return {
-    ...(state || {}),
+    ...(state),
     questions: [
       ...(state?.questions?.filter(
         (question) =>

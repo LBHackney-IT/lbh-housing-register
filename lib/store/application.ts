@@ -1,4 +1,10 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {
+  AnyAction,
+  createAsyncThunk,
+  createSlice,
+  Middleware,
+  ThunkDispatch,
+} from '@reduxjs/toolkit';
 import { Store } from '.';
 import { Application } from '../../domain/HousingApi';
 import applicant from './applicant';
@@ -50,5 +56,25 @@ export const selectApplicant =
       (a) => a.person?.id === applicantPersonId
     );
   };
+
+export const autoSaveMiddleware: Middleware<
+  {},
+  Store,
+  ThunkDispatch<Store, null, AnyAction>
+> = (storeAPI) => (next) => (action) => {
+  const previousApplication = storeAPI.getState().application;
+  const newAction = next(action);
+  const newApplication = storeAPI.getState().application;
+
+  if (
+    previousApplication !== newApplication &&
+    !action.type.startsWith(loadApplicaiton.typePrefix) &&
+    newApplication.id
+  ) {
+    storeAPI.dispatch(updateApplication(newApplication));
+  }
+
+  return newAction;
+};
 
 export default slice;

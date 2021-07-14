@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
 import { combineReducers } from 'redux';
 import { Application } from '../../domain/HousingApi';
-import application, { loadApplicaiton, updateApplication } from './application';
+import application, { autoSaveMiddleware } from './application';
 import cognitoUser, { CognitoUserInfo } from './cognitoUser';
 
 export interface Store {
@@ -20,21 +20,7 @@ const makeStore = () =>
     reducer,
     middleware: (getDefaultMiddleware) => [
       ...getDefaultMiddleware(),
-      (storeAPI) => (next) => (action) => {
-        const previousApplication = storeAPI.getState().application;
-        const newAction = next(action);
-        const newApplication = storeAPI.getState().application;
-
-        if (
-          previousApplication !== newApplication &&
-          !action.type.startsWith(loadApplicaiton.typePrefix) &&
-          newApplication.id
-        ) {
-          storeAPI.dispatch(updateApplication(newApplication));
-        }
-
-        return newAction;
-      },
+      autoSaveMiddleware,
     ],
   });
 

@@ -16,43 +16,39 @@ const ApplicationVerifyPage = (): JSX.Element => {
     router.push('/apply/overview');
   }
 
-  const username = useAppSelector((store) => store.cognitoUser?.username);
+  const emailAddress = useAppSelector(
+    (store) => store.application.mainApplicant?.contactInformation?.emailAddress
+  );
 
   const confirmSignUp = async (values: FormData) => {
-    await Auth.confirmSignUp(values.email, values.code);
+    await Auth.confirmSignUp(values.emailAddress, values.code);
 
     // TODO: turns out we also need to sign in at this point!
     // TODO: update store
     router.push('/apply/household');
   };
 
-  const resendCode = async (username: string) => {
-    try {
-      await Auth.resendSignUp(username);
-
-      // TODO: provide UI update
-    } catch (error) {
-      // TODO: handle error
-      console.log('error sending code', error);
-    }
+  const resendCode = async (emailAddress: string) => {
+    await Auth.resendSignUp(emailAddress);
   };
 
   return (
     <Layout>
       <HeadingOne content="Enter your verification code" />
-      {username && (
+      {emailAddress && (
         <>
           <Paragraph>
-            We've sent a code to <strong>{username}</strong> to confirm your
+            We've sent a code to <strong>{emailAddress}</strong> to confirm your
             account. Enter it below.
           </Paragraph>
-          <Button onClick={() => resendCode(username)} secondary>
+          <Button onClick={() => resendCode(emailAddress)} secondary>
             Send again
           </Button>
         </>
       )}
 
       <Form
+        initialValues={{ emailAddress }}
         formData={getFormData(SIGN_IN_VERIFY)}
         buttonText="Continue"
         onSubmit={confirmSignUp}

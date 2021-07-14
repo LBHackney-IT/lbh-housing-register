@@ -4,7 +4,8 @@ import { useRouter } from 'next/router';
 import { HeadingOne } from '../../components/content/headings';
 import Form from '../../components/form/form';
 import Layout from '../../components/layout/resident-layout';
-import { useAppSelector } from '../../lib/store/hooks';
+import { updateApplicant } from '../../lib/store/applicant';
+import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { getFormData, SIGN_UP_DETAILS } from '../../lib/utils/form-data';
 
 export function processPhonenumber(input: string): string {
@@ -25,25 +26,38 @@ export function processPhonenumber(input: string): string {
 const ApplicationStartPage = (): JSX.Element => {
   const router = useRouter();
   const isLoggedIn = useAppSelector((store) => store.cognitoUser?.username);
+  const dispatch = useAppDispatch();
 
   if (isLoggedIn) {
     router.push('/apply/overview');
   }
 
   const signUp = async (values: FormikValues) => {
+    const phone = values.phoneNumber && processPhonenumber(values.phoneNumber);
     await Auth.signUp({
-      username: values.email,
+      username: values.emailAddress,
       // See https://aws.amazon.com/blogs/mobile/implementing-passwordless-email-authentication-with-amazon-cognito/
       // on how to generate a random password securely.
       password: values.password,
       attributes: {
-        given_name: values.first_name,
-        family_name: values.last_name,
-        phone_number: processPhonenumber(values.phone_number), // E.164 number convention
+        given_name: values.firstName,
+        family_name: values.lastMame,
+        phone_number: phone, // E.164 number convention
       },
     });
 
-    // Store some context about the CognitoUser ready for verify.tsx to read it.
+    dispatch(
+      updateApplicant({
+        person: {
+          firstName: values.firstName,
+          surname: values.lastMame,
+        },
+        contactInformation: {
+          emailAddress: values.emailAddress,
+          phoneNumber: phone,
+        },
+      })
+    );
 
     router.push('/apply/verify');
   };

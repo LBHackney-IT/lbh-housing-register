@@ -6,20 +6,23 @@ import { AGREEMENT } from '../utils/form-data';
 
 const initialState: Applicant = {};
 
-function applyQuestions(state:  Applicant | undefined = {}, activeStepId: string, values: FormikValues): Applicant {
+function applyQuestions(
+  state: Applicant | undefined = {},
+  activeStepId: string,
+  values: FormikValues
+): Applicant {
   return {
-    ...(state),
+    ...state,
     questions: [
       ...(state?.questions?.filter(
-        (question) =>
-          !question.id?.startsWith(`${activeStepId}/`)
+        (question) => !question.id?.startsWith(`${activeStepId}/`)
       ) || []),
       ...Object.entries(values).map(([id, answer]) => ({
         id: `${activeStepId}/${id}`,
         answer: JSON.stringify(answer),
       })),
     ],
-  }
+  };
 }
 
 const slice = createSlice({
@@ -29,12 +32,31 @@ const slice = createSlice({
     /**
      * Agree to terms and conditions
      */
-    agree: (state, action) => applyQuestions(state, AGREEMENT, {agree: true}),
+    agree: (state, action) => applyQuestions(state, AGREEMENT, { agree: true }),
+
+    updateApplicant: (state, action: PayloadAction<Partial<Applicant>>) => {
+      return {
+        ...state,
+        person: {
+          ...state?.person,
+          ...action.payload.person,
+        },
+        contactInformation: {
+          ...state?.contactInformation,
+          ...action.payload.contactInformation,
+        },
+        address: {
+          ...state?.address,
+          ...action.payload.address,
+        },
+      };
+    },
 
     updateWithFormValues: (
       state,
       action: PayloadAction<{ activeStepId: string; values: FormikValues }>
-    ) =>  applyQuestions(state, action.payload.activeStepId, action.payload.values)
+    ) =>
+      applyQuestions(state, action.payload.activeStepId, action.payload.values),
   },
 });
 
@@ -47,4 +69,4 @@ export function selectHasAgreed(store: Store) {
 }
 
 export default slice;
-export const { agree, updateWithFormValues } = slice.actions;
+export const { agree, updateApplicant, updateWithFormValues } = slice.actions;

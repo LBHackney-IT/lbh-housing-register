@@ -1,12 +1,7 @@
 {
+  "id": "1",
+  
   "heading": "Court Order",
-  "eligibility": [
-    {
-      "field": "court-order",
-      "is": "No",
-      "reasoning": "It's unlikely that you will qualify for social housing."
-    }
-  ],
   "copy": "Do you have a court order allowing you to be on the register?",
   "steps": [
     {
@@ -33,7 +28,7 @@
     }
   ], 
   "conditionals": {
-    "no": "",
-    "yes": ""
+    "no": "0",
+    "yes": "2"
   }
 }

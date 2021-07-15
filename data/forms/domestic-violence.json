@@ -1,4 +1,5 @@
 {
+  "id": "",
   "heading": "Domestic Violence",
   "copy": "Are you feeling domestic violence?",
   "steps": [
@@ -26,7 +27,7 @@
     }
   ], 
   "conditionals": {
-    "if-no": "",
-    "if-yes": ""
+    "no": "",
+    "yes": ""
   }
 }

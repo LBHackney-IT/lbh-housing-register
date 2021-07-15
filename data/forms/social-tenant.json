@@ -26,7 +26,7 @@
     }
   ], 
   "conditionals": {
-    "if-no": "",
-    "if-yes": ""
+    "no": "",
+    "yes": ""
   }
 }

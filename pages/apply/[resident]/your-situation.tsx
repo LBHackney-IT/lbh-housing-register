@@ -14,7 +14,7 @@ import { useState } from 'react';
 import CourtOrder from '../../../data/forms/court-order.json';
 import SocialTenant from '../../../data/forms/social-tenant.json';
 
-// TODO: initialValues - 
+// TODO: initialValues - pre-population
 // TODO: Conditional logic
 // TODO: exit logic
 // TODO: form data is not being saved
@@ -29,6 +29,12 @@ export default function YourSituation() {
   let thisResident = router.query.resident;
   thisResident = thisResident as string;
   const currentResident = getResident(thisResident, store.getState());
+  console.log('currentResident', currentResident);
+
+  let name = ''
+  if (currentResident && currentResident.name) {
+    name = currentResident.name;
+  }
 
   const [applicationData, setApplicationData] = useState({});
   const [initValues, setInitValues] = useState({});
@@ -36,6 +42,7 @@ export default function YourSituation() {
 
   if(Object.keys(questions).length === 0) {
     //TODO: Need to take into consideration if squatter, unauthorised, owner, none of the above
+    // Query the redux store for previous answers to determine what question to display first
     setQuestions(CourtOrder)
   }
 
@@ -83,7 +90,7 @@ export default function YourSituation() {
   return (
     <>
     <Layout breadcrumbs={breadcrumbs}>
-      <Hint content={currentResident.name} />
+      <Hint content={name} />
 
       <Formik 
           initialValues={initValues}

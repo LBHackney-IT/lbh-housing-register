@@ -59,10 +59,28 @@ export default function YourSituation() {
   const [initValues, setInitValues] = useState({});
   const [questions, setQuestions] = useState({});
 
-  if(Object.keys(questions).length === 0) {
-    //TODO: Need to take into consideration if squatter, unauthorised, owner, none of the above
-    // Query the redux store for previous answers to determine what question to display first
-    setQuestions(CourtOrder)
+  if (Object.keys(questions).length === 0) {
+    var currentAccomodation =
+      currentResident?.formData['address-details']?.['current-acommodation'];
+
+    if (!currentAccomodation || currentAccomodation.length === 0) {
+      router.push('/apply/you');
+    }
+
+    switch (currentAccomodation.toLowerCase()) {
+      case 'squatter':
+        setQuestions(Question1);
+        break;
+      case 'unauthorised-occupant':
+        setQuestions(Question2);
+        break;
+      case 'owner-occupier':
+        setQuestions(Question3);
+        break;
+      default:
+        setQuestions(Question4);
+        break;
+    }
   }
 
   const onExit = true;

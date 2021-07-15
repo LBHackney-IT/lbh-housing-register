@@ -1,0 +1,40 @@
+{
+  "id": "16",
+  "heading": "Breach of tenancy",
+  "copy": "Has anyone in your household ever received a warning for a breach of tenancy? (If Yes, provide details)",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "Please select",
+          "name": "breach-of-tenancy",
+          "options": [
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "Last name",
+          "name": "surname",
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ],
+  "conditionals": {
+    "no": "0",
+    "yes": "17"
+  }
+}

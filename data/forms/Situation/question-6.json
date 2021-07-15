@@ -1,0 +1,33 @@
+{
+  "id": "6",
+  "heading": "Medical",
+  "copy": "Do you have medical need?",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "Please select",
+          "name": "medical-need",
+          "options": [
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ],
+  "conditionals": {
+    "no": "0",
+    "yes": "7"
+  }
+}

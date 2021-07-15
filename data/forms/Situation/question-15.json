@@ -1,0 +1,33 @@
+{
+  "id": "15",
+  "heading": "Other housing register",
+  "copy": "Are you or your partner on another local authority’s housing register?",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "Please select",
+          "name": "Other-housing-register",
+          "options": [
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ],
+  "conditionals": {
+    "no": "16",
+    "yes": "0"
+  }
+}

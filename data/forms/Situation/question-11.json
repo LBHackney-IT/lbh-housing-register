@@ -1,0 +1,33 @@
+{
+  "id": "11",
+  "heading": "Arrears",
+  "copy": "Are you in 4 weeks or more arrears with your rent, council tax or service charges?",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "Please select",
+          "name": "arrears",
+          "options": [
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ],
+  "conditionals": {
+    "no": "15",
+    "yes": "12"
+  }
+}

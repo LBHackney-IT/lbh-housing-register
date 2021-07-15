@@ -1,0 +1,33 @@
+{
+  "id": "14",
+  "heading": "Landlord",
+  "copy": "Have you made an agreement with landlord?",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "Please select",
+          "name": "landlord",
+          "options": [
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ],
+  "conditionals": {
+    "no": "0",
+    "yes": "15"
+  }
+}

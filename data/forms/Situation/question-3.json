@@ -1,0 +1,33 @@
+{
+  "id": "3",
+  "heading": "Domestic Violence?",
+  "copy": "Are you fleeing Domestic Violence?",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "Please Select",
+          "name": "domestic-violence",
+          "options": [
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ],
+  "conditionals": {
+    "no": "8",
+    "yes": "11"
+  }
+}

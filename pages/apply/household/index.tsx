@@ -3,7 +3,10 @@ import { useRouter } from 'next/router';
 import { HeadingOne } from '../../../components/content/headings';
 import Form from '../../../components/form/form';
 import Layout from '../../../components/layout/resident-layout';
-import { updateWithFormValues } from '../../../lib/store/applicant';
+import {
+  ensurePersonId,
+  updateWithFormValues,
+} from '../../../lib/store/applicant';
 import { useAppDispatch } from '../../../lib/store/hooks';
 import { createAdditionalApplicants } from '../../../lib/store/otherMembers';
 import { getFormData, HOUSEHOLD_OVERVIEW } from '../../../lib/utils/form-data';
@@ -13,6 +16,7 @@ const HouseHoldPage = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   const confirmHouseHoldSize = async (values: FormikValues) => {
+    dispatch(ensurePersonId());
     dispatch(
       updateWithFormValues({ activeStepId: HOUSEHOLD_OVERVIEW, values })
     );

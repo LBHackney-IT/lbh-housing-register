@@ -1,4 +1,5 @@
 import { FormField } from '../../lib/types/form';
+import Paragraph from '../content/paragraph';
 import BirthdayInput from './birthdayinput';
 import Checkboxes, { CheckboxesProps } from './checkboxes';
 import DateInput from './dateinput';
@@ -12,7 +13,7 @@ interface DynamicFieldProps {
   field: FormField;
   onAddressLookup?: any;
   timeAtAddress?: any;
-  handleChange?:any;
+  handleChange?: any;
 }
 
 export default function DynamicField({
@@ -36,13 +37,22 @@ export default function DynamicField({
       return <Textarea {...field} />;
 
     case 'dateinput':
-      return <DateInput {...field} timeAtAddress={timeAtAddress} handleChange={handleChange} />;
+      return (
+        <DateInput
+          {...field}
+          timeAtAddress={timeAtAddress}
+          handleChange={handleChange}
+        />
+      );
 
     case 'birthdayinput':
       return <BirthdayInput {...field} />;
 
     case 'dropdown':
       return <Dropdown {...field} />;
+
+    case 'paragraph':
+      return <Paragraph>{field.label}</Paragraph>;
 
     default:
       return <Input {...field} onAddressLookup={onAddressLookup} />;

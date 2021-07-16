@@ -6,7 +6,7 @@ import { AGREEMENT } from '../utils/form-data';
 
 const initialState: Applicant = {};
 
-function applyQuestions(
+export function applyQuestions(
   state: Applicant | undefined = {},
   activeStepId: string,
   values: FormikValues
@@ -25,6 +25,27 @@ function applyQuestions(
   };
 }
 
+export function updateApplicantReducer(
+  state: Applicant | undefined,
+  action: PayloadAction<Partial<Applicant>>
+) {
+  return {
+    ...state,
+    person: {
+      ...state?.person,
+      ...action.payload.person,
+    },
+    contactInformation: {
+      ...state?.contactInformation,
+      ...action.payload.contactInformation,
+    },
+    address: {
+      ...state?.address,
+      ...action.payload.address,
+    },
+  };
+}
+
 const slice = createSlice({
   name: 'applicant',
   initialState: initialState as Applicant | undefined,
@@ -33,25 +54,7 @@ const slice = createSlice({
      * Agree to terms and conditions
      */
     agree: (state, action) => applyQuestions(state, AGREEMENT, { agree: true }),
-
-    updateApplicant: (state, action: PayloadAction<Partial<Applicant>>) => {
-      return {
-        ...state,
-        person: {
-          ...state?.person,
-          ...action.payload.person,
-        },
-        contactInformation: {
-          ...state?.contactInformation,
-          ...action.payload.contactInformation,
-        },
-        address: {
-          ...state?.address,
-          ...action.payload.address,
-        },
-      };
-    },
-
+    updateApplicant: updateApplicantReducer,
     updateWithFormValues: (
       state,
       action: PayloadAction<{ activeStepId: string; values: FormikValues }>

@@ -2,13 +2,7 @@ import addressDetailsFormData from '../../data/forms/address-details.json';
 import addressHistory from '../../data/forms/address-history.json';
 import agreementFormData from '../../data/forms/agreement.json';
 import houseHoldOverview from '../../data/forms/household-details.json';
-import peopleInApplication_1 from '../../data/forms/household/people-in-application-1.json';
-import peopleInApplication_2 from '../../data/forms/household/people-in-application-2.json';
-import peopleInApplication_3 from '../../data/forms/household/people-in-application-3.json';
-import peopleInApplication_4 from '../../data/forms/household/people-in-application-4.json';
-import peopleInApplication_5 from '../../data/forms/household/people-in-application-5.json';
-import peopleInApplication_6 from '../../data/forms/household/people-in-application-6.json';
-import peopleInApplication_7 from '../../data/forms/household/people-in-application-7.json';
+import peopleInApplication from '../../data/forms/people-in-application.json';
 import immigrationStatusFormData from '../../data/forms/immigration-status.json';
 import incomeSavings from '../../data/forms/income.json';
 import medicalNeeds from '../../data/forms/medical-needs.json';
@@ -18,7 +12,7 @@ import signInVerifyFormData from '../../data/forms/sign-in-verify.json';
 import signInFormData from '../../data/forms/sign-in.json';
 import signUpDetailsFormData from '../../data/forms/sign-up-details.json';
 import yourSituationFormData from '../../data/forms/your-situation.json';
-import { EligibilityCriteria, MultiStepForm } from '../types/form';
+import { EligibilityCriteria, FormField, MultiStepForm } from '../types/form';
 
 export const AGREEMENT = 'agreement';
 export const SIGN_IN = 'sign-in';
@@ -98,21 +92,41 @@ export function getFormData(form: string): MultiStepForm {
   }
 }
 
-export function getHouseHoldData(form: any): any {
-  switch (parseInt(form)) {
-    case 1:
-      return peopleInApplication_1;
-    case 2:
-      return peopleInApplication_2;
-    case 3:
-      return peopleInApplication_3;
-    case 4:
-      return peopleInApplication_4;
-    case 5:
-      return peopleInApplication_5;
-    case 6:
-      return peopleInApplication_6;
-    case 7:
-      return peopleInApplication_7;
-  }
+export function getPeopleInApplicationForm(
+  additionalResidents: number
+): MultiStepForm {
+  const formFields = peopleInApplication.steps[0].fields;
+
+  const headerField = (n: number): FormField => ({
+    as: 'paragraph',
+    label: `Person ${n + 1}`,
+    name: `person${n + 1}`,
+  });
+
+  const mainApplicantFields = [
+    headerField(0),
+    ...formFields.map((field) => ({
+      ...field,
+      name: `mainApplicant.${field.name}`,
+    })),
+  ];
+
+  const additionalResidentsFields = new Array(additionalResidents)
+    .fill(undefined)
+    .flatMap((_, i) => [
+      headerField(i + 1),
+      ...formFields.map((field) => ({
+        ...field,
+        name: `otherMembers[${i}].${field.name}`,
+      })),
+    ]);
+
+  return {
+    ...peopleInApplication,
+    steps: [
+      {
+        fields: [...mainApplicantFields, ...additionalResidentsFields],
+      },
+    ],
+  };
 }

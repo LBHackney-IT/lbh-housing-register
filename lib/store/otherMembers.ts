@@ -3,7 +3,7 @@ import { FormikValues } from 'formik';
 import { v4 as uuidv4 } from 'uuid';
 // import { loadApplicaiton } from './application';
 import { Applicant } from '../../domain/HousingApi';
-
+import { applyQuestions, updateApplicantReducer } from './applicant';
 
 const initialState: Applicant[] = [];
 
@@ -12,6 +12,43 @@ const slice = createSlice({
   initialState: initialState as Applicant[] | undefined,
 
   reducers: {
+    createAdditionalApplicants: (state = [], action: PayloadAction<number>) =>
+      new Array(action.payload)
+        .fill(undefined)
+        .map(() => ({ person: { id: 'temp-' + uuidv4() } })),
+
+    updateAdditionalApplicant: (
+      state = [],
+      action: PayloadAction<Applicant>
+    ) => {
+      const applicant = state.findIndex(
+        (p) => p.person?.id && p.person?.id === action.payload.person?.id
+      );
+      // Immer
+      state[applicant] = updateApplicantReducer(state[applicant], action);
+      return state;
+    },
+    updateAdditionalApplicantWithFormValues: (
+      state = [],
+      action: PayloadAction<{
+        activeStepId: string;
+        id: string;
+        values: FormikValues;
+      }>
+    ) => {
+      const applicant = state.findIndex(
+        (p) => p.person?.id && p.person?.id === action.payload.id
+      );
+      // Immer
+      state[applicant] = applyQuestions(
+        state[applicant],
+        action.payload.activeStepId,
+        action.payload.values
+      );
+
+      return state;
+    },
+
     /**
      * Add additional resident to store
      */
@@ -25,7 +62,10 @@ const slice = createSlice({
     /**
      * Add additional resident to store (using form data)
      */
-    addResidentFromFormData: (state = [], action: PayloadAction<FormikValues>) => {
+    addResidentFromFormData: (
+      state = [],
+      action: PayloadAction<FormikValues>
+    ) => {
       const applicant: Applicant = {
         person: {
           id: uuidv4(), // TODO generate on the server instead.
@@ -43,17 +83,18 @@ const slice = createSlice({
     /**
      * Delete resident
      */
-    deleteApplicant: (
-      state = [],
-      action: PayloadAction<Applicant>
-    ) => state.filter(
-      (resident) => resident.person?.id !== action.payload.person?.id
-    ),
+    deleteApplicant: (state = [], action: PayloadAction<Applicant>) =>
+      state.filter(
+        (resident) => resident.person?.id !== action.payload.person?.id
+      ),
   },
 });
 
 export default slice;
 export const {
+  createAdditionalApplicants,
+  updateAdditionalApplicantWithFormValues,
+  updateAdditionalApplicant,
   addApplicant,
   addResidentFromFormData,
   deleteApplicant,

@@ -12,11 +12,11 @@
           "options": [
             {
               "label": "Yes",
-              "value": "yes"
+              "value": "17"
             },
             {
               "label": "No",
-              "value": "no"
+              "value": "17"
             }
           ],
           "validation": {
@@ -24,6 +24,7 @@
           }
         },
         {
+          "as": "textarea",
           "label": "details",
           "name": "details",
           "validation": {
@@ -34,7 +35,7 @@
     }
   ],
   "conditionals": {
-    "no": "",
-    "yes": ""
+    "no": "17",
+    "yes": "17"
   }
 }

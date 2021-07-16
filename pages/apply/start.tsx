@@ -41,7 +41,7 @@ const ApplicationStartPage = (): JSX.Element => {
       password: values.password,
       attributes: {
         given_name: values.firstName,
-        family_name: values.lastMame,
+        family_name: values.surname,
         phone_number: phone, // E.164 number convention
       },
     });
@@ -50,7 +50,7 @@ const ApplicationStartPage = (): JSX.Element => {
       updateApplicant({
         person: {
           firstName: values.firstName,
-          surname: values.lastMame,
+          surname: values.surname,
         },
         contactInformation: {
           emailAddress: values.emailAddress,

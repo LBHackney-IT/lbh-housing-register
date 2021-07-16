@@ -1,18 +1,13 @@
 import { Form as FormikForm, Formik, FormikValues } from 'formik';
 import { useMemo, useRef, useState } from 'react';
+import Announcement from '../../components/announcement';
 import { FormData, MultiStepForm } from '../../lib/types/form';
-import {
-  getDisplayStateOfField,
-  getInitialValuesFromMultiStepForm,
-} from '../../lib/utils/form';
+import { getDisplayStateOfField } from '../../lib/utils/form';
 import { buildValidationSchema } from '../../lib/utils/validation';
 import Button from '../button';
 import { HeadingTwo } from '../content/headings';
 import Paragraph from '../content/paragraph';
-
 import DynamicField from './dynamic-field';
-
-import Announcement from '../../components/announcement';
 
 interface FormProps {
   buttonText?: string;
@@ -37,16 +32,19 @@ export default function Form({
   timeAtAddress,
   activeStep,
 }: FormProps): JSX.Element {
-  const calculatedInitialValues = useMemo(
-    () => initialValues || getInitialValuesFromMultiStepForm(formData),
-    [initialValues, formData]
-  );
   const [stepNumber, setStepNumber] = useState(0);
 
   const step = formData.steps[stepNumber];
   const totalSteps = formData.steps.length;
   const isLastStep = stepNumber === totalSteps - 1;
   const submitButtonRef = useRef<'submit' | 'submitExit'>();
+
+  const schema = buildValidationSchema(step.fields);
+
+  const calculatedInitialValues = useMemo(
+    () => initialValues || schema.getDefault(),
+    [initialValues, schema]
+  );
 
   const next = () => {
     // TODO: Scroll to top + set focus to first field
@@ -93,7 +91,6 @@ export default function Form({
           <FormikForm>
             {step.heading && <HeadingTwo content={step.heading} />}
             {step.copy && <Paragraph>{step.copy}</Paragraph>}
-
             {step.fields.map((field, index) => {
               const display: boolean = getDisplayStateOfField(field, values);
               if (display) {
@@ -108,7 +105,6 @@ export default function Form({
                 );
               }
             })}
-
             {activeStep === 'income-savings' && (
               <Announcement variant="success">
                 <h3 className="lbh-heading-h3">
@@ -143,7 +139,6 @@ export default function Form({
                   </p>
                 </Announcement>
               )}
-
             <div className="c-flex lbh-simple-pagination">
               {stepNumber > 0 && (
                 <div className="c-flex__1">
@@ -167,7 +162,6 @@ export default function Form({
                 </Button>
               </div>
             </div>
-
             {onExit && (
               <div className="text-right">
                 <Button

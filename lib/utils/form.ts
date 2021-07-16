@@ -1,5 +1,5 @@
 import { Applicant } from '../../domain/HousingApi';
-import { FormData, FormField, MultiStepForm } from '../types/form';
+import { FormData, FormField } from '../types/form';
 
 /**
  * Determines if the field should be displayed based on the values passed in
@@ -26,38 +26,6 @@ export function getDisplayStateOfField(
   }
 
   return display;
-}
-
-/**
- * Get the initial state / values.
- * This checks to see if `field.initialValue` is set, otherwise an empty string is returned.
- * @param {FormField[]} fields - The fields
- * @returns {FormData} - An object of form values, where the key is the name of the field
- */
-export function getInitialValuesFromFields(fields: FormField[]): FormData {
-  const initialValues: FormData = {};
-  fields.map((field) => (initialValues[field.name] = field.initialValue || ''));
-  return initialValues;
-}
-
-/**
- * Get the initial state / values from the multi page form data/
- * This checks to see if `field.initialValue` is set, otherwise an empty string is returned.
- * @param {MultiStepForm} data - The multi page form data
- * @returns {FormData} - An object of form values, where the key is the name of the field
- */
-export function getInitialValuesFromMultiStepForm(
-  data: MultiStepForm
-): FormData {
-  let initialValues: FormData = {};
-  data.steps.map(
-    (step) =>
-      (initialValues = Object.assign(
-        initialValues,
-        getInitialValuesFromFields(step.fields)
-      ))
-  );
-  return initialValues;
 }
 
 /**

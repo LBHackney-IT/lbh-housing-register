@@ -1,5 +1,6 @@
+import { setIn } from 'formik';
 import * as Yup from 'yup';
-import { FormData, FormField } from '../types/form';
+import { FormField } from '../types/form';
 
 /**
  * Builds out the validation schema for the form fields that are passed in
@@ -7,14 +8,12 @@ import { FormData, FormField } from '../types/form';
  * @returns ObjectShapeSchema
  */
 export function buildValidationSchema(fields: FormField[]) {
-  const validationSchema: FormData = {};
-
-  fields.map((field) => {
+  const validationSchema = fields.reduce((acc, field) => {
     if (field.validation || field.type) {
       let baseType: Yup.BaseSchema;
       const fieldType: string | undefined =
         field.type?.toLowerCase() || field.as?.toLowerCase();
-      let fieldValidation: any;
+      let fieldValidation: Yup.BaseSchema;
 
       switch (fieldType) {
         case 'checkbox':
@@ -132,11 +131,32 @@ export function buildValidationSchema(fields: FormField[]) {
         field,
         baseType
       );
-      validationSchema[field.name] = fieldValidation;
-    }
-  });
 
-  return Yup.object().shape(validationSchema);
+      fieldValidation = fieldValidation.default(field.initialValue ?? '');
+
+      return setIn(acc, field.name, fieldValidation);
+    }
+    return acc;
+  }, {});
+
+  const walkSchema = (schema: any) => {
+    Object.entries(schema).forEach(([k, v]: [string, any]) => {
+      if (
+        typeof v === 'object' &&
+        v !== null &&
+        (v.constructor === Object || v.constructor === Array)
+      ) {
+        walkSchema(v);
+        // Using object for arrays means that each key in the array can have a different schema (unlikely but not something we're protecting against elsewhere)
+        // A side effect is that you'll get objects instead of arrays out of Formik.
+        schema[k] = Yup.object(v);
+      }
+    });
+  };
+
+  walkSchema(validationSchema);
+
+  return Yup.object(validationSchema);
 }
 
 /**

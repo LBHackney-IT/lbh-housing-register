@@ -21,6 +21,24 @@ import addressHistory from '../../data/forms/address-history.json';
 import incomeSavings from '../../data/forms/income.json';
 import medicalNeeds from '../../data/forms/medical-needs.json';
 
+import CourtOrder from '../../data/forms/Situation/question-1.json';
+import AccommodationType from '../../data/forms/Situation/question-2.json';
+import DomesticViolence from '../../data/forms/Situation/question-3.json';
+import Homelessness from '../../data/forms/Situation/question-4.json';
+import Subletting from '../../data/forms/Situation/question-5.json';
+import MedicalNeed from '../../data/forms/Situation/question-6.json';
+import PurchasingProperty from '../../data/forms/Situation/question-7.json';
+import PropertyOwnership from '../../data/forms/Situation/question-8.json';
+import SoldProperty from '../../data/forms/Situation/question-9.json';
+import RelationshipBreakdown from '../../data/forms/Situation/question-10.json';
+import Arrears from '../../data/forms/Situation/question-11.json';
+import UnderOccupying from '../../data/forms/Situation/question-12.json';
+import Benefits from '../../data/forms/Situation/question-13.json';
+import Landlord from '../../data/forms/Situation/question-14.json';
+import OtherHousingRegister from '../../data/forms/Situation/question-15.json';
+import BreachOfTenancy from '../../data/forms/Situation/question-16.json';
+import legalRestrictions from '../../data/forms/Situation/question-17.json';
+import unspentConvictions from '../../data/forms/Situation/question-18.json';
 
 export const AGREEMENT = 'agreement';
 export const SIGN_IN = 'sign-in';
@@ -36,6 +54,25 @@ export const PEOPLE_IN_APPLICATION = 'people-in-application';
 export const ADDRESS_HISTORY = 'address-history';
 export const INCOME_SAVINGS = 'income-savings';
 export const MEDICAL_NEEDS = 'medical-needs';
+
+export const COURT_ORDER = 'court-order';
+export const ACCOMODATION_TYPE = 'AccommodationType';
+export const DOMESTIC_VIOLENCE = 'domestic-violence';
+export const HOMELESSESS = 'homelessness';
+export const SUBLETTING = 'subletting';
+export const MEDICAL_NEED = 'medical-need';
+export const PURCHASING_PROPERTY = 'purchasing-property';
+export const PROPERTY_OWNERSHIP = 'property-ownership';
+export const SOLD_PROPERTY = 'sold-property';
+export const RELATIONSHIP_BREAKDOWN = 'relationship-breakdown';
+export const ARREARS = 'arrears';
+export const UNDER_OCCUPYING = 'under-occupying';
+export const BENEFITS = 'benefits';
+export const LANDLORD = 'landlord';
+export const OTHER_HOUSING_REGISTER = 'other-housing-register';
+export const BREACH_OF_TENANCY = 'breach-of-tenancy';
+export const LEAGLE_RESTRICTIONS = 'legal-restrictions';
+export const UNSPENT_CONVICTIONS = 'unspent-convictions';
 
 /**
  * Get the eligibility criteria from the requested form
@@ -86,20 +123,73 @@ export function getFormData(form: string): MultiStepForm {
     case HOUSEHOLD_OVERVIEW:
       return houseHoldOverview;
 
-    case ADDRESS_HISTORY: 
+    case ADDRESS_HISTORY:
       return addressHistory;
 
     case INCOME_SAVINGS:
       return incomeSavings;
-      
+
     case MEDICAL_NEEDS:
       return medicalNeeds;
+
+    case COURT_ORDER:
+      return CourtOrder;
+
+    case ACCOMODATION_TYPE:
+      return AccommodationType;
+
+    case DOMESTIC_VIOLENCE:
+      return DomesticViolence;
+
+    case HOMELESSESS:
+      return Homelessness;
+
+    case SUBLETTING:
+      return Subletting;
+
+    case MEDICAL_NEED:
+      return MedicalNeed;
+
+    case PURCHASING_PROPERTY:
+      return PurchasingProperty;
+
+    case PROPERTY_OWNERSHIP:
+      return PropertyOwnership;
+
+    case SOLD_PROPERTY:
+      return SoldProperty;
+
+    case RELATIONSHIP_BREAKDOWN:
+      return RelationshipBreakdown;
+
+    case ARREARS:
+      return Arrears;
+
+    case UNDER_OCCUPYING:
+      return UnderOccupying;
+
+    case BENEFITS:
+      return Benefits;
+
+    case LANDLORD:
+      return Landlord;
+
+    case OTHER_HOUSING_REGISTER:
+      return OtherHousingRegister;
+
+    case BREACH_OF_TENANCY:
+      return BreachOfTenancy;
+
+    case LEAGLE_RESTRICTIONS:
+      return legalRestrictions;
+
+    case UNSPENT_CONVICTIONS:
+      return unspentConvictions;
 
     default:
       return testFormData;
   }
 }
-
 
 export function getHouseHoldData(form: any): any {
   switch (parseInt(form)) {

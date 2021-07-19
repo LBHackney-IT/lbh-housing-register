@@ -108,7 +108,7 @@ export const getApplicationStepsForResident = (
           },
           {
             heading: 'Address history',
-            id: ADDRESS_HISTORY
+            id: ADDRESS_HISTORY,
           },
           {
             heading: 'Current accommodation',

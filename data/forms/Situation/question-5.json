@@ -8,7 +8,7 @@
         {
           "as": "radios",
           "label": "Please select",
-          "name": "Subletting",
+          "name": "subletting",
           "options": [
             {
               "label": "Yes",

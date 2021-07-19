@@ -5,7 +5,12 @@ import { HeadingOne } from '../../components/content/headings';
 import Form from '../../components/form/form';
 import Layout from '../../components/layout/resident-layout';
 import { updateApplicant } from '../../lib/store/applicant';
-import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
+import { createApplication } from '../../lib/store/application';
+import {
+  useAppDispatch,
+  useAppSelector,
+  useAppStore,
+} from '../../lib/store/hooks';
 import { getFormData, SIGN_UP_DETAILS } from '../../lib/utils/form-data';
 
 export function processPhonenumber(input: string): string {
@@ -27,6 +32,7 @@ const ApplicationStartPage = (): JSX.Element => {
   const router = useRouter();
   const isLoggedIn = useAppSelector((store) => store.cognitoUser?.username);
   const dispatch = useAppDispatch();
+  const store = useAppStore();
 
   if (isLoggedIn) {
     router.push('/apply/overview');
@@ -58,6 +64,8 @@ const ApplicationStartPage = (): JSX.Element => {
         },
       })
     );
+
+    dispatch(createApplication(store.getState().application));
 
     router.push('/apply/verify');
   };

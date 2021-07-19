@@ -3,7 +3,6 @@ import { FormikValues } from 'formik';
 import { Store } from '.';
 import { Applicant } from '../../domain/HousingApi';
 import { AGREEMENT } from '../utils/form-data';
-import { v4 as uuidv4 } from 'uuid';
 
 const initialState: Applicant = {};
 
@@ -55,13 +54,6 @@ const slice = createSlice({
      * Agree to terms and conditions
      */
     agree: (state, action) => applyQuestions(state, AGREEMENT, { agree: true }),
-    ensurePersonId: (state) => ({
-      ...state,
-      person: {
-        ...state?.person,
-        id: state?.person?.id ?? 'temp-' + uuidv4(),
-      },
-    }),
     updateApplicant: updateApplicantReducer,
     updateWithFormValues: (
       state,
@@ -80,5 +72,4 @@ export function selectHasAgreed(store: Store) {
 }
 
 export default slice;
-export const { agree, updateApplicant, updateWithFormValues, ensurePersonId } =
-  slice.actions;
+export const { agree, updateApplicant, updateWithFormValues } = slice.actions;

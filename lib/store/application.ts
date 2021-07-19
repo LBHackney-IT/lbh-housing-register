@@ -19,6 +19,17 @@ export const loadApplicaiton = createAsyncThunk(
   }
 );
 
+export const createApplication = createAsyncThunk(
+  'application/create',
+  async (application: Application) => {
+    const res = await fetch('/api/applications', {
+      method: 'POST',
+      body: JSON.stringify(application),
+    });
+    return (await res.json()) as Application;
+  }
+);
+
 export const updateApplication = createAsyncThunk(
   'application/update',
   async (application: Application) => {
@@ -39,6 +50,7 @@ const slice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(loadApplicaiton.fulfilled, (state, action) => action.payload)
+      .addCase(createApplication.fulfilled, (state, action) => action.payload)
       .addCase(signOut.fulfilled, (state, action) => ({}))
       .addDefaultCase((state, action) => {
         state.mainApplicant = applicant.reducer(state.mainApplicant, action);
@@ -66,10 +78,17 @@ export const autoSaveMiddleware: Middleware<
   const newAction = next(action);
   const newApplication = storeAPI.getState().application;
 
+  function blacklist(type: string) {
+    return (
+      type.startsWith(loadApplicaiton.typePrefix) ||
+      type.startsWith(createApplication.typePrefix)
+    );
+  }
+
   if (
     previousApplication !== newApplication &&
-    !action.type.startsWith(loadApplicaiton.typePrefix) &&
-    newApplication.id
+    newApplication.id &&
+    !blacklist(action.type)
   ) {
     storeAPI.dispatch(updateApplication(newApplication));
   }

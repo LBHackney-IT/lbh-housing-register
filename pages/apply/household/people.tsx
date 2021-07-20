@@ -28,12 +28,6 @@ const PeoplePage = (): JSX.Element => {
   );
   const countOfOtherPeopleInApplication = otherMembers.length ?? 0;
 
-  useEffect(() => {
-    if (countOfOtherPeopleInApplication === 0) {
-      router.replace('.');
-    }
-  }, []);
-
   function confirmResidents(values: FormikValues) {
     const { firstName, surname, gender, birthday, ...rest } =
       values.mainApplicant;
@@ -55,35 +49,37 @@ const PeoplePage = (): JSX.Element => {
       })
     );
 
-    Object.entries(values.otherMembers).forEach(
-      ([i, values]: [string, any]) => {
-        const { firstName, surname, gender, birthday, ...rest } = values;
-        const id = otherMembers[Number(i)].person?.id;
-        if (!id) {
-          throw new Error(
-            'Missmatched people array, cannot locate person by ID'
+    if (countOfOtherPeopleInApplication > 0) {
+      Object.entries(values.otherMembers).forEach(
+        ([i, values]: [string, any]) => {
+          const { firstName, surname, gender, birthday, ...rest } = values;
+          const id = otherMembers[Number(i)].person?.id;
+          if (!id) {
+            throw new Error(
+              'Missmatched people array, cannot locate person by ID'
+            );
+          }
+          dispatch(
+            updateAdditionalApplicant({
+              person: {
+                id,
+                firstName,
+                surname,
+                gender,
+                dateOfBirth: birthday,
+              },
+            })
+          );
+          dispatch(
+            updateAdditionalApplicantWithFormValues({
+              activeStepId: PEOPLE_IN_APPLICATION,
+              id,
+              values: rest,
+            })
           );
         }
-        dispatch(
-          updateAdditionalApplicant({
-            person: {
-              id,
-              firstName,
-              surname,
-              gender,
-              dateOfBirth: birthday,
-            },
-          })
-        );
-        dispatch(
-          updateAdditionalApplicantWithFormValues({
-            activeStepId: PEOPLE_IN_APPLICATION,
-            id,
-            values: rest,
-          })
-        );
-      }
-    );
+      );
+    }
 
     router.push('/apply/overview');
   }

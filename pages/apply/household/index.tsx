@@ -8,6 +8,8 @@ import { useAppDispatch } from '../../../lib/store/hooks';
 import { createAdditionalApplicants } from '../../../lib/store/otherMembers';
 import { getFormData, HOUSEHOLD_OVERVIEW } from '../../../lib/utils/form-data';
 
+// TODO: redo all of this: HRT-102
+
 const HouseHoldPage = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();

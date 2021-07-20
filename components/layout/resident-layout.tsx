@@ -19,7 +19,7 @@ export default function ResidentLayout({
 }: ResidentLayoutProps): JSX.Element {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const username = useAppSelector((store) => store.cognitoUser?.username);
+  const username = useAppSelector((store) => store.cognitoUser?.attributes.given_name);
 
   const onSignOut = async () => {
     dispatch(signOut());

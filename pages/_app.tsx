@@ -15,13 +15,13 @@ function App({ Component, pageProps }: AppProps): ReactElement {
     dispatch(loadUser());
   }, []);
 
-  const user = useAppSelector((state) => state.cognitoUser);
-  const applicationId = user?.attributes['custom:application_id'];
-  useEffect(() => {
-    if (applicationId) {
-      dispatch(loadApplicaiton(applicationId));
-    }
-  }, [applicationId]);
+  // const user = useAppSelector((state) => state.cognitoUser);
+  // const applicationId = user?.attributes['custom:application_id'];
+  // useEffect(() => {
+  //   if (applicationId) {
+  //     dispatch(loadApplicaiton(applicationId));
+  //   }
+  // }, [applicationId]);
 
   return (
     <>

@@ -7,8 +7,6 @@ import { getResident } from '../../../lib/utils/resident';
 
 import { updateResidentsFormData } from '../../../lib/utils/resident';
 import { FormData } from '../../../lib/types/form';
-import { getFormIdsFromApplicationSteps } from '../../../lib/utils/application-forms';
-import { ApplicationStep } from '../../../lib/types/application';
 
 import { HeadingTwo } from '../../../components/content/headings';
 import Paragraph from '../../../components/content/paragraph';
@@ -34,7 +32,6 @@ import OtherHousingRegister from '../../../data/forms/Situation/other-housing-re
 import BreachOfTenancy from '../../../data/forms/Situation/breach-of-tenancy.json';
 import legalRestrictions from '../../../data/forms/Situation/legal-restrictions.json';
 import unspentConvictions from '../../../data/forms/Situation/unspent-convictions.json';
-import start from '../start';
 
 export default function YourSituation() {
   const questionData = (formId: string) => {

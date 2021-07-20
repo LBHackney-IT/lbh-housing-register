@@ -11,23 +11,7 @@ const endpoint: NextApiHandler = async (
     case 'POST':
       try {
         const application: Application = JSON.parse(req.body);
-        const applicationWithID: Application = {
-          ...application,
-          mainApplicant: {
-            ...application.mainApplicant,
-            person: {
-              ...application.mainApplicant?.person
-            },
-            address: {
-              ...application.mainApplicant?.address
-            },
-            contactInformation: {
-              ...application.mainApplicant?.contactInformation
-            }
-          },
-        };
-
-        const data = await addApplication(applicationWithID);
+        const data = await addApplication(application);
         res.status(StatusCodes.OK).json(data);
       } catch (error) {
         res

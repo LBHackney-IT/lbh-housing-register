@@ -50,7 +50,6 @@ const ApplicationStartPage = (): JSX.Element => {
         given_name: values.firstName,
         family_name: values.surname,
         phone_number: phone, // E.164 number convention
-        //'custom:application_id': applicationId
       },
     });
 

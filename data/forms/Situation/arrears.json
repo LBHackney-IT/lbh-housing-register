@@ -1,5 +1,5 @@
 {
-  "id": "11",
+  "id": "arrears",
   "heading": "Arrears",
   "copy": "Are you in 4 weeks or more arrears with your rent, council tax or service charges?",
   "steps": [
@@ -26,8 +26,16 @@
       ]
     }
   ],
-  "conditionals": {
-    "no": "15",
-    "yes": "12"
-  }
+  "conditionals": [
+    {
+      "fieldId": "arrears",
+      "value": "yes",
+      "nextFormId": "under-occupying"
+    },
+    {
+      "fieldId": "arrears",
+      "value": "no",
+      "nextFormId": "breach-of-tennancy"
+    }
+  ]
 }

@@ -1,5 +1,5 @@
 {
-  "id": "17",
+  "id": "legal-restrictions",
   "heading": "Legal Restrictions",
   "copy": "Do you or anyone in your household have any legal restrictions in where they can live in the borough? (If Y, provide details)",
   "steps": [
@@ -12,11 +12,11 @@
           "options": [
             {
               "label": "Yes",
-              "value": "17"
+              "value": "yes"
             },
             {
               "label": "No",
-              "value": "17"
+              "value": "no"
             }
           ],
           "validation": {
@@ -34,8 +34,16 @@
       ]
     }
   ],
-  "conditionals": {
-    "no": "17",
-    "yes": "17"
-  }
+  "conditionals": [
+    {
+      "fieldId": "legal-restrictions",
+      "value": "yes",
+      "nextFormId": "unspent-convictions"
+    },
+    {
+      "fieldId": "legal-restrictions",
+      "value": "no",
+      "nextFormId": "unspent-convictions"
+    }
+  ]
 }

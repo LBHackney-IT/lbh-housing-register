@@ -1,5 +1,5 @@
 {
-  "id": "1",
+  "id": "court-order",
 
   "heading": "Court Order",
   "copy": "Do you have a court order allowing you to be on the register?",
@@ -13,13 +13,21 @@
           "options": [
             {
               "label": "Yes",
-              "value": "11"
+              "value": "yes"
             },
             {
               "label": "No",
-              "value": "0"
+              "value": "no"
             }
           ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "textarea",
+          "label": "details",
+          "name": "details",
           "validation": {
             "required": true
           }
@@ -27,8 +35,16 @@
       ]
     }
   ],
-  "conditionals": {
-    "no": "0",
-    "yes": "11"
-  }
+  "conditionals": [
+    {
+      "fieldId": "court-order",
+      "value": "yes",
+      "nextFormId": "arrears"
+    },
+    {
+      "fieldId": "court-order",
+      "value": "no",
+      "nextFormId": "exit"
+    }
+  ]
 }

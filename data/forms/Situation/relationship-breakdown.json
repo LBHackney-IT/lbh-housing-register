@@ -1,5 +1,5 @@
 {
-  "id": "10",
+  "id": "relationship-breakdown",
   "heading": "Situation",
   "copy": "Was this due to a relationship breakdown?",
   "steps": [
@@ -12,11 +12,11 @@
           "options": [
             {
               "label": "Yes",
-              "value": "11"
+              "value": "yes"
             },
             {
               "label": "No",
-              "value": "0"
+              "value": "no"
             }
           ],
           "validation": {
@@ -26,8 +26,16 @@
       ]
     }
   ],
-  "conditionals": {
-    "no": "0",
-    "yes": "11"
-  }
+  "conditionals": [
+    {
+      "fieldId": "relationship-breakdown",
+      "value": "yes",
+      "nextFormId": "arrears"
+    },
+    {
+      "fieldId": "relationship-breakdown",
+      "value": "no",
+      "nextFormId": "exit"
+    }
+  ]
 }

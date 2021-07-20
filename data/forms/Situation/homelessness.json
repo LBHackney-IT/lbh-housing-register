@@ -1,5 +1,5 @@
 {
-  "id": "4",
+  "id": "homelessness",
   "heading": "Homelessness",
   "copy": "Have you been found intentionally homeless?",
   "steps": [
@@ -12,11 +12,11 @@
           "options": [
             {
               "label": "Yes",
-              "value": "0"
+              "value": "yes"
             },
             {
               "label": "No",
-              "value": "9"
+              "value": "no"
             }
           ],
           "validation": {
@@ -26,8 +26,16 @@
       ]
     }
   ],
-  "conditionals": {
-    "no": "9",
-    "yes": "0"
-  }
+  "conditionals": [
+    {
+      "fieldId": "homelessness",
+      "value": "yes",
+      "nextFormId": "exit"
+    },
+    {
+      "fieldId": "homelessness",
+      "value": "no",
+      "nextFormId": "property-ownership"
+    }
+  ]
 }

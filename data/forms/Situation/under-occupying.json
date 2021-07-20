@@ -1,5 +1,5 @@
 {
-  "id": "12",
+  "id": "under-occupying",
   "heading": "Occupency",
   "copy": "Are you under-occupying? ",
   "steps": [
@@ -12,11 +12,11 @@
           "options": [
             {
               "label": "Yes",
-              "value": "15"
+              "value": "yes"
             },
             {
               "label": "No",
-              "value": "13"
+              "value": "no"
             }
           ],
           "validation": {
@@ -26,8 +26,16 @@
       ]
     }
   ],
-  "conditionals": {
-    "no": "13",
-    "yes": "15"
-  }
+  "conditionals": [
+    {
+      "fieldId": "under-occupying",
+      "value": "yes",
+      "nextFormId": "other-housing-register"
+    },
+    {
+      "fieldId": "under-occupying",
+      "value": "no",
+      "nextFormId": "benefits"
+    }
+  ]
 }

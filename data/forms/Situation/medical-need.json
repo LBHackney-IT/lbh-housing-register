@@ -1,5 +1,5 @@
 {
-  "id": "6",
+  "id": "medical-need",
   "heading": "Medical",
   "copy": "Do you have medical need?",
   "steps": [
@@ -12,11 +12,11 @@
           "options": [
             {
               "label": "Yes",
-              "value": "7"
+              "value": "yes"
             },
             {
               "label": "No",
-              "value": "0"
+              "value": "no"
             }
           ],
           "validation": {
@@ -26,8 +26,16 @@
       ]
     }
   ],
-  "conditionals": {
-    "no": "0",
-    "yes": "7"
-  }
+  "conditionals": [
+    {
+      "fieldId": "medical-need",
+      "value": "yes",
+      "nextFormId": "purchasing-property"
+    },
+    {
+      "fieldId": "medical-need",
+      "value": "no",
+      "nextFormId": "exit"
+    }
+  ]
 }

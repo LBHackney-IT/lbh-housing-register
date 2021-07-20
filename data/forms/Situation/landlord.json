@@ -1,5 +1,5 @@
 {
-  "id": "14",
+  "id": "landlord",
   "heading": "Landlord",
   "copy": "Have you made an agreement with landlord?",
   "steps": [
@@ -12,11 +12,11 @@
           "options": [
             {
               "label": "Yes",
-              "value": "15"
+              "value": "yes"
             },
             {
               "label": "No",
-              "value": "0"
+              "value": "no"
             }
           ],
           "validation": {
@@ -26,8 +26,16 @@
       ]
     }
   ],
-  "conditionals": {
-    "no": "0",
-    "yes": "15"
-  }
+  "conditionals": [
+    {
+      "fieldId": "landlord",
+      "value": "yes",
+      "nextFormId": "other-housing-register"
+    },
+    {
+      "fieldId": "landlord",
+      "value": "no",
+      "nextFormId": "save-application-and-advise"
+    }
+  ]
 }

@@ -1,5 +1,5 @@
 {
-  "id": "8",
+  "id": "property-ownership",
   "heading": "Property",
   "copy": "Do you own any property?",
   "steps": [
@@ -12,11 +12,11 @@
           "options": [
             {
               "label": "Yes",
-              "value": "3"
+              "value": "yes"
             },
             {
               "label": "No",
-              "value": "9"
+              "value": "no"
             }
           ],
           "validation": {
@@ -26,8 +26,16 @@
       ]
     }
   ],
-  "conditionals": {
-    "no": "9",
-    "yes": "3"
-  }
+  "conditionals": [
+    {
+      "fieldId": "property-ownership",
+      "value": "yes",
+      "nextFormId": "domestic-violence"
+    },
+    {
+      "fieldId": "property-ownership",
+      "value": "no",
+      "nextFormId": "sold-property"
+    }
+  ]
 }

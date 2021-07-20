@@ -1,5 +1,5 @@
 {
-  "id": "16",
+  "id": "breach-of-tenancy",
   "heading": "Breach of tenancy",
   "copy": "Has anyone in your household ever received a warning for a breach of tenancy? (If Yes, provide details)",
   "steps": [
@@ -12,11 +12,11 @@
           "options": [
             {
               "label": "Yes",
-              "value": "17"
+              "value": "yes"
             },
             {
               "label": "No",
-              "value": "0"
+              "value": "no"
             }
           ],
           "validation": {
@@ -24,18 +24,33 @@
           }
         },
         {
-          "label": "details",
-          "name": "details",
+          "as": "textarea",
+          "label": "details of breach",
+          "name": "breach-of-tenancy-details",
           "options": [],
           "validation": {
             "required": true
-          }
+          },
+          "conditionalDisplay": [
+            {
+              "field": "breach-of-tenancy",
+              "is": "yes"
+            }
+          ]
         }
       ]
     }
   ],
-  "conditionals": {
-    "no": "0",
-    "yes": "17"
-  }
+  "conditionals": [
+    {
+      "fieldId": "breach-of-tenancy",
+      "value": "yes",
+      "nextFormId": "legal-restrictions"
+    },
+    {
+      "fieldId": "breach-of-tenancy",
+      "value": "no",
+      "nextFormId": "legal-restrictions"
+    }
+  ]
 }

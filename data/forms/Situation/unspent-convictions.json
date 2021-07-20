@@ -1,5 +1,5 @@
 {
-  "id": "18",
+  "id": "unspent-convictions",
   "heading": "Unspent convictions",
   "copy": "Does anyone in your household have any unspent convictions? (If Yes, provide details)",
   "steps": [
@@ -12,11 +12,11 @@
           "options": [
             {
               "label": "Yes",
-              "value": "-1"
+              "value": "yes"
             },
             {
               "label": "No",
-              "value": "-1"
+              "value": "no"
             }
           ],
           "validation": {
@@ -26,8 +26,16 @@
       ]
     }
   ],
-  "conditionals": {
-    "no": "0",
-    "yes": "0"
-  }
+  "conditionals": [
+    {
+      "fieldId": "unspent-convictions",
+      "value": "yes",
+      "nextFormId": "exit"
+    },
+    {
+      "fieldId": "unspent-convictions",
+      "value": "no",
+      "nextFormId": "exit"
+    }
+  ]
 }

@@ -47,9 +47,16 @@ export type FormStep = {
   subheading?: string;
 };
 
+export type Conditionals = {
+  fieldId: string;
+  value: string;
+  nextFormId: string;
+};
+
 export type MultiStepForm = {
   copy?: string;
   eligibility?: EligibilityCriteria[];
   heading?: string;
   steps: FormStep[];
+  conditionals: Conditionals[];
 };

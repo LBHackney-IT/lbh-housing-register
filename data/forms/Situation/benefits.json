@@ -1,5 +1,5 @@
 {
-  "id": "13",
+  "id": "benefits",
   "heading": "Benefits",
   "copy": "Are the arrears due to a delay in processing your housing benefits or universal credit claim?",
   "steps": [
@@ -26,8 +26,16 @@
       ]
     }
   ],
-  "conditionals": {
-    "no": "14",
-    "yes": "15"
-  }
+  "conditionals": [
+    {
+      "fieldId": "benefits",
+      "value": "yes",
+      "nextFormId": "other-housing-register"
+    },
+    {
+      "fieldId": "benefits",
+      "value": "no",
+      "nextFormId": "landlord"
+    }
+  ]
 }

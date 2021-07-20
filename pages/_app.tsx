@@ -1,27 +1,21 @@
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import React, { ReactElement, useEffect } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
+import Layout from '../components/layout/resident-layout';
+import Loading from '../components/loading';
 import { wrapper } from '../lib/store';
-import { loadApplication } from '../lib/store/application';
-import { loadUser } from '../lib/store/cognitoUser';
-import { useAppDispatch, useAppSelector } from '../lib/store/hooks';
+import { useAppDispatch } from '../lib/store/hooks';
+import { initStore } from '../lib/store/init';
 import '../styles/global.scss';
 
 function App({ Component, pageProps }: AppProps): ReactElement {
-  // TODO all these initial renders are causing the form to show before any data has
-  // loaded and that makes pre-filling impossible.
+  const waitForLoad = typeof window !== 'undefined';
+  const [loaded, setLoaded] = useState(!waitForLoad);
+
   const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(loadUser());
+    dispatch(initStore()).then(() => setLoaded(true));
   }, []);
-
-  const user = useAppSelector((state) => state.cognitoUser);
-  const applicationId = user?.attributes['custom:application_id'];
-  useEffect(() => {
-    if (applicationId) {
-      dispatch(loadApplication(applicationId));
-    }
-  }, [applicationId]);
 
   return (
     <>
@@ -32,8 +26,12 @@ function App({ Component, pageProps }: AppProps): ReactElement {
           content="width=device-width, initial-scale=1, viewport-fit=cover"
         />
       </Head>
-
-      <Component {...pageProps} />
+      {!loaded && (
+        <Layout>
+          <Loading text="Checking information…" />
+        </Layout>
+      )}
+      {loaded && <Component {...pageProps} />}
     </>
   );
 }

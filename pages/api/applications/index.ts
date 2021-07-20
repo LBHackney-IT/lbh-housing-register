@@ -2,7 +2,6 @@ import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { Application } from '../../../domain/HousingApi';
 import { addApplication } from '../../../lib/gateways/applications-api';
-import { v4 } from 'uuid';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -17,9 +16,14 @@ const endpoint: NextApiHandler = async (
           mainApplicant: {
             ...application.mainApplicant,
             person: {
-              ...application.mainApplicant?.person,
-              id: v4(),
+              ...application.mainApplicant?.person
             },
+            address: {
+              ...application.mainApplicant?.address
+            },
+            contactInformation: {
+              ...application.mainApplicant?.contactInformation
+            }
           },
         };
 

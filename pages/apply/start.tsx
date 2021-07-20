@@ -40,6 +40,7 @@ const ApplicationStartPage = (): JSX.Element => {
 
   const signUp = async (values: FormikValues) => {
     const phone = values.phoneNumber && processPhonenumber(values.phoneNumber);
+
     await Auth.signUp({
       username: values.emailAddress,
       // See https://aws.amazon.com/blogs/mobile/implementing-passwordless-email-authentication-with-amazon-cognito/
@@ -49,6 +50,7 @@ const ApplicationStartPage = (): JSX.Element => {
         given_name: values.firstName,
         family_name: values.surname,
         phone_number: phone, // E.164 number convention
+        //'custom:application_id': applicationId
       },
     });
 

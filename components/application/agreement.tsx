@@ -1,15 +1,23 @@
 import { agree } from '../../lib/store/applicant';
-import { useAppDispatch } from '../../lib/store/hooks';
+import { updateUserAttribute } from '../../lib/store/cognitoUser';
+import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { AGREEMENT, getFormData } from '../../lib/utils/form-data';
 import { HeadingOne } from '../content/headings';
 import Paragraph from '../content/paragraph';
 import Form from '../form/form';
 
 export default function ApplicationAgreement() {
+
+  // TODO: might not be right place for this,
+  // but we need to ensure new user is linked to application
   const dispatch = useAppDispatch();
+  const applicationId = useAppSelector((store) => store.application.id);
 
   const onSave = () => {
     dispatch(agree(true));
+    dispatch(
+      updateUserAttribute({ applicationId: applicationId })
+    );
   };
 
   return (

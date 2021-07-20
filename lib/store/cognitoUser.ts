@@ -32,6 +32,17 @@ export const loadUser = createAsyncThunk('cognitoUser/loadUser', async () => {
   }
 });
 
+export const updateUserAttribute = createAsyncThunk(
+  'cognitoUser/updateUserAttribute',
+  async (
+    { applicationId }: { applicationId: string; }
+  ) => {
+    const promise = Auth.currentAuthenticatedUser();
+    promise.then((user) => Auth.updateUserAttributes(user, { 'custom:application_id': applicationId }));
+    return promise;
+  }
+);
+
 export const signIn = createAsyncThunk(
   'cognitoUser/signIn',
   async (
@@ -59,5 +70,5 @@ const slice = createSlice({
   },
 });
 
-export const {} = slice.actions;
+export const { } = slice.actions;
 export default slice;

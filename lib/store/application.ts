@@ -11,7 +11,7 @@ import applicant from './applicant';
 import { signOut } from './cognitoUser';
 import otherMembers from './otherMembers';
 
-export const loadApplicaiton = createAsyncThunk(
+export const loadApplication = createAsyncThunk(
   'application/load',
   async (id: string) => {
     const r = await fetch(`/api/applications/${id}`);
@@ -45,11 +45,11 @@ const slice = createSlice({
   name: 'application',
   initialState: {} as Application,
   reducers: {
-    submit: () => {},
+    submit: () => { },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(loadApplicaiton.fulfilled, (state, action) => action.payload)
+      .addCase(loadApplication.fulfilled, (state, action) => action.payload)
       .addCase(createApplication.fulfilled, (state, action) => action.payload)
       .addCase(signOut.fulfilled, (state, action) => ({}))
       .addDefaultCase((state, action) => {
@@ -80,7 +80,7 @@ export const autoSaveMiddleware: Middleware<
 
   function blacklist(type: string) {
     return (
-      type.startsWith(loadApplicaiton.typePrefix) ||
+      type.startsWith(loadApplication.typePrefix) ||
       type.startsWith(createApplication.typePrefix)
     );
   }

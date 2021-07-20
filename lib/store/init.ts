@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Store } from '.';
-import { loadApplicaiton } from './application';
+import { loadApplication } from './application';
 import { loadUser } from './cognitoUser';
 
 export const initStore = createAsyncThunk(
@@ -11,7 +11,7 @@ export const initStore = createAsyncThunk(
     const store: Store = getState() as Store;
     if (store.cognitoUser?.attributes['custom:application_id']) {
       dispatch(
-        loadApplicaiton(store.cognitoUser?.attributes['custom:application_id'])
+        loadApplication(store.cognitoUser?.attributes['custom:application_id'])
       );
     }
   }

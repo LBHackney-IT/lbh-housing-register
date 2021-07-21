@@ -91,100 +91,100 @@ function assertNever(never: never, error: string): never {
 export function getFormData(form: FormID): MultiStepForm {
   switch (form) {
     case FormID.AGREEMENT:
-      return agreementFormData;
+      return agreementFormData as MultiStepForm;
 
     case FormID.SIGN_IN:
-      return signInFormData;
+      return signInFormData as MultiStepForm;
 
     case FormID.SIGN_IN_VERIFY:
-      return signInVerifyFormData;
+      return signInVerifyFormData as MultiStepForm;
 
     case FormID.SIGN_UP_DETAILS:
-      return signUpDetailsFormData;
+      return signUpDetailsFormData as MultiStepForm;
 
     case FormID.IMMIGRATION_STATUS:
-      return immigrationStatusFormData;
+      return immigrationStatusFormData as MultiStepForm;
 
     case FormID.PERSONAL_DETAILS:
-      return personalDetailsFormData;
+      return personalDetailsFormData as MultiStepForm;
 
     case FormID.ADDRESS_DETAILS:
-      return addressDetailsFormData;
+      return addressDetailsFormData as MultiStepForm;
 
     case FormID.YOUR_SITUATION:
-      return yourSituationFormData;
+      return yourSituationFormData as MultiStepForm;
 
     case FormID.RESIDENTIAL_STATUS:
-      return residentialStatusFormData;
+      return residentialStatusFormData as MultiStepForm;
 
     case FormID.HOUSEHOLD_OVERVIEW:
-      return houseHoldOverview;
+      return houseHoldOverview as MultiStepForm;
 
     case FormID.ADDRESS_HISTORY:
-      return addressHistory;
+      return addressHistory as MultiStepForm;
 
     case FormID.INCOME_SAVINGS:
-      return incomeSavings;
+      return incomeSavings as MultiStepForm;
 
     case FormID.MEDICAL_NEEDS:
-      return medicalNeeds;
+      return medicalNeeds as MultiStepForm;
 
     case FormID.COURT_ORDER:
-      return CourtOrder;
+      return CourtOrder as MultiStepForm;
 
     case FormID.ACCOMODATION_TYPE:
-      return AccommodationType;
+      return AccommodationType as MultiStepForm;
 
     case FormID.DOMESTIC_VIOLENCE:
-      return DomesticViolence;
+      return DomesticViolence as MultiStepForm;
 
     case FormID.HOMELESSESS:
-      return Homelessness;
+      return Homelessness as MultiStepForm;
 
     case FormID.SUBLETTING:
-      return Subletting;
+      return Subletting as MultiStepForm;
 
     case FormID.MEDICAL_NEED:
-      return MedicalNeed;
+      return MedicalNeed as MultiStepForm;
 
     case FormID.PURCHASING_PROPERTY:
-      return PurchasingProperty;
+      return PurchasingProperty as MultiStepForm;
 
     case FormID.PROPERTY_OWNERSHIP:
-      return PropertyOwnership;
+      return PropertyOwnership as MultiStepForm;
 
     case FormID.SOLD_PROPERTY:
-      return SoldProperty;
+      return SoldProperty as MultiStepForm;
 
     case FormID.RELATIONSHIP_BREAKDOWN:
-      return RelationshipBreakdown;
+      return RelationshipBreakdown as MultiStepForm;
 
     case FormID.ARREARS:
-      return Arrears;
+      return Arrears as MultiStepForm;
 
     case FormID.UNDER_OCCUPYING:
-      return UnderOccupying;
+      return UnderOccupying as MultiStepForm;
 
     case FormID.BENEFITS:
-      return Benefits;
+      return Benefits as MultiStepForm;
 
     case FormID.LANDLORD:
-      return Landlord;
+      return Landlord as MultiStepForm;
 
     case FormID.OTHER_HOUSING_REGISTER:
-      return OtherHousingRegister;
+      return OtherHousingRegister as MultiStepForm;
 
     case FormID.BREACH_OF_TENANCY:
-      return BreachOfTenancy;
+      return BreachOfTenancy as MultiStepForm;
 
     case FormID.LEAGLE_RESTRICTIONS:
-      return legalRestrictions;
+      return legalRestrictions as MultiStepForm;
 
     case FormID.UNSPENT_CONVICTIONS:
-      return unspentConvictions;
+      return unspentConvictions as MultiStepForm;
 
     case FormID.PEOPLE_IN_APPLICATION:
-      return peopleInApplication;
+      return peopleInApplication as MultiStepForm;
 
     default:
       return assertNever(form, 'Unknown form step: ' + form);

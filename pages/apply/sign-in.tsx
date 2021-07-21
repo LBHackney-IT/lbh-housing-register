@@ -6,7 +6,7 @@ import Layout from '../../components/layout/resident-layout';
 import { signIn } from '../../lib/store/cognitoUser';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { FormData } from '../../lib/types/form';
-import { getFormData, SIGN_IN } from '../../lib/utils/form-data';
+import { FormID, getFormData } from '../../lib/utils/form-data';
 
 const ApplicationSignInPage = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -35,7 +35,7 @@ const ApplicationSignInPage = (): JSX.Element => {
       <HeadingOne content="Sign in to your application" />
       {/* TODO not everything should use Formik. */}
       <Form
-        formData={getFormData(SIGN_IN)}
+        formData={getFormData(FormID.SIGN_IN)}
         buttonText="Continue"
         onSubmit={onSubmit}
       />

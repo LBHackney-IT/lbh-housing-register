@@ -6,7 +6,7 @@ import whenAgreed from '../../lib/hoc/whenAgreed';
 import { useAppDispatch } from '../../lib/store/hooks';
 import { addResidentFromFormData } from '../../lib/store/otherMembers';
 import { FormData } from '../../lib/types/form';
-import { getFormData, PERSONAL_DETAILS } from '../../lib/utils/form-data';
+import { FormID, getFormData } from '../../lib/utils/form-data';
 
 const AddPersonToApplication = (): JSX.Element => {
   const returnHref = '/apply/overview';
@@ -30,7 +30,7 @@ const AddPersonToApplication = (): JSX.Element => {
       <HeadingOne content="Add a person" />
       <Form
         buttonText="Add person"
-        formData={getFormData(PERSONAL_DETAILS)}
+        formData={getFormData(FormID.PERSONAL_DETAILS)}
         onSubmit={onSubmit}
       />
     </Layout>

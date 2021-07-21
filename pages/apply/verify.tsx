@@ -8,7 +8,7 @@ import Layout from '../../components/layout/resident-layout';
 import { signIn } from '../../lib/store/cognitoUser';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { FormData } from '../../lib/types/form';
-import { getFormData, SIGN_IN_VERIFY } from '../../lib/utils/form-data';
+import { FormID, getFormData } from '../../lib/utils/form-data';
 
 const ApplicationVerifyPage = (): JSX.Element => {
   const router = useRouter();
@@ -59,7 +59,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
 
       <Form
         initialValues={{ emailAddress }}
-        formData={getFormData(SIGN_IN_VERIFY)}
+        formData={getFormData(FormID.SIGN_IN_VERIFY)}
         buttonText="Continue"
         onSubmit={confirmSignUp}
       />

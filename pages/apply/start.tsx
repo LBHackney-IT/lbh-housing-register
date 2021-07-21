@@ -11,7 +11,7 @@ import {
   useAppSelector,
   useAppStore,
 } from '../../lib/store/hooks';
-import { getFormData, SIGN_UP_DETAILS } from '../../lib/utils/form-data';
+import { FormID, getFormData } from '../../lib/utils/form-data';
 
 export function processPhonenumber(input: string): string {
   const chars = input.match(/[\+0-9]/g);
@@ -75,7 +75,7 @@ const ApplicationStartPage = (): JSX.Element => {
     <Layout>
       <HeadingOne content="Start your application" />
       <Form
-        formData={getFormData(SIGN_UP_DETAILS)}
+        formData={getFormData(FormID.SIGN_UP_DETAILS)}
         buttonText="Save and continue"
         onSubmit={signUp}
       />

@@ -15,8 +15,8 @@ import {
   updateAdditionalApplicantWithFormValues,
 } from '../../../lib/store/otherMembers';
 import {
+  FormID,
   getPeopleInApplicationForm,
-  PEOPLE_IN_APPLICATION,
 } from '../../../lib/utils/form-data';
 
 const PeoplePage = (): JSX.Element => {
@@ -44,7 +44,7 @@ const PeoplePage = (): JSX.Element => {
 
     dispatch(
       updateWithFormValues({
-        activeStepId: PEOPLE_IN_APPLICATION,
+        activeStepId: FormID.PEOPLE_IN_APPLICATION,
         values: rest,
       })
     );
@@ -72,7 +72,7 @@ const PeoplePage = (): JSX.Element => {
           );
           dispatch(
             updateAdditionalApplicantWithFormValues({
-              activeStepId: PEOPLE_IN_APPLICATION,
+              activeStepId: FormID.PEOPLE_IN_APPLICATION,
               id,
               values: rest,
             })

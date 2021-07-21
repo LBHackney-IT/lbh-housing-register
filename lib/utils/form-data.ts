@@ -14,20 +14,22 @@ import signUpDetailsFormData from '../../data/forms/sign-up-details.json';
 import yourSituationFormData from '../../data/forms/your-situation.json';
 import { EligibilityCriteria, FormField, MultiStepForm } from '../types/form';
 
-export const AGREEMENT = 'agreement';
-export const SIGN_IN = 'sign-in';
-export const SIGN_IN_VERIFY = 'sign-in-verify';
-export const SIGN_UP_DETAILS = 'sign-up-details';
-export const IMMIGRATION_STATUS = 'immigration-status';
-export const PERSONAL_DETAILS = 'personal-details';
-export const ADDRESS_DETAILS = 'address-details';
-export const YOUR_SITUATION = 'your-situation';
-export const RESIDENTIAL_STATUS = 'residential-status';
-export const HOUSEHOLD_OVERVIEW = 'household-overview';
-export const PEOPLE_IN_APPLICATION = 'people-in-application';
-export const ADDRESS_HISTORY = 'address-history';
-export const INCOME_SAVINGS = 'income-savings';
-export const MEDICAL_NEEDS = 'medical-needs';
+export enum FormID {
+  AGREEMENT = 'agreement',
+  SIGN_IN = 'sign-in',
+  SIGN_IN_VERIFY = 'sign-in-verify',
+  SIGN_UP_DETAILS = 'sign-up-details',
+  IMMIGRATION_STATUS = 'immigration-status',
+  PERSONAL_DETAILS = 'personal-details',
+  ADDRESS_DETAILS = 'address-details',
+  YOUR_SITUATION = 'your-situation',
+  RESIDENTIAL_STATUS = 'residential-status',
+  HOUSEHOLD_OVERVIEW = 'household-overview',
+  PEOPLE_IN_APPLICATION = 'people-in-application',
+  ADDRESS_HISTORY = 'address-history',
+  INCOME_SAVINGS = 'income-savings',
+  MEDICAL_NEEDS = 'medical-needs',
+}
 
 /**
  * Get the eligibility criteria from the requested form
@@ -35,10 +37,14 @@ export const MEDICAL_NEEDS = 'medical-needs';
  * @returns {EligibilityCriteria}
  */
 export function getEligibilityCriteria(
-  formId: string
+  formId: FormID
 ): EligibilityCriteria[] | undefined {
   const formData = getFormData(formId);
   return formData?.eligibility;
+}
+
+function assertNever(never: never, error: string): never {
+  throw new Error(error);
 }
 
 /**
@@ -46,49 +52,52 @@ export function getEligibilityCriteria(
  * @param {string} form - The requested form data
  * @returns {MultiStepForm}
  */
-export function getFormData(form: string): MultiStepForm {
-  switch (form.toLowerCase()) {
-    case AGREEMENT:
+export function getFormData(form: FormID): MultiStepForm {
+  switch (form) {
+    case FormID.AGREEMENT:
       return agreementFormData;
 
-    case SIGN_IN:
+    case FormID.SIGN_IN:
       return signInFormData;
 
-    case SIGN_IN_VERIFY:
+    case FormID.SIGN_IN_VERIFY:
       return signInVerifyFormData;
 
-    case SIGN_UP_DETAILS:
+    case FormID.SIGN_UP_DETAILS:
       return signUpDetailsFormData;
 
-    case IMMIGRATION_STATUS:
+    case FormID.IMMIGRATION_STATUS:
       return immigrationStatusFormData;
 
-    case PERSONAL_DETAILS:
+    case FormID.PERSONAL_DETAILS:
       return personalDetailsFormData;
 
-    case ADDRESS_DETAILS:
+    case FormID.ADDRESS_DETAILS:
       return addressDetailsFormData;
 
-    case YOUR_SITUATION:
+    case FormID.YOUR_SITUATION:
       return yourSituationFormData;
 
-    case RESIDENTIAL_STATUS:
+    case FormID.RESIDENTIAL_STATUS:
       return residentialStatusFormData;
 
-    case HOUSEHOLD_OVERVIEW:
+    case FormID.HOUSEHOLD_OVERVIEW:
       return houseHoldOverview;
 
-    case ADDRESS_HISTORY:
+    case FormID.ADDRESS_HISTORY:
       return addressHistory;
 
-    case INCOME_SAVINGS:
+    case FormID.INCOME_SAVINGS:
       return incomeSavings;
 
-    case MEDICAL_NEEDS:
+    case FormID.MEDICAL_NEEDS:
       return medicalNeeds;
 
+    case FormID.PEOPLE_IN_APPLICATION:
+      return peopleInApplication;
+
     default:
-      throw new Error('Unknown form step: ' + form);
+      return assertNever(form, 'Unknown form step: ' + form);
   }
 }
 

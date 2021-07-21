@@ -1,120 +1,57 @@
+import { FormikValues, getIn } from 'formik';
 import { useRouter } from 'next/router';
-import { useStore } from 'react-redux';
 import { useState } from 'react';
-
-import { Store } from '../../../lib/store';
-import { getResident } from '../../../lib/utils/resident';
-
-import { updateResidentsFormData } from '../../../lib/utils/resident';
-import { FormData } from '../../../lib/types/form';
-
 import { HeadingTwo } from '../../../components/content/headings';
 import Paragraph from '../../../components/content/paragraph';
-import Layout from '../../../components/layout/resident-layout';
 import Form from '../../../components/form/form';
 import Hint from '../../../components/form/hint';
-
-import CourtOrder from '../../../data/forms/Situation/court-order.json';
-import AccommodationType from '../../../data/forms/Situation/accommodation-type.json';
-import DomesticViolence from '../../../data/forms/Situation/domestic-violence.json';
-import Homelessness from '../../../data/forms/Situation/homelessness.json';
-import Subletting from '../../../data/forms/Situation/subletting.json';
-import MedicalNeed from '../../../data/forms/Situation/medical-need.json';
-import PurchasingProperty from '../../../data/forms/Situation/purchasing-property.json';
-import PropertyOwnership from '../../../data/forms/Situation/property-ownership.json';
-import SoldProperty from '../../../data/forms/Situation/sold-property.json';
-import RelationshipBreakdown from '../../../data/forms/Situation/relationship-breakdown.json';
-import Arrears from '../../../data/forms/Situation/arrears.json';
-import UnderOccupying from '../../../data/forms/Situation/under-occupying.json';
-import Benefits from '../../../data/forms/Situation/benefits.json';
-import Landlord from '../../../data/forms/Situation/landlord.json';
-import OtherHousingRegister from '../../../data/forms/Situation/other-housing-register.json';
-import BreachOfTenancy from '../../../data/forms/Situation/breach-of-tenancy.json';
-import legalRestrictions from '../../../data/forms/Situation/legal-restrictions.json';
-import unspentConvictions from '../../../data/forms/Situation/unspent-convictions.json';
+import Layout from '../../../components/layout/resident-layout';
+import {
+  getQuestionValue,
+  updateWithFormValues,
+} from '../../../lib/store/applicant';
+import { selectApplicant } from '../../../lib/store/application';
+import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
+import { FormID, getFormData } from '../../../lib/utils/form-data';
+import Custom404 from '../../404';
 
 export default function YourSituation() {
-  const questionData = (formId: string) => {
-    switch (formId) {
-      case 'court-order':
-        return CourtOrder;
-
-      case 'accommodation-type':
-        return AccommodationType;
-
-      case 'domestic-violence':
-        return DomesticViolence;
-
-      case 'homelessness':
-        return Homelessness;
-
-      case 'subletting':
-        return Subletting;
-
-      case 'medical-need':
-        return MedicalNeed;
-
-      case 'purchasing-property':
-        return PurchasingProperty;
-
-      case 'property-ownership':
-        return PropertyOwnership;
-
-      case 'sold-property':
-        return SoldProperty;
-
-      case 'relationship-breakdown':
-        return RelationshipBreakdown;
-
-      case 'arrears':
-        return Arrears;
-
-      case 'under-occupying':
-        return UnderOccupying;
-
-      case 'benefits':
-        return Benefits;
-
-      case 'landlord':
-        return Landlord;
-
-      case 'other-housing-register':
-        return OtherHousingRegister;
-
-      case 'breach-of-tenancy':
-        return BreachOfTenancy;
-
-      case 'legal-restrictions':
-        return legalRestrictions;
-
-      case 'unspent-convictions':
-        return unspentConvictions;
-
-      default:
-        return undefined;
-    }
-  };
-
   const router = useRouter();
-  const store = useStore<Store>();
+  const dispatch = useAppDispatch();
+  const { resident } = router.query as { resident: string };
 
-  const [formData, setFormData] = useState({});
-  const [applicationData, setApplicationData] = useState({});
-  const [activeStep, setActiveStep] = useState('');
-  const [currentAccomodation, setCurrentAccomodation] = useState('');
+  const applicant = useAppSelector(selectApplicant(resident));
 
-  let thisResident = router.query.resident as string;
-  const currentResident = getResident(thisResident, store.getState());
-
-  let name = '';
-  if (currentResident && currentResident.name) {
-    name = currentResident.name;
+  if (!applicant) {
+    return <Custom404 />;
   }
 
-  const baseHref = `/apply/${currentResident?.slug}`;
-  const returnHref = '/apply/overview';
+  // TODO work this out.
+  const livingSituation: string = getQuestionValue(
+    applicant.questions,
+    FormID.ADDRESS_DETAILS,
+    'living-situation'
+  );
 
-  const formName = 'your-situation';
+  const [activeStepID, setActiveStepId] = useState(() => {
+    switch (livingSituation) {
+      case 'squatter':
+        return FormID.COURT_ORDER;
+
+      case 'unauthorised-occupant':
+        return FormID.ACCOMODATION_TYPE;
+
+      case 'owner-occupier':
+        return FormID.DOMESTIC_VIOLENCE;
+
+      default:
+        return FormID.HOMELESSESS;
+    }
+  });
+  const formData = getFormData(activeStepID);
+
+  const baseHref = `/apply/${applicant.person?.id}`;
+  const returnHref = '/apply/overview';
 
   const breadcrumbs = [
     {
@@ -123,7 +60,7 @@ export default function YourSituation() {
     },
     {
       href: baseHref,
-      name: `${currentResident?.name}`,
+      name: applicant.person?.firstName || '',
     },
     {
       href: `${baseHref}/your-situation`,
@@ -131,99 +68,38 @@ export default function YourSituation() {
     },
   ];
 
-  const updateFormData = (formId: string) => {
-    const formData = questionData(formId);
-    setApplicationData(formData!);
-    setFormData(formData!);
-    setActiveStep(formData?.steps[0].fields[0].name!);
-    console.log('active step', formData?.steps[0].fields[0].name!);
-  };
+  const nextStep = (values: FormikValues) => {
+    const { nextFormId } = formData.conditionals?.find(
+      (element) => getIn(values, element.fieldId) === element.value
+    ) ?? { nextFormId: 'exit' };
 
-  const startingData = () => {
-    updateFormData('homelessness');
-  };
-
-  const startingDataFromAccomodationStatus = () => {
-    switch (currentAccomodation) {
-      case 'squatter':
-        updateFormData('court-order');
-        break;
-      case 'unauthorised-occupant':
-        updateFormData('accommodation-type');
-        break;
-      case 'owner-occupier':
-        updateFormData('domestic-violence');
-        break;
-      default:
-        updateFormData('court-order');
-        break;
+    if (nextFormId === 'exit') {
+      router.push(baseHref);
+      return;
     }
+
+    setActiveStepId(nextFormId);
   };
 
-  if (Object.keys(applicationData).length === 0) {
-    //if (currentAccomodation.length === 0) {
-    startingData();
-    // } else {
-    //   startingDataFromAccomodationStatus();
-    // }
-  }
-
-  const nextStep = async (values: FormData) => {
-    const data: { [key: string]: FormData } = { ...applicationData };
-
-    console.log('------next step----');
-
-    // console.log('data', data);
-    // console.log('values', values);
-
-    // console.log('extracted value', values[data.id]);
-
-    var formId = data.conditionals.find(
-      (element) => element.value === values[data.id]
-    );
-
-    console.log('found form id', formId);
-
-    console.log('next form id', formId.nextFormId);
-
-    updateFormData(formId.nextFormId);
-
-    console.log('------end next step----');
-  };
-
-  const onSave = (values: FormData) => {
-    const data: { [key: string]: FormData } = { ...applicationData };
-    data[formName!] = values;
-
-    // console.log('Active Step', activeStep);
-    const extractedData: string = values[activeStep];
-
-    // console.log('extracted data', values);
-    // console.log('data', data.conditionals);
-
-    updateResidentsFormData(store, currentResident!, data);
-  };
-
-  const onExit = async () => {
-    // console.log('On Exit');
+  // Note that Formik is building up a big bag of all the values.
+  // Each formData should be a new form?
+  const onSave = (values: FormikValues) => {
+    dispatch(updateWithFormValues({ activeStepId: activeStepID, values }));
   };
 
   return (
-    <>
-      <Layout breadcrumbs={breadcrumbs}>
-        <Hint content={name} />
-        {formData.heading && <HeadingTwo content={formData.heading} />}
-        {formData.copy && <Paragraph>{formData.copy}</Paragraph>}
-        <Form
-          buttonText="Save and continue"
-          formData={formData}
-          onExit={onExit}
-          onSave={onSave}
-          onSubmit={nextStep}
-          activeStep={activeStep}
-          //residentsPreviousAnswers={residentsPreviousAnswers}
-        />
-      </Layout>
-    </>
+    <Layout breadcrumbs={breadcrumbs}>
+      <Hint content={applicant.person?.firstName ?? ''} />
+      {formData.heading && <HeadingTwo content={formData.heading} />}
+      {formData.copy && <Paragraph>{formData.copy}</Paragraph>}
+      <Form
+        // Intentional key outside of an array. Force a fresh form component when we change steps to avoid values persisting between forms.
+        key={activeStepID}
+        buttonText="Save and continue"
+        formData={formData}
+        onSave={onSave}
+        onSubmit={nextStep}
+      />
+    </Layout>
   );
 }

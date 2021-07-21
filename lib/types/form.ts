@@ -1,4 +1,5 @@
 import { FormikValues } from 'formik';
+import { FormID } from '../utils/form-data';
 
 export type EligibilityCriteria = {
   field: string;
@@ -51,7 +52,7 @@ export type FormStep = {
 export type Conditionals = {
   fieldId: string;
   value: string;
-  nextFormId: string; // TODO Should this be linked with a special case for no next step?
+  nextFormId: FormID | 'exit';
 };
 
 export type MultiStepForm = {

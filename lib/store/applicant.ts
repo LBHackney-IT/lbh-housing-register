@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FormikValues } from 'formik';
 import { Store } from '.';
-import { Applicant } from '../../domain/HousingApi';
+import { Applicant, Question } from '../../domain/HousingApi';
 import { FormID } from '../utils/form-data';
 
 const initialState: Applicant = {};
@@ -70,6 +70,20 @@ export function selectHasAgreed(store: Store) {
       (q) => q.id === `${FormID.AGREEMENT}/agree`
     )?.answer === 'true'
   );
+}
+
+export const findQuesiton =
+  (formId: FormID, questionName: string) => (question: Question) =>
+    question.id === `${formId}/${questionName}`;
+
+export function getQuestionValue(
+  questions: Question[] | undefined,
+  formId: FormID,
+  questionName: string,
+  def = undefined
+) {
+  const a = questions?.find(findQuesiton(formId, questionName))?.answer;
+  return a ? JSON.parse(a) : def;
 }
 
 export default slice;

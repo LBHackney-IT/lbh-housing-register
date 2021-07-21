@@ -1,8 +1,8 @@
+import { Field, FieldInputProps, FieldMetaProps } from 'formik';
+import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
-import { Field, FieldInputProps, FieldMetaProps } from 'formik';
-import ErrorMessage from './error-message';
 
 
 export default function Dropdown({
@@ -29,9 +29,9 @@ export default function Dropdown({
             <Field as="select" name={name} className="govuk-select lbh-select">
               {options.map((relationship: any, index: number) => {
                 return <option value={relationship.value} key={index}>{relationship.label}</option>
-                
+
               })}
-             
+
             </Field>
           </div>
 

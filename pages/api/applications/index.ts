@@ -1,9 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
-import type { NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
-import {
-  addApplication,
-  updateApplication,
-} from '../../../lib/gateways/applications-api';
+import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import { Application } from '../../../domain/HousingApi';
+import { addApplication } from '../../../lib/gateways/applications-api';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -12,7 +10,7 @@ const endpoint: NextApiHandler = async (
   switch (req.method) {
     case 'POST':
       try {
-        const application = JSON.parse(req.body);
+        const application: Application = JSON.parse(req.body);
         const data = await addApplication(application);
         res.status(StatusCodes.OK).json(data);
       } catch (error) {

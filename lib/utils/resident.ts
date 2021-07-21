@@ -1,32 +1,28 @@
-import { getFormIdsFromApplicationSteps } from './application-forms';
-import { Store as ReduxStore } from '../store';
-import { updateResident } from '../store/additionalResidents';
-import { updateFormData } from '../store/resident';
-import { MAIN_RESIDENT_KEY } from './constants';
+import { Applicant } from '../../domain/HousingApi';
 import { ApplicationSteps } from '../types/application';
-import { FormData } from '../types/form';
-import { Resident } from '../types/resident';
-import { Store } from 'redux';
+import { getFormIdsFromApplicationSteps } from './application-forms';
 import {
   ADDRESS_DETAILS,
-  IMMIGRATION_STATUS,
-  PERSONAL_DETAILS,
-  YOUR_SITUATION,
-  RESIDENTIAL_STATUS,
   ADDRESS_HISTORY,
+  IMMIGRATION_STATUS,
   INCOME_SAVINGS,
   MEDICAL_NEEDS,
+  PERSONAL_DETAILS,
+  RESIDENTIAL_STATUS,
+  YOUR_SITUATION,
 } from './form-data';
-import { checkEligible } from './form';
 
-export const applicationStepsRemaining = (resident: Resident): number => {
+export const applicationStepsRemaining = (
+  applicant: Applicant,
+  isMainApplicant: boolean
+): number => {
   const steps = getFormIdsFromApplicationSteps(
-    getApplicationStepsForResident(resident)
+    getApplicationStepsForResident(isMainApplicant)
   );
   let completeSteps = 0;
 
   steps.map((step) =>
-    hasResidentAnsweredForm(resident, step) ? completeSteps++ : null
+    hasResidentAnsweredForm(applicant, step) ? completeSteps++ : null
   );
 
   return steps.length - completeSteps;
@@ -42,68 +38,33 @@ export const generateSlug = (input: string): string => {
 };
 
 /**
- * Get the resident
- * @param {string} slug The ID/slug of the resident
- * @param {Store} store The redux store
- * @returns {Resident | undefined} The resident (if found)
- */
-export const getResident = (
-  slug: string,
-  store: ReduxStore
-): Resident | undefined => {
-  if (slug == MAIN_RESIDENT_KEY) {
-    return store.resident;
-  } else {
-    const matches = store.additionalResidents.filter(
-      (resident) => resident.slug == slug
-    );
-    if (matches.length > 0) {
-      return matches[0];
-    }
-  }
-};
-
-/**
  * Get the application form steps required by this resident
- * @param {Resident} resident The resident we wish to get the steps for
+ * @param {Resident} applicant The resident we wish to get the steps for
  * @returns {ApplicationSteps[]} An object of steps, grouped
  */
 export const getApplicationStepsForResident = (
-  resident: Resident
+  isMainApplicant: boolean
 ): ApplicationSteps[] => {
-  if (isMainResident(resident)) {
+  if (isMainApplicant) {
     return [
-      // {
-      //   heading: "Testing",
-      //   steps: [
-      //     {
-      //       heading: "Test form",
-      //       id: "test-form"
-      //     }
-      //   ]
-      // },
       {
         heading: 'Identity',
         steps: [
           {
-            heading: 'Your situation',
-            id: YOUR_SITUATION,
+            heading: 'Personal details',
+            id: PERSONAL_DETAILS,
           },
           {
             heading: 'Immigration status',
             id: IMMIGRATION_STATUS,
           },
-          {
-            heading: 'Personal details',
-            id: PERSONAL_DETAILS,
-          },
         ],
       },
       {
-        heading: 'Accommodation',
+        heading: 'Living Situation',
         steps: [
           {
-            heading: 'Residential Status',
+            heading: 'Residential status',
             id: RESIDENTIAL_STATUS,
           },
           {
@@ -114,13 +75,17 @@ export const getApplicationStepsForResident = (
             heading: 'Current accommodation',
             id: ADDRESS_DETAILS,
           },
+          {
+            heading: 'Your situation',
+            id: YOUR_SITUATION,
+          },
         ],
       },
       {
         heading: 'Money',
         steps: [
           {
-            heading: 'Income & savings',
+            heading: 'Income and savings',
             id: INCOME_SAVINGS,
           },
         ],
@@ -129,7 +94,7 @@ export const getApplicationStepsForResident = (
         heading: 'Health',
         steps: [
           {
-            heading: 'Medical Needs',
+            heading: 'Medical needs',
             id: MEDICAL_NEEDS,
           },
         ],
@@ -141,12 +106,12 @@ export const getApplicationStepsForResident = (
         heading: 'Identity',
         steps: [
           {
-            heading: 'Immigration status',
-            id: IMMIGRATION_STATUS,
-          },
-          {
             heading: 'Personal details',
             id: PERSONAL_DETAILS,
+          },
+          {
+            heading: 'Immigration status',
+            id: IMMIGRATION_STATUS,
           },
         ],
       },
@@ -154,7 +119,7 @@ export const getApplicationStepsForResident = (
         heading: 'Health',
         steps: [
           {
-            heading: 'Medical Needs',
+            heading: 'Medical needs',
             id: MEDICAL_NEEDS,
           },
         ],
@@ -170,42 +135,12 @@ export const getApplicationStepsForResident = (
  * @returns {boolean}
  */
 export const hasResidentAnsweredForm = (
-  resident: Resident,
+  applicant: Applicant,
   form: string
 ): boolean => {
-  return resident.formData[form] != undefined;
-};
+  // TODO how are we going to structure this nested array of questions. And how are we going to record that a section has been answered?
+  // Will we store each section as a JSON encoded string? We'll use a dot notation. E.g. residential-status.moved-borough.
+  // You've answered the form if you've answered at least one question within it.
 
-/**
- * Check to see if the resident is the main applicant
- * @param {Resident} resident The resident we are interrogating
- * @returns {boolean}
- */
-export const isMainResident = (resident: Resident): boolean => {
-  return resident.slug == MAIN_RESIDENT_KEY;
-};
-
-/**
- * Update the form data for the given resident
- * @param {Store} store The redux store
- * @param {Resident} resident The resident we wish to update
- * @param {FormData} data The data we are updating
- */
-export const updateResidentsFormData = (
-  store: Store,
-  resident: Resident,
-  data: FormData
-): void => {
-  if (isMainResident(resident)) {
-    store.dispatch(updateFormData(data));
-  } else {
-    resident = { ...resident };
-    resident.formData = { ...resident.formData, ...data };
-
-    const eligibility = checkEligible(resident.formData);
-    resident.isEligible = eligibility[0];
-    resident.ineligibilityReasons = eligibility[1];
-
-    store.dispatch(updateResident(resident));
-  }
+  return applicant.questions?.find((q) => q.id?.startsWith(form)) !== undefined;
 };

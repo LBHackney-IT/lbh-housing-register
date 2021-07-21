@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
-import type { NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
+import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import {
-  lookUpAddress,
+    lookUpAddress
 } from '../../../../lib/gateways/address-api';
 
 const endpoint: NextApiHandler = async (

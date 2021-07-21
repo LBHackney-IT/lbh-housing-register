@@ -1,9 +1,9 @@
-import { Resident } from '../../domain/resident';
+import { Applicant } from '../../domain/HousingApi';
 import Collapsible from '../collapsible';
 
 interface SummaryProps {
   heading: string;
-  applicant: Resident;
+  applicant: Applicant;
 }
 
 export default function PersonalDetails({
@@ -16,8 +16,8 @@ export default function PersonalDetails({
         <div className="govuk-summary-list__row">
           <dt className="govuk-summary-list__key">Name</dt>
           <dd className="govuk-summary-list__value">
-            {applicant.person.title} {applicant.person.firstName}{' '}
-            {applicant.person.surname}
+            {applicant.person?.title} {applicant.person?.firstName}{' '}
+            {applicant.person?.surname}
           </dd>
           <dd className="govuk-summary-list__actions">
             <ul className="govuk-summary-list__actions-list">
@@ -32,21 +32,21 @@ export default function PersonalDetails({
         <div className="govuk-summary-list__row">
           <dt className="govuk-summary-list__key">Gender</dt>
           <dd className="govuk-summary-list__value">
-            {applicant.person.gender}
+            {applicant.person?.gender}
           </dd>
           <span className="govuk-summary-list__actions"></span>
         </div>
         <div className="govuk-summary-list__row">
           <dt className="govuk-summary-list__key">Nationality</dt>
           <dd className="govuk-summary-list__value">
-            {applicant.person.nationality}
+            {applicant.person?.nationality}
           </dd>
           <span className="govuk-summary-list__actions"></span>
         </div>
         <div className="govuk-summary-list__row">
           <dt className="govuk-summary-list__key">Date of birth</dt>
           <dd className="govuk-summary-list__value">
-            {applicant.person.dateOfBirth}
+            {applicant.person?.dateOfBirth}
           </dd>
           <span className="govuk-summary-list__actions"></span>
         </div>

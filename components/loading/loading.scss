@@ -1,0 +1,31 @@
+.lbh-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__spinner {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1rem;
+    &::after {
+      content: ' ';
+      display: block;
+      width: 50px;
+      height: 50px;
+      margin: 8px;
+      border-radius: 50%;
+      border: 6px solid lbh-colour('lbh-primary-button');
+      border-color: lbh-colour('lbh-primary-button') transparent
+        lbh-colour('lbh-primary-button') transparent;
+      animation: lbh-dual-ring 1.2s linear infinite;
+    }
+    @keyframes lbh-dual-ring {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  }
+}

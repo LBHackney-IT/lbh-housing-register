@@ -1,14 +1,12 @@
-import PhaseBanner from '../phase-banner';
-import Breadcrumbs from '../breadcrumbs';
-import SkipLink from '../skip-link';
-import Header from '../header';
-import { hasPhaseBanner } from '../../lib/utils/phase-banner';
-import React, { ReactNode } from 'react';
-import { Auth } from 'aws-amplify';
 import { useRouter } from 'next/router';
-import { logOut } from '../../lib/store/resident';
-import { Store } from '../../lib/store';
-import { useStore } from 'react-redux';
+import React, { ReactNode } from 'react';
+import { signOut } from '../../lib/store/cognitoUser';
+import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
+import { hasPhaseBanner } from '../../lib/utils/phase-banner';
+import Breadcrumbs from '../breadcrumbs';
+import Header from '../header';
+import PhaseBanner from '../phase-banner';
+import SkipLink from '../skip-link';
 
 interface ResidentLayoutProps {
   breadcrumbs?: { href: string; name: string }[];
@@ -20,24 +18,18 @@ export default function ResidentLayout({
   children,
 }: ResidentLayoutProps): JSX.Element {
   const router = useRouter();
-  const store = useStore<Store>();
-  const resident = store.getState().resident;
+  const dispatch = useAppDispatch();
+  const username = useAppSelector((store) => store.cognitoUser?.attributes.given_name);
 
-  const signOut = async () => {
-    try {
-      await Auth.signOut();
-
-      store.dispatch(logOut());
-      router.push('/');
-    } catch (error) {
-      console.log('error signing out: ', error);
-    }
+  const onSignOut = async () => {
+    dispatch(signOut());
+    router.push('/');
   };
 
   return (
     <>
       <SkipLink />
-      <Header username={resident?.username} onSignOut={signOut} />
+      <Header username={username} onSignOut={onSignOut} />
       {hasPhaseBanner() && <PhaseBanner />}
 
       {breadcrumbs && breadcrumbs.length > 0 && (

@@ -1,15 +1,19 @@
+import Link from 'next/link';
+import { useMemo } from 'react';
+import { useAppSelector } from '../../lib/store/hooks';
+import { checkEligible } from '../../lib/utils/form';
 import { ButtonLink } from '../button';
-import { HeadingOne, HeadingThree, HeadingTwo } from '../content/headings';
+import { HeadingOne, HeadingTwo } from '../content/headings';
 import InsetText from '../content/inset-text';
 import List, { ListItem } from '../content/list';
 import Paragraph from '../content/paragraph';
-import { Store } from '../../lib/store';
-import Link from 'next/link';
-import { useStore } from 'react-redux';
 
 export default function NotEligible(): JSX.Element {
-  const store = useStore<Store>();
-  const reasons = store.getState().resident.ineligibilityReasons;
+  const mainApplicant = useAppSelector(store => store.application.mainApplicant);
+  const [isEligible, reasons] = useMemo(
+    () => (mainApplicant && checkEligible(mainApplicant)) ?? [],
+    [mainApplicant]
+  );
 
   return (
     <>

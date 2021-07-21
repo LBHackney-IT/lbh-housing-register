@@ -1,5 +1,5 @@
-import { getEligibilityCriteria } from './form-data';
-import { FormData, FormField, MultiStepForm } from '../types/form';
+import { Applicant } from '../../domain/HousingApi';
+import { FormData, FormField } from '../types/form';
 
 /**
  * Determines if the field should be displayed based on the values passed in
@@ -29,74 +29,41 @@ export function getDisplayStateOfField(
 }
 
 /**
- * Get the initial state / values.
- * This checks to see if `field.initialValue` is set, otherwise an empty string is returned.
- * @param {FormField[]} fields - The fields
- * @returns {FormData} - An object of form values, where the key is the name of the field
- */
-export function getInitialValuesFromFields(fields: FormField[]): FormData {
-  const initialValues: FormData = {};
-  fields.map((field) => (initialValues[field.name] = field.initialValue || ''));
-  return initialValues;
-}
-
-/**
- * Get the initial state / values from the multi page form data/
- * This checks to see if `field.initialValue` is set, otherwise an empty string is returned.
- * @param {MultiStepForm} data - The multi page form data
- * @returns {FormData} - An object of form values, where the key is the name of the field
- */
-export function getInitialValuesFromMultiStepForm(
-  data: MultiStepForm
-): FormData {
-  let initialValues: FormData = {};
-  data.steps.map(
-    (step) =>
-      (initialValues = Object.assign(
-        initialValues,
-        getInitialValuesFromFields(step.fields)
-      ))
-  );
-  return initialValues;
-}
-
-/**
  * Is the form data passed in eligible?
  * @param formData The multi form data
  * @returns {[boolean, string[]]} - A tuple of state (isValid) and error message
  */
-export function checkEligible(formData: {
-  [key: string]: FormData;
-}): [boolean, string[]] {
-  let isValid = true;
-  let reasons: string[] = [];
+export function checkEligible(application: Applicant): [boolean, string[]] {
+  return [true, []];
+  // let isValid = true;
+  // let reasons: string[] = [];
 
-  const setInvalid = (reasoning?: string): void => {
-    isValid = false;
+  // const setInvalid = (reasoning?: string): void => {
+  //   isValid = false;
 
-    if (reasoning) {
-      reasons.push(reasoning);
-    }
-  };
+  //   if (reasoning) {
+  //     reasons.push(reasoning);
+  //   }
+  // };
 
-  for (const [form, values] of Object.entries(formData)) {
-    const eligibilityCriteria = getEligibilityCriteria(form);
-    eligibilityCriteria?.forEach((criteria) => {
-      const fieldValue = values[criteria.field];
+  // for (const [form, values] of Object.entries(formData)) {
+  //   const eligibilityCriteria = getEligibilityCriteria(form);
+  //   eligibilityCriteria?.forEach((criteria) => {
+  //     const fieldValue = values[criteria.field];
 
-      if (Array.isArray(fieldValue) && fieldValue.indexOf(criteria.is) !== -1) {
-        setInvalid(criteria.reasoning);
-      }
+  //     if (Array.isArray(fieldValue) && fieldValue.indexOf(criteria.is) !== -1) {
+  //       setInvalid(criteria.reasoning);
+  //     }
 
-      if (criteria.is && criteria.is === fieldValue) {
-        setInvalid(criteria.reasoning);
-      }
+  //     if (criteria.is && criteria.is === fieldValue) {
+  //       setInvalid(criteria.reasoning);
+  //     }
 
-      if (criteria.isNot && criteria.isNot === fieldValue) {
-        setInvalid(criteria.reasoning);
-      }
-    });
-  }
+  //     if (criteria.isNot && criteria.isNot === fieldValue) {
+  //       setInvalid(criteria.reasoning);
+  //     }
+  //   });
+  // }
 
-  return [isValid, reasons];
+  // return [isValid, reasons];
 }

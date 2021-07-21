@@ -1,8 +1,7 @@
-import FormGroup from './form-group';
-import Hint from './hint';
-import Label from './label';
 import { Field, FieldInputProps, FieldMetaProps } from 'formik';
 import ErrorMessage from './error-message';
+import FormGroup from './form-group';
+import Label from './label';
 
 
 export function BirthdayInputFields({
@@ -78,7 +77,7 @@ export default function BirthdayInput({
                     ))}
                   </div>
                 </div>
-               
+
               </div>
             </fieldset>
           </div>

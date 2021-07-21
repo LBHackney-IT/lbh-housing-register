@@ -1,11 +1,10 @@
+import { Field, FieldInputProps, FieldMetaProps } from 'formik';
+import { FormField } from '../../lib/types/form';
+import Paragraph from '../content/paragraph';
 import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
-import { FormField, FormFieldOption } from '../../lib/types/form';
-import { Field, FieldInputProps, FieldMetaProps } from 'formik';
-import Paragraph from '../content/paragraph';
-
 
 interface RadioProps extends FormField {
   index?: number;
@@ -67,7 +66,9 @@ export default function Radios({
         meta: FieldMetaProps<string>;
       }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
-          {label && name !== 'medical-needs' && <Label content={label} strong={true} />}
+          {label && name !== 'medical-needs' && (
+            <Label content={label} strong={true} />
+          )}
           {hint && <Hint content={hint} />}
           {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
           {subheading && <Paragraph>{subheading}</Paragraph>}

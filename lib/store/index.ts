@@ -1,22 +1,31 @@
-import additionalResidents from './additionalResidents';
-import resident from './resident';
-import { MainResident, Resident } from '../types/resident';
-import { combineReducers } from 'redux';
-import { createWrapper, Context } from 'next-redux-wrapper';
 import { configureStore } from '@reduxjs/toolkit';
+import { createWrapper } from 'next-redux-wrapper';
+import { combineReducers } from 'redux';
+import { Application } from '../../domain/HousingApi';
+import application, { autoSaveMiddleware } from './application';
+import cognitoUser, { CognitoUserInfo } from './cognitoUser';
 
 export interface Store {
-  applicationId: string
-  resident: MainResident
-  additionalResidents: Resident[]
+  application: Application;
+  cognitoUser: CognitoUserInfo | null;
 }
 
-const reducer = combineReducers({
-  resident: resident.reducer,
-  additionalResidents: additionalResidents.reducer
-})
+const reducer = combineReducers<Store>({
+  application: application.reducer,
+  cognitoUser: cognitoUser.reducer,
+});
 
-// Store function
-const store = (context: Context) => configureStore({reducer, devTools: true})
-export const wrapper = createWrapper(store)
-export default store
+const makeStore = () =>
+  configureStore({
+    reducer,
+    middleware: (getDefaultMiddleware) => [
+      ...getDefaultMiddleware(),
+      autoSaveMiddleware,
+    ],
+  });
+
+export type AppStore = ReturnType<typeof makeStore>;
+export type RootState = ReturnType<AppStore['getState']>;
+export type AppDispatch = AppStore['dispatch'];
+
+export const wrapper = createWrapper(makeStore);

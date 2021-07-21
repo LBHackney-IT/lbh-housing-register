@@ -7,7 +7,7 @@
         {
           "as": "radios",
           "label": "Tell us how many people you want to include in your new household",
-          "name": "household",
+          "name": "numberInHousehold",
           "options": [
             {
               "label": "1 - Just Me",

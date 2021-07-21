@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { Application, ApplicationList } from '../../domain/application';
-import { Stat } from '../../domain/stat';
+import { Application, ApplicationList } from '../../domain/HousingApi';
+import { Stat } from '../../domain/Stat';
 
 const headersWithKey = {
   'x-api-key': process.env.AWS_KEY,
@@ -39,44 +39,36 @@ export const getApplication = async (
 export const addApplication = async (
   application: any
 ): Promise<Application | null> => {
-  try {
-    const headers = {
-      'x-api-key': process.env.AWS_KEY,
-      'Content-Type': 'application/json',
-    };
-    const { data } = await axios.post(
-      `${process.env.ENDPOINT_API}/applications`,
-      application,
-      {
-        headers: headers,
-      }
-    );
-    return data;
-  } catch (err) {
-    return null;
-  }
+  const headers = {
+    'x-api-key': process.env.AWS_KEY,
+    'Content-Type': 'application/json',
+  };
+  const { data } = await axios.post(
+    `${process.env.ENDPOINT_API}/applications`,
+    application,
+    {
+      headers: headers,
+    }
+  );
+  return data;
 };
 
 export const updateApplication = async (
   application: any,
-  id: string | string[]
+  id: string
 ): Promise<Application | null> => {
-  try {
-    const headers = {
-      'x-api-key': process.env.AWS_KEY,
-      'Content-Type': 'application/json',
-    };
-    const { data } = await axios.patch(
-      `${process.env.ENDPOINT_API}/applications/${id}`,
-      application,
-      {
-        headers: headers,
-      }
-    );
-    return data;
-  } catch (err) {
-    return null;
-  }
+  const headers = {
+    'x-api-key': process.env.AWS_KEY,
+    'Content-Type': 'application/json',
+  };
+  const { data } = await axios.patch(
+    `${process.env.ENDPOINT_API}/applications/${id}`,
+    application,
+    {
+      headers: headers,
+    }
+  );
+  return data;
 };
 
 export const getStats = async (): Promise<Array<Stat> | null> => {

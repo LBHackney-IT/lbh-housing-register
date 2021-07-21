@@ -15,9 +15,7 @@ import Form from '../form/form';
 
 interface ApplicationFormsProps {
   activeStep?: string;
-  baseHref: string;
-  onCompletion: () => void;
-  onExit?: () => void;
+  onSubmit?: () => void;
   applicant: Applicant;
   steps: ApplicationSteps[];
 }
@@ -31,13 +29,10 @@ interface ApplicationFormsProps {
  */
 export default function ApplicationForms({
   activeStep,
-  baseHref,
-  onCompletion,
-  onExit,
+  onSubmit,
   applicant,
   steps,
 }: ApplicationFormsProps): JSX.Element | null {
-  const router = useRouter();
 
   const formSteps = getFormIdsFromApplicationSteps(steps);
   const activeStepId =
@@ -53,16 +48,6 @@ export default function ApplicationForms({
     dispatch(updateWithFormValues({ activeStepId, values }));
   };
 
-  const onSubmit = () => {
-    const index = formSteps.indexOf(activeStepId) + 1;
-    if (index === formSteps.length) {
-      onCompletion();
-    }
-    if (formSteps[index]) {
-      router.replace(`${baseHref}/${formSteps[index]}`);
-    }
-  };
-
   return (
     <>
       {formData.heading && <HeadingOne content={formData.heading} />}
@@ -75,7 +60,6 @@ export default function ApplicationForms({
         initialValues={initialValues}
         buttonText="Save and continue"
         formData={formData}
-        onExit={onExit}
         onSave={onSave}
         onSubmit={onSubmit}
       />

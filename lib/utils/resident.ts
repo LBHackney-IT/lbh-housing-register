@@ -85,7 +85,7 @@ export const getApplicationStepsForResident = (
         heading: 'Money',
         steps: [
           {
-            heading: 'Savings',
+            heading: 'Income and savings',
             id: INCOME_SAVINGS,
           },
         ],

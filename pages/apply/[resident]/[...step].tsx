@@ -41,11 +41,7 @@ const ApplicationStep = (): JSX.Element => {
     },
   ];
 
-  const onCompletion = async () => {
-    router.push(baseHref);
-  };
-
-  const onExit = async () => {
+  const onSubmit = async () => {
     router.push(baseHref);
   };
 
@@ -56,9 +52,7 @@ const ApplicationStep = (): JSX.Element => {
         applicant={applicant}
         steps={steps}
         activeStep={activeStep}
-        baseHref={baseHref}
-        onCompletion={onCompletion}
-        onExit={onExit}
+        onSubmit={onSubmit}
       />
     </Layout>
   );

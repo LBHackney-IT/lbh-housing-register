@@ -1,13 +1,14 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
+import Hint from '../../../components/form/hint';
 import { HeadingOne, HeadingTwo } from '../../../components/content/headings';
 import DeleteLink from '../../../components/delete-link';
 import Layout from '../../../components/layout/resident-layout';
 import SummaryList, {
-    SummaryListActions,
-    SummaryListRow,
-    SummaryListValue
+  SummaryListActions,
+  SummaryListRow,
+  SummaryListValue
 } from '../../../components/summary-list';
 import Tag from '../../../components/tag';
 import whenAgreed from '../../../lib/hoc/whenAgreed';
@@ -15,8 +16,8 @@ import { selectApplicant } from '../../../lib/store/application';
 import { useAppSelector } from '../../../lib/store/hooks';
 import { deleteApplicant } from '../../../lib/store/otherMembers';
 import {
-    getApplicationStepsForResident,
-    hasResidentAnsweredForm
+  getApplicationStepsForResident,
+  hasResidentAnsweredForm
 } from '../../../lib/utils/resident';
 import Custom404 from '../../404';
 
@@ -57,9 +58,8 @@ const ApplicationStep = (): JSX.Element => {
 
   return (
     <Layout breadcrumbs={breadcrumbs}>
-      <HeadingOne
-        content={`${currentResident.person?.firstName} ${currentResident.person?.surname}`}
-      />
+      <Hint content="Complete information for:" />
+      <HeadingOne content={`${currentResident.person?.firstName} ${currentResident.person?.surname}`} />
 
       {steps.map((step, index) => (
         <div key={index}>
@@ -74,9 +74,9 @@ const ApplicationStep = (): JSX.Element => {
                 </SummaryListValue>
                 <SummaryListActions>
                   {hasResidentAnsweredForm(currentResident, formStep.id) ? (
-                    <Tag content="Check answers" />
+                    <Tag content="Completed" variant="green" />
                   ) : (
-                    <Tag content="Todo" variant="grey" />
+                    <Tag content="Todo" />
                   )}
                 </SummaryListActions>
               </SummaryListRow>

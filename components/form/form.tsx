@@ -1,5 +1,5 @@
 import { Form as FormikForm, Formik, FormikValues } from 'formik';
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import Announcement from '../../components/announcement';
 import { FormData, MultiStepForm } from '../../lib/types/form';
 import { getDisplayStateOfField } from '../../lib/utils/form';
@@ -8,11 +8,9 @@ import Button from '../button';
 import { HeadingTwo } from '../content/headings';
 import Paragraph from '../content/paragraph';
 import DynamicField from './dynamic-field';
-
 interface FormProps {
   buttonText?: string;
   formData: MultiStepForm;
-  onExit?: () => void;
   onSave?: (values: FormData) => void;
   onSubmit?: (values: FormData, bag: any) => void;
   initialValues?: FormikValues;
@@ -24,7 +22,6 @@ interface FormProps {
 export default function Form({
   buttonText,
   formData,
-  onExit,
   onSave,
   onSubmit,
   initialValues,
@@ -37,7 +34,6 @@ export default function Form({
   const step = formData.steps[stepNumber];
   const totalSteps = formData.steps.length;
   const isLastStep = stepNumber === totalSteps - 1;
-  const submitButtonRef = useRef<'submit' | 'submitExit'>();
 
   const schema = buildValidationSchema(step.fields);
 
@@ -59,19 +55,11 @@ export default function Form({
   const handleSubmit = async (values: FormData, bag: any) => {
     // TODO Do we really need two handlers for onSave and onSubmit?
     if (onSave) {
-      onSave && onSave(values);
+      onSave(values);
     }
 
-    if (isLastStep) {
-      if (onSubmit) {
-        onSubmit(values, bag);
-      }
-
-      if (onExit && submitButtonRef.current === 'submitExit') {
-        onExit();
-      }
-    } else if (onExit && submitButtonRef.current === 'submitExit') {
-      onExit();
+    if (isLastStep && onSubmit) {
+      onSubmit(values, bag);
     } else {
       bag.setTouched({});
       next();
@@ -154,7 +142,6 @@ export default function Form({
 
               <div className="c-flex__1 text-right">
                 <Button
-                  onClick={() => (submitButtonRef.current = 'submit')}
                   disabled={isSubmitting}
                   type="submit"
                 >
@@ -162,18 +149,6 @@ export default function Form({
                 </Button>
               </div>
             </div>
-            {onExit && (
-              <div className="text-right">
-                <Button
-                  onClick={() => (submitButtonRef.current = 'submitExit')}
-                  disabled={isSubmitting}
-                  type="submit"
-                  secondary={true}
-                >
-                  Save and exit
-                </Button>
-              </div>
-            )}
           </FormikForm>
         )}
       </Formik>

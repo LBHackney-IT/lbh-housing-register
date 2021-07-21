@@ -16,7 +16,7 @@ export default function EligibilityChecker(): JSX.Element {
 
   const baseHref = '/eligibility';
 
-  const onCompletion = () => {
+  const onSubmit = () => {
     router.push(`${baseHref}/outcome`);
   };
 
@@ -25,11 +25,10 @@ export default function EligibilityChecker(): JSX.Element {
       {activeStep === 'outcome' && <EligibilityOutcome />}
       {activeStep !== 'outcome' && (
         <ApplicationForms
+          applicant={applicant}
           steps={getEligibilitySteps()}
           activeStep={activeStep}
-          baseHref={baseHref}
-          onCompletion={onCompletion}
-          applicant={applicant}
+          onSubmit={onSubmit}
         />
       )}
     </Layout>

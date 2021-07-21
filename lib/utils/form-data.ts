@@ -32,39 +32,40 @@ import unspentConvictions from '../../data/forms/Situation/unspent-convictions.j
 import yourSituationFormData from '../../data/forms/your-situation.json';
 import { EligibilityCriteria, FormField, MultiStepForm } from '../types/form';
 
-export const AGREEMENT = 'agreement';
-export const SIGN_IN = 'sign-in';
-export const SIGN_IN_VERIFY = 'sign-in-verify';
-export const SIGN_UP_DETAILS = 'sign-up-details';
-export const IMMIGRATION_STATUS = 'immigration-status';
-export const PERSONAL_DETAILS = 'personal-details';
-export const ADDRESS_DETAILS = 'address-details';
-export const YOUR_SITUATION = 'your-situation';
-export const RESIDENTIAL_STATUS = 'residential-status';
-export const HOUSEHOLD_OVERVIEW = 'household-overview';
-export const PEOPLE_IN_APPLICATION = 'people-in-application';
-export const ADDRESS_HISTORY = 'address-history';
-export const INCOME_SAVINGS = 'income-savings';
-export const MEDICAL_NEEDS = 'medical-needs';
-
-export const COURT_ORDER = 'court-order';
-export const ACCOMODATION_TYPE = 'AccommodationType';
-export const DOMESTIC_VIOLENCE = 'domestic-violence';
-export const HOMELESSESS = 'homelessness';
-export const SUBLETTING = 'subletting';
-export const MEDICAL_NEED = 'medical-need';
-export const PURCHASING_PROPERTY = 'purchasing-property';
-export const PROPERTY_OWNERSHIP = 'property-ownership';
-export const SOLD_PROPERTY = 'sold-property';
-export const RELATIONSHIP_BREAKDOWN = 'relationship-breakdown';
-export const ARREARS = 'arrears';
-export const UNDER_OCCUPYING = 'under-occupying';
-export const BENEFITS = 'benefits';
-export const LANDLORD = 'landlord';
-export const OTHER_HOUSING_REGISTER = 'other-housing-register';
-export const BREACH_OF_TENANCY = 'breach-of-tenancy';
-export const LEAGLE_RESTRICTIONS = 'legal-restrictions';
-export const UNSPENT_CONVICTIONS = 'unspent-convictions';
+export enum FormID {
+  AGREEMENT = 'agreement',
+  SIGN_IN = 'sign-in',
+  SIGN_IN_VERIFY = 'sign-in-verify',
+  SIGN_UP_DETAILS = 'sign-up-details',
+  IMMIGRATION_STATUS = 'immigration-status',
+  PERSONAL_DETAILS = 'personal-details',
+  ADDRESS_DETAILS = 'address-details',
+  YOUR_SITUATION = 'your-situation',
+  RESIDENTIAL_STATUS = 'residential-status',
+  HOUSEHOLD_OVERVIEW = 'household-overview',
+  PEOPLE_IN_APPLICATION = 'people-in-application',
+  ADDRESS_HISTORY = 'address-history',
+  INCOME_SAVINGS = 'income-savings',
+  MEDICAL_NEEDS = 'medical-needs',
+  COURT_ORDER = 'court-order',
+  ACCOMODATION_TYPE = 'AccommodationType',
+  DOMESTIC_VIOLENCE = 'domestic-violence',
+  HOMELESSESS = 'homelessness',
+  SUBLETTING = 'subletting',
+  MEDICAL_NEED = 'medical-need',
+  PURCHASING_PROPERTY = 'purchasing-property',
+  PROPERTY_OWNERSHIP = 'property-ownership',
+  SOLD_PROPERTY = 'sold-property',
+  RELATIONSHIP_BREAKDOWN = 'relationship-breakdown',
+  ARREARS = 'arrears',
+  UNDER_OCCUPYING = 'under-occupying',
+  BENEFITS = 'benefits',
+  LANDLORD = 'landlord',
+  OTHER_HOUSING_REGISTER = 'other-housing-register',
+  BREACH_OF_TENANCY = 'breach-of-tenancy',
+  LEAGLE_RESTRICTIONS = 'legal-restrictions',
+  UNSPENT_CONVICTIONS = 'unspent-convictions',
+}
 
 /**
  * Get the eligibility criteria from the requested form
@@ -72,10 +73,14 @@ export const UNSPENT_CONVICTIONS = 'unspent-convictions';
  * @returns {EligibilityCriteria}
  */
 export function getEligibilityCriteria(
-  formId: string
+  formId: FormID
 ): EligibilityCriteria[] | undefined {
   const formData = getFormData(formId);
   return formData?.eligibility;
+}
+
+function assertNever(never: never, error: string): never {
+  throw new Error(error);
 }
 
 /**
@@ -83,103 +88,106 @@ export function getEligibilityCriteria(
  * @param {string} form - The requested form data
  * @returns {MultiStepForm}
  */
-export function getFormData(form: string): MultiStepForm {
-  switch (form.toLowerCase()) {
-    case AGREEMENT:
+export function getFormData(form: FormID): MultiStepForm {
+  switch (form) {
+    case FormID.AGREEMENT:
       return agreementFormData;
 
-    case SIGN_IN:
+    case FormID.SIGN_IN:
       return signInFormData;
 
-    case SIGN_IN_VERIFY:
+    case FormID.SIGN_IN_VERIFY:
       return signInVerifyFormData;
 
-    case SIGN_UP_DETAILS:
+    case FormID.SIGN_UP_DETAILS:
       return signUpDetailsFormData;
 
-    case IMMIGRATION_STATUS:
+    case FormID.IMMIGRATION_STATUS:
       return immigrationStatusFormData;
 
-    case PERSONAL_DETAILS:
+    case FormID.PERSONAL_DETAILS:
       return personalDetailsFormData;
 
-    case ADDRESS_DETAILS:
+    case FormID.ADDRESS_DETAILS:
       return addressDetailsFormData;
 
-    case YOUR_SITUATION:
+    case FormID.YOUR_SITUATION:
       return yourSituationFormData;
 
-    case RESIDENTIAL_STATUS:
+    case FormID.RESIDENTIAL_STATUS:
       return residentialStatusFormData;
 
-    case HOUSEHOLD_OVERVIEW:
+    case FormID.HOUSEHOLD_OVERVIEW:
       return houseHoldOverview;
 
-    case ADDRESS_HISTORY:
+    case FormID.ADDRESS_HISTORY:
       return addressHistory;
 
-    case INCOME_SAVINGS:
+    case FormID.INCOME_SAVINGS:
       return incomeSavings;
 
-    case MEDICAL_NEEDS:
+    case FormID.MEDICAL_NEEDS:
       return medicalNeeds;
 
-    case COURT_ORDER:
+    case FormID.COURT_ORDER:
       return CourtOrder;
 
-    case ACCOMODATION_TYPE:
+    case FormID.ACCOMODATION_TYPE:
       return AccommodationType;
 
-    case DOMESTIC_VIOLENCE:
+    case FormID.DOMESTIC_VIOLENCE:
       return DomesticViolence;
 
-    case HOMELESSESS:
+    case FormID.HOMELESSESS:
       return Homelessness;
 
-    case SUBLETTING:
+    case FormID.SUBLETTING:
       return Subletting;
 
-    case MEDICAL_NEED:
+    case FormID.MEDICAL_NEED:
       return MedicalNeed;
 
-    case PURCHASING_PROPERTY:
+    case FormID.PURCHASING_PROPERTY:
       return PurchasingProperty;
 
-    case PROPERTY_OWNERSHIP:
+    case FormID.PROPERTY_OWNERSHIP:
       return PropertyOwnership;
 
-    case SOLD_PROPERTY:
+    case FormID.SOLD_PROPERTY:
       return SoldProperty;
 
-    case RELATIONSHIP_BREAKDOWN:
+    case FormID.RELATIONSHIP_BREAKDOWN:
       return RelationshipBreakdown;
 
-    case ARREARS:
+    case FormID.ARREARS:
       return Arrears;
 
-    case UNDER_OCCUPYING:
+    case FormID.UNDER_OCCUPYING:
       return UnderOccupying;
 
-    case BENEFITS:
+    case FormID.BENEFITS:
       return Benefits;
 
-    case LANDLORD:
+    case FormID.LANDLORD:
       return Landlord;
 
-    case OTHER_HOUSING_REGISTER:
+    case FormID.OTHER_HOUSING_REGISTER:
       return OtherHousingRegister;
 
-    case BREACH_OF_TENANCY:
+    case FormID.BREACH_OF_TENANCY:
       return BreachOfTenancy;
 
-    case LEAGLE_RESTRICTIONS:
+    case FormID.LEAGLE_RESTRICTIONS:
       return legalRestrictions;
 
-    case UNSPENT_CONVICTIONS:
+    case FormID.UNSPENT_CONVICTIONS:
       return unspentConvictions;
 
+    case FormID.PEOPLE_IN_APPLICATION:
+      return peopleInApplication;
+
     default:
-      throw new Error('Unknown form step: ' + form);
+      return assertNever(form, 'Unknown form step: ' + form);
   }
 }
 

@@ -1,13 +1,12 @@
 import { agree } from '../../lib/store/applicant';
 import { updateUserAttribute } from '../../lib/store/cognitoUser';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
-import { AGREEMENT, getFormData } from '../../lib/utils/form-data';
+import { FormID, getFormData } from '../../lib/utils/form-data';
 import { HeadingOne } from '../content/headings';
 import Paragraph from '../content/paragraph';
 import Form from '../form/form';
 
 export default function ApplicationAgreement() {
-
   // TODO: might not be right place for this,
   // but we need to ensure new user is linked to application
   const dispatch = useAppDispatch();
@@ -15,9 +14,7 @@ export default function ApplicationAgreement() {
 
   const onSave = () => {
     dispatch(agree(true));
-    dispatch(
-      updateUserAttribute({ applicationId: applicationId })
-    );
+    dispatch(updateUserAttribute({ applicationId: applicationId }));
   };
 
   return (
@@ -42,7 +39,7 @@ export default function ApplicationAgreement() {
 
       <Form
         buttonText="Save and continue"
-        formData={getFormData(AGREEMENT)}
+        formData={getFormData(FormID.AGREEMENT)}
         onSave={onSave}
       />
     </>

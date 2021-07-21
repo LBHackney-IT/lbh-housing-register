@@ -1,16 +1,7 @@
 import { Applicant } from '../../domain/HousingApi';
 import { ApplicationSteps } from '../types/application';
 import { getFormIdsFromApplicationSteps } from './application-forms';
-import {
-  ADDRESS_DETAILS,
-  ADDRESS_HISTORY,
-  IMMIGRATION_STATUS,
-  INCOME_SAVINGS,
-  MEDICAL_NEEDS,
-  PERSONAL_DETAILS,
-  RESIDENTIAL_STATUS,
-  YOUR_SITUATION,
-} from './form-data';
+import { FormID } from './form-data';
 
 export const applicationStepsRemaining = (
   applicant: Applicant,
@@ -52,11 +43,11 @@ export const getApplicationStepsForResident = (
         steps: [
           {
             heading: 'Personal details',
-            id: PERSONAL_DETAILS,
+            id: FormID.PERSONAL_DETAILS,
           },
           {
             heading: 'Immigration status',
-            id: IMMIGRATION_STATUS,
+            id: FormID.IMMIGRATION_STATUS,
           },
         ],
       },
@@ -65,19 +56,19 @@ export const getApplicationStepsForResident = (
         steps: [
           {
             heading: 'Residential status',
-            id: RESIDENTIAL_STATUS,
+            id: FormID.RESIDENTIAL_STATUS,
           },
           {
             heading: 'Address history',
-            id: ADDRESS_HISTORY,
+            id: FormID.ADDRESS_HISTORY,
           },
           {
             heading: 'Current accommodation',
-            id: ADDRESS_DETAILS,
+            id: FormID.ADDRESS_DETAILS,
           },
           {
             heading: 'Your situation',
-            id: YOUR_SITUATION,
+            id: FormID.YOUR_SITUATION,
           },
         ],
       },
@@ -86,7 +77,7 @@ export const getApplicationStepsForResident = (
         steps: [
           {
             heading: 'Income and savings',
-            id: INCOME_SAVINGS,
+            id: FormID.INCOME_SAVINGS,
           },
         ],
       },
@@ -95,7 +86,7 @@ export const getApplicationStepsForResident = (
         steps: [
           {
             heading: 'Medical needs',
-            id: MEDICAL_NEEDS,
+            id: FormID.MEDICAL_NEEDS,
           },
         ],
       },
@@ -107,11 +98,11 @@ export const getApplicationStepsForResident = (
         steps: [
           {
             heading: 'Personal details',
-            id: PERSONAL_DETAILS,
+            id: FormID.PERSONAL_DETAILS,
           },
           {
             heading: 'Immigration status',
-            id: IMMIGRATION_STATUS,
+            id: FormID.IMMIGRATION_STATUS,
           },
         ],
       },
@@ -120,7 +111,7 @@ export const getApplicationStepsForResident = (
         steps: [
           {
             heading: 'Medical needs',
-            id: MEDICAL_NEEDS,
+            id: FormID.MEDICAL_NEEDS,
           },
         ],
       },

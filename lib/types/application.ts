@@ -1,6 +1,8 @@
+import { FormID } from '../utils/form-data';
+
 export type ApplicationStep = {
   heading: string;
-  id: string;
+  id: FormID;
 };
 
 export type ApplicationSteps = {

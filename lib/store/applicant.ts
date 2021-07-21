@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FormikValues } from 'formik';
 import { Store } from '.';
 import { Applicant } from '../../domain/HousingApi';
-import { AGREEMENT } from '../utils/form-data';
+import { FormID } from '../utils/form-data';
 
 const initialState: Applicant = {};
 
@@ -53,7 +53,8 @@ const slice = createSlice({
     /**
      * Agree to terms and conditions
      */
-    agree: (state, action) => applyQuestions(state, AGREEMENT, { agree: true }),
+    agree: (state, action) =>
+      applyQuestions(state, FormID.AGREEMENT, { agree: true }),
     updateApplicant: updateApplicantReducer,
     updateWithFormValues: (
       state,
@@ -66,7 +67,7 @@ const slice = createSlice({
 export function selectHasAgreed(store: Store) {
   return (
     store.application?.mainApplicant?.questions?.find(
-      (q) => q.id === `${AGREEMENT}/agree`
+      (q) => q.id === `${FormID.AGREEMENT}/agree`
     )?.answer === 'true'
   );
 }

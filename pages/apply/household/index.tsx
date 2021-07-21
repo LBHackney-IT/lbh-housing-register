@@ -6,7 +6,7 @@ import Layout from '../../../components/layout/resident-layout';
 import { updateWithFormValues } from '../../../lib/store/applicant';
 import { useAppDispatch } from '../../../lib/store/hooks';
 import { createAdditionalApplicants } from '../../../lib/store/otherMembers';
-import { getFormData, HOUSEHOLD_OVERVIEW } from '../../../lib/utils/form-data';
+import { FormID, getFormData } from '../../../lib/utils/form-data';
 
 // TODO: redo all of this: HRT-102
 
@@ -16,7 +16,7 @@ const HouseHoldPage = (): JSX.Element => {
 
   const confirmHouseHoldSize = async (values: FormikValues) => {
     dispatch(
-      updateWithFormValues({ activeStepId: HOUSEHOLD_OVERVIEW, values })
+      updateWithFormValues({ activeStepId: FormID.HOUSEHOLD_OVERVIEW, values })
     );
     dispatch(
       createAdditionalApplicants(parseInt(values.numberInHousehold) - 1)
@@ -29,7 +29,7 @@ const HouseHoldPage = (): JSX.Element => {
       <HeadingOne content="How many people are in this application?" />
 
       <Form
-        formData={getFormData(HOUSEHOLD_OVERVIEW)}
+        formData={getFormData(FormID.HOUSEHOLD_OVERVIEW)}
         buttonText="Continue"
         onSubmit={confirmHouseHoldSize}
       />

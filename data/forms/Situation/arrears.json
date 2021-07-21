@@ -12,11 +12,11 @@
           "options": [
             {
               "label": "Yes",
-              "value": "12"
+              "value": "yes"
             },
             {
               "label": "No",
-              "value": "15"
+              "value": "no"
             }
           ],
           "validation": {

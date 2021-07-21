@@ -20,6 +20,7 @@ const ApplicationStep = (): JSX.Element => {
     return <Custom404 />;
   }
 
+  const activeStep = step ? step[0] : undefined;
   const baseHref = `/apply/${applicant.person?.id}`;
   const returnHref = '/apply/overview';
 
@@ -54,7 +55,7 @@ const ApplicationStep = (): JSX.Element => {
       <ApplicationForms
         applicant={applicant}
         steps={steps}
-        activeStep={step}
+        activeStep={activeStep}
         baseHref={baseHref}
         onCompletion={onCompletion}
         onExit={onExit}

@@ -35,7 +35,7 @@
     {
       "fieldId": "arrears",
       "value": "no",
-      "nextFormId": "breach-of-tennancy"
+      "nextFormId": "breach-of-tenancy"
     }
   ]
 }

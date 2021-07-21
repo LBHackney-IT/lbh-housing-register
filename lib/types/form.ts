@@ -51,7 +51,7 @@ export type FormStep = {
 export type Conditionals = {
   fieldId: string;
   value: string;
-  nextFormId: string;
+  nextFormId: string; // TODO Should this be linked with a special case for no next step?
 };
 
 export type MultiStepForm = {
@@ -59,5 +59,5 @@ export type MultiStepForm = {
   eligibility?: EligibilityCriteria[];
   heading?: string;
   steps: FormStep[];
-  conditionals: Conditionals[];
+  conditionals?: Conditionals[];
 };

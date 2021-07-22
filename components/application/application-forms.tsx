@@ -2,14 +2,12 @@ import { FormikValues } from 'formik';
 import { Applicant } from '../../domain/HousingApi';
 import {
   applicantHasId,
+  getQuestionsForFormAsValues,
   updateWithFormValues,
 } from '../../lib/store/applicant';
 import { useAppDispatch } from '../../lib/store/hooks';
 import { ApplicationSectionGroup } from '../../lib/types/application';
-import {
-  getFormIdsFromApplicationSections,
-  mapApplicantToValues,
-} from '../../lib/utils/application-forms';
+import { getFormIdsFromApplicationSections } from '../../lib/utils/application-forms';
 import { getFormData } from '../../lib/utils/form-data';
 import { HeadingOne } from '../content/headings';
 import Paragraph from '../content/paragraph';
@@ -40,7 +38,7 @@ export default function ApplicationForms({
   const activeStepId =
     formSteps.find((step) => step === activeStep) ?? formSteps[0];
   const formData = getFormData(activeStepId);
-  const initialValues: FormikValues = mapApplicantToValues(
+  const initialValues: FormikValues = getQuestionsForFormAsValues(
     activeStepId,
     applicant
   );

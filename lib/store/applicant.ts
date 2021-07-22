@@ -92,3 +92,17 @@ export function getQuestionValue(
   const a = questions?.find(findQuesiton(formID, questionName))?.answer;
   return a ? JSON.parse(a) : def;
 }
+
+export function getQuestionsForFormAsValues(
+  formID: FormID,
+  applicant: Applicant
+): FormikValues {
+  return Object.fromEntries(
+    (applicant.questions ?? [])
+      .filter((question) => question.id?.startsWith(`${formID}/`))
+      .map((question) => [
+        (question.id || '').slice(`${formID}/`.length),
+        JSON.parse(question.answer || 'null'),
+      ])
+  );
+}

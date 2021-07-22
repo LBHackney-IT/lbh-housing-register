@@ -4,13 +4,13 @@ import React from 'react';
 import ApplicantStep from '../../../components/application/ApplicantStep';
 import Form from '../../../components/form/form';
 import {
+  getQuestionsForFormAsValues,
   selectApplicant,
   updateApplicant,
   updateWithFormValues,
 } from '../../../lib/store/applicant';
 
 import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
-import { mapApplicantToValues } from '../../../lib/utils/application-forms';
 import { FormID, getFormData } from '../../../lib/utils/form-data';
 import Custom404 from '../../404';
 
@@ -25,7 +25,7 @@ const ApplicationStep = (): JSX.Element => {
   }
 
   const initialValues = {
-    ...mapApplicantToValues(FormID.PERSONAL_DETAILS, applicant),
+    ...getQuestionsForFormAsValues(FormID.PERSONAL_DETAILS, applicant),
     firstName: applicant.person?.firstName,
     surname: applicant.person?.surname,
     birthday: applicant.person?.dateOfBirth,

@@ -44,19 +44,3 @@ export const getEligibilitySections = (): ApplicationSectionGroup[] => {
 export const getFormIdsFromApplicationSections = (
   sectionGroups: ApplicationSectionGroup[]
 ): FormID[] => sectionGroups.flatMap((sg) => sg.sections.map((s) => s.id));
-
-export function mapApplicantToValues(
-  stepId: string, // todo FormID
-  applicant: Applicant
-): FormikValues {
-  // TODO Lot's of specific forms are likely to want to map specific values here.
-
-  return Object.fromEntries(
-    (applicant.questions ?? [])
-      .filter((question) => question.id?.startsWith(`${stepId}/`))
-      .map((question) => [
-        (question.id || '').slice(`${stepId}/`.length),
-        JSON.parse(question.answer || 'null'),
-      ])
-  );
-}

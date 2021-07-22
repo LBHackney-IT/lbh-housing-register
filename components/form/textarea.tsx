@@ -4,15 +4,15 @@ import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
-
-interface TextareaProps extends TextareaFormField {}
+import Details from '../details';
 
 export default function Textarea({
   hint,
+  details,
   label,
   name,
   placeholder,
-}: TextareaProps): JSX.Element {
+}: TextareaFormField): JSX.Element {
   return (
     <Field name={name}>
       {({
@@ -27,6 +27,9 @@ export default function Textarea({
             <Label content={label} htmlFor={field.name} strong={true} />
           )}
           {hint && <Hint content={hint} />}
+          {details && (
+            <Details summary="Help with this question">{details}</Details>
+          )}
           {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 
           <textarea

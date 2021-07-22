@@ -15,6 +15,7 @@ export interface BaseFormField {
   name: string;
   label: string;
   hint?: string;
+  details?: string;
   conditionalDisplay?: FormFieldDisplayCriteria[];
   validation?: FormFieldValidation;
   placeholder?: string;

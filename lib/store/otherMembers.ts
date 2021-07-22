@@ -36,9 +36,12 @@ const slice = createSlice({
         person: {
           firstName: action.payload.firstName,
           surname: action.payload.surname,
+          dateOfBirth: action.payload.birthday,
           gender: action.payload.gender,
-          // TODO date of birth needs to be a string.
-          // dateOfBirth: action.payload.birthday,
+        },
+        contactInformation: {
+          phoneNumber: action.payload.phoneNumber,
+          emailAddress: action.payload.emailAddress,
         },
       };
 

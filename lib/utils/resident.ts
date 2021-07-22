@@ -131,11 +131,9 @@ export const getApplicationSectionsForResident = (
  */
 export const hasResidentAnsweredForm = (
   applicant: Applicant,
-  form: string
+  formID: FormID
 ): boolean => {
-  // TODO how are we going to structure this nested array of questions. And how are we going to record that a section has been answered?
-  // Will we store each section as a JSON encoded string? We'll use a dot notation. E.g. residential-status.moved-borough.
-  // You've answered the form if you've answered at least one question within it.
-
-  return applicant.questions?.find((q) => q.id?.startsWith(form)) !== undefined;
+  return (
+    applicant.questions?.find((q) => q.id?.startsWith(formID)) !== undefined
+  );
 };

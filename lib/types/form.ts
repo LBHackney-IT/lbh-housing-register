@@ -1,6 +1,9 @@
 import { FormikValues } from 'formik';
 import { FormID } from '../utils/form-data';
 
+// @Deprecated
+export type FormData = FormikValues;
+
 export type EligibilityCriteria = {
   field: string;
   is?: string;
@@ -8,22 +11,65 @@ export type EligibilityCriteria = {
   reasoning?: string;
 };
 
-// @Deprecated
-export type FormData = FormikValues;
-
-export type FormField = {
-  as?: string;
-  conditionalDisplay?: FormFieldDisplayCriteria[];
-  hint?: string;
-  initialValue?: boolean | number | string | string[];
-  label: string;
+export interface BaseFormField {
   name: string;
-  options?: FormFieldOption[];
-  placeholder?: string;
-  type?: string;
-  validation?: FormFieldValidation;
+  label: string;
+  hint?: string;
   details?: string;
-};
+  conditionalDisplay?: FormFieldDisplayCriteria[];
+  validation?: FormFieldValidation;
+  placeholder?: string;
+  initialValue?: any;
+}
+
+export interface TextFormField extends BaseFormField {
+  as: undefined;
+  type?: string;
+}
+export interface TextareaFormField extends BaseFormField {
+  as: 'textarea';
+}
+export interface CheckboxFormField extends BaseFormField {
+  as: 'checkbox';
+}
+export interface CheckboxesFormField extends BaseFormField {
+  as: 'checkboxes';
+  options: FormFieldOption[];
+}
+export interface RadioFormField extends BaseFormField {
+  as: 'radios';
+  options: FormFieldOption[];
+}
+
+export interface SelectFormField extends BaseFormField {
+  as: 'select';
+  options: FormFieldOption[];
+}
+
+export interface DateFormField extends BaseFormField {
+  as: 'dateinput';
+}
+
+export interface ParagraphFormField extends BaseFormField {
+  as: 'paragraph';
+}
+export interface InsetTextFormField extends BaseFormField {
+  as: 'insettext';
+  title?: string;
+  content?: string;
+  list?: string[];
+}
+
+export type FormField =
+  | TextFormField
+  | TextareaFormField
+  | RadioFormField
+  | CheckboxFormField
+  | CheckboxesFormField
+  | SelectFormField
+  | DateFormField
+  | ParagraphFormField
+  | InsetTextFormField;
 
 export type FormFieldDisplayCriteria = {
   field: string;

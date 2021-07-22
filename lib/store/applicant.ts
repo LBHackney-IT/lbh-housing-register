@@ -58,7 +58,7 @@ const slice = createSlice({
     updateApplicant: updateApplicantReducer,
     updateWithFormValues: (
       state,
-      action: PayloadAction<{ activeStepId: string; values: FormikValues }>
+      action: PayloadAction<{ activeStepId: FormID; values: FormikValues }>
     ) =>
       applyQuestions(state, action.payload.activeStepId, action.payload.values),
   },

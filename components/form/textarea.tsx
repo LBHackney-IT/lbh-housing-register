@@ -1,12 +1,10 @@
 import { Field, FieldInputProps, FieldMetaProps } from 'formik';
-import { FormField } from '../../lib/types/form';
+import { TextareaFormField } from '../../lib/types/form';
 import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
 import Details from '../details';
-
-interface TextareaProps extends FormField { }
 
 export default function Textarea({
   hint,
@@ -14,7 +12,7 @@ export default function Textarea({
   label,
   name,
   placeholder,
-}: TextareaProps): JSX.Element {
+}: TextareaFormField): JSX.Element {
   return (
     <Field name={name}>
       {({
@@ -29,12 +27,15 @@ export default function Textarea({
             <Label content={label} htmlFor={field.name} strong={true} />
           )}
           {hint && <Hint content={hint} />}
-          {details && <Details summary="Help with this question">{details}</Details>}
+          {details && (
+            <Details summary="Help with this question">{details}</Details>
+          )}
           {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 
           <textarea
-            className={`${!!meta.touched && !!meta.error ? 'govuk-textarea--error' : ''
-              } govuk-textarea lbh-textarea`}
+            className={`${
+              !!meta.touched && !!meta.error ? 'govuk-textarea--error' : ''
+            } govuk-textarea lbh-textarea`}
             id={field.name}
             placeholder={placeholder}
             rows={5}

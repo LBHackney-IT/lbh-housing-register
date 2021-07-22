@@ -1,0 +1,134 @@
+{
+  "heading": "Which describes your employment status?",
+  "copy": "If more than one applies, select the option that applies the most",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "",
+          "name": "employment",
+          "options": [
+            {
+              "label": "Employed",
+              "value": "employed"
+            },
+            {
+              "label": "Self-employed",
+              "value": "selfemployed"
+            },
+            {
+              "label": "Full time student",
+              "value": "fulltimestudent"
+            },
+            {
+              "label": "Unemployed",
+              "value": "unemployed"
+            },
+            {
+              "label": "Retired",
+              "value": "retired"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "title": "Accommodation Address",
+          "label": "Postcode",
+          "name": "address-finder",
+          "validation": {
+            "required": false
+          },
+          "conditionalDisplay": [
+            {
+              "field": "employment",
+              "is": "fulltimestudent"
+            }
+          ]
+        },
+        {
+          "as": "dateinput",
+          "label": "Course completion date",
+          "name": "course-completion-date",
+          "options": [
+            {
+              "label": "Month",
+              "value": "month"
+            },
+            {
+              "label": "Year",
+              "value": "year"
+            }
+          ],
+          "validation": {
+            "required": false
+          },
+          "conditionalDisplay": [
+            {
+              "field": "employment",
+              "is": "fulltimestudent"
+            }
+          ]
+        },
+        {
+          "name": "proof-of-income-employeed",
+          "as": "insettext",
+          "title": "Proof of income required (employed)",
+          "content": "Before submitting your application, you will be ",
+          "list": [
+            "if you get paid weekly, we will need your last 5 pay slips",
+            "if you paid monthly, we will need to last 2 pay slips"
+          ],
+          "validation": {
+            "required": false
+          },
+          "conditionalDisplay": [
+            {
+              "field": "employment",
+              "is": "employed"
+            }
+          ]
+        },
+        {
+          "name": "proof-of-income-self-employeed",
+          "as": "insettext",
+          "title": "Proof of income required (self employed)",
+          "content": "Before submitting your application, you will be asked to upload the following documents:",
+          "list": [
+            "Self-assessment or company accounts from HMRC showing your last 12 months income"
+          ],
+          "validation": {
+            "required": false
+          },
+          "conditionalDisplay": [
+            {
+              "field": "employment",
+              "is": "selfemployed"
+            }
+          ]
+        },
+        {
+          "name": "proof-of-income-retired",
+          "as": "insettext",
+          "title": "Proof of income required (retired)",
+          "content": "Before submitting your application, you will be asked to upload the following documents:",
+          "list": [
+            "State pension statement for the last year",
+            "Any private pension statements for the last year"
+          ],
+          "validation": {
+            "required": false
+          },
+          "conditionalDisplay": [
+            {
+              "field": "employment",
+              "is": "retired"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

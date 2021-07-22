@@ -72,7 +72,7 @@
           "initialValue": "2021-01-01",
           "label": "Field 6 - Date field",
           "name": "step-1__6",
-          "type": "date",
+          "as": "datefield",
           "validation": {
             "required": true,
             "min": "2021-01-01",

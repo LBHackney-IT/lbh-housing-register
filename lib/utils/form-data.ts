@@ -1,4 +1,4 @@
-import addressDetailsFormData from '../../data/forms/address-details.json';
+import currentAccommodationFormData from '../../data/forms/current-accommodation.json';
 import addressHistory from '../../data/forms/address-history.json';
 import agreementFormData from '../../data/forms/agreement.json';
 import immigrationStatusFormData from '../../data/forms/immigration-status.json';
@@ -29,7 +29,11 @@ import Subletting from '../../data/forms/Situation/subletting.json';
 import UnderOccupying from '../../data/forms/Situation/under-occupying.json';
 import unspentConvictions from '../../data/forms/Situation/unspent-convictions.json';
 import yourSituationFormData from '../../data/forms/your-situation.json';
+
+import employment from '../../data/forms/employment.json';
+
 import { EligibilityCriteria, FormField, MultiStepForm } from '../types/form';
+import assertNever from './assertNever';
 
 export enum FormID {
   AGREEMENT = 'agreement',
@@ -38,7 +42,7 @@ export enum FormID {
   SIGN_UP_DETAILS = 'sign-up-details',
   IMMIGRATION_STATUS = 'immigration-status',
   PERSONAL_DETAILS = 'personal-details',
-  ADDRESS_DETAILS = 'address-details',
+  CURRENT_ACCOMMODATION = 'current-accommodation',
   YOUR_SITUATION = 'your-situation',
   RESIDENTIAL_STATUS = 'residential-status',
   PEOPLE_IN_APPLICATION = 'people-in-application',
@@ -63,6 +67,7 @@ export enum FormID {
   BREACH_OF_TENANCY = 'breach-of-tenancy',
   LEAGLE_RESTRICTIONS = 'legal-restrictions',
   UNSPENT_CONVICTIONS = 'unspent-convictions',
+  EMPLOYMENT = 'employment',
 }
 
 /**
@@ -75,10 +80,6 @@ export function getEligibilityCriteria(
 ): EligibilityCriteria[] | undefined {
   const formData = getFormData(formId);
   return formData?.eligibility;
-}
-
-function assertNever(never: never, error: string): never {
-  throw new Error(error);
 }
 
 /**
@@ -106,8 +107,8 @@ export function getFormData(form: FormID): MultiStepForm {
     case FormID.PERSONAL_DETAILS:
       return personalDetailsFormData as MultiStepForm;
 
-    case FormID.ADDRESS_DETAILS:
-      return addressDetailsFormData as MultiStepForm;
+    case FormID.CURRENT_ACCOMMODATION:
+      return currentAccommodationFormData as MultiStepForm;
 
     case FormID.YOUR_SITUATION:
       return yourSituationFormData as MultiStepForm;
@@ -182,7 +183,10 @@ export function getFormData(form: FormID): MultiStepForm {
       return peopleInApplication as MultiStepForm;
 
     case FormID.PEOPLE_IN_APPLICATION:
-      return peopleInApplication;
+      return peopleInApplication as MultiStepForm;
+
+    case FormID.EMPLOYMENT:
+      return employment as MultiStepForm;
 
     default:
       return assertNever(form, 'Unknown form step: ' + form);
@@ -192,7 +196,7 @@ export function getFormData(form: FormID): MultiStepForm {
 export function getPeopleInApplicationForm(
   additionalResidents: number
 ): MultiStepForm {
-  const formFields = peopleInApplication.steps[0].fields;
+  const formFields = peopleInApplication.steps[0].fields as FormField[];
 
   const headerField = (n: number): FormField => ({
     as: 'paragraph',

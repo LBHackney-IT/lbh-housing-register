@@ -1,13 +1,13 @@
 import { FormField } from '../../lib/types/form';
+import assertNever from '../../lib/utils/assertNever';
 import Paragraph from '../content/paragraph';
-import BirthdayInput from './birthdayinput';
 import Checkboxes, { CheckboxesProps } from './checkboxes';
 import DateInput from './dateinput';
-import Dropdown from './dropdown';
 import Input from './input';
 import Radios, { RadiosProps } from './radios';
 import Select from './select';
 import Textarea from './textarea';
+import InsetText from './insettext';
 
 interface DynamicFieldProps {
   field: FormField;
@@ -22,12 +22,14 @@ export default function DynamicField({
   timeAtAddress,
   handleChange,
 }: DynamicFieldProps): JSX.Element {
-  switch (field.as?.toLowerCase()) {
+  switch (field.as) {
     case 'checkbox':
     case 'checkboxes':
+      // todo no as
       return <Checkboxes {...(field as CheckboxesProps)} />;
 
     case 'radios':
+      // todo no as
       return <Radios {...(field as RadiosProps)} />;
 
     case 'select':
@@ -37,24 +39,18 @@ export default function DynamicField({
       return <Textarea {...field} />;
 
     case 'dateinput':
-      return (
-        <DateInput
-          {...field}
-          timeAtAddress={timeAtAddress}
-          handleChange={handleChange}
-        />
-      );
-
-    case 'birthdayinput':
-      return <BirthdayInput {...field} />;
-
-    case 'dropdown':
-      return <Dropdown {...field} />;
+      return <DateInput {...field} />;
 
     case 'paragraph':
       return <Paragraph>{field.label}</Paragraph>;
 
-    default:
+    case 'insettext':
+      return <InsetText {...field}></InsetText>;
+
+    case undefined:
       return <Input {...field} onAddressLookup={onAddressLookup} />;
+
+    default:
+      return assertNever(field, 'unknown field dynamic type');
   }
 }

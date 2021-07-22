@@ -1,12 +1,16 @@
 import { Field, FieldArray, FieldInputProps, FieldMetaProps } from 'formik';
-import { FormField, FormFieldOption } from '../../lib/types/form';
+import {
+  BaseFormField,
+  CheckboxesFormField,
+  FormFieldOption,
+} from '../../lib/types/form';
 import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
 import Details from '../details';
 
-interface CheckboxProps extends FormField {
+interface CheckboxProps extends BaseFormField {
   index?: number;
   value: string;
 }
@@ -44,7 +48,7 @@ export function Checkbox({
   );
 }
 
-export interface CheckboxesProps extends FormField {
+export interface CheckboxesProps extends CheckboxesFormField {
   value: string;
 }
 

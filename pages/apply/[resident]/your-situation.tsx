@@ -29,7 +29,7 @@ export default function YourSituation() {
   // TODO work this out.
   const livingSituation: string = getQuestionValue(
     applicant.questions,
-    FormID.ADDRESS_DETAILS,
+    FormID.CURRENT_ACCOMMODATION,
     'living-situation'
   );
 

@@ -1,14 +1,14 @@
 import { Applicant } from '../../domain/HousingApi';
-import { ApplicationSteps } from '../types/application';
-import { getFormIdsFromApplicationSteps } from './application-forms';
+import { ApplicationSectionGroup } from '../types/application';
+import { getFormIdsFromApplicationSections } from './application-forms';
 import { FormID } from './form-data';
 
 export const applicationStepsRemaining = (
   applicant: Applicant,
   isMainApplicant: boolean
 ): number => {
-  const steps = getFormIdsFromApplicationSteps(
-    getApplicationStepsForResident(isMainApplicant)
+  const steps = getFormIdsFromApplicationSections(
+    getApplicationSectionsForResident(isMainApplicant)
   );
   let completeSteps = 0;
 
@@ -31,16 +31,16 @@ export const generateSlug = (input: string): string => {
 /**
  * Get the application form steps required by this resident
  * @param {Resident} applicant The resident we wish to get the steps for
- * @returns {ApplicationSteps[]} An object of steps, grouped
+ * @returns {ApplicationSectionGroup[]} An object of steps, grouped
  */
-export const getApplicationStepsForResident = (
+export const getApplicationSectionsForResident = (
   isMainApplicant: boolean
-): ApplicationSteps[] => {
+): ApplicationSectionGroup[] => {
   if (isMainApplicant) {
     return [
       {
         heading: 'Identity',
-        steps: [
+        sections: [
           {
             heading: 'Personal details',
             id: FormID.PERSONAL_DETAILS,
@@ -53,7 +53,7 @@ export const getApplicationStepsForResident = (
       },
       {
         heading: 'Living Situation',
-        steps: [
+        sections: [
           {
             heading: 'Residential status',
             id: FormID.RESIDENTIAL_STATUS,
@@ -74,7 +74,7 @@ export const getApplicationStepsForResident = (
       },
       {
         heading: 'Money',
-        steps: [
+        sections: [
           {
             heading: 'Income and savings',
             id: FormID.INCOME_SAVINGS,
@@ -83,7 +83,7 @@ export const getApplicationStepsForResident = (
       },
       {
         heading: 'Health',
-        steps: [
+        sections: [
           {
             heading: 'Medical needs',
             id: FormID.MEDICAL_NEEDS,
@@ -95,7 +95,7 @@ export const getApplicationStepsForResident = (
     return [
       {
         heading: 'Identity',
-        steps: [
+        sections: [
           {
             heading: 'Personal details',
             id: FormID.PERSONAL_DETAILS,
@@ -108,7 +108,7 @@ export const getApplicationStepsForResident = (
       },
       {
         heading: 'Health',
-        steps: [
+        sections: [
           {
             heading: 'Medical needs',
             id: FormID.MEDICAL_NEEDS,

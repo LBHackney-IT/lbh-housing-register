@@ -1,11 +1,11 @@
 import { FormID } from '../utils/form-data';
 
-export type ApplicationStep = {
+export type ApplicationSection = {
   heading: string;
   id: FormID;
 };
 
-export type ApplicationSteps = {
-  steps: ApplicationStep[];
+export type ApplicationSectionGroup = {
+  sections: ApplicationSection[];
   heading: string;
 };

@@ -8,7 +8,7 @@ import Layout from '../../../components/layout/resident-layout';
 import SummaryList, {
   SummaryListActions,
   SummaryListRow,
-  SummaryListValue
+  SummaryListValue,
 } from '../../../components/summary-list';
 import Tag from '../../../components/tag';
 import whenAgreed from '../../../lib/hoc/whenAgreed';
@@ -16,8 +16,8 @@ import { selectApplicant } from '../../../lib/store/application';
 import { useAppSelector } from '../../../lib/store/hooks';
 import { deleteApplicant } from '../../../lib/store/otherMembers';
 import {
-  getApplicationStepsForResident,
-  hasResidentAnsweredForm
+  getApplicationSectionsForResident,
+  hasResidentAnsweredForm,
 } from '../../../lib/utils/resident';
 import Custom404 from '../../404';
 
@@ -36,7 +36,7 @@ const ApplicationStep = (): JSX.Element => {
   const baseHref = `/apply/${currentResident.person?.id}`;
   const returnHref = '/apply/overview';
 
-  const steps = getApplicationStepsForResident(
+  const steps = getApplicationSectionsForResident(
     currentResident === mainResident
   );
 
@@ -59,13 +59,15 @@ const ApplicationStep = (): JSX.Element => {
   return (
     <Layout breadcrumbs={breadcrumbs}>
       <Hint content="Complete information for:" />
-      <HeadingOne content={`${currentResident.person?.firstName} ${currentResident.person?.surname}`} />
+      <HeadingOne
+        content={`${currentResident.person?.firstName} ${currentResident.person?.surname}`}
+      />
 
       {steps.map((step, index) => (
         <div key={index}>
           <HeadingTwo content={step.heading} />
           <SummaryList>
-            {step.steps.map((formStep, i) => (
+            {step.sections.map((formStep, i) => (
               <SummaryListRow key={i}>
                 <SummaryListValue>
                   <Link href={`${baseHref}/${formStep.id}`}>

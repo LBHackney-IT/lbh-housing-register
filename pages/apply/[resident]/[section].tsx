@@ -5,13 +5,16 @@ import Layout from '../../../components/layout/resident-layout';
 import whenAgreed from '../../../lib/hoc/whenAgreed';
 import { selectApplicant } from '../../../lib/store/application';
 import { useAppSelector } from '../../../lib/store/hooks';
-import { getApplicationStepFromId } from '../../../lib/utils/application-forms';
-import { getApplicationStepsForResident } from '../../../lib/utils/resident';
+import { getApplicationSectionFromId } from '../../../lib/utils/application-forms';
+import { getApplicationSectionsForResident } from '../../../lib/utils/resident';
 import Custom404 from '../../404';
 
-const ApplicationStep = (): JSX.Element => {
+const ApplicationSection = (): JSX.Element => {
   const router = useRouter();
-  const { resident, step } = router.query as { resident: string; step: string };
+  const { resident, section } = router.query as {
+    resident: string;
+    section: string;
+  };
 
   const applicant = useAppSelector(selectApplicant(resident));
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
@@ -20,11 +23,12 @@ const ApplicationStep = (): JSX.Element => {
     return <Custom404 />;
   }
 
-  const activeStep = step ? step[0] : undefined;
   const baseHref = `/apply/${applicant.person?.id}`;
   const returnHref = '/apply/overview';
 
-  const steps = getApplicationStepsForResident(applicant === mainResident);
+  const sectionGroups = getApplicationSectionsForResident(
+    applicant === mainResident
+  );
 
   const breadcrumbs = [
     {
@@ -36,8 +40,8 @@ const ApplicationStep = (): JSX.Element => {
       name: applicant.person?.firstName || '',
     },
     {
-      href: `${baseHref}/${step}`,
-      name: getApplicationStepFromId(step, steps)?.heading || '',
+      href: `${baseHref}/${section}`,
+      name: getApplicationSectionFromId(section, sectionGroups)?.heading || '',
     },
   ];
 
@@ -50,12 +54,12 @@ const ApplicationStep = (): JSX.Element => {
       <Hint content={applicant.person?.firstName ?? ''} />
       <ApplicationForms
         applicant={applicant}
-        steps={steps}
-        activeStep={activeStep}
+        sectionGroups={sectionGroups}
+        activeStep={section}
         onSubmit={onSubmit}
       />
     </Layout>
   );
 };
 
-export default whenAgreed(ApplicationStep);
+export default whenAgreed(ApplicationSection);

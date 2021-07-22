@@ -40,6 +40,7 @@ const ApplicationStep = (): JSX.Element => {
     gender,
     phoneNumber,
     emailAddress,
+    birthday,
     ...values
   }: FormikValues) => {
     dispatch(
@@ -48,7 +49,7 @@ const ApplicationStep = (): JSX.Element => {
           id: applicant.person.id,
           firstName,
           surname,
-          dateOfBirth: values.birthday,
+          dateOfBirth: birthday,
           gender,
         },
         contactInformation: {

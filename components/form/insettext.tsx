@@ -10,9 +10,9 @@ export default function InsetText({
       {title && <h3>{title}</h3>}
       {content && <p className="lbh-body-m">{content}</p>}
       {list &&
-        list.map((content: string, index: number) => {
-          return <li key={index}>{content}</li>;
-        })}
+        list.map((content: string, index: number) => (
+          <li key={index}>{content}</li>
+        ))}
     </div>
   );
 }

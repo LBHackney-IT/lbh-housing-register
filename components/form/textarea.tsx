@@ -1,11 +1,11 @@
 import { Field, FieldInputProps, FieldMetaProps } from 'formik';
-import { FormField } from '../../lib/types/form';
+import { TextareaFormField } from '../../lib/types/form';
 import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
 
-interface TextareaProps extends FormField {}
+interface TextareaProps extends TextareaFormField {}
 
 export default function Textarea({
   hint,

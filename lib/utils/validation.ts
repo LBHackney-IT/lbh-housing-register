@@ -1,6 +1,7 @@
 import { setIn } from 'formik';
 import * as Yup from 'yup';
 import { FormField } from '../types/form';
+import assertNever from './assertNever';
 
 /**
  * Builds out the validation schema for the form fields that are passed in
@@ -9,13 +10,11 @@ import { FormField } from '../types/form';
  */
 export function buildValidationSchema(fields: FormField[]) {
   const validationSchema = fields.reduce((acc, field) => {
-    if (field.validation || field.type) {
-      let baseType: Yup.BaseSchema;
-      const fieldType: string | undefined =
-        field.type?.toLowerCase() || field.as?.toLowerCase();
-      let fieldValidation: Yup.BaseSchema;
+    if (field.validation || (field.as === undefined && field.type)) {
+      let baseType: Yup.BaseSchema | undefined;
+      let fieldValidation: Yup.BaseSchema | undefined;
 
-      switch (fieldType) {
+      switch (field.as) {
         case 'checkbox':
           const oneOf = field.validation?.required ? [true] : [true, false];
           baseType = Yup.boolean().oneOf(oneOf, `${field.label} is required`);
@@ -53,61 +52,23 @@ export function buildValidationSchema(fields: FormField[]) {
           );
           break;
 
-        case 'date':
-          baseType = Yup.date();
-
-          fieldValidation = baseType;
-          fieldValidation = checkRequired(fieldValidation, field);
-          fieldValidation = checkMinimumLength(
-            fieldValidation,
-            field,
-            `${field.label} must be on or after ${field.validation?.min}`
-          );
-          fieldValidation = checkMaximumLength(
-            fieldValidation,
-            field,
-            `${field.label} must be on or before ${field.validation?.max}`
-          );
-          break;
-
-        case 'email':
-          baseType = Yup.string().email(`${field.label} must be a valid email`);
-
-          fieldValidation = baseType;
-          fieldValidation = checkRequired(fieldValidation, field);
-          fieldValidation = checkMinimumLength(fieldValidation, field);
-          fieldValidation = checkMaximumLength(fieldValidation, field);
-          break;
-
-        case 'number':
-          baseType = Yup.number().integer(
-            `${field.label} must be a valid number`
-          );
-
-          fieldValidation = baseType;
-          fieldValidation = checkRequired(fieldValidation, field);
-          fieldValidation = checkMinimumLength(
-            fieldValidation,
-            field,
-            `${field.label} must be no less than ${field.validation?.min}`
-          );
-          fieldValidation = checkMaximumLength(
-            fieldValidation,
-            field,
-            `${field.label} must be no more than ${field.validation?.max}`
-          );
-          break;
-
-        case 'birthdayinput':
-          baseType = Yup.number().integer(
-            `${field.label} must be a valid number`
-          );
-
-          fieldValidation = baseType;
-          fieldValidation = checkRequired(fieldValidation, field);
-          break;
-
         case 'dateinput':
+          // case 'date':
+          //   baseType = Yup.date();
+
+          //   fieldValidation = baseType;
+          //   fieldValidation = checkRequired(fieldValidation, field);
+          //   fieldValidation = checkMinimumLength(
+          //     fieldValidation,
+          //     field,
+          //     `${field.label} must be on or after ${field.validation?.min}`
+          //   );
+          //   fieldValidation = checkMaximumLength(
+          //     fieldValidation,
+          //     field,
+          //     `${field.label} must be on or before ${field.validation?.max}`
+          //   );
+          //   break;
           baseType = Yup.number().integer(
             `${field.label} must be a valid number`
           );
@@ -116,14 +77,50 @@ export function buildValidationSchema(fields: FormField[]) {
           fieldValidation = checkRequired(fieldValidation, field);
           break;
 
-        default:
-          baseType = Yup.string();
+        case undefined:
+          switch (field.type) {
+            case 'email':
+              baseType = Yup.string().email(
+                `${field.label} must be a valid email`
+              );
 
-          fieldValidation = baseType;
-          fieldValidation = checkRequired(fieldValidation, field);
-          fieldValidation = checkMinimumLength(fieldValidation, field);
-          fieldValidation = checkMaximumLength(fieldValidation, field);
+              fieldValidation = baseType;
+              fieldValidation = checkRequired(fieldValidation, field);
+              fieldValidation = checkMinimumLength(fieldValidation, field);
+              fieldValidation = checkMaximumLength(fieldValidation, field);
+              break;
+
+            case 'number':
+              baseType = Yup.number().integer(
+                `${field.label} must be a valid number`
+              );
+
+              fieldValidation = baseType;
+              fieldValidation = checkRequired(fieldValidation, field);
+              fieldValidation = checkMinimumLength(
+                fieldValidation,
+                field,
+                `${field.label} must be no less than ${field.validation?.min}`
+              );
+              fieldValidation = checkMaximumLength(
+                fieldValidation,
+                field,
+                `${field.label} must be no more than ${field.validation?.max}`
+              );
+              break;
+          }
           break;
+      }
+
+      if (
+        typeof baseType === 'undefined' ||
+        typeof fieldValidation === 'undefined'
+      ) {
+        baseType = Yup.string();
+        fieldValidation = baseType;
+        fieldValidation = checkRequired(fieldValidation, field);
+        fieldValidation = checkMinimumLength(fieldValidation, field);
+        fieldValidation = checkMaximumLength(fieldValidation, field);
       }
 
       fieldValidation = setUpConditionalValidation(

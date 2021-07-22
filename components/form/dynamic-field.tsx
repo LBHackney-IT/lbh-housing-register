@@ -1,9 +1,8 @@
 import { FormField } from '../../lib/types/form';
+import assertNever from '../../lib/utils/assertNever';
 import Paragraph from '../content/paragraph';
-import BirthdayInput from './birthdayinput';
 import Checkboxes, { CheckboxesProps } from './checkboxes';
 import DateInput from './dateinput';
-import Dropdown from './dropdown';
 import Input from './input';
 import Radios, { RadiosProps } from './radios';
 import Select from './select';
@@ -22,7 +21,7 @@ export default function DynamicField({
   timeAtAddress,
   handleChange,
 }: DynamicFieldProps): JSX.Element {
-  switch (field.as?.toLowerCase()) {
+  switch (field.as) {
     case 'checkbox':
     case 'checkboxes':
       return <Checkboxes {...(field as CheckboxesProps)} />;
@@ -45,16 +44,13 @@ export default function DynamicField({
         />
       );
 
-    case 'birthdayinput':
-      return <BirthdayInput {...field} />;
-
-    case 'dropdown':
-      return <Dropdown {...field} />;
-
     case 'paragraph':
       return <Paragraph>{field.label}</Paragraph>;
 
-    default:
+    case undefined:
       return <Input {...field} onAddressLookup={onAddressLookup} />;
+
+    default:
+      return assertNever(field, 'unknown field dynamic type');
   }
 }

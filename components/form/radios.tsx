@@ -1,12 +1,12 @@
 import { Field, FieldInputProps, FieldMetaProps } from 'formik';
-import { FormField } from '../../lib/types/form';
+import { BaseFormField, RadioFormField } from '../../lib/types/form';
 import Paragraph from '../content/paragraph';
 import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
 
-interface RadioProps extends FormField {
+interface RadioProps extends BaseFormField {
   index?: number;
   value: string;
 }
@@ -44,7 +44,7 @@ export function Radio({
   );
 }
 
-export interface RadiosProps extends FormField {
+export interface RadiosProps extends RadioFormField {
   value: string;
   subheading?: string;
 }

@@ -22,6 +22,7 @@ export type FormField = {
   placeholder?: string;
   type?: string;
   validation?: FormFieldValidation;
+  details?: string;
 };
 
 export type FormFieldDisplayCriteria = {

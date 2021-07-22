@@ -4,6 +4,7 @@ import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
+import Details from '../details';
 
 interface CheckboxProps extends FormField {
   index?: number;
@@ -49,6 +50,7 @@ export interface CheckboxesProps extends FormField {
 
 export default function Checkboxes({
   hint,
+  details,
   label,
   options,
   name,
@@ -71,6 +73,7 @@ export default function Checkboxes({
             <Label content={label} strong={true} />
           )}
           {hasMultipleOptions && hint && <Hint content={hint} />}
+          {hasMultipleOptions && details && <Details summary="Help with this question">{details}</Details>}
           {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 
           <div

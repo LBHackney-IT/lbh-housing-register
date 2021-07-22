@@ -5,6 +5,7 @@ import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
+import Details from '../details';
 
 interface RadioProps extends FormField {
   index?: number;
@@ -52,6 +53,7 @@ export interface RadiosProps extends FormField {
 export default function Radios({
   hint,
   label,
+  details,
   name,
   options,
   subheading,
@@ -70,6 +72,7 @@ export default function Radios({
             <Label content={label} strong={true} />
           )}
           {hint && <Hint content={hint} />}
+          {details && <Details summary="Help with this question">{details}</Details>}
           {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
           {subheading && <Paragraph>{subheading}</Paragraph>}
 

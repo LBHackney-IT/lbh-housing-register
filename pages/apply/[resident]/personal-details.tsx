@@ -4,10 +4,11 @@ import React from 'react';
 import ApplicantStep from '../../../components/application/ApplicantStep';
 import Form from '../../../components/form/form';
 import {
+  selectApplicant,
   updateApplicant,
   updateWithFormValues,
 } from '../../../lib/store/applicant';
-import { selectApplicant } from '../../../lib/store/application';
+
 import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import { mapApplicantToValues } from '../../../lib/utils/application-forms';
 import { FormID, getFormData } from '../../../lib/utils/form-data';
@@ -44,6 +45,7 @@ const ApplicationStep = (): JSX.Element => {
     dispatch(
       updateApplicant({
         person: {
+          id: applicant.person.id,
           firstName,
           surname,
           dateOfBirth: values.birthday,
@@ -56,7 +58,11 @@ const ApplicationStep = (): JSX.Element => {
       })
     );
     dispatch(
-      updateWithFormValues({ activeStepId: FormID.PERSONAL_DETAILS, values })
+      updateWithFormValues({
+        formID: FormID.PERSONAL_DETAILS,
+        personID: applicant.person.id,
+        values,
+      })
     );
   };
 

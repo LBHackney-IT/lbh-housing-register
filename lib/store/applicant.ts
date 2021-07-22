@@ -1,10 +1,28 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAction } from '@reduxjs/toolkit';
 import { FormikValues } from 'formik';
 import { Store } from '.';
 import { Applicant, Question } from '../../domain/HousingApi';
 import { FormID } from '../utils/form-data';
 
-const initialState: Applicant = {};
+export type ApplicantWithPersonID = Applicant & {
+  person: Applicant['person'] & { id: string };
+};
+
+export function applicantHasId(
+  applicant: Applicant | undefined = {}
+): applicant is ApplicantWithPersonID {
+  return !!applicant.person?.id;
+}
+
+export const updateApplicant = createAction<ApplicantWithPersonID>(
+  'applicant/updateApplicant'
+);
+
+export const updateWithFormValues = createAction<{
+  personID: string;
+  formID: FormID;
+  values: FormikValues;
+}>('applicant/updateWithFormValues');
 
 export function applyQuestions(
   state: Applicant | undefined = {},
@@ -27,64 +45,50 @@ export function applyQuestions(
 
 export function updateApplicantReducer(
   state: Applicant | undefined,
-  action: PayloadAction<Partial<Applicant>>
+  payload: Applicant
 ) {
   return {
     ...state,
     person: {
       ...state?.person,
-      ...action.payload.person,
+      ...payload.person,
     },
     contactInformation: {
       ...state?.contactInformation,
-      ...action.payload.contactInformation,
+      ...payload.contactInformation,
     },
     address: {
       ...state?.address,
-      ...action.payload.address,
+      ...payload.address,
     },
   };
 }
 
-const slice = createSlice({
-  name: 'applicant',
-  initialState: initialState as Applicant | undefined,
-  reducers: {
-    /**
-     * Agree to terms and conditions
-     */
-    agree: (state, action) =>
-      applyQuestions(state, FormID.AGREEMENT, { agree: true }),
-    updateApplicant: updateApplicantReducer,
-    updateWithFormValues: (
-      state,
-      action: PayloadAction<{ activeStepId: FormID; values: FormikValues }>
-    ) =>
-      applyQuestions(state, action.payload.activeStepId, action.payload.values),
-  },
-});
-
-export function selectHasAgreed(store: Store) {
-  return (
-    store.application?.mainApplicant?.questions?.find(
-      (q) => q.id === `${FormID.AGREEMENT}/agree`
-    )?.answer === 'true'
-  );
-}
+export const selectApplicant =
+  (applicantPersonId: string) =>
+  (store: Store): ApplicantWithPersonID | undefined => {
+    if (
+      applicantHasId(store.application.mainApplicant) &&
+      store.application.mainApplicant?.person?.id === applicantPersonId
+    ) {
+      return store.application.mainApplicant;
+    }
+    return store.application.otherMembers?.find(
+      (a): a is ApplicantWithPersonID =>
+        applicantHasId(a) && a.person?.id === applicantPersonId
+    );
+  };
 
 export const findQuesiton =
-  (formId: FormID, questionName: string) => (question: Question) =>
-    question.id === `${formId}/${questionName}`;
+  (formID: FormID, questionName: string) => (question: Question) =>
+    question.id === `${formID}/${questionName}`;
 
 export function getQuestionValue(
   questions: Question[] | undefined,
-  formId: FormID,
+  formID: FormID,
   questionName: string,
   def = undefined
 ) {
-  const a = questions?.find(findQuesiton(formId, questionName))?.answer;
+  const a = questions?.find(findQuesiton(formID, questionName))?.answer;
   return a ? JSON.parse(a) : def;
 }
-
-export default slice;
-export const { agree, updateApplicant, updateWithFormValues } = slice.actions;

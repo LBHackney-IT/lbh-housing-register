@@ -4,13 +4,13 @@ import { useRouter } from 'next/router';
 import { HeadingOne } from '../../components/content/headings';
 import Form from '../../components/form/form';
 import Layout from '../../components/layout/resident-layout';
-import { updateApplicant } from '../../lib/store/applicant';
 import { createApplication } from '../../lib/store/application';
 import {
   useAppDispatch,
   useAppSelector,
   useAppStore,
 } from '../../lib/store/hooks';
+import { updateBeforeFirstSave } from '../../lib/store/mainApplicant';
 import { FormID, getFormData } from '../../lib/utils/form-data';
 import processPhonenumber from '../../lib/utils/processPhonenumber';
 
@@ -40,7 +40,7 @@ const ApplicationStartPage = (): JSX.Element => {
     });
 
     dispatch(
-      updateApplicant({
+      updateBeforeFirstSave({
         person: {
           firstName: values.firstName,
           surname: values.surname,

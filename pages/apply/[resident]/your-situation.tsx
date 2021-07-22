@@ -8,9 +8,9 @@ import Hint from '../../../components/form/hint';
 import Layout from '../../../components/layout/resident-layout';
 import {
   getQuestionValue,
+  selectApplicant,
   updateWithFormValues,
 } from '../../../lib/store/applicant';
-import { selectApplicant } from '../../../lib/store/application';
 import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import { FormID, getFormData } from '../../../lib/utils/form-data';
 import Custom404 from '../../404';
@@ -81,10 +81,14 @@ export default function YourSituation() {
     setActiveStepId(nextFormId);
   };
 
-  // Note that Formik is building up a big bag of all the values.
-  // Each formData should be a new form?
   const onSave = (values: FormikValues) => {
-    dispatch(updateWithFormValues({ activeStepId: activeStepID, values }));
+    dispatch(
+      updateWithFormValues({
+        formID: activeStepID,
+        personID: applicant.person.id,
+        values,
+      })
+    );
   };
 
   return (

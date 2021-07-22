@@ -1,7 +1,9 @@
 import { FormikValues } from 'formik';
-import { useRouter } from 'next/router';
 import { Applicant } from '../../domain/HousingApi';
-import { updateWithFormValues } from '../../lib/store/applicant';
+import {
+  applicantHasId,
+  updateWithFormValues,
+} from '../../lib/store/applicant';
 import { useAppDispatch } from '../../lib/store/hooks';
 import { ApplicationSectionGroup } from '../../lib/types/application';
 import {
@@ -26,6 +28,7 @@ interface ApplicationFormsProps {
  * as well as a clear journey from the first form to the next, and so on...
  * @param {ApplicationFormsProps} param0 - Property object of the application
  * @returns {JSX.Element}
+ * @deprecated don't use this. See personal-details.tsx for a better pattern.
  */
 export default function ApplicationForms({
   activeStep,
@@ -44,7 +47,16 @@ export default function ApplicationForms({
 
   const dispatch = useAppDispatch();
   const onSave = (values: FormikValues) => {
-    dispatch(updateWithFormValues({ activeStepId, values }));
+    // TODO store eligibility answer.
+    if (applicantHasId(applicant)) {
+      dispatch(
+        updateWithFormValues({
+          formID: activeStepId,
+          personID: applicant.person.id,
+          values,
+        })
+      );
+    }
   };
 
   return (

@@ -1,8 +1,8 @@
 import React from 'react';
 import ApplicationAgreement from '../../components/application/agreement';
 import Layout from '../../components/layout/resident-layout';
-import { selectHasAgreed } from '../store/applicant';
 import { useAppSelector } from '../store/hooks';
+import { selectHasAgreed } from '../store/mainApplicant';
 
 export default function whenAgreed<P>(
   WrappedComponent: React.ComponentType<P>

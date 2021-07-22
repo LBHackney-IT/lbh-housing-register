@@ -12,7 +12,6 @@ import SummaryList, {
 } from '../../../components/summary-list';
 import Tag from '../../../components/tag';
 import whenAgreed from '../../../lib/hoc/whenAgreed';
-import { selectApplicant } from '../../../lib/store/application';
 import { useAppSelector } from '../../../lib/store/hooks';
 import { deleteApplicant } from '../../../lib/store/otherMembers';
 import {
@@ -20,6 +19,7 @@ import {
   hasResidentAnsweredForm,
 } from '../../../lib/utils/resident';
 import Custom404 from '../../404';
+import { selectApplicant } from '../../../lib/store/applicant';
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter();

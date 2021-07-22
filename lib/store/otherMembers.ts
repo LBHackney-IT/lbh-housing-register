@@ -1,7 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FormikValues } from 'formik';
 import { Applicant } from '../../domain/HousingApi';
-import { applyQuestions, updateApplicantReducer } from './applicant';
+import {
+  applyQuestions,
+  updateApplicant,
+  updateApplicantReducer,
+  updateWithFormValues,
+} from './applicant';
 
 const initialState: Applicant[] = [];
 
@@ -10,38 +15,6 @@ const slice = createSlice({
   initialState: initialState as Applicant[] | undefined,
 
   reducers: {
-    updateAdditionalApplicant: (
-      state = [],
-      action: PayloadAction<Applicant>
-    ) => {
-      const applicant = state.findIndex(
-        (p) => p.person?.id && p.person?.id === action.payload.person?.id
-      );
-      // Immer
-      state[applicant] = updateApplicantReducer(state[applicant], action);
-      return state;
-    },
-    updateAdditionalApplicantWithFormValues: (
-      state = [],
-      action: PayloadAction<{
-        activeStepId: string;
-        id: string;
-        values: FormikValues;
-      }>
-    ) => {
-      const applicant = state.findIndex(
-        (p) => p.person?.id && p.person?.id === action.payload.id
-      );
-      // Immer
-      state[applicant] = applyQuestions(
-        state[applicant],
-        action.payload.activeStepId,
-        action.payload.values
-      );
-
-      return state;
-    },
-
     /**
      * Add additional resident to store
      */
@@ -80,13 +53,35 @@ const slice = createSlice({
         (resident) => resident.person?.id !== action.payload.person?.id
       ),
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(updateApplicant, (state = [], action) => {
+        const applicant = state.findIndex(
+          (p) => p.person?.id && p.person.id === action.payload.person.id
+        );
+        // Immer
+        state[applicant] = updateApplicantReducer(
+          state[applicant],
+          action.payload
+        );
+        return state;
+      })
+      .addCase(updateWithFormValues, (state = [], action) => {
+        const applicant = state.findIndex(
+          (p) => p.person?.id && p.person.id === action.payload.personID
+        );
+
+        // Immer
+        state[applicant] = applyQuestions(
+          state[applicant],
+          action.payload.formID,
+          action.payload.values
+        );
+        return state;
+      });
+  },
 });
 
 export default slice;
-export const {
-  updateAdditionalApplicantWithFormValues,
-  updateAdditionalApplicant,
-  addApplicant,
-  addResidentFromFormData,
-  deleteApplicant,
-} = slice.actions;
+export const { addApplicant, addResidentFromFormData, deleteApplicant } =
+  slice.actions;

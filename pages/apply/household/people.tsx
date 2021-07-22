@@ -6,14 +6,11 @@ import { HeadingOne } from '../../../components/content/headings';
 import Form from '../../../components/form/form';
 import Layout from '../../../components/layout/resident-layout';
 import {
+  applicantHasId,
   updateApplicant,
   updateWithFormValues,
 } from '../../../lib/store/applicant';
 import { useAppSelector } from '../../../lib/store/hooks';
-import {
-  updateAdditionalApplicant,
-  updateAdditionalApplicantWithFormValues,
-} from '../../../lib/store/otherMembers';
 import {
   FormID,
   getPeopleInApplicationForm,
@@ -23,17 +20,26 @@ const PeoplePage = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useDispatch();
 
+  const mainApplicant = useAppSelector(
+    (store) => store.application.mainApplicant
+  );
+
   const otherMembers = useAppSelector(
     (store) => store.application.otherMembers || []
   );
   const countOfOtherPeopleInApplication = otherMembers.length ?? 0;
 
   function confirmResidents(values: FormikValues) {
+    if (!applicantHasId(mainApplicant)) {
+      throw new Error('mainApplicant missing ID');
+    }
+
     const { firstName, surname, gender, birthday, ...rest } =
       values.mainApplicant;
     dispatch(
       updateApplicant({
         person: {
+          id: mainApplicant.person.id,
           firstName,
           surname,
           gender,
@@ -44,7 +50,8 @@ const PeoplePage = (): JSX.Element => {
 
     dispatch(
       updateWithFormValues({
-        activeStepId: FormID.PEOPLE_IN_APPLICATION,
+        formID: FormID.PEOPLE_IN_APPLICATION,
+        personID: mainApplicant.person.id,
         values: rest,
       })
     );
@@ -53,16 +60,16 @@ const PeoplePage = (): JSX.Element => {
       Object.entries(values.otherMembers).forEach(
         ([i, values]: [string, any]) => {
           const { firstName, surname, gender, birthday, ...rest } = values;
-          const id = otherMembers[Number(i)].person?.id;
-          if (!id) {
+          const personID = otherMembers[Number(i)].person?.id;
+          if (!personID) {
             throw new Error(
               'Missmatched people array, cannot locate person by ID'
             );
           }
           dispatch(
-            updateAdditionalApplicant({
+            updateApplicant({
               person: {
-                id,
+                id: personID,
                 firstName,
                 surname,
                 gender,
@@ -71,9 +78,9 @@ const PeoplePage = (): JSX.Element => {
             })
           );
           dispatch(
-            updateAdditionalApplicantWithFormValues({
-              activeStepId: FormID.PEOPLE_IN_APPLICATION,
-              id,
+            updateWithFormValues({
+              formID: FormID.PEOPLE_IN_APPLICATION,
+              personID,
               values: rest,
             })
           );

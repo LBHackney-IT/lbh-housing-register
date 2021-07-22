@@ -1,6 +1,6 @@
-import { agree } from '../../lib/store/applicant';
 import { updateUserAttribute } from '../../lib/store/cognitoUser';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
+import { agree } from '../../lib/store/mainApplicant';
 import { FormID, getFormData } from '../../lib/utils/form-data';
 import { HeadingOne } from '../content/headings';
 import Paragraph from '../content/paragraph';
@@ -13,7 +13,7 @@ export default function ApplicationAgreement() {
   const applicationId = useAppSelector((store) => store.application.id);
 
   const onSave = () => {
-    dispatch(agree(true));
+    dispatch(agree());
     dispatch(updateUserAttribute({ applicationId: applicationId }));
   };
 

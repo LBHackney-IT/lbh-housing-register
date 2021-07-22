@@ -3,7 +3,8 @@ import ApplicationForms from '../../../components/application/application-forms'
 import Hint from '../../../components/form/hint';
 import Layout from '../../../components/layout/resident-layout';
 import whenAgreed from '../../../lib/hoc/whenAgreed';
-import { selectApplicant } from '../../../lib/store/application';
+import { applicantHasId, selectApplicant } from '../../../lib/store/applicant';
+
 import { useAppSelector } from '../../../lib/store/hooks';
 import { getApplicationSectionFromId } from '../../../lib/utils/application-forms';
 import { getApplicationSectionsForResident } from '../../../lib/utils/resident';
@@ -19,11 +20,11 @@ const ApplicationSection = (): JSX.Element => {
   const applicant = useAppSelector(selectApplicant(resident));
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
 
-  if (!applicant) {
+  if (!applicantHasId(applicant)) {
     return <Custom404 />;
   }
 
-  const baseHref = `/apply/${applicant.person?.id}`;
+  const baseHref = `/apply/${applicant.person.id}`;
   const returnHref = '/apply/overview';
 
   const sectionGroups = getApplicationSectionsForResident(
@@ -37,7 +38,7 @@ const ApplicationSection = (): JSX.Element => {
     },
     {
       href: baseHref,
-      name: applicant.person?.firstName || '',
+      name: applicant.person.firstName || '',
     },
     {
       href: `${baseHref}/${section}`,
@@ -51,7 +52,7 @@ const ApplicationSection = (): JSX.Element => {
 
   return (
     <Layout breadcrumbs={breadcrumbs}>
-      <Hint content={applicant.person?.firstName ?? ''} />
+      <Hint content={applicant.person.firstName ?? ''} />
       <ApplicationForms
         applicant={applicant}
         sectionGroups={sectionGroups}

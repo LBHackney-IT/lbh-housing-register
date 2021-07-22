@@ -1,34 +1,32 @@
 import { FormikValues } from 'formik';
 import { Applicant } from '../../domain/HousingApi';
-import { ApplicationStep, ApplicationSteps } from '../types/application';
+import {
+  ApplicationSection,
+  ApplicationSectionGroup,
+} from '../types/application';
 import { FormID } from './form-data';
 
 /**
  * Get application step model from ID
  * @param {string} id The ID of the form step
- * @param {ApplicationSteps[]} steps The steps to check against
- * @returns {ApplicationStep}
+ * @param {ApplicationSectionGroup[]} sectionGroups The steps to check against
+ * @returns {ApplicationSection}
  */
-export const getApplicationStepFromId = (
+export const getApplicationSectionFromId = (
   id: string,
-  steps: ApplicationSteps[]
-): ApplicationStep | undefined => {
-  const activeSection = steps.filter(
-    (step) => step.steps.filter((s) => s.id == id).length > 0
-  )[0]?.steps;
-  const activeStepModel = activeSection?.filter((step) => step.id == id)[0];
-  return activeStepModel;
-};
+  sectionGroups: ApplicationSectionGroup[]
+): ApplicationSection | undefined =>
+  sectionGroups.flatMap((sg) => sg.sections).find((s) => s.id === id);
 
 /**
  * Eligibility form steps
- * @returns {ApplicationSteps[]}
+ * @returns {ApplicationSectionGroup[]}
  */
-export const getEligibilitySteps = (): ApplicationSteps[] => {
+export const getEligibilitySections = (): ApplicationSectionGroup[] => {
   return [
     {
       heading: 'Eligibility',
-      steps: [
+      sections: [
         {
           heading: 'Immigration status',
           id: FormID.IMMIGRATION_STATUS,
@@ -40,19 +38,15 @@ export const getEligibilitySteps = (): ApplicationSteps[] => {
 
 /**
  * Get form IDs from the ApplicationSteps type
- * @param {ApplicationSteps[]} steps Application steps
+ * @param {ApplicationSectionGroup[]} sectionGroups Application steps
  * @returns {string[]} Workable form ids
  */
-export const getFormIdsFromApplicationSteps = (
-  steps: ApplicationSteps[]
-): FormID[] => {
-  const ids: FormID[] = [];
-  steps.map((step) => step.steps.map((s) => ids.push(s.id)));
-  return ids;
-};
+export const getFormIdsFromApplicationSections = (
+  sectionGroups: ApplicationSectionGroup[]
+): FormID[] => sectionGroups.flatMap((sg) => sg.sections.map((s) => s.id));
 
 export function mapApplicantToValues(
-  stepId: string,
+  stepId: string, // todo FormID
   applicant: Applicant
 ): FormikValues {
   // TODO Lot's of specific forms are likely to want to map specific values here.

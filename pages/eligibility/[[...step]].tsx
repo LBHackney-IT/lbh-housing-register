@@ -3,7 +3,7 @@ import ApplicationForms from '../../components/application/application-forms';
 import EligibilityOutcome from '../../components/eligibility';
 import Layout from '../../components/layout/resident-layout';
 import { useAppSelector } from '../../lib/store/hooks';
-import { getEligibilitySteps } from '../../lib/utils/application-forms';
+import { getEligibilitySections } from '../../lib/utils/application-forms';
 
 export default function EligibilityChecker(): JSX.Element {
   const applicant =
@@ -26,7 +26,7 @@ export default function EligibilityChecker(): JSX.Element {
       {activeStep !== 'outcome' && (
         <ApplicationForms
           applicant={applicant}
-          steps={getEligibilitySteps()}
+          sectionGroups={getEligibilitySections()}
           activeStep={activeStep}
           onSubmit={onSubmit}
         />

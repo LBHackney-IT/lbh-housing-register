@@ -33,18 +33,25 @@ const ApplicationStep = (): JSX.Element => {
     emailAddress: applicant.contactInformation?.emailAddress,
   };
 
-  const onSave = (values: FormikValues) => {
+  const onSave = ({
+    firstName,
+    surname,
+    gender,
+    phoneNumber,
+    emailAddress,
+    ...values
+  }: FormikValues) => {
     dispatch(
       updateApplicant({
         person: {
-          firstName: values.firstName,
-          surname: values.surname,
+          firstName,
+          surname,
           // dateOfBirth: values.birthday,
-          gender: values.gender,
+          gender,
         },
         contactInformation: {
-          phoneNumber: values.phoneNumber,
-          emailAddress: values.emailAddress,
+          phoneNumber,
+          emailAddress,
         },
       })
     );

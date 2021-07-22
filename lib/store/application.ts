@@ -7,8 +7,8 @@ import {
 } from '@reduxjs/toolkit';
 import { Store } from '.';
 import { Application } from '../../domain/HousingApi';
-import mainApplicant from './mainApplicant';
 import { signOut } from './cognitoUser';
+import mainApplicant from './mainApplicant';
 import otherMembers from './otherMembers';
 
 export const loadApplication = createAsyncThunk(

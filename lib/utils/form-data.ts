@@ -1,6 +1,7 @@
-import currentAccommodationFormData from '../../data/forms/current-accommodation.json';
 import addressHistory from '../../data/forms/address-history.json';
 import agreementFormData from '../../data/forms/agreement.json';
+import currentAccommodationFormData from '../../data/forms/current-accommodation.json';
+import employment from '../../data/forms/employment.json';
 import immigrationStatusFormData from '../../data/forms/immigration-status.json';
 import incomeSavings from '../../data/forms/income.json';
 import medicalNeeds from '../../data/forms/medical-needs.json';
@@ -29,9 +30,6 @@ import Subletting from '../../data/forms/Situation/subletting.json';
 import UnderOccupying from '../../data/forms/Situation/under-occupying.json';
 import unspentConvictions from '../../data/forms/Situation/unspent-convictions.json';
 import yourSituationFormData from '../../data/forms/your-situation.json';
-
-import employment from '../../data/forms/employment.json';
-
 import { EligibilityCriteria, FormField, MultiStepForm } from '../types/form';
 import assertNever from './assertNever';
 

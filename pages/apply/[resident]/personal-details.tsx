@@ -9,7 +9,6 @@ import {
   updateApplicant,
   updateWithFormValues,
 } from '../../../lib/store/applicant';
-
 import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import { FormID, getFormData } from '../../../lib/utils/form-data';
 import Custom404 from '../../404';

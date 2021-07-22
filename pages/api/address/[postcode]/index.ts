@@ -1,8 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import {
-    lookUpAddress
-} from '../../../../lib/gateways/address-api';
+import { lookUpAddress } from '../../../../lib/gateways/address-api';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -11,7 +9,7 @@ const endpoint: NextApiHandler = async (
   switch (req.method) {
     case 'GET':
       try {
-        const { postcode} = req.query;
+        const { postcode } = req.query;
         const data = await lookUpAddress(postcode);
         res.status(StatusCodes.OK).json(data);
       } catch (error) {

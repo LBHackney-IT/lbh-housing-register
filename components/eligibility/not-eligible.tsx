@@ -9,7 +9,9 @@ import List, { ListItem } from '../content/list';
 import Paragraph from '../content/paragraph';
 
 export default function NotEligible(): JSX.Element {
-  const mainApplicant = useAppSelector(store => store.application.mainApplicant);
+  const mainApplicant = useAppSelector(
+    (store) => store.application.mainApplicant
+  );
   const [isEligible, reasons] = useMemo(
     () => (mainApplicant && checkEligible(mainApplicant)) ?? [],
     [mainApplicant]

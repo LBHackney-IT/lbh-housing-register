@@ -1,6 +1,6 @@
 {
   "id": "1",
-  
+
   "heading": "Court Order",
   "copy": "Do you have a court order allowing you to be on the register?",
   "steps": [
@@ -26,7 +26,7 @@
         }
       ]
     }
-  ], 
+  ],
   "conditionals": {
     "no": "0",
     "yes": "2"

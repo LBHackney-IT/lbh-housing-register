@@ -1,11 +1,11 @@
 import { Field, FieldInputProps, FieldMetaProps } from 'formik';
 import { BaseFormField, RadioFormField } from '../../lib/types/form';
 import Paragraph from '../content/paragraph';
+import Details from '../details';
 import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
-import Details from '../details';
 
 interface RadioProps extends BaseFormField {
   index?: number;
@@ -72,7 +72,9 @@ export default function Radios({
             <Label content={label} strong={true} />
           )}
           {hint && <Hint content={hint} />}
-          {details && <Details summary="Help with this question">{details}</Details>}
+          {details && (
+            <Details summary="Help with this question">{details}</Details>
+          )}
           {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
           {subheading && <Paragraph>{subheading}</Paragraph>}
 

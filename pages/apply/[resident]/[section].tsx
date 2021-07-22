@@ -4,7 +4,6 @@ import Hint from '../../../components/form/hint';
 import Layout from '../../../components/layout/resident-layout';
 import whenAgreed from '../../../lib/hoc/whenAgreed';
 import { applicantHasId, selectApplicant } from '../../../lib/store/applicant';
-
 import { useAppSelector } from '../../../lib/store/hooks';
 import { getApplicationSectionFromId } from '../../../lib/utils/application-forms';
 import { getApplicationSectionsForResident } from '../../../lib/utils/resident';

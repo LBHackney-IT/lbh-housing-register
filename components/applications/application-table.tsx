@@ -55,8 +55,8 @@ export default function ApplicationTable({
             </td>
             <td className="govuk-table__cell">
               <Tag
-                content={application.status || ""}
-                className={getStatusTag(application.status || "")}
+                content={application.status || ''}
+                className={getStatusTag(application.status || '')}
               />
             </td>
             <td className="govuk-table__cell">{application.createdAt}</td>

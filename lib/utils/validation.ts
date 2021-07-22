@@ -2,7 +2,6 @@ import { setIn } from 'formik';
 import * as Yup from 'yup';
 import { INVALID_DATE } from '../../components/form/dateinput';
 import { FormField } from '../types/form';
-import assertNever from './assertNever';
 
 /**
  * Builds out the validation schema for the form fields that are passed in

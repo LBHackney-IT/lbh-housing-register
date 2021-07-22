@@ -1,7 +1,10 @@
-export default function ShowAddress({currentAddress, duration}: any): JSX.Element {
+export default function ShowAddress({
+  currentAddress,
+  duration,
+}: any): JSX.Element {
   const addressSplit = currentAddress.split(',');
   return (
-    <div className="lbh-body-m" >
+    <div className="lbh-body-m">
       {addressSplit[0]}
       <br />
       {addressSplit[1]}

@@ -1,6 +1,5 @@
 import { FormikValues } from 'formik';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { HeadingOne } from '../../../components/content/headings';
 import Form from '../../../components/form/form';

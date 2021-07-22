@@ -4,9 +4,9 @@ import { ButtonLink } from '../../components/button';
 import { HeadingOne, HeadingTwo } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
 import Table, {
-    TableCell,
-    TableHeading,
-    TableRow
+  TableCell,
+  TableHeading,
+  TableRow,
 } from '../../components/content/table';
 import Layout from '../../components/layout/resident-layout';
 

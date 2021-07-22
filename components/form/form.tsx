@@ -141,10 +141,7 @@ export default function Form({
               )}
 
               <div className="c-flex__1 text-right">
-                <Button
-                  disabled={isSubmitting}
-                  type="submit"
-                >
+                <Button disabled={isSubmitting} type="submit">
                   {buttonText ? buttonText : 'Save'}
                 </Button>
               </div>

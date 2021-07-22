@@ -1,5 +1,3 @@
-import { FormikValues } from 'formik';
-import { Applicant } from '../../domain/HousingApi';
 import {
   ApplicationSection,
   ApplicationSectionGroup,

@@ -27,22 +27,31 @@ export default function ApplicationPage({
     <UserContext.Provider value={{ user }}>
       <Layout>
         <HeadingOne content={`Application #${data.id}`} />
-        <Tag content={data.status || ""} className={getStatusTag(data.status|| "")} />
+        <Tag
+          content={data.status || ''}
+          className={getStatusTag(data.status || '')}
+        />
 
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-two-thirds">
-            {data.mainApplicant && <PersonalDetails
-              heading="Personal details"
-              applicant={data.mainApplicant}
-            />}
-            {data.mainApplicant?.contactInformation && <ContactDetails
-              heading="Contact details"
-              contact={data.mainApplicant.contactInformation}
-            />}
-            {data.mainApplicant?.address && <AddressDetails
-              heading="Current accommodation"
-              address={data.mainApplicant?.address}
-            />}
+            {data.mainApplicant && (
+              <PersonalDetails
+                heading="Personal details"
+                applicant={data.mainApplicant}
+              />
+            )}
+            {data.mainApplicant?.contactInformation && (
+              <ContactDetails
+                heading="Contact details"
+                contact={data.mainApplicant.contactInformation}
+              />
+            )}
+            {data.mainApplicant?.address && (
+              <AddressDetails
+                heading="Current accommodation"
+                address={data.mainApplicant?.address}
+              />
+            )}
           </div>
           <div className="govuk-grid-column-one-third">
             {data.otherMembers && (

@@ -3,7 +3,7 @@ import Collapsible from '../collapsible';
 
 interface SummaryProps {
   heading: string;
-  others: Applicant[]
+  others: Applicant[];
 }
 
 export default function OtherMembers({

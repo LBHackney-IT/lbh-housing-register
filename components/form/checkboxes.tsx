@@ -4,11 +4,11 @@ import {
   CheckboxesFormField,
   FormFieldOption,
 } from '../../lib/types/form';
+import Details from '../details';
 import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
-import Details from '../details';
 
 interface CheckboxProps extends BaseFormField {
   index?: number;
@@ -77,7 +77,9 @@ export default function Checkboxes({
             <Label content={label} strong={true} />
           )}
           {hasMultipleOptions && hint && <Hint content={hint} />}
-          {hasMultipleOptions && details && <Details summary="Help with this question">{details}</Details>}
+          {hasMultipleOptions && details && (
+            <Details summary="Help with this question">{details}</Details>
+          )}
           {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 
           <div

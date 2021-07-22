@@ -1,10 +1,10 @@
 import { Field, FieldInputProps, FieldMetaProps } from 'formik';
 import { SelectFormField } from '../../lib/types/form';
+import Details from '../details';
 import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
-import Details from '../details';
 
 export default function Select({
   hint,

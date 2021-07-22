@@ -4,10 +4,10 @@ import Paragraph from '../content/paragraph';
 import Checkboxes, { CheckboxesProps } from './checkboxes';
 import DateInput from './dateinput';
 import Input from './input';
+import InsetText from './insettext';
 import Radios, { RadiosProps } from './radios';
 import Select from './select';
 import Textarea from './textarea';
-import InsetText from './insettext';
 
 interface DynamicFieldProps {
   field: FormField;

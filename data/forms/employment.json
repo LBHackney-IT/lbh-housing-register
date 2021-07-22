@@ -35,6 +35,7 @@
           }
         },
         {
+          "title": "Accommodation Address",
           "label": "Postcode",
           "name": "address-finder",
           "validation": {
@@ -53,12 +54,12 @@
           "name": "course-completion-date",
           "options": [
             {
-              "label": "Years",
-              "value": "years"
-            },
-            {
               "label": "Month",
               "value": "month"
+            },
+            {
+              "label": "Year",
+              "value": "year"
             }
           ],
           "validation": {
@@ -73,13 +74,16 @@
         },
         {
           "name": "proof-of-income-employeed",
-          "as": "inserttext",
+          "as": "insettext",
           "title": "Proof of income required (employed)",
           "content": "Before submitting your application, you will be ",
           "list": [
             "if you get paid weekly, we will need your last 5 pay slips",
             "if you paid monthly, we will need to last 2 pay slips"
           ],
+          "validation": {
+            "required": false
+          },
           "conditionalDisplay": [
             {
               "field": "employment",
@@ -89,12 +93,15 @@
         },
         {
           "name": "proof-of-income-self-employeed",
-          "as": "inserttext",
+          "as": "insettext",
           "title": "Proof of income required (self employed)",
           "content": "Before submitting your application, you will be asked to upload the following documents:",
           "list": [
             "Self-assessment or company accounts from HMRC showing your last 12 months income"
           ],
+          "validation": {
+            "required": false
+          },
           "conditionalDisplay": [
             {
               "field": "employment",
@@ -104,13 +111,16 @@
         },
         {
           "name": "proof-of-income-retired",
-          "as": "inserttext",
+          "as": "insettext",
           "title": "Proof of income required (retired)",
           "content": "Before submitting your application, you will be asked to upload the following documents:",
           "list": [
             "State pension statement for the last year",
             "Any private pension statements for the last year"
           ],
+          "validation": {
+            "required": false
+          },
           "conditionalDisplay": [
             {
               "field": "employment",

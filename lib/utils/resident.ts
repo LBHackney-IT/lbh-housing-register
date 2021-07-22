@@ -49,6 +49,10 @@ export const getApplicationStepsForResident = (
             heading: 'Immigration status',
             id: FormID.IMMIGRATION_STATUS,
           },
+          {
+            heading: 'Employment',
+            id: FormID.EMPLOYMENT,
+          },
         ],
       },
       {

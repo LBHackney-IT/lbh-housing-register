@@ -8,6 +8,7 @@ import Input from './input';
 import Radios, { RadiosProps } from './radios';
 import Select from './select';
 import Textarea from './textarea';
+import InsertText from './inserttext';
 
 interface DynamicFieldProps {
   field: FormField;
@@ -53,6 +54,9 @@ export default function DynamicField({
 
     case 'paragraph':
       return <Paragraph>{field.label}</Paragraph>;
+
+    case 'inserttext':
+      return <InsertText {...field}></InsertText>;
 
     default:
       return <Input {...field} onAddressLookup={onAddressLookup} />;

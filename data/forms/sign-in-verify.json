@@ -4,7 +4,7 @@
       "fields": [
         {
           "label": "Email",
-          "name": "email",
+          "name": "emailAddress",
           "type": "email",
           "validation": {
             "required": true

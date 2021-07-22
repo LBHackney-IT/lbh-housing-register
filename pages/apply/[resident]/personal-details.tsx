@@ -27,7 +27,7 @@ const ApplicationStep = (): JSX.Element => {
     ...mapApplicantToValues(FormID.PERSONAL_DETAILS, applicant),
     firstName: applicant.person?.firstName,
     surname: applicant.person?.surname,
-    // birthday: applicant.person?.dateOfBirth,
+    birthday: applicant.person?.dateOfBirth,
     gender: applicant.person?.gender,
     phoneNumber: applicant.contactInformation?.phoneNumber,
     emailAddress: applicant.contactInformation?.emailAddress,
@@ -46,7 +46,7 @@ const ApplicationStep = (): JSX.Element => {
         person: {
           firstName,
           surname,
-          // dateOfBirth: values.birthday,
+          dateOfBirth: values.birthday,
           gender,
         },
         contactInformation: {

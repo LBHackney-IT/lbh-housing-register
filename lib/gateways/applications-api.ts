@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Application, ApplicationList } from '../../domain/HousingApi';
-import { Stat } from '../../domain/Stat';
+import { Stat } from '../../domain/stat';
 
 const headersWithKey = {
   'x-api-key': process.env.AWS_KEY,

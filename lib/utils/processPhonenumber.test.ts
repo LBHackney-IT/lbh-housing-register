@@ -1,4 +1,4 @@
-import { processPhonenumber } from './start';
+import processPhonenumber from './processPhonenumber';
 
 test('process phone number', () => {
   expect(processPhonenumber('+447700000000')).toBe('+447700000000');

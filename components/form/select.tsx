@@ -1,11 +1,11 @@
 import { Field, FieldInputProps, FieldMetaProps } from 'formik';
-import { FormField } from '../../lib/types/form';
+import { SelectFormField } from '../../lib/types/form';
 import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
 
-interface SelectProps extends FormField {}
+interface SelectProps extends SelectFormField {}
 
 export default function Select({
   hint,

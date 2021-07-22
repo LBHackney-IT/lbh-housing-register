@@ -40,18 +40,18 @@ export const updateApplication = createAsyncThunk(
     return await res.json();
   }
 );
-
+const initialState: Application = { id: '' };
 const slice = createSlice({
   name: 'application',
-  initialState: {} as Application,
+  initialState,
   reducers: {
-    submit: () => { },
+    submit: () => {},
   },
   extraReducers: (builder) => {
     builder
       .addCase(loadApplication.fulfilled, (state, action) => action.payload)
       .addCase(createApplication.fulfilled, (state, action) => action.payload)
-      .addCase(signOut.fulfilled, (state, action) => ({}))
+      .addCase(signOut.fulfilled, () => initialState)
       .addDefaultCase((state, action) => {
         state.mainApplicant = applicant.reducer(state.mainApplicant, action);
         state.otherMembers = otherMembers.reducer(state.otherMembers, action);

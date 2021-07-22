@@ -33,6 +33,7 @@ import yourSituationFormData from '../../data/forms/your-situation.json';
 import employment from '../../data/forms/employment.json';
 
 import { EligibilityCriteria, FormField, MultiStepForm } from '../types/form';
+import assertNever from './assertNever';
 
 export enum FormID {
   AGREEMENT = 'agreement',
@@ -79,10 +80,6 @@ export function getEligibilityCriteria(
 ): EligibilityCriteria[] | undefined {
   const formData = getFormData(formId);
   return formData?.eligibility;
-}
-
-function assertNever(never: never, error: string): never {
-  throw new Error(error);
 }
 
 /**
@@ -186,7 +183,7 @@ export function getFormData(form: FormID): MultiStepForm {
       return peopleInApplication as MultiStepForm;
 
     case FormID.PEOPLE_IN_APPLICATION:
-      return peopleInApplication;
+      return peopleInApplication as MultiStepForm;
 
     case FormID.EMPLOYMENT:
       return employment as MultiStepForm;
@@ -199,7 +196,7 @@ export function getFormData(form: FormID): MultiStepForm {
 export function getPeopleInApplicationForm(
   additionalResidents: number
 ): MultiStepForm {
-  const formFields = peopleInApplication.steps[0].fields;
+  const formFields = peopleInApplication.steps[0].fields as FormField[];
 
   const headerField = (n: number): FormField => ({
     as: 'paragraph',

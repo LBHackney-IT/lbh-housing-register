@@ -18,23 +18,9 @@
           }
         },
         {
-          "as": "birthdayinput",
+          "as": "dateinput",
           "label": "Date of birth",
           "name": "birthday",
-          "options": [
-            {
-              "label": "Day",
-              "value": "day"
-            },
-            {
-              "label": "Month",
-              "value": "month"
-            },
-            {
-              "label": "Year",
-              "value": "year"
-            }
-          ],
           "validation": {
             "required": true
           }

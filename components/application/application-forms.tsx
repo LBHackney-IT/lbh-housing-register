@@ -3,9 +3,9 @@ import { useRouter } from 'next/router';
 import { Applicant } from '../../domain/HousingApi';
 import { updateWithFormValues } from '../../lib/store/applicant';
 import { useAppDispatch } from '../../lib/store/hooks';
-import { ApplicationSteps } from '../../lib/types/application';
+import { ApplicationSectionGroup } from '../../lib/types/application';
 import {
-  getFormIdsFromApplicationSteps,
+  getFormIdsFromApplicationSections,
   mapApplicantToValues,
 } from '../../lib/utils/application-forms';
 import { getFormData } from '../../lib/utils/form-data';
@@ -17,7 +17,7 @@ interface ApplicationFormsProps {
   activeStep?: string;
   onSubmit?: () => void;
   applicant: Applicant;
-  steps: ApplicationSteps[];
+  sectionGroups: ApplicationSectionGroup[];
 }
 
 /**
@@ -31,10 +31,9 @@ export default function ApplicationForms({
   activeStep,
   onSubmit,
   applicant,
-  steps,
+  sectionGroups,
 }: ApplicationFormsProps): JSX.Element | null {
-
-  const formSteps = getFormIdsFromApplicationSteps(steps);
+  const formSteps = getFormIdsFromApplicationSections(sectionGroups);
   const activeStepId =
     formSteps.find((step) => step === activeStep) ?? formSteps[0];
   const formData = getFormData(activeStepId);

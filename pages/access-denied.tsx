@@ -1,6 +1,6 @@
-import Layout from '../components/layout/resident-layout';
 import { HeadingOne } from '../components/content/headings';
 import Paragraph from '../components/content/paragraph';
+import Layout from '../components/layout/resident-layout';
 
 export default function AccessDeniedPage(): JSX.Element {
   return (

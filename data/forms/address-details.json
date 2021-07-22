@@ -6,7 +6,7 @@
         {
           "as": "radios",
           "label": "What best describes your current living situation?",
-          "name": "current-acommodation",
+          "name": "living-situation",
           "options": [
             {
               "label": "Living with parents",
@@ -25,9 +25,10 @@
               "value": "temp-accomodation"
             },
             {
-              "label": "Privat rental",
-              "value": "privat-rental"
-            },{
+              "label": "Private rental",
+              "value": "private-rental"
+            },
+            {
               "label": "Owner occupier",
               "value": "owner-occupier"
             },
@@ -54,6 +55,60 @@
             {
               "label": "Tied accommodation",
               "value": "tied-accommodation"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    },
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "What best describes your home?",
+          "name": "home",
+          "options": [
+            {
+              "label": "House",
+              "value": "house"
+            },
+            {
+              "label": "Flat",
+              "value": "flat"
+            },
+            {
+              "label": "Flat above a shop",
+              "value": "flat-above-shop"
+            },
+            {
+              "label": "Maisonnette",
+              "value": "maisonnette"
+            },
+            {
+              "label": "Bungalow",
+              "value": "bungalow"
+            },
+            {
+              "label": "Hotel or hostel",
+              "value": "hotel-hostel"
+            },
+            {
+              "label": "Boat",
+              "value": "boat"
+            },
+            {
+              "label": "Caravan",
+              "value": "caravan"
+            },
+            {
+              "label": "Studio",
+              "value": "studio"
+            },
+            {
+              "label": "Other",
+              "value": "other"
             }
           ],
           "validation": {

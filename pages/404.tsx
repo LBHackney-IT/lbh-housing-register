@@ -1,6 +1,6 @@
 import { HeadingOne } from '../components/content/headings';
-import Layout from '../components/layout/resident-layout';
 import Paragraph from '../components/content/paragraph';
+import Layout from '../components/layout/resident-layout';
 
 export default function Custom404(): JSX.Element {
   return (

@@ -1,9 +1,9 @@
+import { Field, FieldArray, FieldInputProps, FieldMetaProps } from 'formik';
+import { FormField, FormFieldOption } from '../../lib/types/form';
 import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
-import { FormField, FormFieldOption } from '../../lib/types/form';
-import { Field, FieldArray, FieldInputProps, FieldMetaProps } from 'formik';
 
 interface CheckboxProps extends FormField {
   index?: number;

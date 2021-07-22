@@ -14,7 +14,7 @@
         },
         {
           "label": "Last name",
-          "name": "lastName",
+          "name": "surname",
           "validation": {
             "required": true
           }
@@ -22,7 +22,7 @@
         {
           "as": "radios",
           "label": "Sex",
-          "name": "sex",
+          "name": "gender",
           "options": [
             {
               "label": "Female",
@@ -43,7 +43,7 @@
         },
         {
           "as": "birthdayinput",
-          "label":"Date of birth",
+          "label": "Date of birth",
           "name": "birthday",
           "options": [
             {

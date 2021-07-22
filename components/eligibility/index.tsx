@@ -1,11 +1,16 @@
+import { useMemo } from 'react';
+import { useAppSelector } from '../../lib/store/hooks';
+import { checkEligible } from '../../lib/utils/form';
 import Eligible from './eligible';
 import NotEligible from './not-eligible';
-import { Store } from '../../lib/store';
-import { useStore } from 'react-redux';
 
 export default function EligibilityOutcome(): JSX.Element {
-  const store = useStore<Store>();
-  const isEligible = store.getState().resident.isEligible;
-
+  const mainApplicant = useAppSelector(
+    (store) => store.application.mainApplicant
+  );
+  const isEligible = useMemo(
+    () => mainApplicant && checkEligible(mainApplicant)[0],
+    [mainApplicant]
+  );
   return isEligible ? <Eligible /> : <NotEligible />;
 }

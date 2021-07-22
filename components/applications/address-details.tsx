@@ -1,4 +1,4 @@
-import { Address } from '../../domain/resident';
+import { Address } from '../../domain/HousingApi';
 import Collapsible from '../collapsible';
 
 interface SummaryProps {

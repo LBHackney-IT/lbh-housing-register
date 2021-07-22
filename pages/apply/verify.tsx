@@ -1,79 +1,65 @@
-import { HeadingOne } from '../../components/content/headings';
-import Layout from '../../components/layout/resident-layout';
-import whenEligible from '../../lib/hoc/whenEligible';
-import Paragraph from '../../components/content/paragraph';
 import { Auth } from 'aws-amplify';
-import Form from '../../components/form/form';
-import Button from '../../components/button';
-import { FormData } from '../../lib/types/form';
-import { getFormData, SIGN_IN_VERIFY } from '../../lib/utils/form-data';
 import { useRouter } from 'next/router';
-import { Store } from '../../lib/store';
-import { useStore } from 'react-redux';
-import { logIn } from '../../lib/store/resident';
+import Button from '../../components/button';
+import { HeadingOne } from '../../components/content/headings';
+import Paragraph from '../../components/content/paragraph';
+import Form from '../../components/form/form';
+import Layout from '../../components/layout/resident-layout';
+import { signIn } from '../../lib/store/cognitoUser';
+import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
+import { FormData } from '../../lib/types/form';
+import { FormID, getFormData } from '../../lib/utils/form-data';
 
 const ApplicationVerifyPage = (): JSX.Element => {
   const router = useRouter();
-  const store = useStore<Store>();
-  const resident = store.getState().resident;
-
-  // TODO: We also need to check if household section has been filled out and then forward the user to /overview
-  if (resident.isLoggedIn) {
-    // router.push('/apply/overview');
-    router.push('/apply/household');
-
+  const isLoggedIn = useAppSelector((store) => store.cognitoUser?.username);
+  if (isLoggedIn) {
+    router.push('/apply/overview');
   }
 
-  const providedUsername: FormData = {
-    email: resident.username,
-  };
+  const dispatch = useAppDispatch();
+  const emailAddress = useAppSelector(
+    (store) => store.application.mainApplicant?.contactInformation?.emailAddress
+  );
 
   const confirmSignUp = async (values: FormData) => {
-    try {
-      await Auth.confirmSignUp(values.email, values.code);
+    await Auth.confirmSignUp(values.emailAddress, values.code);
 
-      // TODO: turns out we also need to sign in at this point!
-      await Auth.signIn(values.email, 'Testing123!');
+    // TODO: turns out we also need to sign in at this point!
+    // update so we don't need a password
+    dispatch(
+      signIn({
+        username: values.emailAddress,
+        password: 'Testing123!',
+      })
+    );
 
-      // TODO: update store
-      store.dispatch(logIn(values.email));
-      // router.push('/apply/overview');
-      router.push('/apply/household');
-
-    } catch (error) {
-      console.log('error confirming sign up', error);
-    }
+    // TODO: update to link to household: HRT-102
+    router.push('/apply/overview');
   };
 
-  const resendCode = async (username: string) => {
-    try {
-      await Auth.resendSignUp(username);
-
-      // TODO: provide UI update
-    } catch (error) {
-      // TODO: handle error
-      console.log('error sending code', error);
-    }
+  const resendCode = async (emailAddress: string) => {
+    await Auth.resendSignUp(emailAddress);
   };
 
   return (
     <Layout>
       <HeadingOne content="Enter your verification code" />
-      {resident.username && (
+      {emailAddress && (
         <>
           <Paragraph>
-            We've sent a code to <strong>{resident.username}</strong> to confirm
-            your account. Enter it below.
+            We've sent a code to <strong>{emailAddress}</strong> to confirm your
+            account. Enter it below.
           </Paragraph>
-          <Button onClick={() => resendCode(resident.username)} secondary>
+          <Button onClick={() => resendCode(emailAddress)} secondary>
             Send again
           </Button>
         </>
       )}
 
       <Form
-        formData={getFormData(SIGN_IN_VERIFY)}
-        residentsPreviousAnswers={providedUsername}
+        initialValues={{ emailAddress }}
+        formData={getFormData(FormID.SIGN_IN_VERIFY)}
         buttonText="Continue"
         onSubmit={confirmSignUp}
       />
@@ -81,4 +67,4 @@ const ApplicationVerifyPage = (): JSX.Element => {
   );
 };
 
-export default whenEligible(ApplicationVerifyPage);
+export default ApplicationVerifyPage;

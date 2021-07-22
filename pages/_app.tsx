@@ -1,19 +1,21 @@
-import { wrapper } from '../lib/store';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import { FC } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
+import Layout from '../components/layout/resident-layout';
+import Loading from '../components/loading';
+import { wrapper } from '../lib/store';
+import { useAppDispatch } from '../lib/store/hooks';
+import { initStore } from '../lib/store/init';
 import '../styles/global.scss';
-import Amplify, { Auth } from 'aws-amplify';
 
-//export default function HousingRegisterApp({ Component, pageProps }: AppProps): JSX.Element {
-const WrappedApp: FC<AppProps> = ({ Component, pageProps }) => {
-  Amplify.configure({
-    Auth: {
-      region: process.env.NEXT_PUBLIC_AWS_REGION,
-      userPoolId: process.env.NEXT_PUBLIC_COGNITO_USERPOOL_ID,
-      userPoolWebClientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
-    },
-  });
+function App({ Component, pageProps }: AppProps): ReactElement {
+  const waitForLoad = typeof window !== 'undefined';
+  const [loaded, setLoaded] = useState(!waitForLoad);
+
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(initStore()).then(() => setLoaded(true));
+  }, []);
 
   return (
     <>
@@ -24,11 +26,14 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps }) => {
           content="width=device-width, initial-scale=1, viewport-fit=cover"
         />
       </Head>
-      <>
-        <Component {...pageProps} />
-      </>
+      {!loaded && (
+        <Layout>
+          <Loading text="Checking information…" />
+        </Layout>
+      )}
+      {loaded && <Component {...pageProps} />}
     </>
   );
-};
+}
 
-export default wrapper.withRedux(WrappedApp);
+export default wrapper.withRedux(App);

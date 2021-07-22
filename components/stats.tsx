@@ -1,4 +1,4 @@
-import { Stat } from '../domain/stat';
+import { Stat } from '../domain/Stat';
 
 interface StatsProps {
   className: string;

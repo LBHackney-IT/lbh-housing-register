@@ -1,5 +1,7 @@
+import { FormikValues } from 'formik';
+import { Applicant } from '../../domain/HousingApi';
 import { ApplicationStep, ApplicationSteps } from '../types/application';
-import { IMMIGRATION_STATUS, RESIDENTIAL_STATUS } from './form-data';
+import { FormID } from './form-data';
 
 /**
  * Get application step model from ID
@@ -29,8 +31,8 @@ export const getEligibilitySteps = (): ApplicationSteps[] => {
       steps: [
         {
           heading: 'Immigration status',
-          id: IMMIGRATION_STATUS,
-        }
+          id: FormID.IMMIGRATION_STATUS,
+        },
       ],
     },
   ];
@@ -43,8 +45,24 @@ export const getEligibilitySteps = (): ApplicationSteps[] => {
  */
 export const getFormIdsFromApplicationSteps = (
   steps: ApplicationSteps[]
-): string[] => {
-  const ids: string[] = [];
+): FormID[] => {
+  const ids: FormID[] = [];
   steps.map((step) => step.steps.map((s) => ids.push(s.id)));
   return ids;
 };
+
+export function mapApplicantToValues(
+  stepId: string,
+  applicant: Applicant
+): FormikValues {
+  // TODO Lot's of specific forms are likely to want to map specific values here.
+
+  return Object.fromEntries(
+    (applicant.questions ?? [])
+      .filter((question) => question.id?.startsWith(`${stepId}/`))
+      .map((question) => [
+        (question.id || '').slice(`${stepId}/`.length),
+        JSON.parse(question.answer || 'null'),
+      ])
+  );
+}

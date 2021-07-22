@@ -1,13 +1,12 @@
+import { Field, FieldInputProps, FieldMetaProps } from 'formik';
 import { useState } from 'react';
+import { FormField } from '../../lib/types/form';
+import Button from '../button';
+import Paragraph from '../content/paragraph';
 import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
-import { FormField } from '../../lib/types/form';
-import { Field, FieldInputProps, FieldMetaProps } from 'formik';
-import Button from '../button';
-import Paragraph from '../content/paragraph';
-import { lookUpAddress } from '../../lib/gateways/internal-api';
 
 interface InputProps extends FormField {
   className?: string;
@@ -32,7 +31,7 @@ export default function Input({
       onAddressLookup(postCode)
     }
   }
-  
+
   const onChange = (e:any) => {
     setPostCode(e.target.value)
   }
@@ -54,7 +53,7 @@ export default function Input({
           {hint && <Hint content={hint} />}
           {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 
-          {postCodeFinder ? 
+          {postCodeFinder ?
             <input
               className={`${className} ${
                 meta.touched && meta.error && 'govuk-input--error'

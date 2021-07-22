@@ -33,6 +33,7 @@ export default function Header({
           {username && (
             <div className="lbh-header__links">
               <p>{username}</p>
+              {/* TODO: This should be a button, not a link. */}
               <a href="#" onClick={onSignOut}>
                 Sign out
               </a>

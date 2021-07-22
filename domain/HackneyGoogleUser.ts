@@ -1,4 +1,4 @@
-export interface User {
+export interface HackneyGoogleUser {
   name: string;
   email: string;
   groups: string[];

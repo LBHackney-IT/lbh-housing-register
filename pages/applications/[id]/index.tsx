@@ -1,21 +1,21 @@
-import Layout from '../../../components/layout/staff-layout';
 import { GetServerSideProps } from 'next';
-import { getApplication } from '../../../lib/gateways/applications-api';
-import { Application } from '../../../domain/application';
-import { HeadingOne, HeadingTwo } from '../../../components/content/headings';
-import Paragraph from '../../../components/content/paragraph';
-import PersonalDetails from '../../../components/applications/personal-details';
 import AddressDetails from '../../../components/applications/address-details';
 import ContactDetails from '../../../components/applications/contact-details';
-import Tag from '../../../components/tag';
-import { getStatusTag } from '../../../lib/utils/tag';
 import OtherMembers from '../../../components/applications/other-members';
-import { getRedirect, getSession } from '../../../lib/utils/auth';
+import PersonalDetails from '../../../components/applications/personal-details';
+import { HeadingOne, HeadingTwo } from '../../../components/content/headings';
+import Paragraph from '../../../components/content/paragraph';
+import Layout from '../../../components/layout/staff-layout';
+import Tag from '../../../components/tag';
+import { HackneyGoogleUser } from '../../../domain/HackneyGoogleUser';
+import { Application } from '../../../domain/HousingApi';
 import { UserContext } from '../../../lib/contexts/user-context';
-import { User } from '../../../domain/user';
+import { getApplication } from '../../../lib/gateways/applications-api';
+import { getRedirect, getSession } from '../../../lib/utils/auth';
+import { getStatusTag } from '../../../lib/utils/tag';
 
 interface PageProps {
-  user: User;
+  user: HackneyGoogleUser;
   data: Application;
 }
 
@@ -27,22 +27,22 @@ export default function ApplicationPage({
     <UserContext.Provider value={{ user }}>
       <Layout>
         <HeadingOne content={`Application #${data.id}`} />
-        <Tag content={data.status} className={getStatusTag(data.status)} />
+        <Tag content={data.status || ""} className={getStatusTag(data.status|| "")} />
 
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-two-thirds">
-            <PersonalDetails
+            {data.mainApplicant && <PersonalDetails
               heading="Personal details"
               applicant={data.mainApplicant}
-            />
-            <ContactDetails
+            />}
+            {data.mainApplicant?.contactInformation && <ContactDetails
               heading="Contact details"
               contact={data.mainApplicant.contactInformation}
-            />
-            <AddressDetails
+            />}
+            {data.mainApplicant?.address && <AddressDetails
               heading="Current accommodation"
-              address={data.mainApplicant.address}
-            />
+              address={data.mainApplicant?.address}
+            />}
           </div>
           <div className="govuk-grid-column-one-third">
             {data.otherMembers && (

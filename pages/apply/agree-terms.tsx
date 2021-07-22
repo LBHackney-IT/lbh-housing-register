@@ -1,6 +1,5 @@
-import Layout from '../../components/layout/resident-layout';
-import whenEligible from '../../lib/hoc/whenEligible';
 import ApplicationAgreement from '../../components/application/agreement';
+import Layout from '../../components/layout/resident-layout';
 
 const ApplicationTermsPage = (): JSX.Element => {
   return (
@@ -10,4 +9,4 @@ const ApplicationTermsPage = (): JSX.Element => {
   );
 };
 
-export default whenEligible(ApplicationTermsPage);
+export default ApplicationTermsPage;

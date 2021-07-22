@@ -1,35 +1,35 @@
-import { HeadingOne } from '../../../components/content/headings';
-import Layout from '../../../components/layout/resident-layout';
-import Form from '../../../components/form/form';
-import { FormData } from '../../../lib/types/form';
-import { getFormData, HOUSEHOLD_OVERVIEW } from '../../../lib/utils/form-data';
+import { FormikValues } from 'formik';
 import { useRouter } from 'next/router';
-import { Store } from '../../../lib/store';
-import { useStore } from 'react-redux';
-import { updateFormData } from '../../../lib/store/resident';
+import { HeadingOne } from '../../../components/content/headings';
+import Form from '../../../components/form/form';
+import Layout from '../../../components/layout/resident-layout';
+import { updateWithFormValues } from '../../../lib/store/applicant';
+import { useAppDispatch } from '../../../lib/store/hooks';
+import { createAdditionalApplicants } from '../../../lib/store/otherMembers';
+import { FormID, getFormData } from '../../../lib/utils/form-data';
+
+// TODO: redo all of this: HRT-102
 
 const HouseHoldPage = (): JSX.Element => {
   const router = useRouter();
-  const store = useStore<Store>();
-  const resident = store.getState().resident;
+  const dispatch = useAppDispatch();
 
-  const providedUsername: FormData = {
-    email: resident.username,
+  const confirmHouseHoldSize = async (values: FormikValues) => {
+    dispatch(
+      updateWithFormValues({ activeStepId: FormID.HOUSEHOLD_OVERVIEW, values })
+    );
+    dispatch(
+      createAdditionalApplicants(parseInt(values.numberInHousehold) - 1)
+    );
+    router.push('/apply/household/people');
   };
-
-  const confirmHouseHoldSize = async (values: FormData) => {
-    store.dispatch(updateFormData(values));
-    router.push('/apply/household/people')
-  };
-
 
   return (
     <Layout>
       <HeadingOne content="How many people are in this application?" />
 
       <Form
-        formData={getFormData(HOUSEHOLD_OVERVIEW)}
-        residentsPreviousAnswers={providedUsername}
+        formData={getFormData(FormID.HOUSEHOLD_OVERVIEW)}
         buttonText="Continue"
         onSubmit={confirmHouseHoldSize}
       />

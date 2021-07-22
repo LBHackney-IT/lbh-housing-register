@@ -1,27 +1,42 @@
-import Button, { ButtonLink } from "../../components/button"
-import { HeadingOne } from "../../components/content/headings"
-import Paragraph from "../../components/content/paragraph"
-import Hint from "../../components/form/hint"
-import Layout from "../../components/layout/resident-layout"
-import SummaryList, { SummaryListActions as Actions, SummaryListKey as Key, SummaryListRow as Row } from "../../components/summary-list"
-import Tag from "../../components/tag"
-import whenAgreed from "../../lib/hoc/whenAgreed"
-import whenEligible from "../../lib/hoc/whenEligible"
-import { Store } from "../../lib/store"
-import { MAIN_RESIDENT_KEY } from "../../lib/utils/constants"
-import { applicationStepsRemaining } from "../../lib/utils/resident"
-import Link from "next/link"
-import { useStore } from "react-redux"
-import { useRouter } from "next/router"
-import { updateApplication } from "../../lib/gateways/internal-api"
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useMemo } from 'react';
+import Button, { ButtonLink } from '../../components/button';
+import { HeadingOne } from '../../components/content/headings';
+import Paragraph from '../../components/content/paragraph';
+import Hint from '../../components/form/hint';
+import Layout from '../../components/layout/resident-layout';
+import SummaryList, {
+  SummaryListActions as Actions,
+  SummaryListKey as Key,
+  SummaryListRow as Row,
+} from '../../components/summary-list';
+import Tag from '../../components/tag';
+import { Applicant } from '../../domain/HousingApi';
+import whenAgreed from '../../lib/hoc/whenAgreed';
+import { useAppSelector } from '../../lib/store/hooks';
+import { checkEligible } from '../../lib/utils/form';
+import { applicationStepsRemaining } from '../../lib/utils/resident';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
   const router = useRouter();
-  const store = useStore<Store>();
-  const applicants = [
-    store.getState().resident,
-    ...store.getState().additionalResidents,
-  ];
+
+  const applicants = useAppSelector((store) =>
+    [store.application.mainApplicant, store.application.otherMembers]
+      .filter((v): v is Applicant | Applicant[] => v !== undefined)
+      .flat()
+  );
+  const eligibilityMap = useMemo(
+    () =>
+      new Map(
+        applicants.map((applicant) => [applicant, checkEligible(applicant)[0]])
+      ),
+    [applicants]
+  );
+
+  const mainApplicant = useAppSelector(
+    (store) => store.application.mainApplicant
+  );
 
   const breadcrumbs = [
     {
@@ -30,26 +45,16 @@ const ApplicationPersonsOverview = (): JSX.Element => {
     },
   ];
 
-  const handleSubmit = async (): Promise<void> => {
-    try {
-      const applicationId = applicants[0].applicationId
-      const data = await updateApplication(applicants, applicationId)
-      console.log(data)
-
-    } catch (err) {
-      console.log(err);
-      // TODO: handle error
-    }
-    router.push('/apply/confirmation');
-  };
-
   return (
     <Layout breadcrumbs={breadcrumbs}>
       <HeadingOne content="My household" />
 
       <SummaryList>
-        {applicants.map((resident, index) => {
-          const tasksRemaining = applicationStepsRemaining(resident);
+        {applicants.map((applicant, index) => {
+          const tasksRemaining = applicationStepsRemaining(
+            applicant,
+            applicant === mainApplicant
+          );
 
           return (
             <Row key={index} verticalAlign="middle">
@@ -58,17 +63,18 @@ const ApplicationPersonsOverview = (): JSX.Element => {
                   <Hint
                     content={
                       `Person ${index + 1}` +
-                      (applicants.length > 1 &&
-                      resident.slug == MAIN_RESIDENT_KEY
+                      (applicants.length > 1 && applicant === mainApplicant
                         ? ' (you)'
                         : '')
                     }
                   />
-                  <Link href={`/apply/${resident.slug}`}>{resident.name}</Link>
+                  <Link href={`/apply/${applicant.person?.id}`}>
+                    {`${applicant.person?.firstName} ${applicant.person?.surname}`}
+                  </Link>
                 </>
               </Key>
               <Actions>
-                {resident.isEligible === false ? (
+                {!eligibilityMap.get(applicant) ? (
                   <Tag content="Not eligible" variant="red" />
                 ) : tasksRemaining == 0 ? (
                   <Tag content="Completed" variant="green" />
@@ -90,17 +96,18 @@ const ApplicationPersonsOverview = (): JSX.Element => {
       </ButtonLink>
 
       {applicants.every(
-        (resident) => applicationStepsRemaining(resident) == 0
+        (applicant) =>
+          applicationStepsRemaining(applicant, applicant === mainApplicant) == 0
       ) && (
         <>
           <Paragraph>
             The button below only shows when all tasks are complete.
           </Paragraph>
-          <Button onClick={handleSubmit}>Submit application</Button>
+          <Button>Submit application</Button>
         </>
       )}
     </Layout>
   );
 };
 
-export default whenAgreed(whenEligible(ApplicationPersonsOverview));
+export default whenAgreed(ApplicationPersonsOverview);

@@ -1,29 +1,21 @@
+import { agree } from '../../lib/store/applicant';
+import { updateUserAttribute } from '../../lib/store/cognitoUser';
+import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
+import { FormID, getFormData } from '../../lib/utils/form-data';
 import { HeadingOne } from '../content/headings';
 import Paragraph from '../content/paragraph';
 import Form from '../form/form';
-import { Store } from '../../lib/store';
-import { agree } from '../../lib/store/resident';
-import { FormData } from '../../lib/types/form';
-import { AGREEMENT, getFormData } from '../../lib/utils/form-data';
-import { useRouter } from 'next/router';
-import { useStore } from 'react-redux';
 
 export default function ApplicationAgreement() {
-  const router = useRouter();
-  const store = useStore<Store>();
-  const resident = store.getState().resident;
+  // TODO: might not be right place for this,
+  // but we need to ensure new user is linked to application
+  const dispatch = useAppDispatch();
+  const applicationId = useAppSelector((store) => store.application.id);
 
-  const onSubmit = () => {
-    router.push('/apply/overview');
+  const onSave = () => {
+    dispatch(agree(true));
+    dispatch(updateUserAttribute({ applicationId: applicationId }));
   };
-
-  const onSave = (values: FormData) => {
-    store.dispatch(agree(values.agreement));
-  };
-
-  if (resident.hasAgreed) {
-    onSubmit();
-  }
 
   return (
     <>
@@ -47,9 +39,8 @@ export default function ApplicationAgreement() {
 
       <Form
         buttonText="Save and continue"
-        formData={getFormData(AGREEMENT)}
+        formData={getFormData(FormID.AGREEMENT)}
         onSave={onSave}
-        onSubmit={onSubmit}
       />
     </>
   );

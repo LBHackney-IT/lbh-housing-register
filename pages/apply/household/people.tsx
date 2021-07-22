@@ -1,129 +1,102 @@
-import { HeadingOne } from '../../../components/content/headings';
-import Layout from '../../../components/layout/resident-layout';
-import { FormData } from '../../../lib/types/form';
-import { getHouseHoldData } from '../../../lib/utils/form-data';
+import { FormikValues } from 'formik';
 import { useRouter } from 'next/router';
-import { Store } from '../../../lib/store';
-import { useStore } from 'react-redux';
-import { updateFormData } from '../../../lib/store/resident';
-import { addResidentFromFormData } from '../../../lib/store/additionalResidents';
-
-import { buildValidationSchema } from '../../../lib/utils/validation';
-import { Form as FormikForm, Formik } from 'formik';
-import Button from '../../../components/button';
-import { useState } from 'react';
-
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { HeadingOne } from '../../../components/content/headings';
+import Form from '../../../components/form/form';
+import Layout from '../../../components/layout/resident-layout';
 import {
-  getDisplayStateOfField,
-  getInitialValuesFromMultiStepForm,
-} from '../../../lib/utils/form';
+  updateApplicant,
+  updateWithFormValues,
+} from '../../../lib/store/applicant';
+import { useAppSelector } from '../../../lib/store/hooks';
+import {
+  updateAdditionalApplicant,
+  updateAdditionalApplicantWithFormValues,
+} from '../../../lib/store/otherMembers';
+import {
+  FormID,
+  getPeopleInApplicationForm,
+} from '../../../lib/utils/form-data';
 
-import { HeadingTwo } from '../../../components/content/headings';
-import Paragraph from '../../../components/content/paragraph';
-import DynamicField from '../../../components/form/dynamic-field';
-
-import { extractAdditionalResidentFromData, extractMainResidentFromData } from '../../../lib/utils/helper'
-
-
-const PeoplePage = ({
-
-}): JSX.Element => {
+const PeoplePage = (): JSX.Element => {
   const router = useRouter();
-  const store = useStore<Store>();
-  const resident = store.getState().resident;
+  const dispatch = useDispatch();
 
-  const providedUsername: FormData = {
-    email: resident.username,
-  };
+  const otherMembers = useAppSelector(
+    (store) => store.application.otherMembers || []
+  );
+  const countOfOtherPeopleInApplication = otherMembers.length ?? 0;
 
-  const className = undefined;
-  let exit = false;
-  const onExit = false;
-  
-  const countOfPeopleInApplication:any = resident.formData.household || '1';
+  function confirmResidents(values: FormikValues) {
+    const { firstName, surname, gender, birthday, ...rest } =
+      values.mainApplicant;
+    dispatch(
+      updateApplicant({
+        person: {
+          firstName,
+          surname,
+          gender,
+          dateOfBirth: birthday,
+        },
+      })
+    );
 
-  const formData = getHouseHoldData(countOfPeopleInApplication);
-  
-  const [formDataSnapshot] = useState(formData);
-  const [stepNumber] = useState(0);
+    dispatch(
+      updateWithFormValues({
+        activeStepId: FormID.PEOPLE_IN_APPLICATION,
+        values: rest,
+      })
+    );
 
-  const [snapshot] = useState(getInitialValuesFromMultiStepForm(formDataSnapshot));
-  
-  const step: any = formDataSnapshot.steps[stepNumber];
-  
-
-  const handleSubmission = async (values: FormData) => {
-
-    if (countOfPeopleInApplication > 1) {
-      const mainResident = extractMainResidentFromData(values);
-      store.dispatch(updateFormData(mainResident))
-
-      const additionalResident = extractAdditionalResidentFromData(values, countOfPeopleInApplication - 1);
-
-      for(let x = 1; x <= Object.keys(additionalResident).length; x++) {
-        store.dispatch(addResidentFromFormData(additionalResident[`person${x}`]));
-      }
-
-    } else {
-      store.dispatch(updateFormData(values));
-      const resident = store.getState().resident;
+    if (countOfOtherPeopleInApplication > 0) {
+      Object.entries(values.otherMembers).forEach(
+        ([i, values]: [string, any]) => {
+          const { firstName, surname, gender, birthday, ...rest } = values;
+          const id = otherMembers[Number(i)].person?.id;
+          if (!id) {
+            throw new Error(
+              'Missmatched people array, cannot locate person by ID'
+            );
+          }
+          dispatch(
+            updateAdditionalApplicant({
+              person: {
+                id,
+                firstName,
+                surname,
+                gender,
+                dateOfBirth: birthday,
+              },
+            })
+          );
+          dispatch(
+            updateAdditionalApplicantWithFormValues({
+              activeStepId: FormID.PEOPLE_IN_APPLICATION,
+              id,
+              values: rest,
+            })
+          );
+        }
+      );
     }
 
     router.push('/apply/overview');
-  };
+  }
+
+  const formData = getPeopleInApplicationForm(countOfOtherPeopleInApplication);
 
   return (
     <Layout>
-      <HeadingOne content="People in this application" />
-
-      <Formik
-        initialValues={snapshot}
-        onSubmit={handleSubmission}
-        validationSchema={buildValidationSchema(step.fields)}
-      >
-        {({ isSubmitting, values }) => (
-           <FormikForm>
-            {step.heading && <HeadingTwo content={step.heading} />}
-            {step.copy && <Paragraph>{step.copy}</Paragraph>}
-            {step.person && <Paragraph>{step.person}</Paragraph>}
-
-              {step.fields.map((field:any, index:any) => {
-                const display: boolean = getDisplayStateOfField(field, values);
-                if (display) {
-                  return <DynamicField key={index} field={field} />
-                }
-              })}
-
-            <div className="c-flex__1 text-right">
-              <Button
-                onClick={() => (exit = false)}
-                disabled={isSubmitting}
-                type="submit"
-              >
-                {'Save and continue'}
-              </Button>
-            </div>
-
-
-            {onExit && (
-              <div className="text-right">
-                <Button
-                  onClick={() => (exit = true)}
-                  disabled={isSubmitting}
-                  type="submit"
-                  secondary={false}
-                >
-                  Save and exit
-                </Button>
-              </div>
-            )}
-         </FormikForm>
-        )}
-      </Formik>
+      <HeadingOne content="How many people are in this application?" />
+      {/* TODO We need a way to group these. */}
+      <Form
+        formData={formData}
+        buttonText="Save and continue"
+        onSubmit={confirmResidents}
+      />
     </Layout>
   );
 };
 
 export default PeoplePage;
-
-

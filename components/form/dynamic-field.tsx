@@ -24,9 +24,11 @@ export default function DynamicField({
   switch (field.as) {
     case 'checkbox':
     case 'checkboxes':
+      // todo no as
       return <Checkboxes {...(field as CheckboxesProps)} />;
 
     case 'radios':
+      // todo no as
       return <Radios {...(field as RadiosProps)} />;
 
     case 'select':
@@ -36,13 +38,7 @@ export default function DynamicField({
       return <Textarea {...field} />;
 
     case 'dateinput':
-      return (
-        <DateInput
-          {...field}
-          timeAtAddress={timeAtAddress}
-          handleChange={handleChange}
-        />
-      );
+      return <DateInput {...field} />;
 
     case 'paragraph':
       return <Paragraph>{field.label}</Paragraph>;

@@ -1,5 +1,6 @@
 import { setIn } from 'formik';
 import * as Yup from 'yup';
+import { INVALID_DATE } from '../../components/form/dateinput';
 import { FormField } from '../types/form';
 import assertNever from './assertNever';
 
@@ -53,25 +54,7 @@ export function buildValidationSchema(fields: FormField[]) {
           break;
 
         case 'dateinput':
-          // case 'date':
-          //   baseType = Yup.date();
-
-          //   fieldValidation = baseType;
-          //   fieldValidation = checkRequired(fieldValidation, field);
-          //   fieldValidation = checkMinimumLength(
-          //     fieldValidation,
-          //     field,
-          //     `${field.label} must be on or after ${field.validation?.min}`
-          //   );
-          //   fieldValidation = checkMaximumLength(
-          //     fieldValidation,
-          //     field,
-          //     `${field.label} must be on or before ${field.validation?.max}`
-          //   );
-          //   break;
-          baseType = Yup.number().integer(
-            `${field.label} must be a valid number`
-          );
+          baseType = Yup.string().notOneOf([INVALID_DATE], 'Invalid date');
 
           fieldValidation = baseType;
           fieldValidation = checkRequired(fieldValidation, field);

@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FormikValues } from 'formik';
-import { v4 as uuidv4 } from 'uuid';
 import { Applicant } from '../../domain/HousingApi';
 import { applyQuestions, updateApplicantReducer } from './applicant';
 
@@ -11,11 +10,6 @@ const slice = createSlice({
   initialState: initialState as Applicant[] | undefined,
 
   reducers: {
-    createAdditionalApplicants: (state = [], action: PayloadAction<number>) =>
-      new Array(action.payload)
-        .fill(undefined)
-        .map(() => ({ person: { id: 'temp-' + uuidv4() } })),
-
     updateAdditionalApplicant: (
       state = [],
       action: PayloadAction<Applicant>
@@ -67,7 +61,6 @@ const slice = createSlice({
     ) => {
       const applicant: Applicant = {
         person: {
-          id: uuidv4(), // TODO generate on the server instead.
           firstName: action.payload.firstName,
           surname: action.payload.surname,
           gender: action.payload.gender,
@@ -91,7 +84,6 @@ const slice = createSlice({
 
 export default slice;
 export const {
-  createAdditionalApplicants,
   updateAdditionalApplicantWithFormValues,
   updateAdditionalApplicant,
   addApplicant,

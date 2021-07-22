@@ -1,8 +1,8 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import {
-    getApplication,
-    updateApplication
+  getApplication,
+  updateApplication,
 } from '../../../lib/gateways/applications-api';
 
 const endpoint: NextApiHandler = async (
@@ -23,7 +23,6 @@ const endpoint: NextApiHandler = async (
         const application = JSON.parse(req.body);
         const id = req.query.id as string;
         const data = await updateApplication(application, id);
-        console.log(data);
         res.status(StatusCodes.OK).json(data);
       } catch (error) {
         console.error(error);

@@ -9,8 +9,7 @@ import { initStore } from '../lib/store/init';
 import '../styles/global.scss';
 
 function App({ Component, pageProps }: AppProps): ReactElement {
-  const waitForLoad = typeof window !== 'undefined';
-  const [loaded, setLoaded] = useState(!waitForLoad);
+  const [loaded, setLoaded] = useState(false);
 
   const dispatch = useAppDispatch();
   useEffect(() => {

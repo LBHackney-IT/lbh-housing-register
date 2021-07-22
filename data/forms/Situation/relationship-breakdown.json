@@ -1,0 +1,41 @@
+{
+  "id": "relationship-breakdown",
+  "heading": "Situation",
+  "copy": "Was this due to a relationship breakdown?",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "Please select",
+          "name": "relationship-breakdown",
+          "options": [
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ],
+  "conditionals": [
+    {
+      "fieldId": "relationship-breakdown",
+      "value": "yes",
+      "nextFormId": "arrears"
+    },
+    {
+      "fieldId": "relationship-breakdown",
+      "value": "no",
+      "nextFormId": "exit"
+    }
+  ]
+}

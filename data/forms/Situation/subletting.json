@@ -1,0 +1,41 @@
+{
+  "id": "subletting",
+  "heading": "Subletting",
+  "copy": "Have you sublet without permission?",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "Please select",
+          "name": "subletting",
+          "options": [
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ],
+  "conditionals": [
+    {
+      "fieldId": "subletting",
+      "value": "yes",
+      "nextFormId": ""
+    },
+    {
+      "fieldId": "subletting",
+      "value": "no",
+      "nextFormId": ""
+    }
+  ]
+}

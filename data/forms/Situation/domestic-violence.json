@@ -1,0 +1,41 @@
+{
+  "id": "domestic-violence",
+  "heading": "Domestic Violence?",
+  "copy": "Are you fleeing Domestic Violence?",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "Please Select",
+          "name": "domestic-violence",
+          "options": [
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ],
+  "conditionals": [
+    {
+      "fieldId": "domestic-violence",
+      "value": "yes",
+      "nextFormId": "arrears"
+    },
+    {
+      "fieldId": "domestic-violence",
+      "value": "no",
+      "nextFormId": "medical-need"
+    }
+  ]
+}

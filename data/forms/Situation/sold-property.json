@@ -1,0 +1,41 @@
+{
+  "id": "sold-property",
+  "heading": "Property",
+  "copy": "Have you sold property in the last 5 years?",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "Please select",
+          "name": "sold-property",
+          "options": [
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ],
+  "conditionals": [
+    {
+      "fieldId": "sold-property",
+      "value": "yes",
+      "nextFormId": "relationship-breakdown"
+    },
+    {
+      "fieldId": "sold-property",
+      "value": "no",
+      "nextFormId": "arrears"
+    }
+  ]
+}

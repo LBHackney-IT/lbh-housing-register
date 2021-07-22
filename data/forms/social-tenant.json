@@ -1,0 +1,32 @@
+{
+  "heading": "Social Tenant",
+  "copy": "Are you a social tenant or in TA?",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "Social Tenant",
+          "name": "social-tenant",
+          "options": [
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ], 
+  "conditionals": {
+    "no": "",
+    "yes": ""
+  }
+}

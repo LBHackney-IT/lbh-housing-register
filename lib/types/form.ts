@@ -1,4 +1,5 @@
 import { FormikValues } from 'formik';
+import { FormID } from '../utils/form-data';
 
 export type EligibilityCriteria = {
   field: string;
@@ -48,9 +49,16 @@ export type FormStep = {
   subheading?: string;
 };
 
+export type Conditionals = {
+  fieldId: string;
+  value: string;
+  nextFormId: FormID | 'exit';
+};
+
 export type MultiStepForm = {
   copy?: string;
   eligibility?: EligibilityCriteria[];
   heading?: string;
   steps: FormStep[];
+  conditionals?: Conditionals[];
 };

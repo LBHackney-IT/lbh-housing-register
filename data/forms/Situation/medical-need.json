@@ -1,0 +1,41 @@
+{
+  "id": "medical-need",
+  "heading": "Medical",
+  "copy": "Do you have medical need?",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "Please select",
+          "name": "medical-need",
+          "options": [
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ],
+  "conditionals": [
+    {
+      "fieldId": "medical-need",
+      "value": "yes",
+      "nextFormId": "purchasing-property"
+    },
+    {
+      "fieldId": "medical-need",
+      "value": "no",
+      "nextFormId": "exit"
+    }
+  ]
+}

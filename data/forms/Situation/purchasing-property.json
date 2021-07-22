@@ -1,0 +1,41 @@
+{
+  "id": "purchasing-property",
+  "heading": "Purchasing property",
+  "copy": "Are you able to buy a property to meet your needs?",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "Please select",
+          "name": "purchasing-property",
+          "options": [
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ],
+  "conditionals": [
+    {
+      "fieldId": "purchasing-property",
+      "value": "yes",
+      "nextFormId": "exit"
+    },
+    {
+      "fieldId": "purchasing-property",
+      "value": "no",
+      "nextFormId": "arrears"
+    }
+  ]
+}

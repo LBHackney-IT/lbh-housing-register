@@ -1,0 +1,50 @@
+{
+  "id": "court-order",
+
+  "heading": "Court Order",
+  "copy": "Do you have a court order allowing you to be on the register?",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "Please Select",
+          "name": "court-order",
+          "options": [
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "textarea",
+          "label": "details",
+          "name": "details",
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ],
+  "conditionals": [
+    {
+      "fieldId": "court-order",
+      "value": "yes",
+      "nextFormId": "arrears"
+    },
+    {
+      "fieldId": "court-order",
+      "value": "no",
+      "nextFormId": "exit"
+    }
+  ]
+}

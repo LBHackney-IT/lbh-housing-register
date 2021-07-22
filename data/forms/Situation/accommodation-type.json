@@ -1,0 +1,41 @@
+{
+  "id": "accommodation-type",
+  "heading": "Accommodation Type",
+  "copy": "Are you a social tenant or in temporary accommodation?",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "Please Select",
+          "name": "accommodation-type",
+          "options": [
+            {
+              "label": "Yes - social tenant or in temporary accommodation",
+              "value": "yes"
+            },
+            {
+              "label": "No - I'm not either of these",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ],
+  "conditionals": [
+    {
+      "fieldId": "accommodation-type",
+      "value": "yes",
+      "nextFormId": "subletting"
+    },
+    {
+      "fieldId": "accommodation-type",
+      "value": "no",
+      "nextFormId": "arrears"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "homelessness",
+  "heading": "Homelessness",
+  "copy": "Have you been found intentionally homeless?",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "Please select",
+          "name": "homelessness",
+          "options": [
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ],
+  "conditionals": [
+    {
+      "fieldId": "homelessness",
+      "value": "yes",
+      "nextFormId": "exit"
+    },
+    {
+      "fieldId": "homelessness",
+      "value": "no",
+      "nextFormId": "property-ownership"
+    }
+  ]
+}

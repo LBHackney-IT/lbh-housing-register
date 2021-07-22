@@ -1,0 +1,41 @@
+{
+  "id": "landlord",
+  "heading": "Landlord",
+  "copy": "Have you made an agreement with landlord?",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "Please select",
+          "name": "landlord",
+          "options": [
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ],
+  "conditionals": [
+    {
+      "fieldId": "landlord",
+      "value": "yes",
+      "nextFormId": "other-housing-register"
+    },
+    {
+      "fieldId": "landlord",
+      "value": "no",
+      "nextFormId": "save-application-and-advise"
+    }
+  ]
+}

@@ -29,6 +29,9 @@ import Subletting from '../../data/forms/Situation/subletting.json';
 import UnderOccupying from '../../data/forms/Situation/under-occupying.json';
 import unspentConvictions from '../../data/forms/Situation/unspent-convictions.json';
 import yourSituationFormData from '../../data/forms/your-situation.json';
+
+import employment from '../../data/forms/employment.json';
+
 import { EligibilityCriteria, FormField, MultiStepForm } from '../types/form';
 import assertNever from './assertNever';
 
@@ -64,6 +67,7 @@ export enum FormID {
   BREACH_OF_TENANCY = 'breach-of-tenancy',
   LEAGLE_RESTRICTIONS = 'legal-restrictions',
   UNSPENT_CONVICTIONS = 'unspent-convictions',
+  EMPLOYMENT = 'employment',
 }
 
 /**
@@ -180,6 +184,9 @@ export function getFormData(form: FormID): MultiStepForm {
 
     case FormID.PEOPLE_IN_APPLICATION:
       return peopleInApplication as MultiStepForm;
+
+    case FormID.EMPLOYMENT:
+      return employment as MultiStepForm;
 
     default:
       return assertNever(form, 'Unknown form step: ' + form);

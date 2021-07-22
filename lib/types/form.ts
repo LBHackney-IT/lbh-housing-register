@@ -52,6 +52,12 @@ export interface DateFormField extends BaseFormField {
 export interface ParagraphFormField extends BaseFormField {
   as: 'paragraph';
 }
+export interface InsetTextFormField extends BaseFormField {
+  as: 'insettext';
+  title?: string;
+  content?: string;
+  list?: string[];
+}
 
 export type FormField =
   | TextFormField
@@ -61,7 +67,8 @@ export type FormField =
   | CheckboxesFormField
   | SelectFormField
   | DateFormField
-  | ParagraphFormField;
+  | ParagraphFormField
+  | InsetTextFormField;
 
 export type FormFieldDisplayCriteria = {
   field: string;

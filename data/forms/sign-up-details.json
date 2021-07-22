@@ -79,15 +79,9 @@
           }
         },
         {
-          "label": "Password",
           "name": "password",
-          "type": "password",
-          "hint": "Testing123!",
-          "initialValue": "Testing123!",
-          "validation": {
-            "required": true,
-            "min": 8
-          }
+          "type": "hidden",
+          "initialValue": "Testing123!"
         }
       ]
     }

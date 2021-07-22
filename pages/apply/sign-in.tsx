@@ -24,7 +24,7 @@ const ApplicationSignInPage = (): JSX.Element => {
     // a typing problem with it and I wouldn't know how to pass it back to the Formik validation layer.
     dispatch(
       signIn({
-        username: values.email,
+        username: values.emailAddress,
         password: values.password,
       })
     );

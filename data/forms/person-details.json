@@ -45,6 +45,11 @@
           ]
         },
         {
+          "label": "National Insurance number",
+          "hint": "For example, AB 12 34 56 C",
+          "name": "nationalInsuranceNumber"
+        },
+        {
           "label": "Mobile number",
           "name": "phoneNumber",
           "validation": {

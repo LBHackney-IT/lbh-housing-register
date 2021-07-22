@@ -12,21 +12,7 @@ import {
   useAppStore,
 } from '../../lib/store/hooks';
 import { FormID, getFormData } from '../../lib/utils/form-data';
-
-export function processPhonenumber(input: string): string {
-  const chars = input.match(/[\+0-9]/g);
-
-  if (!chars) {
-    return '';
-  }
-  if (chars[0] === '0') {
-    return ['+44', ...chars.slice(1)].join('');
-  }
-  if (chars[0] !== '+') {
-    return ['+44', ...chars].join('');
-  }
-  return chars.join('');
-}
+import processPhonenumber from '../../lib/utils/processPhonenumber';
 
 const ApplicationStartPage = (): JSX.Element => {
   const router = useRouter();

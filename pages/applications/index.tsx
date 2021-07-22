@@ -6,7 +6,7 @@ import Layout from '../../components/layout/staff-layout';
 import { Stats } from '../../components/stats';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { ApplicationList } from '../../domain/HousingApi';
-import { Stat } from '../../domain/Stat';
+import { Stat } from '../../domain/stat';
 import { UserContext } from '../../lib/contexts/user-context';
 import { getApplications, getStats } from '../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../lib/utils/auth';

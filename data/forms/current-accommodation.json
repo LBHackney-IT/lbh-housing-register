@@ -116,6 +116,73 @@
           }
         }
       ]
+    },
+    {
+      "fields": [
+        {
+          "type": "number",
+          "label": "What floor is your home on?",
+          "name": "home-floor",
+          "hint": "For example, 1",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "type": "number",
+          "label": "How many people, outside of who is in this application, do you share your home with?",
+          "name": "home-how-many-people-share",
+          "hint": "For example, 1",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "type": "number",
+          "label": "How many bedrooms does your current home have?",
+          "name": "home-how-many-bedrooms",
+          "hint": "For example, 1",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "type": "number",
+          "label": "How many bathrooms does your current home have?",
+          "name": "home-how-many-bathrooms",
+          "hint": "For example, 1",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "type": "number",
+          "label": "How many kitchens does your current home have?",
+          "name": "home-how-many-kitchens",
+          "hint": "For example, 1",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "type": "number",
+          "label": "How many other rooms does your current home have?",
+          "name": "home-how-many-other-rooms",
+          "hint": "For example, 1",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "type": "number",
+          "label": "How many rooms do you have for your own personal use?",
+          "name": "home-how-many-personal-rooms",
+          "hint": "For example, 1",
+          "validation": {
+            "required": true
+          }
+        }
+      ]
     }
   ]
 }

@@ -14,8 +14,6 @@ interface FormProps {
   onSave?: (values: FormData) => void;
   onSubmit?: (values: FormData, bag: any) => void;
   initialValues?: FormikValues;
-  onAddressLookup?: any;
-  timeAtAddress?: any;
   activeStep?: string;
 }
 
@@ -25,8 +23,6 @@ export default function Form({
   onSave,
   onSubmit,
   initialValues,
-  onAddressLookup,
-  timeAtAddress,
   activeStep,
 }: FormProps): JSX.Element {
   const [stepNumber, setStepNumber] = useState(0);
@@ -86,8 +82,6 @@ export default function Form({
                   <DynamicField
                     key={index}
                     field={field}
-                    onAddressLookup={onAddressLookup}
-                    timeAtAddress={timeAtAddress}
                     handleChange={handleChange} // todo what's this for?
                   />
                 );

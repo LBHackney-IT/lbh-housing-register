@@ -14,7 +14,7 @@ export function getDisplayStateOfField(
   let display = true;
 
   if (field.conditionalDisplay) {
-    field.conditionalDisplay.map((condition) => {
+    field.conditionalDisplay.forEach((condition) => {
       if (display && condition.is) {
         display = values[condition.field] === condition.is;
       }

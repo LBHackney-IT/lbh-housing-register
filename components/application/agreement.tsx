@@ -1,3 +1,5 @@
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { updateUserAttribute } from '../../lib/store/cognitoUser';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { agree } from '../../lib/store/mainApplicant';
@@ -11,8 +13,17 @@ export default function ApplicationAgreement() {
   // but we need to ensure new user is linked to application
   const dispatch = useAppDispatch();
   const applicationId = useAppSelector((store) => store.application.id);
+  const router = useRouter();
+  useEffect(() => {
+    if (!applicationId) {
+      router.replace('/apply/');
+    }
+  }, [applicationId]);
 
   const onSave = () => {
+    if (!applicationId) {
+      throw new Error('No application.');
+    }
     dispatch(agree());
     dispatch(updateUserAttribute({ applicationId: applicationId }));
   };

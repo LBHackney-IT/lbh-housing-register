@@ -44,7 +44,6 @@ export default function Header({
                   height="37"
                 ></image>
               </svg>
-
               <span className="lbh-header__logo-text"> Hackney </span>
               <span className="lbh-header__service-name">
                 {process.env.NEXT_PUBLIC_NAME}

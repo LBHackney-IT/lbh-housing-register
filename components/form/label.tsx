@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 interface LabelProps {
   className?: string;
-  content: string | ReactNode;
+  content: ReactNode;
   htmlFor?: string;
   strong?: boolean;
 }

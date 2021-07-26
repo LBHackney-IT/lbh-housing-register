@@ -71,20 +71,14 @@ export default function Form({
         onSubmit={handleSubmit}
         validationSchema={buildValidationSchema(step.fields)}
       >
-        {({ isSubmitting, values, handleChange }) => (
+        {({ isSubmitting, values }) => (
           <FormikForm>
             {step.heading && <HeadingTwo content={step.heading} />}
             {step.copy && <Paragraph>{step.copy}</Paragraph>}
             {step.fields.map((field, index) => {
               const display: boolean = getDisplayStateOfField(field, values);
               if (display) {
-                return (
-                  <DynamicField
-                    key={index}
-                    field={field}
-                    handleChange={handleChange} // todo what's this for?
-                  />
-                );
+                return <DynamicField key={index} field={field} />;
               }
             })}
             {activeStep === 'income-savings' && (

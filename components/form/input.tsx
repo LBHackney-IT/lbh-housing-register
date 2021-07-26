@@ -1,17 +1,17 @@
 import { Field, FieldInputProps, FieldMetaProps } from 'formik';
-import { useState } from 'react';
+import { InputHTMLAttributes, ReactNode } from 'react';
 import { TextFormField } from '../../lib/types/form';
-import Button from '../button';
 import Paragraph from '../content/paragraph';
 import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
 
-interface InputProps extends TextFormField {
-  className?: string;
-  person?: string;
-}
+type InputProps = Omit<TextFormField, 'label'> &
+  InputHTMLAttributes<HTMLInputElement> & {
+    person?: string;
+    label?: ReactNode;
+  };
 
 export default function Input({
   className,
@@ -21,6 +21,7 @@ export default function Input({
   placeholder,
   type,
   person,
+  ...additionalInputProps
 }: InputProps): JSX.Element {
   return (
     <div>
@@ -44,6 +45,8 @@ export default function Input({
               <ErrorMessage message={meta.error} />
             )}
             <input
+              // Lowest priority to prevent accidental override of component defined props
+              {...additionalInputProps}
               className={`${className} ${
                 meta.touched && meta.error && 'govuk-input--error'
               } govuk-input lbh-input`}

@@ -13,6 +13,7 @@ const endpoint: NextApiHandler = async (
         const data = await lookUpAddress(postcode);
         res.status(StatusCodes.OK).json(data);
       } catch (error) {
+        console.error(error);
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
           .json({ message: 'Unable to look up address' });

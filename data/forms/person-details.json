@@ -4,6 +4,33 @@
     {
       "fields": [
         {
+          "as": "select",
+          "label": "Title",
+          "name": "title",
+          "options": [
+            {
+              "label": "Select an option",
+              "value": ""
+            },
+            {
+              "label": "Mr",
+              "value": "Mr"
+            },
+            {
+              "label": "Mrs",
+              "value": "Mrs"
+            },
+            {
+              "label": "Miss",
+              "value": "Miss"
+            },
+            {
+              "label": "Mx",
+              "value": "Mx"
+            }
+          ]
+        },
+        {
           "label": "First name",
           "name": "firstName",
           "validation": {
@@ -51,10 +78,7 @@
         },
         {
           "label": "Mobile number",
-          "name": "phoneNumber",
-          "validation": {
-            "required": true
-          }
+          "name": "phoneNumber"
         },
         {
           "label": "Email",

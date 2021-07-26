@@ -47,7 +47,7 @@
         {
           "as": "dateinput",
           "label": "Date of birth",
-          "name": "birthday",
+          "name": "dateOfBirth",
           "validation": {
             "required": true
           }

@@ -44,7 +44,7 @@
           }
         },
         {
-          "as": "birthdayinput",
+          "as": "dateinput",
           "label": "Date of birth",
           "name": "dateOfBirth",
           "options": [

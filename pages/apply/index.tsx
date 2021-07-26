@@ -102,10 +102,6 @@ export default function ApplicationHomePage(): JSX.Element {
       >
         Start now
       </ButtonLink>
-
-      <Paragraph>
-        <Link href="#">Send me a link to apply later </Link>
-      </Paragraph>
     </Layout>
   );
 }

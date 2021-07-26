@@ -38,7 +38,7 @@ export default function ApplicationHomePage(): JSX.Element {
         housing offer is made.
       </Paragraph>
 
-      <Announcement variant="success">
+      <Announcement variant="info">
         <Table>
           <TableHeading>Bedrooms required</TableHeading>
           <TableHeading>Housing Register</TableHeading>
@@ -78,7 +78,9 @@ export default function ApplicationHomePage(): JSX.Element {
 
       <HeadingTwo content="Other options" />
       <Paragraph>
-        <Link href="#">View other housing options</Link>
+        <Link href="https://hackney.gov.uk/housing-options">
+          View other housing options
+        </Link>
       </Paragraph>
 
       <HeadingTwo content="I still want to apply" />

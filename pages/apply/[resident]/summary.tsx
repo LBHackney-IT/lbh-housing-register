@@ -15,7 +15,7 @@ interface DisplayProps {
   person: {
     firstName: string;
     surname: string;
-    dateOfBirth: string;
+    dateOfBirth: Date;
     gender?: string;
     'national-insurance'?: string;
   };
@@ -25,6 +25,12 @@ export function DisplayInfo({
   question,
   person
 }: DisplayProps):JSX.Element {
+
+  const formatDate = (date: Date) => {
+    const options = { year: "numeric", month: "long", day: "numeric" } as const
+    return new Date(date).toLocaleDateString(undefined, options)
+  } 
+
   return (
     <div>
       <dl className="govuk-summary-list lbh-summary-list">
@@ -37,7 +43,7 @@ export function DisplayInfo({
         </div>
         <div className="govuk-summary-list__row">
           <dt className="govuk-summary-list__key">Date of birth</dt>
-          <dd className="govuk-summary-list__value">{person?.dateOfBirth}</dd>
+          <dd className="govuk-summary-list__value">{formatDate(person?.dateOfBirth)}</dd>
           <dd className="govuk-summary-list__actions">
           </dd>
         </div>
@@ -55,6 +61,7 @@ export function DisplayInfo({
         </div>
       </dl>
       <br />
+      
 
 
 

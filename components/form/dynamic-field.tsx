@@ -11,16 +11,10 @@ import Textarea from './textarea';
 
 interface DynamicFieldProps {
   field: FormField;
-  onAddressLookup?: any;
-  timeAtAddress?: any;
-  handleChange?: any;
 }
 
 export default function DynamicField({
   field,
-  onAddressLookup,
-  timeAtAddress,
-  handleChange,
 }: DynamicFieldProps): JSX.Element {
   switch (field.as) {
     case 'checkbox':
@@ -48,7 +42,7 @@ export default function DynamicField({
       return <InsetText {...field}></InsetText>;
 
     case undefined:
-      return <Input {...field} onAddressLookup={onAddressLookup} />;
+      return <Input {...field} />;
 
     default:
       return assertNever(field, 'unknown field dynamic type');

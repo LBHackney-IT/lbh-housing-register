@@ -64,6 +64,7 @@
     "@types/yup": "^0.29.11",
     "babel-jest": "^27.0.2",
     "concurrently": "^6.1.0",
-    "jest": "^27.0.4"
+    "jest": "^27.0.4",
+    "mockdate": "^3.0.5"
   }
 }

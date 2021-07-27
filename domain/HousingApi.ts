@@ -36,7 +36,11 @@ export interface Address {
    * @type {string}
    * @memberof Address
    */
-  addressType?: string;
+  addressType?: string; //1 = main address, 2=correspondence address https://github.com/search?q=org%3ALBHackney-IT+addressType&type=code
+}
+export enum AddressType {
+  MainAddress = '1',
+  CorrespondenceAddress = '2',
 }
 
 /**

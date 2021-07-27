@@ -14,8 +14,6 @@ interface FormProps {
   onSave?: (values: FormData) => void;
   onSubmit?: (values: FormData, bag: any) => void;
   initialValues?: FormikValues;
-  onAddressLookup?: any;
-  timeAtAddress?: any;
   activeStep?: string;
 }
 
@@ -25,8 +23,6 @@ export default function Form({
   onSave,
   onSubmit,
   initialValues,
-  onAddressLookup,
-  timeAtAddress,
   activeStep,
 }: FormProps): JSX.Element {
   const [stepNumber, setStepNumber] = useState(0);
@@ -75,22 +71,14 @@ export default function Form({
         onSubmit={handleSubmit}
         validationSchema={buildValidationSchema(step.fields)}
       >
-        {({ isSubmitting, values, handleChange }) => (
+        {({ isSubmitting, values }) => (
           <FormikForm>
             {step.heading && <HeadingTwo content={step.heading} />}
             {step.copy && <Paragraph>{step.copy}</Paragraph>}
             {step.fields.map((field, index) => {
               const display: boolean = getDisplayStateOfField(field, values);
               if (display) {
-                return (
-                  <DynamicField
-                    key={index}
-                    field={field}
-                    onAddressLookup={onAddressLookup}
-                    timeAtAddress={timeAtAddress}
-                    handleChange={handleChange} // todo what's this for?
-                  />
-                );
+                return <DynamicField key={index} field={field} />;
               }
             })}
             {activeStep === 'income-savings' && (

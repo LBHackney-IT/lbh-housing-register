@@ -62,24 +62,27 @@ const slice = createSlice({
         const applicant = state.findIndex(
           (p) => p.person?.id && p.person.id === action.payload.person.id
         );
-        // Immer
-        state[applicant] = updateApplicantReducer(
-          state[applicant],
-          action.payload
-        );
+        if (applicant > -1) {
+          // Immer
+          state[applicant] = updateApplicantReducer(
+            state[applicant],
+            action.payload
+          );
+        }
         return state;
       })
       .addCase(updateWithFormValues, (state = [], action) => {
         const applicant = state.findIndex(
           (p) => p.person?.id && p.person.id === action.payload.personID
         );
-
-        // Immer
-        state[applicant] = applyQuestions(
-          state[applicant],
-          action.payload.formID,
-          action.payload.values
-        );
+        if (applicant > -1) {
+          // Immer
+          state[applicant] = applyQuestions(
+            state[applicant],
+            action.payload.formID,
+            action.payload.values
+          );
+        }
         return state;
       });
   },

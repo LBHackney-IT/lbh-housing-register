@@ -2,7 +2,7 @@ export const extractAdditionalResidentFromData = (
   data: any,
   countOfApplicants: any
 ) => {
-  const fields = ['firstName', 'lastName', 'sex', 'birthday'];
+  const fields = ['title', 'firstName', 'lastName', 'sex', 'dateOfBirth'];
 
   // 1. Remove main resident from object
   // 2. Combine person data that belong together
@@ -34,7 +34,7 @@ export const extractAdditionalResidentFromData = (
 
 export const extractMainResidentFromData = (data: any) => {
   let mainResident: any = {};
-  const expectedFields = ['firstName', 'lastName', 'sex', 'birthday'];
+  const expectedFields = ['title', 'firstName', 'lastName', 'sex', 'dateOfBirth'];
 
   for (const [key, value] of Object.entries(data)) {
     if (expectedFields.includes(key)) {

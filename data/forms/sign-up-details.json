@@ -3,6 +3,33 @@
     {
       "fields": [
         {
+          "as": "select",
+          "label": "Title",
+          "name": "title",
+          "options": [
+            {
+              "label": "Select an option",
+              "value": ""
+            },
+            {
+              "label": "Mr",
+              "value": "Mr"
+            },
+            {
+              "label": "Mrs",
+              "value": "Mrs"
+            },
+            {
+              "label": "Miss",
+              "value": "Miss"
+            },
+            {
+              "label": "Mx",
+              "value": "Mx"
+            }
+          ]
+        },
+        {
           "label": "First name",
           "name": "firstName",
           "validation": {
@@ -17,11 +44,40 @@
           }
         },
         {
-          "label": "Mobile number",
-          "name": "phoneNumber",
+          "as": "dateinput",
+          "label": "Date of birth",
+          "name": "dateOfBirth",
           "validation": {
-            "required": false
+            "required": true
           }
+        },
+        {
+          "as": "radios",
+          "label": "Sex",
+          "name": "gender",
+          "options": [
+            {
+              "label": "Male",
+              "value": "M"
+            },
+            {
+              "label": "Female",
+              "value": "F"
+            },
+            {
+              "label": "Prefer not to say",
+              "value": ""
+            }
+          ]
+        },
+        {
+          "label": "National Insurance number",
+          "hint": "For example, AB 12 34 56 C",
+          "name": "nationalInsuranceNumber"
+        },
+        {
+          "label": "Mobile number",
+          "name": "phoneNumber"
         },
         {
           "label": "Email",
@@ -33,15 +89,9 @@
           }
         },
         {
-          "label": "Password",
           "name": "password",
-          "type": "password",
-          "hint": "Testing123!",
-          "initialValue": "Testing123!",
-          "validation": {
-            "required": true,
-            "min": 8
-          }
+          "type": "hidden",
+          "initialValue": "Testing123!"
         }
       ]
     }

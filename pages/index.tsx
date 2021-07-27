@@ -16,9 +16,7 @@ export default function Home(): JSX.Element {
       <ButtonLink href="/eligibility">Start now</ButtonLink>
 
       <HeadingTwo content="Already started an application?" />
-      <Link href="/apply/sign-in">
-        <a className="govuk-link">Sign in</a>
-      </Link>
+      <ButtonLink href="/apply/sign-in" secondary={true}>Sign in</ButtonLink>
     </Layout>
   );
 }

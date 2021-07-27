@@ -33,16 +33,17 @@ const PeoplePage = (): JSX.Element => {
       throw new Error('mainApplicant missing ID');
     }
 
-    const { firstName, surname, gender, birthday, ...rest } =
+    const { title, firstName, surname, gender, dateOfBirth, ...rest } =
       values.mainApplicant;
     dispatch(
       updateApplicant({
         person: {
           id: mainApplicant.person.id,
+          title,
           firstName,
           surname,
           gender,
-          dateOfBirth: birthday,
+          dateOfBirth
         },
       })
     );
@@ -58,7 +59,7 @@ const PeoplePage = (): JSX.Element => {
     if (countOfOtherPeopleInApplication > 0) {
       Object.entries(values.otherMembers).forEach(
         ([i, values]: [string, any]) => {
-          const { firstName, surname, gender, birthday, ...rest } = values;
+          const { title, firstName, surname, gender, dateOfBirth, ...rest } = values;
           const personID = otherMembers[Number(i)].person?.id;
           if (!personID) {
             throw new Error(
@@ -69,10 +70,11 @@ const PeoplePage = (): JSX.Element => {
             updateApplicant({
               person: {
                 id: personID,
+                title,
                 firstName,
                 surname,
                 gender,
-                dateOfBirth: birthday,
+                dateOfBirth
               },
             })
           );

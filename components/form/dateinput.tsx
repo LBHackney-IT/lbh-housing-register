@@ -82,86 +82,84 @@ export default function DateInput({
       {hint && <Hint content={hint} />}
       {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 
-      <div className="govuk-form-group lbh-form-group">
-        <fieldset
-          className="govuk-fieldset"
-          role="group"
-          aria-describedby="hint"
-        >
-          <span id="address-hint" className="govuk-hint lbh-hint">
-            For example, {showDay && '31'} 3 1980
-          </span>
-          <div className="govuk-date-input lbh-date-input" id="current-address">
-            <div className="govuk-date-input__item">
-              <div className="govuk-form-group">
-                {showDay && (
-                  <div
-                    style={{ display: 'inline-block', padding: '0 20px 0 0' }}
-                  >
-                    <label
-                      className="govuk-label govuk-date-input__label"
-                      htmlFor={`${field.name}-day`}
-                    >
-                      Day
-                    </label>
-                    <input
-                      className="govuk-input govuk-date-input__input govuk-input--width-2"
-                      id={`${field.name}-day`}
-                      type="text"
-                      pattern="[0-9]{1,2}"
-                      inputMode="numeric"
-                      onChange={(e) => setValue(e.target.value, m, y)}
-                      value={d}
-                      onBlur={onBlur}
-                      ref={dRef}
-                    />
-                  </div>
-                )}
-
-                <div style={{ display: 'inline-block', padding: '0 20px 0 0' }}>
+      <fieldset
+        className="govuk-fieldset"
+        role="group"
+        aria-describedby="hint"
+      >
+        <span id="address-hint" className="govuk-hint lbh-hint">
+          For example, {showDay && '31'} 3 1980
+        </span>
+        <div className="govuk-date-input lbh-date-input" id="current-address">
+          <div className="govuk-date-input__item">
+            <div className="govuk-form-group">
+              {showDay && (
+                <div
+                  style={{ display: 'inline-block', padding: '0 20px 0 0' }}
+                >
                   <label
                     className="govuk-label govuk-date-input__label"
-                    htmlFor={`${field.name}-month`}
+                    htmlFor={`${field.name}-day`}
                   >
-                    Month
+                    Day
                   </label>
                   <input
                     className="govuk-input govuk-date-input__input govuk-input--width-2"
-                    id={`${field.name}-month`}
+                    id={`${field.name}-day`}
                     type="text"
                     pattern="[0-9]{1,2}"
                     inputMode="numeric"
-                    onChange={(e) => setValue(d, e.target.value, y)}
-                    value={m}
+                    onChange={(e) => setValue(e.target.value, m, y)}
+                    value={d}
                     onBlur={onBlur}
-                    ref={mRef}
+                    ref={dRef}
                   />
                 </div>
+              )}
 
-                <div style={{ display: 'inline-block', padding: '0 20px 0 0' }}>
-                  <label
-                    className="govuk-label govuk-date-input__label"
-                    htmlFor={`${field.name}-year`}
-                  >
-                    Year
-                  </label>
-                  <input
-                    className="govuk-input govuk-date-input__input govuk-input--width-4"
-                    id={`${field.name}-year`}
-                    type="text"
-                    pattern="[0-9]{4}"
-                    inputMode="numeric"
-                    onChange={(e) => setValue(d, m, e.target.value)}
-                    value={y}
-                    onBlur={onBlur}
-                    ref={yRef}
-                  />
-                </div>
+              <div style={{ display: 'inline-block', padding: '0 20px 0 0' }}>
+                <label
+                  className="govuk-label govuk-date-input__label"
+                  htmlFor={`${field.name}-month`}
+                >
+                  Month
+                </label>
+                <input
+                  className="govuk-input govuk-date-input__input govuk-input--width-2"
+                  id={`${field.name}-month`}
+                  type="text"
+                  pattern="[0-9]{1,2}"
+                  inputMode="numeric"
+                  onChange={(e) => setValue(d, e.target.value, y)}
+                  value={m}
+                  onBlur={onBlur}
+                  ref={mRef}
+                />
+              </div>
+
+              <div style={{ display: 'inline-block', padding: '0 20px 0 0' }}>
+                <label
+                  className="govuk-label govuk-date-input__label"
+                  htmlFor={`${field.name}-year`}
+                >
+                  Year
+                </label>
+                <input
+                  className="govuk-input govuk-date-input__input govuk-input--width-4"
+                  id={`${field.name}-year`}
+                  type="text"
+                  pattern="[0-9]{4}"
+                  inputMode="numeric"
+                  onChange={(e) => setValue(d, m, e.target.value)}
+                  value={y}
+                  onBlur={onBlur}
+                  ref={yRef}
+                />
               </div>
             </div>
           </div>
-        </fieldset>
-      </div>
+        </div>
+      </fieldset>
     </FormGroup>
   );
 }

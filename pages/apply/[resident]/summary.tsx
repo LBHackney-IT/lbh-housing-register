@@ -62,18 +62,10 @@ export function DisplayInfo({
       </dl>
       <br />
       
-
-
-
-      <dl className="govuk-summary-list lbh-summary-list">
-        {question?.id}
-        <div className="govuk-summary-list__row">
-          <dt className="govuk-summary-list__key">{question?.id}</dt>
-          <dd className="govuk-summary-list__value">{question?.answer}</dd>
-          <dd className="govuk-summary-list__actions">
-          </dd>
-        </div>
-      </dl>
+      <div style={{"borderBottom": "1px solid", "color": "#b1b4b6"}}> 
+        <h4 className="lbh-heading-h4">{question?.id}</h4>
+        <p className="lbh-body-m">{question?.answer}</p>
+      </div>
     </div>
   ) 
 }

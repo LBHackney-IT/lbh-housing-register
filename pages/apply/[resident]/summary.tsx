@@ -78,7 +78,7 @@ const UserSummary = (): JSX.Element => {
   const currentResident = useAppSelector(selectApplicant(resident));
 
   const baseHref = `/apply/${currentResident?.person?.id}`;
-  const returnHref = '/apply/overview';
+  const returnHref = `/apply/overview/${currentResident?.person?.id}`;
 
   if (!currentResident) {
     return <Custom404 />;
@@ -101,17 +101,17 @@ const UserSummary = (): JSX.Element => {
   ];
 
   // Create a custom object that makes it easy to iterate over for DisplayInfo
-  // const 
+  const questions = currentResident.questions;
 
   return (
     <Layout breadcrumbs={breadcrumbs}>
       <p className="lbh-body-m">Check answers for</p>
       <h3 className="lbh-heading-h3">{currentResident?.person.firstName + ' ' + currentResident?.person.surname}</h3>
       <br />
-      {currentResident.questions?.map((question) => {
-        return <DisplayInfo question={question} person={currentResident?.person} />
+      {questions?.map((question, index) => {
+        return <DisplayInfo question={question} person={currentResident?.person} key={index} />
       })}
-      <ButtonLink href="something">I confirm this is correct</ButtonLink>
+      <ButtonLink href="submit">I confirm this is correct</ButtonLink>
       <DeleteLink content="Delete this information" onDelete={onDelete} />
     </Layout>
   )

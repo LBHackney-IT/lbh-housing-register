@@ -25,30 +25,33 @@ const ApplicationStep = (): JSX.Element => {
 
   const initialValues = {
     ...getQuestionsForFormAsValues(FormID.PERSONAL_DETAILS, applicant),
+    title: applicant.person?.title,
     firstName: applicant.person?.firstName,
     surname: applicant.person?.surname,
-    birthday: applicant.person?.dateOfBirth,
+    dateOfBirth: applicant.person?.dateOfBirth,
     gender: applicant.person?.gender,
     phoneNumber: applicant.contactInformation?.phoneNumber,
     emailAddress: applicant.contactInformation?.emailAddress,
   };
 
   const onSave = ({
+    title,
     firstName,
     surname,
     gender,
     phoneNumber,
     emailAddress,
-    birthday,
+    dateOfBirth,
     ...values
   }: FormikValues) => {
     dispatch(
       updateApplicant({
         person: {
           id: applicant.person.id,
+          title,
           firstName,
           surname,
-          dateOfBirth: birthday,
+          dateOfBirth,
           gender,
         },
         contactInformation: {

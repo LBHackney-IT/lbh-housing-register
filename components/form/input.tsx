@@ -1,18 +1,17 @@
 import { Field, FieldInputProps, FieldMetaProps } from 'formik';
-import { useState } from 'react';
+import { InputHTMLAttributes, ReactNode } from 'react';
 import { TextFormField } from '../../lib/types/form';
-import Button from '../button';
 import Paragraph from '../content/paragraph';
 import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
 
-interface InputProps extends TextFormField {
-  className?: string;
-  person?: string;
-  onAddressLookup?: any;
-}
+type InputProps = Omit<TextFormField, 'label'> &
+  InputHTMLAttributes<HTMLInputElement> & {
+    person?: string;
+    label?: ReactNode;
+  };
 
 export default function Input({
   className,
@@ -22,21 +21,8 @@ export default function Input({
   placeholder,
   type,
   person,
-  onAddressLookup,
+  ...additionalInputProps
 }: InputProps): JSX.Element {
-  const [postCode, setPostCode] = useState();
-
-  const onClick = async () => {
-    if (onAddressLookup) {
-      onAddressLookup(postCode);
-    }
-  };
-
-  const onChange = (e: any) => {
-    setPostCode(e.target.value);
-  };
-
-  const postCodeFinder = name === 'address-finder';
   return (
     <div>
       <Field name={name}>
@@ -58,38 +44,20 @@ export default function Input({
             {meta.touched && meta.error && (
               <ErrorMessage message={meta.error} />
             )}
-
-            {postCodeFinder ? (
-              <input
-                className={`${className} ${
-                  meta.touched && meta.error && 'govuk-input--error'
-                } govuk-input lbh-input`}
-                id={name}
-                placeholder={placeholder}
-                type={type}
-                // {...field}
-                onChange={onChange}
-                value={postCode}
-              />
-            ) : (
-              <input
-                className={`${className} ${
-                  meta.touched && meta.error && 'govuk-input--error'
-                } govuk-input lbh-input`}
-                id={name}
-                placeholder={placeholder}
-                type={type}
-                {...field}
-              />
-            )}
+            <input
+              // Lowest priority to prevent accidental override of component defined props
+              {...additionalInputProps}
+              className={`${className} ${
+                meta.touched && meta.error && 'govuk-input--error'
+              } govuk-input lbh-input`}
+              id={name}
+              placeholder={placeholder}
+              type={type}
+              {...field}
+            />
           </FormGroup>
         )}
       </Field>
-      {postCodeFinder && (
-        <Button onClick={() => onClick()} secondary={false} type="button">
-          Find Address
-        </Button>
-      )}
     </div>
   );
 }

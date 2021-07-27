@@ -4,6 +4,33 @@
     {
       "fields": [
         {
+          "as": "select",
+          "label": "Title",
+          "name": "title",
+          "options": [
+            {
+              "label": "Select an option",
+              "value": ""
+            },
+            {
+              "label": "Mr",
+              "value": "Mr"
+            },
+            {
+              "label": "Mrs",
+              "value": "Mrs"
+            },
+            {
+              "label": "Miss",
+              "value": "Miss"
+            },
+            {
+              "label": "Mx",
+              "value": "Mx"
+            }
+          ]
+        },
+        {
           "label": "First name",
           "name": "firstName",
           "validation": {
@@ -20,7 +47,7 @@
         {
           "as": "dateinput",
           "label": "Date of birth",
-          "name": "birthday",
+          "name": "dateOfBirth",
           "validation": {
             "required": true
           }
@@ -45,11 +72,13 @@
           ]
         },
         {
+          "label": "National Insurance number",
+          "hint": "For example, AB 12 34 56 C",
+          "name": "nationalInsuranceNumber"
+        },
+        {
           "label": "Mobile number",
-          "name": "phoneNumber",
-          "validation": {
-            "required": true
-          }
+          "name": "phoneNumber"
         },
         {
           "label": "Email",

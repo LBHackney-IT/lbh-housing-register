@@ -31,9 +31,6 @@ export const createApplication = createAsyncThunk(
   }
 );
 
-// don't cancel it. if you cancel it then you still don't have any assurance that the server will give up and it could finish the job and do it out of order if it likes.
-// instead we want to throttle the save calls. wait until it's finished and then launch another one. So
-
 export const updateApplication = createAsyncThunk(
   'application/update',
   async (application: Application) => {

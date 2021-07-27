@@ -1,10 +1,12 @@
 import { FormikValues } from 'formik';
 import { useRouter } from 'next/router';
 import React from 'react';
+import { batch } from 'react-redux';
 import ApplicantStep from '../../../components/application/ApplicantStep';
 import Form from '../../../components/form/form';
 import {
   getQuestionsForFormAsValues,
+  markSectionAsComplete,
   selectApplicant,
   updateApplicant,
   updateWithFormValues,
@@ -42,28 +44,36 @@ const ApplicationStep = (): JSX.Element => {
     birthday,
     ...values
   }: FormikValues) => {
-    dispatch(
-      updateApplicant({
-        person: {
-          id: applicant.person.id,
-          firstName,
-          surname,
-          dateOfBirth: birthday,
-          gender,
-        },
-        contactInformation: {
-          phoneNumber,
-          emailAddress,
-        },
-      })
-    );
-    dispatch(
-      updateWithFormValues({
-        formID: FormID.PERSONAL_DETAILS,
-        personID: applicant.person.id,
-        values,
-      })
-    );
+    batch(() => {
+      dispatch(
+        updateApplicant({
+          person: {
+            id: applicant.person.id,
+            firstName,
+            surname,
+            dateOfBirth: birthday,
+            gender,
+          },
+          contactInformation: {
+            phoneNumber,
+            emailAddress,
+          },
+        })
+      );
+      dispatch(
+        updateWithFormValues({
+          formID: FormID.PERSONAL_DETAILS,
+          personID: applicant.person.id,
+          values,
+        })
+      );
+      dispatch(
+        markSectionAsComplete({
+          formID: FormID.PERSONAL_DETAILS,
+          personID: applicant.person.id,
+        })
+      );
+    });
   };
 
   const onSubmit = async () => {

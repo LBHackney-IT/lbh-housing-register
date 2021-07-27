@@ -12,7 +12,10 @@ import SummaryList, {
 } from '../../../components/summary-list';
 import Tag from '../../../components/tag';
 import whenAgreed from '../../../lib/hoc/whenAgreed';
-import { selectApplicant } from '../../../lib/store/applicant';
+import {
+  getQuestionValue,
+  selectApplicant,
+} from '../../../lib/store/applicant';
 import { useAppSelector } from '../../../lib/store/hooks';
 import { deleteApplicant } from '../../../lib/store/otherMembers';
 import {
@@ -75,7 +78,12 @@ const ApplicationStep = (): JSX.Element => {
                   </Link>
                 </SummaryListValue>
                 <SummaryListActions>
-                  {hasResidentAnsweredForm(currentResident, formStep.id) ? (
+                  {getQuestionValue(
+                    currentResident.questions,
+                    formStep.id,
+                    'sectionCompleted',
+                    false
+                  ) ? (
                     <Tag content="Completed" variant="green" />
                   ) : (
                     <Tag content="Todo" />

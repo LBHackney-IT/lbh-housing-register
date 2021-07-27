@@ -8,6 +8,7 @@ import Hint from '../../../components/form/hint';
 import Layout from '../../../components/layout/resident-layout';
 import {
   getQuestionValue,
+  markSectionAsComplete,
   selectApplicant,
   updateWithFormValues,
 } from '../../../lib/store/applicant';
@@ -74,6 +75,12 @@ export default function YourSituation() {
     ) ?? { nextFormId: 'exit' };
 
     if (nextFormId === 'exit') {
+      dispatch(
+        markSectionAsComplete({
+          formID: FormID.YOUR_SITUATION,
+          personID: applicant.person.id,
+        })
+      );
       router.push(baseHref);
       return;
     }

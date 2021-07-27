@@ -20,6 +20,7 @@ import {
   hasResidentAnsweredForm,
 } from '../../../lib/utils/resident';
 import Custom404 from '../../404';
+import { ButtonLink } from '../../../components/button';
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter();
@@ -86,6 +87,8 @@ const ApplicationStep = (): JSX.Element => {
           </SummaryList>
         </div>
       ))}
+
+      <ButtonLink href={`/apply/${currentResident.person?.id}/summary/`}>Check Answers</ButtonLink>
 
       {currentResident !== mainResident && (
         <DeleteLink content="Delete this information" onDelete={onDelete} />

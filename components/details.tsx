@@ -1,6 +1,8 @@
+import { ReactNode } from 'react';
+
 interface DetailsProps {
   summary: string;
-  children: string | JSX.Element;
+  children: ReactNode;
 }
 
 export default function Details({

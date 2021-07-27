@@ -1,5 +1,7 @@
+import { ReactNode } from 'react';
+
 interface InsetTextProps {
-  children: JSX.Element;
+  children: ReactNode;
 }
 
 export default function InsetText({ children }: InsetTextProps): JSX.Element {

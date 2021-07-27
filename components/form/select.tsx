@@ -1,4 +1,5 @@
 import { Field, FieldInputProps, FieldMetaProps } from 'formik';
+import { ReactElement } from 'react';
 import { SelectFormField } from '../../lib/types/form';
 import Details from '../details';
 import ErrorMessage from './error-message';
@@ -12,7 +13,7 @@ export default function Select({
   label,
   name,
   options,
-}: SelectFormField): JSX.Element {
+}: Omit<SelectFormField, 'as'>): ReactElement {
   return (
     <Field name={name}>
       {({

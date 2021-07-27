@@ -15,6 +15,7 @@ import { AddressLookupAddress } from '../../../domain/addressLookup';
 import { AddressType } from '../../../domain/HousingApi';
 import { lookUpAddress } from '../../../lib/gateways/internal-api';
 import {
+  markSectionAsComplete,
   selectApplicant,
   updateApplicant,
   updateWithFormValues,
@@ -288,6 +289,12 @@ const ApplicationStep = (): JSX.Element => {
             personID: applicant.person.id,
             formID: FormID.ADDRESS_HISTORY,
             values: { addressHistory },
+          })
+        );
+        dispatch(
+          markSectionAsComplete({
+            personID: applicant.person.id,
+            formID: FormID.ADDRESS_HISTORY,
           })
         );
         router.push(`/apply/${resident}`);

@@ -24,6 +24,19 @@ export const updateWithFormValues = createAction<{
   values: FormikValues;
 }>('applicant/updateWithFormValues');
 
+export const markSectionAsComplete = ({
+  personID,
+  formID,
+}: {
+  personID: string;
+  formID: FormID;
+}) =>
+  updateWithFormValues({
+    personID,
+    formID,
+    values: { sectionCompleted: true },
+  });
+
 export function applyQuestions(
   state: Applicant | undefined = {},
   activeStepId: string,
@@ -87,7 +100,7 @@ export function getQuestionValue(
   questions: Question[] | undefined,
   formID: FormID,
   questionName: string,
-  def = undefined
+  def: any = undefined
 ) {
   const a = questions?.find(findQuesiton(formID, questionName))?.answer;
   return a ? JSON.parse(a) : def;

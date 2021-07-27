@@ -5,6 +5,7 @@ import ApplicantStep from '../../../components/application/ApplicantStep';
 import Form from '../../../components/form/form';
 import {
   getQuestionsForFormAsValues,
+  markSectionAsComplete,
   selectApplicant,
   updateApplicant,
   updateWithFormValues,
@@ -65,6 +66,12 @@ const ApplicationStep = (): JSX.Element => {
         formID: FormID.PERSONAL_DETAILS,
         personID: applicant.person.id,
         values,
+      })
+    );
+    dispatch(
+      markSectionAsComplete({
+        formID: FormID.PERSONAL_DETAILS,
+        personID: applicant.person.id,
       })
     );
   };

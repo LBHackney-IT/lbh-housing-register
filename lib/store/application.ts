@@ -1,3 +1,4 @@
+import throttle from 'lodash.throttle';
 import {
   AnyAction,
   createAsyncThunk,
@@ -45,7 +46,7 @@ const slice = createSlice({
   name: 'application',
   initialState: {} as Application,
   reducers: {
-    submit: () => { },
+    submit: () => {},
   },
   extraReducers: (builder) => {
     builder
@@ -66,27 +67,41 @@ export const autoSaveMiddleware: Middleware<
   {},
   Store,
   ThunkDispatch<Store, null, AnyAction>
-> = (storeAPI) => (next) => (action) => {
-  const previousApplication = storeAPI.getState().application;
-  const newAction = next(action);
-  const newApplication = storeAPI.getState().application;
+> = (storeAPI) => {
+  // TODO This basic throttle batches up sequential changes in the store.
+  // it doesn't deal with race conditions in communicating with the API.
+  // for that we'd also need to cancel existing fetch requests before issuing new ones.
+  const throttledDispatch = throttle(
+    (action: any) => {
+      storeAPI.dispatch(action);
+    },
+    100,
+    {
+      leading: false,
+    }
+  );
+  return (next) => (action) => {
+    const previousApplication = storeAPI.getState().application;
+    const newAction = next(action);
+    const newApplication = storeAPI.getState().application;
 
-  function blacklist(type: string) {
-    return (
-      type.startsWith(loadApplication.typePrefix) ||
-      type.startsWith(createApplication.typePrefix)
-    );
-  }
+    function blacklist(type: string) {
+      return (
+        type.startsWith(loadApplication.typePrefix) ||
+        type.startsWith(createApplication.typePrefix)
+      );
+    }
 
-  if (
-    previousApplication !== newApplication &&
-    newApplication.id &&
-    !blacklist(action.type)
-  ) {
-    storeAPI.dispatch(updateApplication(newApplication));
-  }
+    if (
+      previousApplication !== newApplication &&
+      newApplication.id &&
+      !blacklist(action.type)
+    ) {
+      throttledDispatch(updateApplication(newApplication));
+    }
 
-  return newAction;
+    return newAction;
+  };
 };
 
 export default slice;

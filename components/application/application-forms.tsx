@@ -1,5 +1,5 @@
 import { FormikValues } from 'formik';
-import { batch } from 'react-redux';
+
 import { Applicant } from '../../domain/HousingApi';
 import {
   applicantHasId,
@@ -49,21 +49,19 @@ export default function ApplicationForms({
   const onSave = (values: FormikValues) => {
     // TODO store eligibility answer.
     if (applicantHasId(applicant)) {
-      batch(() => {
-        dispatch(
-          updateWithFormValues({
-            formID: activeStepId,
-            personID: applicant.person.id,
-            values,
-          })
-        );
-        dispatch(
-          markSectionAsComplete({
-            formID: activeStepId,
-            personID: applicant.person.id,
-          })
-        );
-      });
+      dispatch(
+        updateWithFormValues({
+          formID: activeStepId,
+          personID: applicant.person.id,
+          values,
+        })
+      );
+      dispatch(
+        markSectionAsComplete({
+          formID: activeStepId,
+          personID: applicant.person.id,
+        })
+      );
     }
   };
 

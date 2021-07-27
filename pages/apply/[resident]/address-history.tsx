@@ -1,7 +1,6 @@
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { batch } from 'react-redux';
 import * as Yup from 'yup';
 import ApplicantStep from '../../../components/application/ApplicantStep';
 import Button from '../../../components/button';
@@ -270,36 +269,34 @@ const ApplicationStep = (): JSX.Element => {
       }
 
       case 'review': {
-        batch(() => {
-          const [currentAddress] = addressHistory;
-          dispatch(
-            updateApplicant({
-              person: { id: applicant.person.id },
-              address: {
-                addressLine1: currentAddress.address.line1,
-                addressLine2: currentAddress.address.line2,
-                addressLine3:
-                  currentAddress.address.line3 ?? currentAddress.address.town,
-                postCode:
-                  currentAddress.address.postcode ?? currentAddress.postcode,
-                addressType: AddressType.MainAddress,
-              },
-            })
-          );
-          dispatch(
-            updateWithFormValues({
-              personID: applicant.person.id,
-              formID: FormID.ADDRESS_HISTORY,
-              values: { addressHistory },
-            })
-          );
-          dispatch(
-            markSectionAsComplete({
-              personID: applicant.person.id,
-              formID: FormID.ADDRESS_HISTORY,
-            })
-          );
-        });
+        const [currentAddress] = addressHistory;
+        dispatch(
+          updateApplicant({
+            person: { id: applicant.person.id },
+            address: {
+              addressLine1: currentAddress.address.line1,
+              addressLine2: currentAddress.address.line2,
+              addressLine3:
+                currentAddress.address.line3 ?? currentAddress.address.town,
+              postCode:
+                currentAddress.address.postcode ?? currentAddress.postcode,
+              addressType: AddressType.MainAddress,
+            },
+          })
+        );
+        dispatch(
+          updateWithFormValues({
+            personID: applicant.person.id,
+            formID: FormID.ADDRESS_HISTORY,
+            values: { addressHistory },
+          })
+        );
+        dispatch(
+          markSectionAsComplete({
+            personID: applicant.person.id,
+            formID: FormID.ADDRESS_HISTORY,
+          })
+        );
         router.push(`/apply/${resident}`);
         break;
       }

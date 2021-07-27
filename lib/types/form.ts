@@ -23,7 +23,7 @@ export interface BaseFormField {
 }
 
 export interface TextFormField extends BaseFormField {
-  as: undefined;
+  as?: undefined;
   type?: string;
 }
 export interface TextareaFormField extends BaseFormField {

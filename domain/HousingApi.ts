@@ -94,7 +94,7 @@ export interface Application {
    * @type {string}
    * @memberof Application
    */
-  id: string;
+  id?: string;
   /**
    *
    * @type {string}

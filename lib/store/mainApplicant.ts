@@ -39,7 +39,11 @@ const slice = createSlice({
           state?.person?.id &&
           state?.person?.id === action.payload.personID
         ) {
-          applyQuestions(state, action.payload.formID, action.payload.values);
+          return applyQuestions(
+            state,
+            action.payload.formID,
+            action.payload.values
+          );
         }
         return state;
       });

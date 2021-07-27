@@ -17,7 +17,7 @@ interface DisplayProps {
     surname: string;
     dateOfBirth: string;
     gender?: string;
-    nationalinsurance?: string;
+    'national-insurance'?: string;
   };
 }
 
@@ -25,9 +25,6 @@ export function DisplayInfo({
   question,
   person
 }: DisplayProps):JSX.Element {
-  console.log('what is question', question);
-  console.log('what is person', person);
-
   return (
     <div>
       <dl className="govuk-summary-list lbh-summary-list">
@@ -52,12 +49,14 @@ export function DisplayInfo({
         </div>
         <div className="govuk-summary-list__row">
           <dt className="govuk-summary-list__key">NI Number</dt>
-          <dd className="govuk-summary-list__value">{person?.nationalinsurance}</dd>
+          <dd className="govuk-summary-list__value">{person?.['national-insurance']}</dd>
           <dd className="govuk-summary-list__actions">
           </dd>
         </div>
       </dl>
       <br />
+
+
 
       <dl className="govuk-summary-list lbh-summary-list">
         {question?.id}

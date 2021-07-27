@@ -12,60 +12,22 @@ interface DisplayProps {
     id?: string | undefined;
     answer?: string | undefined;
   };
-  person: {
-    firstName: string;
-    surname: string;
-    dateOfBirth: Date;
-    gender?: string;
-    'national-insurance'?: string;
-  };
 }
 
 export function DisplayInfo({
   question,
-  person
 }: DisplayProps):JSX.Element {
 
-  const formatDate = (date: Date) => {
-    const options = { year: "numeric", month: "long", day: "numeric" } as const
-    return new Date(date).toLocaleDateString(undefined, options)
-  } 
+  const formatHeader = (header: any) => {
+    header = header.replace(/-|\s+/g, ' ').toUpperCase();
+    header = header.substring(0, header.lastIndexOf("/"));
+    return header;
+  }
 
   return (
-    <div>
-      <dl className="govuk-summary-list lbh-summary-list">
-        Personal Details
-        <div className="govuk-summary-list__row">
-          <dt className="govuk-summary-list__key">Name</dt>
-          <dd className="govuk-summary-list__value">{person.firstName + ' ' + person.surname}</dd>
-          <dd className="govuk-summary-list__actions">
-          </dd>
-        </div>
-        <div className="govuk-summary-list__row">
-          <dt className="govuk-summary-list__key">Date of birth</dt>
-          <dd className="govuk-summary-list__value">{formatDate(person?.dateOfBirth)}</dd>
-          <dd className="govuk-summary-list__actions">
-          </dd>
-        </div>
-        <div className="govuk-summary-list__row">
-          <dt className="govuk-summary-list__key">Gender</dt>
-          <dd className="govuk-summary-list__value">{person?.gender}</dd>
-          <dd className="govuk-summary-list__actions">
-          </dd>
-        </div>
-        <div className="govuk-summary-list__row">
-          <dt className="govuk-summary-list__key">NI Number</dt>
-          <dd className="govuk-summary-list__value">{person?.['national-insurance']}</dd>
-          <dd className="govuk-summary-list__actions">
-          </dd>
-        </div>
-      </dl>
-      <br />
-      
-      <div style={{"borderBottom": "1px solid", "color": "#b1b4b6"}}> 
-        <h4 className="lbh-heading-h4">{question?.id}</h4>
-        <p className="lbh-body-m">{question?.answer}</p>
-      </div>
+    <div style={{"borderBottom": "1px solid", "color": "#b1b4b6"}}> 
+      <h4 className="lbh-heading-h4">{formatHeader(question?.id)}</h4>
+      <p className="lbh-body-m">{question?.answer}</p>
     </div>
   ) 
 }
@@ -84,10 +46,12 @@ const UserSummary = (): JSX.Element => {
     return <Custom404 />;
   }
 
-  const onDelete = () => {}
+  const onDelete = () => {};
 
-  const headerTitles = ['Immigration Status', 'Residential Status', 'Address Histoy', 'Current Accomodation', 
-    'My Situation', 'Income & savings', 'Employment', 'Health'];
+  const formatDate = (date: Date | undefined | string) => {
+    const options = { year: "numeric", month: "long", day: "numeric" } as const
+    return date ? new Date(date).toLocaleDateString(undefined, options) : ''
+  };
 
   const breadcrumbs = [
     {
@@ -101,15 +65,44 @@ const UserSummary = (): JSX.Element => {
   ];
 
   // Create a custom object that makes it easy to iterate over for DisplayInfo
-  const questions = currentResident.questions;
+  let questions = currentResident.questions;
+  questions = questions?.slice(1);
 
   return (
     <Layout breadcrumbs={breadcrumbs}>
       <p className="lbh-body-m">Check answers for</p>
       <h3 className="lbh-heading-h3">{currentResident?.person.firstName + ' ' + currentResident?.person.surname}</h3>
       <br />
+      <dl className="govuk-summary-list lbh-summary-list">
+        Personal Details
+        <div className="govuk-summary-list__row">
+          <dt className="govuk-summary-list__key">Name</dt>
+          <dd className="govuk-summary-list__value">{currentResident?.person.firstName + ' ' + currentResident?.person.surname}</dd>
+          <dd className="govuk-summary-list__actions">
+          </dd>
+        </div>
+        <div className="govuk-summary-list__row">
+          <dt className="govuk-summary-list__key">Date of birth</dt>
+          <dd className="govuk-summary-list__value">{formatDate(currentResident?.person?.dateOfBirth)}</dd>
+          <dd className="govuk-summary-list__actions">
+          </dd>
+        </div>
+        <div className="govuk-summary-list__row">
+          <dt className="govuk-summary-list__key">Gender</dt>
+          <dd className="govuk-summary-list__value">{currentResident?.person?.gender}</dd>
+          <dd className="govuk-summary-list__actions">
+          </dd>
+        </div>
+        <div className="govuk-summary-list__row">
+          <dt className="govuk-summary-list__key">NI Number</dt>
+          <dd className="govuk-summary-list__value">{currentResident?.person?.['national-insurance']}</dd>
+          <dd className="govuk-summary-list__actions">
+          </dd>
+        </div>
+      </dl>
+      <br />
       {questions?.map((question, index) => {
-        return <DisplayInfo question={question} person={currentResident?.person} key={index} />
+        return <DisplayInfo question={question} key={index} />
       })}
       <ButtonLink href="submit">I confirm this is correct</ButtonLink>
       <DeleteLink content="Delete this information" onDelete={onDelete} />

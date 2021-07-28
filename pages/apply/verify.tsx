@@ -35,7 +35,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
     );
 
     // TODO: update to link to household: HRT-102
-    router.push('/apply/overview');
+    router.push('/apply/household');
   };
 
   const resendCode = async (emailAddress: string) => {

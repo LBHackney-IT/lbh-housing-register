@@ -63,8 +63,8 @@ const ApplicationHouseholdOverview = (): JSX.Element => {
         Add a person
       </ButtonLink>
       <Paragraph>
-        There <strong>{applicants.length > 1
-          ? `"are ${applicants.length} people"` : "is 1 person"}</strong> in this application.
+        There {applicants.length > 1 ? "are" : "is"}
+        <strong>{applicants.length > 1 ? ` ${applicants.length} people` : " 1 person"}</strong> in this application.
       </Paragraph>
       <ButtonLink href="/apply/overview">
         Continue to next step

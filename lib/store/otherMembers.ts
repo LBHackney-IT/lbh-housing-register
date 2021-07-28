@@ -34,10 +34,12 @@ const slice = createSlice({
     ) => {
       const applicant: Applicant = {
         person: {
+          title: action.payload.title,
           firstName: action.payload.firstName,
           surname: action.payload.surname,
           dateOfBirth: action.payload.dateOfBirth,
           gender: action.payload.gender,
+          nationalInsuranceNumber: action.payload.nationalInsuranceNumber
         },
         contactInformation: {
           phoneNumber: action.payload.phoneNumber,

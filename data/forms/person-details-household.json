@@ -1,0 +1,153 @@
+{
+  "heading": "Personal details",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "select",
+          "label": "Title",
+          "name": "title",
+          "options": [
+            {
+              "label": "Select an option",
+              "value": ""
+            },
+            {
+              "label": "Mr",
+              "value": "Mr"
+            },
+            {
+              "label": "Mrs",
+              "value": "Mrs"
+            },
+            {
+              "label": "Miss",
+              "value": "Miss"
+            },
+            {
+              "label": "Mx",
+              "value": "Mx"
+            }
+          ]
+        },
+        {
+          "label": "First name",
+          "name": "firstName",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "Last name",
+          "name": "surname",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "select",
+          "label": "Relationship to you",
+          "name": "relationship",
+          "options": [
+            {
+              "label": "Select an option",
+              "value": ""
+            },
+            {
+              "label": "My aunt",
+              "value": "aunt"
+            },
+            {
+              "label": "My brother",
+              "value": "brother"
+            },
+            {
+              "label": "My cousin",
+              "value": "cousin"
+            },
+            {
+              "label": "My daughter",
+              "value": "daughter"
+            },
+            {
+              "label": "My friend",
+              "value": "friend"
+            },
+            {
+              "label": "My grandchild",
+              "value": "grandchild"
+            },
+            {
+              "label": "My grandparent",
+              "value": "grandparent"
+            },
+            {
+              "label": "My nephew",
+              "value": "nephew"
+            },
+            {
+              "label": "My niece",
+              "value": "niece"
+            },
+            {
+              "label": "My parent",
+              "value": "parent"
+            },
+            {
+              "label": "My partner",
+              "value": "partner"
+            },
+            {
+              "label": "My sister",
+              "value": "sister"
+            },
+            {
+              "label": "My son",
+              "value": "son"
+            },
+            {
+              "label": "My uncle",
+              "value": "uncle"
+            },
+            {
+              "label": "Other",
+              "value": "other"
+            }
+          ]
+        },
+        {
+          "as": "dateinput",
+          "label": "Date of birth",
+          "name": "dateOfBirth",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "as": "radios",
+          "label": "Sex",
+          "name": "gender",
+          "options": [
+            {
+              "label": "Male",
+              "value": "M"
+            },
+            {
+              "label": "Female",
+              "value": "F"
+            },
+            {
+              "label": "Prefer not to say",
+              "value": ""
+            }
+          ]
+        },
+        {
+          "label": "National Insurance number",
+          "hint": "For example, AB 12 34 56 C",
+          "name": "nationalInsuranceNumber"
+        }
+      ]
+    }
+  ]
+}

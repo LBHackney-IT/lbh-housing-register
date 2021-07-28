@@ -28,10 +28,10 @@ const AddPersonToApplication = (): JSX.Element => {
 
   return (
     <Layout breadcrumbs={breadcrumbs}>
-      <HeadingOne content="Add a person" />
+      <HeadingOne content="Add a person to this application" />
       <Form
         buttonText="Add person"
-        formData={getFormData(FormID.PERSONAL_DETAILS)}
+        formData={getFormData(FormID.HOUSEHOLD_DETAILS)}
         onSubmit={onSubmit}
       />
     </Layout>

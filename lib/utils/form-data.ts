@@ -5,7 +5,6 @@ import employment from '../../data/forms/employment.json';
 import immigrationStatusFormData from '../../data/forms/immigration-status.json';
 import incomeSavings from '../../data/forms/income.json';
 import medicalNeeds from '../../data/forms/medical-needs.json';
-import peopleInApplication from '../../data/forms/people-in-application.json';
 import personalDetailsFormData from '../../data/forms/person-details.json';
 import residentialStatusFormData from '../../data/forms/residential-status.json';
 import signInVerifyFormData from '../../data/forms/sign-in-verify.json';
@@ -30,7 +29,7 @@ import Subletting from '../../data/forms/Situation/subletting.json';
 import UnderOccupying from '../../data/forms/Situation/under-occupying.json';
 import unspentConvictions from '../../data/forms/Situation/unspent-convictions.json';
 import yourSituationFormData from '../../data/forms/your-situation.json';
-import { EligibilityCriteria, FormField, MultiStepForm } from '../types/form';
+import { EligibilityCriteria, MultiStepForm } from '../types/form';
 import assertNever from './assertNever';
 
 export enum FormID {
@@ -43,7 +42,6 @@ export enum FormID {
   CURRENT_ACCOMMODATION = 'current-accommodation',
   YOUR_SITUATION = 'your-situation',
   RESIDENTIAL_STATUS = 'residential-status',
-  PEOPLE_IN_APPLICATION = 'people-in-application',
   ADDRESS_HISTORY = 'address-history',
   INCOME_SAVINGS = 'income-savings',
   MEDICAL_NEEDS = 'medical-needs',
@@ -177,55 +175,10 @@ export function getFormData(form: FormID): MultiStepForm {
     case FormID.UNSPENT_CONVICTIONS:
       return unspentConvictions as MultiStepForm;
 
-    case FormID.PEOPLE_IN_APPLICATION:
-      return peopleInApplication as MultiStepForm;
-
-    case FormID.PEOPLE_IN_APPLICATION:
-      return peopleInApplication as MultiStepForm;
-
     case FormID.EMPLOYMENT:
       return employment as MultiStepForm;
 
     default:
       return assertNever(form, 'Unknown form step: ' + form);
   }
-}
-
-export function getPeopleInApplicationForm(
-  additionalResidents: number
-): MultiStepForm {
-  const formFields = peopleInApplication.steps[0].fields as FormField[];
-
-  const headerField = (n: number): FormField => ({
-    as: 'paragraph',
-    label: `Person ${n + 1}`,
-    name: `person${n + 1}`,
-  });
-
-  const mainApplicantFields = [
-    headerField(0),
-    ...formFields.map((field) => ({
-      ...field,
-      name: `mainApplicant.${field.name}`,
-    })),
-  ];
-
-  const additionalResidentsFields = new Array(additionalResidents)
-    .fill(undefined)
-    .flatMap((_, i) => [
-      headerField(i + 1),
-      ...formFields.map((field) => ({
-        ...field,
-        name: `otherMembers[${i}].${field.name}`,
-      })),
-    ]);
-
-  return {
-    ...peopleInApplication,
-    steps: [
-      {
-        fields: [...mainApplicantFields, ...additionalResidentsFields],
-      },
-    ],
-  };
 }

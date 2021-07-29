@@ -39,7 +39,8 @@ const slice = createSlice({
           surname: action.payload.surname,
           dateOfBirth: action.payload.dateOfBirth,
           gender: action.payload.gender,
-          nationalInsuranceNumber: action.payload.nationalInsuranceNumber
+          nationalInsuranceNumber: action.payload.nationalInsuranceNumber,
+          relationshipType: action.payload.relationshipType
         },
         contactInformation: {
           phoneNumber: action.payload.phoneNumber,

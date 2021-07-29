@@ -251,6 +251,12 @@ export interface Person {
    * @memberof Person
    */
   nationalInsuranceNumber?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Person
+   */
+  relationshipType?: string;
 }
 
 /**

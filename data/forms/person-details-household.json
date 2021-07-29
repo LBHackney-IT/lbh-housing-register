@@ -47,7 +47,7 @@
         {
           "as": "select",
           "label": "Relationship to you",
-          "name": "relationship",
+          "name": "relationshipType",
           "options": [
             {
               "label": "Select an option",
@@ -125,7 +125,7 @@
         },
         {
           "as": "radios",
-          "label": "Sex",
+          "label": "Gender",
           "name": "gender",
           "options": [
             {

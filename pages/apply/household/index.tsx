@@ -58,8 +58,8 @@ const ApplicationHouseholdOverview = (): JSX.Element => {
                     content={
                       `Person ${index + 1}` +
                       (applicants.length > 1 && applicant === mainApplicant
-                        ? ' (you)'
-                        : '')
+                        ? ': Me'
+                        : `: My ${applicant.person?.relationshipType}`)
                     }
                   />
                   {applicant.person?.firstName} {applicant.person?.surname}

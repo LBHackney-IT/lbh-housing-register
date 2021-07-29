@@ -70,8 +70,8 @@ const ApplicationPersonsOverview = (): JSX.Element => {
                     content={
                       `Person ${index + 1}` +
                       (applicants.length > 1 && applicant === mainApplicant
-                        ? ' (you)'
-                        : '')
+                        ? ': Me'
+                        : `: My ${applicant.person?.relationshipType}`)
                     }
                   />
                   <Link href={`/apply/${applicant.person?.id}`}>

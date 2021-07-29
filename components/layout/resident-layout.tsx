@@ -7,13 +7,16 @@ import Breadcrumbs from '../breadcrumbs';
 import Header from '../header';
 import PhaseBanner from '../phase-banner';
 import SkipLink from '../skip-link';
+import Seo from '../seo';
 
 interface ResidentLayoutProps {
+  pageName?: string;
   breadcrumbs?: { href: string; name: string }[];
   children: ReactNode;
 }
 
 export default function ResidentLayout({
+  pageName,
   breadcrumbs,
   children,
 }: ResidentLayoutProps): JSX.Element {
@@ -30,6 +33,7 @@ export default function ResidentLayout({
 
   return (
     <>
+      {pageName && <Seo title={pageName} />}
       <SkipLink />
       <Header username={username} onSignOut={onSignOut} />
       {hasPhaseBanner() && <PhaseBanner />}

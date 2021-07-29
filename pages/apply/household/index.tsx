@@ -42,7 +42,7 @@ const ApplicationHouseholdOverview = (): JSX.Element => {
   };
 
   return (
-    <Layout breadcrumbs={breadcrumbs}>
+    <Layout pageName="My household" breadcrumbs={breadcrumbs}>
       <HeadingOne content="Who are you applying with?" />
       <Paragraph>
         Include all the people you would like to move with.

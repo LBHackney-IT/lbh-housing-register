@@ -47,7 +47,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
   };
 
   return (
-    <Layout>
+    <Layout pageName="Verify your account">
       <HeadingOne content="Enter your verification code" />
       <Announcement variant="success">
         <Paragraph>

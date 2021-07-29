@@ -58,7 +58,7 @@ const ApplicationStartPage = (): JSX.Element => {
   };
 
   return (
-    <Layout>
+    <Layout pageName="Start your application">
       <HeadingOne content="Start your application" />
       <Form
         formData={getFormData(FormID.SIGN_UP_DETAILS)}

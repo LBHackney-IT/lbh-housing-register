@@ -31,7 +31,7 @@ const AddPersonToApplication = (): JSX.Element => {
       <HeadingOne content="Add a person to this application" />
       <Form
         buttonText="Add person"
-        formData={getFormData(FormID.HOUSEHOLD_DETAILS)}
+        formData={getFormData(FormID.NEW_PERSON_DETAILS)}
         onSubmit={onSubmit}
       />
     </Layout>

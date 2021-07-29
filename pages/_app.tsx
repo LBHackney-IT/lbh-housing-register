@@ -18,6 +18,9 @@ function App({ Component, pageProps }: AppProps): ReactElement {
 
   return (
     <>
+      <Head>
+        <title>Housing Register | Hackney Council</title>
+      </Head>
       {!loaded && (
         <Layout>
           <Loading text="Checking information…" />

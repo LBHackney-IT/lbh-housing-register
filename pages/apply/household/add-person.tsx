@@ -27,7 +27,7 @@ const AddPersonToApplication = (): JSX.Element => {
   };
 
   return (
-    <Layout breadcrumbs={breadcrumbs}>
+    <Layout pageName="Add person" breadcrumbs={breadcrumbs}>
       <HeadingOne content="Add a person to this application" />
       <Form
         buttonText="Add person"

@@ -12,7 +12,7 @@ import Layout from '../../components/layout/resident-layout';
 
 export default function ApplicationHomePage(): JSX.Element {
   return (
-    <Layout>
+    <Layout pageName="Apply">
       <HeadingOne content="Apply to the Housing Register" />
 
       <HeadingTwo content="What to expect" />

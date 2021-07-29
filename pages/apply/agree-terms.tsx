@@ -3,7 +3,7 @@ import Layout from '../../components/layout/resident-layout';
 
 const ApplicationTermsPage = (): JSX.Element => {
   return (
-    <Layout>
+    <Layout pageName="Agreement">
       <ApplicationAgreement />
     </Layout>
   );

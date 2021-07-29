@@ -3,14 +3,6 @@
     {
       "fields": [
         {
-          "label": "Email",
-          "name": "emailAddress",
-          "type": "email",
-          "validation": {
-            "required": true
-          }
-        },
-        {
           "label": "Verification code",
           "name": "code",
           "validation": {

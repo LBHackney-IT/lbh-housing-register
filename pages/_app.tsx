@@ -18,13 +18,6 @@ function App({ Component, pageProps }: AppProps): ReactElement {
 
   return (
     <>
-      <Head>
-        <title>{process.env.NEXT_PUBLIC_NAME} | Hackney Council</title>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, viewport-fit=cover"
-        />
-      </Head>
       {!loaded && (
         <Layout>
           <Loading text="Checking information…" />

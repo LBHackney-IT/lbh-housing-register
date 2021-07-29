@@ -65,8 +65,17 @@
               "value": "F"
             },
             {
-              "label": "Prefer not to say",
-              "value": ""
+              "label": "Prefer to self-describe",
+              "value": "self"
+            }
+          ]
+        },
+        {
+          "name": "self-describe",
+          "conditionalDisplay": [
+            {
+              "field": "gender",
+              "is": "self"
             }
           ]
         },

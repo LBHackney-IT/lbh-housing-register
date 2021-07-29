@@ -99,7 +99,10 @@ const ApplicationStep = (): JSX.Element => {
       <ButtonLink href={`/apply/${currentResident.person?.id}/summary/`}>Check Answers</ButtonLink>
 
       {currentResident !== mainResident && (
-        <DeleteLink content="Delete this information" onDelete={onDelete} />
+        <DeleteLink
+          content="Delete this information"
+          details="This information will be permanently deleted."
+          onDelete={onDelete} />
       )}
     </Layout>
   );

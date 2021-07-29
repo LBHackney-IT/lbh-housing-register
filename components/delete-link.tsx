@@ -3,30 +3,31 @@ import Dialog from './dialog';
 
 interface DeleteLinkProps {
   content: string;
+  details?: string;
   onDelete: () => void;
 }
 
-export default function DeleteLink({ content, onDelete }: DeleteLinkProps) {
-  const [confirmation, setConfirmation] = useState(false);
-
-  if (confirmation) {
-    const onConfirmation = () => onDelete();
-
-    return (
-      <Dialog
-        title="Are you sure?"
-        copy="This record will be permanently deleted"
-        onConfirmation={onConfirmation}
-        onCancel={() => setConfirmation(false)}
-      />
-    );
-  }
+export default function DeleteLink({ content, details, onDelete }: DeleteLinkProps) {
+  const [open, setOpen] = useState(false)
 
   return (
-    <div className="text-center">
-      <a onClick={() => setConfirmation(true)}>
-        <span className="govuk-error-message lbh-error-message">{content}</span>
-      </a>
-    </div>
+    <>
+      <div className="text-center">
+        <button
+          onClick={() => setOpen(true)}
+          className="lbh-link lbh-link--no-visited-state lbh-delete-link"
+        >
+          {content}
+        </button>
+      </div>
+
+      <Dialog
+        isOpen={open}
+        title="Are you sure?"
+        copy={details}
+        onConfirmation={onDelete}
+        onCancel={() => setOpen(false)}
+      />
+    </>
   );
 }

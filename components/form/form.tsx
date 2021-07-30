@@ -1,6 +1,5 @@
 import { Form as FormikForm, Formik, FormikValues } from 'formik';
 import { useMemo, useState } from 'react';
-import Announcement from '../../components/announcement';
 import { FormData, MultiStepForm } from '../../lib/types/form';
 import { getDisplayStateOfField } from '../../lib/utils/form';
 import { buildValidationSchema } from '../../lib/utils/validation';
@@ -81,40 +80,7 @@ export default function Form({
                 return <DynamicField key={index} field={field} />;
               }
             })}
-            {activeStep === 'income-savings' && (
-              <Announcement variant="success">
-                <h3 className="lbh-heading-h3">
-                  Proof of income and savings required
-                </h3>
-                <p className="lbh-body-m">
-                  Before submitting your application, you will be asked to
-                  upload the following:
-                </p>
-                <ul className="lbh-list lbh-list--bullet">
-                  <li className="lbh-body-m">
-                    Bank statements covering the last two months for every
-                    account held by each working adult in your household
-                  </li>
-                  <li className="lbh-body-m">
-                    Last two months' payslips for all working adults in your
-                    household
-                  </li>
-                </ul>
-              </Announcement>
-            )}
-            {values['medical-needs'] === 'yes' &&
-              activeStep === 'medical-needs' && (
-                <Announcement variant="success">
-                  <h3 className="lbh-heading-h3">
-                    You will need to complete a separate medical form
-                  </h3>
-                  <p className="lbh-body-m">
-                    After you have submitted this application, you will be asked
-                    to provide detailed information about your medical needs in
-                    a separate form.
-                  </p>
-                </Announcement>
-              )}
+
             <div className="c-flex lbh-simple-pagination">
               {stepNumber > 0 && (
                 <div className="c-flex__1">

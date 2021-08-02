@@ -79,6 +79,10 @@ const slice = createSlice({
           (p) => p.person?.id && p.person.id === action.payload.personID
         );
         if (applicant > -1) {
+          if (action.payload.markAsComplete) {
+            action.payload.values["sectionCompleted"] = true;
+          }
+
           // Immer
           state[applicant] = applyQuestions(
             state[applicant],

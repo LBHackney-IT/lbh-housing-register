@@ -52,7 +52,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
   };
 
   return (
-    <Layout breadcrumbs={breadcrumbs}>
+    <Layout pageName="Application overview" breadcrumbs={breadcrumbs}>
       <HeadingOne content="Application tasks" />
 
       <SummaryList>

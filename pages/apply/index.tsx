@@ -12,8 +12,8 @@ import Layout from '../../components/layout/resident-layout';
 
 export default function ApplicationHomePage(): JSX.Element {
   return (
-    <Layout>
-      <HeadingOne content={`Apply to the ${process.env.NEXT_PUBLIC_NAME!}`} />
+    <Layout pageName="Apply">
+      <HeadingOne content="Apply to the Housing Register" />
 
       <HeadingTwo content="What to expect" />
       <Paragraph>

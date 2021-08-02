@@ -61,7 +61,7 @@ const ApplicationStep = (): JSX.Element => {
   };
 
   return (
-    <Layout breadcrumbs={breadcrumbs}>
+    <Layout pageName="Person overview" breadcrumbs={breadcrumbs}>
       <Hint content="Complete information for:" />
       <HeadingOne
         content={`${currentResident.person?.firstName} ${currentResident.person?.surname}`}

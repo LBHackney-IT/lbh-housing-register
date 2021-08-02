@@ -27,9 +27,6 @@
           "as": "insettext",
           "title": "You will need to complete a seperate medical form",
           "content": "After you have submitted this application, you will be asked to provide detailed information about your medical needs in a seperate form.",
-          "validation": {
-            "required": false
-          },
           "conditionalDisplay": [
             {
               "field": "medical-needs",

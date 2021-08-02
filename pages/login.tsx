@@ -19,7 +19,7 @@ export default function LoginPage({ appUrl }: LoginProps): JSX.Element {
   }, [router, appUrl]);
 
   return (
-    <Layout>
+    <Layout pageName="Staff login">
       <HeadingOne content="Staff login" />
       <ButtonLink href={loginUrl}>Sign in with Google</ButtonLink>
       <Paragraph>Please sign in with your Hackney email account.</Paragraph>

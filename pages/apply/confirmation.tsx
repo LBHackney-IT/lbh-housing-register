@@ -17,7 +17,7 @@ const ApplicationConfirmation = (): JSX.Element => {
   };
 
   return (
-    <Layout>
+    <Layout pageName="Confirmation">
       <Panel
         heading="Application complete"
         message="Your reference number: HDJ2123F"

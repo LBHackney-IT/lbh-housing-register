@@ -80,6 +80,16 @@
           "validation": {
             "required": true
           }
+        },
+        {
+          "name": "proof-of-income-savings",
+          "as": "insettext",
+          "title": "Proof of income and savings required",
+          "content": "Before submitting your application, you will be asked to upload the following documents: ",
+          "list": [
+            "Bank statements covering the last two months for every account you hold",
+            "Last two months’ payslips for all working adults in your household"
+          ]
         }
       ]
     }

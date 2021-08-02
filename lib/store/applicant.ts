@@ -22,20 +22,8 @@ export const updateWithFormValues = createAction<{
   personID: string;
   formID: FormID;
   values: FormikValues;
+  markAsComplete: boolean;
 }>('applicant/updateWithFormValues');
-
-export const markSectionAsComplete = ({
-  personID,
-  formID,
-}: {
-  personID: string;
-  formID: FormID;
-}) =>
-  updateWithFormValues({
-    personID,
-    formID,
-    values: { sectionCompleted: true },
-  });
 
 export function applyQuestions(
   state: Applicant | undefined = {},
@@ -79,18 +67,18 @@ export function updateApplicantReducer(
 
 export const selectApplicant =
   (applicantPersonId: string) =>
-  (store: Store): ApplicantWithPersonID | undefined => {
-    if (
-      applicantHasId(store.application.mainApplicant) &&
-      store.application.mainApplicant?.person?.id === applicantPersonId
-    ) {
-      return store.application.mainApplicant;
-    }
-    return store.application.otherMembers?.find(
-      (a): a is ApplicantWithPersonID =>
-        applicantHasId(a) && a.person?.id === applicantPersonId
-    );
-  };
+    (store: Store): ApplicantWithPersonID | undefined => {
+      if (
+        applicantHasId(store.application.mainApplicant) &&
+        store.application.mainApplicant?.person?.id === applicantPersonId
+      ) {
+        return store.application.mainApplicant;
+      }
+      return store.application.otherMembers?.find(
+        (a): a is ApplicantWithPersonID =>
+          applicantHasId(a) && a.person?.id === applicantPersonId
+      );
+    };
 
 export const findQuesiton =
   (formID: FormID, questionName: string) => (question: Question) =>

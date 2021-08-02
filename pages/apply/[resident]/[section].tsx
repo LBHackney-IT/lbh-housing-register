@@ -30,6 +30,7 @@ const ApplicationSection = (): JSX.Element => {
     applicant === mainResident
   );
 
+  const sectionName = getApplicationSectionFromId(section, sectionGroups)?.heading || '';
   const breadcrumbs = [
     {
       href: returnHref,
@@ -41,7 +42,7 @@ const ApplicationSection = (): JSX.Element => {
     },
     {
       href: `${baseHref}/${section}`,
-      name: getApplicationSectionFromId(section, sectionGroups)?.heading || '',
+      name: sectionName,
     },
   ];
 
@@ -50,7 +51,7 @@ const ApplicationSection = (): JSX.Element => {
   };
 
   return (
-    <Layout breadcrumbs={breadcrumbs}>
+    <Layout pageName={sectionName} breadcrumbs={breadcrumbs}>
       <Hint content={applicant.person.firstName ?? ''} />
       <ApplicationForms
         applicant={applicant}

@@ -8,7 +8,6 @@ import Hint from '../../../components/form/hint';
 import Layout from '../../../components/layout/resident-layout';
 import {
   getQuestionValue,
-  markSectionAsComplete,
   selectApplicant,
   updateWithFormValues,
 } from '../../../lib/store/applicant';
@@ -76,9 +75,11 @@ export default function YourSituation() {
 
     if (nextFormId === 'exit') {
       dispatch(
-        markSectionAsComplete({
+        updateWithFormValues({
           formID: FormID.YOUR_SITUATION,
           personID: applicant.person.id,
+          values,
+          markAsComplete: true
         })
       );
       router.push(baseHref);
@@ -94,12 +95,13 @@ export default function YourSituation() {
         formID: activeStepID,
         personID: applicant.person.id,
         values,
+        markAsComplete: true
       })
     );
   };
 
   return (
-    <Layout breadcrumbs={breadcrumbs}>
+    <Layout pageName="Your situation" breadcrumbs={breadcrumbs}>
       <Hint content={applicant.person?.firstName ?? ''} />
       {formData.heading && <HeadingTwo content={formData.heading} />}
       {formData.copy && <Paragraph>{formData.copy}</Paragraph>}

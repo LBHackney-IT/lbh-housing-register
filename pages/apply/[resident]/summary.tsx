@@ -10,6 +10,8 @@ import Custom404 from '../../404';
 import DeleteLink from '../../../components/delete-link';
 import { FormID } from '../../../lib/utils/form-data';
 
+// Date types have been ignored for the most parts and need serious attention!!!
+
 interface DisplayProps {
   question: {
     id?: string | undefined;
@@ -17,14 +19,12 @@ interface DisplayProps {
   };
 }
 
-// Date types have been ignored for the most parts and need serious attention!!!
-
 const retrieveSectionName = (question: any) => {
   return question['id'].substr(question['id'].lastIndexOf('/') + 1);
 };
 
 const normalizeString = (answer: string) => {
-  return answer.replace(/[^a-zA-Z ]/g, '');
+  return answer.replace(/[^a-zA-Z0-9 ]/g, '');
 };
 
 export function ImmigrationStatus(data) {
@@ -82,8 +82,6 @@ export function ResidentialStatus(data) {
 }
 
 export function CurrentAccommodation(data) {
-  console.log('Current Accommodation data', data);
-
   const formulator = (question: any) => {
     if (retrieveSectionName(question) === 'living-situation') {
       switch (normalizeString(question['answer'])) {
@@ -114,6 +112,24 @@ export function CurrentAccommodation(data) {
       switch (normalizeString(question['answer'])) {
         case 'house':
           return 'house';
+        case 'flat':
+          return 'flat';
+        case 'flataboveshop':
+          return 'flat above shop';
+        case 'maisonnette':
+          return 'maisonnette';
+        case 'bungalow':
+          return 'bungalow';
+        case 'hotelhostel':
+          return 'hotel hostel';
+        case 'boat':
+          return 'boat';
+        case 'caravan':
+          return 'caravan';
+        case 'studio':
+          return 'studio';
+        case 'other':
+          return 'other';
       }
     }
 
@@ -130,9 +146,7 @@ export function CurrentAccommodation(data) {
     <>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
         <h4 className="lbh-heading-h4">Current Accommodation</h4>
-        <p className="lbh-body-m">{`I am living with ${formulator(
-          data[0]
-        )}`}</p>
+        <p className="lbh-body-m">{`I am living ${formulator(data[0])}`}</p>
       </div>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
         <p className="lbh-body-m">{`I live in a ${formulator(data[1])}`}</p>
@@ -168,19 +182,111 @@ export function CurrentAccommodation(data) {
 
 export function MySituation(data) {
   return (
-    <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-      <h4 className="lbh-heading-h4">My Situation</h4>
-      <p className="lbh-body-m"></p>
-    </div>
+    <>
+      <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
+        <h4 className="lbh-heading-h4">My Situation</h4>
+        <p className="lbh-body-m">{`${
+          data[0]['answer'] === 'yes' ? 'I have been' : 'I have not'
+        } been found intentionally homelessness by any local housing authority(in accordance with the housing act 1996 section 184) within the last 2 years`}</p>
+      </div>
+      <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
+        <p className="lbh-body-m">{`${
+          data[1]['answer'] === 'yes' ? 'I do' : 'I do not'
+        } own any property`}</p>
+      </div>
+      <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
+        <p className="lbh-body-m">{`${
+          data[2]['answer'] === 'yes' ? 'I have' : 'I have not'
+        } sold any property within the last 5 years`}</p>
+      </div>
+      <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
+        <p className="lbh-body-m">{`${
+          data[3]['answer'] === 'yes' ? 'I am' : 'I am not'
+        } in four or more weeks arrears with rent, council tax or service charges`}</p>
+      </div>
+      <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
+        <p className="lbh-body-m">{`${
+          data[4]['answer'] === 'yes'
+            ? 'I am, and my partner is'
+            : 'I am not, and my partner is not'
+        } on another local authority's housing register`}</p>
+      </div>
+      <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
+        <p className="lbh-body-m">{`${
+          data[5]['answer'] == 'yes'
+            ? 'Someone in my household has'
+            : 'Nobody in my household has'
+        } previously received a warning for a breach of tenancy`}</p>
+      </div>
+      <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
+        <p className="lbh-body-m">{`${
+          data[7]['answer'] === 'yes'
+            ? 'Somebody in my household'
+            : 'Nobody in my household'
+        } has any legal restrictions in where they can live in the borough`}</p>
+      </div>
+      <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
+        <p className="lbh-body-m">{`${
+          data[8]['answer'] === 'yes'
+            ? 'Somebody in my household'
+            : 'Nobody in my household'
+        } has any unspent convictions`}</p>
+      </div>
+    </>
   );
 }
 
 export function IncomeSavings(data) {
+  interface Money {
+    [key: string]: string;
+  }
+
+  const incomeValues: Money = {
+    under20000: 'Under £20,000',
+    '20to40000': '£20,000 - £39,999',
+    '40to60000': '£40,000 - £59,999',
+    '60to80000': '£60,000 - £79,999',
+    '80to100000': '£80,000 - £99,999',
+    '100000': '£100,000 or more',
+  };
+
+  const savingsValues: Money = {
+    under5000: 'Under £5,000',
+    '5to10000': '£5,000 - £9,999',
+    '10to30000': '£10,000 - £29,999',
+    '30to50000': '£30,000 - £49,999',
+    '50to80000': '£50,000 - £79,999',
+    '80000': '£80,000 or more',
+  };
+
+  const formulator = (question: any) => {
+    if (retrieveSectionName(question) === 'savings') {
+      return savingsValues[normalizeString(question['answer'])];
+    }
+
+    if (retrieveSectionName(question) === 'income') {
+      return incomeValues[normalizeString(question['answer'])];
+    }
+  };
   return (
-    <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-      <h4 className="lbh-heading-h4">Income & savings</h4>
-      <p className="lbh-body-m"></p>
-    </div>
+    <>
+      <div
+        style={{
+          borderBottom: '1px solid',
+          color: '#b1b4b6',
+        }}
+      >
+        <h4 className="lbh-heading-h4">Income & savings</h4>
+        <p className="lbh-body-m">{`My total yearly household income is ${formulator(
+          data[0]
+        )}`}</p>
+      </div>
+      <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
+        <p className="lbh-body-m">{`In total, my household has combined savings and capital of ${formulator(
+          data[1]
+        )}`}</p>
+      </div>
+    </>
   );
 }
 
@@ -210,6 +316,56 @@ export function Employment(data) {
   );
 }
 
+export function AddressHistory(data) {
+  // Address is weirdly constructed
+  const getSpecificDates = (date: Date) => {
+    const dateObj = new Date(date);
+    return {
+      month: dateObj.toLocaleString('default', { month: 'long' }),
+      year: dateObj.toLocaleString('default', { year: 'numeric' }),
+    };
+  };
+
+  return (
+    <>
+      <h4 className="lbh-heading-h4">Address history</h4>
+      {JSON.parse(data[0]['answer']).map((address, index) => {
+        return (
+          <>
+            <div
+              key={index}
+              style={{ borderBottom: '1px solid', color: '#b1b4b6' }}
+            >
+              <p className="lbh-body-m">
+                {index === 0 ? 'Current Address' : 'Previous Address'}
+              </p>
+              <p className="lbh-body-m">
+                {address['address']['line1']}, {address['address']['town']},{' '}
+                {address['postcode']}
+              </p>
+              <p className="lbh-body-m">
+                From {getSpecificDates(address['date'])['month']}{' '}
+                {getSpecificDates(address['date'])['year']}{' '}
+                {index !== 0
+                  ? `to ${
+                      getSpecificDates(
+                        JSON.parse(data[0]['answer'])[index - 1]['date']
+                      )['month']
+                    } ${' '} ${
+                      getSpecificDates(
+                        JSON.parse(data[0]['answer'])[index - 1]['date']
+                      )['year']
+                    }`
+                  : ``}
+              </p>
+            </div>
+          </>
+        );
+      })}
+    </>
+  );
+}
+
 export function Health(data) {
   const formulator = (question: any) => {
     if (retrieveSectionName(question) === 'medical-needs') {
@@ -231,12 +387,6 @@ export function Health(data) {
 }
 
 export function DisplayInfo({ question }: any): JSX.Element {
-  const formatHeader = (header: any) => {
-    header = header.replace(/-|\s+/g, ' ').toUpperCase();
-    header = header.substring(0, header.lastIndexOf('/'));
-    return header;
-  };
-
   const answerBuilder = (question: any) => {
     switch (
       question[0]['id'].substring(0, question[0]['id'].lastIndexOf('/'))
@@ -247,7 +397,7 @@ export function DisplayInfo({ question }: any): JSX.Element {
         return ResidentialStatus(question);
       case 'current-accommodation':
         return CurrentAccommodation(question);
-      case '':
+      case 'my-situation':
         return MySituation(question);
       case 'income-savings':
         return IncomeSavings(question);
@@ -255,6 +405,8 @@ export function DisplayInfo({ question }: any): JSX.Element {
         return Employment(question);
       case 'medical-needs':
         return Health(question);
+      case 'address-history':
+        return AddressHistory(question);
     }
   };
 
@@ -298,14 +450,34 @@ const UserSummary = (): JSX.Element => {
         currentValue.id.lastIndexOf('/')
       );
 
+      const newCurrentValue = Object.assign({}, currentValue);
+
+      const mySituationSectionNames = [
+        'arrears',
+        'homelessness',
+        'property-ownership',
+        'sold-property',
+        'breach-of-tenancy',
+        'legal-restrictions',
+        'unspent-convictions',
+      ];
+
+      if (mySituationSectionNames.includes(groupSection)) {
+        groupSection = 'my-situation';
+        var selectBeforeFirstSlash = /^[^/]+/;
+
+        newCurrentValue.id = newCurrentValue.id.replace(
+          selectBeforeFirstSlash,
+          'my-situation'
+        );
+      }
+
       result[groupSection] = result[groupSection] || [];
-      result[groupSection].push(currentValue);
+      result[groupSection].push(newCurrentValue);
       return result;
     },
     {}
   );
-
-  // console.log('what is groupedAnswers', groupedSectionAnswers);
 
   return (
     <Layout breadcrumbs={breadcrumbs}>

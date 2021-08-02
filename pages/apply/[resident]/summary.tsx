@@ -64,7 +64,7 @@ export function ImmigrationStatus(data) {
 
   return (
     <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-      <h4 className="lbh-heading-h4">Immigration status</h4>
+      <h3 className="lbh-heading-h3">Immigration status</h3>
       <p className="lbh-body-m">
         I am <strong>{formulator(data[0])}</strong> citizen{' '}
         <strong>{data[1] ? formulator(data[1]) : ''}</strong>{' '}
@@ -77,7 +77,7 @@ export function ImmigrationStatus(data) {
 export function ResidentialStatus(data) {
   return (
     <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-      <h4 className="lbh-heading-h4">Residential Status</h4>
+      <h3 className="lbh-heading-h3">Residential Status</h3>
       <p className="lbh-body-m"></p>
     </div>
   );
@@ -147,7 +147,7 @@ export function CurrentAccommodation(data) {
   return (
     <>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <h4 className="lbh-heading-h4">Current Accommodation</h4>
+        <h3 className="lbh-heading-h3">Current Accommodation</h3>
         <p className="lbh-body-m">
           I am living <strong>{formulator(data[0])}</strong>
         </p>
@@ -202,7 +202,7 @@ export function MySituation(data) {
   return (
     <>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <h4 className="lbh-heading-h4">My Situation</h4>
+        <h3 className="lbh-heading-h3">My Situation</h3>
         <p className="lbh-body-m">
           <strong>
             {normalizeString(data[0]['answer']) === 'yes'
@@ -325,7 +325,7 @@ export function IncomeSavings(data) {
           color: '#b1b4b6',
         }}
       >
-        <h4 className="lbh-heading-h4">Income & savings</h4>
+        <h3 className="lbh-heading-h3">Income & savings</h3>
         <p className="lbh-body-m">
           My total yearly household income is{' '}
           <strong>{formulator(data[0])}</strong>
@@ -361,7 +361,7 @@ export function Employment(data) {
 
   return (
     <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-      <h4 className="lbh-heading-h4">Employment</h4>
+      <h3 className="lbh-heading-h3">Employment</h3>
       <p className="lbh-body-m">
         I am <strong>{formulator(data[0])}</strong>
       </p>
@@ -381,7 +381,7 @@ export function AddressHistory(data) {
 
   return (
     <>
-      <h4 className="lbh-heading-h4">Address history</h4>
+      <h3 className="lbh-heading-h3">Address history</h3>
       {JSON.parse(data[0]['answer']).map((address, index) => {
         return (
           <>
@@ -441,7 +441,7 @@ export function Health(data) {
 
   return (
     <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-      <h4 className="lbh-heading-h4">Health</h4>
+      <h3 className="lbh-heading-h3">Health</h3>
       <p className="lbh-body-m">
         <strong>{`${formulator(data[0])}`}</strong> have{' '}
         {normalizeString(data[0]['answer']) === 'yes'

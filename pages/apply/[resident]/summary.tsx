@@ -65,9 +65,11 @@ export function ImmigrationStatus(data) {
   return (
     <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
       <h4 className="lbh-heading-h4">Immigration status</h4>
-      <p className="lbh-body-m">{`I am ${formulator(data[0])} citizen ${
-        data[1] ? formulator(data[1]) : ''
-      } ${data[2] ? formulator(data[2]) : ''}`}</p>
+      <p className="lbh-body-m">
+        I am <strong>{formulator(data[0])}</strong> citizen{' '}
+        <strong>{data[1] ? formulator(data[1]) : ''}</strong>{' '}
+        <strong>{data[2] ? formulator(data[2]) : ''}</strong>
+      </p>
     </div>
   );
 }

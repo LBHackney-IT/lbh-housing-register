@@ -146,35 +146,51 @@ export function CurrentAccommodation(data) {
     <>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
         <h4 className="lbh-heading-h4">Current Accommodation</h4>
-        <p className="lbh-body-m">{`I am living ${formulator(data[0])}`}</p>
+        <p className="lbh-body-m">
+          I am living <strong>{formulator(data[0])}</strong>
+        </p>
       </div>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">{`I live in a ${formulator(data[1])}`}</p>
+        <p className="lbh-body-m">
+          I live in a <strong>{formulator(data[1])}</strong>
+        </p>
       </div>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">{`My home is on floor ${formulator(
-          data[2]
-        )}`}</p>
+        <p className="lbh-body-m">
+          My home is on floor <strong>{formulator(data[2])}</strong>
+        </p>
       </div>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">{`I share my home with ${formulator(
-          data[3]
-        )} people not included in this application`}</p>
+        <p className="lbh-body-m">
+          I share my home with <strong>{formulator(data[3])}</strong> people not
+          included in this application
+        </p>
       </div>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">{`My home has ${data[4]['answer']} bedroom(s)`}</p>
+        <p className="lbh-body-m">
+          My home has <strong>{data[4]['answer']}</strong> bedroom(s)
+        </p>
       </div>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">{`My home has ${data[5]['answer']} bathrooms`}</p>
+        <p className="lbh-body-m">
+          My home has <strong>{data[5]['answer']}</strong> bathrooms
+        </p>
       </div>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">{`My home has ${data[6]['answer']} kitchen`}</p>
+        <p className="lbh-body-m">
+          My home has <strong>{data[6]['answer']}</strong> kitchen
+        </p>
       </div>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">{`My home has ${data[7]['answer']} other rooms`}</p>
+        <p className="lbh-body-m">
+          My home has <strong>{data[7]['answer']}</strong> other rooms
+        </p>
       </div>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">{`I have ${data[8]['answer']} rooms for my own personal use`}</p>
+        <p className="lbh-body-m">
+          I have <strong>{data[8]['answer']}</strong> rooms for my own personal
+          use
+        </p>
       </div>
     </>
   );
@@ -185,52 +201,83 @@ export function MySituation(data) {
     <>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
         <h4 className="lbh-heading-h4">My Situation</h4>
-        <p className="lbh-body-m">{`${
-          data[0]['answer'] === 'yes' ? 'I have been' : 'I have not'
-        } been found intentionally homelessness by any local housing authority(in accordance with the housing act 1996 section 184) within the last 2 years`}</p>
+        <p className="lbh-body-m">
+          <strong>
+            {normalizeString(data[0]['answer']) === 'yes'
+              ? 'I have been'
+              : 'I have not'}
+          </strong>{' '}
+          been found intentionally homelessness by any local housing
+          authority(in accordance with the housing act 1996 section 184) within
+          the last 2 years
+        </p>
       </div>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">{`${
-          data[1]['answer'] === 'yes' ? 'I do' : 'I do not'
-        } own any property`}</p>
+        <p className="lbh-body-m">
+          <strong>
+            {normalizeString(data[1]['answer']) === 'yes' ? 'I do' : 'I do not'}
+          </strong>{' '}
+          own any property
+        </p>
       </div>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">{`${
-          data[2]['answer'] === 'yes' ? 'I have' : 'I have not'
-        } sold any property within the last 5 years`}</p>
+        <p className="lbh-body-m">
+          <strong>
+            {normalizeString(data[2]['answer']) === 'yes'
+              ? 'I have'
+              : 'I have not'}
+          </strong>{' '}
+          sold any property within the last 5 years
+        </p>
       </div>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">{`${
-          data[3]['answer'] === 'yes' ? 'I am' : 'I am not'
-        } in four or more weeks arrears with rent, council tax or service charges`}</p>
+        <p className="lbh-body-m">
+          <strong>
+            {normalizeString(data[3]['answer']) === 'yes' ? 'I am' : 'I am not'}
+          </strong>{' '}
+          in four or more weeks arrears with rent, council tax or service
+          charges
+        </p>
       </div>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">{`${
-          data[4]['answer'] === 'yes'
-            ? 'I am, and my partner is'
-            : 'I am not, and my partner is not'
-        } on another local authority's housing register`}</p>
+        <p className="lbh-body-m">
+          <strong>
+            {normalizeString(data[4]['answer']) === 'yes'
+              ? 'I am, and my partner is'
+              : 'I am not, and my partner is not'}
+          </strong>{' '}
+          on another local authority's housing register
+        </p>
       </div>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">{`${
-          data[5]['answer'] == 'yes'
-            ? 'Someone in my household has'
-            : 'Nobody in my household has'
-        } previously received a warning for a breach of tenancy`}</p>
+        <p className="lbh-body-m">
+          <strong>
+            {normalizeString(data[5]['answer']) == 'yes'
+              ? 'Someone in my household has'
+              : 'Nobody in my household has'}
+          </strong>{' '}
+          previously received a warning for a breach of tenancy
+        </p>
       </div>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">{`${
-          data[7]['answer'] === 'yes'
-            ? 'Somebody in my household'
-            : 'Nobody in my household'
-        } has any legal restrictions in where they can live in the borough`}</p>
+        <p className="lbh-body-m">
+          <strong>
+            {normalizeString(data[7]['answer']) === 'yes'
+              ? 'Somebody in my household'
+              : 'Nobody in my household'}
+          </strong>{' '}
+          has any legal restrictions in where they can live in the borough
+        </p>
       </div>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">{`${
-          data[8]['answer'] === 'yes'
-            ? 'Somebody in my household'
-            : 'Nobody in my household'
-        } has any unspent convictions`}</p>
+        <p className="lbh-body-m">
+          <strong>
+            {normalizeString(data[8]['answer']) === 'yes'
+              ? 'Somebody in my household'
+              : 'Nobody in my household'}
+          </strong>{' '}
+          has any unspent convictions
+        </p>
       </div>
     </>
   );
@@ -277,14 +324,16 @@ export function IncomeSavings(data) {
         }}
       >
         <h4 className="lbh-heading-h4">Income & savings</h4>
-        <p className="lbh-body-m">{`My total yearly household income is ${formulator(
-          data[0]
-        )}`}</p>
+        <p className="lbh-body-m">
+          My total yearly household income is{' '}
+          <strong>{formulator(data[0])}</strong>
+        </p>
       </div>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">{`In total, my household has combined savings and capital of ${formulator(
-          data[1]
-        )}`}</p>
+        <p className="lbh-body-m">
+          In total, my household has combined savings and capital of{' '}
+          <strong>{formulator(data[1])}</strong>
+        </p>
       </div>
     </>
   );
@@ -311,7 +360,9 @@ export function Employment(data) {
   return (
     <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
       <h4 className="lbh-heading-h4">Employment</h4>
-      <p className="lbh-body-m">{`I am ${formulator(data[0])}`}</p>
+      <p className="lbh-body-m">
+        I am <strong>{formulator(data[0])}</strong>
+      </p>
     </div>
   );
 }
@@ -334,29 +385,37 @@ export function AddressHistory(data) {
           <>
             <div
               key={index}
-              style={{ borderBottom: '1px solid', color: '#b1b4b6' }}
+              style={{
+                borderBottom: '1px solid',
+                color: '#b1b4b6',
+              }}
             >
               <p className="lbh-body-m">
                 {index === 0 ? 'Current Address' : 'Previous Address'}
               </p>
               <p className="lbh-body-m">
-                {address['address']['line1']}, {address['address']['town']},{' '}
-                {address['postcode']}
+                <strong>
+                  {address['address']['line1']}, {address['address']['town']},{' '}
+                  {address['postcode']}
+                </strong>
               </p>
               <p className="lbh-body-m">
-                From {getSpecificDates(address['date'])['month']}{' '}
-                {getSpecificDates(address['date'])['year']}{' '}
-                {index !== 0
-                  ? `to ${
-                      getSpecificDates(
-                        JSON.parse(data[0]['answer'])[index - 1]['date']
-                      )['month']
-                    } ${' '} ${
-                      getSpecificDates(
-                        JSON.parse(data[0]['answer'])[index - 1]['date']
-                      )['year']
-                    }`
-                  : ``}
+                From{' '}
+                <strong>
+                  {getSpecificDates(address['date'])['month']}{' '}
+                  {getSpecificDates(address['date'])['year']}{' '}
+                  {index !== 0
+                    ? `to ${
+                        getSpecificDates(
+                          JSON.parse(data[0]['answer'])[index - 1]['date']
+                        )['month']
+                      } ${' '} ${
+                        getSpecificDates(
+                          JSON.parse(data[0]['answer'])[index - 1]['date']
+                        )['year']
+                      }`
+                    : ``}
+                </strong>
               </p>
             </div>
           </>
@@ -370,10 +429,10 @@ export function Health(data) {
   const formulator = (question: any) => {
     if (retrieveSectionName(question) === 'medical-needs') {
       if (normalizeString(question['answer']) === 'yes') {
-        return 'I do have a medical needs that affects my housing needs';
+        return 'I do';
       }
       if (normalizeString(question['answer']) === 'no') {
-        return 'I do not have any medical needs';
+        return 'I do not';
       }
     }
   };
@@ -381,7 +440,12 @@ export function Health(data) {
   return (
     <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
       <h4 className="lbh-heading-h4">Health</h4>
-      <p className="lbh-body-m">{formulator(data[0])}</p>
+      <p className="lbh-body-m">
+        <strong>{`${formulator(data[0])}`}</strong> have{' '}
+        {normalizeString(data[0]['answer']) === 'yes'
+          ? 'a medical need that affects my housing needs'
+          : 'any medical needs'}
+      </p>
     </div>
   );
 }

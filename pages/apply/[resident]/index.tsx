@@ -87,7 +87,7 @@ const ApplicationStep = (): JSX.Element => {
                   ) ? (
                     <Tag content="Completed" variant="green" />
                   ) : (
-                    <Tag content="Todo" />
+                    <Tag content="To do" />
                   )}
                 </SummaryListActions>
               </SummaryListRow>

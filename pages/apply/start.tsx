@@ -42,8 +42,12 @@ const ApplicationStartPage = (): JSX.Element => {
     dispatch(
       updateBeforeFirstSave({
         person: {
+          title: values.title,
           firstName: values.firstName,
           surname: values.surname,
+          dateOfBirth: values.dateOfBirth,
+          gender: values.gender,
+          nationalInsuranceNumber: values.nationalInsuranceNumber
         },
         contactInformation: {
           emailAddress: values.emailAddress,

@@ -34,7 +34,15 @@ const normalizeString = (answer: string) => {
   return answer.replace(/[^a-zA-Z0-9 ]/g, '');
 };
 
-export function ImmigrationStatus(data) {
+const getUserData = () => {
+  const router = useRouter();
+  const { resident } = router.query as { resident: string };
+
+  const currentResident = useAppSelector(selectApplicant(resident));
+  return currentResident;
+};
+
+export function ImmigrationStatus(data: any) {
   const formulator = (question: any) => {
     if (question) {
       if (retrieveSectionName(question) === 'citizenship') {
@@ -77,7 +85,14 @@ export function ImmigrationStatus(data) {
             <h3 className="lbh-heading-h3">Immigration status</h3>
           </SummaryListValue>
           <SummaryListActions>
-            <Link href="">Edit</Link>
+            <Link
+              href={{
+                pathname: '/apply/[resident]/immigration-status',
+                query: { resident: getUserData()?.person.id },
+              }}
+            >
+              Edit
+            </Link>
           </SummaryListActions>
         </SummaryListRow>
       </SummaryListNoBorder>
@@ -90,7 +105,7 @@ export function ImmigrationStatus(data) {
   );
 }
 
-export function ResidentialStatus(data) {
+export function ResidentialStatus(data: any) {
   return (
     <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
       <h3 className="lbh-heading-h3">Residential Status</h3>
@@ -99,7 +114,7 @@ export function ResidentialStatus(data) {
   );
 }
 
-export function CurrentAccommodation(data) {
+export function CurrentAccommodation(data: any) {
   const formulator = (question: any) => {
     if (retrieveSectionName(question) === 'living-situation') {
       switch (normalizeString(question['answer'])) {
@@ -169,7 +184,14 @@ export function CurrentAccommodation(data) {
               <h3 className="lbh-heading-h3">Current Accommodation</h3>
             </SummaryListValue>
             <SummaryListActions>
-              <Link href="">Edit</Link>
+              <Link
+                href={{
+                  pathname: '/apply/[resident]/current-accommodation',
+                  query: { resident: getUserData()?.person.id },
+                }}
+              >
+                Edit
+              </Link>
             </SummaryListActions>
           </SummaryListRow>
         </SummaryListNoBorder>
@@ -223,7 +245,7 @@ export function CurrentAccommodation(data) {
   );
 }
 
-export function MySituation(data) {
+export function MySituation(data: any) {
   return (
     <>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
@@ -233,7 +255,14 @@ export function MySituation(data) {
               <h3 className="lbh-heading-h3">My Situation</h3>
             </SummaryListValue>
             <SummaryListActions>
-              <Link href="">Edit</Link>
+              <Link
+                href={{
+                  pathname: '/apply/[resident]/your-situation',
+                  query: { resident: getUserData()?.person.id },
+                }}
+              >
+                Edit
+              </Link>
             </SummaryListActions>
           </SummaryListRow>
         </SummaryListNoBorder>
@@ -319,7 +348,7 @@ export function MySituation(data) {
   );
 }
 
-export function IncomeSavings(data) {
+export function IncomeSavings(data: any) {
   interface Money {
     [key: string]: string;
   }
@@ -365,7 +394,14 @@ export function IncomeSavings(data) {
               <h3 className="lbh-heading-h3">Income & savings</h3>
             </SummaryListValue>
             <SummaryListActions>
-              <Link href="">Edit</Link>
+              <Link
+                href={{
+                  pathname: '/apply/[resident]/income-savings',
+                  query: { resident: getUserData()?.person.id },
+                }}
+              >
+                Edit
+              </Link>
             </SummaryListActions>
           </SummaryListRow>
         </SummaryListNoBorder>
@@ -384,7 +420,7 @@ export function IncomeSavings(data) {
   );
 }
 
-export function Employment(data) {
+export function Employment(data: any) {
   const formulator = (question: any) => {
     if (retrieveSectionName(question) === 'employment') {
       switch (normalizeString(question['answer'])) {
@@ -412,7 +448,7 @@ export function Employment(data) {
   );
 }
 
-export function AddressHistory(data) {
+export function AddressHistory(data: any) {
   // Address is weirdly constructed
   const getSpecificDates = (date: Date) => {
     const dateObj = new Date(date);
@@ -430,7 +466,14 @@ export function AddressHistory(data) {
             <h3 className="lbh-heading-h3">Address history</h3>
           </SummaryListValue>
           <SummaryListActions>
-            <Link href="">Edit</Link>
+            <Link
+              href={{
+                pathname: '/apply/[resident]/address-history',
+                query: { resident: getUserData()?.person.id },
+              }}
+            >
+              Edit
+            </Link>
           </SummaryListActions>
         </SummaryListRow>
       </SummaryListNoBorder>
@@ -499,7 +542,14 @@ export function Health(data) {
             <h3 className="lbh-heading-h3">Health</h3>
           </SummaryListValue>
           <SummaryListActions>
-            <Link href="">Edit</Link>
+            <Link
+              href={{
+                pathname: '/apply/[resident]/medical-needs',
+                query: { resident: getUserData()?.person.id },
+              }}
+            >
+              Edit
+            </Link>
           </SummaryListActions>
         </SummaryListRow>
       </SummaryListNoBorder>
@@ -541,10 +591,7 @@ export function DisplayInfo({ question }: any): JSX.Element {
 }
 
 const UserSummary = (): JSX.Element => {
-  const router = useRouter();
-  const { resident } = router.query as { resident: string };
-
-  const currentResident = useAppSelector(selectApplicant(resident));
+  const currentResident = getUserData();
   if (!currentResident) {
     return <Custom404 />;
   }
@@ -616,13 +663,22 @@ const UserSummary = (): JSX.Element => {
       </h3>
       <br />
       <dl className="govuk-summary-list lbh-summary-list">
-        Personal Details
+        <h3 className="lbh-heading-h3">Personal Details</h3>
         <div className="govuk-summary-list__row">
           <dt className="govuk-summary-list__key">Name</dt>
           <dd className="govuk-summary-list__value">
             {`${currentResident.person.firstName} ${currentResident.person.surname}`}
           </dd>
-          <dd className="govuk-summary-list__actions"></dd>
+          <dd className="govuk-summary-list__actions">
+            <Link
+              href={{
+                pathname: '/apply/[resident]/personal-details',
+                query: { resident: currentResident.person.id },
+              }}
+            >
+              <a>Edit</a>
+            </Link>
+          </dd>
         </div>
         {currentResident.person.dateOfBirth && (
           <div className="govuk-summary-list__row">

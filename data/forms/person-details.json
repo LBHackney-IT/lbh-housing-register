@@ -79,15 +79,6 @@
           ]
         },
         {
-          "name": "self-describe",
-          "conditionalDisplay": [
-            {
-              "field": "gender",
-              "is": "self"
-            }
-          ]
-        },
-        {
           "label": "National Insurance number",
           "hint": "For example, AB 12 34 56 C",
           "name": "nationalInsuranceNumber"

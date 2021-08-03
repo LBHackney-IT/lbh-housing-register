@@ -4,6 +4,32 @@
     {
       "fields": [
         {
+          "as": "radioconditional",
+          "label": "Gender",
+          "name": "gender-value",
+          "options": [
+            {
+              "label": "Male",
+              "value": "M"
+            },
+            {
+              "label": "Female",
+              "value": "F"
+            },
+            {
+              "label": "Prefer to self-describe",
+              "value": "self",
+              "conditionalFieldInput": {
+                "as": "input",
+                "containerId": "conditional-how-contacted-checked-2",
+                "fieldId": "self-describe",
+                "fieldName": "self-describe",
+                "label": "Please enter you self-discription"
+              }
+            }
+          ]
+        },
+        {
           "as": "select",
           "label": "Title",
           "name": "title",

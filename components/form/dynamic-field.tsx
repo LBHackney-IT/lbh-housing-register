@@ -8,6 +8,7 @@ import InsetText from './insettext';
 import Radios, { RadiosProps } from './radios';
 import Select from './select';
 import Textarea from './textarea';
+import RadioConditional, { RadioConditionalProps } from './radioconditional';
 
 interface DynamicFieldProps {
   field: FormField;
@@ -40,6 +41,9 @@ export default function DynamicField({
 
     case 'insettext':
       return <InsetText {...field}></InsetText>;
+
+    case 'radioconditional':
+      return <RadioConditional {...(field as RadioConditionalProps)} />;
 
     case undefined:
       return <Input {...field} />;

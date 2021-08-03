@@ -9,7 +9,7 @@ import { ButtonLink } from '../../../components/button';
 import Custom404 from '../../404';
 import DeleteLink from '../../../components/delete-link';
 import { FormID } from '../../../lib/utils/form-data';
-import SummaryList, {
+import {
   SummaryListActions,
   SummaryListRow,
   SummaryListValue,
@@ -477,7 +477,7 @@ export function AddressHistory(data: any) {
           </SummaryListActions>
         </SummaryListRow>
       </SummaryListNoBorder>
-      {JSON.parse(data[0]['answer']).map((address, index) => {
+      {JSON.parse(data[0]['answer']).map((address: any, index: any) => {
         return (
           <>
             <div
@@ -502,15 +502,13 @@ export function AddressHistory(data: any) {
                   {getSpecificDates(address['date'])['month']}{' '}
                   {getSpecificDates(address['date'])['year']}{' '}
                   {index !== 0
-                    ? `to ${
-                        getSpecificDates(
-                          JSON.parse(data[0]['answer'])[index - 1]['date']
-                        )['month']
-                      } ${' '} ${
-                        getSpecificDates(
-                          JSON.parse(data[0]['answer'])[index - 1]['date']
-                        )['year']
-                      }`
+                    ? `to ${getSpecificDates(
+                      JSON.parse(data[0]['answer'])[index - 1]['date']
+                    )['month']
+                    } ${' '} ${getSpecificDates(
+                      JSON.parse(data[0]['answer'])[index - 1]['date']
+                    )['year']
+                    }`
                     : ``}
                 </strong>
               </p>
@@ -522,7 +520,7 @@ export function AddressHistory(data: any) {
   );
 }
 
-export function Health(data) {
+export function Health(data: any) {
   const formulator = (question: any) => {
     if (retrieveSectionName(question) === 'medical-needs') {
       if (normalizeString(question['answer']) === 'yes') {
@@ -566,7 +564,7 @@ export function Health(data) {
 export function DisplayInfo({ question }: any): JSX.Element {
   const answerBuilder = (question: any) => {
     switch (
-      question[0]['id'].substring(0, question[0]['id'].lastIndexOf('/'))
+    question[0]['id'].substring(0, question[0]['id'].lastIndexOf('/'))
     ) {
       case 'immigration-status':
         return ImmigrationStatus(question);
@@ -582,8 +580,8 @@ export function DisplayInfo({ question }: any): JSX.Element {
         return Employment(question);
       case 'medical-needs':
         return Health(question);
-      case 'address-history':
-        return AddressHistory(question);
+      // case 'address-history':
+      //   return AddressHistory(question);
     }
   };
 

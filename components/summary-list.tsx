@@ -48,3 +48,13 @@ export function SummaryListValue({
 }: SummaryListValueProps): JSX.Element {
   return <dd className="govuk-summary-list__value">{children}</dd>;
 }
+
+export function SummaryListNoBorder({
+  children,
+}: SummaryListProps): JSX.Element {
+  return (
+    <dl className="govuk-summary-list govuk-summary-list--no-border lbh-summary-list">
+      {children}
+    </dl>
+  );
+}

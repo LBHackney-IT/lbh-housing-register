@@ -9,6 +9,13 @@ import { ButtonLink } from '../../../components/button';
 import Custom404 from '../../404';
 import DeleteLink from '../../../components/delete-link';
 import { FormID } from '../../../lib/utils/form-data';
+import SummaryList, {
+  SummaryListActions,
+  SummaryListRow,
+  SummaryListValue,
+  SummaryListNoBorder,
+} from '../../../components/summary-list';
+import Link from 'next/link';
 
 // Date types have been ignored for the most parts and need serious attention!!!
 
@@ -64,7 +71,16 @@ export function ImmigrationStatus(data) {
 
   return (
     <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-      <h3 className="lbh-heading-h3">Immigration status</h3>
+      <SummaryListNoBorder>
+        <SummaryListRow>
+          <SummaryListValue>
+            <h3 className="lbh-heading-h3">Immigration status</h3>
+          </SummaryListValue>
+          <SummaryListActions>
+            <Link href="">Edit</Link>
+          </SummaryListActions>
+        </SummaryListRow>
+      </SummaryListNoBorder>
       <p className="lbh-body-m">
         I am <strong>{formulator(data[0])}</strong> citizen{' '}
         <strong>{data[1] ? formulator(data[1]) : ''}</strong>{' '}
@@ -147,7 +163,16 @@ export function CurrentAccommodation(data) {
   return (
     <>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <h3 className="lbh-heading-h3">Current Accommodation</h3>
+        <SummaryListNoBorder>
+          <SummaryListRow>
+            <SummaryListValue>
+              <h3 className="lbh-heading-h3">Current Accommodation</h3>
+            </SummaryListValue>
+            <SummaryListActions>
+              <Link href="">Edit</Link>
+            </SummaryListActions>
+          </SummaryListRow>
+        </SummaryListNoBorder>
         <p className="lbh-body-m">
           I am living <strong>{formulator(data[0])}</strong>
         </p>
@@ -202,7 +227,16 @@ export function MySituation(data) {
   return (
     <>
       <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <h3 className="lbh-heading-h3">My Situation</h3>
+        <SummaryListNoBorder>
+          <SummaryListRow>
+            <SummaryListValue>
+              <h3 className="lbh-heading-h3">My Situation</h3>
+            </SummaryListValue>
+            <SummaryListActions>
+              <Link href="">Edit</Link>
+            </SummaryListActions>
+          </SummaryListRow>
+        </SummaryListNoBorder>
         <p className="lbh-body-m">
           <strong>
             {normalizeString(data[0]['answer']) === 'yes'
@@ -325,7 +359,16 @@ export function IncomeSavings(data) {
           color: '#b1b4b6',
         }}
       >
-        <h3 className="lbh-heading-h3">Income & savings</h3>
+        <SummaryListNoBorder>
+          <SummaryListRow>
+            <SummaryListValue>
+              <h3 className="lbh-heading-h3">Income & savings</h3>
+            </SummaryListValue>
+            <SummaryListActions>
+              <Link href="">Edit</Link>
+            </SummaryListActions>
+          </SummaryListRow>
+        </SummaryListNoBorder>
         <p className="lbh-body-m">
           My total yearly household income is{' '}
           <strong>{formulator(data[0])}</strong>
@@ -381,7 +424,16 @@ export function AddressHistory(data) {
 
   return (
     <>
-      <h3 className="lbh-heading-h3">Address history</h3>
+      <SummaryListNoBorder>
+        <SummaryListRow>
+          <SummaryListValue>
+            <h3 className="lbh-heading-h3">Address history</h3>
+          </SummaryListValue>
+          <SummaryListActions>
+            <Link href="">Edit</Link>
+          </SummaryListActions>
+        </SummaryListRow>
+      </SummaryListNoBorder>
       {JSON.parse(data[0]['answer']).map((address, index) => {
         return (
           <>
@@ -441,7 +493,16 @@ export function Health(data) {
 
   return (
     <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-      <h3 className="lbh-heading-h3">Health</h3>
+      <SummaryListNoBorder>
+        <SummaryListRow>
+          <SummaryListValue>
+            <h3 className="lbh-heading-h3">Health</h3>
+          </SummaryListValue>
+          <SummaryListActions>
+            <Link href="">Edit</Link>
+          </SummaryListActions>
+        </SummaryListRow>
+      </SummaryListNoBorder>
       <p className="lbh-body-m">
         <strong>{`${formulator(data[0])}`}</strong> have{' '}
         {normalizeString(data[0]['answer']) === 'yes'

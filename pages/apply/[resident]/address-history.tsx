@@ -288,6 +288,7 @@ const ApplicationStep = (): JSX.Element => {
             personID: applicant.person.id,
             formID: FormID.ADDRESS_HISTORY,
             values: { addressHistory },
+            markAsComplete: true
           })
         );
         router.push(`/apply/${resident}`);

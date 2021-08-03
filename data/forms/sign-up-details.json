@@ -53,7 +53,7 @@
         },
         {
           "as": "radios",
-          "label": "Sex",
+          "label": "Gender",
           "name": "gender",
           "options": [
             {

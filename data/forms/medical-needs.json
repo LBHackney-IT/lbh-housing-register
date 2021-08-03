@@ -1,5 +1,5 @@
 {
-  "heading": "Medical Needs",
+  "heading": "Do you have any significant medical needs that affect your housing requirements?",
   "copy": "This will limit the amount of properties you may be suitable for, and can increase wait times. We will discuss your needs and conduct medical checks as part of your application.",
   "steps": [
     {
@@ -21,6 +21,18 @@
           "validation": {
             "required": true
           }
+        },
+        {
+          "name": "proof-of-medical-needs",
+          "as": "insettext",
+          "title": "You will need to complete a seperate medical form",
+          "content": "After you have submitted this application, you will be asked to provide detailed information about your medical needs in a seperate form.",
+          "conditionalDisplay": [
+            {
+              "field": "medical-needs",
+              "is": "yes"
+            }
+          ]
         }
       ]
     }

@@ -39,6 +39,10 @@ const slice = createSlice({
           state?.person?.id &&
           state?.person?.id === action.payload.personID
         ) {
+          if (action.payload.markAsComplete) {
+            action.payload.values["sectionCompleted"] = true;
+          }
+
           return applyQuestions(
             state,
             action.payload.formID,

@@ -596,7 +596,7 @@ const UserSummary = (): JSX.Element => {
     return <Custom404 />;
   }
 
-  const onDelete = () => {};
+  const onDelete = () => { };
 
   const formatDate = (date: string) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' } as const;
@@ -605,7 +605,7 @@ const UserSummary = (): JSX.Element => {
 
   const breadcrumbs = [
     {
-      href: `/apply/overview/${currentResident.person?.id}`,
+      href: `/apply/overview`,
       name: 'Application',
     },
     {
@@ -654,7 +654,7 @@ const UserSummary = (): JSX.Element => {
   );
 
   return (
-    <Layout breadcrumbs={breadcrumbs}>
+    <Layout pageName="Application summary" breadcrumbs={breadcrumbs}>
       <p className="lbh-body-m">Check answers for</p>
       <h3 className="lbh-heading-h3">
         {currentResident.person.firstName +

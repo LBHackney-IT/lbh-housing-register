@@ -34,10 +34,13 @@ const slice = createSlice({
     ) => {
       const applicant: Applicant = {
         person: {
+          title: action.payload.title,
           firstName: action.payload.firstName,
           surname: action.payload.surname,
           dateOfBirth: action.payload.dateOfBirth,
           gender: action.payload.gender,
+          nationalInsuranceNumber: action.payload.nationalInsuranceNumber,
+          relationshipType: action.payload.relationshipType
         },
         contactInformation: {
           phoneNumber: action.payload.phoneNumber,
@@ -76,6 +79,10 @@ const slice = createSlice({
           (p) => p.person?.id && p.person.id === action.payload.personID
         );
         if (applicant > -1) {
+          if (action.payload.markAsComplete) {
+            action.payload.values["sectionCompleted"] = true;
+          }
+
           // Immer
           state[applicant] = applyQuestions(
             state[applicant],

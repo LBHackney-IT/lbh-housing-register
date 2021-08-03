@@ -31,7 +31,7 @@ const ApplicationSignInPage = (): JSX.Element => {
   };
 
   return (
-    <Layout>
+    <Layout pageName="Sign in">
       <HeadingOne content="Sign in to your application" />
       {/* TODO not everything should use Formik. */}
       <Form

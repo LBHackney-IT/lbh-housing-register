@@ -22,6 +22,7 @@ export const updateWithFormValues = createAction<{
   personID: string;
   formID: FormID;
   values: FormikValues;
+  markAsComplete: boolean;
 }>('applicant/updateWithFormValues');
 
 export function applyQuestions(
@@ -66,18 +67,18 @@ export function updateApplicantReducer(
 
 export const selectApplicant =
   (applicantPersonId: string) =>
-  (store: Store): ApplicantWithPersonID | undefined => {
-    if (
-      applicantHasId(store.application.mainApplicant) &&
-      store.application.mainApplicant?.person?.id === applicantPersonId
-    ) {
-      return store.application.mainApplicant;
-    }
-    return store.application.otherMembers?.find(
-      (a): a is ApplicantWithPersonID =>
-        applicantHasId(a) && a.person?.id === applicantPersonId
-    );
-  };
+    (store: Store): ApplicantWithPersonID | undefined => {
+      if (
+        applicantHasId(store.application.mainApplicant) &&
+        store.application.mainApplicant?.person?.id === applicantPersonId
+      ) {
+        return store.application.mainApplicant;
+      }
+      return store.application.otherMembers?.find(
+        (a): a is ApplicantWithPersonID =>
+          applicantHasId(a) && a.person?.id === applicantPersonId
+      );
+    };
 
 export const findQuesiton =
   (formID: FormID, questionName: string) => (question: Question) =>
@@ -87,7 +88,7 @@ export function getQuestionValue(
   questions: Question[] | undefined,
   formID: FormID,
   questionName: string,
-  def = undefined
+  def: any = undefined
 ) {
   const a = questions?.find(findQuesiton(formID, questionName))?.answer;
   return a ? JSON.parse(a) : def;

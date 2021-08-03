@@ -2,6 +2,8 @@ body {
   margin: 0;
 }
 
-.lbh-header__service-name {
-  margin-left: 1em;
+@media (min-width: 1020px) {
+  .lbh-header__service-name {
+    margin-left: 1em;
+  }
 }

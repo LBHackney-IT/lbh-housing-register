@@ -74,6 +74,14 @@ export default function YourSituation() {
     ) ?? { nextFormId: 'exit' };
 
     if (nextFormId === 'exit') {
+      dispatch(
+        updateWithFormValues({
+          formID: FormID.YOUR_SITUATION,
+          personID: applicant.person.id,
+          values,
+          markAsComplete: true
+        })
+      );
       router.push(baseHref);
       return;
     }
@@ -87,12 +95,13 @@ export default function YourSituation() {
         formID: activeStepID,
         personID: applicant.person.id,
         values,
+        markAsComplete: true
       })
     );
   };
 
   return (
-    <Layout breadcrumbs={breadcrumbs}>
+    <Layout pageName="Your situation" breadcrumbs={breadcrumbs}>
       <Hint content={applicant.person?.firstName ?? ''} />
       {formData.heading && <HeadingTwo content={formData.heading} />}
       {formData.copy && <Paragraph>{formData.copy}</Paragraph>}

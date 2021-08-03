@@ -45,9 +45,15 @@ const ApplicationPersonsOverview = (): JSX.Element => {
     },
   ];
 
+  const submitApplication = async () => {
+    // TODO: perform update on application
+
+    router.push('/apply/confirmation');
+  };
+
   return (
-    <Layout breadcrumbs={breadcrumbs}>
-      <HeadingOne content="My household" />
+    <Layout pageName="Application overview" breadcrumbs={breadcrumbs}>
+      <HeadingOne content="Application tasks" />
 
       <SummaryList>
         {applicants.map((applicant, index) => {
@@ -64,8 +70,8 @@ const ApplicationPersonsOverview = (): JSX.Element => {
                     content={
                       `Person ${index + 1}` +
                       (applicants.length > 1 && applicant === mainApplicant
-                        ? ' (you)'
-                        : '')
+                        ? ': Me'
+                        : `: My ${applicant.person?.relationshipType}`)
                     }
                   />
                   <Link href={`/apply/${applicant.person?.id}`}>
@@ -80,9 +86,8 @@ const ApplicationPersonsOverview = (): JSX.Element => {
                   <Tag content="Completed" variant="green" />
                 ) : (
                   <Tag
-                    content={`${tasksRemaining} task${
-                      tasksRemaining > 1 ? 's' : ''
-                    } to do`}
+                    content={`${tasksRemaining} task${tasksRemaining > 1 ? 's' : ''
+                      } to do`}
                   />
                 )}
               </Actions>
@@ -91,21 +96,21 @@ const ApplicationPersonsOverview = (): JSX.Element => {
         })}
       </SummaryList>
 
-      <ButtonLink href="/apply/add-resident" secondary={true}>
-        Add a person
+      <ButtonLink href="/apply/household" secondary={true}>
+        Edit my household
       </ButtonLink>
 
       {applicants.every(
         (applicant) =>
           applicationStepsRemaining(applicant, applicant === mainApplicant) == 0
       ) && (
-        <>
-          <Paragraph>
-            The button below only shows when all tasks are complete.
-          </Paragraph>
-          <Button>Submit application</Button>
-        </>
-      )}
+          <>
+            <Paragraph>
+              Please make sure you have checked your answers for each applicant.
+            </Paragraph>
+            <Button onClick={submitApplication}>Submit application</Button>
+          </>
+        )}
     </Layout>
   );
 };

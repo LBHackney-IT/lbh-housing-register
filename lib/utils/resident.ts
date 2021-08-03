@@ -48,11 +48,7 @@ export const getApplicationSectionsForResident = (
           {
             heading: 'Immigration status',
             id: FormID.IMMIGRATION_STATUS,
-          },
-          {
-            heading: 'Employment',
-            id: FormID.EMPLOYMENT,
-          },
+          }
         ],
       },
       {
@@ -83,6 +79,10 @@ export const getApplicationSectionsForResident = (
             heading: 'Income and savings',
             id: FormID.INCOME_SAVINGS,
           },
+          {
+            heading: 'Employment',
+            id: FormID.EMPLOYMENT,
+          },
         ],
       },
       {
@@ -103,11 +103,16 @@ export const getApplicationSectionsForResident = (
           {
             heading: 'Personal details',
             id: FormID.PERSONAL_DETAILS,
-          },
+          }
+        ],
+      },
+      {
+        heading: 'Money',
+        sections: [
           {
-            heading: 'Immigration status',
-            id: FormID.IMMIGRATION_STATUS,
-          },
+            heading: 'Income and savings',
+            id: FormID.INCOME_SAVINGS,
+          }
         ],
       },
       {

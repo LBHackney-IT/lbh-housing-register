@@ -1,4 +1,5 @@
 import { FormikValues } from 'formik';
+
 import { Applicant } from '../../domain/HousingApi';
 import {
   applicantHasId,
@@ -52,6 +53,7 @@ export default function ApplicationForms({
           formID: activeStepId,
           personID: applicant.person.id,
           values,
+          markAsComplete: true
         })
       );
     }

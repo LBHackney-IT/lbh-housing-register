@@ -42,8 +42,12 @@ const ApplicationStartPage = (): JSX.Element => {
     dispatch(
       updateBeforeFirstSave({
         person: {
+          title: values.title,
           firstName: values.firstName,
           surname: values.surname,
+          dateOfBirth: values.dateOfBirth,
+          gender: values.gender,
+          nationalInsuranceNumber: values.nationalInsuranceNumber
         },
         contactInformation: {
           emailAddress: values.emailAddress,
@@ -58,7 +62,7 @@ const ApplicationStartPage = (): JSX.Element => {
   };
 
   return (
-    <Layout>
+    <Layout pageName="Start your application">
       <HeadingOne content="Start your application" />
       <Form
         formData={getFormData(FormID.SIGN_UP_DETAILS)}

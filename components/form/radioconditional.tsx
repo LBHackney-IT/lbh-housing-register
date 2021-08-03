@@ -17,7 +17,6 @@ export function ConditionalInput({
   fieldId,
   fieldName,
   label,
-  value,
   display,
 }: ConditionalFormFieldOptionInput) {
   return (
@@ -27,7 +26,7 @@ export function ConditionalInput({
     >
       <Label
         className="govuk-radios__label"
-        content={label || value}
+        content={label}
         htmlFor={fieldId}
       />
       <Field
@@ -35,7 +34,6 @@ export function ConditionalInput({
         type={as}
         id={fieldId}
         name={fieldName}
-        value={value}
         data-aria-controls={containerId}
       />
     </div>
@@ -135,7 +133,6 @@ export default function RadioConditional({
                     fieldId={radio.conditionalFieldInput.fieldId}
                     fieldName={radio.conditionalFieldInput.fieldName}
                     label={radio.conditionalFieldInput.label}
-                    value=""
                     display={meta.value == radio.value}
                   />
                 )}

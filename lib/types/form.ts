@@ -96,7 +96,6 @@ export type ConditionalFormFieldOptionInput = {
   fieldId?: string;
   fieldName?: string;
   label?: string;
-  value: string;
   display: boolean;
 };
 

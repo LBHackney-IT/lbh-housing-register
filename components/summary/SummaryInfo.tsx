@@ -1,38 +1,21 @@
 import Link from "next/link";
 import React, { ReactNode } from "react";
-import { ApplicantWithPersonID } from "../../lib/store/applicant";
 import { HeadingThree } from "../content/headings";
-import { AddressHistorySummary } from "./AddressHistory";
-import { CurrentAccommodationSummary } from "./CurrentAccommodation";
-import { EmploymentSummary } from "./Employment";
-import { ImmigrationStatusSummary } from "./ImmigrationStatus";
-import { IncomeSavingsSummary } from "./IncomeSavings";
-import { MedicalNeedsSummary } from "./MedicalNeeds";
-import { ResidentialStatusSummary } from "./ResidentialStatus";
-import { YourSituationSummary } from "./YourSituation";
 
-interface SummaryInfoProps {
-  currentResident: ApplicantWithPersonID;
+interface SummarySectionProps {
+  children: ReactNode
 }
 
-export function SummaryInfo({ currentResident }: SummaryInfoProps): JSX.Element {
-
+export function SummarySection({
+  children,
+}: SummarySectionProps): JSX.Element {
   return (
-    <>
-      <ImmigrationStatusSummary currentResident={currentResident} />
-      <ResidentialStatusSummary currentResident={currentResident} />
-
-      <AddressHistorySummary currentResident={currentResident} />
-      <CurrentAccommodationSummary currentResident={currentResident} />
-      <YourSituationSummary currentResident={currentResident} />
-
-      <IncomeSavingsSummary currentResident={currentResident} />
-      <EmploymentSummary currentResident={currentResident} />
-
-      <MedicalNeedsSummary currentResident={currentResident} />
-    </>
-  )
+    <div className="lbh-summary-section">
+      {children}
+    </div>
+  );
 }
+
 
 interface SummaryTitleProps {
   href: string,

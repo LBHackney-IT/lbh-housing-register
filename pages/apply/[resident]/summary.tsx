@@ -5,8 +5,16 @@ import { useRouter } from 'next/router';
 import Custom404 from '../../404';
 import { ButtonLink } from '../../../components/button';
 import DeleteLink from '../../../components/delete-link';
-import { SummaryInfo } from '../../../components/summary/SummaryInfo';
 import PersonalDetailsSummary from '../../../components/summary/PersonalDetails';
+import React from 'react';
+import { AddressHistorySummary } from '../../../components/summary/AddressHistory';
+import { CurrentAccommodationSummary } from '../../../components/summary/CurrentAccommodation';
+import { EmploymentSummary } from '../../../components/summary/Employment';
+import { ImmigrationStatusSummary } from '../../../components/summary/ImmigrationStatus';
+import { IncomeSavingsSummary } from '../../../components/summary/IncomeSavings';
+import { MedicalNeedsSummary } from '../../../components/summary/MedicalNeeds';
+import { ResidentialStatusSummary } from '../../../components/summary/ResidentialStatus';
+import { YourSituationSummary } from '../../../components/summary/YourSituation';
 
 const UserSummary = (): JSX.Element => {
   const router = useRouter();
@@ -44,7 +52,14 @@ const UserSummary = (): JSX.Element => {
       </h1>
 
       <PersonalDetailsSummary currentResident={currentResident} />
-      <SummaryInfo currentResident={currentResident} />
+      <ImmigrationStatusSummary currentResident={currentResident} />
+      <ResidentialStatusSummary currentResident={currentResident} />
+      <AddressHistorySummary currentResident={currentResident} />
+      <CurrentAccommodationSummary currentResident={currentResident} />
+      <YourSituationSummary currentResident={currentResident} />
+      <IncomeSavingsSummary currentResident={currentResident} />
+      <EmploymentSummary currentResident={currentResident} />
+      <MedicalNeedsSummary currentResident={currentResident} />
 
       <ButtonLink href="/apply/overview">I confirm this is correct</ButtonLink>
       <DeleteLink content="Delete this information" onDelete={onDelete} />

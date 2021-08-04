@@ -4,7 +4,7 @@ import { AddressHistoryEntry, calculateDurations } from "../../lib/utils/address
 import { FormID } from "../../lib/utils/form-data";
 import Paragraph from "../content/paragraph";
 import Hint from "../form/hint";
-import { SummaryAnswer, SummaryTitle } from "./SummaryInfo";
+import { SummaryAnswer, SummarySection, SummaryTitle } from "./SummaryInfo";
 
 interface AddressHistorySummaryProps {
   currentResident: ApplicantWithPersonID;
@@ -16,7 +16,7 @@ export function AddressHistorySummary({ currentResident }: AddressHistorySummary
   const durations = calculateDurations(addressHistory);
 
   return (
-    <>
+    <SummarySection>
       <SummaryTitle
         content="Address history"
         href={`/apply/${currentResident.person.id}/${FormID.ADDRESS_HISTORY}`} />
@@ -40,6 +40,6 @@ export function AddressHistorySummary({ currentResident }: AddressHistorySummary
             );
           }
         )}
-    </>
+    </SummarySection>
   );
 }

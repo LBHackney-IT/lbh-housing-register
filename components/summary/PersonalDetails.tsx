@@ -2,7 +2,7 @@ import React from 'react';
 import { ApplicantWithPersonID, getQuestionValue } from "../../lib/store/applicant";
 import { formatDate } from '../../lib/utils/addressHistory';
 import { FormID } from '../../lib/utils/form-data';
-import { SummaryTitle } from './SummaryInfo';
+import { SummarySection, SummaryTitle } from './SummaryInfo';
 
 interface PersonalDetailsSummaryProps {
   currentResident: ApplicantWithPersonID;
@@ -13,7 +13,7 @@ export default function PersonalDetailsSummary({
 }: PersonalDetailsSummaryProps): JSX.Element {
 
   return (
-    <>
+    <SummarySection>
       <SummaryTitle
         content="Personal Details"
         href={`/apply/${currentResident.person.id}/${FormID.PERSONAL_DETAILS}`} />
@@ -54,7 +54,7 @@ export default function PersonalDetailsSummary({
           <dd className="govuk-summary-list__actions"></dd>
         </div>
       </dl>
-    </>
+    </SummarySection>
   )
 }
 

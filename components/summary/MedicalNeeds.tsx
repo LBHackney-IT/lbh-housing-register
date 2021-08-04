@@ -2,7 +2,7 @@ import React from "react";
 import { ApplicantWithPersonID, getQuestionValue } from "../../lib/store/applicant";
 import { FormID } from "../../lib/utils/form-data";
 import Paragraph from "../content/paragraph";
-import { SummaryAnswer, SummaryTitle } from "./SummaryInfo";
+import { SummaryAnswer, SummarySection, SummaryTitle } from "./SummaryInfo";
 
 interface MedicalNeedsSummaryProps {
   currentResident: ApplicantWithPersonID;
@@ -13,7 +13,7 @@ export function MedicalNeedsSummary({ currentResident }: MedicalNeedsSummaryProp
   const medicalNeeds = getQuestionValue(currentResident.questions, FormID.MEDICAL_NEEDS, 'medical-needs');
 
   return (
-    <>
+    <SummarySection>
       <SummaryTitle
         content="Medical Needs"
         href={`/apply/${currentResident.person.id}/${FormID.MEDICAL_NEEDS}`} />
@@ -24,6 +24,6 @@ export function MedicalNeedsSummary({ currentResident }: MedicalNeedsSummaryProp
           : <Paragraph><strong>I do not</strong> have any medical needs</Paragraph>
         }
       </SummaryAnswer>
-    </>
+    </SummarySection>
   );
 }

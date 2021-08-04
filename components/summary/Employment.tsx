@@ -2,7 +2,7 @@ import React from "react";
 import { ApplicantWithPersonID, getQuestionValue } from "../../lib/store/applicant";
 import { FormID } from "../../lib/utils/form-data";
 import Paragraph from "../content/paragraph";
-import { SummaryAnswer, SummaryTitle } from "./SummaryInfo";
+import { SummaryAnswer, SummarySection, SummaryTitle } from "./SummaryInfo";
 
 interface EmploymentSummaryProps {
   currentResident: ApplicantWithPersonID;
@@ -27,7 +27,7 @@ export function EmploymentSummary({ currentResident }: EmploymentSummaryProps) {
   }
 
   return (
-    <>
+    <SummarySection>
       <SummaryTitle
         content="Employment"
         href={`/apply/${currentResident.person.id}/${FormID.EMPLOYMENT}`} />
@@ -35,6 +35,6 @@ export function EmploymentSummary({ currentResident }: EmploymentSummaryProps) {
       <SummaryAnswer>
         <Paragraph>I am <strong>{getEmploymentType()}</strong></Paragraph>
       </SummaryAnswer>
-    </>
+    </SummarySection>
   );
 }

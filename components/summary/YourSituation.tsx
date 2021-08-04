@@ -2,7 +2,7 @@ import React from "react";
 import { ApplicantWithPersonID, getQuestionValue } from "../../lib/store/applicant";
 import { FormID } from "../../lib/utils/form-data";
 import Paragraph from "../content/paragraph";
-import { SummaryAnswer, SummaryTitle } from "./SummaryInfo";
+import { SummaryAnswer, SummarySection, SummaryTitle } from "./SummaryInfo";
 
 interface YourSituationSummaryProps {
   currentResident: ApplicantWithPersonID;
@@ -10,6 +10,7 @@ interface YourSituationSummaryProps {
 
 export function YourSituationSummary({ currentResident }: YourSituationSummaryProps) {
 
+  // TODO: this could be nicer, but we've got a mixture of questions and forms to get answers for
   const homelessness = getQuestionValue(currentResident.questions, FormID.HOMELESSESS, 'homelessness');
   const propertyOwnership = getQuestionValue(currentResident.questions, FormID.PROPERTY_OWNERSHIP, 'property-ownership');
   const soldProperty = getQuestionValue(currentResident.questions, FormID.SOLD_PROPERTY, 'sold-property');
@@ -21,7 +22,7 @@ export function YourSituationSummary({ currentResident }: YourSituationSummaryPr
   const unspentConvictions = getQuestionValue(currentResident.questions, FormID.UNSPENT_CONVICTIONS, 'unspent-convictions');
 
   return (
-    <>
+    <SummarySection>
       <SummaryTitle
         content="Your situation"
         href={`/apply/${currentResident.person.id}/${FormID.YOUR_SITUATION}`} />
@@ -113,6 +114,6 @@ export function YourSituationSummary({ currentResident }: YourSituationSummaryPr
           </Paragraph>
         </SummaryAnswer>
       }
-    </>
+    </SummarySection>
   );
 }

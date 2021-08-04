@@ -2,7 +2,7 @@ import React from "react";
 import { ApplicantWithPersonID, getQuestionValue } from "../../lib/store/applicant";
 import { FormID } from "../../lib/utils/form-data";
 import Paragraph from "../content/paragraph";
-import { SummaryAnswer, SummaryTitle } from "./SummaryInfo";
+import { SummaryAnswer, SummarySection, SummaryTitle } from "./SummaryInfo";
 
 interface ImmigrationStatusSummaryProps {
   currentResident: ApplicantWithPersonID;
@@ -33,7 +33,7 @@ export function ImmigrationStatusSummary({ currentResident }: ImmigrationStatusS
 
   return (
 
-    <>
+    <SummarySection>
       <SummaryTitle
         content="Immigration Status"
         href={`/apply/${currentResident.person.id}/${FormID.IMMIGRATION_STATUS}`} />
@@ -43,6 +43,6 @@ export function ImmigrationStatusSummary({ currentResident }: ImmigrationStatusS
           I am <strong>{getCitizenship()}</strong> citizen {getUkStudying()} {getSettledStatus()}
         </Paragraph>
       </SummaryAnswer>
-    </>
+    </SummarySection>
   );
 }

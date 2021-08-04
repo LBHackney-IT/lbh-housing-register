@@ -2,7 +2,7 @@ import React from "react";
 import { ApplicantWithPersonID, getQuestionValue } from "../../lib/store/applicant";
 import { FormID } from "../../lib/utils/form-data";
 import Paragraph from "../content/paragraph";
-import { SummaryAnswer, SummaryTitle } from "./SummaryInfo";
+import { SummaryAnswer, SummarySection, SummaryTitle } from "./SummaryInfo";
 
 interface IncomeSavingsSummaryProps {
   currentResident: ApplicantWithPersonID;
@@ -44,7 +44,7 @@ export function IncomeSavingsSummary({ currentResident }: IncomeSavingsSummaryPr
   }
 
   return (
-    <>
+    <SummarySection>
       <SummaryTitle
         content="Income & savings"
         href={`/apply/${currentResident.person.id}/${FormID.INCOME_SAVINGS}`} />
@@ -55,6 +55,6 @@ export function IncomeSavingsSummary({ currentResident }: IncomeSavingsSummaryPr
       <SummaryAnswer>
         <Paragraph>In total, my household has combined savings and capital of <strong>{getSavings()}</strong></Paragraph>
       </SummaryAnswer>
-    </>
+    </SummarySection>
   );
 }

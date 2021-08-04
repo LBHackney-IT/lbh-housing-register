@@ -2,7 +2,7 @@ import React from "react";
 import { ApplicantWithPersonID, getQuestionValue } from "../../lib/store/applicant";
 import { FormID } from "../../lib/utils/form-data";
 import Paragraph from "../content/paragraph";
-import { SummaryAnswer, SummaryTitle } from "./SummaryInfo";
+import { SummaryAnswer, SummarySection, SummaryTitle } from "./SummaryInfo";
 
 interface CurrentAccommodationSummaryProps {
   currentResident: ApplicantWithPersonID;
@@ -70,7 +70,7 @@ export function CurrentAccommodationSummary({ currentResident }: CurrentAccommod
   }
 
   return (
-    <>
+    <SummarySection>
       <SummaryTitle
         content="Current accommodation"
         href={`/apply/${currentResident.person.id}/${FormID.CURRENT_ACCOMMODATION}`} />
@@ -123,6 +123,6 @@ export function CurrentAccommodationSummary({ currentResident }: CurrentAccommod
           personal use
         </Paragraph>
       </SummaryAnswer>
-    </>
+    </SummarySection>
   );
 }

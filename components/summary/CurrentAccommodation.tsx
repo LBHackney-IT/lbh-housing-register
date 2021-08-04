@@ -13,12 +13,12 @@ export function CurrentAccommodationSummary({ currentResident }: CurrentAccommod
   const livingSituation = getQuestionValue(currentResident.questions, FormID.CURRENT_ACCOMMODATION, 'living-situation');
   const homeSituation = getQuestionValue(currentResident.questions, FormID.CURRENT_ACCOMMODATION, 'home');
 
-  const lookupAnswer = (question: string) => {
+  function lookupAnswer(question: string) {
     return getQuestionValue(currentResident.questions, FormID.CURRENT_ACCOMMODATION, question);
   }
 
-  const getLivingSituation = () => {
-    switch (livingSituation) {
+  function getLivingSituation(answer: string) {
+    switch (answer) {
       case 'living-with-parents':
         return 'with parents';
       case 'living-with-friends':
@@ -44,8 +44,8 @@ export function CurrentAccommodationSummary({ currentResident }: CurrentAccommod
     }
   }
 
-  const getHomeSituation = () => {
-    switch (homeSituation) {
+  function getHomeSituation(answer: string) {
+    switch (answer) {
       case 'house':
         return 'house';
       case 'flat':
@@ -77,12 +77,12 @@ export function CurrentAccommodationSummary({ currentResident }: CurrentAccommod
 
       <SummaryAnswer>
         <Paragraph>
-          I am living <strong>{getLivingSituation()}</strong>
+          I am living <strong>{getLivingSituation(livingSituation)}</strong>
         </Paragraph>
       </SummaryAnswer>
       <SummaryAnswer>
         <Paragraph>
-          I am living in a <strong>{getHomeSituation()}</strong>
+          I am living in a <strong>{getHomeSituation(homeSituation)}</strong>
         </Paragraph>
       </SummaryAnswer>
 

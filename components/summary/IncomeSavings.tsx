@@ -35,12 +35,12 @@ export function IncomeSavingsSummary({ currentResident }: IncomeSavingsSummaryPr
   const income = getQuestionValue(currentResident.questions, FormID.INCOME_SAVINGS, 'income');
   const savings = getQuestionValue(currentResident.questions, FormID.INCOME_SAVINGS, 'savings');
 
-  const getIncome = () => {
-    return incomeValues[income];
+  function getIncome(answer: string) {
+    return incomeValues[answer];
   }
 
-  const getSavings = () => {
-    return savingsValues[savings];
+  function getSavings(answer: string) {
+    return savingsValues[answer];
   }
 
   return (
@@ -50,10 +50,10 @@ export function IncomeSavingsSummary({ currentResident }: IncomeSavingsSummaryPr
         href={`/apply/${currentResident.person.id}/${FormID.INCOME_SAVINGS}`} />
 
       <SummaryAnswer>
-        <Paragraph>My total yearly household income is <strong>{getIncome()}</strong></Paragraph>
+        <Paragraph>My total yearly household income is <strong>{getIncome(income)}</strong></Paragraph>
       </SummaryAnswer>
       <SummaryAnswer>
-        <Paragraph>In total, my household has combined savings and capital of <strong>{getSavings()}</strong></Paragraph>
+        <Paragraph>In total, my household has combined savings and capital of <strong>{getSavings(savings)}</strong></Paragraph>
       </SummaryAnswer>
     </SummarySection>
   );

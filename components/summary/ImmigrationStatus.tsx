@@ -14,8 +14,8 @@ export function ImmigrationStatusSummary({ currentResident }: ImmigrationStatusS
   const ukStudying = getQuestionValue(currentResident.questions, FormID.IMMIGRATION_STATUS, 'uk-studying');
   const settledStatus = getQuestionValue(currentResident.questions, FormID.IMMIGRATION_STATUS, 'settled-status');
 
-  const getCitizenship = () => {
-    switch (citizenship) {
+  function getCitizenship(answer: string) {
+    switch (answer) {
       case 'european':
         return 'an EEA';
       case 'british':
@@ -23,16 +23,15 @@ export function ImmigrationStatusSummary({ currentResident }: ImmigrationStatusS
     }
   }
 
-  const getUkStudying = () => {
-    return ukStudying === 'yes' ? 'currently studying in the UK' : '';
+  function getUkStudying(answer: string) {
+    return answer === 'yes' ? 'currently studying in the UK' : '';
   }
 
-  const getSettledStatus = () => {
-    return settledStatus === 'yes' ? 'and I have pre-settled status' : '';
+  function getSettledStatus(answer: string) {
+    return answer === 'yes' ? 'and I have pre-settled status' : '';
   }
 
   return (
-
     <SummarySection>
       <SummaryTitle
         content="Immigration Status"
@@ -40,7 +39,7 @@ export function ImmigrationStatusSummary({ currentResident }: ImmigrationStatusS
 
       <SummaryAnswer>
         <Paragraph>
-          I am <strong>{getCitizenship()}</strong> citizen {getUkStudying()} {getSettledStatus()}
+          I am <strong>{getCitizenship(citizenship)}</strong> citizen {getUkStudying(ukStudying)} {getSettledStatus(settledStatus)}
         </Paragraph>
       </SummaryAnswer>
     </SummarySection>

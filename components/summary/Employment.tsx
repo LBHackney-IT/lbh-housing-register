@@ -11,8 +11,9 @@ interface EmploymentSummaryProps {
 export function EmploymentSummary({ currentResident }: EmploymentSummaryProps) {
 
   const employment = getQuestionValue(currentResident.questions, FormID.EMPLOYMENT, 'employment');
-  const getEmploymentType = () => {
-    switch (employment) {
+
+  function getEmploymentType(answer: string) {
+    switch (answer) {
       case 'employed':
         return 'full time employed';
       case 'selfemployed':
@@ -33,7 +34,7 @@ export function EmploymentSummary({ currentResident }: EmploymentSummaryProps) {
         href={`/apply/${currentResident.person.id}/${FormID.EMPLOYMENT}`} />
 
       <SummaryAnswer>
-        <Paragraph>I am <strong>{getEmploymentType()}</strong></Paragraph>
+        <Paragraph>I am <strong>{getEmploymentType(employment)}</strong></Paragraph>
       </SummaryAnswer>
     </SummarySection>
   );

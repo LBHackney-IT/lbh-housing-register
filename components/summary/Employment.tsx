@@ -15,7 +15,7 @@ export function EmploymentSummary({ currentResident }: EmploymentSummaryProps) {
     switch (employment) {
       case 'employed':
         return 'full time employed';
-      case 'self-employed':
+      case 'selfemployed':
         return 'self employed';
       case 'fulltimestudent':
         return 'a full time student';

@@ -23,8 +23,8 @@ export function SummaryInfo({ currentResident }: SummaryInfoProps): JSX.Element 
       <ResidentialStatusSummary currentResident={currentResident} />
 
       <AddressHistorySummary currentResident={currentResident} />
-      {/* <CurrentAccommodationSummary currentResident={currentResident} data={question} />
-      <YourSituationSummary currentResident={currentResident} data={question} /> */}
+      <CurrentAccommodationSummary currentResident={currentResident} />
+      {/* <YourSituationSummary currentResident={currentResident} data={question} /> */}
 
       <IncomeSavingsSummary currentResident={currentResident} />
       <EmploymentSummary currentResident={currentResident} />

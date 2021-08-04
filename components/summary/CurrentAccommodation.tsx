@@ -1,136 +1,128 @@
-import Link from "next/link";
 import React from "react";
-import { ApplicantWithPersonID } from "../../lib/store/applicant";
-import { normalizeString, retrieveQuestionName } from "../../lib/utils/summary";
-import { SummaryListActions, SummaryListNoBorder, SummaryListRow, SummaryListValue } from "../summary-list";
+import { ApplicantWithPersonID, getQuestionValue } from "../../lib/store/applicant";
+import { FormID } from "../../lib/utils/form-data";
+import Paragraph from "../content/paragraph";
+import { SummaryAnswer, SummaryTitle } from "./SummaryInfo";
 
 interface CurrentAccommodationSummaryProps {
   currentResident: ApplicantWithPersonID;
-  data: any;
 }
 
-export function CurrentAccommodationSummary({ currentResident, data }: CurrentAccommodationSummaryProps) {
-  const formulator = (question: any) => {
-    if (retrieveQuestionName(question) === 'living-situation') {
-      switch (normalizeString(question['answer'])) {
-        case 'livingwithparents':
-          return 'with parents';
-        case 'livingwithfriends':
-          return 'with friends';
-        case 'livingwithrelatives':
-          return 'with relatives';
-        case 'temporaryaccommodation':
-          return 'temporary accommodation';
-        case 'privaterental':
-          return 'private rental';
-        case 'owneroccupier':
-          return 'owner occupier';
-        case 'nofixedabode':
-          return 'no fixed abode';
-        case 'squatter':
-          return 'squatter';
-        case 'unauthorisedoccupant':
-          return 'unauthorised occupant';
-        case 'tiedaccommodation':
-          return 'tied accommodation';
-      }
-    }
+export function CurrentAccommodationSummary({ currentResident }: CurrentAccommodationSummaryProps) {
 
-    if (retrieveQuestionName(question) === 'home') {
-      switch (normalizeString(question['answer'])) {
-        case 'house':
-          return 'house';
-        case 'flat':
-          return 'flat';
-        case 'flataboveshop':
-          return 'flat above shop';
-        case 'maisonnette':
-          return 'maisonnette';
-        case 'bungalow':
-          return 'bungalow';
-        case 'hotelhostel':
-          return 'hotel hostel';
-        case 'boat':
-          return 'boat';
-        case 'caravan':
-          return 'caravan';
-        case 'studio':
-          return 'studio';
-        case 'other':
-          return 'other';
-      }
-    }
+  const livingSituation = getQuestionValue(currentResident.questions, FormID.CURRENT_ACCOMMODATION, 'living-situation');
+  const homeSituation = getQuestionValue(currentResident.questions, FormID.CURRENT_ACCOMMODATION, 'home');
 
-    if (retrieveQuestionName(question) === 'home-floor') {
-      return question['answer'];
-    }
+  const lookupAnswer = (question: string) => {
+    return getQuestionValue(currentResident.questions, FormID.CURRENT_ACCOMMODATION, question);
+  }
 
-    if (retrieveQuestionName(question) === 'home-how-many-people-share') {
-      return question['answer'];
+  const getLivingSituation = () => {
+    switch (livingSituation) {
+      case 'living-with-parents':
+        return 'with parents';
+      case 'living-with-friends':
+        return 'with friends';
+      case 'living-with-relatives':
+        return 'with relatives';
+      case 'temp-accomodation':
+        return 'in temporary accommodation';
+      case 'private-rental':
+        return 'in private rental';
+      case 'owner-occupier':
+        return 'as an owner occupier';
+      case 'no-fixed-abode':
+        return 'in no fixed abode';
+      case 'squatter':
+        return 'as a squatter';
+      case 'lodger':
+        return 'as a lodger';
+      case 'unauthorised-occupant':
+        return 'as an unauthorised occupant';
+      case 'tied-accommodation':
+        return 'in tied accommodation';
     }
-  };
+  }
+
+  const getHomeSituation = () => {
+    switch (homeSituation) {
+      case 'house':
+        return 'house';
+      case 'flat':
+        return 'flat';
+      case 'flat-above-shop':
+        return 'flat above shop';
+      case 'maisonnette':
+        return 'maisonnette';
+      case 'bungalow':
+        return 'bungalow';
+      case 'hotel-hostel':
+        return 'hotel hostel';
+      case 'boat':
+        return 'boat';
+      case 'caravan':
+        return 'caravan';
+      case 'studio':
+        return 'studio';
+      case 'other':
+        return 'other';
+    }
+  }
 
   return (
     <>
-      <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <SummaryListNoBorder>
-          <SummaryListRow>
-            <SummaryListValue>
-              <h3 className="lbh-heading-h3">Current Accommodation</h3>
-            </SummaryListValue>
-            <SummaryListActions>
-              <Link href={`/apply/${currentResident.person.id}/current-accommodation`}>
-                Edit
-              </Link>
-            </SummaryListActions>
-          </SummaryListRow>
-        </SummaryListNoBorder>
-        <p className="lbh-body-m">
-          I am living <strong>{formulator(data[0])}</strong>
-        </p>
-      </div>
-      <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">
-          I live in a <strong>{formulator(data[1])}</strong>
-        </p>
-      </div>
-      <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">
-          My home is on floor <strong>{formulator(data[2])}</strong>
-        </p>
-      </div>
-      <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">
-          I share my home with <strong>{formulator(data[3])}</strong> people not
+      <SummaryTitle
+        content="Current accommodation"
+        href={`/apply/${currentResident.person.id}/${FormID.CURRENT_ACCOMMODATION}`} />
+
+      <SummaryAnswer>
+        <Paragraph>
+          I am living <strong>{getLivingSituation()}</strong>
+        </Paragraph>
+      </SummaryAnswer>
+      <SummaryAnswer>
+        <Paragraph>
+          I am living in a <strong>{getHomeSituation()}</strong>
+        </Paragraph>
+      </SummaryAnswer>
+
+      <SummaryAnswer>
+        <Paragraph>
+          My home is on <strong>floor {lookupAnswer('home-floor')}</strong>
+        </Paragraph>
+      </SummaryAnswer>
+      <SummaryAnswer>
+        <Paragraph>
+          I share my home with <strong>{lookupAnswer('home-how-many-people-share')} people</strong> not
           included in this application
-        </p>
-      </div>
-      <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">
-          My home has <strong>{data[4]['answer']}</strong> bedroom(s)
-        </p>
-      </div>
-      <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">
-          My home has <strong>{data[5]['answer']}</strong> bathrooms
-        </p>
-      </div>
-      <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">
-          My home has <strong>{data[6]['answer']}</strong> kitchen
-        </p>
-      </div>
-      <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">
-          My home has <strong>{data[7]['answer']}</strong> other rooms
-        </p>
-      </div>
-      <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">
-          I have <strong>{data[8]['answer']}</strong> rooms for my own personal
-          use
-        </p>
-      </div>
+        </Paragraph>
+      </SummaryAnswer>
+      <SummaryAnswer>
+        <Paragraph>
+          My home has <strong>{lookupAnswer('home-how-many-bedrooms')} bedroom(s)</strong>
+        </Paragraph>
+      </SummaryAnswer>
+      <SummaryAnswer>
+        <Paragraph>
+          My home has <strong>{lookupAnswer('home-how-many-bathrooms')} bathroom(s)</strong>
+        </Paragraph>
+      </SummaryAnswer>
+      <SummaryAnswer>
+        <Paragraph>
+          My home has <strong>{lookupAnswer('home-how-many-kitchens')} kitchen(s)</strong>
+        </Paragraph>
+      </SummaryAnswer>
+      <SummaryAnswer>
+        <Paragraph>
+          My home has <strong>{lookupAnswer('home-how-many-other-rooms')} other room(s)</strong>
+        </Paragraph>
+      </SummaryAnswer>
+      <SummaryAnswer>
+        <Paragraph>
+          I have <strong>{lookupAnswer('home-how-many-personal-rooms')} room(s)</strong> for my own
+          personal use
+        </Paragraph>
+      </SummaryAnswer>
     </>
   );
 }

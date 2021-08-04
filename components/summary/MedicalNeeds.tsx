@@ -1,26 +1,17 @@
 import Link from "next/link";
 import React from "react";
-import { ApplicantWithPersonID } from "../../lib/store/applicant";
-import { normalizeString, retrieveQuestionName } from "../../lib/utils/summary";
+import { ApplicantWithPersonID, getQuestionValue } from "../../lib/store/applicant";
+import { FormID } from "../../lib/utils/form-data";
+import Paragraph from "../content/paragraph";
 import { SummaryListActions, SummaryListNoBorder, SummaryListRow, SummaryListValue } from "../summary-list";
 
 interface MedicalNeedsSummaryProps {
   currentResident: ApplicantWithPersonID;
-  data: any;
 }
 
-export function MedicalNeedsSummary({ currentResident, data }: MedicalNeedsSummaryProps) {
+export function MedicalNeedsSummary({ currentResident }: MedicalNeedsSummaryProps) {
 
-  const formulator = (question: any) => {
-    if (retrieveQuestionName(question) === 'medical-needs') {
-      if (normalizeString(question['answer']) === 'yes') {
-        return 'I do';
-      }
-      if (normalizeString(question['answer']) === 'no') {
-        return 'I do not';
-      }
-    }
-  };
+  const medicalNeeds = getQuestionValue(currentResident.questions, FormID.MEDICAL_NEEDS, 'medical-needs');
 
   return (
     <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
@@ -30,18 +21,16 @@ export function MedicalNeedsSummary({ currentResident, data }: MedicalNeedsSumma
             <h3 className="lbh-heading-h3">Medical Needs</h3>
           </SummaryListValue>
           <SummaryListActions>
-            <Link href={`/apply/${currentResident.person.id}/medical-needs`}>
+            <Link href={`/apply/${currentResident.person.id}/${FormID.MEDICAL_NEEDS}`}>
               Edit
             </Link>
           </SummaryListActions>
         </SummaryListRow>
       </SummaryListNoBorder>
-      <p className="lbh-body-m">
-        <strong>{`${formulator(data[0])}`}</strong> have{' '}
-        {normalizeString(data[0]['answer']) === 'yes'
-          ? 'a medical need that affects my housing needs'
-          : 'any medical needs'}
-      </p>
+      {medicalNeeds === 'yes'
+        ? <Paragraph><strong>I do</strong> have a medical need that affects my housing needs</Paragraph>
+        : <Paragraph><strong>I do not</strong> have any medical needs</Paragraph>
+      }
     </div>
   );
 }

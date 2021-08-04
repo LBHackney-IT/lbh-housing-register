@@ -29,7 +29,7 @@ export function SummaryInfo({ currentResident, question }: SummaryInfoProps): JS
     case 'employment':
       return <EmploymentSummary currentResident={currentResident} data={question} />
     case 'medical-needs':
-      return <MedicalNeedsSummary currentResident={currentResident} data={question} />
+      return <MedicalNeedsSummary currentResident={currentResident} />
     case 'address-history':
       return <AddressHistorySummary currentResident={currentResident} data={question} />
   }

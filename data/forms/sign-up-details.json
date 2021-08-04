@@ -52,7 +52,7 @@
           }
         },
         {
-          "as": "radios",
+          "as": "radioconditional",
           "label": "Gender",
           "name": "gender",
           "options": [
@@ -65,8 +65,15 @@
               "value": "F"
             },
             {
-              "label": "Prefer not to say",
-              "value": ""
+              "label": "Prefer to self-describe",
+              "value": "self",
+              "conditionalFieldInput": {
+                "as": "input",
+                "containerId": "self-describe-text-values",
+                "fieldId": "self-describe",
+                "fieldName": "self-describe",
+                "label": "Please enter your self-discription"
+              }
             }
           ]
         },

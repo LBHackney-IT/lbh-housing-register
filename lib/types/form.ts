@@ -60,6 +60,11 @@ export interface InsetTextFormField extends BaseFormField {
   list?: string[];
 }
 
+export interface RadioConditionalFormField extends BaseFormField {
+  as: 'radioconditional';
+  options: ConditionalFormFieldOption[];
+}
+
 export type FormField =
   | TextFormField
   | TextareaFormField
@@ -69,12 +74,29 @@ export type FormField =
   | SelectFormField
   | DateFormField
   | ParagraphFormField
-  | InsetTextFormField;
+  | InsetTextFormField
+  | RadioConditionalFormField;
 
 export type FormFieldDisplayCriteria = {
   field: string;
   is?: boolean | number | string;
   isNot?: boolean | number | string;
+};
+
+export type ConditionalFormFieldOption = {
+  hint?: string;
+  label?: string;
+  value: string;
+  conditionalFieldInput?: ConditionalFormFieldOptionInput;
+};
+
+export type ConditionalFormFieldOptionInput = {
+  as?: string;
+  containerId?: string;
+  fieldId?: string;
+  fieldName?: string;
+  label?: string;
+  display: boolean;
 };
 
 export type FormFieldOption = {

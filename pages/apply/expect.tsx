@@ -18,7 +18,7 @@ const WhatToExpect = (): JSX.Element => {
   };
 
   return (
-    <Layout pageName="Confirmation">
+    <Layout pageName="What to expect">
       <HeadingOne content="What to expect" />
       <Announcement variant="success">
         <Paragraph>

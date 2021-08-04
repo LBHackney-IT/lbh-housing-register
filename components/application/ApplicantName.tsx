@@ -11,7 +11,7 @@ interface ApplicantNameProps {
 
 export default function ApplicantName({ applicant, isMainApplicant }: ApplicantNameProps): JSX.Element {
   const applicantAge = getAgeInYears(applicant);
-  const applicantInfo = `(${getGenderName(applicant)}${applicantAge >= 0 ? `, ${applicantAge}` : ''})`;
+  const applicantInfo = `(${getGenderName(applicant)}${isNaN(applicantAge) ? '' : `, ${applicantAge}`})`;
   return (
     <>
       <Link href={`/apply/${applicant.person?.id}`}>

@@ -11,10 +11,13 @@ export const getAgeInYears = (
   const dateString = applicant.person?.dateOfBirth ?? '';
   var today = new Date();
   var dateOfBirth = new Date(dateString);
+  if (isNaN(+dateOfBirth)) {
+    return NaN;
+  }
 
   var age = today.getFullYear() - dateOfBirth.getFullYear();
-  var m = today.getMonth() - dateOfBirth.getMonth();
-  if (m < 0 || (m === 0 && today < dateOfBirth)) {
+  var monthDiff = today.getMonth() - dateOfBirth.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && today < dateOfBirth)) {
     age--;
   }
   return age;

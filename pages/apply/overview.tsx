@@ -1,10 +1,8 @@
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import Button, { ButtonLink } from '../../components/button';
 import { HeadingOne } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
-import Hint from '../../components/form/hint';
 import Layout from '../../components/layout/resident-layout';
 import SummaryList, {
   SummaryListActions as Actions,
@@ -12,6 +10,7 @@ import SummaryList, {
   SummaryListRow as Row,
 } from '../../components/summary-list';
 import Tag from '../../components/tag';
+import ApplicantName from '../../components/application/ApplicantName';
 import { Applicant } from '../../domain/HousingApi';
 import whenAgreed from '../../lib/hoc/whenAgreed';
 import { useAppSelector } from '../../lib/store/hooks';
@@ -65,19 +64,9 @@ const ApplicationPersonsOverview = (): JSX.Element => {
           return (
             <Row key={index} verticalAlign="middle">
               <Key>
-                <>
-                  <Hint
-                    content={
-                      `Person ${index + 1}` +
-                      (applicants.length > 1 && applicant === mainApplicant
-                        ? ': Me'
-                        : `: My ${applicant.person?.relationshipType}`)
-                    }
-                  />
-                  <Link href={`/apply/${applicant.person?.id}`}>
-                    {`${applicant.person?.firstName} ${applicant.person?.surname}`}
-                  </Link>
-                </>
+                <ApplicantName
+                  applicant={applicant}
+                  isMainApplicant={applicant === mainApplicant} />
               </Key>
               <Actions>
                 {!eligibilityMap.get(applicant) ? (
@@ -85,9 +74,8 @@ const ApplicationPersonsOverview = (): JSX.Element => {
                 ) : tasksRemaining == 0 ? (
                   <Tag content="Completed" variant="green" />
                 ) : (
-                  <Tag
-                    content={`${tasksRemaining} task${tasksRemaining > 1 ? 's' : ''
-                      } to do`}
+                  <Tag content=
+                    {`${tasksRemaining} task${tasksRemaining > 1 ? 's' : ''} to do`}
                   />
                 )}
               </Actions>

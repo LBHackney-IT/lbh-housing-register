@@ -1,7 +1,8 @@
-import Link from 'next/link';
+import React from 'react';
 import { ApplicantWithPersonID, getQuestionValue } from "../../lib/store/applicant";
 import { formatDate } from '../../lib/utils/addressHistory';
 import { FormID } from '../../lib/utils/form-data';
+import { SummaryTitle } from './SummaryInfo';
 
 interface PersonalDetailsSummaryProps {
   currentResident: ApplicantWithPersonID;
@@ -12,24 +13,18 @@ export default function PersonalDetailsSummary({
 }: PersonalDetailsSummaryProps): JSX.Element {
 
   return (
-    <div>
+    <>
+      <SummaryTitle
+        content="Personal Details"
+        href={`/apply/${currentResident.person.id}/${FormID.PERSONAL_DETAILS}`} />
+
       <dl className="govuk-summary-list lbh-summary-list">
-        <h3 className="lbh-heading-h3">Personal Details</h3>
         <div className="govuk-summary-list__row">
           <dt className="govuk-summary-list__key">Name</dt>
           <dd className="govuk-summary-list__value">
             {`${currentResident.person.firstName} ${currentResident.person.surname}`}
           </dd>
-          <dd className="govuk-summary-list__actions">
-            <Link
-              href={{
-                pathname: '/apply/[resident]/personal-details',
-                query: { resident: currentResident.person.id },
-              }}
-            >
-              <a>Edit</a>
-            </Link>
-          </dd>
+          <dd className="govuk-summary-list__actions"></dd>
         </div>
         {currentResident.person.dateOfBirth && (
           <div className="govuk-summary-list__row">
@@ -59,7 +54,7 @@ export default function PersonalDetailsSummary({
           <dd className="govuk-summary-list__actions"></dd>
         </div>
       </dl>
-    </div>
+    </>
   )
 }
 

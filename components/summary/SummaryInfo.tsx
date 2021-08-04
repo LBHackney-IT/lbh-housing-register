@@ -13,31 +13,25 @@ import { YourSituationSummary } from "./YourSituation";
 
 interface SummaryInfoProps {
   currentResident: ApplicantWithPersonID;
-  question: any;
 }
 
-export function SummaryInfo({ currentResident, question }: SummaryInfoProps): JSX.Element {
-  const sectionName = question[0]['id'].substring(0, question[0]['id'].lastIndexOf('/'));
-  switch (sectionName) {
-    case 'immigration-status':
-      return <ImmigrationStatusSummary currentResident={currentResident} data={question} />
-    case 'residential-status':
-      return <ResidentialStatusSummary currentResident={currentResident} data={question} />
-    case 'current-accommodation':
-      return <CurrentAccommodationSummary currentResident={currentResident} data={question} />
-    case 'my-situation':
-      return <YourSituationSummary currentResident={currentResident} data={question} />
-    case 'income-savings':
-      return <IncomeSavingsSummary currentResident={currentResident} data={question} />
-    case 'employment':
-      return <EmploymentSummary currentResident={currentResident} data={question} />
-    case 'medical-needs':
-      return <MedicalNeedsSummary currentResident={currentResident} />
-    case 'address-history':
-      return <AddressHistorySummary currentResident={currentResident} data={question} />
-  }
+export function SummaryInfo({ currentResident }: SummaryInfoProps): JSX.Element {
 
-  return <></>;
+  return (
+    <>
+      <ImmigrationStatusSummary currentResident={currentResident} />
+      <ResidentialStatusSummary currentResident={currentResident} />
+
+      {/* <AddressHistorySummary currentResident={currentResident} data={question} />
+      <CurrentAccommodationSummary currentResident={currentResident} data={question} />
+      <YourSituationSummary currentResident={currentResident} data={question} /> */}
+
+      <IncomeSavingsSummary currentResident={currentResident} />
+      <EmploymentSummary currentResident={currentResident} />
+
+      <MedicalNeedsSummary currentResident={currentResident} />
+    </>
+  )
 }
 
 interface SummaryTitleProps {

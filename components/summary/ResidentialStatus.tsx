@@ -1,22 +1,30 @@
-import Link from "next/link";
 import React from "react";
-import { ApplicantWithPersonID } from "../../lib/store/applicant";
-import { normalizeString, retrieveQuestionName } from "../../lib/utils/summary";
-import { SummaryListActions, SummaryListNoBorder, SummaryListRow, SummaryListValue } from "../summary-list";
+import { ApplicantWithPersonID, getQuestionValue } from "../../lib/store/applicant";
+import { FormID } from "../../lib/utils/form-data";
+import Paragraph from "../content/paragraph";
+import { SummaryAnswer, SummaryTitle } from "./SummaryInfo";
 
 interface ResidentialStatusSummaryProps {
   currentResident: ApplicantWithPersonID;
-  data: any;
 }
 
-export function ResidentialStatusSummary({ currentResident, data }: ResidentialStatusSummaryProps) {
+export function ResidentialStatusSummary({ currentResident }: ResidentialStatusSummaryProps) {
 
-  // TODO: add answers
+  // TODO: add more answers
+  const hackneyResident = getQuestionValue(currentResident.questions, FormID.RESIDENTIAL_STATUS, 'residential-status');
 
   return (
-    <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-      <h3 className="lbh-heading-h3">Residential Status</h3>
-      <p className="lbh-body-m"></p>
-    </div>
+    <>
+      <SummaryTitle
+        content="Residential Status"
+        href={`/apply/${currentResident.person.id}/${FormID.RESIDENTIAL_STATUS}`} />
+
+      <SummaryAnswer>
+        {hackneyResident === 'yes'
+          ? <Paragraph><strong>I am</strong> currently and continually resided in the borough for 3 years or more</Paragraph>
+          : <Paragraph><strong>I am not</strong> currently and continually resided in the borough for 3 years or more</Paragraph>
+        }
+      </SummaryAnswer>
+    </>
   );
 }

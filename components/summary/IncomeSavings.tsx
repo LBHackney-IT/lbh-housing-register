@@ -1,15 +1,14 @@
-import Link from "next/link";
 import React from "react";
-import { ApplicantWithPersonID } from "../../lib/store/applicant";
-import { normalizeString, retrieveQuestionName } from "../../lib/utils/summary";
-import { SummaryListActions, SummaryListNoBorder, SummaryListRow, SummaryListValue } from "../summary-list";
+import { ApplicantWithPersonID, getQuestionValue } from "../../lib/store/applicant";
+import { FormID } from "../../lib/utils/form-data";
+import Paragraph from "../content/paragraph";
+import { SummaryAnswer, SummaryTitle } from "./SummaryInfo";
 
 interface IncomeSavingsSummaryProps {
   currentResident: ApplicantWithPersonID;
-  data: any;
 }
 
-export function IncomeSavingsSummary({ currentResident, data }: IncomeSavingsSummaryProps) {
+export function IncomeSavingsSummary({ currentResident }: IncomeSavingsSummaryProps) {
 
   interface Money {
     [key: string]: string;
@@ -33,41 +32,29 @@ export function IncomeSavingsSummary({ currentResident, data }: IncomeSavingsSum
     '80000': '£80,000 or more',
   };
 
-  const formulator = (question: any) => {
-    if (retrieveQuestionName(question) === 'savings') {
-      return savingsValues[normalizeString(question['answer'])];
-    }
+  const income = getQuestionValue(currentResident.questions, FormID.INCOME_SAVINGS, 'income');
+  const savings = getQuestionValue(currentResident.questions, FormID.INCOME_SAVINGS, 'savings');
 
-    if (retrieveQuestionName(question) === 'income') {
-      return incomeValues[normalizeString(question['answer'])];
-    }
-  };
+  const getIncome = () => {
+    return incomeValues[income];
+  }
+
+  const getSavings = () => {
+    return savingsValues[savings];
+  }
+
   return (
     <>
-      <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <SummaryListNoBorder>
-          <SummaryListRow>
-            <SummaryListValue>
-              <h3 className="lbh-heading-h3">Income & savings</h3>
-            </SummaryListValue>
-            <SummaryListActions>
-              <Link href={`/apply/${currentResident.person.id}/income-savings`}>
-                Edit
-              </Link>
-            </SummaryListActions>
-          </SummaryListRow>
-        </SummaryListNoBorder>
-        <p className="lbh-body-m">
-          My total yearly household income is{' '}
-          <strong>{formulator(data[0])}</strong>
-        </p>
-      </div>
-      <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-        <p className="lbh-body-m">
-          In total, my household has combined savings and capital of{' '}
-          <strong>{formulator(data[1])}</strong>
-        </p>
-      </div>
+      <SummaryTitle
+        content="Income & savings"
+        href={`/apply/${currentResident.person.id}/${FormID.INCOME_SAVINGS}`} />
+
+      <SummaryAnswer>
+        <Paragraph>My total yearly household income is <strong>{getIncome()}</strong></Paragraph>
+      </SummaryAnswer>
+      <SummaryAnswer>
+        <Paragraph>In total, my household has combined savings and capital of <strong>{getSavings()}</strong></Paragraph>
+      </SummaryAnswer>
     </>
   );
 }

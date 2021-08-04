@@ -1,68 +1,48 @@
-import Link from "next/link";
 import React from "react";
-import { ApplicantWithPersonID } from "../../lib/store/applicant";
-import { normalizeString, retrieveQuestionName } from "../../lib/utils/summary";
-import { SummaryListActions, SummaryListNoBorder, SummaryListRow, SummaryListValue } from "../summary-list";
+import { ApplicantWithPersonID, getQuestionValue } from "../../lib/store/applicant";
+import { FormID } from "../../lib/utils/form-data";
+import Paragraph from "../content/paragraph";
+import { SummaryAnswer, SummaryTitle } from "./SummaryInfo";
 
 interface ImmigrationStatusSummaryProps {
   currentResident: ApplicantWithPersonID;
-  data: any;
 }
 
-export function ImmigrationStatusSummary({ currentResident, data }: ImmigrationStatusSummaryProps) {
-  const formulator = (question: any) => {
-    if (question) {
-      if (retrieveQuestionName(question) === 'citizenship') {
-        if (normalizeString(question['answer']) === 'european') {
-          return 'an EEA';
-        }
+export function ImmigrationStatusSummary({ currentResident }: ImmigrationStatusSummaryProps) {
 
-        if (normalizeString(question['answer']) === 'british') {
-          return 'a British';
-        }
-      }
+  const citizenship = getQuestionValue(currentResident.questions, FormID.IMMIGRATION_STATUS, 'citizenship');
+  const ukStudying = getQuestionValue(currentResident.questions, FormID.IMMIGRATION_STATUS, 'uk-studying');
+  const settledStatus = getQuestionValue(currentResident.questions, FormID.IMMIGRATION_STATUS, 'settled-status');
 
-      if (retrieveQuestionName(question) === 'uk-studying') {
-        if (normalizeString(question['answer']) === 'yes') {
-          return 'currently studying in the UK';
-        }
-
-        if (normalizeString(question['answer']) === 'no') {
-          return '';
-        }
-      }
-
-      if (retrieveQuestionName(question) === 'settled-status') {
-        if (normalizeString(question['answer']) === 'yes') {
-          return 'and I have a pre-settled status';
-        }
-
-        if (normalizeString(question['answer']) === 'no') {
-          return '';
-        }
-      }
+  const getCitizenship = () => {
+    switch (citizenship) {
+      case 'european':
+        return 'an EEA';
+      case 'british':
+        return 'a British';
     }
-  };
+  }
+
+  const getUkStudying = () => {
+    return ukStudying === 'yes' ? 'currently studying in the UK' : '';
+  }
+
+  const getSettledStatus = () => {
+    return settledStatus === 'yes' ? 'and I have pre-settled status' : '';
+  }
 
   return (
-    <div style={{ borderBottom: '1px solid', color: '#b1b4b6' }}>
-      <SummaryListNoBorder>
-        <SummaryListRow>
-          <SummaryListValue>
-            <h3 className="lbh-heading-h3">Immigration status</h3>
-          </SummaryListValue>
-          <SummaryListActions>
-            <Link href={`/apply/${currentResident.person.id}/immigration-status`}>
-              Edit
-            </Link>
-          </SummaryListActions>
-        </SummaryListRow>
-      </SummaryListNoBorder>
-      <p className="lbh-body-m">
-        I am <strong>{formulator(data[0])}</strong> citizen{' '}
-        <strong>{data[1] ? formulator(data[1]) : ''}</strong>{' '}
-        <strong>{data[2] ? formulator(data[2]) : ''}</strong>
-      </p>
-    </div>
+
+    <>
+      <SummaryTitle
+        content="Immigration Status"
+        href={`/apply/${currentResident.person.id}/${FormID.IMMIGRATION_STATUS}`} />
+
+      <SummaryAnswer>
+        <Paragraph>
+          I am <strong>{getCitizenship()}</strong> citizen {getUkStudying()} {getSettledStatus()}
+        </Paragraph>
+      </SummaryAnswer>
+    </>
   );
 }

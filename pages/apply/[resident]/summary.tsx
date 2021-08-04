@@ -83,15 +83,7 @@ const UserSummary = (): JSX.Element => {
       </h1>
 
       <PersonalDetailsSummary currentResident={currentResident} />
-
-      {Object.keys(groupedSectionAnswers).map((question, index) => {
-        return (
-          <SummaryInfo
-            currentResident={currentResident}
-            question={groupedSectionAnswers[question]}
-            key={index} />
-        );
-      })}
+      <SummaryInfo currentResident={currentResident} />
 
       <ButtonLink href="/apply/overview">I confirm this is correct</ButtonLink>
       <DeleteLink content="Delete this information" onDelete={onDelete} />

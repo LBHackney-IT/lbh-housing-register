@@ -24,7 +24,7 @@ export function SummaryInfo({ currentResident }: SummaryInfoProps): JSX.Element 
 
       <AddressHistorySummary currentResident={currentResident} />
       <CurrentAccommodationSummary currentResident={currentResident} />
-      {/* <YourSituationSummary currentResident={currentResident} data={question} /> */}
+      <YourSituationSummary currentResident={currentResident} />
 
       <IncomeSavingsSummary currentResident={currentResident} />
       <EmploymentSummary currentResident={currentResident} />

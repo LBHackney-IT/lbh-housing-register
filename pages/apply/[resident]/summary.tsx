@@ -36,45 +36,6 @@ const UserSummary = (): JSX.Element => {
     },
   ];
 
-  let questions: any = currentResident.questions;
-  questions = questions?.slice(1);
-
-  const groupedSectionAnswers = questions?.reduce(
-    (result: any, currentValue: any) => {
-      let groupSection = currentValue.id.substring(
-        0,
-        currentValue.id.lastIndexOf('/')
-      );
-
-      const newCurrentValue = Object.assign({}, currentValue);
-
-      const mySituationSectionNames = [
-        'arrears',
-        'homelessness',
-        'property-ownership',
-        'sold-property',
-        'breach-of-tenancy',
-        'legal-restrictions',
-        'unspent-convictions',
-      ];
-
-      if (mySituationSectionNames.includes(groupSection)) {
-        groupSection = 'my-situation';
-        var selectBeforeFirstSlash = /^[^/]+/;
-
-        newCurrentValue.id = newCurrentValue.id.replace(
-          selectBeforeFirstSlash,
-          'my-situation'
-        );
-      }
-
-      result[groupSection] = result[groupSection] || [];
-      result[groupSection].push(newCurrentValue);
-      return result;
-    },
-    {}
-  );
-
   return (
     <Layout pageName="Application summary" breadcrumbs={breadcrumbs}>
       <h1 className="lbh-heading-h1">

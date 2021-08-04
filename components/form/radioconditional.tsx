@@ -25,7 +25,6 @@ export function ConditionalInput({
       id={containerId}
     >
       <Label
-        className="govuk-radios__label"
         content={label}
         htmlFor={fieldId}
       />

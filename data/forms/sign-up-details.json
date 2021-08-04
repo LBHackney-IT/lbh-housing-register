@@ -54,7 +54,7 @@
         {
           "as": "radioconditional",
           "label": "Gender",
-          "name": "gender-value",
+          "name": "gender",
           "options": [
             {
               "label": "Male",
@@ -72,7 +72,7 @@
                 "containerId": "self-describe-text-values",
                 "fieldId": "self-describe",
                 "fieldName": "self-describe",
-                "label": "Please enter you self-discription"
+                "label": "Please enter your self-discription"
               }
             }
           ]

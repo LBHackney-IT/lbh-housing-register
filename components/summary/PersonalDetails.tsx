@@ -2,6 +2,7 @@ import React from 'react';
 import { ApplicantWithPersonID, getQuestionValue } from "../../lib/store/applicant";
 import { formatDate } from '../../lib/utils/addressHistory';
 import { FormID } from '../../lib/utils/form-data';
+import { getGenderName } from '../../lib/utils/gender';
 import { SummarySection, SummaryTitle } from './SummaryInfo';
 
 interface PersonalDetailsSummaryProps {
@@ -38,7 +39,7 @@ export default function PersonalDetailsSummary({
         <div className="govuk-summary-list__row">
           <dt className="govuk-summary-list__key">Gender</dt>
           <dd className="govuk-summary-list__value">
-            {currentResident.person?.gender}
+            {getGenderName(currentResident)}
           </dd>
           <dd className="govuk-summary-list__actions"></dd>
         </div>

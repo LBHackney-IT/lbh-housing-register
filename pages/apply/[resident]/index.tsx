@@ -60,7 +60,7 @@ const ApplicationStep = (): JSX.Element => {
     router.push(returnHref);
   };
 
-  const save = () => {
+  const goBack = () => {
     router.push('/apply/overview');
   };
 
@@ -104,7 +104,7 @@ const ApplicationStep = (): JSX.Element => {
         Check Answers
       </ButtonLink>
       <br />
-      <Button onClick={save}>Save & go back</Button>
+      <Button onClick={goBack}>Save & go back</Button>
       {currentResident !== mainResident && (
         <DeleteLink
           content="Delete this information"

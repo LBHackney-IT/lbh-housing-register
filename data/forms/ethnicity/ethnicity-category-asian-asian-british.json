@@ -1,0 +1,55 @@
+{
+  "heading": "Which of the following best describes your Asian or Asian British background?",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "name": "ethnicity-category-asian-asian-british",
+          "options": [
+            {
+              "label": "Indian",
+              "value": "indian"
+            },
+            {
+              "label": "Pakistani",
+              "value": "pakistani"
+            },
+            {
+              "label": "Bangladeshi",
+              "value": "bangladeshi"
+            },
+            {
+              "label": "Chinese",
+              "value": "chinese"
+            },
+            {
+              "label": "Nepali",
+              "value": "nepali"
+            },
+            {
+              "label": "Sri Lankan Sinhalese",
+              "value": "sri-lankan-sinhalese"
+            },
+            {
+              "label": "Sri Lankan Tamil",
+              "value": "sri-lankan-tamil"
+            },
+            {
+              "label": "Sri Lankan other",
+              "value": "sri-lankan-other"
+            },
+            {
+              "label": "Vietnamese",
+              "value": "Vietnamese"
+            },
+            {
+              "label": "Other Asian",
+              "value": "other-asian"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

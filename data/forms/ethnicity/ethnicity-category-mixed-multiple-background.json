@@ -1,0 +1,31 @@
+{
+  "heading": "Which of the following best describes your Mixed or Multiple background background?",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "name": "ethnicity-category-mixed-multiple-background",
+          "options": [
+            {
+              "label": "White and Black Caribbean",
+              "value": "white-and-black-caribbean"
+            },
+            {
+              "label": "White and Black African",
+              "value": "white-and-black-african"
+            },
+            {
+              "label": "White and Asian",
+              "value": "white-and-asian"
+            },
+            {
+              "label": "Any other mixed background",
+              "value": "any-other-mixed-background"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

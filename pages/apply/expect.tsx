@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { useAppDispatch } from '../../lib/store/hooks';
 import { useRouter } from 'next/router';
 import { ButtonLink } from '../../components/button';
 import { HeadingOne } from '../../components/content/headings';
@@ -6,12 +6,14 @@ import Paragraph from '../../components/content/paragraph';
 import Layout from '../../components/layout/resident-layout';
 import DeleteLink from '../../components/delete-link';
 import Announcement from '../../components/announcement';
+import { signOut } from '../../lib/store/cognitoUser';
 
 const WhatToExpect = (): JSX.Element => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
-  const onDelete = () => {
-    // TODO: a way to delete entire application(all residents)
+  const onCancel = () => {
+    dispatch(signOut());
     router.push('/');
   };
 
@@ -34,11 +36,7 @@ const WhatToExpect = (): JSX.Element => {
       </Announcement>
 
       <ButtonLink href="/apply/overview">Save and continue</ButtonLink>
-      <DeleteLink
-        content="Delete this information"
-        details="This information will be permanently deleted."
-        onDelete={onDelete}
-      />
+      <DeleteLink content="Cancel this application" onDelete={onCancel} />
     </Layout>
   );
 };

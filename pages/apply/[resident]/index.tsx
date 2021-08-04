@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
-import { HeadingOne, HeadingTwo } from '../../../components/content/headings';
+import { HeadingTwo } from '../../../components/content/headings';
 import DeleteLink from '../../../components/delete-link';
 import Hint from '../../../components/form/hint';
 import Layout from '../../../components/layout/resident-layout';
@@ -23,7 +23,7 @@ import {
   hasResidentAnsweredForm,
 } from '../../../lib/utils/resident';
 import Custom404 from '../../404';
-import { ButtonLink } from '../../../components/button';
+import Button, { ButtonLink } from '../../../components/button';
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter();
@@ -60,12 +60,17 @@ const ApplicationStep = (): JSX.Element => {
     router.push(returnHref);
   };
 
+  const save = () => {
+    router.push('/apply/overview');
+  };
+
   return (
     <Layout pageName="Person overview" breadcrumbs={breadcrumbs}>
       <Hint content="Complete information for:" />
-      <HeadingOne
-        content={`${currentResident.person?.firstName} ${currentResident.person?.surname}`}
-      />
+      <h1
+        className="lbh-heading-h1"
+        style={{ marginTop: '20px' }}
+      >{`${currentResident.person?.firstName} ${currentResident.person?.surname}`}</h1>
 
       {steps.map((step, index) => (
         <div key={index}>
@@ -95,14 +100,17 @@ const ApplicationStep = (): JSX.Element => {
           </SummaryList>
         </div>
       ))}
-
-      <ButtonLink href={`/apply/${currentResident.person?.id}/summary/`}>Check Answers</ButtonLink>
-
+      <ButtonLink href={`/apply/${currentResident.person?.id}/summary/`}>
+        Check Answers
+      </ButtonLink>
+      <br />
+      <Button onClick={save}>Save & go back</Button>
       {currentResident !== mainResident && (
         <DeleteLink
           content="Delete this information"
           details="This information will be permanently deleted."
-          onDelete={onDelete} />
+          onDelete={onDelete}
+        />
       )}
     </Layout>
   );

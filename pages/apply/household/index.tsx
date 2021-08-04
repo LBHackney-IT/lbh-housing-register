@@ -57,7 +57,7 @@ const ApplicationHouseholdOverview = (): JSX.Element => {
                   <Hint
                     content={
                       `Person ${index + 1}` +
-                      (applicants.length > 1 && applicant === mainApplicant
+                      (applicant === mainApplicant
                         ? ': Me'
                         : `: My ${applicant.person?.relationshipType}`)
                     }

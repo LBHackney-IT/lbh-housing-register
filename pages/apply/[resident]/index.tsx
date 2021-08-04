@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { HeadingTwo } from '../../../components/content/headings';
 import DeleteLink from '../../../components/delete-link';
-import Hint from '../../../components/form/hint';
 import Layout from '../../../components/layout/resident-layout';
 import SummaryList, {
   SummaryListActions,
@@ -66,11 +65,12 @@ const ApplicationStep = (): JSX.Element => {
 
   return (
     <Layout pageName="Person overview" breadcrumbs={breadcrumbs}>
-      <Hint content="Complete information for:" />
       <h1
         className="lbh-heading-h1"
-        style={{ marginTop: '20px' }}
-      >{`${currentResident.person?.firstName} ${currentResident.person?.surname}`}</h1>
+        style={{ marginBottom: '40px' }}>
+        <span className="govuk-hint lbh-hint">Complete information for:</span>
+        {`${currentResident.person?.firstName} ${currentResident.person?.surname}`}
+      </h1>
 
       {steps.map((step, index) => (
         <div key={index}>
@@ -101,10 +101,12 @@ const ApplicationStep = (): JSX.Element => {
         </div>
       ))}
       <ButtonLink href={`/apply/${currentResident.person?.id}/summary/`}>
-        Check Answers
+        Check answers
       </ButtonLink>
       <br />
-      <Button onClick={goBack}>Save & go back</Button>
+      <Button onClick={goBack} secondary={true}>
+        Save & go back
+      </Button>
       {currentResident !== mainResident && (
         <DeleteLink
           content="Delete this information"

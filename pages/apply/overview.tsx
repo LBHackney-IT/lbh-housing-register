@@ -60,7 +60,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
             applicant,
             applicant === mainApplicant
           );
-
+          const isEligible = eligibilityMap.get(applicant);
           return (
             <Row key={index} verticalAlign="middle">
               <Key>
@@ -69,7 +69,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
                   isMainApplicant={applicant === mainApplicant} />
               </Key>
               <Actions>
-                {!eligibilityMap.get(applicant) ? (
+                {!isEligible ? (
                   <Tag content="Not eligible" variant="red" />
                 ) : tasksRemaining == 0 ? (
                   <Tag content="Completed" variant="green" />

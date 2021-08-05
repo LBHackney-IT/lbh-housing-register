@@ -44,9 +44,7 @@ const ApplicationHouseholdOverview = (): JSX.Element => {
   return (
     <Layout pageName="My household" breadcrumbs={breadcrumbs}>
       <HeadingOne content="Who are you applying with?" />
-      <Paragraph>
-        Include all the people you would like to move with.
-      </Paragraph>
+      <Paragraph>Include all the people you would like to move with.</Paragraph>
 
       <SummaryList>
         {applicants.map((applicant, index) => {
@@ -74,16 +72,18 @@ const ApplicationHouseholdOverview = (): JSX.Element => {
         Add a person
       </ButtonLink>
       <Paragraph>
-        There {applicants.length > 1 ? "are" : "is"}
-        <strong>{applicants.length > 1 ? ` ${applicants.length} people` : " 1 person"}</strong> in this application.
+        There {applicants.length > 1 ? 'are' : 'is'}
+        <strong>
+          {applicants.length > 1 ? ` ${applicants.length} people` : ' 1 person'}
+        </strong>{' '}
+        in this application.
       </Paragraph>
-      <ButtonLink href="/apply/overview">
-        Continue to next step
-      </ButtonLink>
+      <ButtonLink href="/apply/expect">Continue to next step</ButtonLink>
       <DeleteLink
         content="Cancel this application"
         details="This application will be permanently deleted."
-        onDelete={onDelete} />
+        onDelete={onDelete}
+      />
     </Layout>
   );
 };

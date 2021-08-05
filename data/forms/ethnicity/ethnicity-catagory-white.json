@@ -1,10 +1,12 @@
 {
+  "id": "ethnicity-catagory-white",
   "heading": "Which of the following best describes your white background?",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
+          "label": "Please Select",
           "name": "ethnicity-catagory-white",
           "options": [
             {
@@ -63,7 +65,10 @@
               "label": "White Other",
               "value": "White-other"
             }
-          ]
+          ],
+          "validation": {
+            "required": true
+          }
         }
       ]
     }

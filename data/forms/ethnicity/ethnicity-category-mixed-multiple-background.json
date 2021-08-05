@@ -1,10 +1,12 @@
 {
+  "id": "ethnicity-category-mixed-multiple-background",
   "heading": "Which of the following best describes your Mixed or Multiple background background?",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
+          "label": "Please Select",
           "name": "ethnicity-category-mixed-multiple-background",
           "options": [
             {
@@ -23,7 +25,10 @@
               "label": "Any other mixed background",
               "value": "any-other-mixed-background"
             }
-          ]
+          ],
+          "validation": {
+            "required": true
+          }
         }
       ]
     }

@@ -1,10 +1,12 @@
 {
+  "id": "ethnicity-category-other-ethnic-group",
   "heading": "Which of the following best describes your ethnic background?",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
+          "label": "Please Select",
           "name": "ethnicity-category-other-ethnic-group",
           "options": [
             {
@@ -91,7 +93,10 @@
               "label": "Other European",
               "value": "other-european"
             }
-          ]
+          ],
+          "validation": {
+            "required": true
+          }
         }
       ]
     }

@@ -1,0 +1,104 @@
+{
+  "id": "ethnicity-extended-category-other-ethnic-group",
+  "heading": "Which of the following best describes your ethnic background?",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "Please Select",
+          "name": "ethnicity-extended-category",
+          "options": [
+            {
+              "label": "Arab",
+              "value": "arab"
+            },
+            {
+              "label": "Afghan",
+              "value": "afghan"
+            },
+            {
+              "label": "Egyptian",
+              "value": "egyptian"
+            },
+            {
+              "label": "Filipino",
+              "value": "filipino"
+            },
+            {
+              "label": "Iranian",
+              "value": "iranian"
+            },
+            {
+              "label": "Iraqi",
+              "value": "iraqi"
+            },
+            {
+              "label": "Japanese",
+              "value": "japanese"
+            },
+            {
+              "label": "Korean",
+              "value": "korean"
+            },
+            {
+              "label": "Kurdish",
+              "value": "kurdish"
+            },
+            {
+              "label": "Latin/South/ Central American",
+              "value": "latin-south-central-american"
+            },
+            {
+              "label": "Lebanese",
+              "value": "lebanese"
+            },
+            {
+              "label": "Libyan",
+              "value": "libyan"
+            },
+            {
+              "label": "Malay",
+              "value": "malay"
+            },
+            {
+              "label": "Moroccan",
+              "value": "moroccan"
+            },
+            {
+              "label": "Polynesian",
+              "value": "polynesian"
+            },
+            {
+              "label": "Thai",
+              "value": "thai"
+            },
+            {
+              "label": "Turkish",
+              "value": "turkish"
+            },
+            {
+              "label": "Vietnamese",
+              "value": "vietnamese"
+            },
+            {
+              "label": "Yemeni",
+              "value": "yemeni"
+            },
+            {
+              "label": "Gypsy Roma",
+              "value": "gypsy-roma"
+            },
+            {
+              "label": "Other European",
+              "value": "other-european"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ]
+}

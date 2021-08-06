@@ -1,0 +1,81 @@
+{
+  "id": "ethnicity-main-category",
+  "heading": "What is your ethnic group?",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "Please Select",
+          "name": "ethnicity-main-category",
+          "options": [
+            {
+              "label": "Asian or Asian British",
+              "value": "asian-asian-british"
+            },
+            {
+              "label": "Black or Black British",
+              "value": "black-black-british"
+            },
+            {
+              "label": "Mixed or multiple background",
+              "value": "mixed-or-multiple-background"
+            },
+            {
+              "label": "White",
+              "value": "white"
+            },
+            {
+              "label": "Other ethnic group",
+              "value": "other-ethnic-group"
+            },
+            {
+              "label": "Prefer not to say",
+              "value": "perfer-not-to-say"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ],
+  "conditionals": [
+    {
+      "fieldId": "ethnicity-main-category",
+      "value": "asian-asian-british",
+      "nextFormId": "ethnicity-extended-category-asian-asian-british"
+    },
+
+    {
+      "fieldId": "ethnicity-main-category",
+      "value": "black-black-british",
+      "nextFormId": "ethnicity-extended-category-black-black-british"
+    },
+
+    {
+      "fieldId": "ethnicity-main-category",
+      "value": "mixed-or-multiple-background",
+      "nextFormId": "ethnicity-extended-category-mixed-multiple-background"
+    },
+
+    {
+      "fieldId": "ethnicity-main-category",
+      "value": "white",
+      "nextFormId": "ethnicity-extended-category-white"
+    },
+
+    {
+      "fieldId": "ethnicity-main-category",
+      "value": "other-ethnic-group",
+      "nextFormId": "ethnicity-extended-category-other-ethnic-group"
+    },
+
+    {
+      "fieldId": "ethnicity-main-category",
+      "value": "perfer-not-to-say",
+      "nextFormId": "exit"
+    }
+  ]
+}

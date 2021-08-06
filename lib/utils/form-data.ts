@@ -32,6 +32,12 @@ import unspentConvictions from '../../data/forms/Situation/unspent-convictions.j
 import yourSituationFormData from '../../data/forms/your-situation.json';
 import { EligibilityCriteria, MultiStepForm } from '../types/form';
 import assertNever from './assertNever';
+import EthnicityQuestions from '../../data/forms/ethnicity/ethnicity-questions.json';
+import EthnicityCategoryAsianAsianBritish from '../../data/forms/ethnicity/ethnicity-category-asian-asian-british.json';
+import EthnicityCategoryBlackBlackBritish from '../../data/forms/ethnicity/ethnicity-category-black-black-british.json';
+import EthnicityCategoryMixedMultipleBackground from '../../data/forms/ethnicity/ethnicity-category-mixed-multiple-background.json';
+import EthnicityCategoryWhite from '../../data/forms/ethnicity/ethnicity-category-white.json';
+import EthnicityCategoryOtherEthnicGroup from '../../data/forms/ethnicity/ethnicity-category-other-ethnic-group.json';
 
 export enum FormID {
   AGREEMENT = 'agreement',
@@ -66,6 +72,12 @@ export enum FormID {
   LEAGLE_RESTRICTIONS = 'legal-restrictions',
   UNSPENT_CONVICTIONS = 'unspent-convictions',
   EMPLOYMENT = 'employment',
+  ETHNICITY_QUESTIONS = 'ethnicity-questions',
+  ETHNICITY_CATEGORY_ASIAN_ASIAN_BRITISH = 'ethnicity-extended-category-asian-asian-british',
+  ETHNICITY_CATEGORY_BLACK_BLACK_BRITISH = 'ethnicity-extended-category-black-black-british',
+  ETHNICITY_CATEGORY_MIXED_MULTIPLE_BACKGROUND = 'ethnicity-extended-category-mixed-multiple-background',
+  ETHNICITY_CATEGORY_WHITE = 'ethnicity-extended-category-white',
+  ETHNICITY_CATEGORY_OTHER_ETHNIC_GROUP = 'ethnicity-extended-category-other-ethnic-group',
 }
 
 /**
@@ -182,6 +194,24 @@ export function getFormData(form: FormID): MultiStepForm {
 
     case FormID.EMPLOYMENT:
       return employment as MultiStepForm;
+
+    case FormID.ETHNICITY_QUESTIONS:
+      return EthnicityQuestions as MultiStepForm;
+
+    case FormID.ETHNICITY_CATEGORY_ASIAN_ASIAN_BRITISH:
+      return EthnicityCategoryAsianAsianBritish as MultiStepForm;
+
+    case FormID.ETHNICITY_CATEGORY_BLACK_BLACK_BRITISH:
+      return EthnicityCategoryBlackBlackBritish as MultiStepForm;
+
+    case FormID.ETHNICITY_CATEGORY_MIXED_MULTIPLE_BACKGROUND:
+      return EthnicityCategoryMixedMultipleBackground as MultiStepForm;
+
+    case FormID.ETHNICITY_CATEGORY_WHITE:
+      return EthnicityCategoryWhite as MultiStepForm;
+
+    case FormID.ETHNICITY_CATEGORY_OTHER_ETHNIC_GROUP:
+      return EthnicityCategoryOtherEthnicGroup as MultiStepForm;
 
     default:
       return assertNever(form, 'Unknown form step: ' + form);

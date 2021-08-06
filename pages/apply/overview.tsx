@@ -47,7 +47,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
   const submitApplication = async () => {
     // TODO: perform update on application
 
-    router.push('/apply/confirmation');
+    router.push('/apply/ethnicity-questions');
   };
 
   return (
@@ -66,7 +66,8 @@ const ApplicationPersonsOverview = (): JSX.Element => {
               <Key>
                 <ApplicantName
                   applicant={applicant}
-                  isMainApplicant={applicant === mainApplicant} />
+                  isMainApplicant={applicant === mainApplicant}
+                />
               </Key>
               <Actions>
                 {!isEligible ? (
@@ -74,8 +75,10 @@ const ApplicationPersonsOverview = (): JSX.Element => {
                 ) : tasksRemaining == 0 ? (
                   <Tag content="Completed" variant="green" />
                 ) : (
-                  <Tag content=
-                    {`${tasksRemaining} task${tasksRemaining > 1 ? 's' : ''} to do`}
+                  <Tag
+                    content={`${tasksRemaining} task${
+                      tasksRemaining > 1 ? 's' : ''
+                    } to do`}
                   />
                 )}
               </Actions>
@@ -92,13 +95,13 @@ const ApplicationPersonsOverview = (): JSX.Element => {
         (applicant) =>
           applicationStepsRemaining(applicant, applicant === mainApplicant) == 0
       ) && (
-          <>
-            <Paragraph>
-              Please make sure you have checked your answers for each applicant.
-            </Paragraph>
-            <Button onClick={submitApplication}>Submit application</Button>
-          </>
-        )}
+        <>
+          <Paragraph>
+            Please make sure you have checked your answers for each applicant.
+          </Paragraph>
+          <Button onClick={submitApplication}>Submit application</Button>
+        </>
+      )}
     </Layout>
   );
 };

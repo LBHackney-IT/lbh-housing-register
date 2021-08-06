@@ -1,5 +1,5 @@
 {
-  "id": "ethnicity-category-mixed-multiple-background",
+  "id": "ethnicity-extended-category-mixed-multiple-background",
   "heading": "Which of the following best describes your Mixed or Multiple background background?",
   "steps": [
     {
@@ -7,7 +7,7 @@
         {
           "as": "radios",
           "label": "Please Select",
-          "name": "ethnicity-category-mixed-multiple-background",
+          "name": "ethnicity-extended-category-mixed-multiple-background",
           "options": [
             {
               "label": "White and Black Caribbean",

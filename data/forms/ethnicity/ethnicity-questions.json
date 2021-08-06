@@ -1,5 +1,5 @@
 {
-  "id": "ethnicity-questions",
+  "id": "ethnicity-main-category",
   "heading": "What is your ethnic group?",
   "steps": [
     {
@@ -7,7 +7,7 @@
         {
           "as": "radios",
           "label": "Please Select",
-          "name": "ethnicity-questions-qs",
+          "name": "ethnicity-main-category",
           "options": [
             {
               "label": "Asian or Asian British",
@@ -43,37 +43,37 @@
   ],
   "conditionals": [
     {
-      "fieldId": "ethnicity-questions-qs",
+      "fieldId": "ethnicity-main-category",
       "value": "asian-asian-british",
-      "nextFormId": "ethnicity-category-asian-asian-british"
+      "nextFormId": "ethnicity-extended-category-asian-asian-british"
     },
 
     {
-      "fieldId": "ethnicity-questions-qs",
+      "fieldId": "ethnicity-main-category",
       "value": "black-black-british",
-      "nextFormId": "ethnicity-category-black-black-british"
+      "nextFormId": "ethnicity-extended-category-black-black-british"
     },
 
     {
-      "fieldId": "ethnicity-questions-qs",
+      "fieldId": "ethnicity-main-category",
       "value": "mixed-or-multiple-background",
-      "nextFormId": "ethnicity-category-mixed-multiple-background"
+      "nextFormId": "ethnicity-extended-category-mixed-multiple-background"
     },
 
     {
-      "fieldId": "ethnicity-questions-qs",
+      "fieldId": "ethnicity-main-category",
       "value": "white",
-      "nextFormId": "ethnicity-catagory-white"
+      "nextFormId": "ethnicity-extended-category-white"
     },
 
     {
-      "fieldId": "ethnicity-questions-qs",
+      "fieldId": "ethnicity-main-category",
       "value": "other-ethnic-group",
-      "nextFormId": "ethnicity-category-other-ethnic-group"
+      "nextFormId": "ethnicity-extended-category-other-ethnic-group"
     },
 
     {
-      "fieldId": "ethnicity-questions-qs",
+      "fieldId": "ethnicity-main-category",
       "value": "perfer-not-to-say",
       "nextFormId": "exit"
     }

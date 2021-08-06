@@ -20,26 +20,23 @@ export default function EthnicityQuestions() {
   }
 
   const returnHref = '/apply/confirmation';
-
   const [formId, setFormId] = useState('ethnicity-questions');
-
-  console.log('FormID ', formId);
 
   const [activeStepID, setActiveStepId] = useState(() => {
     switch (formId) {
-      case 'ethnicity-category-asian-asian-british':
-        return FormID.ETHNICITY_CATAGORY_ASIAN_ASIAN_BRITISH;
+      case 'ethnicity-extended-category-asian-asian-british':
+        return FormID.ETHNICITY_CATEGORY_ASIAN_ASIAN_BRITISH;
 
-      case 'ethnicity-category-black-black-british':
+      case 'ethnicity-extended-category-black-black-british':
         return FormID.ETHNICITY_CATEGORY_BLACK_BLACK_BRITISH;
 
-      case 'ethnicity-category-mixed-multiple-background':
+      case 'ethnicity-extended-category-mixed-multiple-background':
         return FormID.ETHNICITY_CATEGORY_MIXED_MULTIPLE_BACKGROUND;
 
-      case 'ethnicity-catagory-white':
-        return FormID.ETHNICITY_CATAGORY_WHITE;
+      case 'ethnicity-extended-category-white':
+        return FormID.ETHNICITY_CATEGORY_WHITE;
 
-      case 'ethnicity-category-other-ethnic-group':
+      case 'ethnicity-extended-category-other-ethnic-group':
         return FormID.ETHNICITY_CATEGORY_OTHER_ETHNIC_GROUP;
 
       default:

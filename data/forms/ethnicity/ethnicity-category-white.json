@@ -1,5 +1,5 @@
 {
-  "id": "ethnicity-catagory-white",
+  "id": "ethnicity-extended-category-white",
   "heading": "Which of the following best describes your white background?",
   "steps": [
     {
@@ -7,7 +7,7 @@
         {
           "as": "radios",
           "label": "Please Select",
-          "name": "ethnicity-catagory-white",
+          "name": "ethnicity-extended-category-white",
           "options": [
             {
               "label": "White - British",

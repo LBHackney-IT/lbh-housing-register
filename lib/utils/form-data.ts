@@ -36,7 +36,7 @@ import EthnicityQuestions from '../../data/forms/ethnicity/ethnicity-questions.j
 import EthnicityCategoryAsianAsianBritish from '../../data/forms/ethnicity/ethnicity-category-asian-asian-british.json';
 import EthnicityCategoryBlackBlackBritish from '../../data/forms/ethnicity/ethnicity-category-black-black-british.json';
 import EthnicityCategoryMixedMultipleBackground from '../../data/forms/ethnicity/ethnicity-category-mixed-multiple-background.json';
-import EthnicityCatagoryWhite from '../../data/forms/ethnicity/ethnicity-catagory-white.json';
+import EthnicityCategoryWhite from '../../data/forms/ethnicity/ethnicity-category-white.json';
 import EthnicityCategoryOtherEthnicGroup from '../../data/forms/ethnicity/ethnicity-category-other-ethnic-group.json';
 
 export enum FormID {
@@ -73,11 +73,11 @@ export enum FormID {
   UNSPENT_CONVICTIONS = 'unspent-convictions',
   EMPLOYMENT = 'employment',
   ETHNICITY_QUESTIONS = 'ethnicity-questions',
-  ETHNICITY_CATAGORY_ASIAN_ASIAN_BRITISH = 'ethnicity-category-asian-asian-british',
-  ETHNICITY_CATEGORY_BLACK_BLACK_BRITISH = 'ethnicity-category-black-black-british',
-  ETHNICITY_CATEGORY_MIXED_MULTIPLE_BACKGROUND = 'ethnicity-category-mixed-multiple-background',
-  ETHNICITY_CATAGORY_WHITE = 'ethnicity-catagory-white',
-  ETHNICITY_CATEGORY_OTHER_ETHNIC_GROUP = 'ethnicity-category-other-ethnic-group',
+  ETHNICITY_CATEGORY_ASIAN_ASIAN_BRITISH = 'ethnicity-extended-category-asian-asian-british',
+  ETHNICITY_CATEGORY_BLACK_BLACK_BRITISH = 'ethnicity-extended-category-black-black-british',
+  ETHNICITY_CATEGORY_MIXED_MULTIPLE_BACKGROUND = 'ethnicity-extended-category-mixed-multiple-background',
+  ETHNICITY_CATEGORY_WHITE = 'ethnicity-extended-category-white',
+  ETHNICITY_CATEGORY_OTHER_ETHNIC_GROUP = 'ethnicity-extended-category-other-ethnic-group',
 }
 
 /**
@@ -198,7 +198,7 @@ export function getFormData(form: FormID): MultiStepForm {
     case FormID.ETHNICITY_QUESTIONS:
       return EthnicityQuestions as MultiStepForm;
 
-    case FormID.ETHNICITY_CATAGORY_ASIAN_ASIAN_BRITISH:
+    case FormID.ETHNICITY_CATEGORY_ASIAN_ASIAN_BRITISH:
       return EthnicityCategoryAsianAsianBritish as MultiStepForm;
 
     case FormID.ETHNICITY_CATEGORY_BLACK_BLACK_BRITISH:
@@ -207,8 +207,8 @@ export function getFormData(form: FormID): MultiStepForm {
     case FormID.ETHNICITY_CATEGORY_MIXED_MULTIPLE_BACKGROUND:
       return EthnicityCategoryMixedMultipleBackground as MultiStepForm;
 
-    case FormID.ETHNICITY_CATAGORY_WHITE:
-      return EthnicityCatagoryWhite as MultiStepForm;
+    case FormID.ETHNICITY_CATEGORY_WHITE:
+      return EthnicityCategoryWhite as MultiStepForm;
 
     case FormID.ETHNICITY_CATEGORY_OTHER_ETHNIC_GROUP:
       return EthnicityCategoryOtherEthnicGroup as MultiStepForm;

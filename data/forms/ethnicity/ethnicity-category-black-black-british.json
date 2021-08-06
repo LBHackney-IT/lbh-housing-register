@@ -1,5 +1,5 @@
 {
-  "id": "ethnicity-category-black-black-british",
+  "id": "ethnicity-extended-category-black-black-british",
   "heading": "Which of the following best describes your Black or Black British background?",
   "steps": [
     {
@@ -7,7 +7,7 @@
         {
           "as": "radios",
           "label": "Please Select",
-          "name": "ethnicity-category-black-black-british",
+          "name": "ethnicity-extended-category-black-black-british",
           "options": [
             {
               "label": "Black Caribbean",

@@ -50,7 +50,6 @@ export default function EthnicityQuestions() {
     const { nextFormId } = formData.conditionals?.find(
       (element) => getIn(values, element.fieldId) === element.value
     ) ?? { nextFormId: 'exit' };
-    console.log('nextFormId', nextFormId);
 
     if (nextFormId === 'exit') {
       dispatch(

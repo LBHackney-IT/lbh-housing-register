@@ -7,7 +7,7 @@
         {
           "as": "radios",
           "label": "Please Select",
-          "name": "ethnicity-extended-category-other-ethnic-group",
+          "name": "ethnicity-extended-category",
           "options": [
             {
               "label": "Arab",

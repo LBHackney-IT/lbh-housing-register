@@ -7,7 +7,7 @@
         {
           "as": "radios",
           "label": "Please Select",
-          "name": "ethnicity-extended-category-mixed-multiple-background",
+          "name": "ethnicity-extended-category",
           "options": [
             {
               "label": "White and Black Caribbean",

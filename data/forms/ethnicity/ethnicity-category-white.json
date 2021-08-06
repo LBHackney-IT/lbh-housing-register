@@ -7,7 +7,7 @@
         {
           "as": "radios",
           "label": "Please Select",
-          "name": "ethnicity-extended-category-white",
+          "name": "ethnicity-extended-category",
           "options": [
             {
               "label": "White - British",

@@ -19,12 +19,19 @@ export function ResidentialStatusSummary({ currentResident }: ResidentialStatusS
         content="Residential Status"
         href={`/apply/${currentResident.person.id}/${FormID.RESIDENTIAL_STATUS}`} />
 
-      <SummaryAnswer>
-        {hackneyResident === 'yes'
-          ? <Paragraph><strong>I am</strong> currently and continually resided in the borough for 3 years or more</Paragraph>
-          : <Paragraph><strong>I am not</strong> currently and continually resided in the borough for 3 years or more</Paragraph>
-        }
-      </SummaryAnswer>
+      {!hackneyResident &&
+        <SummaryAnswer>
+          <Paragraph>Not provided yet</Paragraph>
+        </SummaryAnswer>
+      }
+      {hackneyResident &&
+        <SummaryAnswer>
+          {hackneyResident === 'yes'
+            ? <Paragraph><strong>I am</strong> currently and continually resided in the borough for 3 years or more</Paragraph>
+            : <Paragraph><strong>I am not</strong> currently and continually resided in the borough for 3 years or more</Paragraph>
+          }
+        </SummaryAnswer>
+      }
     </SummarySection>
   );
 }

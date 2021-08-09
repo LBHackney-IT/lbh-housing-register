@@ -27,6 +27,11 @@ export function YourSituationSummary({ currentResident }: YourSituationSummaryPr
         content="Your situation"
         href={`/apply/${currentResident.person.id}/${FormID.YOUR_SITUATION}`} />
 
+      {!homelessness &&
+        <SummaryAnswer>
+          <Paragraph>Not provided yet</Paragraph>
+        </SummaryAnswer>
+      }
       {homelessness &&
         <SummaryAnswer>
           <Paragraph>

@@ -34,7 +34,10 @@ export function EmploymentSummary({ currentResident }: EmploymentSummaryProps) {
         href={`/apply/${currentResident.person.id}/${FormID.EMPLOYMENT}`} />
 
       <SummaryAnswer>
-        <Paragraph>I am <strong>{getEmploymentType(employment)}</strong></Paragraph>
+        {employment
+          ? <Paragraph>I am <strong>{getEmploymentType(employment)}</strong></Paragraph>
+          : <Paragraph>Not provided yet</Paragraph>
+        }
       </SummaryAnswer>
     </SummarySection>
   );

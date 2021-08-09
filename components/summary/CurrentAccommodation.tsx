@@ -75,54 +75,63 @@ export function CurrentAccommodationSummary({ currentResident }: CurrentAccommod
         content="Current accommodation"
         href={`/apply/${currentResident.person.id}/${FormID.CURRENT_ACCOMMODATION}`} />
 
-      <SummaryAnswer>
-        <Paragraph>
-          I am living <strong>{getLivingSituation(livingSituation)}</strong>
-        </Paragraph>
-      </SummaryAnswer>
-      <SummaryAnswer>
-        <Paragraph>
-          I am living in a <strong>{getHomeSituation(homeSituation)}</strong>
-        </Paragraph>
-      </SummaryAnswer>
+      {!livingSituation &&
+        <SummaryAnswer>
+          <Paragraph>Not provided yet</Paragraph>
+        </SummaryAnswer>
+      }
+      {livingSituation &&
+        <>
+          <SummaryAnswer>
+            <Paragraph>
+              I am living <strong>{getLivingSituation(livingSituation)}</strong>
+            </Paragraph>
+          </SummaryAnswer>
+          <SummaryAnswer>
+            <Paragraph>
+              I am living in a <strong>{getHomeSituation(homeSituation)}</strong>
+            </Paragraph>
+          </SummaryAnswer>
 
-      <SummaryAnswer>
-        <Paragraph>
-          My home is on <strong>floor {lookupAnswer('home-floor')}</strong>
-        </Paragraph>
-      </SummaryAnswer>
-      <SummaryAnswer>
-        <Paragraph>
-          I share my home with <strong>{lookupAnswer('home-how-many-people-share')} people</strong> not
-          included in this application
-        </Paragraph>
-      </SummaryAnswer>
-      <SummaryAnswer>
-        <Paragraph>
-          My home has <strong>{lookupAnswer('home-how-many-bedrooms')} bedroom(s)</strong>
-        </Paragraph>
-      </SummaryAnswer>
-      <SummaryAnswer>
-        <Paragraph>
-          My home has <strong>{lookupAnswer('home-how-many-bathrooms')} bathroom(s)</strong>
-        </Paragraph>
-      </SummaryAnswer>
-      <SummaryAnswer>
-        <Paragraph>
-          My home has <strong>{lookupAnswer('home-how-many-kitchens')} kitchen(s)</strong>
-        </Paragraph>
-      </SummaryAnswer>
-      <SummaryAnswer>
-        <Paragraph>
-          My home has <strong>{lookupAnswer('home-how-many-other-rooms')} other room(s)</strong>
-        </Paragraph>
-      </SummaryAnswer>
-      <SummaryAnswer>
-        <Paragraph>
-          I have <strong>{lookupAnswer('home-how-many-personal-rooms')} room(s)</strong> for my own
-          personal use
-        </Paragraph>
-      </SummaryAnswer>
+          <SummaryAnswer>
+            <Paragraph>
+              My home is on <strong>floor {lookupAnswer('home-floor')}</strong>
+            </Paragraph>
+          </SummaryAnswer>
+          <SummaryAnswer>
+            <Paragraph>
+              I share my home with <strong>{lookupAnswer('home-how-many-people-share')} people</strong> not
+              included in this application
+            </Paragraph>
+          </SummaryAnswer>
+          <SummaryAnswer>
+            <Paragraph>
+              My home has <strong>{lookupAnswer('home-how-many-bedrooms')} bedroom(s)</strong>
+            </Paragraph>
+          </SummaryAnswer>
+          <SummaryAnswer>
+            <Paragraph>
+              My home has <strong>{lookupAnswer('home-how-many-bathrooms')} bathroom(s)</strong>
+            </Paragraph>
+          </SummaryAnswer>
+          <SummaryAnswer>
+            <Paragraph>
+              My home has <strong>{lookupAnswer('home-how-many-kitchens')} kitchen(s)</strong>
+            </Paragraph>
+          </SummaryAnswer>
+          <SummaryAnswer>
+            <Paragraph>
+              My home has <strong>{lookupAnswer('home-how-many-other-rooms')} other room(s)</strong>
+            </Paragraph>
+          </SummaryAnswer>
+          <SummaryAnswer>
+            <Paragraph>
+              I have <strong>{lookupAnswer('home-how-many-personal-rooms')} room(s)</strong> for my own
+              personal use
+            </Paragraph>
+          </SummaryAnswer>
+        </>
+      }
     </SummarySection>
   );
 }

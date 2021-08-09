@@ -21,25 +21,27 @@ export function AddressHistorySummary({ currentResident }: AddressHistorySummary
         content="Address history"
         href={`/apply/${currentResident.person.id}/${FormID.ADDRESS_HISTORY}`} />
 
-      {addressHistory && addressHistory
-        .map(
-          (address: AddressHistoryEntry, index: number) => {
-            return (
-              <>
-                <SummaryAnswer>
-                  <Paragraph>
-                    <Hint content={index === 0 ? 'Current Address' : 'Previous Address'} />
-                    <strong>
-                      {address.address.line1}, {address.address.town}, {address.postcode}
-                      <br />
-                      {durations[index].label}
-                    </strong>
-                  </Paragraph>
-                </SummaryAnswer>
-              </>
-            );
-          }
-        )}
+      {!addressHistory &&
+        <SummaryAnswer>
+          <Paragraph>Not provided yet</Paragraph>
+        </SummaryAnswer>
+      }
+      {addressHistory && addressHistory.map(
+        (address: AddressHistoryEntry, index: number) => {
+          return (
+            <SummaryAnswer>
+              <Paragraph>
+                <Hint content={index === 0 ? 'Current Address' : 'Previous Address'} />
+                <strong>
+                  {address.address.line1}, {address.address.town}, {address.postcode}
+                  <br />
+                  {durations[index].label}
+                </strong>
+              </Paragraph>
+            </SummaryAnswer>
+          );
+        }
+      )}
     </SummarySection>
   );
 }

@@ -2,6 +2,11 @@
   "heading": "Residential status",
   "eligibility": [
     {
+      "field": "asbo-behaviour",
+      "is": "yes",
+      "reasoning": "It's unlikely that you will qualify for social housing."
+    },
+    {
       "field": "institutions",
       "is": "none",
       "reasoning": "It's unlikely that you will qualify for social housing."
@@ -71,6 +76,10 @@
           },
           "conditionalDisplay": [
             {
+              "field": "residential-status",
+              "is": "no"
+            },
+            {
               "field": "moved-borough",
               "is": "no"
             }
@@ -94,6 +103,14 @@
             "required": true
           },
           "conditionalDisplay": [
+            {
+              "field": "residential-status",
+              "is": "no"
+            },
+            {
+              "field": "moved-borough",
+              "is": "no"
+            },
             {
               "field": "homeless",
               "is": "no"
@@ -119,6 +136,18 @@
           },
           "conditionalDisplay": [
             {
+              "field": "residential-status",
+              "is": "no"
+            },
+            {
+              "field": "moved-borough",
+              "is": "no"
+            },
+            {
+              "field": "homeless",
+              "is": "no"
+            },
+            {
               "field": "asbo-behaviour",
               "is": "no"
             }
@@ -142,6 +171,22 @@
             "required": true
           },
           "conditionalDisplay": [
+            {
+              "field": "residential-status",
+              "is": "no"
+            },
+            {
+              "field": "moved-borough",
+              "is": "no"
+            },
+            {
+              "field": "homeless",
+              "is": "no"
+            },
+            {
+              "field": "asbo-behaviour",
+              "is": "no"
+            },
             {
               "field": "armed-forces",
               "is": "no"
@@ -167,6 +212,26 @@
           },
           "conditionalDisplay": [
             {
+              "field": "residential-status",
+              "is": "no"
+            },
+            {
+              "field": "moved-borough",
+              "is": "no"
+            },
+            {
+              "field": "homeless",
+              "is": "no"
+            },
+            {
+              "field": "asbo-behaviour",
+              "is": "no"
+            },
+            {
+              "field": "armed-forces",
+              "is": "no"
+            },
+            {
               "field": "mobility-scheme",
               "is": "no"
             }
@@ -190,6 +255,30 @@
             "required": true
           },
           "conditionalDisplay": [
+            {
+              "field": "residential-status",
+              "is": "no"
+            },
+            {
+              "field": "moved-borough",
+              "is": "no"
+            },
+            {
+              "field": "homeless",
+              "is": "no"
+            },
+            {
+              "field": "asbo-behaviour",
+              "is": "no"
+            },
+            {
+              "field": "armed-forces",
+              "is": "no"
+            },
+            {
+              "field": "mobility-scheme",
+              "is": "no"
+            },
             {
               "field": "homelessness-accepted",
               "is": "no"
@@ -215,6 +304,34 @@
           },
           "conditionalDisplay": [
             {
+              "field": "residential-status",
+              "is": "no"
+            },
+            {
+              "field": "moved-borough",
+              "is": "no"
+            },
+            {
+              "field": "homeless",
+              "is": "no"
+            },
+            {
+              "field": "asbo-behaviour",
+              "is": "no"
+            },
+            {
+              "field": "armed-forces",
+              "is": "no"
+            },
+            {
+              "field": "mobility-scheme",
+              "is": "no"
+            },
+            {
+              "field": "homelessness-accepted",
+              "is": "no"
+            },
+            {
               "field": "social-housing",
               "is": "no"
             }
@@ -239,6 +356,38 @@
           },
           "conditionalDisplay": [
             {
+              "field": "residential-status",
+              "is": "no"
+            },
+            {
+              "field": "moved-borough",
+              "is": "no"
+            },
+            {
+              "field": "homeless",
+              "is": "no"
+            },
+            {
+              "field": "asbo-behaviour",
+              "is": "no"
+            },
+            {
+              "field": "armed-forces",
+              "is": "no"
+            },
+            {
+              "field": "mobility-scheme",
+              "is": "no"
+            },
+            {
+              "field": "homelessness-accepted",
+              "is": "no"
+            },
+            {
+              "field": "social-housing",
+              "is": "no"
+            },
+            {
               "field": "providing-care",
               "is": "no"
             }
@@ -262,6 +411,42 @@
             "required": true
           },
           "conditionalDisplay": [
+            {
+              "field": "residential-status",
+              "is": "no"
+            },
+            {
+              "field": "moved-borough",
+              "is": "no"
+            },
+            {
+              "field": "homeless",
+              "is": "no"
+            },
+            {
+              "field": "asbo-behaviour",
+              "is": "no"
+            },
+            {
+              "field": "armed-forces",
+              "is": "no"
+            },
+            {
+              "field": "mobility-scheme",
+              "is": "no"
+            },
+            {
+              "field": "homelessness-accepted",
+              "is": "no"
+            },
+            {
+              "field": "social-housing",
+              "is": "no"
+            },
+            {
+              "field": "providing-care",
+              "is": "no"
+            },
             {
               "field": "domestic-violence",
               "is": "no"
@@ -302,6 +487,46 @@
             "required": true
           },
           "conditionalDisplay": [
+            {
+              "field": "residential-status",
+              "is": "no"
+            },
+            {
+              "field": "moved-borough",
+              "is": "no"
+            },
+            {
+              "field": "homeless",
+              "is": "no"
+            },
+            {
+              "field": "asbo-behaviour",
+              "is": "no"
+            },
+            {
+              "field": "armed-forces",
+              "is": "no"
+            },
+            {
+              "field": "mobility-scheme",
+              "is": "no"
+            },
+            {
+              "field": "homelessness-accepted",
+              "is": "no"
+            },
+            {
+              "field": "social-housing",
+              "is": "no"
+            },
+            {
+              "field": "providing-care",
+              "is": "no"
+            },
+            {
+              "field": "domestic-violence",
+              "is": "no"
+            },
             {
               "field": "studying-outside-borough",
               "is": "no"

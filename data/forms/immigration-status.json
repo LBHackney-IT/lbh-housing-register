@@ -95,6 +95,10 @@
           },
           "conditionalDisplay": [
             {
+              "field": "citizenship",
+              "is": "european"
+            },
+            {
               "field": "uk-studying",
               "is": "no"
             }
@@ -143,6 +147,10 @@
           },
           "conditionalDisplay": [
             {
+              "field": "citizenship",
+              "is": "other"
+            },
+            {
               "field": "work-or-study-visa",
               "is": "no"
             }
@@ -166,6 +174,14 @@
             "required": true
           },
           "conditionalDisplay": [
+            {
+              "field": "citizenship",
+              "is": "other"
+            },
+            {
+              "field": "work-or-study-visa",
+              "is": "no"
+            },
             {
               "field": "eea-national",
               "is": "no"
@@ -200,12 +216,28 @@
             {
               "label": "I have limited Leave to Remain with no recourse to public funds",
               "value": "limited-leave-to-remain-no-public-funds"
+            },
+            {
+              "label": "Other",
+              "value": "other"
             }
           ],
           "validation": {
             "required": true
           },
           "conditionalDisplay": [
+            {
+              "field": "citizenship",
+              "is": "other"
+            },
+            {
+              "field": "work-or-study-visa",
+              "is": "no"
+            },
+            {
+              "field": "eea-national",
+              "is": "no"
+            },
             {
               "field": "receiving-sponsorship",
               "is": "no"

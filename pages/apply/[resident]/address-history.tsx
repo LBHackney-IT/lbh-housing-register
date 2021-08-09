@@ -212,7 +212,7 @@ const ApplicationStep = (): JSX.Element => {
     AddressLookupAddress[]
   >([]);
 
-  const [addressHistory, setAddressHistory] = useState<AddressHistoryEntry[]>(savedAddressHistory);
+  const [addressHistory, setAddressHistory] = useState<AddressHistoryEntry[]>(savedAddressHistory ?? []);
 
   const restart = () => {
     setAddressHistory([]);
@@ -315,10 +315,7 @@ const ApplicationStep = (): JSX.Element => {
         contact a <a href="https://hackney.gov.uk/housing-options">housing officer</a>
       </Details>
 
-      {state === 'review' &&
-        <Summary addressHistory={addressHistory} />
-      }
-
+      <Summary addressHistory={addressHistory} />
       <Formik
         initialValues={initialValues}
         onSubmit={onSubmit}

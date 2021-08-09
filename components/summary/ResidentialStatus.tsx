@@ -10,8 +10,22 @@ interface ResidentialStatusSummaryProps {
 
 export function ResidentialStatusSummary({ currentResident }: ResidentialStatusSummaryProps) {
 
-  // TODO: add more answers
-  const hackneyResident = getQuestionValue(currentResident.questions, FormID.RESIDENTIAL_STATUS, 'residential-status');
+  function lookupAnswer(question: string) {
+    return getQuestionValue(currentResident.questions, FormID.RESIDENTIAL_STATUS, question);
+  }
+
+  const hackneyResident = lookupAnswer('residential-status');
+  const movedBorough = lookupAnswer('moved-borough');
+  const homeless = lookupAnswer('homeless');
+  const asboBehavior = lookupAnswer('asbo-behaviour');
+  const armedForces = lookupAnswer('armed-forces');
+  const mobilityScheme = lookupAnswer('mobility-scheme');
+  const homelessnessAccepted = lookupAnswer('homelessness-accepted');
+  const socialHousing = lookupAnswer('social-housing');
+  const providingCare = lookupAnswer('providing-care');
+  const domesticViolence = lookupAnswer('domestic-violence');
+  const studyingOutsideBorough = lookupAnswer('studying-outside-borough');
+  const institutions = lookupAnswer('institutions');
 
   return (
     <SummarySection>
@@ -25,12 +39,87 @@ export function ResidentialStatusSummary({ currentResident }: ResidentialStatusS
         </SummaryAnswer>
       }
       {hackneyResident &&
-        <SummaryAnswer>
-          {hackneyResident === 'yes'
-            ? <Paragraph><strong>I am</strong> currently and continually resided in the borough for 3 years or more</Paragraph>
-            : <Paragraph><strong>I am not</strong> currently and continually resided in the borough for 3 years or more</Paragraph>
-          }
-        </SummaryAnswer>
+        <>
+          <SummaryAnswer>
+            <Paragraph>
+              <strong>I am{hackneyResident !== 'yes' && ' not'}</strong> currently and continually
+              resided in the borough for 3 years or more.
+            </Paragraph>
+          </SummaryAnswer>
+          <SummaryAnswer>
+            <Paragraph>
+              <strong>I have{movedBorough !== 'yes' && ' not'}</strong> in the last 3 years moved out
+              and moved back into the borough within 3 months.
+            </Paragraph>
+          </SummaryAnswer>
+          <SummaryAnswer>
+            <Paragraph>
+              <strong>I am{homeless !== 'yes' && ' not'}</strong> currently homeless and placed in
+              temporary accommodation outside of the borough.
+            </Paragraph>
+          </SummaryAnswer>
+          <SummaryAnswer>
+            <Paragraph>
+              <strong>I am{asboBehavior !== 'yes' && ' not'}</strong> unable to reside in the borough
+              due to a court order or an injunction due to unacceptable behaviour.
+            </Paragraph>
+          </SummaryAnswer>
+          <SummaryAnswer>
+            <Paragraph>
+              <strong>I (or my partner) are{armedForces !== 'yes' && ' not'}</strong> serving, or
+              ex-serving member of the armed forces.
+            </Paragraph>
+          </SummaryAnswer>
+          <SummaryAnswer>
+            <Paragraph>
+              <strong>I (or my partner) am{mobilityScheme !== 'yes' && ' not'}</strong> a nominee
+              under National Witness Mobility Scheme.
+            </Paragraph>
+          </SummaryAnswer>
+          <SummaryAnswer>
+            <Paragraph>
+              <strong>I have{homelessnessAccepted !== 'yes' && ' not'}</strong> been accepted as
+              Homeless by the Council with a duty to provide accomodation under the Housing Act 1996.
+            </Paragraph>
+          </SummaryAnswer>
+          <SummaryAnswer>
+            <Paragraph>
+              <strong>I am{socialHousing !== 'yes' && ' not'}</strong> an existing social housing
+              tenant in Hackney who has a secure, assured or fixed term tenancy.
+            </Paragraph>
+          </SummaryAnswer>
+          <SummaryAnswer>
+            <Paragraph>
+              <strong>I am{providingCare !== 'yes' && ' not'}</strong> moving to Hackney to provide
+              care to a Hackney resident that has been agreed by the Council's medical advisor.
+            </Paragraph>
+          </SummaryAnswer>
+          <SummaryAnswer>
+            <Paragraph>
+              <strong>I am{domesticViolence !== 'yes' && ' not'}</strong> fleeing domestic or familial
+              violence, or need to move to Hackney due to social or welfare reasons.
+            </Paragraph>
+          </SummaryAnswer>
+          <SummaryAnswer>
+            <Paragraph>
+              <strong>I am{studyingOutsideBorough !== 'yes' && ' not'}</strong> a student living and
+              studying away from the borough.
+            </Paragraph>
+          </SummaryAnswer>
+          <SummaryAnswer>
+            <Paragraph>
+              <strong>I have{institutions !== 'yes' && ' not'}</strong> been in any of the following
+              institution for the last 3 years or more.
+            </Paragraph>
+            <Paragraph>
+              Hospital,<br />
+              Prison,<br />
+              Care Home,<br />
+              Foster Placement,<br />
+              Accommodation provided by social services
+            </Paragraph>
+          </SummaryAnswer>
+        </>
       }
     </SummarySection>
   );

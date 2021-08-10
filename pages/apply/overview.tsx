@@ -16,11 +16,12 @@ import whenAgreed from '../../lib/hoc/whenAgreed';
 import { useAppSelector } from '../../lib/store/hooks';
 import { checkEligible } from '../../lib/utils/form';
 import { applicationStepsRemaining } from '../../lib/utils/resident';
-import { NotifyRequest } from '../../domain/govukNotify';
-import { sendNewApplicationEmail } from '../../lib/gateways/internal-api';
+import { useDispatch } from 'react-redux';
+import { sendConfirmation } from '../../lib/store/application';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const applicants = useAppSelector((store) =>
     [store.application.mainApplicant, store.application.otherMembers]
@@ -46,17 +47,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
   const submitApplication = async () => {
     // TODO: perform update on application
 
-    // TODO: do as part of submission
-    const notifyRequest: NotifyRequest = {
-      emailAddress: application.mainApplicant?.contactInformation?.emailAddress ?? '',
-      personalisation: {
-        'ref_number': application.id ?? '',
-        'resident_name': application.mainApplicant?.person?.firstName ?? '',
-      },
-      reference: `${application.id}`
-    };
-    sendNewApplicationEmail(notifyRequest);
-
+    dispatch(sendConfirmation(application));
     router.push('/apply/ethnicity-questions');
   };
 

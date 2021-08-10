@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -16,6 +20,16 @@
     "noEmit": true,
     "jsx": "preserve"
   },
-  "include": ["next-env.d.ts", "components", "lib", "pages"],
-  "exclude": [".next", "data", "public", "node_modules", "styles"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    ".next",
+    "data",
+    "public",
+    "node_modules",
+    "styles"
+  ]
 }

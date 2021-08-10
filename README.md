@@ -132,3 +132,9 @@ This has been extended to be used in a more generic way, which means forms can b
 [Higher order components](https://reactjs.org/docs/higher-order-components.html) are used to wrap existing components with some logic about the current application, allowing for code re-use.
 
 - `whenAgreed` - ensure that the applicant has agreed to the terms and conditions
+
+### Emails
+
+[Gov.UK Notify](https://gov.uk/notify) is used to send emails (e.g. confirmation emails). Update the `NOTIFY_API_KEY` and relevant template ids in the `.env` file.
+
+ - NOTIFY_TEMPLATE_NEW_APPLICATION: sent on completion of an application

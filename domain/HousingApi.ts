@@ -110,6 +110,12 @@ export interface Application {
    * @type {string}
    * @memberof Application
    */
+  reference?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Application
+   */
   createdAt?: string;
   /**
    *

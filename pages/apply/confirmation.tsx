@@ -6,10 +6,12 @@ import Paragraph from '../../components/content/paragraph';
 import Layout from '../../components/layout/resident-layout';
 import Panel from '../../components/panel';
 import Timeline, { TimelineEvent } from '../../components/timeline';
+import { useAppSelector } from '../../lib/store/hooks';
 
 const ApplicationConfirmation = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const application = useAppSelector((store) => store.application);
 
   const signOut = () => {
     dispatch(signOut());
@@ -20,7 +22,7 @@ const ApplicationConfirmation = (): JSX.Element => {
     <Layout pageName="Confirmation">
       <Panel
         heading="Application complete"
-        message="Your reference number: HDJ2123F"
+        message={`Your reference number: ${application.reference?.toUpperCase()}`}
       />
 
       <HeadingTwo content="What happens next" />

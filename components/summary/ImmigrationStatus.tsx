@@ -32,15 +32,21 @@ export function ImmigrationStatusSummary({ currentResident }: ImmigrationStatusS
   }
 
   return (
+
     <SummarySection>
       <SummaryTitle
         content="Immigration Status"
         href={`/apply/${currentResident.person.id}/${FormID.IMMIGRATION_STATUS}`} />
 
       <SummaryAnswer>
-        <Paragraph>
-          I am <strong>{getCitizenship(citizenship)}</strong> citizen {getUkStudying(ukStudying)} {getSettledStatus(settledStatus)}
-        </Paragraph>
+        {!citizenship &&
+          <Paragraph>Not provided yet</Paragraph>
+        }
+        {citizenship &&
+          <Paragraph>
+            I am <strong>{getCitizenship(citizenship)}</strong> citizen {getUkStudying(ukStudying)} {getSettledStatus(settledStatus)}
+          </Paragraph>
+        }
       </SummaryAnswer>
     </SummarySection>
   );

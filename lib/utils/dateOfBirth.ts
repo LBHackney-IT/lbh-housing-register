@@ -1,5 +1,11 @@
 import { Applicant } from "../../domain/HousingApi";
 
+export function formatDob(date: Date) {
+  return `${date.toLocaleString('default', {
+    day: 'numeric', month: 'short', year: 'numeric'
+  })}`;
+}
+
 /**
  * Get the applicants age as a number
  * @param {Applicant} applicant The applicant

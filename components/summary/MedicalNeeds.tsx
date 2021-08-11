@@ -18,12 +18,19 @@ export function MedicalNeedsSummary({ currentResident }: MedicalNeedsSummaryProp
         content="Medical Needs"
         href={`/apply/${currentResident.person.id}/${FormID.MEDICAL_NEEDS}`} />
 
-      <SummaryAnswer>
-        {medicalNeeds === 'yes'
-          ? <Paragraph><strong>I do</strong> have a medical need that affects my housing needs</Paragraph>
-          : <Paragraph><strong>I do not</strong> have any medical needs</Paragraph>
-        }
-      </SummaryAnswer>
+      {!medicalNeeds &&
+        <SummaryAnswer>
+          <Paragraph>Not provided yet</Paragraph>
+        </SummaryAnswer>
+      }
+      {medicalNeeds &&
+        <SummaryAnswer>
+          {medicalNeeds === 'yes'
+            ? <Paragraph><strong>I do</strong> have a medical need that affects my housing needs</Paragraph>
+            : <Paragraph><strong>I do not</strong> have any medical needs</Paragraph>
+          }
+        </SummaryAnswer>
+      }
     </SummarySection>
   );
 }

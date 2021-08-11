@@ -35,7 +35,7 @@
         },
         {
           "as": "radios",
-          "label": "In the last 3 years have you moved out and moved back into the borough with 3 months?",
+          "label": "In the last 3 years have you moved out and moved back into the borough within 3 months?",
           "name": "moved-borough",
           "options": [
             {
@@ -59,7 +59,7 @@
         },
         {
           "as": "radios",
-          "label": "Are you currently homeless and placed in temporary accomodation outside of the borough?",
+          "label": "Are you currently homeless and placed in temporary accommodation outside of the borough?",
           "name": "homeless",
           "options": [
             {

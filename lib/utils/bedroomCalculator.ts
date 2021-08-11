@@ -1,19 +1,22 @@
-function calculateBedrooms(...people: Array<any>) {
+type People = [number, string[], string[] | null]; // this is causing me headache
+
+export function calculateBedrooms(...people: Array<any>) {
   // one bedroom each...unless it's a couple
-  let relationshipType = people[0].pop();
-  let over16 = people.filter(([age, _]) => {
+  let relationship = false;
+  const over16 = people[0].filter(([age, gender, relationshipType]) => {
+    if (relationshipType === 'partner') {
+      relationship = true;
+    }
     return age >= 16;
   }).length;
 
-  // 0.5 bedroom each.
-  const under10 = people.filter(([age]) => age < 10).length / 2;
+  const over16CoupleAdjusted = relationship ? over16 - 1 : over16;
 
-  if (relationshipType === 'partner') {
-    over16 = over16 - 1;
-  }
+  // 0.5 bedroom each.
+  const under10 = people[0].filter(([age]) => age < 10).length / 2;
 
   const over10 = [
-    ...people
+    ...people[0]
       .filter(([age]) => age >= 10 && age < 16)
       .map(([age, gender]) => gender)
       .reduce((map, gender) => {
@@ -25,7 +28,7 @@ function calculateBedrooms(...people: Array<any>) {
   ].map(([gender, count]) => {
     // when there's an uneven number of over 10s of a given gender, and an uneven number of under 10s in general...
     if (count % 2 !== 0 && (under10 * 2) % 2 !== 0) {
-      const matchedUnder10s = people.filter(
+      const matchedUnder10s = people[0].filter(
         ([age, g]) => age < 10 && g === gender
       );
       // ...and at least one of the under 10s has this gender then they can share a room.
@@ -37,24 +40,10 @@ function calculateBedrooms(...people: Array<any>) {
     return [gender, count / 2];
   });
 
-  console.log({ over16, under10, over10 });
-
-  const total = over16 + under10 + over10.reduce((acc, [g, c]) => acc + c, 0);
+  const total =
+    over16CoupleAdjusted +
+    Math.ceil(under10) +
+    over10.reduce((acc, [g, c]) => acc + Math.ceil(c), 0);
 
   return total;
-}
-
-export function CALCULATE_BEDROOMS(people: Array<any>) {
-  const individualBedroom = people
-    .map((row) => row.filter((v: string) => v !== ''))
-    .map((row) =>
-      [...Array(Math.ceil(row.length / 3))].map((_, i) =>
-        row.slice(i * 3, i * 3 + 3)
-      )
-    )
-    .map((args) => [calculateBedrooms(...args)]);
-
-  const totalBedrooms = individualBedroom.reduce((acc, cur) => acc + cur[0], 0);
-
-  return Math.ceil(totalBedrooms);
 }

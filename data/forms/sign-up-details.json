@@ -24,8 +24,16 @@
               "value": "Miss"
             },
             {
+              "label": "Ms",
+              "value": "Ms"
+            },
+            {
               "label": "Mx",
               "value": "Mx"
+            },
+            {
+              "label": "Other",
+              "value": "Other"
             }
           ]
         },

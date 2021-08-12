@@ -1,4 +1,4 @@
-import { useAppDispatch } from '../../lib/store/hooks';
+import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { useRouter } from 'next/router';
 import { ButtonLink } from '../../components/button';
 import { HeadingOne } from '../../components/content/headings';
@@ -7,6 +7,12 @@ import Layout from '../../components/layout/resident-layout';
 import DeleteLink from '../../components/delete-link';
 import Announcement from '../../components/announcement';
 import { signOut } from '../../lib/store/cognitoUser';
+import { Applicant } from '../../domain/HousingApi';
+import { calculateBedrooms } from '../../lib/utils/bedroomCalculator';
+import { useState, useEffect } from 'react';
+import { getGenderName } from '../../lib/utils/gender';
+import { getAgeInYears } from '../../lib/utils/dateOfBirth';
+import { getWaitingTime } from '../../lib/utils/bedroomWaitingTime';
 
 const WhatToExpect = (): JSX.Element => {
   const router = useRouter();
@@ -16,6 +22,24 @@ const WhatToExpect = (): JSX.Element => {
     dispatch(signOut());
     router.push('/');
   };
+
+  const applicants = useAppSelector((store) =>
+    [store.application.mainApplicant, store.application.otherMembers]
+      .filter((v): v is Applicant | Applicant[] => v !== undefined)
+      .flat()
+  );
+
+  const bedroomArray = applicants.map((applicant) => ({
+    age: getAgeInYears(applicant),
+    gender: getGenderName(applicant),
+  }));
+
+  const hasPartnerSharing = !!applicants.find(
+    (applicant) => applicant.person?.relationshipType === 'partner'
+  );
+  const bedroomNeed = calculateBedrooms(bedroomArray, hasPartnerSharing);
+
+  const waitingTime = getWaitingTime(bedroomNeed);
 
   return (
     <Layout pageName="What to expect">
@@ -27,8 +51,8 @@ const WhatToExpect = (): JSX.Element => {
           property.
         </Paragraph>
         <Paragraph>
-          The average waiting timefor a two bedroom property is{' '}
-          <strong>11 years.</strong>
+          The average waiting time for a two bedroom property is{' '}
+          <strong>{waitingTime} years.</strong>
         </Paragraph>
       </Announcement>
       <Paragraph>

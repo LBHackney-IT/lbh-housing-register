@@ -1,23 +1,23 @@
-type People = [number, string[], string[] | null]; // this is causing me headache
+type People = Array<(string | number | null)[][]>;
 
-export function calculateBedrooms(...people: Array<any>) {
+export function calculateBedrooms(...people: People) {
   // one bedroom each...unless it's a couple
   let relationship = false;
   const over16 = people[0].filter(([age, gender, relationshipType]) => {
     if (relationshipType === 'partner') {
       relationship = true;
     }
-    return age >= 16;
+    return age! >= 16;
   }).length;
 
   const over16CoupleAdjusted = relationship ? over16 - 1 : over16;
 
   // 0.5 bedroom each.
-  const under10 = people[0].filter(([age]) => age < 10).length / 2;
+  const under10 = people[0].filter(([age]) => age! < 10).length / 2;
 
   const over10 = [
     ...people[0]
-      .filter(([age]) => age >= 10 && age < 16)
+      .filter(([age]) => age! >= 10 && age! < 16)
       .map(([age, gender]) => gender)
       .reduce((map, gender) => {
         let count = map.get(gender) ?? 0;
@@ -29,7 +29,7 @@ export function calculateBedrooms(...people: Array<any>) {
     // when there's an uneven number of over 10s of a given gender, and an uneven number of under 10s in general...
     if (count % 2 !== 0 && (under10 * 2) % 2 !== 0) {
       const matchedUnder10s = people[0].filter(
-        ([age, g]) => age < 10 && g === gender
+        ([age, g]) => age! < 10 && g === gender
       );
       // ...and at least one of the under 10s has this gender then they can share a room.
       if (matchedUnder10s.length) {

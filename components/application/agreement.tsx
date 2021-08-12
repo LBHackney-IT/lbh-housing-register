@@ -33,19 +33,24 @@ export default function ApplicationAgreement() {
       <HeadingOne content="Before you continue" />
 
       <Paragraph>
-        I understand that the information I provide will be verified by Hackney
-        Council to assess my level of housing need.
+        Hackney Council will verify the information you provide, so we can
+        assess your housing needs, and eligibility for social housing.
       </Paragraph>
 
       <Paragraph>
-        The answers and evidence I provide may be referred to credit agencies,
-        other local authorities, medical professionals and HMRC.
+        To do this, we may share your information with credit agencies, local
+        authorities, medical professionals and HMRC.
       </Paragraph>
 
       <Paragraph>
-        I agree to allow a Housing Officer to conduct a home visit to assess my
-        current living situation without advance notice. If I do not allow
-        entry, my application may be declined.
+        A Housing Needs and Benefits Officer may need to visit your home without
+        advance notice to assess your living situation.
+      </Paragraph>
+
+      <Paragraph>
+        By selecting I understand and accept below, you're agreeing to let them
+        into your home, and understand that Hackney may reject your application
+        if you don't.
       </Paragraph>
 
       <Form

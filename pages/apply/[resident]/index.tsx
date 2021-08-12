@@ -65,9 +65,7 @@ const ApplicationStep = (): JSX.Element => {
 
   return (
     <Layout pageName="Person overview" breadcrumbs={breadcrumbs}>
-      <h1
-        className="lbh-heading-h1"
-        style={{ marginBottom: '40px' }}>
+      <h1 className="lbh-heading-h1" style={{ marginBottom: '40px' }}>
         <span className="govuk-hint lbh-hint">Complete information for:</span>
         {`${currentResident.person?.firstName} ${currentResident.person?.surname}`}
       </h1>
@@ -105,7 +103,7 @@ const ApplicationStep = (): JSX.Element => {
       </ButtonLink>
       <br />
       <Button onClick={goBack} secondary={true}>
-        Save & go back
+        Save and go back
       </Button>
       {currentResident !== mainResident && (
         <DeleteLink

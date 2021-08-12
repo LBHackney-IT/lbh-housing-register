@@ -45,8 +45,8 @@ export const updateApplication = createAsyncThunk(
 
 export const completeApplication = createAsyncThunk(
   'application/complete',
-  async (id: string) => {
-    const res = await fetch(`/api/applications/${id}/complete`, {
+  async (application: Application) => {
+    const res = await fetch(`/api/applications/${application.id}/complete`, {
       method: 'PATCH',
     });
     return (await res.json()) as Application;

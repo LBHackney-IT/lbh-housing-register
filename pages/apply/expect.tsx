@@ -29,15 +29,17 @@ const WhatToExpect = (): JSX.Element => {
       .flat()
   );
 
-  const bedroomArray = applicants.map((individual) => {
-    let age = getAgeInYears(individual);
-    let gender = getGenderName(individual);
-    let relationship = individual['person']!['relationshipType']!;
-    return [age, gender, relationship];
-  });
+  const bedroomArray = applicants.map((applicant) => ({
+    age: getAgeInYears(applicant),
+    gender: getGenderName(applicant),
+  }));
 
-  const bedroom_results = calculateBedrooms(bedroomArray);
-  const waitingTime = getWaitingTime(bedroom_results);
+  const hasPartnerSharing = !!applicants.find(
+    (applicant) => applicant.person?.relationshipType === 'partner'
+  );
+  const bedroomNeed = calculateBedrooms(bedroomArray, hasPartnerSharing);
+
+  const waitingTime = getWaitingTime(bedroomNeed);
 
   return (
     <Layout pageName="What to expect">
@@ -45,7 +47,7 @@ const WhatToExpect = (): JSX.Element => {
       <Announcement variant="success">
         <Paragraph>
           If you qualify for the housing register, you may be able to apply for
-          a <strong>{bedroom_results} bedroom</strong> property.
+          a <strong>{bedroomNeed} bedroom</strong> property.
         </Paragraph>
         <Paragraph>
           The average waiting time for a two bedroom property is{' '}

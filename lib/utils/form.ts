@@ -1,5 +1,7 @@
 import { Applicant } from '../../domain/HousingApi';
+import { getQuestionValue } from '../store/applicant';
 import { FormData, FormField } from '../types/form';
+import { FormID, getEligibilityCriteria } from './form-data';
 
 /**
  * Determines if the field should be displayed based on the values passed in
@@ -29,41 +31,40 @@ export function getDisplayStateOfField(
 }
 
 /**
- * Is the form data passed in eligible?
- * @param formData The multi form data
+ * Is the form data for the applicant eligible?
+ * @param applicant The applicant
  * @returns {[boolean, string[]]} - A tuple of state (isValid) and error message
  */
-export function checkEligible(application: Applicant): [boolean, string[]] {
-  return [true, []];
-  // let isValid = true;
-  // let reasons: string[] = [];
+export function checkEligible(applicant: Applicant): [boolean, string[]] {
+  let isValid = true;
+  let reasons: string[] = [];
 
-  // const setInvalid = (reasoning?: string): void => {
-  //   isValid = false;
+  const setInvalid = (reasoning?: string): void => {
+    isValid = false;
 
-  //   if (reasoning) {
-  //     reasons.push(reasoning);
-  //   }
-  // };
+    if (reasoning) {
+      reasons.push(reasoning);
+    }
+  };
 
-  // for (const [form, values] of Object.entries(formData)) {
-  //   const eligibilityCriteria = getEligibilityCriteria(form);
-  //   eligibilityCriteria?.forEach((criteria) => {
-  //     const fieldValue = values[criteria.field];
+  for (const [form, values] of Object.entries(FormID)) {
+    const eligibilityCriteria = getEligibilityCriteria(values);
+    eligibilityCriteria?.forEach((criteria) => {
+      const fieldValue = getQuestionValue(applicant.questions, values, criteria.field);
 
-  //     if (Array.isArray(fieldValue) && fieldValue.indexOf(criteria.is) !== -1) {
-  //       setInvalid(criteria.reasoning);
-  //     }
+      if (Array.isArray(fieldValue) && fieldValue.indexOf(criteria.is) !== -1) {
+        setInvalid(criteria.reasoning);
+      }
 
-  //     if (criteria.is && criteria.is === fieldValue) {
-  //       setInvalid(criteria.reasoning);
-  //     }
+      if (criteria.is && criteria.is === fieldValue) {
+        setInvalid(criteria.reasoning);
+      }
 
-  //     if (criteria.isNot && criteria.isNot === fieldValue) {
-  //       setInvalid(criteria.reasoning);
-  //     }
-  //   });
-  // }
+      if (criteria.isNot && criteria.isNot === fieldValue) {
+        setInvalid(criteria.reasoning);
+      }
+    });
+  }
 
-  // return [isValid, reasons];
+  return [isValid, reasons];
 }

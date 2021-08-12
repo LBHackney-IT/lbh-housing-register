@@ -16,9 +16,12 @@ import whenAgreed from '../../lib/hoc/whenAgreed';
 import { useAppSelector } from '../../lib/store/hooks';
 import { checkEligible } from '../../lib/utils/form';
 import { applicationStepsRemaining } from '../../lib/utils/resident';
+import { useDispatch } from 'react-redux';
+import { sendConfirmation } from '../../lib/store/application';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const applicants = useAppSelector((store) =>
     [store.application.mainApplicant, store.application.otherMembers]
@@ -33,10 +36,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
     [applicants]
   );
 
-  const mainApplicant = useAppSelector(
-    (store) => store.application.mainApplicant
-  );
-
+  const application = useAppSelector((store) => store.application);
   const breadcrumbs = [
     {
       href: '/apply/overview',
@@ -47,7 +47,8 @@ const ApplicationPersonsOverview = (): JSX.Element => {
   const submitApplication = async () => {
     // TODO: perform update on application
 
-    router.push('/apply/confirmation');
+    dispatch(sendConfirmation(application));
+    router.push('/apply/ethnicity-questions');
   };
 
   return (
@@ -58,24 +59,26 @@ const ApplicationPersonsOverview = (): JSX.Element => {
         {applicants.map((applicant, index) => {
           const tasksRemaining = applicationStepsRemaining(
             applicant,
-            applicant === mainApplicant
+            applicant === application.mainApplicant
           );
-
+          const isEligible = eligibilityMap.get(applicant);
           return (
             <Row key={index} verticalAlign="middle">
               <Key>
                 <ApplicantName
                   applicant={applicant}
-                  isMainApplicant={applicant === mainApplicant} />
+                  isMainApplicant={applicant === application.mainApplicant}
+                />
               </Key>
               <Actions>
-                {!eligibilityMap.get(applicant) ? (
+                {!isEligible ? (
                   <Tag content="Not eligible" variant="red" />
                 ) : tasksRemaining == 0 ? (
                   <Tag content="Completed" variant="green" />
                 ) : (
-                  <Tag content=
-                    {`${tasksRemaining} task${tasksRemaining > 1 ? 's' : ''} to do`}
+                  <Tag
+                    content={`${tasksRemaining} task${tasksRemaining > 1 ? 's' : ''
+                      } to do`}
                   />
                 )}
               </Actions>
@@ -90,7 +93,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
 
       {applicants.every(
         (applicant) =>
-          applicationStepsRemaining(applicant, applicant === mainApplicant) == 0
+          applicationStepsRemaining(applicant, applicant === application.mainApplicant) == 0
       ) && (
           <>
             <Paragraph>

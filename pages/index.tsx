@@ -1,18 +1,107 @@
+import Link from 'next/link';
+import Announcement from '../components/announcement';
 import { ButtonLink } from '../components/button';
 import { HeadingOne, HeadingTwo } from '../components/content/headings';
 import Paragraph from '../components/content/paragraph';
+import Table, {
+  TableCell,
+  TableHeading,
+  TableRow,
+} from '../components/content/table';
 import Layout from '../components/layout/resident-layout';
 
-export default function Home(): JSX.Element {
+export default function ApplicationHomePage(): JSX.Element {
   return (
     <Layout pageName="Home">
-      <HeadingOne content="Check to see if you are eligible" />
+      <HeadingOne content="Apply to the Housing Register" />
+
+      <HeadingTwo content="What to expect" />
       <Paragraph>
-        Use this checker to find out what type of settled accommodation is right
-        for your household.
+        It may take up to one hour to complete your application. You will need
+        to supply personal details for each person in your application. You can
+        save your progress and return to your application within 30 days before
+        submitting.
       </Paragraph>
-      <Paragraph>This will take a few minutes.</Paragraph>
-      <ButtonLink href="/eligibility">Start now</ButtonLink>
+
+      <HeadingTwo content="What documents you'll need to provide" />
+      <Paragraph>
+        You will need to upload proof of identity, address, income, any savings,
+        and benefits for each person in your application. You may need to supply
+        additional documentation based on your circumstances.
+      </Paragraph>
+
+      <HeadingTwo content="What happens afterwards?" />
+      <Paragraph>
+        The information you provide will be verified with third parties. This
+        will help us to assess you suitability for social housing in Hackney. If
+        you application is successful, you may still wait many years until a
+        housing offer is made.
+      </Paragraph>
+
+      <Announcement variant="info">
+        <Table>
+          <TableHeading>Bedrooms required</TableHeading>
+          <TableHeading>Housing Register</TableHeading>
+          <TableHeading>Private rental</TableHeading>
+
+          <TableRow>
+            <TableCell>1 bedroom</TableCell>
+            <TableCell>4 years</TableCell>
+            <TableCell>1 month</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>2 bedrooms</TableCell>
+            <TableCell>11 years</TableCell>
+            <TableCell>1 month</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>3 bedrooms</TableCell>
+            <TableCell>12 years</TableCell>
+            <TableCell>1 month</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>4 bedrooms</TableCell>
+            <TableCell>17 years</TableCell>
+            <TableCell>1 month</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>5 bedrooms</TableCell>
+            <TableCell>17 years</TableCell>
+            <TableCell>2 months</TableCell>
+          </TableRow>
+        </Table>
+
+        <Paragraph>
+          <Link href="#">Why we recommend renting privately</Link>
+        </Paragraph>
+      </Announcement>
+
+      <HeadingTwo content="Other options" />
+      <Paragraph>
+        <Link href="https://hackney.gov.uk/housing-options">
+          View other housing options
+        </Link>
+      </Paragraph>
+
+      <HeadingTwo content="I still want to apply" />
+      <ButtonLink
+        href="/apply/start"
+        svg={
+          <svg
+            className="govuk-button__start-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="17.5"
+            height="19"
+            viewBox="0 0 33 40"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
+          </svg>
+        }
+      >
+        Start now
+      </ButtonLink>
 
       <HeadingTwo content="Already started an application?" />
       <ButtonLink href="/apply/sign-in" secondary={true}>Sign in</ButtonLink>

@@ -1,6 +1,6 @@
 import React from 'react';
-import { ApplicantWithPersonID, getQuestionValue } from "../../lib/store/applicant";
-import { formatDate } from '../../lib/utils/addressHistory';
+import { ApplicantWithPersonID } from "../../lib/store/applicant";
+import { formatDob } from '../../lib/utils/dateOfBirth';
 import { FormID } from '../../lib/utils/form-data';
 import { getGenderName } from '../../lib/utils/gender';
 import { SummarySection, SummaryTitle } from './SummaryInfo';
@@ -31,7 +31,7 @@ export default function PersonalDetailsSummary({
           <div className="govuk-summary-list__row">
             <dt className="govuk-summary-list__key">Date of birth</dt>
             <dd className="govuk-summary-list__value">
-              {formatDate(new Date(currentResident.person.dateOfBirth))}
+              {formatDob(new Date(currentResident.person.dateOfBirth))}
             </dd>
             <dd className="govuk-summary-list__actions"></dd>
           </div>
@@ -46,11 +46,7 @@ export default function PersonalDetailsSummary({
         <div className="govuk-summary-list__row">
           <dt className="govuk-summary-list__key">NI Number</dt>
           <dd className="govuk-summary-list__value">
-            {getQuestionValue(
-              currentResident.questions,
-              FormID.PERSONAL_DETAILS,
-              'nationalInsuranceNumber'
-            )}
+            {currentResident.person.nationalInsuranceNumber}
           </dd>
           <dd className="govuk-summary-list__actions"></dd>
         </div>
@@ -58,5 +54,3 @@ export default function PersonalDetailsSummary({
     </SummarySection>
   )
 }
-
-

@@ -8,15 +8,14 @@ This application has two sides: the _officer dashboard_ side, for council office
 
 ### Resident Flow
 
-This app will form part of the user journey, with an multi-step questionnaire which determines the users' eligibility before being able to continue and submit their application, this breaks down into the following steps:
+This app will form part of the user journey, allowing for an application to the housing register. This breaks down into the following steps:
 
 - **`/`** - Entry point, provide starting information and signposts the user to the housing registration application
-- **`/eligibility/[step]`** - Check eligibility status before applying
-- **`/apply`** - Start a new application
-  - **`/apply/sign-in`** - Return to an active application
-  - **`/apply/overview`** - Overall view of the application, display a list of people and current progress
-  - **`/apply/[person]`** - Overall view of each person involved with the application
-    - **`/apply/[person]/[step]`** - Step of the application form
+- **`/apply/start`** - Start a new application
+- **`/apply/sign-in`** - Return to an active application
+- **`/apply/overview`** - Overall view of the application, display a list of people and current progress
+- **`/apply/[person]`** - Overall view of each person involved with the application
+  - **`/apply/[person]/[step]`** - Step of the application form
 
 ### Staff Dashboard
 
@@ -133,3 +132,9 @@ This has been extended to be used in a more generic way, which means forms can b
 [Higher order components](https://reactjs.org/docs/higher-order-components.html) are used to wrap existing components with some logic about the current application, allowing for code re-use.
 
 - `whenAgreed` - ensure that the applicant has agreed to the terms and conditions
+
+### Emails
+
+[Gov.UK Notify](https://gov.uk/notify) is used to send emails (e.g. confirmation emails). Update the `NOTIFY_API_KEY` and relevant template ids in the `.env` file.
+
+ - NOTIFY_TEMPLATE_NEW_APPLICATION: sent on completion of an application

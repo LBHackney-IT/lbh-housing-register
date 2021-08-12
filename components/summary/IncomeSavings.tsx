@@ -49,12 +49,21 @@ export function IncomeSavingsSummary({ currentResident }: IncomeSavingsSummaryPr
         content="Income & savings"
         href={`/apply/${currentResident.person.id}/${FormID.INCOME_SAVINGS}`} />
 
-      <SummaryAnswer>
-        <Paragraph>My total yearly household income is <strong>{getIncome(income)}</strong></Paragraph>
-      </SummaryAnswer>
-      <SummaryAnswer>
-        <Paragraph>In total, my household has combined savings and capital of <strong>{getSavings(savings)}</strong></Paragraph>
-      </SummaryAnswer>
+      {!income &&
+        <SummaryAnswer>
+          <Paragraph>Not provided yet</Paragraph>
+        </SummaryAnswer>
+      }
+      {income &&
+        <>
+          <SummaryAnswer>
+            <Paragraph>My total yearly household income is <strong>{getIncome(income)}</strong></Paragraph>
+          </SummaryAnswer>
+          <SummaryAnswer>
+            <Paragraph>In total, my household has combined savings and capital of <strong>{getSavings(savings)}</strong></Paragraph>
+          </SummaryAnswer>
+        </>
+      }
     </SummarySection>
   );
 }

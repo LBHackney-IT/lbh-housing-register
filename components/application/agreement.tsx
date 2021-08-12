@@ -16,7 +16,7 @@ export default function ApplicationAgreement() {
   const router = useRouter();
   useEffect(() => {
     if (!applicationId) {
-      router.replace('/apply/');
+      router.replace('/');
     }
   }, [applicationId]);
 

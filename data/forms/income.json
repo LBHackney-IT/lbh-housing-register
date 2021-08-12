@@ -2,6 +2,16 @@
   "heading": "Income and savings",
   "eligibility": [
     {
+      "field": "income",
+      "is": "80to100000",
+      "reasoning": "It's unlikely that you will qualify for social housing."
+    },
+    {
+      "field": "income",
+      "is": "100000",
+      "reasoning": "It's unlikely that you will qualify for social housing."
+    },
+    {
       "field": "savings",
       "is": "80000",
       "reasoning": "It's unlikely that you will qualify for social housing."

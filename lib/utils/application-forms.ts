@@ -17,24 +17,6 @@ export const getApplicationSectionFromId = (
   sectionGroups.flatMap((sg) => sg.sections).find((s) => s.id === id);
 
 /**
- * Eligibility form steps
- * @returns {ApplicationSectionGroup[]}
- */
-export const getEligibilitySections = (): ApplicationSectionGroup[] => {
-  return [
-    {
-      heading: 'Eligibility',
-      sections: [
-        {
-          heading: 'Immigration status',
-          id: FormID.IMMIGRATION_STATUS,
-        },
-      ],
-    },
-  ];
-};
-
-/**
  * Get form IDs from the ApplicationSteps type
  * @param {ApplicationSectionGroup[]} sectionGroups Application steps
  * @returns {string[]} Workable form ids

@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import Button from '../../components/button';
 import { HeadingTwo } from '../../components/content/headings';
@@ -6,10 +7,19 @@ import Paragraph from '../../components/content/paragraph';
 import Layout from '../../components/layout/resident-layout';
 import Panel from '../../components/panel';
 import Timeline, { TimelineEvent } from '../../components/timeline';
+import { useAppSelector } from '../../lib/store/hooks';
+import { formatDate } from '../../lib/utils/addressHistory';
 
 const ApplicationConfirmation = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const application = useAppSelector((store) => store.application);
+
+  useEffect(() => {
+    if (!application) {
+      router.replace('/');
+    }
+  }, [application]);
 
   const signOut = () => {
     dispatch(signOut());
@@ -20,16 +30,18 @@ const ApplicationConfirmation = (): JSX.Element => {
     <Layout pageName="Confirmation">
       <Panel
         heading="Application complete"
-        message="Your reference number: HDJ2123F"
+        message={`Your reference number: ${application.reference?.toUpperCase()}`}
       />
 
       <HeadingTwo content="What happens next" />
       <Timeline>
         <TimelineEvent heading="Application submitted" variant="action-needed">
-          <Paragraph>17 May 2021</Paragraph>
+          <Paragraph>{formatDate(new Date())}</Paragraph>
         </TimelineEvent>
         <TimelineEvent heading="Application review">
-          <Paragraph>We aim to review applications within two weeks.</Paragraph>
+          <Paragraph>
+            We aim to review applications within two weeks.
+          </Paragraph>
         </TimelineEvent>
         <TimelineEvent heading="Medical checks">
           <Paragraph>

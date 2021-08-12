@@ -11,6 +11,7 @@ import { Application } from '../../domain/HousingApi';
 import { signOut } from './cognitoUser';
 import mainApplicant from './mainApplicant';
 import otherMembers from './otherMembers';
+import { NotifyRequest, NotifyResponse } from '../../domain/govukNotify';
 
 export const loadApplication = createAsyncThunk(
   'application/load',
@@ -42,11 +43,32 @@ export const updateApplication = createAsyncThunk(
   }
 );
 
+export const sendConfirmation = createAsyncThunk(
+  'application/confirmation',
+  async (application: Application) => {
+    const notifyRequest: NotifyRequest = {
+      emailAddress: application.mainApplicant?.contactInformation?.emailAddress ?? '',
+      personalisation: {
+        'ref_number': application.id ?? '',
+        'resident_name': application.mainApplicant?.person?.firstName ?? '',
+      },
+      reference: `${application.id}`
+    };
+
+    const res = await fetch(`/api/notify/new-application`, {
+      method: 'POST',
+      body: JSON.stringify(notifyRequest),
+    });
+
+    return (await res.json()) as NotifyResponse;
+  }
+);
+
 const slice = createSlice({
   name: 'application',
   initialState: {} as Application,
   reducers: {
-    submit: () => {},
+    submit: () => { },
   },
   extraReducers: (builder) => {
     builder

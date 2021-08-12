@@ -15,6 +15,7 @@ import { AddressLookupAddress } from '../../../domain/addressLookup';
 import { AddressType } from '../../../domain/HousingApi';
 import { lookUpAddress } from '../../../lib/gateways/internal-api';
 import {
+  getQuestionValue,
   selectApplicant,
   updateApplicant,
   updateWithFormValues,
@@ -204,15 +205,19 @@ const ApplicationStep = (): JSX.Element => {
   };
   type Values = typeof initialValues;
 
-  const [state, setState] = useState<State>('postcode-entry');
+  const savedAddressHistory = getQuestionValue(applicant.questions, FormID.ADDRESS_HISTORY, 'addressHistory');
+  const [state, setState] = useState<State>(savedAddressHistory ? 'review' : 'postcode-entry');
 
   const [postcodeResults, setPostcodeResults] = useState<
     AddressLookupAddress[]
   >([]);
 
-  const [addressHistory, setAddressHistory] = useState<AddressHistoryEntry[]>(
-    []
-  );
+  const [addressHistory, setAddressHistory] = useState<AddressHistoryEntry[]>(savedAddressHistory ?? []);
+
+  const restart = () => {
+    setAddressHistory([]);
+    setState('postcode-entry');
+  };
 
   const onSubmit = async (
     values: Values,
@@ -306,10 +311,10 @@ const ApplicationStep = (): JSX.Element => {
       <h2 className="lbh-heading-h2">Current Address</h2>
       <Details summary="Help with your address">
         If you have no fixed abode or if you are sofa surfing, use the address
-        where you sleep for the majority of the week. If you are living on the
-        {/* TODO link */}
-        street, contact a <a href="#">housing officer</a>
+        where you sleep for the majority of the week. If you are living on the street,
+        contact a <a href="https://hackney.gov.uk/housing-options">housing officer</a>
       </Details>
+
       <Summary addressHistory={addressHistory} />
       <Formik
         initialValues={initialValues}
@@ -384,10 +389,20 @@ const ApplicationStep = (): JSX.Element => {
               </InsetText>
             )}
 
-            <div className="c-flex__1 text-right">
-              <Button disabled={isSubmitting} type="submit">
-                Save and continue
-              </Button>
+            <div className="c-flex lbh-simple-pagination">
+              {state === 'review' &&
+                <div className="c-flex__1">
+                  <Button onClick={restart} secondary={true}>
+                    Update address
+                  </Button>
+                </div>
+              }
+
+              <div className="c-flex__1 text-right">
+                <Button disabled={isSubmitting} type="submit">
+                  Save and continue
+                </Button>
+              </div>
             </div>
           </Form>
         )}

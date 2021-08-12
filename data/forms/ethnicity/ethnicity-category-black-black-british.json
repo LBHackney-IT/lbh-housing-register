@@ -1,0 +1,60 @@
+{
+  "id": "ethnicity-extended-category-black-black-british",
+  "heading": "Which of the following best describes your Black or Black British background?",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "Please Select",
+          "name": "ethnicity-extended-category",
+          "options": [
+            {
+              "label": "Black Caribbean",
+              "value": "black-caribbean"
+            },
+            {
+              "label": "Black British",
+              "value": "black-british"
+            },
+            {
+              "label": "Black - Angolan",
+              "value": "black-angolan"
+            },
+            {
+              "label": "Black - Congolese",
+              "value": "black-congolese"
+            },
+            {
+              "label": "Black - Ghanaian",
+              "value": "black-ghanaian"
+            },
+            {
+              "label": "Black - Nigerian",
+              "value": "black-nigerian"
+            },
+            {
+              "label": "Black - Sierra Leonean",
+              "value": "black-sierra-leonean"
+            },
+            {
+              "label": "Black - Somali",
+              "value": "black-somali"
+            },
+            {
+              "label": "Black - Sudanese",
+              "value": "black-sudanese"
+            },
+            {
+              "label": "Other Black African",
+              "value": "other-black-african"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ]
+}

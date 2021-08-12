@@ -29,18 +29,15 @@ const WhatToExpect = (): JSX.Element => {
       .flat()
   );
 
-  const bedroomArray = applicants.map((individual) => {
-    let age = getAgeInYears(individual);
-    let gender = getGenderName(individual);
-    return { age, gender };
-  });
-  const hasPartnerSharing = applicants.find(
+  const bedroomArray = applicants.map((applicant) => ({
+    age: getAgeInYears(applicant),
+    gender: getGenderName(applicant),
+  }));
+
+  const hasPartnerSharing = !!applicants.find(
     (applicant) => applicant.person?.relationshipType === 'partner'
   );
-
-  const bedroomNeed = hasPartnerSharing
-    ? calculateBedrooms(bedroomArray) - 1
-    : calculateBedrooms(bedroomArray);
+  const bedroomNeed = calculateBedrooms(bedroomArray, hasPartnerSharing);
 
   const waitingTime = getWaitingTime(bedroomNeed);
 

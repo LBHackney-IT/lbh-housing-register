@@ -3,12 +3,14 @@ type BedroomNeed = {
   gender: string;
 };
 
-export function calculateBedrooms(people: BedroomNeed[]) {
-  // one bedroom each...unless it's a couple
-  let relationship = false;
+export function calculateBedrooms(
+  people: BedroomNeed[],
+  mainApplicantHasPartnerSharing: boolean
+) {
+  // one bedroom each...
   const over16 = people.filter(({ age }) => age! >= 16).length;
-
-  const over16CoupleAdjusted = relationship ? over16 - 1 : over16;
+  // ...except when there's a couple
+  const over16Bedrooms = mainApplicantHasPartnerSharing ? over16 - 1 : over16;
 
   // 0.5 bedroom each.
   const under10 = people.filter(({ age }) => age! < 10).length / 2;
@@ -39,7 +41,7 @@ export function calculateBedrooms(people: BedroomNeed[]) {
   });
 
   const total =
-    over16CoupleAdjusted +
+    over16Bedrooms +
     Math.ceil(under10) +
     over10.reduce((acc, [g, c]) => acc + Math.ceil(c), 0);
 

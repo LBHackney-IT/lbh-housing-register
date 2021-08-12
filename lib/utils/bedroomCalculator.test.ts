@@ -3,8 +3,8 @@ import { calculateBedrooms } from './bedroomCalculator';
 describe('BedroomCalculator', () => {
   it('should award 1 bedroom for different genders under the age of 10', () => {
     let people = [
-      [5, 'male', 'son'],
-      [5, 'female', 'daughter'],
+      { age: 5, gender: 'male' },
+      { age: 5, gender: 'female' },
     ];
     expect(calculateBedrooms(people)).toBe(1);
   });

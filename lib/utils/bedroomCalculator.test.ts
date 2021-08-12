@@ -26,7 +26,7 @@ describe('BedroomCalculator', () => {
     expect(calculateBedrooms(people, false)).toBe(2);
   });
 
-  it('[[5, `male`], [5, `female`], [5, `female`], [12, `female`]] should be awarded 2 bedrooms', () => {
+  it('2 boys aged between 5 and 15 and 2 girls aged 10 and 12 should be awarded 2 bedrooms', () => {
     let people = [
       { age: 5, gender: 'male' },
       { age: 15, gender: 'male' },
@@ -56,11 +56,11 @@ describe('BedroomCalculator', () => {
 
   it('should calculate 3 bedrooms for couple with children over the age of 10(different gender)', () => {
     let people = [
-      [30, 'male', null],
-      [25, 'female', 'partner'],
-      [11, 'male', 'son'],
-      [12, 'female', 'daugther'],
+      { age: 30, gender: 'male' },
+      { age: 25, gender: 'female' },
+      { age: 11, gender: 'male' },
+      { age: 12, gender: 'female' },
     ];
-    expect(calculateBedrooms(people)).toBe(3);
+    expect(calculateBedrooms(people, true)).toBe(3);
   });
 });

@@ -22,18 +22,19 @@ const WhatToExpect = (): JSX.Element => {
       <HeadingOne content="What to expect" />
       <Announcement variant="success">
         <Paragraph>
-          If you qualify for the housing register, you may be able to apply for
-          a <strong>two bedroom</strong> property.
+          Based on the information you have provided about who you want to move
+          with, you may be able to apply for a <strong>two bedroom</strong>{' '}
+          property.
         </Paragraph>
         <Paragraph>
           The average waiting timefor a two bedroom property is{' '}
           <strong>11 years.</strong>
         </Paragraph>
-        <Paragraph>
-          Next, you will need to complete more information to determine if you
-          qualify for the housing register.
-        </Paragraph>
       </Announcement>
+      <Paragraph>
+        Next, you will need to complete more information to determine if you
+        qualify for the housing register.
+      </Paragraph>
 
       <ButtonLink href="/apply/overview">Save and continue</ButtonLink>
       <DeleteLink content="Cancel this application" onDelete={onCancel} />

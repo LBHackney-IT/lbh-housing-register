@@ -1,3 +1,4 @@
+import app from 'next/app';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -36,12 +37,10 @@ const ApplicationConfirmation = (): JSX.Element => {
       <HeadingTwo content="What happens next" />
       <Timeline>
         <TimelineEvent heading="Application submitted" variant="action-needed">
-          <Paragraph>{formatDate(new Date())}</Paragraph>
+          <Paragraph>{application.submittedAt || 'Not submitted'}</Paragraph>
         </TimelineEvent>
         <TimelineEvent heading="Application review">
-          <Paragraph>
-            We aim to review applications within two weeks.
-          </Paragraph>
+          <Paragraph>We aim to review applications within two weeks.</Paragraph>
         </TimelineEvent>
         <TimelineEvent heading="Medical checks">
           <Paragraph>

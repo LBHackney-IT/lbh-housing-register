@@ -43,16 +43,27 @@ export const updateApplication = createAsyncThunk(
   }
 );
 
+export const completeApplication = createAsyncThunk(
+  'application/complete',
+  async (id: string) => {
+    const res = await fetch(`/api/applications/${id}/complete`, {
+      method: 'PATCH',
+    });
+    return (await res.json()) as Application;
+  }
+);
+
 export const sendConfirmation = createAsyncThunk(
   'application/confirmation',
   async (application: Application) => {
     const notifyRequest: NotifyRequest = {
-      emailAddress: application.mainApplicant?.contactInformation?.emailAddress ?? '',
+      emailAddress:
+        application.mainApplicant?.contactInformation?.emailAddress ?? '',
       personalisation: {
-        'ref_number': application.id ?? '',
-        'resident_name': application.mainApplicant?.person?.firstName ?? '',
+        ref_number: application.id ?? '',
+        resident_name: application.mainApplicant?.person?.firstName ?? '',
       },
-      reference: `${application.id}`
+      reference: `${application.id}`,
     };
 
     const res = await fetch(`/api/notify/new-application`, {
@@ -68,7 +79,7 @@ const slice = createSlice({
   name: 'application',
   initialState: {} as Application,
   reducers: {
-    submit: () => { },
+    submit: () => {},
   },
   extraReducers: (builder) => {
     builder

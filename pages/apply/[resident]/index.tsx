@@ -21,7 +21,6 @@ import { getApplicationSectionsForResident } from '../../../lib/utils/resident';
 import Custom404 from '../../404';
 import Button, { ButtonLink } from '../../../components/button';
 import { getAgeInYears } from '../../../lib/utils/dateOfBirth';
-import { Income } from '../../../lib/utils/money';
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter();
@@ -39,15 +38,9 @@ const ApplicationStep = (): JSX.Element => {
   const returnHref = '/apply/overview';
 
   const steps = getApplicationSectionsForResident(
-    currentResident === mainResident
-  );
-
-  if (
-    currentResident !== mainResident &&
+    currentResident === mainResident,
     getAgeInYears(currentResident) >= 18
-  ) {
-    steps.push(Income);
-  }
+  );
 
   const breadcrumbs = [
     {

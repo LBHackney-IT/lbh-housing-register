@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import Layout from '../../../components/layout/resident-layout';
 import { selectApplicant } from '../../../lib/store/applicant';
 import { useAppSelector } from '../../../lib/store/hooks';
@@ -15,6 +16,10 @@ import { IncomeSavingsSummary } from '../../../components/summary/IncomeSavings'
 import { MedicalNeedsSummary } from '../../../components/summary/MedicalNeeds';
 import { ResidentialStatusSummary } from '../../../components/summary/ResidentialStatus';
 import { YourSituationSummary } from '../../../components/summary/YourSituation';
+import { Applicant } from '../../../domain/HousingApi';
+import { checkEligible } from '../../../lib/utils/form';
+import Button from '../../../components/button';
+import { removeTypeDuplicates } from '@babel/types';
 
 const UserSummary = (): JSX.Element => {
   const router = useRouter();
@@ -27,6 +32,36 @@ const UserSummary = (): JSX.Element => {
 
   const baseHref = `/apply/${currentResident.person?.id}`;
   const returnHref = '/apply/overview';
+  const application = useAppSelector((store) => store.application);
+
+  const applicants = useAppSelector((store) =>
+    [store.application.mainApplicant, store.application.otherMembers]
+      .filter((v): v is Applicant | Applicant[] => v !== undefined)
+      .flat()
+  );
+
+  const eligibilityMap = useMemo(
+    () =>
+      new Map(
+        applicants.map((applicant) => [applicant, checkEligible(applicant)[0]])
+      ),
+    [applicants]
+  );
+
+  const mainApplicant = applicants
+    .filter((app) => app === application.mainApplicant)
+    .map((ma) => ma)
+    .reduce((map) => map);
+
+  const onConfirmData = () => {
+    const isMainApplicantEligible = eligibilityMap.get(mainApplicant);
+
+    if (!isMainApplicantEligible) {
+      router.push('/apply/not-eligible');
+    }
+
+    router.push('/apply/overview');
+  };
 
   const onDelete = () => {
     // TODO: delete applicant
@@ -62,6 +97,7 @@ const UserSummary = (): JSX.Element => {
       <MedicalNeedsSummary currentResident={currentResident} />
 
       <ButtonLink href="/apply/overview">I confirm this is correct</ButtonLink>
+      <Button onClick={onConfirmData}>I confirm this is correct Button</Button>
       <DeleteLink content="Delete this information" onDelete={onDelete} />
     </Layout>
   );

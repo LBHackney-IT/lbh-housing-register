@@ -36,6 +36,7 @@ export default function ApplicationForms({
   sectionGroups,
 }: ApplicationFormsProps): JSX.Element | null {
   const formSteps = getFormIdsFromApplicationSections(sectionGroups);
+
   const activeStepId =
     formSteps.find((step) => step === activeStep) ?? formSteps[0];
   const formData = getFormData(activeStepId);
@@ -53,7 +54,7 @@ export default function ApplicationForms({
           formID: activeStepId,
           personID: applicant.person.id,
           values,
-          markAsComplete: true
+          markAsComplete: true,
         })
       );
     }

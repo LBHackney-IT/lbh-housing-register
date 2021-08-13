@@ -23,6 +23,7 @@ export function buildValidationSchema(fields: FormField[]) {
           fieldValidation = checkRequired(
             fieldValidation,
             field,
+            baseType,
             `${field.label} must be selected`
           );
           break;
@@ -34,20 +35,19 @@ export function buildValidationSchema(fields: FormField[]) {
           fieldValidation = checkRequired(
             fieldValidation,
             field,
+            baseType,
             'At least one option must be selected'
           );
           fieldValidation = checkMinimumLength(
             fieldValidation,
             field,
-            `No less than ${field.validation?.min} item${
-              field.validation?.min! > 1 ? 's' : ''
+            `No less than ${field.validation?.min} item${field.validation?.min! > 1 ? 's' : ''
             } can be selected`
           );
           fieldValidation = checkMaximumLength(
             fieldValidation,
             field,
-            `No more than ${field.validation?.max} item${
-              field.validation?.max! > 1 ? 's' : ''
+            `No more than ${field.validation?.max} item${field.validation?.max! > 1 ? 's' : ''
             } can be selected`
           );
           break;
@@ -56,7 +56,7 @@ export function buildValidationSchema(fields: FormField[]) {
           baseType = Yup.string().notOneOf([INVALID_DATE], 'Invalid date');
 
           fieldValidation = baseType;
-          fieldValidation = checkRequired(fieldValidation, field);
+          fieldValidation = checkRequired(fieldValidation, field, baseType);
           break;
 
         case undefined:
@@ -67,7 +67,7 @@ export function buildValidationSchema(fields: FormField[]) {
               );
 
               fieldValidation = baseType;
-              fieldValidation = checkRequired(fieldValidation, field);
+              fieldValidation = checkRequired(fieldValidation, field, baseType);
               fieldValidation = checkMinimumLength(fieldValidation, field);
               fieldValidation = checkMaximumLength(fieldValidation, field);
               break;
@@ -78,7 +78,7 @@ export function buildValidationSchema(fields: FormField[]) {
               );
 
               fieldValidation = baseType;
-              fieldValidation = checkRequired(fieldValidation, field);
+              fieldValidation = checkRequired(fieldValidation, field, baseType);
               fieldValidation = checkMinimumLength(
                 fieldValidation,
                 field,
@@ -100,16 +100,10 @@ export function buildValidationSchema(fields: FormField[]) {
       ) {
         baseType = Yup.string();
         fieldValidation = baseType;
-        fieldValidation = checkRequired(fieldValidation, field);
+        fieldValidation = checkRequired(fieldValidation, field, baseType);
         fieldValidation = checkMinimumLength(fieldValidation, field);
         fieldValidation = checkMaximumLength(fieldValidation, field);
       }
-
-      fieldValidation = setUpConditionalValidation(
-        fieldValidation,
-        field,
-        baseType
-      );
 
       fieldValidation = fieldValidation.default(field.initialValue ?? '');
 
@@ -153,8 +147,7 @@ function checkMaximumLength(
   if (field.validation && field.validation.max) {
     errorMessage =
       errorMessage ||
-      `${field.label} must be at most ${field.validation.max} character${
-        field.validation.max > 1 ? 's' : ''
+      `${field.label} must be at most ${field.validation.max} character${field.validation.max > 1 ? 's' : ''
       }`;
     return fieldValidationSchema.max(field.validation.max, errorMessage);
   }
@@ -177,8 +170,7 @@ function checkMinimumLength(
   if (field.validation && field.validation.min) {
     errorMessage =
       errorMessage ||
-      `${field.label} must be at least ${field.validation.min} character${
-        field.validation.min > 1 ? 's' : ''
+      `${field.label} must be at least ${field.validation.min} character${field.validation.min > 1 ? 's' : ''
       }`;
     return fieldValidationSchema.min(field.validation.min, errorMessage);
   }
@@ -187,57 +179,49 @@ function checkMinimumLength(
 }
 
 /**
- * Checks to see if the field is required, and if so will update the yup schema to reflect this
- * @param {Yup.BaseSchema} fieldValidationSchema - Yup schema which we potentially amend
- * @param {FormField} field - The field which we are checking validation against
- * @param {string} errorMessage - An optional error message, otherwise a default will be used
- * @returns {Yup.BaseSchema} - The yup schema
- */
-function checkRequired(
-  fieldValidationSchema: Yup.BaseSchema,
-  field: FormField,
-  errorMessage?: string
-): Yup.BaseSchema {
-  errorMessage = errorMessage || `${field.label} is required`;
-  return field.validation?.required
-    ? fieldValidationSchema.required(errorMessage)
-    : fieldValidationSchema;
-}
-
-/**
- * Set up conditional validation for conditional fields
+ * Checks to see if the field is required, if it's a conditional display will check if visible first.
  * This will ensure that hidden fields do not interrupt validation, allowing the user to progress forms
  * @param fieldValidationSchema - The validation schema (when the condition has been met)
  * @param field - The field which we are validating against
  * @param baseType - The base validation schema (for the current type), this will be used always (in the case where the conditions are not met)
+ * @param {string} errorMessage - An optional error message, otherwise a default will be used
  * @returns Up to date validation schema with conditional logic (if relevant)
  */
-function setUpConditionalValidation(
+function checkRequired(
   fieldValidationSchema: Yup.BaseSchema,
   field: FormField,
-  baseType: Yup.BaseSchema
+  baseType: Yup.BaseSchema,
+  errorMessage?: string
 ): Yup.BaseSchema {
-  if (field.conditionalDisplay) {
+
+  errorMessage = errorMessage || `${field.label} is required`;
+  if (!field.conditionalDisplay) {
+    return field.validation?.required
+      ? fieldValidationSchema.required(errorMessage)
+      : fieldValidationSchema;
+  }
+
+  if (field.conditionalDisplay && field.validation?.required) {
     const conditionalLogicFields: string[] = field.conditionalDisplay.map(
       (condition) => condition.field
     );
+
     fieldValidationSchema = baseType.when(conditionalLogicFields, {
       is: (...values: any[]) => {
-        let isValid = true;
-
+        let isVisible = true;
         field.conditionalDisplay?.map((condition, index) => {
-          if (isValid && condition.is && condition.is != values[index]) {
-            isValid = false;
+          if (isVisible && condition.is && condition.is != values[index]) {
+            isVisible = false;
           }
 
-          if (isValid && condition.isNot && condition.isNot == values[index]) {
-            isValid = false;
+          if (isVisible && condition.isNot && condition.isNot == values[index]) {
+            isVisible = false;
           }
         });
-
-        return isValid;
+        return isVisible;
       },
-      then: fieldValidationSchema,
+      then: fieldValidationSchema.required(errorMessage),
+      otherwise: fieldValidationSchema
     });
   }
 

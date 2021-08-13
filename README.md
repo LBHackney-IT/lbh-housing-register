@@ -84,7 +84,7 @@ The app comes with a [mock server](http://mocks-server.org) for mock requests to
 
 e.g. `http://localhost:5000/api/applications` will return a list of applications.
 
-To connect directly to an external API, update the `ENDPOINT_API` variable in the `.env` file.
+To connect directly to the Housing Register API, update the `HOUSING_REGISTER_API` variable in the `.env` file.
 
 ## Concepts
 

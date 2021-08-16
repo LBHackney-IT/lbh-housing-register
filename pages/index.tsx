@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Announcement from '../components/announcement';
 import { ButtonLink } from '../components/button';
 import { HeadingOne, HeadingTwo } from '../components/content/headings';
+import List, { ListItem } from '../components/content/list';
 import Paragraph from '../components/content/paragraph';
 import Table, {
   TableCell,
@@ -15,27 +16,44 @@ export default function ApplicationHomePage(): JSX.Element {
     <Layout pageName="Home">
       <HeadingOne content="Apply to the Housing Register" />
 
-      <HeadingTwo content="What to expect" />
+      <HeadingTwo content="About this form" />
       <Paragraph>
-        It may take up to one hour to complete your application. You will need
-        to supply personal details for each person in your application. You can
-        save your progress and return to your application within 30 days before
-        submitting.
+        This form is to apply to join the Hackney housing register. If you successfully
+        join the register, you will be on our waiting list for social housing.
+      </Paragraph>
+      <Paragraph>
+        The form could take up to an hour to complete, as we ask for personal
+        information about yourself and any other people you want to move with.
+      </Paragraph>
+      <Paragraph>
+        If you don't have any of the information we ask for to hand, you can
+        save your progress and come back to your application at any time
+        within 30 days before you submit it.
       </Paragraph>
 
-      <HeadingTwo content="What documents you'll need to provide" />
+      <HeadingTwo content="Documents you’ll need to provide" />
       <Paragraph>
-        You will need to upload proof of identity, address, income, any savings,
-        and benefits for each person in your application. You may need to supply
-        additional documentation based on your circumstances.
+        We'll ask you to upload proof of:
+      </Paragraph>
+      <List>
+        <ListItem>identity</ListItem>
+        <ListItem>address</ListItem>
+        <ListItem>all income and savings</ListItem>
+      </List>
+      <Paragraph>
+        Depending on your household's circumstances, you might need to provide
+        additional documentation.
       </Paragraph>
 
-      <HeadingTwo content="What happens afterwards?" />
+      <HeadingTwo content="What happens next" />
       <Paragraph>
-        The information you provide will be verified with third parties. This
-        will help us to assess you suitability for social housing in Hackney. If
-        you application is successful, you may still wait many years until a
-        housing offer is made.
+        Once you've submitted your information, we'll verify it, and assess if
+        you’re eligible for social housing in Hackney. You will receive a decision
+        by email within 20 working days.
+      </Paragraph>
+      <Paragraph>
+        If your application is successful, you might still have to wait many years
+        until you’re offered a home.
       </Paragraph>
 
       <Announcement variant="info">

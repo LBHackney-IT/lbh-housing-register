@@ -24,7 +24,7 @@ export default function NotEligible(): JSX.Element {
   return (
     <Layout>
       <Panel
-        heading="You dont qualify for the housing register"
+        heading="Unfortunately, you don't qualify to join the housing register"
         message={`Your reference number: ${application.reference?.toUpperCase()}`}
       />
 

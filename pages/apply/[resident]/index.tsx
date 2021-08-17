@@ -20,7 +20,7 @@ import { deleteApplicant } from '../../../lib/store/otherMembers';
 import { getApplicationSectionsForResident } from '../../../lib/utils/resident';
 import Custom404 from '../../404';
 import Button, { ButtonLink } from '../../../components/button';
-import { getAgeInYears } from '../../../lib/utils/dateOfBirth';
+import { isOver18 } from '../../../lib/utils/dateOfBirth';
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter();
@@ -39,7 +39,7 @@ const ApplicationStep = (): JSX.Element => {
 
   const steps = getApplicationSectionsForResident(
     currentResident === mainResident,
-    getAgeInYears(currentResident) >= 18
+    isOver18(currentResident)
   );
 
   const breadcrumbs = [

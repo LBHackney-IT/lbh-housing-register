@@ -4,7 +4,6 @@ import { selectApplicant } from '../../../lib/store/applicant';
 import { useAppSelector } from '../../../lib/store/hooks';
 import { useRouter } from 'next/router';
 import Custom404 from '../../404';
-import { ButtonLink } from '../../../components/button';
 import DeleteLink from '../../../components/delete-link';
 import PersonalDetailsSummary from '../../../components/summary/PersonalDetails';
 import React from 'react';
@@ -19,7 +18,6 @@ import { YourSituationSummary } from '../../../components/summary/YourSituation'
 import { Applicant } from '../../../domain/HousingApi';
 import { checkEligible } from '../../../lib/utils/form';
 import Button from '../../../components/button';
-import { removeTypeDuplicates } from '@babel/types';
 
 const UserSummary = (): JSX.Element => {
   const router = useRouter();
@@ -92,8 +90,7 @@ const UserSummary = (): JSX.Element => {
       <EmploymentSummary currentResident={currentResident} />
       <MedicalNeedsSummary currentResident={currentResident} />
 
-      <ButtonLink href="/apply/overview">I confirm this is correct</ButtonLink>
-      <Button onClick={onConfirmData}>I confirm this is correct Button</Button>
+      <Button onClick={onConfirmData}>I confirm this is correct</Button>
       <DeleteLink content="Delete this information" onDelete={onDelete} />
     </Layout>
   );

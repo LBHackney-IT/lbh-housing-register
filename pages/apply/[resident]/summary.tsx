@@ -32,7 +32,6 @@ const UserSummary = (): JSX.Element => {
 
   const baseHref = `/apply/${currentResident.person?.id}`;
   const returnHref = '/apply/overview';
-  const application = useAppSelector((store) => store.application);
 
   const applicants = useAppSelector((store) =>
     [store.application.mainApplicant, store.application.otherMembers]
@@ -48,17 +47,14 @@ const UserSummary = (): JSX.Element => {
     [applicants]
   );
 
-  const mainApplicant = applicants
-    .filter((app) => app === application.mainApplicant)
-    .map((ma) => ma)
-    .reduce((map) => map);
-
   const onConfirmData = () => {
-    const isMainApplicantEligible = eligibilityMap.get(mainApplicant);
+    applicants.map((applicant, index) => {
+      const isEligible = eligibilityMap.get(applicant);
 
-    if (!isMainApplicantEligible) {
-      router.push('/apply/not-eligible');
-    }
+      if (!isEligible) {
+        router.push('/apply/not-eligible');
+      }
+    });
 
     router.push('/apply/overview');
   };

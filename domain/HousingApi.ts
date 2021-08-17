@@ -122,6 +122,12 @@ export interface Application {
    * @type {Applicant}
    * @memberof Application
    */
+  submittedAt?: string;
+  /**
+   *
+   * @type {Applicant}
+   * @memberof Application
+   */
   mainApplicant?: Applicant;
   /**
    *

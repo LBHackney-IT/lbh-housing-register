@@ -94,6 +94,7 @@ const UserSummary = (): JSX.Element => {
 
       <ButtonLink href="/apply/overview">I confirm this is correct</ButtonLink>
       <Button onClick={onConfirmData}>I confirm this is correct Button</Button>
+      <DeleteLink content="Delete this information" onDelete={onDelete} />
     </Layout>
   );
 };

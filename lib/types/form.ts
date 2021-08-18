@@ -58,6 +58,7 @@ export interface InsetTextFormField extends BaseFormField {
   title?: string;
   content?: string;
   list?: string[];
+  removeBorder?: boolean;
 }
 
 export interface RadioConditionalFormField extends BaseFormField {

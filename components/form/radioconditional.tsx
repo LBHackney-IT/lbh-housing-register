@@ -28,9 +28,6 @@ export function ConditionalInput({
     <>
       <div
         className={'govuk-radios__conditional' + (display ? '' : '--hidden')}
-        style={{
-          ...(isInsetText ? { borderLeft: 'none' } : {}),
-        }}
         id={containerId}
       >
         {!isInsetText && (
@@ -53,6 +50,7 @@ export function ConditionalInput({
             title={title}
             content={content}
             list={list}
+            removeBorder={true}
           />
         )}
       </div>

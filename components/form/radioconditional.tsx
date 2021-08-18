@@ -10,6 +10,7 @@ import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
+import InsetText from './insettext';
 
 export function ConditionalInput({
   as,
@@ -18,24 +19,44 @@ export function ConditionalInput({
   fieldName,
   label,
   display,
+  title,
+  content,
+  list,
 }: ConditionalFormFieldOptionInput) {
+  const isInsetText = as == 'insettext';
   return (
-    <div
-      className={'govuk-radios__conditional' + (display ? '' : '--hidden')}
-      id={containerId}
-    >
-      <Label
-        content={label}
-        htmlFor={fieldId}
-      />
-      <Field
-        className="govuk-input govuk-!-width-one-third"
-        type={as}
-        id={fieldId}
-        name={fieldName}
-        data-aria-controls={containerId}
-      />
-    </div>
+    <>
+      <div
+        className={'govuk-radios__conditional' + (display ? '' : '--hidden')}
+        style={{
+          ...(isInsetText ? { borderLeft: 'none' } : {}),
+        }}
+        id={containerId}
+      >
+        {!isInsetText && (
+          <>
+            <Label content={label} htmlFor={fieldId} />
+            <Field
+              className="govuk-input govuk-!-width-one-third"
+              type={as}
+              id={fieldId}
+              name={fieldName}
+              data-aria-controls={containerId}
+            />
+          </>
+        )}
+        {isInsetText && (
+          <InsetText
+            as={'insettext'}
+            name={'insettext'}
+            label={''}
+            title={title}
+            content={content}
+            list={list}
+          />
+        )}
+      </div>
+    </>
   );
 }
 
@@ -133,6 +154,9 @@ export default function RadioConditional({
                     fieldName={radio.conditionalFieldInput.fieldName}
                     label={radio.conditionalFieldInput.label}
                     display={meta.value == radio.value}
+                    title={radio.conditionalFieldInput.title}
+                    content={radio.conditionalFieldInput.content}
+                    list={radio.conditionalFieldInput.list}
                   />
                 )}
               </>

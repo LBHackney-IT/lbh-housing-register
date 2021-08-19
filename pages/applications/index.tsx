@@ -15,7 +15,7 @@ import {
 } from '../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../lib/utils/auth';
 import SearchBox from '../../components/applications/SearchBox';
-import React, { useState, useEffect, ChangeEvent, Component } from 'react';
+import React, { useState } from 'react';
 
 interface PageProps {
   user: HackneyGoogleUser;
@@ -28,18 +28,17 @@ export default function ApplicationListPage({
   applications,
   stats,
 }: PageProps): JSX.Element {
-  const [inputValue, setInputValue] = useState('');
+  const [searchInputValue, setsearchInputValue] = useState('');
 
   const textChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
   ): React.ChangeEvent<HTMLInputElement> => {
-    setInputValue(event.target.value);
-    console.log('Input from text box', inputValue);
+    setsearchInputValue(event.target.value);
     return event;
   };
 
   const onSearchSubmit = async () => {
-    const searchApplications = await searchApplication(inputValue);
+    const searchApplications = await searchApplication(searchInputValue);
   };
 
   return (

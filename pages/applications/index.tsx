@@ -8,8 +8,14 @@ import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { ApplicationList } from '../../domain/HousingApi';
 import { Stat } from '../../domain/stat';
 import { UserContext } from '../../lib/contexts/user-context';
-import { getApplications, getStats } from '../../lib/gateways/applications-api';
+import {
+  getApplications,
+  getStats,
+  searchApplication,
+} from '../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../lib/utils/auth';
+import SearchBox from '../../components/applications/SearchBox';
+import React, { useState, useEffect, ChangeEvent, Component } from 'react';
 
 interface PageProps {
   user: HackneyGoogleUser;
@@ -22,9 +28,30 @@ export default function ApplicationListPage({
   applications,
   stats,
 }: PageProps): JSX.Element {
+  const [inputValue, setInputValue] = useState('');
+
+  const textChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): React.ChangeEvent<HTMLInputElement> => {
+    setInputValue(event.target.value);
+    console.log('Input from text box', inputValue);
+    return event;
+  };
+
+  const onSearchSubmit = async () => {
+    const searchApplications = await searchApplication(inputValue);
+  };
+
   return (
     <UserContext.Provider value={{ user }}>
       <Layout>
+        <SearchBox
+          title="Housing Register"
+          buttonTitle="Search"
+          watermark="Search by Name, NI number or application reference"
+          onSearch={onSearchSubmit}
+          textChangeHandler={textChangeHandler}
+        />
         <HeadingOne content="Staff dashboard" />
         {stats && (
           <Stats className="govuk-grid-column-one-third" stats={stats} />

@@ -21,6 +21,7 @@ import { getApplicationSectionsForResident } from '../../../lib/utils/resident';
 import Custom404 from '../../404';
 import Button, { ButtonLink } from '../../../components/button';
 import { getAgeInYears } from '../../../lib/utils/dateOfBirth';
+import { FormID } from '../../../lib/utils/form-data';
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter();
@@ -42,6 +43,13 @@ const ApplicationStep = (): JSX.Element => {
     getAgeInYears(currentResident) >= 18
   );
 
+  let sectionNames: FormID[] = [];
+  steps.map((step, index) => {
+    step.sections.map((section, i) => {
+      sectionNames.push(section.id);
+    });
+  });
+
   const breadcrumbs = [
     {
       href: returnHref,
@@ -62,6 +70,49 @@ const ApplicationStep = (): JSX.Element => {
     router.push('/apply/overview');
   };
 
+  const linkClick = (event: any) => {
+    event.preventDefault();
+  };
+
+  const cantStartYet = (formId: FormID) => {
+    const indexOfSectionName = sectionNames.indexOf(formId);
+
+    // First Section is always unlocked
+    if (indexOfSectionName === 0) {
+      return true;
+    }
+
+    // Last Section
+    if (sectionNames.length - 1 === indexOfSectionName) {
+      return getQuestionValue(
+        currentResident.questions,
+        sectionNames[indexOfSectionName],
+        'sectionCompleted',
+        false
+      );
+    }
+
+    // Has previous section been completed?
+    const hasPreviousQuestionBeenAnswered = getQuestionValue(
+      currentResident.questions,
+      sectionNames[indexOfSectionName - 1],
+      'sectionCompleted',
+      false
+    );
+
+    return hasPreviousQuestionBeenAnswered;
+  };
+
+  const cantStartYetTag = (formID: FormID) => {
+    const tag = cantStartYet(formID);
+
+    if (tag) {
+      return <Tag content="To do" />;
+    }
+
+    return <Tag content="Can't start yet" variant="grey" />;
+  };
+
   return (
     <Layout pageName="Person overview" breadcrumbs={breadcrumbs}>
       <h1 className="lbh-heading-h1" style={{ marginBottom: '40px' }}>
@@ -77,7 +128,13 @@ const ApplicationStep = (): JSX.Element => {
               <SummaryListRow key={i}>
                 <SummaryListValue>
                   <Link href={`${baseHref}/${formStep.id}`}>
-                    {formStep.heading}
+                    {!cantStartYet(formStep.id) ? (
+                      <a key={index} style={{ textDecoration: 'none' }}>
+                        <span onClick={linkClick}>{formStep.heading}</span>
+                      </a>
+                    ) : (
+                      formStep.heading
+                    )}
                   </Link>
                 </SummaryListValue>
                 <SummaryListActions>
@@ -89,7 +146,7 @@ const ApplicationStep = (): JSX.Element => {
                   ) ? (
                     <Tag content="Completed" variant="green" />
                   ) : (
-                    <Tag content="To do" />
+                    cantStartYetTag(formStep.id)
                   )}
                 </SummaryListActions>
               </SummaryListRow>

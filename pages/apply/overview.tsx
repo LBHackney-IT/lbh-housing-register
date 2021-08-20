@@ -56,7 +56,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
 
   return (
     <Layout pageName="Application overview" breadcrumbs={breadcrumbs}>
-      <HeadingOne content="Application tasks" />
+      <HeadingOne content="Tasks to complete" />
 
       <SummaryList>
         {applicants.map((applicant, index) => {

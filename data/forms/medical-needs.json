@@ -1,6 +1,17 @@
 {
-  "heading": "Do you have any significant medical needs that affect your housing requirements?",
-  "copy": "This will limit the amount of properties you may be suitable for, and can increase wait times. We will discuss your needs and conduct medical checks as part of your application.",
+  "heading": "Do you have any significant medical conditions that affect the type of housing you need?",
+  "copy": "We will carry out checks to assess your medical needs. This might restrict the types of properties you can bid for, which could increase your waiting time due to the unfortunate number of properties which become available.",
+  "details": {
+    "title": "How do I answer this question",
+    "content": [
+      "Select 'yes' if your need is:",
+      "a long term condition that currently affects your mobility or the use of your home",
+      "Select 'No' if your need is:",
+      "a temporary condition, such as a broken leg",
+      "a medical issue which doesn’t currently affect the use of your home pregnancy",
+      "a health issue due to a problem in your home which can be fixed, such as damp or condensation"
+    ]
+  },
   "steps": [
     {
       "fields": [
@@ -25,8 +36,11 @@
         {
           "name": "proof-of-medical-needs",
           "as": "insettext",
-          "title": "You will need to complete a seperate medical form",
-          "content": "After you have submitted this application, you will be asked to provide detailed information about your medical needs in a seperate form.",
+          "title": "You will need to complete a separate medical form",
+          "content": "After you have submitted this application, we will email you a link to a form asking you to provide detailed information about your medical needs.",
+          "borderColour": "84BD00",
+          "backgroundColour": "f0f4dc",
+
           "conditionalDisplay": [
             {
               "field": "medical-needs",

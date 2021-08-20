@@ -57,7 +57,7 @@
           }
         },
         {
-          "as": "radios",
+          "as": "radioconditional",
           "label": "How much, in total, does your household have in savings and capital",
           "subheading": "Include the total amount in all current accounts, plus all types of savings",
           "name": "savings",
@@ -84,22 +84,25 @@
             },
             {
               "label": "£80,000 or more",
-              "value": "80000"
+              "value": "80000",
+              "conditionalFieldInput": {
+                "as": "insettext",
+                "containerId": "proof-of-income-savings",
+                "fieldId": "proof-of-income-savings",
+                "fieldName": "proof-of-income-savings",
+                "label": "Please enter your self-discription",
+                "title": "Proof of income and savings required",
+                "content": "Before submitting your application, you will be asked to upload the following documents: ",
+                "list": [
+                  "Bank statements covering the last two months for every account you hold",
+                  "Last two months’ payslips for all working adults in your household"
+                ]
+              }
             }
           ],
           "validation": {
             "required": true
           }
-        },
-        {
-          "name": "proof-of-income-savings",
-          "as": "insettext",
-          "title": "Proof of income and savings required",
-          "content": "Before submitting your application, you will be asked to upload the following documents: ",
-          "list": [
-            "Bank statements covering the last two months for every account you hold",
-            "Last two months’ payslips for all working adults in your household"
-          ]
         }
       ]
     }

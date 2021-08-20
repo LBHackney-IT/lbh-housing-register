@@ -5,12 +5,16 @@ export default function InsetText({
   content,
   list,
   removeBorder,
+  borderColour,
+  backgroundColour,
 }: InsetTextFormField): JSX.Element {
   return (
     <div
       className="govuk-inset-text lbh-inset-text"
       style={{
         ...(removeBorder ? { borderLeft: 'none' } : {}),
+        ...(borderColour && { borderLeft: '10px solid #' + borderColour }),
+        ...(backgroundColour && { backgroundColor: '#' + backgroundColour }),
       }}
     >
       {title && <h3>{title}</h3>}

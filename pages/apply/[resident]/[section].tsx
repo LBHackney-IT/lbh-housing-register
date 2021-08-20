@@ -6,6 +6,7 @@ import whenAgreed from '../../../lib/hoc/whenAgreed';
 import { applicantHasId, selectApplicant } from '../../../lib/store/applicant';
 import { useAppSelector } from '../../../lib/store/hooks';
 import { getApplicationSectionFromId } from '../../../lib/utils/application-forms';
+import { isOver18 } from '../../../lib/utils/dateOfBirth';
 import { getApplicationSectionsForResident } from '../../../lib/utils/resident';
 import Custom404 from '../../404';
 
@@ -27,7 +28,8 @@ const ApplicationSection = (): JSX.Element => {
   const returnHref = '/apply/overview';
 
   const sectionGroups = getApplicationSectionsForResident(
-    applicant === mainResident
+    applicant === mainResident,
+    isOver18(applicant)
   );
 
   const sectionName = getApplicationSectionFromId(section, sectionGroups)?.heading || '';

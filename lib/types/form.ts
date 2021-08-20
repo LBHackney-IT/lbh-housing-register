@@ -58,6 +58,9 @@ export interface InsetTextFormField extends BaseFormField {
   title?: string;
   content?: string;
   list?: string[];
+  removeBorder?: boolean;
+  borderColour?: string;
+  backgroundColour?: string;
 }
 
 export interface RadioConditionalFormField extends BaseFormField {
@@ -97,6 +100,9 @@ export type ConditionalFormFieldOptionInput = {
   fieldName?: string;
   label?: string;
   display: boolean;
+  title?: string;
+  content?: string;
+  list?: string[];
 };
 
 export type FormFieldOption = {
@@ -130,4 +136,10 @@ export type MultiStepForm = {
   heading?: string;
   steps: FormStep[];
   conditionals?: Conditionals[];
+  details?: DetailsSection;
+};
+
+export type DetailsSection = {
+  title: string;
+  content: string;
 };

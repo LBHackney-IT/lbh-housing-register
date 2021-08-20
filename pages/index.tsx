@@ -1,7 +1,11 @@
 import Link from 'next/link';
 import Announcement from '../components/announcement';
 import { ButtonLink } from '../components/button';
-import { HeadingOne, HeadingTwo } from '../components/content/headings';
+import {
+  HeadingOne,
+  HeadingThree,
+  HeadingTwo,
+} from '../components/content/headings';
 import Paragraph from '../components/content/paragraph';
 import Table, {
   TableCell,
@@ -15,30 +19,47 @@ export default function ApplicationHomePage(): JSX.Element {
     <Layout pageName="Home">
       <HeadingOne content="Apply to the Housing Register" />
 
-      <HeadingTwo content="What to expect" />
+      <HeadingTwo content="About this form" />
       <Paragraph>
-        It may take up to one hour to complete your application. You will need
-        to supply personal details for each person in your application. You can
-        save your progress and return to your application within 30 days before
-        submitting.
+        This form is to apply to join the Hackney housing register. If you
+        successfully join the register, you will be on our waiting list for
+        social housing.
+      </Paragraph>
+      <Paragraph>
+        The form could take up to an hour to complete, as we ask for personal
+        information about yourself and any other people you want to move with.
+      </Paragraph>
+      <Paragraph>
+        If you don't have any of the information we ask for to hand, you can
+        save your progress and come back to your application at any time within
+        30 days before you submit it.
       </Paragraph>
 
-      <HeadingTwo content="What documents you'll need to provide" />
+      <HeadingTwo content="What happens next" />
       <Paragraph>
-        You will need to upload proof of identity, address, income, any savings,
-        and benefits for each person in your application. You may need to supply
-        additional documentation based on your circumstances.
+        After completing this form, we may email you links to securely provide
+        additional information or documents to support your application.
       </Paragraph>
-
-      <HeadingTwo content="What happens afterwards?" />
       <Paragraph>
-        The information you provide will be verified with third parties. This
-        will help us to assess you suitability for social housing in Hackney. If
-        you application is successful, you may still wait many years until a
-        housing offer is made.
+        We will then verify your information to assess your suitability for
+        social housing in Hackney. You will receive a decision by email within
+        20 working days.
       </Paragraph>
 
       <Announcement variant="info">
+        <HeadingThree content="Average waiting times" />
+
+        <Paragraph>
+          Due to the demand for council housing in Hackney, many people who join
+          the register will never receive a council property.
+        </Paragraph>
+
+        <Paragraph>
+          We strongly recommend that you consider all alternative housing
+          options. For many people, the most realistic option is to rent in the
+          private sector.
+        </Paragraph>
+
         <Table>
           <TableHeading>Bedrooms required</TableHeading>
           <TableHeading>Housing Register</TableHeading>
@@ -72,14 +93,17 @@ export default function ApplicationHomePage(): JSX.Element {
         </Table>
 
         <Paragraph>
-          <Link href="#">Why we recommend renting privately</Link>
+          If you choose to rent privately, we may be able to help in a number of
+          ways, both financially and practically.
+          <br />
+          <Link href="#">Find out more</Link>
         </Paragraph>
       </Announcement>
 
       <HeadingTwo content="Other options" />
       <Paragraph>
         <Link href="https://hackney.gov.uk/housing-options">
-          View other housing options
+          View all housing housing options and schemes
         </Link>
       </Paragraph>
 
@@ -104,7 +128,9 @@ export default function ApplicationHomePage(): JSX.Element {
       </ButtonLink>
 
       <HeadingTwo content="Already started an application?" />
-      <ButtonLink href="/apply/sign-in" secondary={true}>Sign in</ButtonLink>
+      <ButtonLink href="/apply/sign-in" secondary={true}>
+        Sign in
+      </ButtonLink>
     </Layout>
   );
 }

@@ -2,13 +2,17 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 import { useAppSelector } from '../../lib/store/hooks';
 import { checkEligible } from '../../lib/utils/form';
-import { ButtonLink } from '../button';
-import { HeadingOne, HeadingTwo } from '../content/headings';
-import InsetText from '../content/inset-text';
-import List, { ListItem } from '../content/list';
-import Paragraph from '../content/paragraph';
+import { ButtonLink } from '../../components/button';
+import { HeadingOne, HeadingTwo } from '../../components/content/headings';
+import InsetText from '../../components/content/inset-text';
+import List, { ListItem } from '../../components/content/list';
+import Paragraph from '../../components/content/paragraph';
+import Layout from '../../components/layout/resident-layout';
+import Panel from '../../components/panel';
 
 export default function NotEligible(): JSX.Element {
+  const application = useAppSelector((store) => store.application);
+
   const mainApplicant = useAppSelector(
     (store) => store.application.mainApplicant
   );
@@ -18,8 +22,11 @@ export default function NotEligible(): JSX.Element {
   );
 
   return (
-    <>
-      <HeadingOne content="You may not be able to join the housing register" />
+    <Layout>
+      <Panel
+        heading="Unfortunately, you don't qualify to join the housing register"
+        message={`Your reference number: ${application.reference?.toUpperCase()}`}
+      />
 
       {reasons && reasons.length > 0 && (
         <>
@@ -60,11 +67,6 @@ export default function NotEligible(): JSX.Element {
       <ButtonLink href="https://hackney.gov.uk/housing-application">
         Contact us for advice
       </ButtonLink>
-      <Paragraph>
-        If you feel this information is incorrect, please refer to our lettings
-        policy before you{' '}
-        <Link href="/apply">continue to make an application</Link>.
-      </Paragraph>
-    </>
+    </Layout>
   );
 }

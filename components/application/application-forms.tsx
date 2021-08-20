@@ -13,6 +13,7 @@ import { getFormData } from '../../lib/utils/form-data';
 import { HeadingOne } from '../content/headings';
 import Paragraph from '../content/paragraph';
 import Form from '../form/form';
+import Details from '../../components/details';
 
 interface ApplicationFormsProps {
   activeStep?: string;
@@ -63,11 +64,18 @@ export default function ApplicationForms({
   return (
     <>
       {formData.heading && <HeadingOne content={formData.heading} />}
+      {formData.details && (
+        <Details summary={formData.details.title}>
+          {formData.details.content}
+        </Details>
+      )}
+
       {formData.copy && (
         <Paragraph>
           <strong>{formData.copy}</strong>
         </Paragraph>
       )}
+
       <Form
         initialValues={initialValues}
         buttonText="Save and continue"

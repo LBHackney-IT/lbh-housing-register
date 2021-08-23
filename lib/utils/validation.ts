@@ -193,14 +193,12 @@ function checkRequired(
   baseType: Yup.BaseSchema,
   errorMessage?: string
 ): Yup.BaseSchema {
-
   errorMessage = errorMessage || `${field.label} is required`;
   if (!field.conditionalDisplay) {
-    return field.validation?.required
+    fieldValidationSchema = field.validation?.required
       ? fieldValidationSchema.required(errorMessage)
       : fieldValidationSchema;
   }
-
   if (field.conditionalDisplay && field.validation?.required) {
     const conditionalLogicFields: string[] = field.conditionalDisplay.map(
       (condition) => condition.field

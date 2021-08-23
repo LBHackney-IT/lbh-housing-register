@@ -1,12 +1,12 @@
 {
   "id": "ethnicity-extended-category-white",
-  "heading": "Which of the following best describes your white background?",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
-          "label": "Please Select",
+          "label": "Which of the following best describes your white background?",
+          "hint": "Please Select",
           "name": "ethnicity-extended-category",
           "options": [
             {

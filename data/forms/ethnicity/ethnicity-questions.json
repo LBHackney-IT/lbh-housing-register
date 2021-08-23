@@ -1,12 +1,11 @@
 {
-  "id": "ethnicity-main-category",
-  "heading": "What is your ethnic group?",
+  "id": "ethnicity-questions",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
-          "label": "Please Select",
+          "label": "What is your ethnic group?",
           "name": "ethnicity-main-category",
           "options": [
             {

@@ -1,10 +1,12 @@
 interface HeaderProps {
   username?: string;
+  signOutText: string;
   onSignOut?: () => void;
 }
 
 export default function Header({
   username,
+  signOutText,
   onSignOut,
 }: HeaderProps): JSX.Element {
   return (
@@ -47,8 +49,8 @@ export default function Header({
             {username && (
               <>
                 <p>{username}</p>
-                <a href="#" onClick={onSignOut}>
-                  Sign out
+                <a href="" onClick={onSignOut}>
+                  {signOutText}
                 </a>
               </>
             )}

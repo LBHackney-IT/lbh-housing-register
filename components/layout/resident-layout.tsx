@@ -35,7 +35,11 @@ export default function ResidentLayout({
     <>
       {pageName && <Seo title={pageName} />}
       <SkipLink />
-      <Header username={username} onSignOut={onSignOut} />
+      <Header
+        username={username}
+        signOutText="Save and exit"
+        onSignOut={onSignOut}
+      />
       {hasPhaseBanner() && <PhaseBanner />}
 
       {breadcrumbs && breadcrumbs.length > 0 && (

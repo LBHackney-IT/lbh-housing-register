@@ -47,12 +47,12 @@ const WhatToExpect = (): JSX.Element => {
       <Announcement variant="success">
         <Paragraph>
           Based on the information you have provided about who you want to move
-          with, you may be able to apply for a <strong>two bedroom</strong>{' '}
-          property.
+          with, you may be able to apply for a{' '}
+          <strong>{bedroomNeed} bedroom</strong> property.
         </Paragraph>
         <Paragraph>
-          The average waiting time for a two bedroom property is{' '}
-          <strong>{waitingTime} years.</strong>
+          The average waiting time for a <strong>{bedroomNeed}</strong> bedroom
+          property is <strong>{waitingTime} years.</strong>
         </Paragraph>
       </Announcement>
       <Paragraph>

@@ -122,12 +122,12 @@ export default function RadioConditional({
         meta: FieldMetaProps<string>;
       }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
-          {label && name !== 'medical-needs' && (
-            <Label content={label} strong={true} />
-          )}
+          {label && <Label content={label} strong={true} />}
           {hint && <Hint content={hint} />}
           {details && (
-            <Details summary="Help with this question">{details}</Details>
+            <Details summary={details.title ?? 'Help with this question'}>
+              {details.content}
+            </Details>
           )}
           {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
           {subheading && <Paragraph>{subheading}</Paragraph>}

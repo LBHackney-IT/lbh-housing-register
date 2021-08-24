@@ -78,7 +78,9 @@
         {
           "as": "radios",
           "label": "Have you been granted settled status or pre-settled status?",
-          "details": "Pre settled status means a person is granted permission to remain in the UK for five years. Settled status means a person is granted indefinite permission to remain in the UK.",
+          "details": {
+            "content": "Pre settled status means a person is granted permission to remain in the UK for five years. Settled status means a person is granted indefinite permission to remain in the UK."
+          },
           "name": "settled-status",
           "options": [
             {

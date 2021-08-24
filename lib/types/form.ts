@@ -15,7 +15,7 @@ export interface BaseFormField {
   name: string;
   label: string;
   hint?: string;
-  details?: string;
+  details?: DetailsSection;
   conditionalDisplay?: FormFieldDisplayCriteria[];
   validation?: FormFieldValidation;
   placeholder?: string;
@@ -136,7 +136,6 @@ export type MultiStepForm = {
   heading?: string;
   steps: FormStep[];
   conditionals?: Conditionals[];
-  details?: DetailsSection;
 };
 
 export type DetailsSection = {

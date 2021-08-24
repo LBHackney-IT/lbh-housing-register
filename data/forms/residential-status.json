@@ -483,9 +483,6 @@
               "value": "none"
             }
           ],
-          "validation": {
-            "required": true
-          },
           "conditionalDisplay": [
             {
               "field": "residential-status",

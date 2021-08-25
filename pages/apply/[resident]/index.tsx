@@ -17,7 +17,10 @@ import {
 } from '../../../lib/store/applicant';
 import { useAppSelector } from '../../../lib/store/hooks';
 import { deleteApplicant } from '../../../lib/store/otherMembers';
-import { getApplicationSectionsForResident } from '../../../lib/utils/resident';
+import {
+  applicationStepsRemaining,
+  getApplicationSectionsForResident,
+} from '../../../lib/utils/resident';
 import Custom404 from '../../404';
 import Button, { ButtonLink } from '../../../components/button';
 import { isOver18 } from '../../../lib/utils/dateOfBirth';
@@ -41,6 +44,11 @@ const ApplicationStep = (): JSX.Element => {
   const steps = getApplicationSectionsForResident(
     currentResident === mainResident,
     isOver18(currentResident)
+  );
+
+  const tasksRemaining = applicationStepsRemaining(
+    currentResident,
+    currentResident === mainResident
   );
 
   let sectionNames: FormID[] = [];
@@ -154,9 +162,11 @@ const ApplicationStep = (): JSX.Element => {
           </SummaryList>
         </div>
       ))}
-      <ButtonLink href={`/apply/${currentResident.person?.id}/summary/`}>
-        Check answers
-      </ButtonLink>
+      {tasksRemaining == 0 && (
+        <ButtonLink href={`/apply/${currentResident.person?.id}/summary/`}>
+          Check answers
+        </ButtonLink>
+      )}
       <br />
       <Button onClick={goBack} secondary={true}>
         Save and go back

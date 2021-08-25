@@ -1,13 +1,11 @@
 {
   "id": "landlord",
-  "heading": "Landlord",
-  "copy": "Have you made an agreement with landlord?",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
-          "label": "Please select",
+          "label": "Have you made an agreement with landlord?",
           "name": "landlord",
           "options": [
             {

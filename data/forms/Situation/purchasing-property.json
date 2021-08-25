@@ -1,13 +1,11 @@
 {
   "id": "purchasing-property",
-  "heading": "Purchasing property",
-  "copy": "Are you able to buy a property to meet your needs?",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
-          "label": "Please select",
+          "label": "Are you able to buy a property to meet your needs?",
           "name": "purchasing-property",
           "options": [
             {

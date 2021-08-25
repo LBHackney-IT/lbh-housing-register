@@ -1,13 +1,11 @@
 {
   "id": "arrears",
-  "heading": "Arrears",
-  "copy": "Are you in 4 weeks or more arrears with your rent, council tax or service charges?",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
-          "label": "Please select",
+          "label": "Are you in 4 weeks or more arrears with your rent, council tax or service charges?",
           "name": "arrears",
           "options": [
             {

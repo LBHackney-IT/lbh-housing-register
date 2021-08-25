@@ -102,8 +102,7 @@ export default function YourSituation() {
 
   return (
     <Layout pageName="Your situation" breadcrumbs={breadcrumbs}>
-      {formData.heading && <HeadingTwo content={formData.heading} />}
-      {formData.copy && <Paragraph>{formData.copy}</Paragraph>}
+      <HeadingOne content="Your situation" />
       <Form
         // Intentional key outside of an array. Force a fresh form component when we change steps to avoid values persisting between forms.
         key={activeStepID}

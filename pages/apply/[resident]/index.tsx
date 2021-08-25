@@ -78,11 +78,7 @@ const ApplicationStep = (): JSX.Element => {
     router.push('/apply/overview');
   };
 
-  const linkClick = (event: any) => {
-    event.preventDefault();
-  };
-
-  const cantStartYet = (formId: FormID) => {
+  const isSectionActive = (formId: FormID) => {
     const indexOfSectionName = sectionNames.indexOf(formId);
 
     // First Section is always unlocked
@@ -90,35 +86,22 @@ const ApplicationStep = (): JSX.Element => {
       return true;
     }
 
-    // Last Section
-    if (sectionNames.length - 1 === indexOfSectionName) {
-      return getQuestionValue(
-        currentResident.questions,
-        sectionNames[indexOfSectionName],
-        'sectionCompleted',
-        false
-      );
-    }
-
     // Has previous section been completed?
-    const hasPreviousQuestionBeenAnswered = getQuestionValue(
+    return getQuestionValue(
       currentResident.questions,
       sectionNames[indexOfSectionName - 1],
       'sectionCompleted',
       false
     );
-
-    return hasPreviousQuestionBeenAnswered;
   };
 
   const cantStartYetTag = (formID: FormID) => {
-    const tag = cantStartYet(formID);
-
-    if (tag) {
-      return <Tag content="To do" />;
-    }
-
-    return <Tag content="Can't start yet" variant="grey" />;
+    const sectionActive = isSectionActive(formID);
+    return sectionActive ? (
+      <Tag content="To do" />
+    ) : (
+      <Tag content="Can't start yet" variant="grey" />
+    );
   };
 
   return (
@@ -135,15 +118,13 @@ const ApplicationStep = (): JSX.Element => {
             {step.sections.map((formStep, i) => (
               <SummaryListRow key={i}>
                 <SummaryListValue>
-                  <Link href={`${baseHref}/${formStep.id}`}>
-                    {!cantStartYet(formStep.id) ? (
-                      <a key={index} style={{ textDecoration: 'none' }}>
-                        <span onClick={linkClick}>{formStep.heading}</span>
-                      </a>
-                    ) : (
-                      formStep.heading
-                    )}
-                  </Link>
+                  {isSectionActive(formStep.id) ? (
+                    <Link href={`${baseHref}/${formStep.id}`}>
+                      {formStep.heading}
+                    </Link>
+                  ) : (
+                    formStep.heading
+                  )}
                 </SummaryListValue>
                 <SummaryListActions>
                   {getQuestionValue(

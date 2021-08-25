@@ -14,8 +14,9 @@ import {
   searchApplication,
 } from '../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../lib/utils/auth';
-import SearchBox from '../../components/applications/SearchBox';
+import SearchBox from '../../components/applications/searchBox';
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 
 interface PageProps {
   user: HackneyGoogleUser;
@@ -29,6 +30,7 @@ export default function ApplicationListPage({
   stats,
 }: PageProps): JSX.Element {
   const [searchInputValue, setsearchInputValue] = useState('');
+  const router = useRouter();
 
   const textChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -38,7 +40,7 @@ export default function ApplicationListPage({
   };
 
   const onSearchSubmit = async () => {
-    const searchApplications = await searchApplication(searchInputValue);
+    router.push(window.location.pathname + '?searchterm=' + searchInputValue);
   };
 
   return (
@@ -47,7 +49,7 @@ export default function ApplicationListPage({
         <SearchBox
           title="Housing Register"
           buttonTitle="Search"
-          watermark="Search by Name, NI number or application reference"
+          watermark="Search application reference"
           onSearch={onSearchSubmit}
           textChangeHandler={textChangeHandler}
         />
@@ -83,7 +85,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const applications = await getApplications();
+  const { searchterm } = context.query as {
+    searchterm: string;
+  };
+
+  const applications =
+    searchterm === undefined
+      ? await getApplications()
+      : await searchApplication(searchterm);
+
   const stats = await getStats();
 
   return { props: { user, applications, stats } };

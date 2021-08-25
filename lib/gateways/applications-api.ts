@@ -90,7 +90,7 @@ export const searchApplication = async (
 ): Promise<ApplicationList | null> => {
   try {
     const { data } = await axios.get(
-      `${process.env.HOUSING_REGISTER_API}/applications/search/${searchTerm}`,
+      `${process.env.HOUSING_REGISTER_API}/applications?searchterm=${searchTerm}`,
       {
         headers: headersWithKey,
       }

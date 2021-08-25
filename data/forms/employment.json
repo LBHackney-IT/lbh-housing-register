@@ -1,12 +1,12 @@
 {
-  "heading": "Which describes your employment status?",
-  "copy": "If more than one applies, select the option that applies the most",
+  "heading": "Employment",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
-          "label": "",
+          "label": "Which describes your employment status?",
+          "hint": "If more than one applies, select the option that applies the most",
           "name": "employment",
           "options": [
             {
@@ -74,9 +74,9 @@
         },
         {
           "name": "proof-of-income-employeed",
-          "as": "insettext",
+          "as": "announcement",
           "title": "Proof of income required (employed)",
-          "content": "Before submitting your application, you will be ",
+          "content": "Before submitting your application, you will be asked to upload copies of the following documents:",
           "list": [
             "if you get paid weekly, we will need your last 5 pay slips",
             "if you paid monthly, we will need to last 2 pay slips"
@@ -93,7 +93,7 @@
         },
         {
           "name": "proof-of-income-self-employeed",
-          "as": "insettext",
+          "as": "announcement",
           "title": "Proof of income required (self employed)",
           "content": "Before submitting your application, you will be asked to upload the following documents:",
           "list": [
@@ -111,7 +111,7 @@
         },
         {
           "name": "proof-of-income-retired",
-          "as": "insettext",
+          "as": "announcement",
           "title": "Proof of income required (retired)",
           "content": "Before submitting your application, you will be asked to upload the following documents:",
           "list": [

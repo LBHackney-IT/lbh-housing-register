@@ -4,7 +4,7 @@ import Paragraph from '../content/paragraph';
 import Checkboxes, { CheckboxesProps } from './checkboxes';
 import DateInput from './dateinput';
 import Input from './input';
-import InsetText from './insettext';
+import AnnouncementText from './announcement-text';
 import Radios, { RadiosProps } from './radios';
 import Select from './select';
 import Textarea from './textarea';
@@ -39,8 +39,8 @@ export default function DynamicField({
     case 'paragraph':
       return <Paragraph>{field.label}</Paragraph>;
 
-    case 'insettext':
-      return <InsetText {...field}></InsetText>;
+    case 'announcement':
+      return <AnnouncementText {...field}></AnnouncementText>;
 
     case 'radioconditional':
       return <RadioConditional {...(field as RadioConditionalProps)} />;

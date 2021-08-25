@@ -28,11 +28,9 @@
         },
         {
           "name": "proof-of-medical-needs",
-          "as": "insettext",
+          "as": "announcement",
           "title": "You will need to complete a separate medical form",
           "content": "After you have submitted this application, we will email you a link to a form asking you to provide detailed information about your medical needs.",
-          "borderColour": "84BD00",
-          "backgroundColour": "f0f4dc",
           "conditionalDisplay": [
             {
               "field": "medical-needs",

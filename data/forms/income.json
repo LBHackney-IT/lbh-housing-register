@@ -17,15 +17,15 @@
       "reasoning": "It's unlikely that you will qualify for social housing."
     }
   ],
-  "copy": "What is your total yearly household income?",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
           "name": "income",
-          "label": "",
-          "subheading": "Include all employment and benefits received from everyone in your household, and any other income",
+          "label": "What is your household’s total yearly income?",
+          "hint": "Please include salary, benefits and any other income for everyone in your household.",
+          "subheading": "You will need to provide the last two months' payslips for all the working adults in your household.",
           "options": [
             {
               "label": "Under £20,000",
@@ -58,8 +58,9 @@
         },
         {
           "as": "radioconditional",
-          "label": "How much, in total, does your household have in savings and capital",
-          "subheading": "Include the total amount in all current accounts, plus all types of savings",
+          "label": "How much money does your household have in total savings and capital?",
+          "hint": "This includes the total amount in all your current accounts, saving accounts, and any other types of savings.",
+          "subheading": "You will need to provide the last two months' bank statements for each account you hold.",
           "name": "savings",
           "options": [
             {
@@ -84,20 +85,7 @@
             },
             {
               "label": "£80,000 or more",
-              "value": "80000",
-              "conditionalFieldInput": {
-                "as": "insettext",
-                "containerId": "proof-of-income-savings",
-                "fieldId": "proof-of-income-savings",
-                "fieldName": "proof-of-income-savings",
-                "label": "Please enter your self-discription",
-                "title": "Proof of income and savings required",
-                "content": "Before submitting your application, you will be asked to upload the following documents: ",
-                "list": [
-                  "Bank statements covering the last two months for every account you hold",
-                  "Last two months’ payslips for all working adults in your household"
-                ]
-              }
+              "value": "80000"
             }
           ],
           "validation": {

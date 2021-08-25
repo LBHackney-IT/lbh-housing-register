@@ -1,14 +1,13 @@
 import { FormikValues, getIn } from 'formik';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { HeadingTwo } from '../../components/content/headings';
-import Paragraph from '../../components/content/paragraph';
-import Form from '../../components/form/form';
-import Layout from '../../components/layout/resident-layout';
-import { FormID, getFormData } from '../../lib/utils/form-data';
-import Custom404 from '../404';
-import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
-import { updateWithFormValues } from '../../lib/store/applicant';
+import { HeadingOne } from '../../../components/content/headings';
+import Form from '../../../components/form/form';
+import Layout from '../../../components/layout/resident-layout';
+import { FormID, getFormData } from '../../../lib/utils/form-data';
+import Custom404 from '../../404';
+import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
+import { updateWithFormValues } from '../../../lib/store/applicant';
 
 export default function EthnicityQuestions() {
   const router = useRouter();
@@ -80,9 +79,8 @@ export default function EthnicityQuestions() {
   };
 
   return (
-    <Layout pageName="Ethnicity Questions">
-      {formData.heading && <HeadingTwo content={formData.heading} />}
-      {formData.copy && <Paragraph>{formData.copy}</Paragraph>}
+    <Layout pageName="Before you submit">
+      <HeadingOne content="Before you submit" />
       <Form
         key={activeStepID}
         buttonText="Save and continue"

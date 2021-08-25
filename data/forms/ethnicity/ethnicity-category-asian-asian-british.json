@@ -1,12 +1,11 @@
 {
   "id": "ethnicity-extended-category-asian-asian-british",
-  "heading": "Which of the following best describes your Asian or Asian British background?",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
-          "label": "Please Select",
+          "label": "Which of the following best describes your Asian or Asian British background?",
           "name": "ethnicity-extended-category",
           "options": [
             {

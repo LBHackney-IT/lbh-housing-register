@@ -32,6 +32,7 @@ import unspentConvictions from '../../data/forms/Situation/unspent-convictions.j
 import yourSituationFormData from '../../data/forms/your-situation.json';
 import { EligibilityCriteria, MultiStepForm } from '../types/form';
 import assertNever from './assertNever';
+import AdditionalQuestions from '../../data/forms/additional-questions.json';
 import EthnicityQuestions from '../../data/forms/ethnicity/ethnicity-questions.json';
 import EthnicityCategoryAsianAsianBritish from '../../data/forms/ethnicity/ethnicity-category-asian-asian-british.json';
 import EthnicityCategoryBlackBlackBritish from '../../data/forms/ethnicity/ethnicity-category-black-black-british.json';
@@ -72,6 +73,7 @@ export enum FormID {
   LEAGLE_RESTRICTIONS = 'legal-restrictions',
   UNSPENT_CONVICTIONS = 'unspent-convictions',
   EMPLOYMENT = 'employment',
+  ADDITIONAL_QUESTIONS = 'additional-questions',
   ETHNICITY_QUESTIONS = 'ethnicity-questions',
   ETHNICITY_CATEGORY_ASIAN_ASIAN_BRITISH = 'ethnicity-extended-category-asian-asian-british',
   ETHNICITY_CATEGORY_BLACK_BLACK_BRITISH = 'ethnicity-extended-category-black-black-british',
@@ -194,6 +196,9 @@ export function getFormData(form: FormID): MultiStepForm {
 
     case FormID.EMPLOYMENT:
       return employment as MultiStepForm;
+
+    case FormID.ADDITIONAL_QUESTIONS:
+      return AdditionalQuestions as MultiStepForm;
 
     case FormID.ETHNICITY_QUESTIONS:
       return EthnicityQuestions as MultiStepForm;

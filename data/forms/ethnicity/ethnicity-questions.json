@@ -1,12 +1,11 @@
 {
-  "id": "ethnicity-main-category",
-  "heading": "What is your ethnic group?",
+  "id": "ethnicity-questions",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
-          "label": "Please Select",
+          "label": "What is your ethnic group?",
           "name": "ethnicity-main-category",
           "details": {
             "title": "Why we ask for this information",
@@ -35,7 +34,7 @@
             },
             {
               "label": "Prefer not to say",
-              "value": "perfer-not-to-say"
+              "value": "prefer-not-to-say"
             }
           ],
           "validation": {

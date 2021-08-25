@@ -51,7 +51,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
     dispatch(sendConfirmation(application));
     dispatch(completeApplication(application));
 
-    router.push('/apply/ethnicity-questions');
+    router.push('/apply/submit/additional-questions');
   };
 
   return (

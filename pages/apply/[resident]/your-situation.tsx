@@ -79,7 +79,7 @@ export default function YourSituation() {
           formID: FormID.YOUR_SITUATION,
           personID: applicant.person.id,
           values,
-          markAsComplete: true
+          markAsComplete: true,
         })
       );
       router.push(baseHref);
@@ -95,14 +95,13 @@ export default function YourSituation() {
         formID: activeStepID,
         personID: applicant.person.id,
         values,
-        markAsComplete: true
+        markAsComplete: true,
       })
     );
   };
 
   return (
     <Layout pageName="Your situation" breadcrumbs={breadcrumbs}>
-      <Hint content={applicant.person?.firstName ?? ''} />
       {formData.heading && <HeadingTwo content={formData.heading} />}
       {formData.copy && <Paragraph>{formData.copy}</Paragraph>}
       <Form

@@ -32,7 +32,8 @@ const ApplicationSection = (): JSX.Element => {
     isOver18(applicant)
   );
 
-  const sectionName = getApplicationSectionFromId(section, sectionGroups)?.heading || '';
+  const sectionName =
+    getApplicationSectionFromId(section, sectionGroups)?.heading || '';
   const breadcrumbs = [
     {
       href: returnHref,
@@ -54,7 +55,6 @@ const ApplicationSection = (): JSX.Element => {
 
   return (
     <Layout pageName={sectionName} breadcrumbs={breadcrumbs}>
-      <Hint content={applicant.person.firstName ?? ''} />
       <ApplicationForms
         applicant={applicant}
         sectionGroups={sectionGroups}

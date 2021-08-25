@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
@@ -22,6 +23,8 @@ import Custom404 from '../../404';
 import Button, { ButtonLink } from '../../../components/button';
 import { isOver18 } from '../../../lib/utils/dateOfBirth';
 import { FormID } from '../../../lib/utils/form-data';
+import { Applicant } from '../../../domain/HousingApi';
+import { checkEligible } from '../../../lib/utils/form';
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter();
@@ -37,6 +40,29 @@ const ApplicationStep = (): JSX.Element => {
 
   const baseHref = `/apply/${currentResident.person?.id}`;
   const returnHref = '/apply/overview';
+  const checkAnswers = `${baseHref}/summary`;
+
+  const applicants = useAppSelector((store) =>
+    [store.application.mainApplicant, store.application.otherMembers]
+      .filter((v): v is Applicant | Applicant[] => v !== undefined)
+      .flat()
+  );
+
+  const eligibilityMap = useMemo(
+    () =>
+      new Map(
+        applicants.map((applicant) => [applicant, checkEligible(applicant)[0]])
+      ),
+    [applicants]
+  );
+
+  applicants.map((applicant, index) => {
+    const isEligible = eligibilityMap.get(applicant);
+
+    if (!isEligible) {
+      router.push(checkAnswers);
+    }
+  });
 
   const steps = getApplicationSectionsForResident(
     currentResident === mainResident,

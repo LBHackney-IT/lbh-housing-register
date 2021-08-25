@@ -23,7 +23,7 @@
         },
         {
           "as": "textarea",
-          "label": "details",
+          "label": "Details of legal restrictions",
           "name": "details",
           "validation": {
             "required": true

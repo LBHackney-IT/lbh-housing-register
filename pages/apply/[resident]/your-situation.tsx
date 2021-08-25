@@ -1,10 +1,8 @@
 import { FormikValues, getIn } from 'formik';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { HeadingTwo } from '../../../components/content/headings';
-import Paragraph from '../../../components/content/paragraph';
+import { HeadingOne } from '../../../components/content/headings';
 import Form from '../../../components/form/form';
-import Hint from '../../../components/form/hint';
 import Layout from '../../../components/layout/resident-layout';
 import {
   getQuestionValue,
@@ -45,7 +43,7 @@ export default function YourSituation() {
         return FormID.DOMESTIC_VIOLENCE;
 
       default:
-        return FormID.HOMELESSESS;
+        return FormID.HOMELESSNESS;
     }
   });
   const formData = getFormData(activeStepID);

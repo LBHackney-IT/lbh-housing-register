@@ -23,9 +23,8 @@
         },
         {
           "as": "textarea",
-          "label": "details of breach",
-          "name": "breach-of-tenancy-details",
-          "options": [],
+          "label": "Details of breach",
+          "name": "details",
           "validation": {
             "required": true
           },

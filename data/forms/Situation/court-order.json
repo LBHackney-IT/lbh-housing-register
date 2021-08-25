@@ -23,7 +23,7 @@
         },
         {
           "as": "textarea",
-          "label": "details",
+          "label": "Details of court order",
           "name": "details",
           "validation": {
             "required": true

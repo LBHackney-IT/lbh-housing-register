@@ -8,6 +8,10 @@
           "as": "radios",
           "label": "Please Select",
           "name": "ethnicity-main-category",
+          "details": {
+            "title": "Why we ask for this information",
+            "content": "We regularly collect equality information from members of the public to ensure our services reach the people who need them. Your answer to this question won’t affect your application."
+          },
           "options": [
             {
               "label": "Asian or Asian British",

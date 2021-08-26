@@ -50,15 +50,18 @@ const UserSummary = (): JSX.Element => {
   );
 
   const onConfirmData = () => {
+    let isEligible = true;
     applicants.map((applicant, index) => {
-      const isEligible = eligibilityMap.get(applicant);
-
-      if (!isEligible) {
-        router.push('/apply/not-eligible');
+      if (!eligibilityMap.get(applicant)) {
+        isEligible = false;
       }
     });
 
-    router.push('/apply/overview');
+    if (!isEligible) {
+      router.push('/apply/not-eligible');
+    } else {
+      router.push('/apply/overview');
+    }
   };
 
   const onDelete = () => {

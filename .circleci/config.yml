@@ -1,0 +1,154 @@
+version: 2.1
+
+orbs:
+  aws-cli: circleci/aws-cli@1.0.0
+  aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
+
+executors:
+  node-executor:
+    docker:
+      - image: circleci/node:14.15.5-browsers
+  docker-python:
+    docker:
+      - image: circleci/python:3.7
+
+references:
+  workspace_root: &workspace_root '~'
+  attach_workspace: &attach_workspace
+    attach_workspace:
+      at: *workspace_root
+
+jobs:
+  install-dependencies:
+    executor: node-executor
+    steps:
+      - *attach_workspace
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install Dependencies
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+            - ./.next/cache
+      - persist_to_workspace:
+          root: *workspace_root
+          paths: .
+
+  build-deploy-development:
+    executor: aws-cli/default
+    steps:
+      - *attach_workspace
+      - run:
+          name: deploy
+          command: npm run build && sudo npm i -g serverless && sls deploy --stage development
+
+  build-deploy-staging:
+    executor: aws-cli/default
+    steps:
+      - *attach_workspace
+      - run:
+          name: deploy
+          command: npm run build && sudo npm i -g serverless && sls deploy --stage staging
+
+  build-deploy-production:
+    executor: aws-cli/default
+    steps:
+      - *attach_workspace
+      - run:
+          name: deploy
+          command: npm run build && sudo npm i -g serverless && sls deploy --stage production
+
+  assume-role-development:
+    executor: docker-python
+    steps:
+      - checkout
+      - aws_assume_role/assume_role:
+          account: $AWS_ACCOUNT_DEVELOPMENT
+          profile_name: default
+          role: 'LBH_Circle_CI_Deployment_Role'
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - .aws
+
+  assume-role-staging:
+    executor: docker-python
+    steps:
+      - checkout
+      - aws_assume_role/assume_role:
+          account: $AWS_ACCOUNT_STAGING
+          profile_name: default
+          role: 'LBH_Circle_CI_Deployment_Role'
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - .aws
+
+  assume-role-production:
+    executor: docker-python
+    steps:
+      - checkout
+      - aws_assume_role/assume_role:
+          account: $AWS_ACCOUNT_PRODUCTION
+          profile_name: default
+          role: 'LBH_Circle_CI_Deployment_Role'
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - .aws
+
+workflows:
+  version: 2
+  continuous-delivery:
+    jobs:
+      - install-dependencies
+      - assume-role-development:
+          context: api-assume-role-housing-development-context
+          requires:
+            - install-dependencies
+          filters:
+            branches:
+              only: main
+      - build-deploy-development:
+          requires:
+            - assume-role-development
+          filters:
+            branches:
+              only: main
+      - assume-role-staging:
+          context: api-assume-role-staging-context
+          requires:
+            - build-deploy-development
+          filters:
+            branches:
+              only: main
+      - build-deploy-staging:
+          requires:
+            - assume-role-staging
+          filters:
+            branches:
+              only: main
+      - permit-deploy-production:
+          type: approval
+          requires:
+            - build-deploy-staging
+          filters:
+            branches:
+              only: main
+      - assume-role-production:
+          context: api-assume-role-housing-production-context
+          requires:
+            - permit-deploy-production
+          filters:
+            branches:
+              only: main
+      - build-deploy-production:
+          requires:
+            - assume-role-production
+          filters:
+            branches:
+              only: main

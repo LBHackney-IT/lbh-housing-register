@@ -19,6 +19,8 @@ import {
   sendConfirmation,
   completeApplication,
 } from '../../lib/store/application';
+import { useMemo } from 'react';
+import { checkEligible } from '../../lib/utils/form';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
   const router = useRouter();
@@ -38,11 +40,30 @@ const ApplicationPersonsOverview = (): JSX.Element => {
     },
   ];
 
-  const submitApplication = async () => {
-    dispatch(sendConfirmation(application));
-    dispatch(completeApplication(application));
+  const eligibilityMap = useMemo(
+    () =>
+      new Map(
+        applicants.map((applicant) => [applicant, checkEligible(applicant)[0]])
+      ),
+    [applicants]
+  );
 
-    router.push('/apply/submit/additional-questions');
+  const submitApplication = async () => {
+    let isEligible = true;
+    applicants.map((applicant, index) => {
+      if (!eligibilityMap.get(applicant)) {
+        isEligible = false;
+      }
+    });
+
+    if (!isEligible) {
+      router.push('/apply/not-eligible');
+    } else {
+      dispatch(sendConfirmation(application));
+      dispatch(completeApplication(application));
+
+      router.push('/apply/submit/additional-questions');
+    }
   };
 
   return (

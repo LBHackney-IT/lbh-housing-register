@@ -65,33 +65,33 @@ export function updateApplicantReducer(
   };
 }
 
-export const selectApplicant =
-  (applicantPersonId: string) =>
-    (store: Store): ApplicantWithPersonID | undefined => {
-      if (
-        applicantHasId(store.application.mainApplicant) &&
-        store.application.mainApplicant?.person?.id === applicantPersonId
-      ) {
-        return store.application.mainApplicant;
-      }
-      return store.application.otherMembers?.find(
-        (a): a is ApplicantWithPersonID =>
-          applicantHasId(a) && a.person?.id === applicantPersonId
-      );
-    };
+export const selectApplicant = (applicantPersonId: string) => (
+  store: Store
+): ApplicantWithPersonID | undefined => {
+  if (
+    applicantHasId(store.application.mainApplicant) &&
+    store.application.mainApplicant?.person?.id === applicantPersonId
+  ) {
+    return store.application.mainApplicant;
+  }
+  return store.application.otherMembers?.find(
+    (a): a is ApplicantWithPersonID =>
+      applicantHasId(a) && a.person?.id === applicantPersonId
+  );
+};
 
-export const findQuesiton =
-  (formID: FormID, questionName: string) => (question: Question) =>
-    question.id === `${formID}/${questionName}`;
+export const findQuesiton = (formID: FormID, questionName: string) => (
+  question: Question
+) => question.id === `${formID}/${questionName}`;
 
 export function getQuestionValue(
   questions: Question[] | undefined,
   formID: FormID,
   questionName: string,
-  def: any = undefined
+  fallbackValue: any = undefined
 ) {
   const a = questions?.find(findQuesiton(formID, questionName))?.answer;
-  return a ? JSON.parse(a) : def;
+  return a ? JSON.parse(a) : fallbackValue;
 }
 
 export function getQuestionsForFormAsValues(

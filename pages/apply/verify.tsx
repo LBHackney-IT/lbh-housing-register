@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { FormData } from '../../lib/types/form';
 import { FormID, getFormData } from '../../lib/utils/form-data';
 import UserErrors from '../../components/errors/user';
+import ErrorResponseCodes from '../../components/errors/response';
 
 const ApplicationVerifyPage = (): JSX.Element => {
   const router = useRouter();
@@ -20,7 +21,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
     router.push('/apply/overview');
   }
 
-  const [userError, setUserError] = useState(null);
+  const [userError, setUserError] = useState<string | null>(null);
 
   const dispatch = useAppDispatch();
   const emailAddress = useAppSelector(
@@ -47,7 +48,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
       // TODO: update to link to household: HRT-102
       router.push('/apply/household');
     } catch (error) {
-      setUserError(error.message);
+      setUserError(ErrorResponseCodes[error.code]);
     }
   };
 

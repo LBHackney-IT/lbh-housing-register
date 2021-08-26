@@ -14,8 +14,9 @@ export default function UserErrors({ children }: UserErrors): JSX.Element {
       data-module="govuk-error-summary"
     >
       <h2 className="govuk-error-summary__title" id="error-summary-title">
-        {children}
+        <p>The following error occurred:</p>
       </h2>
+      <div className="govuk-error-summary__body">{children}</div>
     </div>
   );
 }

@@ -1,13 +1,11 @@
 {
   "id": "under-occupying",
-  "heading": "Occupency",
-  "copy": "Are you under-occupying? ",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
-          "label": "Please select",
+          "label": "Are you under-occupying?",
           "name": "under-occupying",
           "options": [
             {

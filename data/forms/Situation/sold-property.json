@@ -1,13 +1,11 @@
 {
   "id": "sold-property",
-  "heading": "Property",
-  "copy": "Have you sold property in the last 5 years?",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
-          "label": "Please select",
+          "label": "Have you sold property in the last 5 years?",
           "name": "sold-property",
           "options": [
             {

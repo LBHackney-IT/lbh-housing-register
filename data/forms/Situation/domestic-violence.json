@@ -1,13 +1,11 @@
 {
   "id": "domestic-violence",
-  "heading": "Domestic Violence?",
-  "copy": "Are you fleeing Domestic Violence?",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
-          "label": "Please Select",
+          "label": "Are you fleeing domestic violence?",
           "name": "domestic-violence",
           "options": [
             {

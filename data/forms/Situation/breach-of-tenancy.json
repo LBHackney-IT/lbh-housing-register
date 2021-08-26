@@ -1,13 +1,11 @@
 {
   "id": "breach-of-tenancy",
-  "heading": "Breach of tenancy",
-  "copy": "Has anyone in your household ever received a warning for a breach of tenancy? (If Yes, provide details)",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
-          "label": "Please select",
+          "label": "Has anyone in your household ever received a warning for a breach of tenancy? (If Yes, provide details)",
           "name": "breach-of-tenancy",
           "options": [
             {
@@ -25,9 +23,8 @@
         },
         {
           "as": "textarea",
-          "label": "details of breach",
-          "name": "breach-of-tenancy-details",
-          "options": [],
+          "label": "Details of breach",
+          "name": "details",
           "validation": {
             "required": true
           },

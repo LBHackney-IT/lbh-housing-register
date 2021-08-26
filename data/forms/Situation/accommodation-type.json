@@ -1,13 +1,11 @@
 {
   "id": "accommodation-type",
-  "heading": "Accommodation Type",
-  "copy": "Are you a social tenant or in temporary accommodation?",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
-          "label": "Please Select",
+          "label": "Are you a social tenant or in temporary accommodation?",
           "name": "accommodation-type",
           "options": [
             {

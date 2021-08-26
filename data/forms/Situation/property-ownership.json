@@ -1,13 +1,11 @@
 {
   "id": "property-ownership",
-  "heading": "Property",
-  "copy": "Do you own any property?",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
-          "label": "Please select",
+          "label": "Do you own any property?",
           "name": "property-ownership",
           "options": [
             {

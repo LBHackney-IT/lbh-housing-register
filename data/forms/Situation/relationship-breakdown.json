@@ -1,13 +1,11 @@
 {
   "id": "relationship-breakdown",
-  "heading": "Situation",
-  "copy": "Was this due to a relationship breakdown?",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
-          "label": "Please select",
+          "label": "Was this due to a relationship breakdown?",
           "name": "relationship-breakdown",
           "options": [
             {

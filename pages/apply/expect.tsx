@@ -57,7 +57,7 @@ const WhatToExpect = (): JSX.Element => {
       </Announcement>
       <Paragraph>
         Next, you will need to complete more information to determine if you
-        qualify for the housing register.
+        qualify to join the housing register.
       </Paragraph>
 
       <ButtonLink href="/apply/overview">Save and continue</ButtonLink>

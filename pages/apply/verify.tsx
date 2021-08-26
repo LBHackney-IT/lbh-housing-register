@@ -20,7 +20,8 @@ const ApplicationVerifyPage = (): JSX.Element => {
 
   const dispatch = useAppDispatch();
   const emailAddress = useAppSelector(
-    (store) => store.application.mainApplicant?.contactInformation?.emailAddress ?? ''
+    (store) =>
+      store.application.mainApplicant?.contactInformation?.emailAddress ?? ''
   );
   if (emailAddress === '') {
     router.push('/apply/start');
@@ -51,11 +52,10 @@ const ApplicationVerifyPage = (): JSX.Element => {
       <HeadingOne content="Enter your verification code" />
       <Announcement variant="success">
         <Paragraph>
-          We've sent an email containing a six-digit verification code to <strong>{emailAddress}</strong>.
+          We've sent an email containing a six-digit verification code to{' '}
+          <strong>{emailAddress}</strong>.
         </Paragraph>
-        <Paragraph>
-          Haven't recieved an email?
-        </Paragraph>
+        <Paragraph>Haven't received an email?</Paragraph>
         <Button onClick={() => resendCode(emailAddress)} secondary>
           Send again
         </Button>

@@ -47,8 +47,8 @@ const ApplicationVerifyPage = (): JSX.Element => {
 
       // TODO: update to link to household: HRT-102
       router.push('/apply/household');
-    } catch (error) {
-      setUserError(ErrorResponseCodes[error.code]);
+    } catch (e) {
+      setUserError(ErrorResponseCodes[e.code]);
     }
   };
 
@@ -65,7 +65,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
           We've sent an email containing a six-digit verification code to{' '}
           <strong>{emailAddress}</strong>.
         </Paragraph>
-        <Paragraph>Haven't recieved an email?</Paragraph>
+        <Paragraph>Haven't received an email?</Paragraph>
         <Button onClick={() => resendCode(emailAddress)} secondary>
           Send again
         </Button>

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Button, { ButtonLink } from '../../components/button';
 import { HeadingOne } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
@@ -21,10 +21,14 @@ import {
   sendConfirmation,
   completeApplication,
 } from '../../lib/store/application';
+import ErrorResponseCodes from '../../components/errors/response';
+import UserErrors from '../../components/errors/user';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useDispatch();
+
+  const [userError, setUserError] = useState<string | null>(null);
 
   const applicants = useAppSelector((store) =>
     [store.application.mainApplicant, store.application.otherMembers]
@@ -48,15 +52,20 @@ const ApplicationPersonsOverview = (): JSX.Element => {
   ];
 
   const submitApplication = async () => {
-    dispatch(sendConfirmation(application));
-    dispatch(completeApplication(application));
-
-    router.push('/apply/ethnicity-questions');
+    // TODO: Error handling
+    try {
+      dispatch(sendConfirmation(application));
+      dispatch(completeApplication(application));
+      router.push('/apply/ethnicity-questions');
+    } catch (e) {
+      setUserError(ErrorResponseCodes[e.code]);
+    }
   };
 
   return (
     <Layout pageName="Application overview" breadcrumbs={breadcrumbs}>
       <HeadingOne content="Tasks to complete" />
+      {userError && <UserErrors>{userError}</UserErrors>}
 
       <SummaryList>
         {applicants.map((applicant, index) => {

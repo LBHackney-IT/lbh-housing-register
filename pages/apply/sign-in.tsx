@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { HeadingOne } from '../../components/content/headings';
 import Form from '../../components/form/form';
 import Layout from '../../components/layout/resident-layout';
@@ -7,11 +7,15 @@ import { signIn } from '../../lib/store/cognitoUser';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { FormData } from '../../lib/types/form';
 import { FormID, getFormData } from '../../lib/utils/form-data';
+import ErrorResponseCodes from '../../components/errors/response';
+import UserErrors from '../../components/errors/user';
 
 const ApplicationSignInPage = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const isLoggedIn = useAppSelector((s) => s.cognitoUser?.username);
   const router = useRouter();
+
+  const [userError, setUserError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -27,11 +31,17 @@ const ApplicationSignInPage = (): JSX.Element => {
         username: values.emailAddress,
         password: values.password,
       })
-    );
+    ).then((result: any) => {
+      if (result.error) {
+        setUserError(ErrorResponseCodes[result.error.code]);
+      }
+      return result;
+    });
   };
 
   return (
     <Layout pageName="Sign in">
+      {userError && <UserErrors>{userError}</UserErrors>}
       <HeadingOne content="Sign in to your application" />
       {/* TODO not everything should use Formik. */}
       <Form

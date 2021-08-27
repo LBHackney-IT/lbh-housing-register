@@ -1,13 +1,16 @@
 {
-  "id": "ethnicity-main-category",
-  "heading": "What is your ethnic group?",
+  "id": "ethnicity-questions",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
-          "label": "Please Select",
+          "label": "What is your ethnic group?",
           "name": "ethnicity-main-category",
+          "details": {
+            "title": "Why we ask for this information",
+            "content": "We regularly collect equality information from members of the public to ensure our services reach the people who need them. Your answer to this question won’t affect your application."
+          },
           "options": [
             {
               "label": "Asian or Asian British",
@@ -31,7 +34,7 @@
             },
             {
               "label": "Prefer not to say",
-              "value": "perfer-not-to-say"
+              "value": "prefer-not-to-say"
             }
           ],
           "validation": {

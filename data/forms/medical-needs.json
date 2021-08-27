@@ -1,16 +1,16 @@
 {
-  "heading": "Do you have any significant medical conditions that affect the type of housing you need?",
-  "copy": "We will carry out checks to assess your medical needs. This might restrict the types of properties you can bid for, which could increase your waiting time due to the number of properties which become available.",
-  "details": {
-    "title": "How do I answer this question",
-    "content": "Select 'yes' if your need is a long term condition that currently affects your mobility or the use of your home. Select 'No' if your need is a temporary condition such as a broken leg, a medical issue, pregnancy, or a health issue due to a problem in your home which can be fixed, such as damp or condensation."
-  },
+  "heading": "Medical needs",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
-          "label": "Medical Needs",
+          "label": "Do you have any significant medical conditions that affect the type of housing you need?",
+          "hint": "We will carry out checks to assess your medical needs. This might restrict the types of properties you can bid for, which could increase your waiting time due to the number of properties which become available.",
+          "details": {
+            "title": "How do I answer this question",
+            "content": "Select 'Yes' if your need is a long term condition that currently affects your mobility or the use of your home. Select 'No' if your need is a temporary condition such as a broken leg, a medical issue, pregnancy, or a health issue due to a problem in your home which can be fixed, such as damp or condensation."
+          },
           "name": "medical-needs",
           "options": [
             {
@@ -28,11 +28,9 @@
         },
         {
           "name": "proof-of-medical-needs",
-          "as": "insettext",
+          "as": "announcement",
           "title": "You will need to complete a separate medical form",
           "content": "After you have submitted this application, we will email you a link to a form asking you to provide detailed information about your medical needs.",
-          "borderColour": "84BD00",
-          "backgroundColour": "f0f4dc",
           "conditionalDisplay": [
             {
               "field": "medical-needs",

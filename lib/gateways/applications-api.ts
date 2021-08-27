@@ -73,9 +73,28 @@ export const updateApplication = async (
 
 export const getStats = async (): Promise<Array<Stat> | null> => {
   try {
-    const { data } = await axios.get(`${process.env.HOUSING_REGISTER_API}/stats`, {
-      headers: headersWithKey,
-    });
+    const { data } = await axios.get(
+      `${process.env.HOUSING_REGISTER_API}/stats`,
+      {
+        headers: headersWithKey,
+      }
+    );
+    return data;
+  } catch (err) {
+    return null;
+  }
+};
+
+export const searchApplication = async (
+  searchTerm: string
+): Promise<ApplicationList | null> => {
+  try {
+    const { data } = await axios.get(
+      `${process.env.HOUSING_REGISTER_API}/applications?searchterm=${searchTerm}`,
+      {
+        headers: headersWithKey,
+      }
+    );
     return data;
   } catch (err) {
     return null;

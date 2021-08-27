@@ -1,12 +1,11 @@
 {
   "id": "ethnicity-extended-category-other-ethnic-group",
-  "heading": "Which of the following best describes your ethnic background?",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
-          "label": "Please Select",
+          "label": "Which of the following best describes your ethnic background?",
           "name": "ethnicity-extended-category",
           "options": [
             {

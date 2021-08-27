@@ -78,7 +78,9 @@ export default function Checkboxes({
           )}
           {hasMultipleOptions && hint && <Hint content={hint} />}
           {hasMultipleOptions && details && (
-            <Details summary="Help with this question">{details}</Details>
+            <Details summary={details.title ?? 'Help with this question'}>
+              {details.content}
+            </Details>
           )}
           {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 

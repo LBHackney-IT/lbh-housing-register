@@ -1,13 +1,11 @@
 {
   "id": "medical-need",
-  "heading": "Medical",
-  "copy": "Do you have medical need?",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
-          "label": "Please select",
+          "label": "Do you have medical need?",
           "name": "medical-need",
           "options": [
             {

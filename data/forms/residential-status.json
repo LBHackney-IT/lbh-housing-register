@@ -17,7 +17,7 @@
       "fields": [
         {
           "as": "radios",
-          "label": "Are you currently and continually resided in the borough for 3 years or more?",
+          "label": "Are you currently and have you continuously resided in the borough for 3 years or more?",
           "name": "residential-status",
           "options": [
             {

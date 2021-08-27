@@ -1,14 +1,11 @@
 {
   "id": "court-order",
-
-  "heading": "Court Order",
-  "copy": "Do you have a court order allowing you to be on the register?",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
-          "label": "Please Select",
+          "label": "Do you have a court order allowing you to be on the register?",
           "name": "court-order",
           "options": [
             {
@@ -26,7 +23,7 @@
         },
         {
           "as": "textarea",
-          "label": "details",
+          "label": "Details of court order",
           "name": "details",
           "validation": {
             "required": true

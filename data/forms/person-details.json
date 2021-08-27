@@ -81,7 +81,7 @@
                 "containerId": "self-describe-text-values",
                 "fieldId": "self-describe",
                 "fieldName": "self-describe",
-                "label": "Please enter your self-discription"
+                "label": "Please enter your self-description"
               }
             }
           ]

@@ -18,12 +18,16 @@ import { YourSituationSummary } from '../../../components/summary/YourSituation'
 import { Applicant } from '../../../domain/HousingApi';
 import { checkEligible } from '../../../lib/utils/form';
 import Button from '../../../components/button';
+import { isOver18 } from '../../../lib/utils/dateOfBirth';
 
 const UserSummary = (): JSX.Element => {
   const router = useRouter();
   const { resident } = router.query as { resident: string };
 
   const currentResident = useAppSelector(selectApplicant(resident));
+  const mainResident = useAppSelector((s) => s.application.mainApplicant);
+  const isMainApplicant = currentResident == mainResident;
+
   if (!currentResident) {
     return <Custom404 />;
   }
@@ -46,15 +50,18 @@ const UserSummary = (): JSX.Element => {
   );
 
   const onConfirmData = () => {
+    let isEligible = true;
     applicants.map((applicant, index) => {
-      const isEligible = eligibilityMap.get(applicant);
-
-      if (!isEligible) {
-        router.push('/apply/not-eligible');
+      if (!eligibilityMap.get(applicant)) {
+        isEligible = false;
       }
     });
 
-    router.push('/apply/overview');
+    if (!isEligible) {
+      router.push('/apply/not-eligible');
+    } else {
+      router.push('/apply/overview');
+    }
   };
 
   const onDelete = () => {
@@ -81,13 +88,30 @@ const UserSummary = (): JSX.Element => {
       </h1>
 
       <PersonalDetailsSummary currentResident={currentResident} />
-      <ImmigrationStatusSummary currentResident={currentResident} />
-      <ResidentialStatusSummary currentResident={currentResident} />
+
+      {isMainApplicant && (
+        <>
+          <ImmigrationStatusSummary currentResident={currentResident} />
+          <ResidentialStatusSummary currentResident={currentResident} />
+        </>
+      )}
+
       <AddressHistorySummary currentResident={currentResident} />
-      <CurrentAccommodationSummary currentResident={currentResident} />
-      <YourSituationSummary currentResident={currentResident} />
-      <IncomeSavingsSummary currentResident={currentResident} />
-      <EmploymentSummary currentResident={currentResident} />
+
+      {isMainApplicant && (
+        <>
+          <CurrentAccommodationSummary currentResident={currentResident} />
+          <YourSituationSummary currentResident={currentResident} />
+        </>
+      )}
+
+      {isOver18(currentResident) && (
+        <>
+          <IncomeSavingsSummary currentResident={currentResident} />
+          <EmploymentSummary currentResident={currentResident} />
+        </>
+      )}
+
       <MedicalNeedsSummary currentResident={currentResident} />
 
       <Button onClick={onConfirmData}>I confirm this is correct</Button>

@@ -15,7 +15,7 @@ export interface BaseFormField {
   name: string;
   label: string;
   hint?: string;
-  details?: string;
+  details?: DetailsSection;
   conditionalDisplay?: FormFieldDisplayCriteria[];
   validation?: FormFieldValidation;
   placeholder?: string;
@@ -53,14 +53,12 @@ export interface DateFormField extends BaseFormField {
 export interface ParagraphFormField extends BaseFormField {
   as: 'paragraph';
 }
-export interface InsetTextFormField extends BaseFormField {
-  as: 'insettext';
+export interface AnnouncementTextFormField extends BaseFormField {
+  as: 'announcement';
   title?: string;
   content?: string;
   list?: string[];
-  removeBorder?: boolean;
-  borderColour?: string;
-  backgroundColour?: string;
+  variant: 'info' | 'success' | 'warning';
 }
 
 export interface RadioConditionalFormField extends BaseFormField {
@@ -77,7 +75,7 @@ export type FormField =
   | SelectFormField
   | DateFormField
   | ParagraphFormField
-  | InsetTextFormField
+  | AnnouncementTextFormField
   | RadioConditionalFormField;
 
 export type FormFieldDisplayCriteria = {
@@ -100,9 +98,6 @@ export type ConditionalFormFieldOptionInput = {
   fieldName?: string;
   label?: string;
   display: boolean;
-  title?: string;
-  content?: string;
-  list?: string[];
 };
 
 export type FormFieldOption = {
@@ -136,7 +131,6 @@ export type MultiStepForm = {
   heading?: string;
   steps: FormStep[];
   conditionals?: Conditionals[];
-  details?: DetailsSection;
 };
 
 export type DetailsSection = {

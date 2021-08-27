@@ -1,13 +1,11 @@
 {
   "id": "unspent-convictions",
-  "heading": "Unspent convictions",
-  "copy": "Does anyone in your household have any unspent convictions? (If Yes, provide details)",
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
-          "label": "Please select",
+          "label": "Does anyone in your household have any unspent convictions? (If Yes, provide details)",
           "name": "unspent-convictions",
           "options": [
             {

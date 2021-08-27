@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
@@ -17,11 +18,16 @@ import {
 } from '../../../lib/store/applicant';
 import { useAppSelector } from '../../../lib/store/hooks';
 import { deleteApplicant } from '../../../lib/store/otherMembers';
-import { getApplicationSectionsForResident } from '../../../lib/utils/resident';
+import {
+  applicationStepsRemaining,
+  getApplicationSectionsForResident,
+} from '../../../lib/utils/resident';
 import Custom404 from '../../404';
 import Button, { ButtonLink } from '../../../components/button';
 import { isOver18 } from '../../../lib/utils/dateOfBirth';
 import { FormID } from '../../../lib/utils/form-data';
+import { Applicant } from '../../../domain/HousingApi';
+import { checkEligible } from '../../../lib/utils/form';
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter();
@@ -37,10 +43,38 @@ const ApplicationStep = (): JSX.Element => {
 
   const baseHref = `/apply/${currentResident.person?.id}`;
   const returnHref = '/apply/overview';
+  const checkAnswers = `${baseHref}/summary`;
+
+  const applicants = useAppSelector((store) =>
+    [store.application.mainApplicant, store.application.otherMembers]
+      .filter((v): v is Applicant | Applicant[] => v !== undefined)
+      .flat()
+  );
+
+  const eligibilityMap = useMemo(
+    () =>
+      new Map(
+        applicants.map((applicant) => [applicant, checkEligible(applicant)[0]])
+      ),
+    [applicants]
+  );
+
+  applicants.map((applicant, index) => {
+    const isEligible = eligibilityMap.get(applicant);
+
+    if (!isEligible) {
+      router.push(checkAnswers);
+    }
+  });
 
   const steps = getApplicationSectionsForResident(
     currentResident === mainResident,
     isOver18(currentResident)
+  );
+
+  const tasksRemaining = applicationStepsRemaining(
+    currentResident,
+    currentResident === mainResident
   );
 
   let sectionNames: FormID[] = [];
@@ -70,11 +104,7 @@ const ApplicationStep = (): JSX.Element => {
     router.push('/apply/overview');
   };
 
-  const linkClick = (event: any) => {
-    event.preventDefault();
-  };
-
-  const cantStartYet = (formId: FormID) => {
+  const isSectionActive = (formId: FormID) => {
     const indexOfSectionName = sectionNames.indexOf(formId);
 
     // First Section is always unlocked
@@ -82,35 +112,22 @@ const ApplicationStep = (): JSX.Element => {
       return true;
     }
 
-    // Last Section
-    if (sectionNames.length - 1 === indexOfSectionName) {
-      return getQuestionValue(
-        currentResident.questions,
-        sectionNames[indexOfSectionName],
-        'sectionCompleted',
-        false
-      );
-    }
-
     // Has previous section been completed?
-    const hasPreviousQuestionBeenAnswered = getQuestionValue(
+    return getQuestionValue(
       currentResident.questions,
       sectionNames[indexOfSectionName - 1],
       'sectionCompleted',
       false
     );
-
-    return hasPreviousQuestionBeenAnswered;
   };
 
   const cantStartYetTag = (formID: FormID) => {
-    const tag = cantStartYet(formID);
-
-    if (tag) {
-      return <Tag content="To do" />;
-    }
-
-    return <Tag content="Can't start yet" variant="grey" />;
+    const sectionActive = isSectionActive(formID);
+    return sectionActive ? (
+      <Tag content="To do" />
+    ) : (
+      <Tag content="Can't start yet" variant="grey" />
+    );
   };
 
   return (
@@ -127,15 +144,13 @@ const ApplicationStep = (): JSX.Element => {
             {step.sections.map((formStep, i) => (
               <SummaryListRow key={i}>
                 <SummaryListValue>
-                  <Link href={`${baseHref}/${formStep.id}`}>
-                    {!cantStartYet(formStep.id) ? (
-                      <a key={index} style={{ textDecoration: 'none' }}>
-                        <span onClick={linkClick}>{formStep.heading}</span>
-                      </a>
-                    ) : (
-                      formStep.heading
-                    )}
-                  </Link>
+                  {isSectionActive(formStep.id) ? (
+                    <Link href={`${baseHref}/${formStep.id}`}>
+                      {formStep.heading}
+                    </Link>
+                  ) : (
+                    formStep.heading
+                  )}
                 </SummaryListValue>
                 <SummaryListActions>
                   {getQuestionValue(
@@ -154,9 +169,11 @@ const ApplicationStep = (): JSX.Element => {
           </SummaryList>
         </div>
       ))}
-      <ButtonLink href={`/apply/${currentResident.person?.id}/summary/`}>
-        Check answers
-      </ButtonLink>
+      {tasksRemaining == 0 && (
+        <ButtonLink href={`/apply/${currentResident.person?.id}/summary/`}>
+          Check answers
+        </ButtonLink>
+      )}
       <br />
       <Button onClick={goBack} secondary={true}>
         Save and go back

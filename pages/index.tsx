@@ -87,7 +87,7 @@ export default function ApplicationHomePage(): JSX.Element {
           </TableRow>
           <TableRow>
             <TableCell>5 bedrooms</TableCell>
-            <TableCell>17 years</TableCell>
+            <TableCell>32 years</TableCell>
             <TableCell>2 months</TableCell>
           </TableRow>
         </Table>

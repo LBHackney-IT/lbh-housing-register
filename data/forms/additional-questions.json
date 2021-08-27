@@ -1,0 +1,37 @@
+{
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "checkboxes",
+          "label": "Do any of the following apply to your household?",
+          "hint": "Select all options that apply",
+          "name": "household-info",
+          "options": [
+            {
+              "label": "Someone in this application is an employee, or is related to an employee of Hackney Council",
+              "value": "employee-hackney-council"
+            },
+            {
+              "label": "Someone in this application is an elected member, or is related to an elected member of Hackney Council",
+              "value": "elected-member-hackney-council"
+            },
+            {
+              "label": "Someone in this application has served in the armed forces in the last five years",
+              "value": "served-in-armed-forces"
+            },
+            {
+              "label": "Someone in this application is a nominee under the National Witness Mobility Scheme",
+              "value": "nominee-national-witness-mobility-scheme"
+            }
+          ]
+        },
+        {
+          "as": "textarea",
+          "label": "Please provide details if applicable",
+          "name": "household-details"
+        }
+      ]
+    }
+  ]
+}

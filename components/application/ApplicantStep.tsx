@@ -36,8 +36,6 @@ function ApplicantStep({
 
   return (
     <Layout pageName={stepName} breadcrumbs={breadcrumbs}>
-      <Hint content={applicant.person?.firstName ?? ''} />
-
       {formData.heading && <HeadingOne content={formData.heading} />}
       {formData.copy && (
         <Paragraph>

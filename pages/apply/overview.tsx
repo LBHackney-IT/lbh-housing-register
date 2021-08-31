@@ -64,10 +64,13 @@ const ApplicationPersonsOverview = (): JSX.Element => {
       router.push('/apply/not-eligible');
     } else {
       try {
-        dispatch(sendConfirmation(application));
+        const something = dispatch(sendConfirmation(application));
         dispatch(completeApplication(application));
+        console.log('inside the try of overview');
         router.push('/apply/submit/additional-questions');
       } catch (e) {
+        console.log('we never get here');
+        console.log('what is error ', e);
         setUserError(ErrorResponseCodes[e.code]);
       }
     }

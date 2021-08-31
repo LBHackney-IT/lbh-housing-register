@@ -22,7 +22,6 @@ const AddPersonToApplication = (): JSX.Element => {
 
   const onSubmit = async (values: FormData) => {
     // TODO This should be a thunk that waits for the new person ID to come back and updates the store with it.
-    // TODO Error handling
     dispatch(addResidentFromFormData(values));
     router.push(returnHref);
   };

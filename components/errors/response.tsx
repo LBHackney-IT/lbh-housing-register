@@ -26,6 +26,7 @@ const ErrorResponseCodes: ResponseCodes = {
     'An internal error occurred, please try again later',
   UnexpectedLambdaException:
     'An internal error occurred, please try again later',
+  SyntaxError: 'An internal error occurred, please try again later',
 };
 
 export default ErrorResponseCodes;

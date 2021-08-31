@@ -46,22 +46,9 @@ export const updateApplication = createAsyncThunk(
 export const completeApplication = createAsyncThunk(
   'application/complete',
   async (application: Application) => {
-    // Only returns the json error rather than status code one
-    const res = await fetch(`/api/application/${application.id}/complete`, {
+    const res = await fetch(`/api/applications/${application.id}/complete`, {
       method: 'PATCH',
     });
-    // .then((response) => {
-    //   if (response.status >= 400 && response.status < 600) {
-    //     console.log('something went wrong', response);
-    //     throw new Error(`Request failed with status code ${response.status}`);
-    //   }
-    //   return response;
-    // })
-    // .catch((e) => {
-    //   console.log('was ist hier los', e);
-    //   return e;
-    // });
-    console.log('res is', res);
     return (await res.json()) as Application;
   }
 );
@@ -99,10 +86,6 @@ const slice = createSlice({
       .addCase(loadApplication.fulfilled, (state, action) => action.payload)
       .addCase(createApplication.fulfilled, (state, action) => action.payload)
       .addCase(signOut.fulfilled, (state, action) => ({}))
-      .addCase(completeApplication.rejected, (state, action) => {
-        // Is this required or a necessity, can we not handle it directly in the function?
-        console.log('what is action', action);
-      })
 
       .addDefaultCase((state, action) => {
         state.mainApplicant = mainApplicant.reducer(

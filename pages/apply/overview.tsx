@@ -12,9 +12,8 @@ import Tag from '../../components/tag';
 import ApplicantName from '../../components/application/ApplicantName';
 import { Applicant } from '../../domain/HousingApi';
 import whenAgreed from '../../lib/hoc/whenAgreed';
-import { useAppSelector } from '../../lib/store/hooks';
+import { useAppSelector, useAppDispatch } from '../../lib/store/hooks';
 import { applicationStepsRemaining } from '../../lib/utils/resident';
-import { useDispatch } from 'react-redux';
 import {
   sendConfirmation,
   completeApplication,
@@ -26,7 +25,7 @@ import { checkEligible } from '../../lib/utils/form';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [userError, setUserError] = useState<string | null>(null);
 
@@ -63,16 +62,30 @@ const ApplicationPersonsOverview = (): JSX.Element => {
     if (!isEligible) {
       router.push('/apply/not-eligible');
     } else {
-      try {
-        const something = dispatch(sendConfirmation(application));
-        dispatch(completeApplication(application));
-        console.log('inside the try of overview');
-        router.push('/apply/submit/additional-questions');
-      } catch (e) {
-        console.log('we never get here');
-        console.log('what is error ', e);
-        setUserError(ErrorResponseCodes[e.code]);
-      }
+      dispatch(sendConfirmation(application)).then(
+        (sendConfirmationResult: any) => {
+          dispatch(completeApplication(application)).then(
+            (completeApplicationResult: any) => {
+              if (
+                !sendConfirmationResult.error ||
+                !completeApplicationResult.error
+              ) {
+                router.push('/apply/submit/additional-questions');
+              }
+              if (sendConfirmationResult.error) {
+                setUserError(
+                  ErrorResponseCodes[sendConfirmationResult.error.name]
+                );
+              }
+              if (completeApplicationResult.error) {
+                setUserError(
+                  ErrorResponseCodes[completeApplicationResult.error.name]
+                );
+              }
+            }
+          );
+        }
+      );
     }
   };
 

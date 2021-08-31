@@ -1,0 +1,121 @@
+service: housing-register-frontend
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  versionFunctions: false
+  region: eu-west-2
+  stage: ${opt:stage}
+
+package:
+  individually: true
+  exclude:
+    - ./**
+
+functions:
+  housing-register-frontend:
+    name: ${self:service}-${self:provider.stage}
+    handler: src/lambda.handler
+    timeout: 30
+    package:
+      include:
+        - lambda.js
+        - next.config.js
+        - pages/**
+        - public/**
+        - build/_next/**
+        - node_modules/**
+    events:
+      - http: ANY /
+      - http: ANY /{proxy+}
+    vpc:
+      securityGroupIds: ${self:custom.securityGroups.${self:provider.stage}}
+      subnetIds: ${self:custom.subnets.${self:provider.stage}}
+    environment:
+      NEXT_PUBLIC_ENV: ${opt:stage}
+      NEXT_PUBLIC_AWS_REGION: ${ssm:/housing-register/${self:provider.stage}/cognito-aws-region}
+      NEXT_PUBLIC_COGNITO_USERPOOL_ID: ${ssm:/housing-register/${self:provider.stage}/cognito-userpool-id}
+      NEXT_PUBLIC_COGNITO_CLIENT_ID: ${ssm:/housing-register/${self:provider.stage}/cognito-client-id}
+      HACKNEY_JWT_SECRET: ${ssm:/housing-register/${self:provider.stage}/hackney-jwt-secret}
+      AUTHORISED_ADMIN_GROUP: ${ssm:/housing-register/${self:provider.stage}/authorised_admin_group}
+      HOUSING_REGISTER_API: ${ssm:/housing-register/${self:provider.stage}/housing-register-api-url}
+      HOUSING_REGISTER_KEY: ${ssm:/housing-register/${self:provider.stage}/housing-register-api-key}
+      LOOKUP_API_URL: ${ssm:/housing-register/${self:provider.stage}/lookup-api-url}
+      LOOKUP_API_TOKEN: ${ssm:/housing-register/${self:provider.stage}/lookup-api-key}
+      NOTIFY_API_KEY: ${ssm:/housing-register/${self:provider.stage}/notify-api-key}
+      NOTIFY_TEMPLATE_NEW_APPLICATION: ${ssm:/housing-register/${self:provider.stage}/notify-template-new-application}
+
+resources:
+  Resources:
+    CloudFrontDistribution:
+      Type: AWS::CloudFront::Distribution
+      Properties:
+        DistributionConfig:
+          Aliases:
+            - ${self:custom.aliases.${self:provider.stage}}
+          PriceClass: PriceClass_100
+          ViewerCertificate:
+            AcmCertificateArn: ${self:custom.certificate-arn.${self:provider.stage}}
+            MinimumProtocolVersion: TLSv1.2_2018
+            SslSupportMethod: sni-only
+          DefaultCacheBehavior:
+            TargetOriginId: ${self:service}-${self:provider.stage}-custom-origin
+            ViewerProtocolPolicy: 'redirect-to-https'
+            AllowedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+              - PUT
+              - PATCH
+              - POST
+              - DELETE
+            DefaultTTL: 0
+            MaxTTL: 0
+            MinTTL: 0
+            ForwardedValues:
+              QueryString: true
+              Cookies:
+                Forward: all
+          Enabled: true
+          Origins:
+            - Id: ${self:service}-${self:provider.stage}-custom-origin
+              DomainName: ${self:custom.domain-name}
+              OriginPath: /${self:provider.stage}
+              CustomOriginConfig:
+                HTTPPort: 80
+                HTTPSPort: 443
+                OriginProtocolPolicy: https-only
+
+custom:
+  domain-name:
+    Fn::Join:
+      - '.'
+      - - Ref: ApiGatewayRestApi
+        - execute-api
+        - eu-west-2
+        - amazonaws.com
+  aliases:
+    development: housing-register-development.hackney.gov.uk
+    staging: housing-register-staging.hackney.gov.uk
+    production: housing-register.hackney.gov.uk
+  certificate-arn:
+    development: arn:aws:acm:us-east-1:364864573329:certificate/d903d9e2-c3da-482b-8768-916ec09e461f
+    staging: arn:aws:acm:us-east-1:715003523189:certificate/8f7fa30c-a4e5-4775-b827-ade824a33c9a
+    production: arn:aws:acm:us-east-1:282997303675:certificate/a43b1303-83ff-496e-b7a2-a75fa3ebfe87
+  securityGroups:
+    development:
+      - sg-08e28776da7918e4b
+    staging:
+      - sg-0166cbf56b7e77af0
+    production:
+      - sg-0c40b8cfd2d03c359
+  subnets:
+    development:
+      - subnet-0140d06fb84fdb547
+      - subnet-05ce390ba88c42bfd
+    staging:
+      - subnet-06d3de1bd9181b0d7
+      - subnet-0ed7d7713d1127656
+    production:
+      - subnet-0beb266003a56ca82
+      - subnet-06a697d86a9b6ed01

@@ -38,6 +38,14 @@ jobs:
           root: *workspace_root
           paths: .
 
+  tests:
+    executor: node-executor
+    steps:
+      - *attach_workspace
+      - run:
+          name: Run Prettier
+          command: npm run prettier:test
+
   build-deploy-development:
     executor: aws-cli/default
     steps:

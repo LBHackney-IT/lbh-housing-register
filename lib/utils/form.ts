@@ -50,7 +50,11 @@ export function checkEligible(applicant: Applicant): [boolean, string[]] {
   for (const [form, values] of Object.entries(FormID)) {
     const eligibilityCriteria = getEligibilityCriteria(values);
     eligibilityCriteria?.forEach((criteria) => {
-      const fieldValue = getQuestionValue(applicant.questions, values, criteria.field);
+      const fieldValue = getQuestionValue(
+        applicant.questions,
+        values,
+        criteria.field
+      );
 
       if (Array.isArray(fieldValue) && fieldValue.indexOf(criteria.is) !== -1) {
         setInvalid(criteria.reasoning);

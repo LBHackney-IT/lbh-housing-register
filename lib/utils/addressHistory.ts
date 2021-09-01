@@ -50,8 +50,9 @@ export function calculateDurations(entries: AddressHistoryEntry[]) {
       from,
       years,
       months,
-      label: `${years} year${years !== 1 ? 's' : ''} ${months} month${months !== 1 ? 's' : ''
-        } (${formatDate(from)} – ${formatDate(until)})`,
+      label: `${years} year${years !== 1 ? 's' : ''} ${months} month${
+        months !== 1 ? 's' : ''
+      } (${formatDate(from)} – ${formatDate(until)})`,
     };
 
     until = from;

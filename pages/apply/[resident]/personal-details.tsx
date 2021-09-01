@@ -55,7 +55,7 @@ const ApplicationStep = (): JSX.Element => {
           surname,
           dateOfBirth,
           gender,
-          nationalInsuranceNumber
+          nationalInsuranceNumber,
         },
         contactInformation: {
           phoneNumber,
@@ -68,7 +68,7 @@ const ApplicationStep = (): JSX.Element => {
         formID: FormID.PERSONAL_DETAILS,
         personID: applicant.person.id,
         values,
-        markAsComplete: true
+        markAsComplete: true,
       })
     );
   };

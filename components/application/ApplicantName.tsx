@@ -5,24 +5,30 @@ import Hint from '../form/hint';
 import { getAgeInYears } from '../../lib/utils/dateOfBirth';
 
 interface ApplicantNameProps {
-  applicant: Applicant,
-  isMainApplicant: boolean
+  applicant: Applicant;
+  isMainApplicant: boolean;
 }
 
-export default function ApplicantName({ applicant, isMainApplicant }: ApplicantNameProps): JSX.Element {
+export default function ApplicantName({
+  applicant,
+  isMainApplicant,
+}: ApplicantNameProps): JSX.Element {
   const applicantAge = getAgeInYears(applicant);
-  const applicantInfo = `(${getGenderName(applicant)}${isNaN(applicantAge) ? '' : `, ${applicantAge}`})`;
+  const applicantInfo = `(${getGenderName(applicant)}${
+    isNaN(applicantAge) ? '' : `, ${applicantAge}`
+  })`;
   return (
     <>
       <Link href={`/apply/${applicant.person?.id}`}>
         {`${applicant.person?.firstName} ${applicant.person?.surname}`}
       </Link>
-      <Hint content=
-        {isMainApplicant
-          ? `Me ${applicantInfo}`
-          : `My ${applicant.person?.relationshipType} ${applicantInfo}`
+      <Hint
+        content={
+          isMainApplicant
+            ? `Me ${applicantInfo}`
+            : `My ${applicant.person?.relationshipType} ${applicantInfo}`
         }
       />
     </>
-  )
+  );
 }

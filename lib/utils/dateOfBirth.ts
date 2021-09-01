@@ -1,8 +1,10 @@
-import { Applicant } from "../../domain/HousingApi";
+import { Applicant } from '../../domain/HousingApi';
 
 export function formatDob(date: Date) {
   return `${date.toLocaleString('default', {
-    day: 'numeric', month: 'short', year: 'numeric'
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
   })}`;
 }
 
@@ -11,9 +13,7 @@ export function formatDob(date: Date) {
  * @param {Applicant} applicant The applicant
  * @returns {string}
  */
-export const getAgeInYears = (
-  applicant: Applicant
-): number => {
+export const getAgeInYears = (applicant: Applicant): number => {
   const dateString = applicant.person?.dateOfBirth ?? '';
   var today = new Date();
   var dateOfBirth = new Date(dateString);
@@ -29,8 +29,6 @@ export const getAgeInYears = (
   return age;
 };
 
-export const isOver18 = (
-  applicant: Applicant
-): boolean => {
+export const isOver18 = (applicant: Applicant): boolean => {
   return getAgeInYears(applicant) >= 18;
-}
+};

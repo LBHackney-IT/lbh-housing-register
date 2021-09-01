@@ -5,11 +5,7 @@ interface SummaryListProps {
 export default function SummaryList({
   children,
 }: SummaryListProps): JSX.Element {
-  return (
-    <dl className="govuk-summary-list lbh-summary-list">
-      {children}
-    </dl>
-  );
+  return <dl className="govuk-summary-list lbh-summary-list">{children}</dl>;
 }
 
 export function SummaryListNoBorder({

@@ -137,4 +137,4 @@ This has been extended to be used in a more generic way, which means forms can b
 
 [Gov.UK Notify](https://gov.uk/notify) is used to send emails (e.g. confirmation emails). Update the `NOTIFY_API_KEY` and relevant template ids in the `.env` file.
 
- - NOTIFY_TEMPLATE_NEW_APPLICATION: sent on completion of an application
+- NOTIFY_TEMPLATE_NEW_APPLICATION: sent on completion of an application

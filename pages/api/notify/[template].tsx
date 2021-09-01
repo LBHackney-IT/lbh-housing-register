@@ -7,7 +7,6 @@ const endpoint: NextApiHandler = async (
   res: NextApiResponse
 ) => {
   switch (req.method) {
-
     case 'POST':
       try {
         const notification = JSON.parse(req.body);

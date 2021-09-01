@@ -7,8 +7,12 @@ interface DeleteLinkProps {
   onDelete: () => void;
 }
 
-export default function DeleteLink({ content, details, onDelete }: DeleteLinkProps) {
-  const [open, setOpen] = useState(false)
+export default function DeleteLink({
+  content,
+  details,
+  onDelete,
+}: DeleteLinkProps) {
+  const [open, setOpen] = useState(false);
 
   return (
     <>

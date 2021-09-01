@@ -40,7 +40,7 @@ const slice = createSlice({
           dateOfBirth: action.payload.dateOfBirth,
           gender: action.payload.gender,
           nationalInsuranceNumber: action.payload.nationalInsuranceNumber,
-          relationshipType: action.payload.relationshipType
+          relationshipType: action.payload.relationshipType,
         },
         contactInformation: {
           phoneNumber: action.payload.phoneNumber,
@@ -80,7 +80,7 @@ const slice = createSlice({
         );
         if (applicant > -1) {
           if (action.payload.markAsComplete) {
-            action.payload.values["sectionCompleted"] = true;
+            action.payload.values['sectionCompleted'] = true;
           }
 
           // Immer

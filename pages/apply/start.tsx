@@ -47,7 +47,7 @@ const ApplicationStartPage = (): JSX.Element => {
           surname: values.surname,
           dateOfBirth: values.dateOfBirth,
           gender: values.gender,
-          nationalInsuranceNumber: values.nationalInsuranceNumber
+          nationalInsuranceNumber: values.nationalInsuranceNumber,
         },
         contactInformation: {
           emailAddress: values.emailAddress,

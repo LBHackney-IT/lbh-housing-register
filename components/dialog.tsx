@@ -1,7 +1,6 @@
-
-import React from "react"
-import { Dialog as ReachDialog } from "@reach/dialog"
-import "@reach/dialog/styles.css"
+import React from 'react';
+import { Dialog as ReachDialog } from '@reach/dialog';
+import '@reach/dialog/styles.css';
 import Button from './button';
 import { HeadingTwo } from './content/headings';
 import Paragraph from './content/paragraph';
@@ -32,9 +31,7 @@ export default function Dialog({
       {copy && <Paragraph>{copy}</Paragraph>}
 
       <div className="lbh-dialog__actions">
-        <Button onClick={onConfirmation}>
-          Yes
-        </Button>
+        <Button onClick={onConfirmation}>Yes</Button>
         <button
           onClick={onCancel}
           className="lbh-link lbh-link--no-visited-state"

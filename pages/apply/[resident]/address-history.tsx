@@ -205,14 +205,22 @@ const ApplicationStep = (): JSX.Element => {
   };
   type Values = typeof initialValues;
 
-  const savedAddressHistory = getQuestionValue(applicant.questions, FormID.ADDRESS_HISTORY, 'addressHistory');
-  const [state, setState] = useState<State>(savedAddressHistory ? 'review' : 'postcode-entry');
+  const savedAddressHistory = getQuestionValue(
+    applicant.questions,
+    FormID.ADDRESS_HISTORY,
+    'addressHistory'
+  );
+  const [state, setState] = useState<State>(
+    savedAddressHistory ? 'review' : 'postcode-entry'
+  );
 
   const [postcodeResults, setPostcodeResults] = useState<
     AddressLookupAddress[]
   >([]);
 
-  const [addressHistory, setAddressHistory] = useState<AddressHistoryEntry[]>(savedAddressHistory ?? []);
+  const [addressHistory, setAddressHistory] = useState<AddressHistoryEntry[]>(
+    savedAddressHistory ?? []
+  );
 
   const restart = () => {
     setAddressHistory([]);
@@ -293,7 +301,7 @@ const ApplicationStep = (): JSX.Element => {
             personID: applicant.person.id,
             formID: FormID.ADDRESS_HISTORY,
             values: { addressHistory },
-            markAsComplete: true
+            markAsComplete: true,
           })
         );
         router.push(`/apply/${resident}`);
@@ -311,8 +319,9 @@ const ApplicationStep = (): JSX.Element => {
       <h2 className="lbh-heading-h2">Current Address</h2>
       <Details summary="Help with your address">
         If you have no fixed abode or if you are sofa surfing, use the address
-        where you sleep for the majority of the week. If you are living on the street,
-        contact a <a href="https://hackney.gov.uk/housing-options">housing officer</a>
+        where you sleep for the majority of the week. If you are living on the
+        street, contact a{' '}
+        <a href="https://hackney.gov.uk/housing-options">housing officer</a>
       </Details>
 
       <Summary addressHistory={addressHistory} />
@@ -390,13 +399,13 @@ const ApplicationStep = (): JSX.Element => {
             )}
 
             <div className="c-flex lbh-simple-pagination">
-              {state === 'review' &&
+              {state === 'review' && (
                 <div className="c-flex__1">
                   <Button onClick={restart} secondary={true}>
                     Update address
                   </Button>
                 </div>
-              }
+              )}
 
               <div className="c-flex__1 text-right">
                 <Button disabled={isSubmitting} type="submit">

@@ -1,20 +1,36 @@
-import React from "react";
-import { ApplicantWithPersonID, getQuestionValue } from "../../lib/store/applicant";
-import { FormID } from "../../lib/utils/form-data";
-import Paragraph from "../content/paragraph";
-import { SummaryAnswer, SummarySection, SummaryTitle } from "./SummaryInfo";
+import React from 'react';
+import {
+  ApplicantWithPersonID,
+  getQuestionValue,
+} from '../../lib/store/applicant';
+import { FormID } from '../../lib/utils/form-data';
+import Paragraph from '../content/paragraph';
+import { SummaryAnswer, SummarySection, SummaryTitle } from './SummaryInfo';
 
 interface CurrentAccommodationSummaryProps {
   currentResident: ApplicantWithPersonID;
 }
 
-export function CurrentAccommodationSummary({ currentResident }: CurrentAccommodationSummaryProps) {
-
-  const livingSituation = getQuestionValue(currentResident.questions, FormID.CURRENT_ACCOMMODATION, 'living-situation');
-  const homeSituation = getQuestionValue(currentResident.questions, FormID.CURRENT_ACCOMMODATION, 'home');
+export function CurrentAccommodationSummary({
+  currentResident,
+}: CurrentAccommodationSummaryProps) {
+  const livingSituation = getQuestionValue(
+    currentResident.questions,
+    FormID.CURRENT_ACCOMMODATION,
+    'living-situation'
+  );
+  const homeSituation = getQuestionValue(
+    currentResident.questions,
+    FormID.CURRENT_ACCOMMODATION,
+    'home'
+  );
 
   function lookupAnswer(question: string) {
-    return getQuestionValue(currentResident.questions, FormID.CURRENT_ACCOMMODATION, question);
+    return getQuestionValue(
+      currentResident.questions,
+      FormID.CURRENT_ACCOMMODATION,
+      question
+    );
   }
 
   function getLivingSituation(answer: string) {
@@ -73,14 +89,15 @@ export function CurrentAccommodationSummary({ currentResident }: CurrentAccommod
     <SummarySection>
       <SummaryTitle
         content="Current accommodation"
-        href={`/apply/${currentResident.person.id}/${FormID.CURRENT_ACCOMMODATION}`} />
+        href={`/apply/${currentResident.person.id}/${FormID.CURRENT_ACCOMMODATION}`}
+      />
 
-      {!livingSituation &&
+      {!livingSituation && (
         <SummaryAnswer>
           <Paragraph>Not provided yet</Paragraph>
         </SummaryAnswer>
-      }
-      {livingSituation &&
+      )}
+      {livingSituation && (
         <>
           <SummaryAnswer>
             <Paragraph>
@@ -89,7 +106,8 @@ export function CurrentAccommodationSummary({ currentResident }: CurrentAccommod
           </SummaryAnswer>
           <SummaryAnswer>
             <Paragraph>
-              I am living in a <strong>{getHomeSituation(homeSituation)}</strong>
+              I am living in a{' '}
+              <strong>{getHomeSituation(homeSituation)}</strong>
             </Paragraph>
           </SummaryAnswer>
 
@@ -100,38 +118,56 @@ export function CurrentAccommodationSummary({ currentResident }: CurrentAccommod
           </SummaryAnswer>
           <SummaryAnswer>
             <Paragraph>
-              I share my home with <strong>{lookupAnswer('home-how-many-people-share')} people</strong> not
-              included in this application
+              I share my home with{' '}
+              <strong>
+                {lookupAnswer('home-how-many-people-share')} people
+              </strong>{' '}
+              not included in this application
             </Paragraph>
           </SummaryAnswer>
           <SummaryAnswer>
             <Paragraph>
-              My home has <strong>{lookupAnswer('home-how-many-bedrooms')} bedroom(s)</strong>
+              My home has{' '}
+              <strong>
+                {lookupAnswer('home-how-many-bedrooms')} bedroom(s)
+              </strong>
             </Paragraph>
           </SummaryAnswer>
           <SummaryAnswer>
             <Paragraph>
-              My home has <strong>{lookupAnswer('home-how-many-bathrooms')} bathroom(s)</strong>
+              My home has{' '}
+              <strong>
+                {lookupAnswer('home-how-many-bathrooms')} bathroom(s)
+              </strong>
             </Paragraph>
           </SummaryAnswer>
           <SummaryAnswer>
             <Paragraph>
-              My home has <strong>{lookupAnswer('home-how-many-kitchens')} kitchen(s)</strong>
+              My home has{' '}
+              <strong>
+                {lookupAnswer('home-how-many-kitchens')} kitchen(s)
+              </strong>
             </Paragraph>
           </SummaryAnswer>
           <SummaryAnswer>
             <Paragraph>
-              My home has <strong>{lookupAnswer('home-how-many-other-rooms')} other room(s)</strong>
+              My home has{' '}
+              <strong>
+                {lookupAnswer('home-how-many-other-rooms')} other room(s)
+              </strong>
             </Paragraph>
           </SummaryAnswer>
           <SummaryAnswer>
             <Paragraph>
-              I have <strong>{lookupAnswer('home-how-many-personal-rooms')} room(s)</strong> for my own
-              personal use
+              I have{' '}
+              <strong>
+                {lookupAnswer('home-how-many-personal-rooms')} room(s)
+              </strong>{' '}
+              for my own personal use
             </Paragraph>
           </SummaryAnswer>
         </>
-      }
+      )}
     </SummarySection>
   );
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ApplicantWithPersonID } from "../../lib/store/applicant";
+import { ApplicantWithPersonID } from '../../lib/store/applicant';
 import { formatDob } from '../../lib/utils/dateOfBirth';
 import { FormID } from '../../lib/utils/form-data';
 import { getGenderName } from '../../lib/utils/gender';
@@ -12,12 +12,12 @@ interface PersonalDetailsSummaryProps {
 export default function PersonalDetailsSummary({
   currentResident,
 }: PersonalDetailsSummaryProps): JSX.Element {
-
   return (
     <SummarySection>
       <SummaryTitle
         content="Personal Details"
-        href={`/apply/${currentResident.person.id}/${FormID.PERSONAL_DETAILS}`} />
+        href={`/apply/${currentResident.person.id}/${FormID.PERSONAL_DETAILS}`}
+      />
 
       <dl className="govuk-summary-list lbh-summary-list">
         <div className="govuk-summary-list__row">
@@ -52,5 +52,5 @@ export default function PersonalDetailsSummary({
         </div>
       </dl>
     </SummarySection>
-  )
+  );
 }

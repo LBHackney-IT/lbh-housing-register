@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import Announcement from '../components/announcement';
 import { ButtonLink } from '../components/button';
 import {
@@ -13,8 +14,15 @@ import Table, {
   TableRow,
 } from '../components/content/table';
 import Layout from '../components/layout/resident-layout';
+import { useAppSelector } from '../lib/store/hooks';
 
 export default function ApplicationHomePage(): JSX.Element {
+  const router = useRouter();
+  const isLoggedIn = useAppSelector((store) => store.cognitoUser?.username);
+
+  if (isLoggedIn) {
+    router.push('/apply/overview');
+  }
   return (
     <Layout pageName="Home">
       <HeadingOne content="Apply to the Housing Register" />

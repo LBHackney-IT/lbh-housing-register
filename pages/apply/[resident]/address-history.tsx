@@ -59,6 +59,21 @@ function generateValidationSchema(
           return d < min;
         }
       ),
+    dateTo: Yup.string()
+      .notOneOf([INVALID_DATE], 'Invalid date')
+      .label('When did you leave this address')
+      .required()
+      .test(
+        'min',
+        '${path} must be before ' + formatDate(new Date(min)),
+        (value) => {
+          if (typeof value !== 'string' || value === INVALID_DATE) {
+            return false;
+          }
+          const d = +new Date(value);
+          return d < min;
+        }
+      ),
     postcode: Yup.string().label('Postcode').required(),
     uprn: Yup.string().label('Address').required(),
     address: Yup.object({
@@ -73,9 +88,9 @@ function generateValidationSchema(
     case 'postcode-entry':
       return schema.pick(['postcode']);
     case 'manual-entry':
-      return schema.pick(['postcode', 'address', 'date']);
+      return schema.pick(['postcode', 'address', 'date', 'dateTo']);
     case 'choose-address':
-      return schema.pick(['uprn', 'date']);
+      return schema.pick(['uprn', 'date', 'dateTo']);
   }
 }
 
@@ -195,6 +210,7 @@ const ApplicationStep = (): JSX.Element => {
   const initialValues = {
     postcode: '',
     date: '',
+    dateTo: '',
     uprn: '',
     address: {
       line1: '',
@@ -264,6 +280,7 @@ const ApplicationStep = (): JSX.Element => {
         appendAddress({
           postcode: values.postcode,
           date: values.date,
+          dateTo: values.dateTo,
           address: values.address,
         });
         break;
@@ -273,6 +290,7 @@ const ApplicationStep = (): JSX.Element => {
         appendAddress({
           postcode: values.postcode,
           date: values.date,
+          dateTo: values.dateTo,
           address: postcodeResults.find(
             (r) => r.UPRN.toString() === values.uprn
           )!,
@@ -351,6 +369,11 @@ const ApplicationStep = (): JSX.Element => {
                   label={'When did you move to this address?'}
                   showDay={false}
                 />
+                <DateInput
+                  name={'dateTo'}
+                  label={'When did you leave this address?'}
+                  showDay={false}
+                />
               </InsetText>
             )}
 
@@ -393,6 +416,11 @@ const ApplicationStep = (): JSX.Element => {
                 <DateInput
                   name={'date'}
                   label={'When did you move to this address?'}
+                  showDay={false}
+                />
+                <DateInput
+                  name={'dateTo'}
+                  label={'When did you leave this address?'}
                   showDay={false}
                 />
               </InsetText>

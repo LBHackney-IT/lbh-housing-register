@@ -41,13 +41,15 @@ export function buildValidationSchema(fields: FormField[]) {
           fieldValidation = checkMinimumLength(
             fieldValidation,
             field,
-            `No less than ${field.validation?.min} item${field.validation?.min! > 1 ? 's' : ''
+            `No less than ${field.validation?.min} item${
+              field.validation?.min! > 1 ? 's' : ''
             } can be selected`
           );
           fieldValidation = checkMaximumLength(
             fieldValidation,
             field,
-            `No more than ${field.validation?.max} item${field.validation?.max! > 1 ? 's' : ''
+            `No more than ${field.validation?.max} item${
+              field.validation?.max! > 1 ? 's' : ''
             } can be selected`
           );
           break;
@@ -147,7 +149,8 @@ function checkMaximumLength(
   if (field.validation && field.validation.max) {
     errorMessage =
       errorMessage ||
-      `${field.label} must be at most ${field.validation.max} character${field.validation.max > 1 ? 's' : ''
+      `${field.label} must be at most ${field.validation.max} character${
+        field.validation.max > 1 ? 's' : ''
       }`;
     return fieldValidationSchema.max(field.validation.max, errorMessage);
   }
@@ -170,7 +173,8 @@ function checkMinimumLength(
   if (field.validation && field.validation.min) {
     errorMessage =
       errorMessage ||
-      `${field.label} must be at least ${field.validation.min} character${field.validation.min > 1 ? 's' : ''
+      `${field.label} must be at least ${field.validation.min} character${
+        field.validation.min > 1 ? 's' : ''
       }`;
     return fieldValidationSchema.min(field.validation.min, errorMessage);
   }
@@ -212,14 +216,18 @@ function checkRequired(
             isVisible = false;
           }
 
-          if (isVisible && condition.isNot && condition.isNot == values[index]) {
+          if (
+            isVisible &&
+            condition.isNot &&
+            condition.isNot == values[index]
+          ) {
             isVisible = false;
           }
         });
         return isVisible;
       },
       then: fieldValidationSchema.required(errorMessage),
-      otherwise: fieldValidationSchema
+      otherwise: fieldValidationSchema,
     });
   }
 

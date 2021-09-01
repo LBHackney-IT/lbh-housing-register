@@ -1,36 +1,51 @@
-import React from "react";
-import { ApplicantWithPersonID, getQuestionValue } from "../../lib/store/applicant";
-import { FormID } from "../../lib/utils/form-data";
-import Paragraph from "../content/paragraph";
-import { SummaryAnswer, SummarySection, SummaryTitle } from "./SummaryInfo";
+import React from 'react';
+import {
+  ApplicantWithPersonID,
+  getQuestionValue,
+} from '../../lib/store/applicant';
+import { FormID } from '../../lib/utils/form-data';
+import Paragraph from '../content/paragraph';
+import { SummaryAnswer, SummarySection, SummaryTitle } from './SummaryInfo';
 
 interface MedicalNeedsSummaryProps {
   currentResident: ApplicantWithPersonID;
 }
 
-export function MedicalNeedsSummary({ currentResident }: MedicalNeedsSummaryProps) {
-
-  const medicalNeeds = getQuestionValue(currentResident.questions, FormID.MEDICAL_NEEDS, 'medical-needs');
+export function MedicalNeedsSummary({
+  currentResident,
+}: MedicalNeedsSummaryProps) {
+  const medicalNeeds = getQuestionValue(
+    currentResident.questions,
+    FormID.MEDICAL_NEEDS,
+    'medical-needs'
+  );
 
   return (
     <SummarySection>
       <SummaryTitle
         content="Medical Needs"
-        href={`/apply/${currentResident.person.id}/${FormID.MEDICAL_NEEDS}`} />
+        href={`/apply/${currentResident.person.id}/${FormID.MEDICAL_NEEDS}`}
+      />
 
-      {!medicalNeeds &&
+      {!medicalNeeds && (
         <SummaryAnswer>
           <Paragraph>Not provided yet</Paragraph>
         </SummaryAnswer>
-      }
-      {medicalNeeds &&
+      )}
+      {medicalNeeds && (
         <SummaryAnswer>
-          {medicalNeeds === 'yes'
-            ? <Paragraph><strong>I do</strong> have a medical need that affects my housing needs</Paragraph>
-            : <Paragraph><strong>I do not</strong> have any medical needs</Paragraph>
-          }
+          {medicalNeeds === 'yes' ? (
+            <Paragraph>
+              <strong>I do</strong> have a medical need that affects my housing
+              needs
+            </Paragraph>
+          ) : (
+            <Paragraph>
+              <strong>I do not</strong> have any medical needs
+            </Paragraph>
+          )}
         </SummaryAnswer>
-      }
+      )}
     </SummarySection>
   );
 }

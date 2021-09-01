@@ -65,24 +65,24 @@ export function updateApplicantReducer(
   };
 }
 
-export const selectApplicant = (applicantPersonId: string) => (
-  store: Store
-): ApplicantWithPersonID | undefined => {
-  if (
-    applicantHasId(store.application.mainApplicant) &&
-    store.application.mainApplicant?.person?.id === applicantPersonId
-  ) {
-    return store.application.mainApplicant;
-  }
-  return store.application.otherMembers?.find(
-    (a): a is ApplicantWithPersonID =>
-      applicantHasId(a) && a.person?.id === applicantPersonId
-  );
-};
+export const selectApplicant =
+  (applicantPersonId: string) =>
+  (store: Store): ApplicantWithPersonID | undefined => {
+    if (
+      applicantHasId(store.application.mainApplicant) &&
+      store.application.mainApplicant?.person?.id === applicantPersonId
+    ) {
+      return store.application.mainApplicant;
+    }
+    return store.application.otherMembers?.find(
+      (a): a is ApplicantWithPersonID =>
+        applicantHasId(a) && a.person?.id === applicantPersonId
+    );
+  };
 
-export const findQuesiton = (formID: FormID, questionName: string) => (
-  question: Question
-) => question.id === `${formID}/${questionName}`;
+export const findQuesiton =
+  (formID: FormID, questionName: string) => (question: Question) =>
+    question.id === `${formID}/${questionName}`;
 
 export function getQuestionValue(
   questions: Question[] | undefined,

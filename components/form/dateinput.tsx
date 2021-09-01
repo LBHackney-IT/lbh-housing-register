@@ -82,11 +82,7 @@ export default function DateInput({
       {hint && <Hint content={hint} />}
       {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 
-      <fieldset
-        className="govuk-fieldset"
-        role="group"
-        aria-describedby="hint"
-      >
+      <fieldset className="govuk-fieldset" role="group" aria-describedby="hint">
         <span id="address-hint" className="govuk-hint lbh-hint">
           For example, {showDay && '31'} 3 1980
         </span>
@@ -94,9 +90,7 @@ export default function DateInput({
           <div className="govuk-date-input__item">
             <div className="govuk-form-group">
               {showDay && (
-                <div
-                  style={{ display: 'inline-block', padding: '0 20px 0 0' }}
-                >
+                <div style={{ display: 'inline-block', padding: '0 20px 0 0' }}>
                   <label
                     className="govuk-label govuk-date-input__label"
                     htmlFor={`${field.name}-day`}

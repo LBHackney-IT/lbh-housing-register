@@ -1,15 +1,19 @@
-import React from "react";
-import { ApplicantWithPersonID, getQuestionValue } from "../../lib/store/applicant";
-import { FormID } from "../../lib/utils/form-data";
-import Paragraph from "../content/paragraph";
-import { SummaryAnswer, SummarySection, SummaryTitle } from "./SummaryInfo";
+import React from 'react';
+import {
+  ApplicantWithPersonID,
+  getQuestionValue,
+} from '../../lib/store/applicant';
+import { FormID } from '../../lib/utils/form-data';
+import Paragraph from '../content/paragraph';
+import { SummaryAnswer, SummarySection, SummaryTitle } from './SummaryInfo';
 
 interface IncomeSavingsSummaryProps {
   currentResident: ApplicantWithPersonID;
 }
 
-export function IncomeSavingsSummary({ currentResident }: IncomeSavingsSummaryProps) {
-
+export function IncomeSavingsSummary({
+  currentResident,
+}: IncomeSavingsSummaryProps) {
   interface Money {
     [key: string]: string;
   }
@@ -32,8 +36,16 @@ export function IncomeSavingsSummary({ currentResident }: IncomeSavingsSummaryPr
     '80000': '£80,000 or more',
   };
 
-  const income = getQuestionValue(currentResident.questions, FormID.INCOME_SAVINGS, 'income');
-  const savings = getQuestionValue(currentResident.questions, FormID.INCOME_SAVINGS, 'savings');
+  const income = getQuestionValue(
+    currentResident.questions,
+    FormID.INCOME_SAVINGS,
+    'income'
+  );
+  const savings = getQuestionValue(
+    currentResident.questions,
+    FormID.INCOME_SAVINGS,
+    'savings'
+  );
 
   function getIncome(answer: string) {
     return incomeValues[answer];
@@ -47,23 +59,30 @@ export function IncomeSavingsSummary({ currentResident }: IncomeSavingsSummaryPr
     <SummarySection>
       <SummaryTitle
         content="Income & savings"
-        href={`/apply/${currentResident.person.id}/${FormID.INCOME_SAVINGS}`} />
+        href={`/apply/${currentResident.person.id}/${FormID.INCOME_SAVINGS}`}
+      />
 
-      {!income &&
+      {!income && (
         <SummaryAnswer>
           <Paragraph>Not provided yet</Paragraph>
         </SummaryAnswer>
-      }
-      {income &&
+      )}
+      {income && (
         <>
           <SummaryAnswer>
-            <Paragraph>My total yearly household income is <strong>{getIncome(income)}</strong></Paragraph>
+            <Paragraph>
+              My total yearly household income is{' '}
+              <strong>{getIncome(income)}</strong>
+            </Paragraph>
           </SummaryAnswer>
           <SummaryAnswer>
-            <Paragraph>In total, my household has combined savings and capital of <strong>{getSavings(savings)}</strong></Paragraph>
+            <Paragraph>
+              In total, my household has combined savings and capital of{' '}
+              <strong>{getSavings(savings)}</strong>
+            </Paragraph>
           </SummaryAnswer>
         </>
-      }
+      )}
     </SummarySection>
   );
 }

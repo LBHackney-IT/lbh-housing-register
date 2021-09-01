@@ -9,10 +9,7 @@ export const applicationStepsRemaining = (
   isMainApplicant: boolean
 ): number => {
   const steps = getFormIdsFromApplicationSections(
-    getApplicationSectionsForResident(
-      isMainApplicant,
-      isOver18(applicant)
-    )
+    getApplicationSectionsForResident(isMainApplicant, isOver18(applicant))
   );
   let completeSteps = 0;
 
@@ -39,12 +36,12 @@ export const generateSlug = (input: string): string => {
  */
 export const getApplicationSectionsForResident = (
   isMainApplicant: boolean,
-  isOver18?: boolean,
+  isOver18?: boolean
 ): ApplicationSectionGroup[] => {
   if (isMainApplicant) {
-    return getMainApplicantQuestions()
+    return getMainApplicantQuestions();
   } else {
-    return getOtherMemberQuestions(isOver18)
+    return getOtherMemberQuestions(isOver18);
   }
 };
 
@@ -63,8 +60,7 @@ export const hasResidentAnsweredForm = (
   );
 };
 
-export const getMainApplicantQuestions = ()
-  : ApplicationSectionGroup[] => {
+export const getMainApplicantQuestions = (): ApplicationSectionGroup[] => {
   return [
     {
       heading: 'Identity',

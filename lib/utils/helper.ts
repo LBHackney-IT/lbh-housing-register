@@ -34,7 +34,13 @@ export const extractAdditionalResidentFromData = (
 
 export const extractMainResidentFromData = (data: any) => {
   let mainResident: any = {};
-  const expectedFields = ['title', 'firstName', 'lastName', 'sex', 'dateOfBirth'];
+  const expectedFields = [
+    'title',
+    'firstName',
+    'lastName',
+    'sex',
+    'dateOfBirth',
+  ];
 
   for (const [key, value] of Object.entries(data)) {
     if (expectedFields.includes(key)) {

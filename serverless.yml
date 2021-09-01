@@ -3,9 +3,11 @@ service: housing-register-frontend
 provider:
   name: aws
   runtime: nodejs14.x
-  versionFunctions: false
+  timeout: 10
   region: eu-west-2
   stage: ${opt:stage}
+  apiGateway:
+    shouldStartNameWithService: true
 
 package:
   individually: true
@@ -16,12 +18,10 @@ functions:
   housing-register-frontend:
     name: ${self:service}-${self:provider.stage}
     handler: src/lambda.handler
-    timeout: 30
     package:
       include:
         - lambda.js
         - next.config.js
-        - pages/**
         - public/**
         - build/_next/**
         - node_modules/**

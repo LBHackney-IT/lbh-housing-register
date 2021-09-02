@@ -1,4 +1,4 @@
-import { Auth } from 'aws-amplify';
+import Auth from '@aws-amplify/auth';
 import { FormikValues } from 'formik';
 import { useRouter } from 'next/router';
 import { HeadingOne } from '../../components/content/headings';

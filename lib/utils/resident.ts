@@ -1,7 +1,7 @@
 import { Applicant } from '../../domain/HousingApi';
 import { ApplicationSectionGroup } from '../types/application';
 import { getFormIdsFromApplicationSections } from './application-forms';
-import { isOver18 } from './dateOfBirth';
+import { applicantEqualToOrOlderThanAge } from './dateOfBirth';
 import { FormID } from './form-data';
 
 export const applicationStepsRemaining = (
@@ -9,7 +9,10 @@ export const applicationStepsRemaining = (
   isMainApplicant: boolean
 ): number => {
   const steps = getFormIdsFromApplicationSections(
-    getApplicationSectionsForResident(isMainApplicant, isOver18(applicant))
+    getApplicationSectionsForResident(
+      isMainApplicant,
+      applicantEqualToOrOlderThanAge(applicant, 18)
+    )
   );
   let completeSteps = 0;
 

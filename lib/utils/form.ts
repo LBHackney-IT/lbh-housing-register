@@ -2,7 +2,7 @@ import { Applicant } from '../../domain/HousingApi';
 import { getQuestionValue } from '../store/applicant';
 import { FormData, FormField } from '../types/form';
 import { FormID, getEligibilityCriteria } from './form-data';
-import { isOver18 } from '../../lib/utils/dateOfBirth';
+import { applicantEqualToOrOlderThanAge } from '../../lib/utils/dateOfBirth';
 
 /**
  * Determines if the field should be displayed based on the values passed in
@@ -52,7 +52,7 @@ export function checkEligible(
   };
 
   if (isMainApplicant) {
-    if (!isOver18(applicant)) {
+    if (!applicantEqualToOrOlderThanAge(applicant, 18)) {
       setInvalid('Main Applicant is not over 18');
     }
   }

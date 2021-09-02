@@ -18,7 +18,7 @@ import { YourSituationSummary } from '../../../components/summary/YourSituation'
 import { Applicant } from '../../../domain/HousingApi';
 import { checkEligible } from '../../../lib/utils/form';
 import Button from '../../../components/button';
-import { isOver18 } from '../../../lib/utils/dateOfBirth';
+import { applicantEqualToOrOlderThanAge } from '../../../lib/utils/dateOfBirth';
 
 const UserSummary = (): JSX.Element => {
   const router = useRouter();
@@ -108,7 +108,7 @@ const UserSummary = (): JSX.Element => {
         </>
       )}
 
-      {isOver18(currentResident) && (
+      {applicantEqualToOrOlderThanAge(currentResident, 18) && (
         <>
           <IncomeSavingsSummary currentResident={currentResident} />
           <EmploymentSummary currentResident={currentResident} />

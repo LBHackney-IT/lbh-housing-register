@@ -24,7 +24,7 @@ import {
 } from '../../../lib/utils/resident';
 import Custom404 from '../../404';
 import Button, { ButtonLink } from '../../../components/button';
-import { isOver18 } from '../../../lib/utils/dateOfBirth';
+import { applicantEqualToOrOlderThanAge } from '../../../lib/utils/dateOfBirth';
 import { FormID } from '../../../lib/utils/form-data';
 import { Applicant } from '../../../domain/HousingApi';
 import { checkEligible } from '../../../lib/utils/form';
@@ -72,7 +72,7 @@ const ApplicationStep = (): JSX.Element => {
 
   const steps = getApplicationSectionsForResident(
     currentResident === mainResident,
-    isOver18(currentResident)
+    applicantEqualToOrOlderThanAge(currentResident, 18)
   );
 
   const tasksRemaining = applicationStepsRemaining(

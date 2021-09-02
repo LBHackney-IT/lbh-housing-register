@@ -29,6 +29,9 @@ export const getAgeInYears = (applicant: Applicant): number => {
   return age;
 };
 
-export const isOver18 = (applicant: Applicant): boolean => {
-  return getAgeInYears(applicant) >= 18;
+export const applicantEqualToOrOlderThanAge = (
+  applicant: Applicant,
+  age: number
+): boolean => {
+  return getAgeInYears(applicant) >= age;
 };

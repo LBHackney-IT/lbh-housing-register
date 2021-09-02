@@ -44,7 +44,10 @@ const UserSummary = (): JSX.Element => {
   const eligibilityMap = useMemo(
     () =>
       new Map(
-        applicants.map((applicant) => [applicant, checkEligible(applicant)[0]])
+        applicants.map((applicant) => [
+          applicant,
+          checkEligible(applicant, isMainApplicant)[0],
+        ])
       ),
     [applicants]
   );

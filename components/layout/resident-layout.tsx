@@ -8,6 +8,7 @@ import Header from '../header';
 import PhaseBanner from '../phase-banner';
 import SkipLink from '../skip-link';
 import Seo from '../seo';
+import Footer from '../footer';
 
 interface ResidentLayoutProps {
   pageName?: string;
@@ -24,6 +25,9 @@ export default function ResidentLayout({
   const dispatch = useAppDispatch();
   const username = useAppSelector(
     (store) => store.cognitoUser?.attributes.given_name
+  );
+  const referenceNumber = useAppSelector(
+    (store) => store.application.reference || ''
   );
 
   const onSignOut = async () => {
@@ -49,6 +53,8 @@ export default function ResidentLayout({
       <main id="main-content" className="lbh-main-wrapper">
         <div className="lbh-container">{children}</div>
       </main>
+
+      <Footer referenceNumber={referenceNumber} />
     </>
   );
 }

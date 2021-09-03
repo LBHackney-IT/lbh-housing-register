@@ -9,14 +9,18 @@ interface DialogProps {
   isOpen: boolean;
   copy?: string;
   title?: string;
+  onCancelText?: string;
+  onConfirmationText?: string;
   onCancel?: () => void;
-  onConfirmation: () => void;
+  onConfirmation?: () => void;
 }
 
 export default function Dialog({
   isOpen,
   copy,
   title,
+  onCancelText,
+  onConfirmationText,
   onCancel,
   onConfirmation,
 }: DialogProps) {
@@ -31,13 +35,20 @@ export default function Dialog({
       {copy && <Paragraph>{copy}</Paragraph>}
 
       <div className="lbh-dialog__actions">
-        <Button onClick={onConfirmation}>Yes</Button>
-        <button
-          onClick={onCancel}
-          className="lbh-link lbh-link--no-visited-state"
-        >
-          No, cancel
-        </button>
+        {onConfirmation && (
+          <Button onClick={onConfirmation}>
+            {onConfirmationText === undefined ? 'yes' : onConfirmationText}
+          </Button>
+        )}
+
+        {onCancel && (
+          <button
+            onClick={onCancel}
+            className="lbh-link lbh-link--no-visited-state"
+          >
+            {onCancelText === undefined ? 'No, cancel' : onCancelText}
+          </button>
+        )}
       </div>
 
       <button onClick={onCancel} className="lbh-dialog__close">

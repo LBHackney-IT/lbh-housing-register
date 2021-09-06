@@ -3,6 +3,7 @@ import { AddressLookupAddress } from '../../domain/addressLookup';
 export interface AddressHistoryEntry {
   postcode: string;
   date: string;
+  dateTo: string;
   address: Partial<
     // Using partial rather than union to make the props easier to access.
     AddressLookupAddress & {
@@ -35,8 +36,8 @@ export function formatDate(date: Date) {
 export function calculateDurations(entries: AddressHistoryEntry[]) {
   if (!entries) return [];
 
-  let until = new Date();
   return entries.map((entry) => {
+    let until = new Date(entry.dateTo);
     const from = new Date(entry.date);
 
     const untilInMonths = until.getFullYear() * 12 + until.getMonth();
@@ -50,8 +51,9 @@ export function calculateDurations(entries: AddressHistoryEntry[]) {
       from,
       years,
       months,
-      label: `${years} year${years !== 1 ? 's' : ''} ${months} month${months !== 1 ? 's' : ''
-        } (${formatDate(from)} – ${formatDate(until)})`,
+      label: `${years} year${years !== 1 ? 's' : ''} ${months} month${
+        months !== 1 ? 's' : ''
+      } (${formatDate(from)} – ${formatDate(until)})`,
     };
 
     until = from;

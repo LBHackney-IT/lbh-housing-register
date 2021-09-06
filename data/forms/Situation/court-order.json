@@ -27,7 +27,13 @@
           "name": "details",
           "validation": {
             "required": true
-          }
+          },
+          "conditionalDisplay": [
+            {
+              "field": "court-order",
+              "is": "yes"
+            }
+          ]
         }
       ]
     }

@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 import { Auth } from 'aws-amplify';
 import { useState } from 'react';
+=======
+import Auth from '@aws-amplify/auth';
+>>>>>>> main
 import { FormikValues } from 'formik';
 import { useRouter } from 'next/router';
 import { HeadingOne } from '../../components/content/headings';

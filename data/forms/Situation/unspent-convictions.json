@@ -20,6 +20,20 @@
           "validation": {
             "required": true
           }
+        },
+        {
+          "as": "textarea",
+          "label": "Details of unspent convictions",
+          "name": "details",
+          "validation": {
+            "required": true
+          },
+          "conditionalDisplay": [
+            {
+              "field": "unspent-convictions",
+              "is": "yes"
+            }
+          ]
         }
       ]
     }

@@ -2,6 +2,7 @@ import { Applicant } from '../../domain/HousingApi';
 import { getQuestionValue } from '../store/applicant';
 import { FormData, FormField } from '../types/form';
 import { FormID, getEligibilityCriteria } from './form-data';
+import { isOver18 } from '../../lib/utils/dateOfBirth';
 
 /**
  * Determines if the field should be displayed based on the values passed in
@@ -35,7 +36,10 @@ export function getDisplayStateOfField(
  * @param applicant The applicant
  * @returns {[boolean, string[]]} - A tuple of state (isValid) and error message
  */
-export function checkEligible(applicant: Applicant): [boolean, string[]] {
+export function checkEligible(
+  applicant: Applicant,
+  isMainApplicant: boolean
+): [boolean, string[]] {
   let isValid = true;
   let reasons: string[] = [];
 
@@ -47,10 +51,20 @@ export function checkEligible(applicant: Applicant): [boolean, string[]] {
     }
   };
 
+  if (isMainApplicant) {
+    if (!isOver18(applicant)) {
+      setInvalid('Main Applicant is not over 18');
+    }
+  }
+
   for (const [form, values] of Object.entries(FormID)) {
     const eligibilityCriteria = getEligibilityCriteria(values);
     eligibilityCriteria?.forEach((criteria) => {
-      const fieldValue = getQuestionValue(applicant.questions, values, criteria.field);
+      const fieldValue = getQuestionValue(
+        applicant.questions,
+        values,
+        criteria.field
+      );
 
       if (Array.isArray(fieldValue) && fieldValue.indexOf(criteria.is) !== -1) {
         setInvalid(criteria.reasoning);

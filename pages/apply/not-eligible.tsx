@@ -17,7 +17,7 @@ export default function NotEligible(): JSX.Element {
     (store) => store.application.mainApplicant
   );
   const [isEligible, reasons] = useMemo(
-    () => (mainApplicant && checkEligible(mainApplicant)) ?? [],
+    () => (mainApplicant && checkEligible(mainApplicant, true)) ?? [],
     [mainApplicant]
   );
 

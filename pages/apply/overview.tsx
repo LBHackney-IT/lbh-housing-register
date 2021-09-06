@@ -35,6 +35,8 @@ const ApplicationPersonsOverview = (): JSX.Element => {
       .flat()
   );
 
+  const mainResident = useAppSelector((s) => s.application.mainApplicant);
+
   const application = useAppSelector((store) => store.application);
   const breadcrumbs = [
     {
@@ -46,7 +48,10 @@ const ApplicationPersonsOverview = (): JSX.Element => {
   const eligibilityMap = useMemo(
     () =>
       new Map(
-        applicants.map((applicant) => [applicant, checkEligible(applicant)[0]])
+        applicants.map((applicant) => [
+          applicant,
+          checkEligible(applicant, applicant === mainResident)[0],
+        ])
       ),
     [applicants]
   );

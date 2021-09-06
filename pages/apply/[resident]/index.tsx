@@ -54,7 +54,10 @@ const ApplicationStep = (): JSX.Element => {
   const eligibilityMap = useMemo(
     () =>
       new Map(
-        applicants.map((applicant) => [applicant, checkEligible(applicant)[0]])
+        applicants.map((applicant) => [
+          applicant,
+          checkEligible(applicant, applicant === mainResident)[0],
+        ])
       ),
     [applicants]
   );

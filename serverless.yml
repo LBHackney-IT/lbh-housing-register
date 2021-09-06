@@ -15,7 +15,7 @@ package:
 functions:
   housing-register-frontend:
     name: ${self:service}-${self:provider.stage}
-    handler: src/lambda.handler
+    handler: lambda.handler
     timeout: 30
     package:
       include:

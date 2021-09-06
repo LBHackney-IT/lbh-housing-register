@@ -34,8 +34,9 @@
     ]
   },
   "dependencies": {
+    "@aws-amplify/auth": "^4.3.1",
+    "@aws-amplify/core": "^4.2.5",
     "@reduxjs/toolkit": "^1.5.1",
-    "aws-amplify": "^4.0.0",
     "axios": "^0.21.1",
     "cookie": "^0.4.1",
     "formik": "^2.2.6",
@@ -46,16 +47,13 @@
     "next": "^10.2.0",
     "next-redux-wrapper": "^6.0.2",
     "notifications-node-client": "^5.1.0",
-    "prettier": "^2.3.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.4",
     "redux": "^4.1.0",
     "restana": "^4.9.1",
-    "sass": "^1.32.12",
     "serve-static": "^1.14.1",
     "serverless-http": "^2.7.0",
-    "typescript": "^4.2.4",
     "yup": "^0.32.9"
   },
   "devDependencies": {
@@ -71,6 +69,9 @@
     "babel-jest": "^27.0.2",
     "concurrently": "^6.1.0",
     "jest": "^27.0.4",
-    "mockdate": "^3.0.5"
+    "mockdate": "^3.0.5",
+    "prettier": "^2.3.0",
+    "sass": "^1.32.12",
+    "typescript": "^4.2.4"
   }
 }

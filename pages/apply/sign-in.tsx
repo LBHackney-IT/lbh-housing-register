@@ -7,7 +7,7 @@ import { signIn } from '../../lib/store/cognitoUser';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { FormData } from '../../lib/types/form';
 import { FormID, getFormData } from '../../lib/utils/form-data';
-import ErrorResponseCodes from '../../components/errors/response';
+import ErrorResponse from '../../components/errors/response';
 import UserErrors from '../../components/errors/user';
 
 const ApplicationSignInPage = (): JSX.Element => {
@@ -33,7 +33,7 @@ const ApplicationSignInPage = (): JSX.Element => {
       })
     ).then((result: any) => {
       if (result.error) {
-        setUserError(ErrorResponseCodes[result.error.code]);
+        setUserError(ErrorResponse());
       }
       return result;
     });

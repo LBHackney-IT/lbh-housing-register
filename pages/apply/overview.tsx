@@ -18,7 +18,7 @@ import {
   sendConfirmation,
   completeApplication,
 } from '../../lib/store/application';
-import ErrorResponseCodes from '../../components/errors/response';
+import ErrorResponse from '../../components/errors/response';
 import UserErrors from '../../components/errors/user';
 import { useMemo, useState } from 'react';
 import { checkEligible } from '../../lib/utils/form';
@@ -73,14 +73,10 @@ const ApplicationPersonsOverview = (): JSX.Element => {
                 router.push('/apply/submit/additional-questions');
               }
               if (sendConfirmationResult.error) {
-                setUserError(
-                  ErrorResponseCodes[sendConfirmationResult.error.name]
-                );
+                setUserError(ErrorResponse());
               }
               if (completeApplicationResult.error) {
-                setUserError(
-                  ErrorResponseCodes[completeApplicationResult.error.name]
-                );
+                setUserError(ErrorResponse());
               }
             }
           );

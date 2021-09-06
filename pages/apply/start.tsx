@@ -15,7 +15,7 @@ import { updateBeforeFirstSave } from '../../lib/store/mainApplicant';
 import { FormID, getFormData } from '../../lib/utils/form-data';
 import processPhonenumber from '../../lib/utils/processPhonenumber';
 import UserErrors from '../../components/errors/user';
-import ErrorResponseCodes from '../../components/errors/response';
+import ErrorResponse from '../../components/errors/response';
 
 const ApplicationStartPage = (): JSX.Element => {
   const router = useRouter();
@@ -66,7 +66,7 @@ const ApplicationStartPage = (): JSX.Element => {
 
       router.push('/apply/verify');
     } catch (error) {
-      setUserError(ErrorResponseCodes[error.code]);
+      setUserError(ErrorResponse());
     }
   };
 

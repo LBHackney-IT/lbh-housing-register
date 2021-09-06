@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import ApplicationForms from '../../../components/application/application-forms';
-import Hint from '../../../components/form/hint';
 import Layout from '../../../components/layout/resident-layout';
 import whenAgreed from '../../../lib/hoc/whenAgreed';
 import { applicantHasId, selectApplicant } from '../../../lib/store/applicant';

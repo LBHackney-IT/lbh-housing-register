@@ -25,8 +25,8 @@ export default function ApplicationPage({
 }: PageProps): JSX.Element {
   return (
     <UserContext.Provider value={{ user }}>
-      <Layout>
-        <HeadingOne content={`Application #${data.id}`} />
+      <Layout pageName="View application">
+        <HeadingOne content={`Application #${data.reference}`} />
         <Tag
           content={data.status || ''}
           className={getStatusTag(data.status || '')}

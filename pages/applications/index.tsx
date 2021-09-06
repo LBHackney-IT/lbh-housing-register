@@ -45,7 +45,7 @@ export default function ApplicationListPage({
 
   return (
     <UserContext.Provider value={{ user }}>
-      <Layout>
+      <Layout pageName="Manage applications">
         <SearchBox
           title="Housing Register"
           buttonTitle="Search"

@@ -85,6 +85,7 @@ const slice = createSlice({
     builder
       .addCase(loadApplication.fulfilled, (state, action) => action.payload)
       .addCase(createApplication.fulfilled, (state, action) => action.payload)
+      .addCase(updateApplication.fulfilled, (state, action) => action.payload)
       .addCase(signOut.fulfilled, (state, action) => ({}))
       .addDefaultCase((state, action) => {
         state.mainApplicant = mainApplicant.reducer(
@@ -104,6 +105,7 @@ export const autoSaveMiddleware: Middleware<
   // TODO This basic throttle batches up sequential changes in the store.
   // it doesn't deal with race conditions in communicating with the API.
   // for that we'd also need to cancel existing fetch requests before issuing new ones.
+
   const throttledDispatch = throttle(
     (action: any) => {
       storeAPI.dispatch(action);
@@ -117,7 +119,6 @@ export const autoSaveMiddleware: Middleware<
     const previousApplication = storeAPI.getState().application;
     const newAction = next(action);
     const newApplication = storeAPI.getState().application;
-
     function blacklist(type: string) {
       return (
         type.startsWith(loadApplication.typePrefix) ||

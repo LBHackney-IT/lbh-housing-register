@@ -1,6 +1,6 @@
 import { Form, Formik, FormikValues } from 'formik';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useState } from 'react';
 import ApplicantStep from '../../../components/application/ApplicantStep';
 import {
   getQuestionsForFormAsValues,
@@ -13,12 +13,25 @@ import { FormID } from '../../../lib/utils/form-data';
 import Custom404 from '../../404';
 import Input from '../../../components/form/input';
 import Select from '../../../components/form/select';
-import DateInput from '../../../components/form/dateinput';
+import DateInput, { INVALID_DATE } from '../../../components/form/dateinput';
 import RadioConditional, {
   RadioConditionalProps,
 } from '../../../components/form/radioconditional';
 import Button from '../../../components/button';
-import { applicantEqualToOrOlderThanAge } from '../../../lib/utils/dateOfBirth';
+import * as Yup from 'yup';
+import { Applicant } from '../../../domain/HousingApi';
+import {
+  applicantEqualToOrOlderThanAge,
+  getAgeInYearsFromDate,
+} from '../../../lib//utils/dateOfBirth';
+
+type State = 'under-sixteen' | 'over-sixteen';
+
+export function formatDate(date: Date) {
+  return `${date.toLocaleString('default', {
+    month: 'long',
+  })} ${date.getFullYear()}`;
+}
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter();
@@ -34,7 +47,11 @@ const ApplicationStep = (): JSX.Element => {
     return <Custom404 />;
   }
 
-  const isApplicantOver16 = applicantEqualToOrOlderThanAge(applicant, 16);
+  const [state, setState] = useState<State>(
+    applicantEqualToOrOlderThanAge(applicant, 16)
+      ? 'over-sixteen'
+      : 'under-sixteen'
+  );
 
   const initialValues = {
     ...getQuestionsForFormAsValues(FormID.PERSONAL_DETAILS, applicant),
@@ -59,7 +76,7 @@ const ApplicationStep = (): JSX.Element => {
     emailAddress,
     ...values
   }: FormikValues) => {
-    if (!isApplicantOver16) {
+    if (state === 'under-sixteen') {
       nationalInsuranceNumber = '';
     }
 
@@ -157,13 +174,67 @@ const ApplicationStep = (): JSX.Element => {
     ],
   };
 
+  function generateValidationSchema(state: State, applicant: Applicant) {
+    const min = Math.min(+new Date());
+
+    const schema = Yup.object({
+      dateOfBirth: Yup.string()
+        .notOneOf([INVALID_DATE], 'Invalid date')
+        .label('Date of birth')
+        .required()
+        .test(
+          'min',
+          '${path} must be before ' + formatDate(new Date(min)),
+          (value) => {
+            if (typeof value !== 'string' || value === INVALID_DATE) {
+              return false;
+            }
+
+            const dateOfBirth = new Date(value);
+            const ageInYears = getAgeInYearsFromDate(dateOfBirth);
+
+            if (ageInYears >= 16) {
+              setState('over-sixteen');
+              return true;
+            }
+
+            setState('under-sixteen');
+            return true;
+          }
+        ),
+      title: Yup.string().label('Title').required(),
+      firstName: Yup.string().label('First Name').required(),
+      surname: Yup.string().label('surname').required(),
+      nationalInsuranceNumber: Yup.string()
+        .label('National Insurance Number')
+        .required(),
+    });
+
+    switch (state) {
+      case 'under-sixteen':
+        return schema.pick(['title', 'firstName', 'surname', 'dateOfBirth']);
+      case 'over-sixteen':
+        return schema.pick([
+          'title',
+          'firstName',
+          'surname',
+          'dateOfBirth',
+          'nationalInsuranceNumber',
+        ]);
+    }
+  }
+
   return (
     <ApplicantStep
       applicant={applicant}
       stepName="Personal details"
       formID={FormID.PERSONAL_DETAILS}
     >
-      <Formik initialValues={initialValues} onSubmit={onSave}>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={onSave}
+        validationSchema={generateValidationSchema(state, applicant)}
+      >
         {({ isSubmitting, values }) => (
           <Form>
             <Select
@@ -192,7 +263,7 @@ const ApplicationStep = (): JSX.Element => {
               subheading={radioProps.subheading}
             />
 
-            {isApplicantOver16 && (
+            {state === 'over-sixteen' && (
               <Input
                 name="nationalInsuranceNumber"
                 label="National Insurance number"

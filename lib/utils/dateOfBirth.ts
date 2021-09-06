@@ -15,8 +15,18 @@ export function formatDob(date: Date) {
  */
 export const getAgeInYears = (applicant: Applicant): number => {
   const dateString = applicant.person?.dateOfBirth ?? '';
-  var today = new Date();
+
+  if (dateString === '') {
+    return 0;
+  }
+
   var dateOfBirth = new Date(dateString);
+  return getAgeInYearsFromDate(dateOfBirth);
+};
+
+export const getAgeInYearsFromDate = (date: Date): number => {
+  var today = new Date();
+  var dateOfBirth = new Date(date);
   if (isNaN(+dateOfBirth)) {
     return NaN;
   }

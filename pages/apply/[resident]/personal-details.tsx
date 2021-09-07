@@ -55,14 +55,14 @@ const ApplicationStep = (): JSX.Element => {
 
   const initialValues = {
     ...getQuestionsForFormAsValues(FormID.PERSONAL_DETAILS, applicant),
-    title: applicant.person?.title,
-    firstName: applicant.person?.firstName,
-    surname: applicant.person?.surname,
-    gender: applicant.person?.gender,
-    dateOfBirth: applicant.person?.dateOfBirth,
-    nationalInsuranceNumber: applicant.person?.nationalInsuranceNumber,
-    phoneNumber: applicant.contactInformation?.phoneNumber,
-    emailAddress: applicant.contactInformation?.emailAddress,
+    title: applicant.person?.title ?? '',
+    firstName: applicant.person?.firstName ?? '',
+    surname: applicant.person?.surname ?? '',
+    gender: applicant.person?.gender ?? '',
+    dateOfBirth: applicant.person?.dateOfBirth ?? '',
+    nationalInsuranceNumber: applicant.person?.nationalInsuranceNumber ?? '',
+    phoneNumber: applicant.contactInformation?.phoneNumber ?? '',
+    emailAddress: applicant.contactInformation?.emailAddress ?? '',
   };
 
   const onSave = ({
@@ -82,6 +82,7 @@ const ApplicationStep = (): JSX.Element => {
 
     if (!isMainApplicant) {
       nationalInsuranceNumber = '';
+      phoneNumber = '';
       emailAddress = '';
     }
 

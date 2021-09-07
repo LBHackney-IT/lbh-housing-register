@@ -15,6 +15,9 @@ const ApplicationConfirmation = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useDispatch();
   const application = useAppSelector((store) => store.application);
+  const residentEmail = useAppSelector(
+    (store) => store.cognitoUser?.attributes.email
+  );
 
   useEffect(() => {
     if (!application) {
@@ -32,6 +35,7 @@ const ApplicationConfirmation = (): JSX.Element => {
       <Panel
         heading="Application complete"
         message={`Your reference number: ${application.reference?.toUpperCase()}`}
+        email={residentEmail}
       />
 
       <HeadingTwo content="What happens next" />

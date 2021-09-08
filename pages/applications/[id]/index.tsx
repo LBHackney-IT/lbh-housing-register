@@ -1,4 +1,5 @@
 import { GetServerSideProps } from 'next';
+import { useState } from 'react';
 import ContactDetails from '../../../components/applications/contact-details';
 import OtherMembers from '../../../components/applications/other-members';
 import PersonalDetails from '../../../components/applications/personal-details';
@@ -27,7 +28,7 @@ export function getPersonName(application: Application | undefined) {
   if (!application?.mainApplicant?.person) return '';
   let person = application?.mainApplicant?.person;
   let name = `${person.firstName} ${person.surname}`;
-  if (application.otherMembers && application.otherMembers.length > 0){
+  if (application.otherMembers && application.otherMembers.length > 0) {
     name += ` (+${application.otherMembers?.length})`
   }
   return name;
@@ -43,57 +44,90 @@ export default function ApplicationPage({
   data,
 }: PageProps): JSX.Element {
   if (!data.id) return <Custom404 />
+
+  type State = 'overview' | 'actions';
+  const [state, setState] = useState<State>('overview');
+
   return (
     <UserContext.Provider value={{ user }}>
       <Layout>
         <HeadingOne content="View application" />
         <HeadingTwo content={getPersonName(data)} />
 
+        <button
+          onClick={() => {
+            setState('overview');
+          }}
+          className="lbh-link lbh-link--no-visited-state"
+        >
+          Overview
+        </button>
+        {' '}
+        <button
+          onClick={() => {
+            setState('actions');
+          }}
+          className="lbh-link lbh-link--no-visited-state"
+        >
+          Actions
+        </button>
+
         <hr />
-        <div className="govuk-grid-row">
-          <div className="govuk-grid-column-two-thirds">
-            <HeadingThree content="Snapshot" />
-            {data.mainApplicant && (
-              <PersonalDetails
-                heading="Personal details"
-                applicant={data.mainApplicant}
-                applicationId={data.id}
+
+        {state == 'overview' &&
+          <div className="govuk-grid-row">
+            <div className="govuk-grid-column-two-thirds">
+              <HeadingThree content="Snapshot" />
+              {data.mainApplicant && (
+                <PersonalDetails
+                  heading="Personal details"
+                  applicant={data.mainApplicant}
+                  applicationId={data.id}
+                />
+              )}
+              {data.mainApplicant?.contactInformation && (
+                <ContactDetails
+                  heading="Contact details"
+                  contact={data.mainApplicant.contactInformation}
+                />
+              )}
+              {data.otherMembers && data.otherMembers.length > 0 && (
+                <OtherMembers
+                  heading="Other Members"
+                  others={data.otherMembers}
+                  applicationId={data.id}
+                />
+              )}
+            </div>
+            <div className="govuk-grid-column-one-third">
+              <HeadingThree content="Case details" />
+              <Tag
+                content={data.status || ''}
+                className={getStatusTag(data.status || '')}
               />
-            )}
-            {data.mainApplicant?.contactInformation && (
-              <ContactDetails
-                heading="Contact details"
-                contact={data.mainApplicant.contactInformation}
-              />
-            )}
-            {data.otherMembers && data.otherMembers.length > 0 && (
-              <OtherMembers
-                heading="Other Members"
-                others={data.otherMembers}
-                applicationId={data.id}
-              />
-            )}
+              <Paragraph>
+                <strong>Application reference</strong><br />
+                {data.reference}
+              </Paragraph>
+              <Paragraph>
+                <strong>Created date</strong><br />
+                {formatDate(data.createdAt)}
+              </Paragraph>
+              <Paragraph>
+                <strong>Submission date</strong><br />
+                {formatDate(data.submittedAt)}
+              </Paragraph>
+            </div>
           </div>
-          <div className="govuk-grid-column-one-third">
-            <HeadingThree content="Case details" />
-            <Tag
-              content={data.status || ''}
-              className={getStatusTag(data.status || '')}
-            />
-            <Paragraph>
-              <strong>Application reference</strong><br />
-              {data.reference}
-            </Paragraph>
-            <Paragraph>
-              <strong>Created date</strong><br />
-              {formatDate(data.createdAt)}
-            </Paragraph>
-            <Paragraph>
-              <strong>Submission date</strong><br />
-              {formatDate(data.submittedAt)}
-            </Paragraph>
-          </div>
-        </div>
+        }
+
+        {state == 'actions' &&
+          <>
+            <HeadingThree content="Action" />
+            <Paragraph>Actions go here...</Paragraph>
+          </>
+        }
+
       </Layout>
     </UserContext.Provider>
   );

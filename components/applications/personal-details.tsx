@@ -1,4 +1,6 @@
 import { Applicant } from '../../domain/HousingApi';
+import { formatDob } from '../../lib/utils/dateOfBirth';
+import { getGenderName } from '../../lib/utils/gender';
 import Collapsible from '../collapsible';
 
 interface SummaryProps {
@@ -32,21 +34,14 @@ export default function PersonalDetails({
         <div className="govuk-summary-list__row">
           <dt className="govuk-summary-list__key">Gender</dt>
           <dd className="govuk-summary-list__value">
-            {applicant.person?.gender}
-          </dd>
-          <span className="govuk-summary-list__actions"></span>
-        </div>
-        <div className="govuk-summary-list__row">
-          <dt className="govuk-summary-list__key">Nationality</dt>
-          <dd className="govuk-summary-list__value">
-            {applicant.person?.nationality}
+            {getGenderName(applicant)}
           </dd>
           <span className="govuk-summary-list__actions"></span>
         </div>
         <div className="govuk-summary-list__row">
           <dt className="govuk-summary-list__key">Date of birth</dt>
           <dd className="govuk-summary-list__value">
-            {applicant.person?.dateOfBirth}
+            {applicant.person?.dateOfBirth && formatDob(new Date(applicant.person?.dateOfBirth))}
           </dd>
           <span className="govuk-summary-list__actions"></span>
         </div>

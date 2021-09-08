@@ -13,8 +13,9 @@ const StaffLayout: FunctionComponent = (props) => {
   if (!user) return <></>;
 
   const router = useRouter();
-  const { id } = router.query as {
+  const { id, person } = router.query as {
     id: string;
+    person: string;
   };
 
   return (
@@ -23,12 +24,23 @@ const StaffLayout: FunctionComponent = (props) => {
       <Header username={user.name} signOutText="Sign out" onSignOut={signOut} />
       {hasPhaseBanner() && <PhaseBanner />}
 
-      {id && (
+      {id && !person && (
         <div className="lbh-container">
           <nav>
             <strong className="lbh-heading-h5">
               <Link href={`/applications/`}>
                 <a className="lbh-link">Back to dashboard</a>
+              </Link>
+            </strong>
+          </nav>
+        </div>
+      )}
+      {id && person && (
+        <div className="lbh-container">
+          <nav>
+            <strong className="lbh-heading-h5">
+              <Link href={`/applications/${id}`}>
+                <a className="lbh-link">Back to household overview</a>
               </Link>
             </strong>
           </nav>

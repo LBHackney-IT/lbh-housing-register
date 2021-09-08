@@ -6,11 +6,13 @@ import Collapsible from '../collapsible';
 interface SummaryProps {
   heading: string;
   applicant: Applicant;
+  applicationId: string;
 }
 
 export default function PersonalDetails({
   heading,
   applicant,
+  applicationId,
 }: SummaryProps): JSX.Element {
   return (
     <Collapsible heading={heading}>
@@ -18,14 +20,13 @@ export default function PersonalDetails({
         <div className="govuk-summary-list__row">
           <dt className="govuk-summary-list__key">Name</dt>
           <dd className="govuk-summary-list__value">
-            {applicant.person?.title} {applicant.person?.firstName}{' '}
-            {applicant.person?.surname}
+            {applicant.person?.title} {applicant.person?.firstName} {applicant.person?.surname}
           </dd>
           <dd className="govuk-summary-list__actions">
             <ul className="govuk-summary-list__actions-list">
               <li className="govuk-summary-list__actions-list-item">
-                <a className="govuk-link" href="#">
-                  Edit<span className="govuk-visually-hidden"> name</span>
+                <a className="govuk-link" href={`/applications/${applicationId}/${applicant.person?.id}`}>
+                  Review<span className="govuk-visually-hidden"> {applicant.person?.firstName}</span>
                 </a>
               </li>
             </ul>

@@ -12,6 +12,7 @@ import { UserContext } from '../../../lib/contexts/user-context';
 import { getApplication } from '../../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../../lib/utils/auth';
 import { getStatusTag } from '../../../lib/utils/tag';
+import Custom404 from '../../404';
 
 export function formatDate(date: string | undefined) {
   if (!date) return '';
@@ -41,6 +42,7 @@ export default function ApplicationPage({
   user,
   data,
 }: PageProps): JSX.Element {
+  if (!data.id) return <Custom404 />
   return (
     <UserContext.Provider value={{ user }}>
       <Layout>
@@ -55,6 +57,7 @@ export default function ApplicationPage({
               <PersonalDetails
                 heading="Personal details"
                 applicant={data.mainApplicant}
+                applicationId={data.id}
               />
             )}
             {data.mainApplicant?.contactInformation && (
@@ -67,6 +70,7 @@ export default function ApplicationPage({
               <OtherMembers
                 heading="Other Members"
                 others={data.otherMembers}
+                applicationId={data.id}
               />
             )}
           </div>

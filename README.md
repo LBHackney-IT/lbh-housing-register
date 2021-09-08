@@ -115,7 +115,7 @@ This has been extended to be used in a more generic way, which means forms can b
       "fields": [
         {
           "label": "Postcode",
-          "name": "postCode",
+          "name": "postcode",
           "validation": {
             "required": true
           }

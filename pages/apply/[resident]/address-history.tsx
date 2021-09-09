@@ -88,7 +88,9 @@ function generateValidationSchema(
     case 'postcode-entry':
       return schema.pick(['postcode']);
     case 'manual-entry':
-      return schema.pick(['postcode', 'address', 'date', 'dateTo']);
+      return addressHistory.length === 0
+        ? schema.pick(['postcode', 'address', 'date'])
+        : schema.pick(['postcode', 'address', 'date', 'dateTo']);
     case 'choose-address':
       return schema.pick(['uprn', 'date', 'dateTo']);
   }
@@ -96,7 +98,7 @@ function generateValidationSchema(
 
 function ManualEntry() {
   return (
-    // These all need the validation markerts. And that's why we need the standard inputs.
+    // These all need the validation markers. And that's why we need the standard inputs.
     <fieldset className="govuk-fieldset">
       <legend className="govuk-fieldset__legend govuk-fieldset__legend--l">
         <h1 className="govuk-fieldset__heading">What is your address?</h1>
@@ -372,11 +374,13 @@ const ApplicationStep = (): JSX.Element => {
                   label={'When did you move to this address?'}
                   showDay={false}
                 />
-                <DateInput
-                  name={'dateTo'}
-                  label={'When did you leave this address?'}
-                  showDay={false}
-                />
+                {addressHistory.length > 0 && (
+                  <DateInput
+                    name={'dateTo'}
+                    label={'When did you leave this address?'}
+                    showDay={false}
+                  />
+                )}
               </InsetText>
             )}
 

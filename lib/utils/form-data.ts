@@ -1,6 +1,8 @@
 import addressHistory from '../../data/forms/address-history.json';
 import agreementFormData from '../../data/forms/agreement.json';
-import currentAccommodationFormData from '../../data/forms/current-accommodation.json';
+import currentAccommodationFormData from '../../data/forms/current_accommodation/current-accommodation.json';
+import currentAccommodationHostDetails from '../../data/forms/current_accommodation/current-accommodation-host-details.json';
+import currentAccommodationLandlordDetails from '../../data/forms/current_accommodation/current-accommodation-landlord-details.json';
 import employment from '../../data/forms/employment.json';
 import immigrationStatusFormData from '../../data/forms/immigration-status.json';
 import incomeSavings from '../../data/forms/income.json';
@@ -42,6 +44,7 @@ import EthnicityCategoryOtherEthnicGroup from '../../data/forms/ethnicity/ethnic
 
 import { EligibilityCriteria, MultiStepForm } from '../types/form';
 import assertNever from './assertNever';
+import Form from '../../components/form/form';
 
 export enum FormID {
   AGREEMENT = 'agreement',
@@ -54,6 +57,8 @@ export enum FormID {
   RESIDENTIAL_STATUS = 'residential-status',
   ADDRESS_HISTORY = 'address-history',
   CURRENT_ACCOMMODATION = 'current-accommodation',
+  CURRENT_ACCOMMODATION_HOST_DETAILS = 'current-accommodation-host-details',
+  CURRENT_ACCOMMODATION_LANDLORD_DETAILS = 'current-accommodation-landlord-details',
   EMPLOYMENT = 'employment',
   INCOME_SAVINGS = 'income-savings',
   MEDICAL_NEEDS = 'medical-needs',
@@ -219,6 +224,12 @@ export function getFormData(form: FormID): MultiStepForm {
 
     case FormID.ETHNICITY_CATEGORY_OTHER_ETHNIC_GROUP:
       return EthnicityCategoryOtherEthnicGroup as MultiStepForm;
+
+    case FormID.CURRENT_ACCOMMODATION_HOST_DETAILS:
+      return currentAccommodationHostDetails as MultiStepForm;
+
+    case FormID.CURRENT_ACCOMMODATION_LANDLORD_DETAILS:
+      return currentAccommodationLandlordDetails as MultiStepForm;
 
     // this form isn't used anywhere
     case FormID.YOUR_SITUATION:

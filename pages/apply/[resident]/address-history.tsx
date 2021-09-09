@@ -352,6 +352,9 @@ const ApplicationStep = (): JSX.Element => {
           <Form>
             {state === 'postcode-entry' && (
               <>
+                {addressHistory.length > 0 && (
+                  <h2 className="lbh-heading-h2">Previous address</h2>
+                )}
                 <Input
                   name="postcode"
                   label="Postcode"

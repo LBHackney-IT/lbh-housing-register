@@ -92,7 +92,9 @@ function generateValidationSchema(
         ? schema.pick(['postcode', 'address', 'date'])
         : schema.pick(['postcode', 'address', 'date', 'dateTo']);
     case 'choose-address':
-      return schema.pick(['uprn', 'date', 'dateTo']);
+      return addressHistory.length === 0
+        ? schema.pick(['uprn', 'date'])
+        : schema.pick(['uprn', 'date', 'dateTo']);
   }
 }
 
@@ -425,11 +427,13 @@ const ApplicationStep = (): JSX.Element => {
                   label={'When did you move to this address?'}
                   showDay={false}
                 />
-                <DateInput
-                  name={'dateTo'}
-                  label={'When did you leave this address?'}
-                  showDay={false}
-                />
+                {addressHistory.length > 0 && (
+                  <DateInput
+                    name={'dateTo'}
+                    label={'When did you leave this address?'}
+                    showDay={false}
+                  />
+                )}
               </InsetText>
             )}
 

@@ -39,7 +39,6 @@ export default function ApplicationForms({
   const activeStepId =
     formSteps.find((step) => step === activeStep) ?? formSteps[0];
   const formData = getFormData(activeStepId);
-  console.log('formData', formData);
   const initialValues: FormikValues = getQuestionsForFormAsValues(
     activeStepId,
     applicant

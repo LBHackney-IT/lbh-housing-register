@@ -44,7 +44,6 @@ import EthnicityCategoryOtherEthnicGroup from '../../data/forms/ethnicity/ethnic
 
 import { EligibilityCriteria, MultiStepForm } from '../types/form';
 import assertNever from './assertNever';
-import Form from '../../components/form/form';
 
 export enum FormID {
   AGREEMENT = 'agreement',

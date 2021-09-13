@@ -81,12 +81,12 @@ export const selectApplicant =
   };
 
 export const findQuesiton =
-  (formID: FormID, questionName: string) => (question: Question) =>
+  (formID: FormID | string, questionName: string) => (question: Question) =>
     question.id === `${formID}/${questionName}`;
 
 export function getQuestionValue(
   questions: Question[] | undefined,
-  formID: FormID,
+  formID: FormID | string,
   questionName: string,
   fallbackValue: any = undefined
 ) {

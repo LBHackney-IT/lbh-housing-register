@@ -129,6 +129,7 @@
         },
         {
           "type": "number",
+          "min": 0,
           "label": "How many people do you share your home with?",
           "name": "home-how-many-people-share",
           "hint": "For example, 1",

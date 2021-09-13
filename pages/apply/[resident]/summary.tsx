@@ -87,68 +87,24 @@ const UserSummary = (): JSX.Element => {
     },
   ];
 
-  const pesonalDetailsCompleted = getQuestionValue(
-    currentResident.questions,
-    'personal-details',
-    'sectionCompleted',
-    false
-  );
+  function isSectionComplete(sectionName: FormID) {
+    return getQuestionValue(
+      currentResident?.questions,
+      sectionName,
+      'sectionCompleted',
+      false
+    );
+  }
 
-  const immigrationStatusCompleted = getQuestionValue(
-    currentResident.questions,
-    'immigration-status',
-    'sectionCompleted',
-    false
-  );
-
-  const residentialStatusCompleted = getQuestionValue(
-    currentResident.questions,
-    'residential-status',
-    'sectionCompleted',
-    false
-  );
-
-  const addressHistoryCompleted = getQuestionValue(
-    currentResident.questions,
-    'address-history',
-    'sectionCompleted',
-    false
-  );
-
-  const currentAccommodationCompleted = getQuestionValue(
-    currentResident.questions,
-    'current-accommodation',
-    'sectionCompleted',
-    false
-  );
-
-  const yourSituationCompleted = getQuestionValue(
-    currentResident.questions,
-    'your-situation',
-    'sectionCompleted',
-    false
-  );
-
-  const incomeSavingsCompleted = getQuestionValue(
-    currentResident.questions,
-    'income-savings',
-    'sectionCompleted',
-    false
-  );
-
-  const employmentCompleted = getQuestionValue(
-    currentResident.questions,
-    'employment',
-    'sectionCompleted',
-    false
-  );
-
-  const medicalNeedsCompleted = getQuestionValue(
-    currentResident.questions,
-    'medical-needs',
-    'sectionCompleted',
-    false
-  );
+  const pesonalDetailsCompleted = isSectionComplete(FormID.PERSONAL_DETAILS);
+  const immigrationStatusCompleted = isSectionComplete(FormID.IMMIGRATION_STATUS);
+  const residentialStatusCompleted = isSectionComplete(FormID.RESIDENTIAL_STATUS);
+  const addressHistoryCompleted = isSectionComplete(FormID.ADDRESS_HISTORY);
+  const currentAccommodationCompleted = isSectionComplete(FormID.CURRENT_ACCOMMODATION);
+  const yourSituationCompleted = isSectionComplete(FormID.YOUR_SITUATION);
+  const incomeSavingsCompleted = isSectionComplete(FormID.INCOME_SAVINGS);
+  const employmentCompleted = isSectionComplete(FormID.EMPLOYMENT);
+  const medicalNeedsCompleted = isSectionComplete(FormID.MEDICAL_NEEDS);
 
   return (
     <Layout pageName="Application summary" breadcrumbs={breadcrumbs}>

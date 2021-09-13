@@ -80,17 +80,17 @@ export const selectApplicant =
     );
   };
 
-export const findQuesiton =
-  (formID: FormID | string, questionName: string) => (question: Question) =>
+export const findQuestion =
+  (formID: FormID, questionName: string) => (question: Question) =>
     question.id === `${formID}/${questionName}`;
 
 export function getQuestionValue(
   questions: Question[] | undefined,
-  formID: FormID | string,
+  formID: FormID,
   questionName: string,
   fallbackValue: any = undefined
 ) {
-  const a = questions?.find(findQuesiton(formID, questionName))?.answer;
+  const a = questions?.find(findQuestion(formID, questionName))?.answer;
   return a ? JSON.parse(a) : fallbackValue;
 }
 

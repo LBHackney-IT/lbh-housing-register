@@ -3,6 +3,7 @@
     {
       "fields": [
         {
+          "type": "number",
           "label": "Verification code",
           "name": "code",
           "validation": {

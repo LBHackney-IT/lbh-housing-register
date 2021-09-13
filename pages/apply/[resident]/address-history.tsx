@@ -312,7 +312,7 @@ const ApplicationStep = (): JSX.Element => {
               addressLine2: currentAddress.address.line2,
               addressLine3:
                 currentAddress.address.line3 ?? currentAddress.address.town,
-              postCode:
+              postcode:
                 currentAddress.address.postcode ?? currentAddress.postcode,
               addressType: AddressType.MainAddress,
             },

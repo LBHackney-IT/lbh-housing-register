@@ -1,24 +1,29 @@
 import axios from 'axios';
-import { Application, ApplicationList } from '../../domain/HousingApi';
+import {
+  Application,
+  ApplicationList,
+  PaginatedApplicationListResponse,
+} from '../../domain/HousingApi';
 import { Stat } from '../../domain/stat';
 
 const headersWithKey = {
   'x-api-key': process.env.HOUSING_REGISTER_KEY,
 };
 
-export const getApplications = async (): Promise<ApplicationList | null> => {
-  try {
-    const { data } = await axios.get(
-      `${process.env.HOUSING_REGISTER_API}/applications`,
-      {
-        headers: headersWithKey,
-      }
-    );
-    return data;
-  } catch (err) {
-    return null;
-  }
-};
+export const getApplications =
+  async (): Promise<PaginatedApplicationListResponse | null> => {
+    try {
+      const { data } = await axios.get(
+        `${process.env.HOUSING_REGISTER_API}/applications`,
+        {
+          headers: headersWithKey,
+        }
+      );
+      return data;
+    } catch (err) {
+      return null;
+    }
+  };
 
 export const getApplication = async (
   id: string
@@ -86,11 +91,11 @@ export const getStats = async (): Promise<Array<Stat> | null> => {
 };
 
 export const searchApplication = async (
-  searchTerm: string
-): Promise<ApplicationList | null> => {
+  page: string
+): Promise<PaginatedApplicationListResponse | null> => {
   try {
     const { data } = await axios.get(
-      `${process.env.HOUSING_REGISTER_API}/applications?searchterm=${searchTerm}`,
+      `${process.env.HOUSING_REGISTER_API}/applications?page=${page}`,
       {
         headers: headersWithKey,
       }

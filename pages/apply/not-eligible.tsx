@@ -1,9 +1,8 @@
-import Link from 'next/link';
 import { useMemo } from 'react';
 import { useAppSelector } from '../../lib/store/hooks';
 import { checkEligible } from '../../lib/utils/form';
 import { ButtonLink } from '../../components/button';
-import { HeadingOne, HeadingTwo } from '../../components/content/headings';
+import { HeadingTwo } from '../../components/content/headings';
 import InsetText from '../../components/content/inset-text';
 import List, { ListItem } from '../../components/content/list';
 import Paragraph from '../../components/content/paragraph';
@@ -24,7 +23,7 @@ export default function NotEligible(): JSX.Element {
   return (
     <Layout>
       <Panel
-        heading="Unfortunately, you don't qualify to join the housing register"
+        heading="You don't qualify to join the housing register"
         message={`Your reference number: ${application.reference?.toUpperCase()}`}
       />
 

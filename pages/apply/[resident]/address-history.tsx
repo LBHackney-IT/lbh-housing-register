@@ -338,7 +338,7 @@ const ApplicationStep = (): JSX.Element => {
       stepName="Address History"
       formID={FormID.ADDRESS_HISTORY}
     >
-      <h2 className="lbh-heading-h2">Current Address</h2>
+      <h2 className="lbh-heading-h2">Current address</h2>
       <Details summary="Help with your address">
         If you have no fixed abode or if you are sofa surfing, use the address
         where you sleep for the majority of the week. If you are living on the

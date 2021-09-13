@@ -76,7 +76,7 @@ export const getMainApplicantQuestions = (): ApplicationSectionGroup[] => {
       ],
     },
     {
-      heading: 'Living Situation',
+      heading: 'Living situation',
       sections: [
         {
           heading: 'Residential status',
@@ -100,12 +100,12 @@ export const getMainApplicantQuestions = (): ApplicationSectionGroup[] => {
       heading: 'Money',
       sections: [
         {
-          heading: 'Income and savings',
-          id: FormID.INCOME_SAVINGS,
-        },
-        {
           heading: 'Employment',
           id: FormID.EMPLOYMENT,
+        },
+        {
+          heading: 'Income and savings',
+          id: FormID.INCOME_SAVINGS,
         },
       ],
     },
@@ -136,7 +136,7 @@ export const getOtherMemberQuestions = (
         ],
       },
       {
-        heading: 'Living Situation',
+        heading: 'Living situation',
         sections: [
           {
             heading: 'Address history',
@@ -148,12 +148,12 @@ export const getOtherMemberQuestions = (
         heading: 'Money',
         sections: [
           {
-            heading: 'Income and savings',
-            id: FormID.INCOME_SAVINGS,
-          },
-          {
             heading: 'Employment',
             id: FormID.EMPLOYMENT,
+          },
+          {
+            heading: 'Income and savings',
+            id: FormID.INCOME_SAVINGS,
           },
         ],
       },
@@ -179,7 +179,7 @@ export const getOtherMemberQuestions = (
         ],
       },
       {
-        heading: 'Living Situation',
+        heading: 'Living situation',
         sections: [
           {
             heading: 'Address history',

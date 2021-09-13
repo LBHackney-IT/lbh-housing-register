@@ -76,7 +76,7 @@ export const getMainApplicantQuestions = (): ApplicationSectionGroup[] => {
       ],
     },
     {
-      heading: 'Living Situation',
+      heading: 'Living situation',
       sections: [
         {
           heading: 'Residential status',
@@ -136,7 +136,7 @@ export const getOtherMemberQuestions = (
         ],
       },
       {
-        heading: 'Living Situation',
+        heading: 'Living situation',
         sections: [
           {
             heading: 'Address history',
@@ -179,7 +179,7 @@ export const getOtherMemberQuestions = (
         ],
       },
       {
-        heading: 'Living Situation',
+        heading: 'Living situation',
         sections: [
           {
             heading: 'Address history',

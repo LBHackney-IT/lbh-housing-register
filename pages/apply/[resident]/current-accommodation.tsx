@@ -87,8 +87,8 @@ export default function YourSituation() {
   };
 
   return (
-    <Layout pageName="Current Accommodation" breadcrumbs={breadcrumbs}>
-      <HeadingOne content="Current Accommodation" />
+    <Layout pageName="Current accommodation" breadcrumbs={breadcrumbs}>
+      <HeadingOne content="Current accommodation" />
       <Form
         // Intentional key outside of an array. Force a fresh form component when we change steps to avoid values persisting between forms.
         initialValues={initialValues}

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, {  } from 'react';
+import React from 'react';
 import { useAppSelector } from '../store/hooks';
 
 export default function withApplication<P>(

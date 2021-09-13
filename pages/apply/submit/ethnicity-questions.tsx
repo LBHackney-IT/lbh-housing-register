@@ -91,6 +91,6 @@ const EthnicityQuestions = (): JSX.Element => {
       />
     </Layout>
   );
-}
+};
 
 export default withApplication(EthnicityQuestions);

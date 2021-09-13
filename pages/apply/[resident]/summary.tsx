@@ -98,10 +98,16 @@ const UserSummary = (): JSX.Element => {
   }
 
   const pesonalDetailsCompleted = isSectionComplete(FormID.PERSONAL_DETAILS);
-  const immigrationStatusCompleted = isSectionComplete(FormID.IMMIGRATION_STATUS);
-  const residentialStatusCompleted = isSectionComplete(FormID.RESIDENTIAL_STATUS);
+  const immigrationStatusCompleted = isSectionComplete(
+    FormID.IMMIGRATION_STATUS
+  );
+  const residentialStatusCompleted = isSectionComplete(
+    FormID.RESIDENTIAL_STATUS
+  );
   const addressHistoryCompleted = isSectionComplete(FormID.ADDRESS_HISTORY);
-  const currentAccommodationCompleted = isSectionComplete(FormID.CURRENT_ACCOMMODATION);
+  const currentAccommodationCompleted = isSectionComplete(
+    FormID.CURRENT_ACCOMMODATION
+  );
   const yourSituationCompleted = isSectionComplete(FormID.YOUR_SITUATION);
   const incomeSavingsCompleted = isSectionComplete(FormID.INCOME_SAVINGS);
   const employmentCompleted = isSectionComplete(FormID.EMPLOYMENT);

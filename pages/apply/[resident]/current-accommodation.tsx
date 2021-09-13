@@ -101,6 +101,6 @@ const CurrentAccommodation = (): JSX.Element => {
       />
     </Layout>
   );
-}
+};
 
 export default withApplication(CurrentAccommodation);

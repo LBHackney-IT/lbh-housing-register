@@ -112,6 +112,6 @@ const YourSituation = (): JSX.Element => {
       />
     </Layout>
   );
-}
+};
 
 export default withApplication(YourSituation);

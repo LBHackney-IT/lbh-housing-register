@@ -69,6 +69,6 @@ const NotEligible = (): JSX.Element => {
       </ButtonLink>
     </Layout>
   );
-}
+};
 
 export default withApplication(NotEligible);

@@ -49,6 +49,6 @@ const AdditonalQuestions = (): JSX.Element => {
       />
     </Layout>
   );
-}
+};
 
 export default withApplication(AdditonalQuestions);

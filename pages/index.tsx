@@ -104,7 +104,9 @@ export default function ApplicationHomePage(): JSX.Element {
           If you choose to rent privately, we may be able to help in a number of
           ways, both financially and practically.
           <br />
-          <Link href="https://hackney.gov.uk/housing-options">Find out more</Link>
+          <Link href="https://hackney.gov.uk/housing-options">
+            Find out more
+          </Link>
         </Paragraph>
       </Announcement>
 

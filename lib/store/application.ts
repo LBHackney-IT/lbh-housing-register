@@ -85,7 +85,6 @@ const slice = createSlice({
     builder
       .addCase(loadApplication.fulfilled, (state, action) => action.payload)
       .addCase(createApplication.fulfilled, (state, action) => action.payload)
-      .addCase(updateApplication.fulfilled, (state, action) => action.payload)
       .addCase(signOut.fulfilled, (state, action) => ({}))
       .addDefaultCase((state, action) => {
         state.mainApplicant = mainApplicant.reducer(

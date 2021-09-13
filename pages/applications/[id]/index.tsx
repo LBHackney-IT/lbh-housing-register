@@ -50,7 +50,7 @@ export default function ApplicationPage({
 
   return (
     <UserContext.Provider value={{ user }}>
-      <Layout>
+      <Layout pageName="View application">
         <HeadingOne content="View application" />
         <HeadingTwo content={getPersonName(data)} />
 

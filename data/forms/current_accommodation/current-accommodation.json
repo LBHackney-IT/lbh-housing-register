@@ -139,6 +139,7 @@
         },
         {
           "type": "number",
+          "min": 0,
           "label": "How many bedrooms does your current home have?",
           "name": "home-how-many-bedrooms",
           "hint": "For example, 1",
@@ -148,6 +149,7 @@
         },
         {
           "type": "number",
+          "min": 0,
           "label": "How many living rooms does your current home have?",
           "name": "home-how-many-livingrooms",
           "hint": "For example, 1",
@@ -157,6 +159,7 @@
         },
         {
           "type": "number",
+          "min": 0,
           "label": "How many dining rooms does your current home have?",
           "name": "home-how-many-diningrooms",
           "hint": "For example, 1",
@@ -166,6 +169,7 @@
         },
         {
           "type": "number",
+          "min": 0,
           "label": "How many bathrooms does your current home have?",
           "name": "home-how-many-bathrooms",
           "hint": "For example, 1",
@@ -175,6 +179,7 @@
         },
         {
           "type": "number",
+          "min": 0,
           "label": "How many kitchens does your current home have?",
           "name": "home-how-many-kitchens",
           "hint": "For example, 1",
@@ -184,6 +189,7 @@
         },
         {
           "type": "number",
+          "min": 0,
           "label": "How many other rooms does your current home have?",
           "name": "home-how-many-other-rooms",
           "hint": "For example, 1",

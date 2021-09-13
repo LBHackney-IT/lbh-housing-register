@@ -3,12 +3,11 @@
     {
       "fields": [
         {
-          "type": "number",
+          "type": "verifycode",
           "label": "Verification code",
           "name": "code",
           "validation": {
-            "required": true,
-            "min": 6
+            "required": true
           }
         }
       ]

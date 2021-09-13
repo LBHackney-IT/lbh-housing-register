@@ -92,6 +92,14 @@ export function buildValidationSchema(fields: FormField[]) {
                 `${field.label} must be no more than ${field.validation?.max}`
               );
               break;
+            case 'verifycode':
+              baseType = Yup.string().matches(
+                /^\d{6}$/,
+                `${field.label} must be a 6 digit number`
+              );
+
+              fieldValidation = baseType;
+              break;
           }
           break;
       }

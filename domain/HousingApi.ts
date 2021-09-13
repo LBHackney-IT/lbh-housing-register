@@ -30,7 +30,7 @@ export interface Address {
    * @type {string}
    * @memberof Address
    */
-  postCode?: string;
+  postcode?: string;
   /**
    *
    * @type {string}

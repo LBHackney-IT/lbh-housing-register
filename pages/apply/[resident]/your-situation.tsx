@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { HeadingOne } from '../../../components/content/headings';
 import Form from '../../../components/form/form';
 import Layout from '../../../components/layout/resident-layout';
+import withApplication from '../../../lib/hoc/withApplication';
 import {
   getQuestionValue,
   selectApplicant,
@@ -13,7 +14,7 @@ import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import { FormID, getFormData } from '../../../lib/utils/form-data';
 import Custom404 from '../../404';
 
-export default function YourSituation() {
+const YourSituation = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { resident } = router.query as { resident: string };
@@ -112,3 +113,5 @@ export default function YourSituation() {
     </Layout>
   );
 }
+
+export default withApplication(YourSituation);

@@ -3,7 +3,11 @@ import { useState } from 'react';
 import ContactDetails from '../../../components/applications/contact-details';
 import OtherMembers from '../../../components/applications/other-members';
 import PersonalDetails from '../../../components/applications/personal-details';
-import { HeadingOne, HeadingThree, HeadingTwo } from '../../../components/content/headings';
+import {
+  HeadingOne,
+  HeadingThree,
+  HeadingTwo,
+} from '../../../components/content/headings';
 import Paragraph from '../../../components/content/paragraph';
 import Layout from '../../../components/layout/staff-layout';
 import Tag from '../../../components/tag';
@@ -29,7 +33,7 @@ export function getPersonName(application: Application | undefined) {
   let person = application?.mainApplicant?.person;
   let name = `${person.firstName} ${person.surname}`;
   if (application.otherMembers && application.otherMembers.length > 0) {
-    name += ` (+${application.otherMembers?.length})`
+    name += ` (+${application.otherMembers?.length})`;
   }
   return name;
 }
@@ -43,7 +47,7 @@ export default function ApplicationPage({
   user,
   data,
 }: PageProps): JSX.Element {
-  if (!data.id) return <Custom404 />
+  if (!data.id) return <Custom404 />;
 
   type State = 'overview' | 'actions';
   const [state, setState] = useState<State>('overview');
@@ -53,7 +57,6 @@ export default function ApplicationPage({
       <Layout pageName="View application">
         <HeadingOne content="View application" />
         <HeadingTwo content={getPersonName(data)} />
-
         <button
           onClick={() => {
             setState('overview');
@@ -61,8 +64,7 @@ export default function ApplicationPage({
           className="lbh-link lbh-link--no-visited-state"
         >
           Overview
-        </button>
-        {' '}
+        </button>{' '}
         <button
           onClick={() => {
             setState('actions');
@@ -71,10 +73,8 @@ export default function ApplicationPage({
         >
           Actions
         </button>
-
         <hr />
-
-        {state == 'overview' &&
+        {state == 'overview' && (
           <div className="govuk-grid-row">
             <div className="govuk-grid-column-two-thirds">
               <HeadingThree content="Snapshot" />
@@ -106,28 +106,29 @@ export default function ApplicationPage({
                 className={getStatusTag(data.status || '')}
               />
               <Paragraph>
-                <strong>Application reference</strong><br />
+                <strong>Application reference</strong>
+                <br />
                 {data.reference}
               </Paragraph>
               <Paragraph>
-                <strong>Created date</strong><br />
+                <strong>Created date</strong>
+                <br />
                 {formatDate(data.createdAt)}
               </Paragraph>
               <Paragraph>
-                <strong>Submission date</strong><br />
+                <strong>Submission date</strong>
+                <br />
                 {formatDate(data.submittedAt)}
               </Paragraph>
             </div>
           </div>
-        }
-
-        {state == 'actions' &&
+        )}
+        {state == 'actions' && (
           <>
             <HeadingThree content="Action" />
             <Paragraph>Actions go here...</Paragraph>
           </>
-        }
-
+        )}
       </Layout>
     </UserContext.Provider>
   );

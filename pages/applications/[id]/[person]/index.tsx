@@ -3,7 +3,10 @@ import React from 'react';
 import AddressDetails from '../../../../components/applications/address-details';
 import ContactDetails from '../../../../components/applications/contact-details';
 import PersonalDetails from '../../../../components/applications/personal-details';
-import { HeadingOne, HeadingTwo } from '../../../../components/content/headings';
+import {
+  HeadingOne,
+  HeadingTwo,
+} from '../../../../components/content/headings';
 import Layout from '../../../../components/layout/staff-layout';
 import { HackneyGoogleUser } from '../../../../domain/HackneyGoogleUser';
 import { Application } from '../../../../domain/HousingApi';
@@ -32,17 +35,25 @@ export default function ApplicationPersonPage({
   data,
   person,
 }: PageProps): JSX.Element {
-  if (!data.id) return <Custom404 />
+  if (!data.id) return <Custom404 />;
   let isMainApplicant = data.mainApplicant?.person?.id === person;
   let applicant = isMainApplicant
     ? data.mainApplicant
-    : data.otherMembers?.find(x => x.person?.id === person);
+    : data.otherMembers?.find((x) => x.person?.id === person);
 
   return (
     <UserContext.Provider value={{ user }}>
       <Layout>
-        <HeadingOne content={isMainApplicant ? "Review main applicant" : "Review household member"} />
-        <HeadingTwo content={`${applicant?.person?.firstName} ${applicant?.person?.surname}`} />
+        <HeadingOne
+          content={
+            isMainApplicant
+              ? 'Review main applicant'
+              : 'Review household member'
+          }
+        />
+        <HeadingTwo
+          content={`${applicant?.person?.firstName} ${applicant?.person?.surname}`}
+        />
 
         <hr />
         {applicant && (

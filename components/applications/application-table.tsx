@@ -23,7 +23,6 @@ export default function ApplicationTable({
   caption,
   applications,
 }: TableProps): JSX.Element {
-
   return (
     <>
       {applications.length > 0 ? (
@@ -67,7 +66,9 @@ export default function ApplicationTable({
                     </a>
                   </Link>
                 </td>
-                <td className="govuk-table__cell">{formatDate(application.createdAt)}</td>
+                <td className="govuk-table__cell">
+                  {formatDate(application.createdAt)}
+                </td>
                 <td className="govuk-table__cell">
                   <Tag
                     content={application.status || ''}

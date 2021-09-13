@@ -72,13 +72,17 @@ export default function ApplicationListPage({
         {state == 'new-applications' && (
           <ApplicationTable
             caption="Applications"
-            applications={applications.results?.filter(x => x.status === 'New') ?? []}
+            applications={
+              applications.results?.filter((x) => x.status === 'New') ?? []
+            }
           />
         )}
         {state == 'pending-applications' && (
           <ApplicationTable
             caption="Applications"
-            applications={applications.results?.filter(x => x.status === 'Pending') ?? []}
+            applications={
+              applications.results?.filter((x) => x.status === 'Pending') ?? []
+            }
           />
         )}
       </Layout>

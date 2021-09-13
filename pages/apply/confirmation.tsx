@@ -1,6 +1,4 @@
-import app from 'next/app';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import Button from '../../components/button';
 import { HeadingTwo } from '../../components/content/headings';
@@ -8,19 +6,13 @@ import Paragraph from '../../components/content/paragraph';
 import Layout from '../../components/layout/resident-layout';
 import Panel from '../../components/panel';
 import Timeline, { TimelineEvent } from '../../components/timeline';
+import withApplication from '../../lib/hoc/withApplication';
 import { useAppSelector } from '../../lib/store/hooks';
-import { formatDate } from '../../lib/utils/addressHistory';
 
 const ApplicationConfirmation = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useDispatch();
   const application = useAppSelector((store) => store.application);
-
-  useEffect(() => {
-    if (!application) {
-      router.replace('/');
-    }
-  }, [application]);
 
   const signOut = () => {
     dispatch(signOut());
@@ -68,4 +60,4 @@ const ApplicationConfirmation = (): JSX.Element => {
   );
 };
 
-export default ApplicationConfirmation;
+export default withApplication(ApplicationConfirmation);

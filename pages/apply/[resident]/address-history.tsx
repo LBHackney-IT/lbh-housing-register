@@ -14,6 +14,7 @@ import Select from '../../../components/form/select';
 import { AddressLookupAddress } from '../../../domain/addressLookup';
 import { AddressType } from '../../../domain/HousingApi';
 import { lookUpAddress } from '../../../lib/gateways/internal-api';
+import withApplication from '../../../lib/hoc/withApplication';
 import {
   getQuestionValue,
   selectApplicant,
@@ -459,4 +460,4 @@ const ApplicationStep = (): JSX.Element => {
   );
 };
 
-export default ApplicationStep;
+export default withApplication(ApplicationStep);

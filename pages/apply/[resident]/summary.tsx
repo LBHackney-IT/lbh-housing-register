@@ -23,6 +23,7 @@ import { checkEligible } from '../../../lib/utils/form';
 import Button from '../../../components/button';
 import { isOver18 } from '../../../lib/utils/dateOfBirth';
 import { FormID } from '../../../lib/utils/form-data';
+import withApplication from '../../../lib/hoc/withApplication';
 
 const UserSummary = (): JSX.Element => {
   const router = useRouter();
@@ -161,4 +162,4 @@ const UserSummary = (): JSX.Element => {
   );
 };
 
-export default UserSummary;
+export default withApplication(UserSummary);

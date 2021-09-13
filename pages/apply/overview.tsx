@@ -11,7 +11,6 @@ import SummaryList, {
 import Tag from '../../components/tag';
 import ApplicantName from '../../components/application/ApplicantName';
 import { Applicant } from '../../domain/HousingApi';
-import whenAgreed from '../../lib/hoc/whenAgreed';
 import { useAppSelector } from '../../lib/store/hooks';
 import { applicationStepsRemaining } from '../../lib/utils/resident';
 import { useDispatch } from 'react-redux';
@@ -21,6 +20,7 @@ import {
 } from '../../lib/store/application';
 import { useMemo } from 'react';
 import { checkEligible } from '../../lib/utils/form';
+import withApplication from '../../lib/hoc/withApplication';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
   const router = useRouter();
@@ -127,4 +127,4 @@ const ApplicationPersonsOverview = (): JSX.Element => {
   );
 };
 
-export default whenAgreed(ApplicationPersonsOverview);
+export default withApplication(ApplicationPersonsOverview);

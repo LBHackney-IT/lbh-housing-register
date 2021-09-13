@@ -13,11 +13,6 @@ import { FormID, getFormData } from '../../lib/utils/form-data';
 
 const ApplicationVerifyPage = (): JSX.Element => {
   const router = useRouter();
-  const isLoggedIn = useAppSelector((store) => store.cognitoUser?.username);
-  if (isLoggedIn) {
-    router.push('/apply/overview');
-  }
-
   const dispatch = useAppDispatch();
   const emailAddress = useAppSelector(
     (store) =>
@@ -39,8 +34,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
       })
     );
 
-    // TODO: update to link to household: HRT-102
-    router.push('/apply/household');
+    router.push('/apply/agree-terms');
   };
 
   const resendCode = async (emailAddress: string) => {

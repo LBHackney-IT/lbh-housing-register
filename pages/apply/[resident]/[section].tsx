@@ -5,7 +5,7 @@ import whenAgreed from '../../../lib/hoc/whenAgreed';
 import { applicantHasId, selectApplicant } from '../../../lib/store/applicant';
 import { useAppSelector } from '../../../lib/store/hooks';
 import { getApplicationSectionFromId } from '../../../lib/utils/application-forms';
-import { applicantEqualToOrOlderThanAge } from '../../../lib/utils/dateOfBirth';
+import { isOver18 } from '../../../lib/utils/dateOfBirth';
 import { getApplicationSectionsForResident } from '../../../lib/utils/resident';
 import Custom404 from '../../404';
 
@@ -28,7 +28,7 @@ const ApplicationSection = (): JSX.Element => {
 
   const sectionGroups = getApplicationSectionsForResident(
     applicant === mainResident,
-    applicantEqualToOrOlderThanAge(applicant, 18)
+    isOver18(applicant)
   );
 
   const sectionName =

@@ -21,8 +21,8 @@ import Button from '../../../components/button';
 import * as Yup from 'yup';
 import { Applicant } from '../../../domain/HousingApi';
 import {
-  applicantEqualToOrOlderThanAge,
   getAgeInYearsFromDate,
+  isOver16,
 } from '../../../lib//utils/dateOfBirth';
 
 type State = 'under-sixteen' | 'over-sixteen';
@@ -48,9 +48,7 @@ const ApplicationStep = (): JSX.Element => {
   }
 
   const [state, setState] = useState<State>(
-    applicantEqualToOrOlderThanAge(applicant, 16)
-      ? 'over-sixteen'
-      : 'under-sixteen'
+    isOver16(applicant) ? 'over-sixteen' : 'under-sixteen'
   );
 
   const initialValues = {

@@ -47,11 +47,11 @@ const Pagination = ({
 
     urlWithParams.searchParams.append('page', i.toString());
 
-    if (parameters !== undefined) {
-      if (Array.from(parameters).length > 0) {
-        for (var pair of parameters.entries()) {
-          urlWithParams.searchParams.append(pair[0], pair[1]);
-        }
+    //alert(parameters);
+
+    if (Array.from(parameters).length > 0) {
+      for (var pair of parameters.entries()) {
+        urlWithParams.searchParams.append(pair[0], pair[1]);
       }
     }
 
@@ -70,39 +70,7 @@ const Pagination = ({
       <div className="lbh-pagination__summary">
         Showing {pageStartOffSet}—{pageEndOffSet} of {totalItems} results
       </div>
-      <ul className="lbh-pagination">
-        {page > totalNumberOfPages && (
-          <li className="lbh-pagination__item">
-            <a
-              className="lbh-pagination__link"
-              href="#"
-              aria-label="Previous page"
-            >
-              <span aria-hidden="true" role="presentation">
-                &laquo;
-              </span>
-              Previous
-            </a>
-          </li>
-        )}
-
-        {paginationItems}
-
-        {totalNumberOfPages > 5 && (
-          <li className="lbh-pagination__item">
-            <a
-              className="lbh-pagination__link"
-              href={`${page + 1}`}
-              aria-label="Next page"
-            >
-              Next
-              <span aria-hidden="true" role="presentation">
-                &raquo;
-              </span>
-            </a>
-          </li>
-        )}
-      </ul>
+      <ul className="lbh-pagination">{paginationItems}</ul>
     </nav>
   );
 };

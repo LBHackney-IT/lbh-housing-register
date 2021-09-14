@@ -5,7 +5,10 @@ import Layout from '../../components/layout/staff-layout';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
 import { UserContext } from '../../lib/contexts/user-context';
-import { searchApplication } from '../../lib/gateways/applications-api';
+import {
+  searchApplication,
+  getApplications,
+} from '../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../lib/utils/auth';
 import SearchBox from '../../components/applications/searchBox';
 import React, { useState } from 'react';
@@ -16,47 +19,25 @@ interface PageProps {
   applications: PaginatedApplicationListResponse;
   pageurl: string;
   page: string;
-  nationalInsurance: string;
   reference: string;
-  surname: string;
-  orderby: string;
 }
 
 export default function ApplicationListPage({
   user,
   applications,
   pageurl,
-  page,
-  nationalInsurance,
-  reference,
-  surname,
-  orderby,
+  page = '1',
+  reference = '',
 }: PageProps): JSX.Element {
   const [searchInputValue, setsearchInputValue] = useState('');
   const router = useRouter();
-
-  type State = 'new-applications' | 'pending-applications';
-  const [state, setState] = useState<State>('new-applications');
-
   const parameters = new URLSearchParams();
 
-  if (nationalInsurance !== undefined) {
-    parameters.append('nationalInsurance', nationalInsurance);
-  }
-
-  if (reference !== undefined) {
+  if (reference !== '') {
     parameters.append('reference', reference);
   }
 
-  if (surname !== undefined) {
-    parameters.append('surname', surname);
-  }
-
-  if (orderby !== undefined) {
-    parameters.append('orderby', orderby);
-  }
-
-  const parsedPage = page === undefined ? 1 : parseInt(page);
+  const parsedPage = parseInt(page);
 
   const textChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -66,7 +47,17 @@ export default function ApplicationListPage({
   };
 
   const onSearchSubmit = async () => {
-    router.push(window.location.pathname + '?searchterm=' + searchInputValue);
+    router.push({
+      pathname: '/applications',
+      query: { reference: searchInputValue },
+    });
+  };
+
+  const applicationStatus = async (status: string) => {
+    router.push({
+      pathname: '/applications',
+      query: { status: status },
+    });
   };
 
   return (
@@ -83,7 +74,7 @@ export default function ApplicationListPage({
 
         <button
           onClick={() => {
-            setState('new-applications');
+            applicationStatus('new');
           }}
           className="lbh-link lbh-link--no-visited-state"
         >
@@ -91,39 +82,20 @@ export default function ApplicationListPage({
         </button>
         <button
           onClick={() => {
-            setState('pending-applications');
+            applicationStatus('pending');
           }}
           className="lbh-link lbh-link--no-visited-state"
         >
           Pending applications
         </button>
 
-        {state == 'new-applications' && (
-          <ApplicationTable
-            caption="Applications"
-            applications={applications}
-            currentPage={parsedPage}
-            parameters={parameters}
-            pageurl={pageurl}
-
-            // applications={
-            //   applications.results?.filter((x) => x.status === 'New') ?? []
-            // }
-          />
-        )}
-        {state == 'pending-applications' && (
-          <ApplicationTable
-            caption="Applications"
-            applications={applications}
-            currentPage={parsedPage}
-            parameters={parameters}
-            pageurl={pageurl}
-
-            // applications={
-            //   applications.results?.filter((x) => x.status === 'Pending') ?? []
-            // }
-          />
-        )}
+        <ApplicationTable
+          caption="Applications"
+          applications={applications}
+          currentPage={parsedPage}
+          parameters={parameters}
+          pageurl={pageurl}
+        />
       </Layout>
     </UserContext.Provider>
   );
@@ -144,41 +116,26 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const { page, orderby, nationalInsurance, reference, surname } =
-    context.query as {
-      page: string;
-      nationalInsurance: string;
-      reference: string;
-      surname: string;
-      orderby: string;
-    };
-
-  // const applications =
-  //   searchterm === undefined
-  //     ? await getApplications()
-  //     : await searchApplication(searchterm);
+  const {
+    page = '1',
+    reference = '',
+    orderby = '',
+    status = '',
+  } = context.query as {
+    page: string;
+    reference: string;
+    orderby: string;
+    status: string;
+  };
 
   const pageurl = `http://${context.req.headers.host}/applications`;
 
-  const currentpage: number = page !== undefined ? +page : 1;
-  const nt = nationalInsurance === undefined ? '' : nationalInsurance;
-  const refNo = reference === undefined ? '' : reference;
-  const sname = surname === undefined ? '' : surname;
-  const order = orderby === undefined ? '' : orderby;
-
-  const applications = await searchApplication(currentpage.toString());
+  const applications =
+    reference === '' && status === ''
+      ? await getApplications(page)
+      : await searchApplication(page, reference, status);
 
   return {
-    props: {
-      user,
-      applications,
-      currentpage,
-      pageurl,
-      page,
-      nt,
-      refNo,
-      sname,
-      order,
-    },
+    props: { user, applications, pageurl, page, reference },
   };
 };

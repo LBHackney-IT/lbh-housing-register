@@ -10,20 +10,21 @@ const headersWithKey = {
   'x-api-key': process.env.HOUSING_REGISTER_KEY,
 };
 
-export const getApplications =
-  async (): Promise<PaginatedApplicationListResponse | null> => {
-    try {
-      const { data } = await axios.get(
-        `${process.env.HOUSING_REGISTER_API}/applications`,
-        {
-          headers: headersWithKey,
-        }
-      );
-      return data;
-    } catch (err) {
-      return null;
-    }
-  };
+export const getApplications = async (
+  page: string
+): Promise<PaginatedApplicationListResponse | null> => {
+  try {
+    const { data } = await axios.get(
+      `${process.env.HOUSING_REGISTER_API}/applications?page=${page}`,
+      {
+        headers: headersWithKey,
+      }
+    );
+    return data;
+  } catch (err) {
+    return null;
+  }
+};
 
 export const getApplication = async (
   id: string
@@ -91,11 +92,13 @@ export const getStats = async (): Promise<Array<Stat> | null> => {
 };
 
 export const searchApplication = async (
-  page: string
+  page: string,
+  reference: string,
+  status: string
 ): Promise<PaginatedApplicationListResponse | null> => {
   try {
     const { data } = await axios.get(
-      `${process.env.HOUSING_REGISTER_API}/applications?page=${page}`,
+      `${process.env.HOUSING_REGISTER_API}/applications?page=${page}&reference=${reference}&status=${status}`,
       {
         headers: headersWithKey,
       }

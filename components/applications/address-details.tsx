@@ -23,7 +23,7 @@ export default function AddressDetails({
               <br />
               {address.addressLine3}
               <br />
-              {address.postCode}
+              {address.postcode}
             </p>
           </dd>
           <span className="govuk-summary-list__actions"></span>

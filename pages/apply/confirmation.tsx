@@ -32,11 +32,11 @@ const ApplicationConfirmation = (): JSX.Element => {
 
   return (
     <Layout pageName="Confirmation">
-      <Panel
-        heading="Application complete"
-        message={`Your reference number: ${application.reference?.toUpperCase()}`}
-        email={residentEmail}
-      />
+      <Panel heading="Application complete">
+        <div className="govuk-panel__body">{`Your reference number: ${application.reference?.toUpperCase()}`}</div>
+        <br />
+        <div className="govuk-panel__body">{`We have sent a confirmation email to ${residentEmail}`}</div>
+      </Panel>
 
       <HeadingTwo content="What happens next" />
       <Timeline>

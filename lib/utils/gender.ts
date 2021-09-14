@@ -1,6 +1,4 @@
 import { Applicant } from '../../domain/HousingApi';
-import { getQuestionValue } from '../store/applicant';
-import { FormID } from './form-data';
 
 /**
  * Get the applicants gender as a string
@@ -16,10 +14,6 @@ export const getGenderName = (applicant: Applicant): string => {
       return 'Female';
     default:
     case 'self':
-      return getQuestionValue(
-        applicant.questions,
-        FormID.PERSONAL_DETAILS,
-        'self-describe'
-      );
+      return applicant.person?.genderDescription ?? '';
   }
 };

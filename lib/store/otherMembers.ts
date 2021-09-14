@@ -50,6 +50,7 @@ const slice = createSlice({
           surname: action.payload.surname,
           dateOfBirth: action.payload.dateOfBirth,
           gender: action.payload.gender,
+          genderDescription: action.payload.genderDescription,
           nationalInsuranceNumber: action.payload.nationalInsuranceNumber,
           relationshipType: action.payload.relationshipType,
         },

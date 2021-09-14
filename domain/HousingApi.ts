@@ -78,12 +78,6 @@ export interface Applicant {
    * @type {Array<Question>}
    * @memberof Applicant
    */
-  eligibility?: Array<Question>;
-  /**
-   *
-   * @type {Array<Question>}
-   * @memberof Applicant
-   */
   questions?: Array<Question>;
 }
 
@@ -232,24 +226,6 @@ export interface Person {
    * @type {string}
    * @memberof Person
    */
-  ethnicity?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof Person
-   */
-  nationality?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof Person
-   */
-  placeOfBirth?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof Person
-   */
   dateOfBirth?: string;
   /**
    *
@@ -257,6 +233,12 @@ export interface Person {
    * @memberof Person
    */
   gender?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Person
+   */
+  genderDescription?: string;
   /**
    *
    * @type {string}

@@ -3,7 +3,7 @@ import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import {
   getApplication,
   updateApplication,
-} from '../../../lib/gateways/applications-api';
+} from '../../../../lib/gateways/applications-api';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,

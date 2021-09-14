@@ -8,6 +8,7 @@ import Panel from '../../components/panel';
 import Timeline, { TimelineEvent } from '../../components/timeline';
 import withApplication from '../../lib/hoc/withApplication';
 import { useAppSelector } from '../../lib/store/hooks';
+import { formatDate } from '../../lib/utils/dateOfBirth';
 
 const ApplicationConfirmation = (): JSX.Element => {
   const router = useRouter();
@@ -30,7 +31,7 @@ const ApplicationConfirmation = (): JSX.Element => {
       <Timeline>
         <TimelineEvent heading="Application submitted" variant="action-needed">
           <Paragraph>
-            {application.submittedAt || 'date not available'}
+            {formatDate(application.submittedAt)}
           </Paragraph>
         </TimelineEvent>
         <TimelineEvent heading="Application review">

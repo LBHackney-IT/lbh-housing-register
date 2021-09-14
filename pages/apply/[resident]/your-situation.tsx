@@ -63,7 +63,7 @@ const YourSituation = (): JSX.Element => {
     },
     {
       href: `${baseHref}/your-situation`,
-      name: `Your Situation`,
+      name: `Your situation`,
     },
   ];
 

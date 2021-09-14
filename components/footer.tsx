@@ -23,7 +23,7 @@ const Footer = ({ referenceNumber }: FooterProps) => {
         <HeadingThree content="Help" />
         <Paragraph>
           If you need help completing this form, please contact us quoting your
-          <strong> application reference {referenceNumber}</strong> and we will
+          <strong> application reference {referenceNumber.toUpperCase()}</strong> and we will
           assist you
           <br />
           <button

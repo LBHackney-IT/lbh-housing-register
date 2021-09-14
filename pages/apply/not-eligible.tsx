@@ -8,8 +8,9 @@ import List, { ListItem } from '../../components/content/list';
 import Paragraph from '../../components/content/paragraph';
 import Layout from '../../components/layout/resident-layout';
 import Panel from '../../components/panel';
+import withApplication from '../../lib/hoc/withApplication';
 
-export default function NotEligible(): JSX.Element {
+const NotEligible = (): JSX.Element => {
   const application = useAppSelector((store) => store.application);
 
   const mainApplicant = useAppSelector(
@@ -68,4 +69,6 @@ export default function NotEligible(): JSX.Element {
       </ButtonLink>
     </Layout>
   );
-}
+};
+
+export default withApplication(NotEligible);

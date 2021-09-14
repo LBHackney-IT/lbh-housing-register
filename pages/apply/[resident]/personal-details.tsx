@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import ApplicantStep from '../../../components/application/ApplicantStep';
 import Form from '../../../components/form/form';
+import withApplication from '../../../lib/hoc/withApplication';
 import {
   getQuestionsForFormAsValues,
   selectApplicant,
@@ -94,4 +95,4 @@ const ApplicationStep = (): JSX.Element => {
   );
 };
 
-export default ApplicationStep;
+export default withApplication(ApplicationStep);

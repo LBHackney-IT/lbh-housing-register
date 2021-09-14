@@ -11,7 +11,6 @@ import SummaryList, {
   SummaryListValue,
 } from '../../../components/summary-list';
 import Tag from '../../../components/tag';
-import whenAgreed from '../../../lib/hoc/whenAgreed';
 import {
   getQuestionValue,
   selectApplicant,
@@ -28,6 +27,7 @@ import { isOver18 } from '../../../lib/utils/dateOfBirth';
 import { FormID } from '../../../lib/utils/form-data';
 import { Applicant } from '../../../domain/HousingApi';
 import { checkEligible } from '../../../lib/utils/form';
+import withApplication from '../../../lib/hoc/withApplication';
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter();
@@ -192,4 +192,4 @@ const ApplicationStep = (): JSX.Element => {
   );
 };
 
-export default whenAgreed(ApplicationStep);
+export default withApplication(ApplicationStep);

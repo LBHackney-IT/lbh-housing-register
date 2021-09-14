@@ -24,14 +24,9 @@ import {
   getAgeInYearsFromDate,
   isOver16,
 } from '../../../lib//utils/dateOfBirth';
+import { formatDate } from '../../../lib/utils/form';
 
 type State = 'under-sixteen' | 'over-sixteen';
-
-export function formatDate(date: Date) {
-  return `${date.toLocaleString('default', {
-    month: 'long',
-  })} ${date.getFullYear()}`;
-}
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter();

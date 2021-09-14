@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
@@ -16,7 +16,7 @@ import {
   selectApplicant,
 } from '../../../lib/store/applicant';
 import { useAppSelector } from '../../../lib/store/hooks';
-import { deleteApplicant } from '../../../lib/store/otherMembers';
+import { deleteApplicant, removeApplicant } from '../../../lib/store/otherMembers';
 import {
   applicationStepsRemaining,
   getApplicationSectionsForResident,
@@ -29,7 +29,7 @@ import { Applicant } from '../../../domain/HousingApi';
 import { checkEligible } from '../../../lib/utils/form';
 import withApplication from '../../../lib/hoc/withApplication';
 
-const ApplicationStep = (): JSX.Element => {
+const ResidentIndex = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { resident } = router.query as { resident: string };
@@ -37,7 +37,7 @@ const ApplicationStep = (): JSX.Element => {
   const currentResident = useAppSelector(selectApplicant(resident));
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
 
-  if (!currentResident) {
+  if (!currentResident || !mainResident) {
     return <Custom404 />;
   }
 
@@ -45,30 +45,10 @@ const ApplicationStep = (): JSX.Element => {
   const returnHref = '/apply/overview';
   const checkAnswers = `${baseHref}/summary`;
 
-  const applicants = useAppSelector((store) =>
-    [store.application.mainApplicant, store.application.otherMembers]
-      .filter((v): v is Applicant | Applicant[] => v !== undefined)
-      .flat()
-  );
-
-  const eligibilityMap = useMemo(
-    () =>
-      new Map(
-        applicants.map((applicant) => [
-          applicant,
-          checkEligible(applicant, applicant === mainResident)[0],
-        ])
-      ),
-    [applicants]
-  );
-
-  applicants.map((applicant, index) => {
-    const isEligible = eligibilityMap.get(applicant);
-
-    if (!isEligible) {
-      router.push(checkAnswers);
-    }
-  });
+  const [isEligible] = checkEligible(mainResident);
+  if (!isEligible) {
+    router.push(checkAnswers);
+  }
 
   const steps = getApplicationSectionsForResident(
     currentResident === mainResident,
@@ -99,7 +79,8 @@ const ApplicationStep = (): JSX.Element => {
   ];
 
   const onDelete = () => {
-    dispatch(deleteApplicant(currentResident));
+    dispatch(removeApplicant(currentResident.person.id));
+
     router.push(returnHref);
   };
 
@@ -192,4 +173,4 @@ const ApplicationStep = (): JSX.Element => {
   );
 };
 
-export default withApplication(ApplicationStep);
+export default withApplication(ResidentIndex);

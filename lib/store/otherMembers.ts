@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FormikValues } from 'formik';
+import { Store } from '.';
 import { Applicant } from '../../domain/HousingApi';
 import {
   applyQuestions,
@@ -9,6 +10,16 @@ import {
 } from './applicant';
 
 const initialState: Applicant[] = [];
+
+export const removeApplicant = createAsyncThunk(
+  'applicant/remove',
+  async (id: string, { getState }) => {
+    const store: Store = getState() as Store;
+    return store.application.otherMembers?.filter(
+      (resident) => resident.person?.id !== id
+    )
+  }
+);
 
 const slice = createSlice({
   name: 'otherMembers',
@@ -61,12 +72,12 @@ const slice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(removeApplicant.fulfilled, (state, action) => action.payload)
       .addCase(updateApplicant, (state = [], action) => {
         const applicant = state.findIndex(
           (p) => p.person?.id && p.person.id === action.payload.person.id
         );
         if (applicant > -1) {
-          // Immer
           state[applicant] = updateApplicantReducer(
             state[applicant],
             action.payload
@@ -82,8 +93,6 @@ const slice = createSlice({
           if (action.payload.markAsComplete) {
             action.payload.values['sectionCompleted'] = true;
           }
-
-          // Immer
           state[applicant] = applyQuestions(
             state[applicant],
             action.payload.formID,

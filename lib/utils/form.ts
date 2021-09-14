@@ -37,8 +37,7 @@ export function getDisplayStateOfField(
  * @returns {[boolean, string[]]} - A tuple of state (isValid) and error message
  */
 export function checkEligible(
-  applicant: Applicant,
-  isMainApplicant: boolean
+  applicant: Applicant
 ): [boolean, string[]] {
   let isValid = true;
   let reasons: string[] = [];
@@ -51,10 +50,8 @@ export function checkEligible(
     }
   };
 
-  if (isMainApplicant) {
-    if (!isOver18(applicant)) {
-      setInvalid('Main Applicant is not over 18');
-    }
+  if (!isOver18(applicant)) {
+    setInvalid('Applicant is not over 18');
   }
 
   for (const [form, values] of Object.entries(FormID)) {

@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import { HeadingOne } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
 import Layout from '../../components/layout/resident-layout';
@@ -7,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { agree } from '../../lib/store/mainApplicant';
 import { getFormData, FormID } from '../../lib/utils/form-data';
 import Form from '../../components/form/form';
-import router, { useRouter } from 'next/router';
+import router from 'next/router';
 
 const ApplicationTermsPage = (): JSX.Element => {
   // TODO: might not be right place for this,

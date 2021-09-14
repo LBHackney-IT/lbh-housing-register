@@ -30,9 +30,7 @@ const ApplicationConfirmation = (): JSX.Element => {
       <HeadingTwo content="What happens next" />
       <Timeline>
         <TimelineEvent heading="Application submitted" variant="action-needed">
-          <Paragraph>
-            {formatDate(application.submittedAt)}
-          </Paragraph>
+          <Paragraph>{formatDate(application.submittedAt)}</Paragraph>
         </TimelineEvent>
         <TimelineEvent heading="Application review">
           <Paragraph>We aim to review applications within two weeks.</Paragraph>

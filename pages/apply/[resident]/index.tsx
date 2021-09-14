@@ -1,4 +1,3 @@
-import { useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
@@ -16,7 +15,7 @@ import {
   selectApplicant,
 } from '../../../lib/store/applicant';
 import { useAppSelector } from '../../../lib/store/hooks';
-import { deleteApplicant, removeApplicant } from '../../../lib/store/otherMembers';
+import { removeApplicant } from '../../../lib/store/otherMembers';
 import {
   applicationStepsRemaining,
   getApplicationSectionsForResident,
@@ -25,7 +24,6 @@ import Custom404 from '../../404';
 import Button, { ButtonLink } from '../../../components/button';
 import { isOver18 } from '../../../lib/utils/dateOfBirth';
 import { FormID } from '../../../lib/utils/form-data';
-import { Applicant } from '../../../domain/HousingApi';
 import { checkEligible } from '../../../lib/utils/form';
 import withApplication from '../../../lib/hoc/withApplication';
 

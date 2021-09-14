@@ -39,7 +39,7 @@ export const updateApplication = createAsyncThunk(
       method: 'PATCH',
       body: JSON.stringify(application),
     });
-    return await res.json() as Application;
+    return (await res.json()) as Application;
   }
 );
 

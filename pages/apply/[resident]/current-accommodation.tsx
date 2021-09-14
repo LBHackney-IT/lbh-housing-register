@@ -6,7 +6,6 @@ import Form from '../../../components/form/form';
 import Layout from '../../../components/layout/resident-layout';
 import withApplication from '../../../lib/hoc/withApplication';
 import {
-  getQuestionValue,
   selectApplicant,
   updateWithFormValues,
   getQuestionsForFormAsValues,

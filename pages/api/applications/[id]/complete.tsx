@@ -1,15 +1,12 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import {
-  completeApplication,
-} from '../../../../lib/gateways/applications-api';
+import { completeApplication } from '../../../../lib/gateways/applications-api';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
   switch (req.method) {
-
     case 'PATCH':
       try {
         const id = req.query.id as string;

@@ -18,7 +18,6 @@ import {
   sendConfirmation,
   completeApplication,
 } from '../../lib/store/application';
-import React, { useMemo } from 'react';
 import { checkEligible } from '../../lib/utils/form';
 import withApplication from '../../lib/hoc/withApplication';
 import Custom404 from '../404';

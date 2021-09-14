@@ -17,7 +17,7 @@ export const removeApplicant = createAsyncThunk(
     const store: Store = getState() as Store;
     return store.application.otherMembers?.filter(
       (resident) => resident.person?.id !== id
-    )
+    );
   }
 );
 

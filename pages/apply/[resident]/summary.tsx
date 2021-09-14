@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import Layout from '../../../components/layout/resident-layout';
 import {
   selectApplicant,
@@ -18,7 +17,6 @@ import { IncomeSavingsSummary } from '../../../components/summary/IncomeSavings'
 import { MedicalNeedsSummary } from '../../../components/summary/MedicalNeeds';
 import { ResidentialStatusSummary } from '../../../components/summary/ResidentialStatus';
 import { YourSituationSummary } from '../../../components/summary/YourSituation';
-import { Applicant } from '../../../domain/HousingApi';
 import { checkEligible } from '../../../lib/utils/form';
 import Button from '../../../components/button';
 import { isOver18 } from '../../../lib/utils/dateOfBirth';

@@ -36,9 +36,7 @@ export function getDisplayStateOfField(
  * @param applicant The applicant
  * @returns {[boolean, string[]]} - A tuple of state (isValid) and error message
  */
-export function checkEligible(
-  applicant: Applicant
-): [boolean, string[]] {
+export function checkEligible(applicant: Applicant): [boolean, string[]] {
   let isValid = true;
   let reasons: string[] = [];
 

@@ -33,9 +33,13 @@ const ApplicationConfirmation = (): JSX.Element => {
   return (
     <Layout pageName="Confirmation">
       <Panel heading="Application complete">
-        <div className="govuk-panel__body">{`Your reference number: ${application.reference?.toUpperCase()}`}</div>
-        <br />
-        <div className="govuk-panel__body">{`We have sent a confirmation email to ${residentEmail}`}</div>
+        <>
+          {`Your reference number: ${application.reference?.toUpperCase()}`}
+          <br />
+          <span style={{ display: 'block', fontSize: '1.2rem', overflowWrap: 'break-word' }}>
+            {`We have sent a confirmation email to ${residentEmail}`}
+          </span>
+        </>
       </Panel>
 
       <HeadingTwo content="What happens next" />

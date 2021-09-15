@@ -137,6 +137,23 @@ export function CurrentAccommodationSummary({
             <Paragraph>
               My home has{' '}
               <strong>
+                {lookupAnswer('home-how-many-livingrooms')} living room(s)
+              </strong>
+            </Paragraph>
+          </SummaryAnswer>
+          <SummaryAnswer>
+            <Paragraph>
+              My home has{' '}
+              <strong>
+                {lookupAnswer('home-how-many-diningrooms')} dining room(s)
+              </strong>
+            </Paragraph>
+          </SummaryAnswer>
+
+          <SummaryAnswer>
+            <Paragraph>
+              My home has{' '}
+              <strong>
                 {lookupAnswer('home-how-many-bathrooms')} bathroom(s)
               </strong>
             </Paragraph>
@@ -155,15 +172,6 @@ export function CurrentAccommodationSummary({
               <strong>
                 {lookupAnswer('home-how-many-other-rooms')} other room(s)
               </strong>
-            </Paragraph>
-          </SummaryAnswer>
-          <SummaryAnswer>
-            <Paragraph>
-              I have{' '}
-              <strong>
-                {lookupAnswer('home-how-many-personal-rooms')} room(s)
-              </strong>{' '}
-              for my own personal use
             </Paragraph>
           </SummaryAnswer>
         </>

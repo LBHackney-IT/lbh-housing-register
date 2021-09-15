@@ -37,26 +37,44 @@ export function calculateDurations(entries: AddressHistoryEntry[]) {
   if (!entries) return [];
 
   return entries.map((entry) => {
-    let until = new Date(entry.dateTo);
     const from = new Date(entry.date);
 
-    const untilInMonths = until.getFullYear() * 12 + until.getMonth();
-    const fromInMonths = from.getFullYear() * 12 + from.getMonth();
+    if (entry.dateTo) {
+      let until = new Date(entry.dateTo);
 
+      const untilInMonths = until.getFullYear() * 12 + until.getMonth();
+      const fromInMonths = from.getFullYear() * 12 + from.getMonth();
+
+      const years = Math.floor((untilInMonths - fromInMonths) / 12);
+      const months = (untilInMonths - fromInMonths) % 12;
+
+      const r = {
+        until,
+        from,
+        years,
+        months,
+        label: `${years} year${years !== 1 ? 's' : ''} ${months} month${
+          months !== 1 ? 's' : ''
+        } (${formatDate(from)} – ${formatDate(until)})`,
+      };
+
+      until = from;
+      return r;
+    }
+
+    const untilInMonths = new Date().getFullYear() * 12 + new Date().getMonth();
+    const fromInMonths = from.getFullYear() * 12 + from.getMonth();
     const years = Math.floor((untilInMonths - fromInMonths) / 12);
     const months = (untilInMonths - fromInMonths) % 12;
 
     const r = {
-      until,
       from,
       years,
       months,
       label: `${years} year${years !== 1 ? 's' : ''} ${months} month${
         months !== 1 ? 's' : ''
-      } (${formatDate(from)} – ${formatDate(until)})`,
+      } (${formatDate(from)} - Now)`,
     };
-
-    until = from;
     return r;
   });
 }

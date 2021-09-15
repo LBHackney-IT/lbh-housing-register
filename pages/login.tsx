@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { ButtonLink } from '../components/button';
 import { HeadingOne } from '../components/content/headings';
 import Paragraph from '../components/content/paragraph';
-import Layout from '../components/layout/resident-layout';
+import Layout from '../components/layout/staff-layout';
 
 interface LoginProps {
   appUrl: string;

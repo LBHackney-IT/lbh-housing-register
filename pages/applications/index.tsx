@@ -1,16 +1,12 @@
 import { GetServerSideProps } from 'next';
 import ApplicationTable from '../../components/applications/application-table';
 import { HeadingOne } from '../../components/content/headings';
-import Paragraph from '../../components/content/paragraph';
 import Layout from '../../components/layout/staff-layout';
-import { Stats } from '../../components/stats';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { ApplicationList } from '../../domain/HousingApi';
-import { Stat } from '../../domain/stat';
 import { UserContext } from '../../lib/contexts/user-context';
 import {
   getApplications,
-  getStats,
   searchApplication,
 } from '../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../lib/utils/auth';
@@ -21,16 +17,17 @@ import { useRouter } from 'next/router';
 interface PageProps {
   user: HackneyGoogleUser;
   applications: ApplicationList;
-  stats: Array<Stat>;
 }
 
 export default function ApplicationListPage({
   user,
   applications,
-  stats,
 }: PageProps): JSX.Element {
   const [searchInputValue, setsearchInputValue] = useState('');
   const router = useRouter();
+
+  type State = 'new-applications' | 'pending-applications';
+  const [state, setState] = useState<State>('new-applications');
 
   const textChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -45,7 +42,7 @@ export default function ApplicationListPage({
 
   return (
     <UserContext.Provider value={{ user }}>
-      <Layout>
+      <Layout pageName="Manage applications">
         <SearchBox
           title="Housing Register"
           buttonTitle="Search"
@@ -53,17 +50,40 @@ export default function ApplicationListPage({
           onSearch={onSearchSubmit}
           textChangeHandler={textChangeHandler}
         />
-        <HeadingOne content="Staff dashboard" />
-        {stats && (
-          <Stats className="govuk-grid-column-one-third" stats={stats} />
-        )}
-        {applications.results?.length ? (
+        <HeadingOne content="View housing register" />
+
+        <button
+          onClick={() => {
+            setState('new-applications');
+          }}
+          className="lbh-link lbh-link--no-visited-state"
+        >
+          New applications
+        </button>
+        <button
+          onClick={() => {
+            setState('pending-applications');
+          }}
+          className="lbh-link lbh-link--no-visited-state"
+        >
+          Pending applications
+        </button>
+
+        {state == 'new-applications' && (
           <ApplicationTable
             caption="Applications"
-            applications={applications}
+            applications={
+              applications.results?.filter((x) => x.status === 'New') ?? []
+            }
           />
-        ) : (
-          <Paragraph>No applications to show</Paragraph>
+        )}
+        {state == 'pending-applications' && (
+          <ApplicationTable
+            caption="Applications"
+            applications={
+              applications.results?.filter((x) => x.status === 'Pending') ?? []
+            }
+          />
         )}
       </Layout>
     </UserContext.Provider>
@@ -94,7 +114,5 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       ? await getApplications()
       : await searchApplication(searchterm);
 
-  const stats = await getStats();
-
-  return { props: { user, applications, stats } };
+  return { props: { user, applications } };
 };

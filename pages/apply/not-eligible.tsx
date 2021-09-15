@@ -1,25 +1,32 @@
-import Link from 'next/link';
 import { useMemo } from 'react';
 import { useAppSelector } from '../../lib/store/hooks';
 import { checkEligible } from '../../lib/utils/form';
 import { ButtonLink } from '../../components/button';
-import { HeadingOne, HeadingTwo } from '../../components/content/headings';
+import { HeadingTwo } from '../../components/content/headings';
 import InsetText from '../../components/content/inset-text';
 import List, { ListItem } from '../../components/content/list';
 import Paragraph from '../../components/content/paragraph';
 import Layout from '../../components/layout/resident-layout';
 import Panel from '../../components/panel';
+import withApplication from '../../lib/hoc/withApplication';
+import { useRouter } from 'next/router';
 
-export default function NotEligible(): JSX.Element {
+const NotEligible = (): JSX.Element => {
+  const router = useRouter();
+
   const application = useAppSelector((store) => store.application);
-
   const mainApplicant = useAppSelector(
     (store) => store.application.mainApplicant
   );
+
   const [isEligible, reasons] = useMemo(
-    () => (mainApplicant && checkEligible(mainApplicant, true)) ?? [],
+    () => (mainApplicant && checkEligible(mainApplicant)) ?? [],
     [mainApplicant]
   );
+
+  if (isEligible) {
+    router.push('/apply/overview');
+  }
 
   return (
     <Layout>
@@ -68,4 +75,6 @@ export default function NotEligible(): JSX.Element {
       </ButtonLink>
     </Layout>
   );
-}
+};
+
+export default withApplication(NotEligible);

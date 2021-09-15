@@ -1,10 +1,8 @@
 import { ReactElement, ReactNode } from 'react';
 import { Applicant } from '../../domain/HousingApi';
-import whenAgreed from '../../lib/hoc/whenAgreed';
 import { FormID, getFormData } from '../../lib/utils/form-data';
 import { HeadingOne } from '../content/headings';
 import Paragraph from '../content/paragraph';
-import Hint from '../form/hint';
 import Layout from '../layout/resident-layout';
 
 function ApplicantStep({
@@ -47,4 +45,4 @@ function ApplicantStep({
     </Layout>
   );
 }
-export default whenAgreed(ApplicantStep);
+export default ApplicantStep;

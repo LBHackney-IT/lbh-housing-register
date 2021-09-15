@@ -42,7 +42,6 @@ const slice = createSlice({
           if (action.payload.markAsComplete) {
             action.payload.values['sectionCompleted'] = true;
           }
-
           return applyQuestions(
             state,
             action.payload.formID,

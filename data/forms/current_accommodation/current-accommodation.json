@@ -1,0 +1,265 @@
+{
+  "heading": "Current accommodation",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "What best describes your current living situation?",
+          "name": "living-situation",
+          "options": [
+            {
+              "label": "Living with parents",
+              "value": "living-with-parents"
+            },
+            {
+              "label": "Living with friends",
+              "value": "living-with-friends"
+            },
+            {
+              "label": "Living with relatives",
+              "value": "living-with-relatives"
+            },
+            {
+              "label": "Temporary accommodation",
+              "value": "temp-accomodation"
+            },
+            {
+              "label": "Private rental",
+              "value": "private-rental"
+            },
+            {
+              "label": "Owner occupier",
+              "value": "owner-occupier"
+            },
+            {
+              "label": "No fixed abode",
+              "value": "no-fixed-abode"
+            },
+            {
+              "label": "Squatter",
+              "value": "squatter"
+            },
+            {
+              "label": "B&B, Hotel or Hostel",
+              "value": "b&b-hotel-hostel"
+            },
+            {
+              "label": "Lodger",
+              "value": "lodger"
+            },
+            {
+              "label": "Unauthorised occupant",
+              "value": "unauthorised-occupant"
+            },
+            {
+              "label": "Tied accommodation",
+              "value": "tied-accommodation"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    },
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "What best describes your home?",
+          "name": "home",
+          "options": [
+            {
+              "label": "House",
+              "value": "house"
+            },
+            {
+              "label": "Flat",
+              "value": "flat"
+            },
+            {
+              "label": "Flat above a shop",
+              "value": "flat-above-shop"
+            },
+            {
+              "label": "Maisonnette",
+              "value": "maisonnette"
+            },
+            {
+              "label": "Bungalow",
+              "value": "bungalow"
+            },
+            {
+              "label": "Hotel or hostel",
+              "value": "hotel-hostel"
+            },
+            {
+              "label": "Boat",
+              "value": "boat"
+            },
+            {
+              "label": "Caravan",
+              "value": "caravan"
+            },
+            {
+              "label": "Studio",
+              "value": "studio"
+            },
+            {
+              "label": "Other",
+              "value": "other"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    },
+    {
+      "fields": [
+        {
+          "label": "What floor is your home on?",
+          "name": "home-floor",
+          "hint": "For example, ground floor, or ground and first floor’",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "type": "number",
+          "min": 0,
+          "label": "How many people do you share your home with?",
+          "name": "home-how-many-people-share",
+          "hint": "For example, 1",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "type": "number",
+          "min": 0,
+          "label": "How many bedrooms does your current home have?",
+          "name": "home-how-many-bedrooms",
+          "hint": "For example, 1",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "type": "number",
+          "min": 0,
+          "label": "How many living rooms does your current home have?",
+          "name": "home-how-many-livingrooms",
+          "hint": "For example, 1",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "type": "number",
+          "min": 0,
+          "label": "How many dining rooms does your current home have?",
+          "name": "home-how-many-diningrooms",
+          "hint": "For example, 1",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "type": "number",
+          "min": 0,
+          "label": "How many bathrooms does your current home have?",
+          "name": "home-how-many-bathrooms",
+          "hint": "For example, 1",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "type": "number",
+          "min": 0,
+          "label": "How many kitchens does your current home have?",
+          "name": "home-how-many-kitchens",
+          "hint": "For example, 1",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "type": "number",
+          "min": 0,
+          "label": "How many other rooms does your current home have?",
+          "name": "home-how-many-other-rooms",
+          "hint": "For example, 1",
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ],
+  "conditionals": [
+    {
+      "fieldId": "living-situation",
+      "value": "tied-accommodation",
+      "nextFormId": "current-accommodation-landlord-details"
+    },
+    {
+      "fieldId": "living-situation",
+      "value": "b&b-hotel-hostel",
+      "nextFormId": "current-accommodation-landlord-details"
+    },
+    {
+      "fieldId": "living-situation",
+      "value": "private-rental",
+      "nextFormId": "current-accommodation-landlord-details"
+    },
+    {
+      "fieldId": "living-situation",
+      "value": "squatter",
+      "nextFormId": "current-accommodation-landlord-details"
+    },
+    {
+      "fieldId": "living-situation",
+      "value": "unauthorised-occupant",
+      "nextFormId": "current-accommodation-landlord-details"
+    },
+    {
+      "fieldId": "living-situation",
+      "value": "temp-accomodation",
+      "nextFormId": "current-accommodation-landlord-details"
+    },
+    {
+      "fieldId": "living-situation",
+      "value": "owner-occupier",
+      "nextFormId": "current-accommodation-landlord-details"
+    },
+    {
+      "fieldId": "living-situation",
+      "value": "lodger",
+      "nextFormId": "current-accommodation-host-details"
+    },
+    {
+      "fieldId": "living-situation",
+      "value": "living-with-parents",
+      "nextFormId": "current-accommodation-host-details"
+    },
+    {
+      "fieldId": "living-situation",
+      "value": "living-with-friends",
+      "nextFormId": "current-accommodation-host-details"
+    },
+    {
+      "fieldId": "living-situation",
+      "value": "living-with-relatives",
+      "nextFormId": "current-accommodation-host-details"
+    },
+    {
+      "fieldId": "living-situation",
+      "value": "no-fixed-abode",
+      "nextFormId": "current-accommodation-host-details"
+    }
+  ]
+}

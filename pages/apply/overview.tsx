@@ -11,20 +11,23 @@ import SummaryList, {
 import Tag from '../../components/tag';
 import ApplicantName from '../../components/application/ApplicantName';
 import { Applicant } from '../../domain/HousingApi';
-import { useAppSelector } from '../../lib/store/hooks';
+import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { applicationStepsRemaining } from '../../lib/utils/resident';
-import { useDispatch } from 'react-redux';
 import {
   sendConfirmation,
   completeApplication,
 } from '../../lib/store/application';
+import ErrorSummary from '../../components/errors/error-summary';
+import { useState } from 'react';
 import { checkEligible } from '../../lib/utils/form';
 import withApplication from '../../lib/hoc/withApplication';
 import Custom404 from '../404';
+import { Errors } from '../../lib/utils/errors';
+import { scrollToError } from '../../lib/utils/scroll';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
   if (!mainResident) {
@@ -32,6 +35,8 @@ const ApplicationPersonsOverview = (): JSX.Element => {
   }
 
   const application = useAppSelector((store) => store.application);
+  const [userError, setUserError] = useState<string | null>(null);
+
   const applicants = useAppSelector((store) =>
     [store.application.mainApplicant, store.application.otherMembers]
       .filter((v): v is Applicant | Applicant[] => v !== undefined)
@@ -51,15 +56,23 @@ const ApplicationPersonsOverview = (): JSX.Element => {
       router.push('/apply/not-eligible');
     } else {
       dispatch(sendConfirmation(application));
-      dispatch(completeApplication(application));
-
-      router.push('/apply/submit/additional-questions');
+      dispatch(completeApplication(application)).then(
+        (completeApplicationResult: any) => {
+          if (completeApplicationResult.error) {
+            setUserError(Errors.API_ERROR);
+            scrollToError();
+          } else {
+            router.push('/apply/submit/additional-questions');
+          }
+        }
+      );
     }
   };
 
   return (
     <Layout pageName="Application overview" breadcrumbs={breadcrumbs}>
       <HeadingOne content="Tasks to complete" />
+      {userError && <ErrorSummary>{userError}</ErrorSummary>}
 
       <SummaryList>
         {applicants.map((applicant, index) => {

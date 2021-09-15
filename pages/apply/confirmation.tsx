@@ -14,6 +14,9 @@ const ApplicationConfirmation = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useDispatch();
   const application = useAppSelector((store) => store.application);
+  const residentEmail = useAppSelector(
+    (store) => store.cognitoUser?.attributes.email
+  );
 
   const signOut = () => {
     dispatch(signOut());
@@ -22,10 +25,15 @@ const ApplicationConfirmation = (): JSX.Element => {
 
   return (
     <Layout pageName="Confirmation">
-      <Panel
-        heading="Application complete"
-        message={`Your reference number: ${application.reference?.toUpperCase()}`}
-      />
+      <Panel heading="Application complete">
+        <>
+          {`Your reference number: ${application.reference?.toUpperCase()}`}
+          <br />
+          <span style={{ display: 'block', fontSize: '1.2rem', overflowWrap: 'break-word' }}>
+            {`We have sent a confirmation email to ${residentEmail}`}
+          </span>
+        </>
+      </Panel>
 
       <HeadingTwo content="What happens next" />
       <Timeline>

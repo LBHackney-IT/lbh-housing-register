@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import Layout from '../../../components/layout/resident-layout';
 import {
   selectApplicant,
@@ -18,53 +17,32 @@ import { IncomeSavingsSummary } from '../../../components/summary/IncomeSavings'
 import { MedicalNeedsSummary } from '../../../components/summary/MedicalNeeds';
 import { ResidentialStatusSummary } from '../../../components/summary/ResidentialStatus';
 import { YourSituationSummary } from '../../../components/summary/YourSituation';
-import { Applicant } from '../../../domain/HousingApi';
 import { checkEligible } from '../../../lib/utils/form';
 import Button from '../../../components/button';
 import { isOver18 } from '../../../lib/utils/dateOfBirth';
 import { FormID } from '../../../lib/utils/form-data';
 import withApplication from '../../../lib/hoc/withApplication';
+import { removeApplicant } from '../../../lib/store/otherMembers';
+import { useDispatch } from 'react-redux';
 
 const UserSummary = (): JSX.Element => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const { resident } = router.query as { resident: string };
 
   const currentResident = useAppSelector(selectApplicant(resident));
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
   const isMainApplicant = currentResident == mainResident;
 
-  if (!currentResident) {
+  if (!currentResident || !mainResident) {
     return <Custom404 />;
   }
 
   const baseHref = `/apply/${currentResident.person?.id}`;
   const returnHref = '/apply/overview';
 
-  const applicants = useAppSelector((store) =>
-    [store.application.mainApplicant, store.application.otherMembers]
-      .filter((v): v is Applicant | Applicant[] => v !== undefined)
-      .flat()
-  );
-
-  const eligibilityMap = useMemo(
-    () =>
-      new Map(
-        applicants.map((applicant) => [
-          applicant,
-          checkEligible(applicant, isMainApplicant)[0],
-        ])
-      ),
-    [applicants]
-  );
-
   const onConfirmData = () => {
-    let isEligible = true;
-    applicants.map((applicant, index) => {
-      if (!eligibilityMap.get(applicant)) {
-        isEligible = false;
-      }
-    });
-
+    const [isEligible] = checkEligible(mainResident);
     if (!isEligible) {
       router.push('/apply/not-eligible');
     } else {
@@ -73,7 +51,7 @@ const UserSummary = (): JSX.Element => {
   };
 
   const onDelete = () => {
-    // TODO: delete applicant
+    dispatch(removeApplicant(currentResident.person.id));
     router.push(returnHref);
   };
 
@@ -163,7 +141,13 @@ const UserSummary = (): JSX.Element => {
       )}
 
       <Button onClick={onConfirmData}>I confirm this is correct</Button>
-      <DeleteLink content="Delete this information" onDelete={onDelete} />
+      {currentResident !== mainResident && (
+        <DeleteLink
+          content="Delete this information"
+          details="This information will be permanently deleted."
+          onDelete={onDelete}
+        />
+      )}
     </Layout>
   );
 };

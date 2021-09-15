@@ -1,4 +1,3 @@
-import React from 'react';
 import { HeadingOne } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
 import Layout from '../../components/layout/resident-layout';
@@ -7,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { agree } from '../../lib/store/mainApplicant';
 import { getFormData, FormID } from '../../lib/utils/form-data';
 import Form from '../../components/form/form';
-import withApplication from '../../lib/hoc/withApplication';
+import router from 'next/router';
 
 const ApplicationTermsPage = (): JSX.Element => {
   // TODO: might not be right place for this,
@@ -19,8 +18,11 @@ const ApplicationTermsPage = (): JSX.Element => {
     if (!applicationId) {
       throw new Error('No application.');
     }
+
     dispatch(agree());
     dispatch(updateUserAttribute({ applicationId: applicationId }));
+
+    router.push('/apply/household');
   };
 
   return (
@@ -57,4 +59,4 @@ const ApplicationTermsPage = (): JSX.Element => {
   );
 };
 
-export default withApplication(ApplicationTermsPage);
+export default ApplicationTermsPage;

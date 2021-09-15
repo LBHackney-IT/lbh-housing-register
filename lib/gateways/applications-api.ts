@@ -71,6 +71,18 @@ export const updateApplication = async (
   return data;
 };
 
+export const completeApplication = async (
+  id: string
+): Promise<Application | null> => {
+  const { data } = await axios.patch(
+    `${process.env.HOUSING_REGISTER_API}/applications/${id}/complete`,
+    {
+      headers: headersWithKey,
+    }
+  );
+  return data;
+};
+
 export const getStats = async (): Promise<Array<Stat> | null> => {
   try {
     const { data } = await axios.get(

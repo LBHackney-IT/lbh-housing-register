@@ -35,14 +35,14 @@ export const loadUser = createAsyncThunk('cognitoUser/loadUser', async () => {
 
 export const updateUserAttribute = createAsyncThunk(
   'cognitoUser/updateUserAttribute',
-  async ({ applicationId }: { applicationId: string }) => {
+  async ({ applicationId }: { applicationId: string }, api) => {
     const promise = Auth.currentAuthenticatedUser();
     promise.then((user) =>
       Auth.updateUserAttributes(user, {
         'custom:application_id': applicationId,
       })
     );
-    return promise;
+    return promise.then(() => api.dispatch(loadUser()));
   }
 );
 
@@ -53,8 +53,7 @@ export const signIn = createAsyncThunk(
     api
   ) => {
     const promise = Auth.signIn(username, password);
-    promise.then(() => api.dispatch(loadUser()));
-    return promise;
+    return promise.then(() => api.dispatch(loadUser()));
   }
 );
 

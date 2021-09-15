@@ -6,7 +6,6 @@ import Form from '../../../components/form/form';
 import Layout from '../../../components/layout/resident-layout';
 import withApplication from '../../../lib/hoc/withApplication';
 import {
-  getQuestionValue,
   selectApplicant,
   updateWithFormValues,
   getQuestionsForFormAsValues,
@@ -50,8 +49,8 @@ const CurrentAccommodation = (): JSX.Element => {
       name: applicant.person?.firstName || '',
     },
     {
-      href: `${baseHref}/your-situation`,
-      name: `Your Situation`,
+      href: `${baseHref}/current-accommodation`,
+      name: `Current accommodation`,
     },
   ];
 
@@ -63,7 +62,7 @@ const CurrentAccommodation = (): JSX.Element => {
     if (nextFormId === 'exit') {
       dispatch(
         updateWithFormValues({
-          formID: FormID.YOUR_SITUATION,
+          formID: FormID.CURRENT_ACCOMMODATION,
           personID: applicant.person.id,
           values,
           markAsComplete: true,

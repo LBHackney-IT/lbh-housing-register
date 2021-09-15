@@ -9,17 +9,24 @@ import Paragraph from '../../components/content/paragraph';
 import Layout from '../../components/layout/resident-layout';
 import Panel from '../../components/panel';
 import withApplication from '../../lib/hoc/withApplication';
+import { useRouter } from 'next/router';
 
 const NotEligible = (): JSX.Element => {
-  const application = useAppSelector((store) => store.application);
+  const router = useRouter();
 
+  const application = useAppSelector((store) => store.application);
   const mainApplicant = useAppSelector(
     (store) => store.application.mainApplicant
   );
+
   const [isEligible, reasons] = useMemo(
-    () => (mainApplicant && checkEligible(mainApplicant, true)) ?? [],
+    () => (mainApplicant && checkEligible(mainApplicant)) ?? [],
     [mainApplicant]
   );
+
+  if (isEligible) {
+    router.push('/apply/overview');
+  }
 
   return (
     <Layout>

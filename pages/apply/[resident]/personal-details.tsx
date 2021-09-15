@@ -30,6 +30,7 @@ const ApplicationStep = (): JSX.Element => {
     firstName: applicant.person?.firstName,
     surname: applicant.person?.surname,
     gender: applicant.person?.gender,
+    genderDescription: applicant.person?.genderDescription,
     dateOfBirth: applicant.person?.dateOfBirth,
     nationalInsuranceNumber: applicant.person?.nationalInsuranceNumber,
     phoneNumber: applicant.contactInformation?.phoneNumber,
@@ -41,6 +42,7 @@ const ApplicationStep = (): JSX.Element => {
     firstName,
     surname,
     gender,
+    genderDescription,
     dateOfBirth,
     nationalInsuranceNumber,
     phoneNumber,
@@ -56,6 +58,7 @@ const ApplicationStep = (): JSX.Element => {
           surname,
           dateOfBirth,
           gender,
+          genderDescription,
           nationalInsuranceNumber,
         },
         contactInformation: {

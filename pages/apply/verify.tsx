@@ -13,6 +13,7 @@ import { FormData } from '../../lib/types/form';
 import { FormID, getFormData } from '../../lib/utils/form-data';
 import ErrorSummary from '../../components/errors/error-summary';
 import { Errors } from '../../lib/utils/errors';
+import { scrollToError } from '../../lib/utils/scroll';
 
 const ApplicationVerifyPage = (): JSX.Element => {
   const router = useRouter();
@@ -43,6 +44,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
       router.push('/apply/agree-terms');
     } catch (e) {
       setUserError(Errors.VERIFY_ERROR);
+      scrollToError();
     }
   };
 

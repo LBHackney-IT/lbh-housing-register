@@ -23,6 +23,7 @@ import { checkEligible } from '../../lib/utils/form';
 import withApplication from '../../lib/hoc/withApplication';
 import Custom404 from '../404';
 import { Errors } from '../../lib/utils/errors';
+import { scrollToError } from '../../lib/utils/scroll';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
   const router = useRouter();
@@ -59,6 +60,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
         (completeApplicationResult: any) => {
           if (completeApplicationResult.error) {
             setUserError(Errors.API_ERROR);
+            scrollToError();
           } else {
             router.push('/apply/submit/additional-questions');
           }

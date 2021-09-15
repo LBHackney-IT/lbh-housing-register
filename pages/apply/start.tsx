@@ -16,6 +16,7 @@ import { FormID, getFormData } from '../../lib/utils/form-data';
 import processPhonenumber from '../../lib/utils/processPhonenumber';
 import ErrorSummary from '../../components/errors/error-summary';
 import { Errors } from '../../lib/utils/errors';
+import { scrollToError } from '../../lib/utils/scroll';
 
 const ApplicationStartPage = (): JSX.Element => {
   const router = useRouter();
@@ -68,6 +69,7 @@ const ApplicationStartPage = (): JSX.Element => {
       router.push('/apply/verify');
     } catch (error) {
       setUserError(Errors.GENERIC_ERROR);
+      scrollToError();
     }
   };
 

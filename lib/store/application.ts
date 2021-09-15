@@ -75,6 +75,28 @@ export const sendConfirmation = createAsyncThunk(
   }
 );
 
+export const sendDisqualifyEmail = createAsyncThunk(
+  'application/disqualify',
+  async (application: Application) => {
+    const notifyRequest: NotifyRequest = {
+      emailAddress:
+        application.mainApplicant?.contactInformation?.emailAddress ?? '',
+      personalisation: {
+        ref_number: application.reference ?? '',
+        resident_name: application.mainApplicant?.person?.firstName ?? '',
+      },
+      reference: `${application.reference}`,
+    };
+
+    const res = await fetch(`/api/notify/disqualify`, {
+      method: 'POST',
+      body: JSON.stringify(notifyRequest),
+    });
+
+    return (await res.json()) as NotifyResponse;
+  }
+);
+
 const slice = createSlice({
   name: 'application',
   initialState: {} as Application,

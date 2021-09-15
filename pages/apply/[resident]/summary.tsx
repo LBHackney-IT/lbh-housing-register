@@ -24,6 +24,7 @@ import { FormID } from '../../../lib/utils/form-data';
 import withApplication from '../../../lib/hoc/withApplication';
 import { removeApplicant } from '../../../lib/store/otherMembers';
 import { useDispatch } from 'react-redux';
+import { sendDisqualifyEmail } from '../../../lib/store/application';
 
 const UserSummary = (): JSX.Element => {
   const router = useRouter();
@@ -38,12 +39,15 @@ const UserSummary = (): JSX.Element => {
     return <Custom404 />;
   }
 
+  const application = useAppSelector((store) => store.application);
+
   const baseHref = `/apply/${currentResident.person?.id}`;
   const returnHref = '/apply/overview';
 
   const onConfirmData = () => {
     const [isEligible] = checkEligible(mainResident);
     if (!isEligible) {
+      dispatch(sendDisqualifyEmail(application));
       router.push('/apply/not-eligible');
     } else {
       router.push('/apply/overview');

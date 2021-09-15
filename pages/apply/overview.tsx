@@ -17,6 +17,7 @@ import { useDispatch } from 'react-redux';
 import {
   sendConfirmation,
   completeApplication,
+  sendDisqualifyEmail,
 } from '../../lib/store/application';
 import { checkEligible } from '../../lib/utils/form';
 import withApplication from '../../lib/hoc/withApplication';
@@ -48,6 +49,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
   const submitApplication = async () => {
     const [isEligible] = checkEligible(mainResident);
     if (!isEligible) {
+      dispatch(sendDisqualifyEmail(application));
       router.push('/apply/not-eligible');
     } else {
       dispatch(sendConfirmation(application));

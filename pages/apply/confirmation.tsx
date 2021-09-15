@@ -29,7 +29,13 @@ const ApplicationConfirmation = (): JSX.Element => {
         <>
           {`Your reference number: ${application.reference?.toUpperCase()}`}
           <br />
-          <span style={{ display: 'block', fontSize: '1.2rem', overflowWrap: 'break-word' }}>
+          <span
+            style={{
+              display: 'block',
+              fontSize: '1.2rem',
+              overflowWrap: 'break-word',
+            }}
+          >
             {`We have sent a confirmation email to ${residentEmail}`}
           </span>
         </>

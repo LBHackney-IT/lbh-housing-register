@@ -39,7 +39,7 @@ export const updateApplication = createAsyncThunk(
       method: 'PATCH',
       body: JSON.stringify(application),
     });
-    return await res.json();
+    return (await res.json()) as Application;
   }
 );
 
@@ -60,10 +60,10 @@ export const sendConfirmation = createAsyncThunk(
       emailAddress:
         application.mainApplicant?.contactInformation?.emailAddress ?? '',
       personalisation: {
-        ref_number: application.id ?? '',
+        ref_number: application.reference ?? '',
         resident_name: application.mainApplicant?.person?.firstName ?? '',
       },
-      reference: `${application.id}`,
+      reference: `${application.reference}`,
     };
 
     const res = await fetch(`/api/notify/new-application`, {
@@ -85,6 +85,8 @@ const slice = createSlice({
     builder
       .addCase(loadApplication.fulfilled, (state, action) => action.payload)
       .addCase(createApplication.fulfilled, (state, action) => action.payload)
+      .addCase(updateApplication.fulfilled, (state, action) => action.payload)
+      //.addCase(completeApplication.fulfilled, (state, action) => action.payload)
       .addCase(signOut.fulfilled, (state, action) => ({}))
 
       .addDefaultCase((state, action) => {
@@ -105,6 +107,7 @@ export const autoSaveMiddleware: Middleware<
   // TODO This basic throttle batches up sequential changes in the store.
   // it doesn't deal with race conditions in communicating with the API.
   // for that we'd also need to cancel existing fetch requests before issuing new ones.
+
   const throttledDispatch = throttle(
     (action: any) => {
       storeAPI.dispatch(action);
@@ -118,11 +121,11 @@ export const autoSaveMiddleware: Middleware<
     const previousApplication = storeAPI.getState().application;
     const newAction = next(action);
     const newApplication = storeAPI.getState().application;
-
     function blacklist(type: string) {
       return (
         type.startsWith(loadApplication.typePrefix) ||
-        type.startsWith(createApplication.typePrefix)
+        type.startsWith(createApplication.typePrefix) ||
+        type.startsWith(updateApplication.typePrefix)
       );
     }
 

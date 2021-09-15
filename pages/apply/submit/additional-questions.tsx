@@ -10,8 +10,9 @@ import {
   getQuestionsForFormAsValues,
   updateWithFormValues,
 } from '../../../lib/store/applicant';
+import withApplication from '../../../lib/hoc/withApplication';
 
-export default function AdditonalQuestions() {
+const AdditonalQuestions = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const applicant = useAppSelector((store) => store.application.mainApplicant);
@@ -48,4 +49,6 @@ export default function AdditonalQuestions() {
       />
     </Layout>
   );
-}
+};
+
+export default withApplication(AdditonalQuestions);

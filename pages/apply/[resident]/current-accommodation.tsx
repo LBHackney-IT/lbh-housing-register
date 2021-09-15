@@ -6,15 +6,15 @@ import Form from '../../../components/form/form';
 import Layout from '../../../components/layout/resident-layout';
 import withApplication from '../../../lib/hoc/withApplication';
 import {
-  getQuestionValue,
   selectApplicant,
   updateWithFormValues,
+  getQuestionsForFormAsValues,
 } from '../../../lib/store/applicant';
 import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import { FormID, getFormData } from '../../../lib/utils/form-data';
 import Custom404 from '../../404';
 
-const YourSituation = (): JSX.Element => {
+const CurrentAccommodation = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { resident } = router.query as { resident: string };
@@ -25,28 +25,15 @@ const YourSituation = (): JSX.Element => {
     return <Custom404 />;
   }
 
-  // TODO work this out.
-  const livingSituation: string = getQuestionValue(
-    applicant.questions,
-    FormID.CURRENT_ACCOMMODATION,
-    'living-situation'
+  const [activeStepID, setActiveStepId] = useState(
+    FormID.CURRENT_ACCOMMODATION
   );
 
-  const [activeStepID, setActiveStepId] = useState(() => {
-    switch (livingSituation) {
-      case 'squatter':
-        return FormID.COURT_ORDER;
+  const initialValues: FormikValues = getQuestionsForFormAsValues(
+    activeStepID,
+    applicant
+  );
 
-      case 'unauthorised-occupant':
-        return FormID.ACCOMODATION_TYPE;
-
-      case 'owner-occupier':
-        return FormID.DOMESTIC_VIOLENCE;
-
-      default:
-        return FormID.HOMELESSNESS;
-    }
-  });
   const formData = getFormData(activeStepID);
 
   const baseHref = `/apply/${applicant.person?.id}`;
@@ -62,8 +49,8 @@ const YourSituation = (): JSX.Element => {
       name: applicant.person?.firstName || '',
     },
     {
-      href: `${baseHref}/your-situation`,
-      name: `Your situation`,
+      href: `${baseHref}/current-accommodation`,
+      name: `Current accommodation`,
     },
   ];
 
@@ -75,7 +62,7 @@ const YourSituation = (): JSX.Element => {
     if (nextFormId === 'exit') {
       dispatch(
         updateWithFormValues({
-          formID: FormID.YOUR_SITUATION,
+          formID: FormID.CURRENT_ACCOMMODATION,
           personID: applicant.person.id,
           values,
           markAsComplete: true,
@@ -100,10 +87,11 @@ const YourSituation = (): JSX.Element => {
   };
 
   return (
-    <Layout pageName="Your situation" breadcrumbs={breadcrumbs}>
-      <HeadingOne content="Your situation" />
+    <Layout pageName="Current accommodation" breadcrumbs={breadcrumbs}>
+      <HeadingOne content="Current accommodation" />
       <Form
         // Intentional key outside of an array. Force a fresh form component when we change steps to avoid values persisting between forms.
+        initialValues={initialValues}
         key={activeStepID}
         buttonText="Save and continue"
         formData={formData}
@@ -114,4 +102,4 @@ const YourSituation = (): JSX.Element => {
   );
 };
 
-export default withApplication(YourSituation);
+export default withApplication(CurrentAccommodation);

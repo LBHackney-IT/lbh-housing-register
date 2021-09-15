@@ -11,8 +11,7 @@ import SummaryList, {
 import Tag from '../../components/tag';
 import ApplicantName from '../../components/application/ApplicantName';
 import { Applicant } from '../../domain/HousingApi';
-import whenAgreed from '../../lib/hoc/whenAgreed';
-import { useAppSelector, useAppDispatch } from '../../lib/store/hooks';
+import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { applicationStepsRemaining } from '../../lib/utils/resident';
 import {
   sendConfirmation,
@@ -20,13 +19,21 @@ import {
 } from '../../lib/store/application';
 import ErrorResponse from '../../components/errors/response';
 import UserErrors from '../../components/errors/user';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { checkEligible } from '../../lib/utils/form';
+import withApplication from '../../lib/hoc/withApplication';
+import Custom404 from '../404';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
+  const mainResident = useAppSelector((s) => s.application.mainApplicant);
+  if (!mainResident) {
+    return <Custom404 />;
+  }
+
+  const application = useAppSelector((store) => store.application);
   const [userError, setUserError] = useState<string | null>(null);
 
   const applicants = useAppSelector((store) =>
@@ -35,9 +42,6 @@ const ApplicationPersonsOverview = (): JSX.Element => {
       .flat()
   );
 
-  const mainResident = useAppSelector((s) => s.application.mainApplicant);
-
-  const application = useAppSelector((store) => store.application);
   const breadcrumbs = [
     {
       href: '/apply/overview',
@@ -45,25 +49,8 @@ const ApplicationPersonsOverview = (): JSX.Element => {
     },
   ];
 
-  const eligibilityMap = useMemo(
-    () =>
-      new Map(
-        applicants.map((applicant) => [
-          applicant,
-          checkEligible(applicant, applicant === mainResident)[0],
-        ])
-      ),
-    [applicants]
-  );
-
   const submitApplication = async () => {
-    let isEligible = true;
-    applicants.map((applicant, index) => {
-      if (!eligibilityMap.get(applicant)) {
-        isEligible = false;
-      }
-    });
-
+    const [isEligible] = checkEligible(mainResident);
     if (!isEligible) {
       router.push('/apply/not-eligible');
     } else {
@@ -147,4 +134,4 @@ const ApplicationPersonsOverview = (): JSX.Element => {
   );
 };
 
-export default whenAgreed(ApplicationPersonsOverview);
+export default withApplication(ApplicationPersonsOverview);

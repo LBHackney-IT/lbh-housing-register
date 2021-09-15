@@ -23,7 +23,7 @@ export function MedicalNeedsSummary({
   return (
     <SummarySection>
       <SummaryTitle
-        content="Medical Needs"
+        content="Health"
         href={`/apply/${currentResident.person.id}/${FormID.MEDICAL_NEEDS}`}
       />
 

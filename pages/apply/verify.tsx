@@ -1,4 +1,4 @@
-import { Auth } from 'aws-amplify';
+import Auth from '@aws-amplify/auth';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Button from '../../components/button';
@@ -16,14 +16,9 @@ import ErrorResponse from '../../components/errors/response';
 
 const ApplicationVerifyPage = (): JSX.Element => {
   const router = useRouter();
-  const isLoggedIn = useAppSelector((store) => store.cognitoUser?.username);
-  if (isLoggedIn) {
-    router.push('/apply/overview');
-  }
-
+  const dispatch = useAppDispatch();
   const [userError, setUserError] = useState<string | null>(null);
 
-  const dispatch = useAppDispatch();
   const emailAddress = useAppSelector(
     (store) =>
       store.application.mainApplicant?.contactInformation?.emailAddress ?? ''
@@ -45,8 +40,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
         })
       );
 
-      // TODO: update to link to household: HRT-102
-      router.push('/apply/household');
+      router.push('/apply/agree-terms');
     } catch (e) {
       setUserError(ErrorResponse());
     }

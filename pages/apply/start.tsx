@@ -1,4 +1,4 @@
-import { Auth } from 'aws-amplify';
+import Auth from '@aws-amplify/auth';
 import { useState } from 'react';
 import { FormikValues } from 'formik';
 import { useRouter } from 'next/router';
@@ -53,6 +53,7 @@ const ApplicationStartPage = (): JSX.Element => {
             surname: values.surname,
             dateOfBirth: values.dateOfBirth,
             gender: values.gender,
+            genderDescription: values.genderDescription,
             nationalInsuranceNumber: values.nationalInsuranceNumber,
           },
           contactInformation: {

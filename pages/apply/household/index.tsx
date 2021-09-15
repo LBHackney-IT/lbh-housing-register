@@ -10,9 +10,9 @@ import SummaryList, {
   SummaryListRow as Row,
 } from '../../../components/summary-list';
 import { Applicant } from '../../../domain/HousingApi';
-import whenAgreed from '../../../lib/hoc/whenAgreed';
 import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import { signOut } from '../../../lib/store/cognitoUser';
+import withApplication from '../../../lib/hoc/withApplication';
 
 const ApplicationHouseholdOverview = (): JSX.Element => {
   const router = useRouter();
@@ -88,4 +88,4 @@ const ApplicationHouseholdOverview = (): JSX.Element => {
   );
 };
 
-export default whenAgreed(ApplicationHouseholdOverview);
+export default withApplication(ApplicationHouseholdOverview);

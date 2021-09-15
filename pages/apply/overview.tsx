@@ -17,12 +17,12 @@ import {
   sendConfirmation,
   completeApplication,
 } from '../../lib/store/application';
-import ErrorResponse from '../../components/errors/response';
-import UserErrors from '../../components/errors/user';
+import ErrorSummary from '../../components/errors/error-summary';
 import { useState } from 'react';
 import { checkEligible } from '../../lib/utils/form';
 import withApplication from '../../lib/hoc/withApplication';
 import Custom404 from '../404';
+import { Errors } from '../../lib/utils/errors';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
   const router = useRouter();
@@ -54,24 +54,14 @@ const ApplicationPersonsOverview = (): JSX.Element => {
     if (!isEligible) {
       router.push('/apply/not-eligible');
     } else {
-      dispatch(sendConfirmation(application)).then(
-        (sendConfirmationResult: any) => {
-          dispatch(completeApplication(application)).then(
-            (completeApplicationResult: any) => {
-              if (
-                !sendConfirmationResult.error ||
-                !completeApplicationResult.error
-              ) {
-                router.push('/apply/submit/additional-questions');
-              }
-              if (sendConfirmationResult.error) {
-                setUserError(ErrorResponse());
-              }
-              if (completeApplicationResult.error) {
-                setUserError(ErrorResponse());
-              }
-            }
-          );
+      dispatch(sendConfirmation(application));
+      dispatch(completeApplication(application)).then(
+        (completeApplicationResult: any) => {
+          if (completeApplicationResult.error) {
+            setUserError(Errors.API_ERROR);
+          } else {
+            router.push('/apply/submit/additional-questions');
+          }
         }
       );
     }
@@ -80,7 +70,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
   return (
     <Layout pageName="Application overview" breadcrumbs={breadcrumbs}>
       <HeadingOne content="Tasks to complete" />
-      {userError && <UserErrors>{userError}</UserErrors>}
+      {userError && <ErrorSummary>{userError}</ErrorSummary>}
 
       <SummaryList>
         {applicants.map((applicant, index) => {

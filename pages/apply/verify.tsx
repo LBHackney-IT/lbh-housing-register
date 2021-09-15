@@ -11,8 +11,8 @@ import { signIn } from '../../lib/store/cognitoUser';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { FormData } from '../../lib/types/form';
 import { FormID, getFormData } from '../../lib/utils/form-data';
-import UserErrors from '../../components/errors/user';
-import ErrorResponse from '../../components/errors/response';
+import ErrorSummary from '../../components/errors/error-summary';
+import { Errors } from '../../lib/utils/errors';
 
 const ApplicationVerifyPage = (): JSX.Element => {
   const router = useRouter();
@@ -42,7 +42,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
 
       router.push('/apply/agree-terms');
     } catch (e) {
-      setUserError(ErrorResponse());
+      setUserError(Errors.VERIFY_ERROR);
     }
   };
 
@@ -53,7 +53,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
   return (
     <Layout pageName="Verify your account">
       <HeadingOne content="Enter your verification code" />
-      {userError && <UserErrors>{userError}</UserErrors>}
+      {userError && <ErrorSummary>{userError}</ErrorSummary>}
       <Announcement variant="success">
         <Paragraph>
           We've sent an email containing a six-digit verification code to{' '}

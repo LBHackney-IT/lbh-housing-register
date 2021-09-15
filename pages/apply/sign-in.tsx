@@ -7,8 +7,8 @@ import { signIn } from '../../lib/store/cognitoUser';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { FormData } from '../../lib/types/form';
 import { FormID, getFormData } from '../../lib/utils/form-data';
-import ErrorResponse from '../../components/errors/response';
-import UserErrors from '../../components/errors/user';
+import ErrorSummary from '../../components/errors/error-summary';
+import { Errors } from '../../lib/utils/errors';
 
 const ApplicationSignInPage = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -33,7 +33,7 @@ const ApplicationSignInPage = (): JSX.Element => {
       })
     ).then((result: any) => {
       if (result.error) {
-        setUserError(ErrorResponse());
+        setUserError(Errors.GENERIC_ERROR);
       }
       return result;
     });
@@ -41,7 +41,7 @@ const ApplicationSignInPage = (): JSX.Element => {
 
   return (
     <Layout pageName="Sign in">
-      {userError && <UserErrors>{userError}</UserErrors>}
+      {userError && <ErrorSummary>{userError}</ErrorSummary>}
       <HeadingOne content="Sign in to your application" />
       {/* TODO not everything should use Formik. */}
       <Form

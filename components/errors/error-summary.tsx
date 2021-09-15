@@ -1,10 +1,11 @@
 import { ReactNode } from 'react';
 
-interface UserErrors {
+interface ErrorSummaryProps {
+  title?: string,
   children: ReactNode;
 }
 
-export default function UserErrors({ children }: UserErrors): JSX.Element {
+export default function ErrorSummary({ title, children }: ErrorSummaryProps): JSX.Element {
   return (
     <div
       className="govuk-error-summary optional-extra-class lbh-error-summary"
@@ -13,9 +14,11 @@ export default function UserErrors({ children }: UserErrors): JSX.Element {
       tabIndex={-1}
       data-module="govuk-error-summary"
     >
-      <h2 className="govuk-error-summary__title" id="error-summary-title">
-        <p>The following error occurred:</p>
-      </h2>
+      {title &&
+        <h2 className="govuk-error-summary__title" id="error-summary-title">
+          {title}
+        </h2>
+      }
       <div className="govuk-error-summary__body">{children}</div>
     </div>
   );

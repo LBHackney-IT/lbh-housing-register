@@ -14,8 +14,8 @@ import {
 import { updateBeforeFirstSave } from '../../lib/store/mainApplicant';
 import { FormID, getFormData } from '../../lib/utils/form-data';
 import processPhonenumber from '../../lib/utils/processPhonenumber';
-import UserErrors from '../../components/errors/user';
-import ErrorResponse from '../../components/errors/response';
+import ErrorSummary from '../../components/errors/error-summary';
+import { Errors } from '../../lib/utils/errors';
 
 const ApplicationStartPage = (): JSX.Element => {
   const router = useRouter();
@@ -67,14 +67,14 @@ const ApplicationStartPage = (): JSX.Element => {
 
       router.push('/apply/verify');
     } catch (error) {
-      setUserError(ErrorResponse());
+      setUserError(Errors.GENERIC_ERROR);
     }
   };
 
   return (
     <Layout pageName="Start your application">
       <HeadingOne content="Start your application" />
-      {userError && <UserErrors>{userError}</UserErrors>}
+      {userError && <ErrorSummary>{userError}</ErrorSummary>}
       <Form
         formData={getFormData(FormID.SIGN_UP_DETAILS)}
         buttonText="Save and continue"

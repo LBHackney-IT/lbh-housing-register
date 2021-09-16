@@ -18,6 +18,7 @@ import { getApplication } from '../../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../../lib/utils/auth';
 import { getStatusTag } from '../../../lib/utils/tag';
 import Custom404 from '../../404';
+import Snapshot from '../../../components/applications/snapshot';
 
 export function formatDate(date: string | undefined) {
   if (!date) return '';
@@ -78,17 +79,12 @@ export default function ApplicationPage({
           <div className="govuk-grid-row">
             <div className="govuk-grid-column-two-thirds">
               <HeadingThree content="Snapshot" />
+              <Snapshot data={data} />
               {data.mainApplicant && (
                 <PersonalDetails
-                  heading="Personal details"
+                  heading="Main Applicant"
                   applicant={data.mainApplicant}
                   applicationId={data.id}
-                />
-              )}
-              {data.mainApplicant?.contactInformation && (
-                <ContactDetails
-                  heading="Contact details"
-                  contact={data.mainApplicant.contactInformation}
                 />
               )}
               {data.otherMembers && data.otherMembers.length > 0 && (

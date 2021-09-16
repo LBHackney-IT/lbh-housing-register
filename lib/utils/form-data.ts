@@ -42,6 +42,8 @@ import EthnicityCategoryMixedMultipleBackground from '../../data/forms/ethnicity
 import EthnicityCategoryWhite from '../../data/forms/ethnicity/ethnicity-category-white.json';
 import EthnicityCategoryOtherEthnicGroup from '../../data/forms/ethnicity/ethnicity-category-other-ethnic-group.json';
 
+import AdminActions from '../../data/admin/actions.json';
+
 import { EligibilityCriteria, MultiStepForm } from '../types/form';
 import assertNever from './assertNever';
 
@@ -87,6 +89,7 @@ export enum FormID {
   ETHNICITY_CATEGORY_MIXED_MULTIPLE_BACKGROUND = 'ethnicity-extended-category-mixed-multiple-background',
   ETHNICITY_CATEGORY_WHITE = 'ethnicity-extended-category-white',
   ETHNICITY_CATEGORY_OTHER_ETHNIC_GROUP = 'ethnicity-extended-category-other-ethnic-group',
+  ADMIN_ACTIONS = 'admin-actions',
 }
 
 /**
@@ -229,6 +232,9 @@ export function getFormData(form: FormID): MultiStepForm {
 
     case FormID.CURRENT_ACCOMMODATION_LANDLORD_DETAILS:
       return currentAccommodationLandlordDetails as MultiStepForm;
+
+    case FormID.ADMIN_ACTIONS:
+      return AdminActions as MultiStepForm;
 
     // this form isn't used anywhere
     case FormID.YOUR_SITUATION:

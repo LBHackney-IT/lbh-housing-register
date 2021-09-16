@@ -151,10 +151,6 @@ export const getOtherMemberQuestions = (
             heading: 'Employment',
             id: FormID.EMPLOYMENT,
           },
-          {
-            heading: 'Income and savings',
-            id: FormID.INCOME_SAVINGS,
-          },
         ],
       },
       {

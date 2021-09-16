@@ -2,7 +2,6 @@ import { Form, Formik, FormikValues } from 'formik';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import ApplicantStep from '../../../components/application/ApplicantStep';
-import Form from '../../../components/form/form';
 import withApplication from '../../../lib/hoc/withApplication';
 import {
   getQuestionsForFormAsValues,

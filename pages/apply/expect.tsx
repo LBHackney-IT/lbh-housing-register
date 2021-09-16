@@ -9,10 +9,10 @@ import Announcement from '../../components/announcement';
 import { signOut } from '../../lib/store/cognitoUser';
 import { Applicant } from '../../domain/HousingApi';
 import { calculateBedrooms } from '../../lib/utils/bedroomCalculator';
-import { useState, useEffect } from 'react';
 import { getGenderName } from '../../lib/utils/gender';
 import { getAgeInYears } from '../../lib/utils/dateOfBirth';
 import { getWaitingTime } from '../../lib/utils/bedroomWaitingTime';
+import withApplication from '../../lib/hoc/withApplication';
 
 const WhatToExpect = (): JSX.Element => {
   const router = useRouter();
@@ -66,4 +66,4 @@ const WhatToExpect = (): JSX.Element => {
   );
 };
 
-export default WhatToExpect;
+export default withApplication(WhatToExpect);

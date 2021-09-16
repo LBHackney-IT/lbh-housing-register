@@ -8,8 +8,9 @@ import { FormID, getFormData } from '../../../lib/utils/form-data';
 import Custom404 from '../../404';
 import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import { updateWithFormValues } from '../../../lib/store/applicant';
+import withApplication from '../../../lib/hoc/withApplication';
 
-export default function EthnicityQuestions() {
+const EthnicityQuestions = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const applicant = useAppSelector((store) => store.application.mainApplicant);
@@ -90,4 +91,6 @@ export default function EthnicityQuestions() {
       />
     </Layout>
   );
-}
+};
+
+export default withApplication(EthnicityQuestions);

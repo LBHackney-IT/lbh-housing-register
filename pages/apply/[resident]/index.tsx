@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
@@ -11,13 +10,12 @@ import SummaryList, {
   SummaryListValue,
 } from '../../../components/summary-list';
 import Tag from '../../../components/tag';
-import whenAgreed from '../../../lib/hoc/whenAgreed';
 import {
   getQuestionValue,
   selectApplicant,
 } from '../../../lib/store/applicant';
 import { useAppSelector } from '../../../lib/store/hooks';
-import { deleteApplicant } from '../../../lib/store/otherMembers';
+import { removeApplicant } from '../../../lib/store/otherMembers';
 import {
   applicationStepsRemaining,
   getApplicationSectionsForResident,
@@ -26,10 +24,10 @@ import Custom404 from '../../404';
 import Button, { ButtonLink } from '../../../components/button';
 import { isOver18 } from '../../../lib/utils/dateOfBirth';
 import { FormID } from '../../../lib/utils/form-data';
-import { Applicant } from '../../../domain/HousingApi';
 import { checkEligible } from '../../../lib/utils/form';
+import withApplication from '../../../lib/hoc/withApplication';
 
-const ApplicationStep = (): JSX.Element => {
+const ResidentIndex = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { resident } = router.query as { resident: string };
@@ -37,7 +35,7 @@ const ApplicationStep = (): JSX.Element => {
   const currentResident = useAppSelector(selectApplicant(resident));
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
 
-  if (!currentResident) {
+  if (!currentResident || !mainResident) {
     return <Custom404 />;
   }
 
@@ -45,30 +43,10 @@ const ApplicationStep = (): JSX.Element => {
   const returnHref = '/apply/overview';
   const checkAnswers = `${baseHref}/summary`;
 
-  const applicants = useAppSelector((store) =>
-    [store.application.mainApplicant, store.application.otherMembers]
-      .filter((v): v is Applicant | Applicant[] => v !== undefined)
-      .flat()
-  );
-
-  const eligibilityMap = useMemo(
-    () =>
-      new Map(
-        applicants.map((applicant) => [
-          applicant,
-          checkEligible(applicant, applicant === mainResident)[0],
-        ])
-      ),
-    [applicants]
-  );
-
-  applicants.map((applicant, index) => {
-    const isEligible = eligibilityMap.get(applicant);
-
-    if (!isEligible) {
-      router.push(checkAnswers);
-    }
-  });
+  const [isEligible] = checkEligible(mainResident);
+  if (!isEligible) {
+    router.push(checkAnswers);
+  }
 
   const steps = getApplicationSectionsForResident(
     currentResident === mainResident,
@@ -99,7 +77,8 @@ const ApplicationStep = (): JSX.Element => {
   ];
 
   const onDelete = () => {
-    dispatch(deleteApplicant(currentResident));
+    dispatch(removeApplicant(currentResident.person.id));
+
     router.push(returnHref);
   };
 
@@ -192,4 +171,4 @@ const ApplicationStep = (): JSX.Element => {
   );
 };
 
-export default whenAgreed(ApplicationStep);
+export default withApplication(ResidentIndex);

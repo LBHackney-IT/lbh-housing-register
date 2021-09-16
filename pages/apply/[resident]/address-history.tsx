@@ -14,6 +14,7 @@ import Select from '../../../components/form/select';
 import { AddressLookupAddress } from '../../../domain/addressLookup';
 import { AddressType } from '../../../domain/HousingApi';
 import { lookUpAddress } from '../../../lib/gateways/internal-api';
+import withApplication from '../../../lib/hoc/withApplication';
 import {
   getQuestionValue,
   selectApplicant,
@@ -30,7 +31,7 @@ import {
 import { FormID } from '../../../lib/utils/form-data';
 import Custom404 from '../../404';
 
-const REQUIRED_YEARS = 3;
+const REQUIRED_YEARS = 5;
 
 type State = 'postcode-entry' | 'manual-entry' | 'choose-address' | 'review';
 
@@ -88,15 +89,19 @@ function generateValidationSchema(
     case 'postcode-entry':
       return schema.pick(['postcode']);
     case 'manual-entry':
-      return schema.pick(['postcode', 'address', 'date', 'dateTo']);
+      return addressHistory.length === 0
+        ? schema.pick(['postcode', 'address', 'date'])
+        : schema.pick(['postcode', 'address', 'date', 'dateTo']);
     case 'choose-address':
-      return schema.pick(['uprn', 'date', 'dateTo']);
+      return addressHistory.length === 0
+        ? schema.pick(['uprn', 'date'])
+        : schema.pick(['uprn', 'date', 'dateTo']);
   }
 }
 
 function ManualEntry() {
   return (
-    // These all need the validation markerts. And that's why we need the standard inputs.
+    // These all need the validation markers. And that's why we need the standard inputs.
     <fieldset className="govuk-fieldset">
       <legend className="govuk-fieldset__legend govuk-fieldset__legend--l">
         <h1 className="govuk-fieldset__heading">What is your address?</h1>
@@ -308,7 +313,7 @@ const ApplicationStep = (): JSX.Element => {
               addressLine2: currentAddress.address.line2,
               addressLine3:
                 currentAddress.address.line3 ?? currentAddress.address.town,
-              postCode:
+              postcode:
                 currentAddress.address.postcode ?? currentAddress.postcode,
               addressType: AddressType.MainAddress,
             },
@@ -334,7 +339,7 @@ const ApplicationStep = (): JSX.Element => {
       stepName="Address History"
       formID={FormID.ADDRESS_HISTORY}
     >
-      <h2 className="lbh-heading-h2">Current Address</h2>
+      <h2 className="lbh-heading-h2">Current address</h2>
       <Details summary="Help with your address">
         If you have no fixed abode or if you are sofa surfing, use the address
         where you sleep for the majority of the week. If you are living on the
@@ -372,11 +377,13 @@ const ApplicationStep = (): JSX.Element => {
                   label={'When did you move to this address?'}
                   showDay={false}
                 />
-                <DateInput
-                  name={'dateTo'}
-                  label={'When did you leave this address?'}
-                  showDay={false}
-                />
+                {addressHistory.length > 0 && (
+                  <DateInput
+                    name={'dateTo'}
+                    label={'When did you leave this address?'}
+                    showDay={false}
+                  />
+                )}
               </InsetText>
             )}
 
@@ -421,11 +428,13 @@ const ApplicationStep = (): JSX.Element => {
                   label={'When did you move to this address?'}
                   showDay={false}
                 />
-                <DateInput
-                  name={'dateTo'}
-                  label={'When did you leave this address?'}
-                  showDay={false}
-                />
+                {addressHistory.length > 0 && (
+                  <DateInput
+                    name={'dateTo'}
+                    label={'When did you leave this address?'}
+                    showDay={false}
+                  />
+                )}
               </InsetText>
             )}
 
@@ -451,4 +460,4 @@ const ApplicationStep = (): JSX.Element => {
   );
 };
 
-export default ApplicationStep;
+export default withApplication(ApplicationStep);

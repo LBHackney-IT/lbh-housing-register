@@ -80,7 +80,7 @@ export function YourSituationSummary({
               {homelessness === 'yes' ? 'I have been' : 'I have not'}
             </strong>{' '}
             been found intentionally homelessness by any local housing authority
-            (in accordance with the housing act 1996 section 184) within the
+            (in accordance with the Housing Act 1996 section 184) within the
             last 2 years
           </Paragraph>
         </SummaryAnswer>

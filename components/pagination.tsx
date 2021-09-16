@@ -1,19 +1,19 @@
 interface PaginationItemProps {
   page: number;
-  pageurl: URL;
-  isCurrrent: boolean;
+  pageUrl: URL;
+  isCurrent: boolean;
 }
 
-const PaginationItem = ({ page, pageurl, isCurrrent }: PaginationItemProps) => {
+const PaginationItem = ({ page, pageUrl, isCurrent }: PaginationItemProps) => {
   return (
     <li className="lbh-pagination__item">
       <a
         className={`lbh-pagination__link lbh-pagination__link${
-          isCurrrent ? '--current' : ''
+          isCurrent ? '--current' : ''
         }`}
-        href={`${pageurl.href}`}
-        aria-current={isCurrrent}
-        aria-label={`Page ${page}, ${isCurrrent ? 'current page' : ''}`}
+        href={`${pageUrl.href}`}
+        aria-current={isCurrent}
+        aria-label={`Page ${page}, ${isCurrent ? 'current page' : ''}`}
       >
         {page}
       </a>
@@ -21,14 +21,14 @@ const PaginationItem = ({ page, pageurl, isCurrrent }: PaginationItemProps) => {
   );
 };
 
-interface PageinationProps {
+interface PaginationProps {
   totalItems: number;
   page: number;
   totalNumberOfPages: number;
   numberOfItemsPerPage: number;
   pageStartOffSet: number;
   pageEndOffSet: number;
-  pageurl: string;
+  pageUrl: string;
   parameters: URLSearchParams;
 }
 
@@ -38,16 +38,13 @@ const Pagination = ({
   totalNumberOfPages,
   pageStartOffSet,
   pageEndOffSet,
-  pageurl,
+  pageUrl,
   parameters,
-}: PageinationProps) => {
+}: PaginationProps) => {
   var paginationItems = [];
   for (var i = 1; i <= totalNumberOfPages; i++) {
-    const urlWithParams = new URL(pageurl);
-
+    const urlWithParams = new URL(pageUrl);
     urlWithParams.searchParams.append('page', i.toString());
-
-    //alert(parameters);
 
     if (Array.from(parameters).length > 0) {
       for (var pair of parameters.entries()) {
@@ -59,8 +56,8 @@ const Pagination = ({
       <PaginationItem
         key={i}
         page={i}
-        isCurrrent={i == page}
-        pageurl={urlWithParams}
+        isCurrent={i == page}
+        pageUrl={urlWithParams}
       />
     );
   }

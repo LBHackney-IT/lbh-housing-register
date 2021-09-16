@@ -6,7 +6,7 @@ import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
 import { UserContext } from '../../lib/contexts/user-context';
 import {
-  searchApplication,
+  searchApplications,
   getApplications,
 } from '../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../lib/utils/auth';
@@ -17,7 +17,7 @@ import { useRouter } from 'next/router';
 interface PageProps {
   user: HackneyGoogleUser;
   applications: PaginatedApplicationListResponse;
-  pageurl: string;
+  pageUrl: string;
   page: string;
   reference: string;
 }
@@ -25,7 +25,7 @@ interface PageProps {
 export default function ApplicationListPage({
   user,
   applications,
-  pageurl,
+  pageUrl,
   page = '1',
   reference = '',
 }: PageProps): JSX.Element {
@@ -53,7 +53,7 @@ export default function ApplicationListPage({
     });
   };
 
-  const applicationStatus = async (status: string) => {
+  const filterByStatus = async (status: string) => {
     router.push({
       pathname: '/applications',
       query: { status: status },
@@ -74,7 +74,7 @@ export default function ApplicationListPage({
 
         <button
           onClick={() => {
-            applicationStatus('new');
+            filterByStatus('new');
           }}
           className="lbh-link lbh-link--no-visited-state"
         >
@@ -82,7 +82,7 @@ export default function ApplicationListPage({
         </button>
         <button
           onClick={() => {
-            applicationStatus('pending');
+            filterByStatus('pending');
           }}
           className="lbh-link lbh-link--no-visited-state"
         >
@@ -94,7 +94,7 @@ export default function ApplicationListPage({
           applications={applications}
           currentPage={parsedPage}
           parameters={parameters}
-          pageurl={pageurl}
+          pageUrl={pageUrl}
         />
       </Layout>
     </UserContext.Provider>
@@ -128,14 +128,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     status: string;
   };
 
-  const pageurl = `http://${context.req.headers.host}/applications`;
+  const pageUrl = `http://${context.req.headers.host}/applications`;
 
   const applications =
     reference === '' && status === ''
       ? await getApplications(page)
-      : await searchApplication(page, reference, status);
+      : await searchApplications(page, reference, status);
 
   return {
-    props: { user, applications, pageurl, page, reference },
+    props: { user, applications, pageUrl, page, reference },
   };
 };

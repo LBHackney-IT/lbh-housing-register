@@ -19,7 +19,7 @@ interface TableProps {
   caption?: string;
   applications: PaginatedApplicationListResponse;
   currentPage: number;
-  pageurl: string;
+  pageUrl: string;
   parameters: URLSearchParams;
 }
 
@@ -27,7 +27,7 @@ export default function ApplicationTable({
   caption,
   applications,
   currentPage,
-  pageurl,
+  pageUrl,
   parameters,
 }: TableProps): JSX.Element {
   return (
@@ -94,7 +94,7 @@ export default function ApplicationTable({
             totalNumberOfPages={applications.totalNumberOfPages}
             pageStartOffSet={applications.pageStartOffSet}
             pageEndOffSet={applications.pageEndOffSet}
-            pageurl={pageurl}
+            pageUrl={pageUrl}
             parameters={parameters}
           />
         </>

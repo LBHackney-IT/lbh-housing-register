@@ -16,6 +16,7 @@ import { applicationStepsRemaining } from '../../lib/utils/resident';
 import {
   sendConfirmation,
   completeApplication,
+  sendDisqualifyEmail,
 } from '../../lib/store/application';
 import ErrorSummary from '../../components/errors/error-summary';
 import { useState } from 'react';
@@ -53,6 +54,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
   const submitApplication = async () => {
     const [isEligible] = checkEligible(mainResident);
     if (!isEligible) {
+      dispatch(sendDisqualifyEmail(application));
       router.push('/apply/not-eligible');
     } else {
       dispatch(sendConfirmation(application));

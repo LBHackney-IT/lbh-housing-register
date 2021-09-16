@@ -1,6 +1,9 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { sendNewApplicationEmail } from '../../../lib/gateways/notify-api';
+import {
+  sendNewApplicationEmail,
+  sendDisqualifyEmail,
+} from '../../../lib/gateways/notify-api';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -14,8 +17,16 @@ const endpoint: NextApiHandler = async (
 
         switch (template) {
           case 'new-application':
-            const data = await sendNewApplicationEmail(notification);
-            res.status(StatusCodes.OK).json(data);
+            const sendNewApplicationData = await sendNewApplicationEmail(
+              notification
+            );
+            res.status(StatusCodes.OK).json(sendNewApplicationData);
+            break;
+          case 'disqualify':
+            const sendDisqualifyEmailData = await sendDisqualifyEmail(
+              notification
+            );
+            res.status(StatusCodes.OK).json(sendDisqualifyEmailData);
             break;
           default:
             res

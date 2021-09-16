@@ -128,7 +128,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     status: string;
   };
 
-  const pageUrl = `http://${context.req.headers.host}/applications`;
+  const pageUrl = `${process.env.APP_URL}/applications`;
 
   const applications =
     reference === '' && status === ''

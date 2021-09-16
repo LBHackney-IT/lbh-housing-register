@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { FormData, MultiStepForm } from '../../lib/types/form';
 import { getDisplayStateOfField } from '../../lib/utils/form';
 import { buildValidationSchema } from '../../lib/utils/validation';
+import { scrollToTop } from '../../lib/utils/scroll';
 import Button from '../button';
 import { HeadingTwo } from '../content/headings';
 import Paragraph from '../content/paragraph';
@@ -39,11 +40,13 @@ export default function Form({
 
   const next = () => {
     // TODO: Scroll to top + set focus to first field
+    scrollToTop();
     setStepNumber(Math.min(stepNumber + 1, totalSteps - 1));
   };
 
   const previous = () => {
     // TODO: Scroll to top + set focus to first field
+    scrollToTop();
     setStepNumber(Math.max(stepNumber - 1, 0));
   };
 

@@ -1,15 +1,38 @@
 import axios from 'axios';
-import { Application, ApplicationList } from '../../domain/HousingApi';
+import {
+  Application,
+  PaginatedApplicationListResponse,
+} from '../../domain/HousingApi';
 import { Stat } from '../../domain/stat';
 
 const headersWithKey = {
   'x-api-key': process.env.HOUSING_REGISTER_KEY,
 };
 
-export const getApplications = async (): Promise<ApplicationList | null> => {
+export const getApplications = async (
+  page: string
+): Promise<PaginatedApplicationListResponse | null> => {
   try {
     const { data } = await axios.get(
-      `${process.env.HOUSING_REGISTER_API}/applications`,
+      `${process.env.HOUSING_REGISTER_API}/applications?page=${page}`,
+      {
+        headers: headersWithKey,
+      }
+    );
+    return data;
+  } catch (err) {
+    return null;
+  }
+};
+
+export const searchApplications = async (
+  page: string,
+  reference: string,
+  status: string
+): Promise<PaginatedApplicationListResponse | null> => {
+  try {
+    const { data } = await axios.get(
+      `${process.env.HOUSING_REGISTER_API}/applications?page=${page}&reference=${reference}&status=${status}`,
       {
         headers: headersWithKey,
       }
@@ -87,22 +110,6 @@ export const getStats = async (): Promise<Array<Stat> | null> => {
   try {
     const { data } = await axios.get(
       `${process.env.HOUSING_REGISTER_API}/stats`,
-      {
-        headers: headersWithKey,
-      }
-    );
-    return data;
-  } catch (err) {
-    return null;
-  }
-};
-
-export const searchApplication = async (
-  searchTerm: string
-): Promise<ApplicationList | null> => {
-  try {
-    const { data } = await axios.get(
-      `${process.env.HOUSING_REGISTER_API}/applications?searchterm=${searchTerm}`,
       {
         headers: headersWithKey,
       }

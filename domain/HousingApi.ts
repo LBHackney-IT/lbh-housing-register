@@ -289,3 +289,54 @@ export interface Question {
    */
   answer?: string;
 }
+
+/**
+ *
+ * @export
+ * @interface PaginatedApplicationListResponse
+ */
+export interface PaginatedApplicationListResponse {
+  /**
+   *
+   * @type {number}
+   * @memberof PaginatedApplicationListResponse
+   */
+  totalItems: number;
+  /**
+   *
+   * @type {number}
+   * @memberof PaginatedApplicationListResponse
+   */
+  page: number;
+  /**
+   *
+   * @type {number}
+   * @memberof PaginatedApplicationListResponse
+   */
+  numberOfItemsPerPage: number;
+  /**
+   *
+   * @type {number}
+   * @memberof PaginatedApplicationListResponse
+   */
+  totalNumberOfPages: number;
+  /**
+   *
+   * @type {number}
+   * @memberof PaginatedApplicationListResponse
+   */
+  pageStartOffSet: number;
+  /**
+   *
+   * @type {number}
+   * @memberof PaginatedApplicationListResponse
+   */
+  pageEndOffSet: number;
+
+  /**
+   *
+   * @type {Array<Application>}
+   * @memberof PaginatedApplicationListResponse
+   */
+  results: Array<Application>;
+}

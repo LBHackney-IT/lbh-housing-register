@@ -3,11 +3,11 @@ import ApplicationTable from '../../components/applications/application-table';
 import { HeadingOne } from '../../components/content/headings';
 import Layout from '../../components/layout/staff-layout';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
-import { ApplicationList } from '../../domain/HousingApi';
+import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
 import { UserContext } from '../../lib/contexts/user-context';
 import {
+  searchApplications,
   getApplications,
-  searchApplication,
 } from '../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../lib/utils/auth';
 import SearchBox from '../../components/applications/searchBox';
@@ -16,18 +16,28 @@ import { useRouter } from 'next/router';
 
 interface PageProps {
   user: HackneyGoogleUser;
-  applications: ApplicationList;
+  applications: PaginatedApplicationListResponse;
+  pageUrl: string;
+  page: string;
+  reference: string;
 }
 
 export default function ApplicationListPage({
   user,
   applications,
+  pageUrl,
+  page = '1',
+  reference = '',
 }: PageProps): JSX.Element {
   const [searchInputValue, setsearchInputValue] = useState('');
   const router = useRouter();
+  const parameters = new URLSearchParams();
 
-  type State = 'new-applications' | 'pending-applications';
-  const [state, setState] = useState<State>('new-applications');
+  if (reference !== '') {
+    parameters.append('reference', reference);
+  }
+
+  const parsedPage = parseInt(page);
 
   const textChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -37,7 +47,17 @@ export default function ApplicationListPage({
   };
 
   const onSearchSubmit = async () => {
-    router.push(window.location.pathname + '?searchterm=' + searchInputValue);
+    router.push({
+      pathname: '/applications',
+      query: { reference: searchInputValue },
+    });
+  };
+
+  const filterByStatus = async (status: string) => {
+    router.push({
+      pathname: '/applications',
+      query: { status: status },
+    });
   };
 
   return (
@@ -54,7 +74,7 @@ export default function ApplicationListPage({
 
         <button
           onClick={() => {
-            setState('new-applications');
+            filterByStatus('new');
           }}
           className="lbh-link lbh-link--no-visited-state"
         >
@@ -62,29 +82,20 @@ export default function ApplicationListPage({
         </button>
         <button
           onClick={() => {
-            setState('pending-applications');
+            filterByStatus('pending');
           }}
           className="lbh-link lbh-link--no-visited-state"
         >
           Pending applications
         </button>
 
-        {state == 'new-applications' && (
-          <ApplicationTable
-            caption="Applications"
-            applications={
-              applications.results?.filter((x) => x.status === 'New') ?? []
-            }
-          />
-        )}
-        {state == 'pending-applications' && (
-          <ApplicationTable
-            caption="Applications"
-            applications={
-              applications.results?.filter((x) => x.status === 'Pending') ?? []
-            }
-          />
-        )}
+        <ApplicationTable
+          caption="Applications"
+          applications={applications}
+          currentPage={parsedPage}
+          parameters={parameters}
+          pageUrl={pageUrl}
+        />
       </Layout>
     </UserContext.Provider>
   );
@@ -105,14 +116,26 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const { searchterm } = context.query as {
-    searchterm: string;
+  const {
+    page = '1',
+    reference = '',
+    orderby = '',
+    status = '',
+  } = context.query as {
+    page: string;
+    reference: string;
+    orderby: string;
+    status: string;
   };
 
-  const applications =
-    searchterm === undefined
-      ? await getApplications()
-      : await searchApplication(searchterm);
+  const pageUrl = `http://${context.req.headers.host}/applications`;
 
-  return { props: { user, applications } };
+  const applications =
+    reference === '' && status === ''
+      ? await getApplications(page)
+      : await searchApplications(page, reference, status);
+
+  return {
+    props: { user, applications, pageUrl, page, reference },
+  };
 };

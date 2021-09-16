@@ -203,33 +203,42 @@ const ApplicationStep = (): JSX.Element => {
       firstName: Yup.string().label('First name').required(),
       surname: Yup.string().label('Last name').required(),
       gender: Yup.string().label('Gender').required(),
-      nationalInsuranceNumber: Yup.string().label('National Insurance number').required(),
+      nationalInsuranceNumber: Yup.string()
+        .label('National Insurance number')
+        .required(),
       phoneNumber: Yup.string().label('Phone number').required(),
       emailAddress: Yup.string().label('Email').email().required(),
     });
 
     switch (state) {
       case 'under-sixteen':
-        return schema.pick(['title', 'firstName', 'surname', 'dateOfBirth', 'gender']);
+        return schema.pick([
+          'title',
+          'firstName',
+          'surname',
+          'dateOfBirth',
+          'gender',
+        ]);
       case 'over-sixteen':
         return isMainApplicant
           ? schema.pick([
-            'title',
-            'firstName',
-            'surname',
-            'dateOfBirth',
-            'gender',
-            'nationalInsuranceNumber',
-            'phoneNumber',
-            'emailAddress',
-          ]) : schema.pick([
-            'title',
-            'firstName',
-            'surname',
-            'dateOfBirth',
-            'gender',
-            'nationalInsuranceNumber',
-          ]);
+              'title',
+              'firstName',
+              'surname',
+              'dateOfBirth',
+              'gender',
+              'nationalInsuranceNumber',
+              'phoneNumber',
+              'emailAddress',
+            ])
+          : schema.pick([
+              'title',
+              'firstName',
+              'surname',
+              'dateOfBirth',
+              'gender',
+              'nationalInsuranceNumber',
+            ]);
     }
   }
 

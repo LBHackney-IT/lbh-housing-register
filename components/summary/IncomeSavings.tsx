@@ -19,7 +19,7 @@ export function IncomeSavingsSummary({
   }
 
   const incomeValues: Money = {
-    under20000: 'Under £20,000',
+    under20000: 'under £20,000',
     '20to40000': '£20,000 - £39,999',
     '40to60000': '£40,000 - £59,999',
     '60to80000': '£60,000 - £79,999',
@@ -28,7 +28,7 @@ export function IncomeSavingsSummary({
   };
 
   const savingsValues: Money = {
-    under5000: 'Under £5,000',
+    under5000: 'under £5,000',
     '5to10000': '£5,000 - £9,999',
     '10to30000': '£10,000 - £29,999',
     '30to50000': '£30,000 - £49,999',

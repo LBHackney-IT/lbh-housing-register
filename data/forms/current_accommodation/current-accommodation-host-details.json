@@ -1,0 +1,25 @@
+{
+  "heading": "Current accommodation",
+  "steps": [
+    {
+      "fields": [
+        {
+          "label": "Name of the person who hosts you in their home",
+          "name": "host-person-name",
+          "hint": "If you are street homeless, please state below",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "Phone number of your host",
+          "name": "host-person-number",
+          "hint": "Please provide this information if you know it. This may help assess your application more quickly.",
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ]
+}

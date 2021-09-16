@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import ApplicationForms from '../../../components/application/application-forms';
 import Layout from '../../../components/layout/resident-layout';
-import whenAgreed from '../../../lib/hoc/whenAgreed';
+import withApplication from '../../../lib/hoc/withApplication';
 import { applicantHasId, selectApplicant } from '../../../lib/store/applicant';
 import { useAppSelector } from '../../../lib/store/hooks';
 import { getApplicationSectionFromId } from '../../../lib/utils/application-forms';
@@ -64,4 +64,4 @@ const ApplicationSection = (): JSX.Element => {
   );
 };
 
-export default whenAgreed(ApplicationSection);
+export default withApplication(ApplicationSection);

@@ -44,7 +44,7 @@ export function AddressHistorySummary({
             <SummaryAnswer>
               <Paragraph>
                 <Hint
-                  content={index === 0 ? 'Current Address' : 'Previous Address'}
+                  content={index === 0 ? 'Current address' : 'Previous address'}
                 />
                 <strong>
                   {address.address.line1}, {address.address.town},{' '}

@@ -30,7 +30,7 @@ export interface Address {
    * @type {string}
    * @memberof Address
    */
-  postCode?: string;
+  postcode?: string;
   /**
    *
    * @type {string}
@@ -73,12 +73,6 @@ export interface Applicant {
    * @memberof Applicant
    */
   evidence?: Array<Evidence>;
-  /**
-   *
-   * @type {Array<Question>}
-   * @memberof Applicant
-   */
-  eligibility?: Array<Question>;
   /**
    *
    * @type {Array<Question>}
@@ -232,24 +226,6 @@ export interface Person {
    * @type {string}
    * @memberof Person
    */
-  ethnicity?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof Person
-   */
-  nationality?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof Person
-   */
-  placeOfBirth?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof Person
-   */
   dateOfBirth?: string;
   /**
    *
@@ -257,6 +233,12 @@ export interface Person {
    * @memberof Person
    */
   gender?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Person
+   */
+  genderDescription?: string;
   /**
    *
    * @type {string}
@@ -306,4 +288,55 @@ export interface Question {
    * @memberof Question
    */
   answer?: string;
+}
+
+/**
+ *
+ * @export
+ * @interface PaginatedApplicationListResponse
+ */
+export interface PaginatedApplicationListResponse {
+  /**
+   *
+   * @type {number}
+   * @memberof PaginatedApplicationListResponse
+   */
+  totalItems: number;
+  /**
+   *
+   * @type {number}
+   * @memberof PaginatedApplicationListResponse
+   */
+  page: number;
+  /**
+   *
+   * @type {number}
+   * @memberof PaginatedApplicationListResponse
+   */
+  numberOfItemsPerPage: number;
+  /**
+   *
+   * @type {number}
+   * @memberof PaginatedApplicationListResponse
+   */
+  totalNumberOfPages: number;
+  /**
+   *
+   * @type {number}
+   * @memberof PaginatedApplicationListResponse
+   */
+  pageStartOffSet: number;
+  /**
+   *
+   * @type {number}
+   * @memberof PaginatedApplicationListResponse
+   */
+  pageEndOffSet: number;
+
+  /**
+   *
+   * @type {Array<Application>}
+   * @memberof PaginatedApplicationListResponse
+   */
+  results: Array<Application>;
 }

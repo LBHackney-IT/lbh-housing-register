@@ -1,17 +1,13 @@
 import { GetServerSideProps } from 'next';
 import ApplicationTable from '../../components/applications/application-table';
 import { HeadingOne } from '../../components/content/headings';
-import Paragraph from '../../components/content/paragraph';
 import Layout from '../../components/layout/staff-layout';
-import { Stats } from '../../components/stats';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
-import { ApplicationList } from '../../domain/HousingApi';
-import { Stat } from '../../domain/stat';
+import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
 import { UserContext } from '../../lib/contexts/user-context';
 import {
+  searchApplications,
   getApplications,
-  getStats,
-  searchApplication,
 } from '../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../lib/utils/auth';
 import SearchBox from '../../components/applications/searchBox';
@@ -20,17 +16,28 @@ import { useRouter } from 'next/router';
 
 interface PageProps {
   user: HackneyGoogleUser;
-  applications: ApplicationList;
-  stats: Array<Stat>;
+  applications: PaginatedApplicationListResponse;
+  pageUrl: string;
+  page: string;
+  reference: string;
 }
 
 export default function ApplicationListPage({
   user,
   applications,
-  stats,
+  pageUrl,
+  page = '1',
+  reference = '',
 }: PageProps): JSX.Element {
   const [searchInputValue, setsearchInputValue] = useState('');
   const router = useRouter();
+  const parameters = new URLSearchParams();
+
+  if (reference !== '') {
+    parameters.append('reference', reference);
+  }
+
+  const parsedPage = parseInt(page);
 
   const textChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -40,12 +47,22 @@ export default function ApplicationListPage({
   };
 
   const onSearchSubmit = async () => {
-    router.push(window.location.pathname + '?searchterm=' + searchInputValue);
+    router.push({
+      pathname: '/applications',
+      query: { reference: searchInputValue },
+    });
+  };
+
+  const filterByStatus = async (status: string) => {
+    router.push({
+      pathname: '/applications',
+      query: { status: status },
+    });
   };
 
   return (
     <UserContext.Provider value={{ user }}>
-      <Layout>
+      <Layout pageName="Manage applications">
         <SearchBox
           title="Housing Register"
           buttonTitle="Search"
@@ -53,18 +70,32 @@ export default function ApplicationListPage({
           onSearch={onSearchSubmit}
           textChangeHandler={textChangeHandler}
         />
-        <HeadingOne content="Staff dashboard" />
-        {stats && (
-          <Stats className="govuk-grid-column-one-third" stats={stats} />
-        )}
-        {applications.results?.length ? (
-          <ApplicationTable
-            caption="Applications"
-            applications={applications}
-          />
-        ) : (
-          <Paragraph>No applications to show</Paragraph>
-        )}
+        <HeadingOne content="View housing register" />
+
+        <button
+          onClick={() => {
+            filterByStatus('new');
+          }}
+          className="lbh-link lbh-link--no-visited-state"
+        >
+          New applications
+        </button>
+        <button
+          onClick={() => {
+            filterByStatus('pending');
+          }}
+          className="lbh-link lbh-link--no-visited-state"
+        >
+          Pending applications
+        </button>
+
+        <ApplicationTable
+          caption="Applications"
+          applications={applications}
+          currentPage={parsedPage}
+          parameters={parameters}
+          pageUrl={pageUrl}
+        />
       </Layout>
     </UserContext.Provider>
   );
@@ -85,16 +116,26 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const { searchterm } = context.query as {
-    searchterm: string;
+  const {
+    page = '1',
+    reference = '',
+    orderby = '',
+    status = '',
+  } = context.query as {
+    page: string;
+    reference: string;
+    orderby: string;
+    status: string;
   };
 
+  const pageUrl = `http://${context.req.headers.host}/applications`;
+
   const applications =
-    searchterm === undefined
-      ? await getApplications()
-      : await searchApplication(searchterm);
+    reference === '' && status === ''
+      ? await getApplications(page)
+      : await searchApplications(page, reference, status);
 
-  const stats = await getStats();
-
-  return { props: { user, applications, stats } };
+  return {
+    props: { user, applications, pageUrl, page, reference },
+  };
 };

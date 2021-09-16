@@ -80,7 +80,7 @@
                 "as": "input",
                 "containerId": "self-describe-text-values",
                 "fieldId": "self-describe",
-                "fieldName": "self-describe",
+                "fieldName": "genderDescription",
                 "label": "Please enter your self-description"
               }
             }

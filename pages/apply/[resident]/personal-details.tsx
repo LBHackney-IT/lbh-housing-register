@@ -20,7 +20,6 @@ import RadioConditional, {
 } from '../../../components/form/radioconditional';
 import Button from '../../../components/button';
 import * as Yup from 'yup';
-import { Applicant } from '../../../domain/HousingApi';
 import {
   getAgeInYearsFromDate,
   isOver16,
@@ -112,7 +111,7 @@ const ApplicationStep = (): JSX.Element => {
     router.push(`/apply/${resident}`);
   };
 
-  const options = [
+  const titleOptions = [
     {
       label: 'Select an option',
       value: '',
@@ -143,7 +142,7 @@ const ApplicationStep = (): JSX.Element => {
     },
   ];
 
-  const radioProps: RadioConditionalProps = {
+  const genderProps: RadioConditionalProps = {
     value: '',
     as: 'radioconditional',
     label: 'Gender',
@@ -164,7 +163,7 @@ const ApplicationStep = (): JSX.Element => {
           as: 'input',
           containerId: 'self-describe-text-values',
           fieldId: 'self-describe',
-          fieldName: 'self-describe',
+          fieldName: 'genderDescription',
           label: 'Please enter your self-description',
           display: true,
         },
@@ -172,7 +171,7 @@ const ApplicationStep = (): JSX.Element => {
     ],
   };
 
-  function generateValidationSchema(state: State, applicant: Applicant) {
+  function generateValidationSchema(state: State) {
     const min = Math.min(+new Date());
 
     const schema = Yup.object({
@@ -201,24 +200,36 @@ const ApplicationStep = (): JSX.Element => {
           }
         ),
       title: Yup.string().label('Title').required(),
-      firstName: Yup.string().label('First Name').required(),
-      surname: Yup.string().label('surname').required(),
-      nationalInsuranceNumber: Yup.string()
-        .label('National Insurance Number')
-        .required(),
+      firstName: Yup.string().label('First name').required(),
+      surname: Yup.string().label('Last name').required(),
+      gender: Yup.string().label('Gender').required(),
+      nationalInsuranceNumber: Yup.string().label('National Insurance number').required(),
+      phoneNumber: Yup.string().label('Phone number').required(),
+      emailAddress: Yup.string().label('Email').email().required(),
     });
 
     switch (state) {
       case 'under-sixteen':
-        return schema.pick(['title', 'firstName', 'surname', 'dateOfBirth']);
+        return schema.pick(['title', 'firstName', 'surname', 'dateOfBirth', 'gender']);
       case 'over-sixteen':
-        return schema.pick([
-          'title',
-          'firstName',
-          'surname',
-          'dateOfBirth',
-          'nationalInsuranceNumber',
-        ]);
+        return isMainApplicant
+          ? schema.pick([
+            'title',
+            'firstName',
+            'surname',
+            'dateOfBirth',
+            'gender',
+            'nationalInsuranceNumber',
+            'phoneNumber',
+            'emailAddress',
+          ]) : schema.pick([
+            'title',
+            'firstName',
+            'surname',
+            'dateOfBirth',
+            'gender',
+            'nationalInsuranceNumber',
+          ]);
     }
   }
 
@@ -231,16 +242,16 @@ const ApplicationStep = (): JSX.Element => {
       <Formik
         initialValues={initialValues}
         onSubmit={onSave}
-        validationSchema={generateValidationSchema(state, applicant)}
+        validationSchema={generateValidationSchema(state)}
       >
         {({ isSubmitting, values }) => (
           <Form>
             <Select
-              label={'title'}
+              label={'Title'}
               name={'title'}
-              options={options.map((address) => ({
-                label: address.label,
-                value: address.value,
+              options={titleOptions.map((title) => ({
+                label: title.label,
+                value: title.value,
               }))}
             />
             <Input name="firstName" label="First name" />
@@ -251,14 +262,14 @@ const ApplicationStep = (): JSX.Element => {
               showDay={true}
             />
             <RadioConditional
-              value={radioProps.value}
-              as={radioProps.as}
-              hint={radioProps.hint}
-              label={radioProps.label}
-              details={radioProps.details}
-              name={radioProps.name}
-              options={radioProps.options}
-              subheading={radioProps.subheading}
+              value={genderProps.value}
+              as={genderProps.as}
+              name={genderProps.name}
+              label={genderProps.label}
+              hint={genderProps.hint}
+              subheading={genderProps.subheading}
+              details={genderProps.details}
+              options={genderProps.options}
             />
 
             {state === 'over-sixteen' && (
@@ -272,7 +283,7 @@ const ApplicationStep = (): JSX.Element => {
             {isMainApplicant && (
               <>
                 <Input name="phoneNumber" label="Mobile number" />
-                <Input type="email" label="email" name="emailAddress" />
+                <Input name="emailAddress" label="Email" type="email" />
               </>
             )}
 

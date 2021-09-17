@@ -1,10 +1,13 @@
 import { Applicant } from '../../domain/HousingApi';
-import { formatDob } from '../../lib/utils/dateOfBirth';
+import { formatDob, getAgeInYears } from '../../lib/utils/dateOfBirth';
 import { getGenderName } from '../../lib/utils/gender';
 import Collapsible from '../collapsible';
-import Button from '../../components/button';
+import Button, { ButtonLink } from '../../components/button';
 import app from 'next/app';
 import Link from 'next/link';
+import React from 'react';
+import { HeadingThree } from '../content/headings';
+import Hint from '../form/hint';
 
 interface SummaryProps {
   heading: string;
@@ -18,48 +21,58 @@ export default function PersonalDetails({
   applicationId,
 }: SummaryProps): JSX.Element {
   return (
-    <table className="govuk-table lbh-table">
-      <thead className="govuk-table__head">
-        <tr className="govuk-table__row">
-          <th scope="col" className="govuk-table__header">
-            Person details
-          </th>
-          <th scope="col" className="govuk-table__header"></th>
-          <th scope="col" className="govuk-table__header"></th>
-        </tr>
-      </thead>
-      <tbody className="govuk-table__body">
-        <tr className="govuk-table__row">
-          <td className="govuk-table__cell">
-            <strong>
-              {applicant.person?.title} {applicant.person?.firstName}{' '}
-              {applicant.person?.surname}
-            </strong>
-            <br />
-            Applicant {applicant.person?.gender}{' '}
-            {applicant.person?.dateOfBirth &&
-              formatDob(new Date(applicant.person?.dateOfBirth))}
-            <br />
-            {applicant.contactInformation?.phoneNumber &&
-              applicant.contactInformation.phoneNumber}
-            {applicant.contactInformation?.emailAddress && (
-              <Link
-                href={`mailto:${applicant.contactInformation.emailAddress}`}
+    <>
+      <HeadingThree content={heading} />
+      <table className="govuk-table lbh-table" style={{marginTop: '1em'}}>
+        <thead className="govuk-table__head">
+          <tr className="govuk-table__row">
+            <th scope="col" colSpan={2} className="govuk-table__header">
+              <Hint content="Person details" />
+            </th>
+          </tr>
+        </thead>
+        <tbody className="govuk-table__body">
+          <tr className="govuk-table__row">
+            <td className="govuk-table__cell">
+              <strong>
+                {applicant.person?.title} {applicant.person?.firstName}{' '}
+                {applicant.person?.surname}
+              </strong>
+              <br />
+              Applicant
+              <br />
+              {getGenderName(applicant)},{' '}
+              {applicant.person?.dateOfBirth &&
+                formatDob(new Date(applicant.person?.dateOfBirth))
+              }{' '}
+              {applicant.person?.dateOfBirth &&
+                `(age ${getAgeInYears(applicant)})`
+              }
+              <br />
+              {applicant.contactInformation?.phoneNumber &&
+                <>
+                  <br />
+                  {applicant.contactInformation?.phoneNumber}
+                </>
+              }
+              {applicant.contactInformation?.emailAddress && (
+                <Link
+                  href={`mailto:${applicant.contactInformation.emailAddress}`}
+                >
+                  {applicant.contactInformation.emailAddress}
+                </Link>
+              )}
+            </td>
+            <td className="govuk-table__cell govuk-table__cell--numeric">
+              <ButtonLink
+                href={`/applications/${applicationId}/${applicant.person?.id}`}
               >
-                {applicant.contactInformation.emailAddress}
-              </Link>
-            )}
-          </td>
-          <td className="govuk-table__cell"></td>
-          <td className="govuk-table__cell">
-            <Link
-              href={`/applications/${applicationId}/${applicant.person?.id}`}
-            >
-              <Button>Open</Button>
-            </Link>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+                Open
+              </ButtonLink>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </>
   );
 }

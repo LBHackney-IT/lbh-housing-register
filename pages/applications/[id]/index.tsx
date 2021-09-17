@@ -121,11 +121,7 @@ export default function ApplicationPage({
           </div>
         )}
         {state == 'actions' && (
-          <>
-            <HeadingThree content="Action" />
-
-            <Actions data={data} />
-          </>
+          <Actions data={data} />
         )}
       </Layout>
     </UserContext.Provider>

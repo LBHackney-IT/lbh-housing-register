@@ -5,7 +5,7 @@
       "fields": [
         {
           "as": "radios",
-
+          "label": "Actions",
           "name": "admin-actions",
           "options": [
             {

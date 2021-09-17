@@ -13,7 +13,7 @@ const onSave = (values: FormikValues) => {};
 export default function Actions({ data }: PageProps): JSX.Element {
   return (
     <Form
-      buttonText="Save and continue"
+      buttonText="Save action"
       formData={formData}
       onSave={onSave}
       onSubmit={nextStep}

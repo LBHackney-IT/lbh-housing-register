@@ -54,11 +54,14 @@ export default function PersonalDetails({
                 </>
               )}
               {applicant.contactInformation?.emailAddress && (
-                <Link
-                  href={`mailto:${applicant.contactInformation.emailAddress}`}
-                >
-                  {applicant.contactInformation.emailAddress}
-                </Link>
+                <>
+                  <br />
+                  <Link
+                    href={`mailto:${applicant.contactInformation.emailAddress}`}
+                  >
+                    {applicant.contactInformation.emailAddress}
+                  </Link>
+                </>
               )}
             </td>
             <td className="govuk-table__cell govuk-table__cell--numeric">

@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import OtherMembers from '../../../../components/applications/other-members';
 import PersonalDetails from '../../../../components/applications/personal-details';
 import {
@@ -19,6 +19,7 @@ import { getStatusTag } from '../../../../lib/utils/tag';
 import Custom404 from '../../../404';
 import Snapshot from '../../../../components/applications/snapshot';
 import Actions from '../../../../components/applications/actions';
+import AssignUser from '../../../../components/applications/assign-user';
 
 export function formatDate(date: string | undefined) {
   if (!date) return '';
@@ -116,6 +117,8 @@ export default function ApplicationPage({
                 <br />
                 {formatDate(data.submittedAt)}
               </Paragraph>
+
+              <AssignUser id={data.id} user={data.assignedTo} />
             </div>
           </div>
         )}

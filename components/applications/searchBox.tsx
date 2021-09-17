@@ -19,14 +19,16 @@ export default function SearchBox({
 }: SearchBoxProps): JSX.Element {
   return (
     <div className="govuk-form-group c-flex">
-      <label className="govuk-visually-hidden" htmlFor="input-search">Search {title}</label>
+      <label className="govuk-visually-hidden" htmlFor="input-search">
+        Search {title}
+      </label>
       <input
         className="govuk-input lbh-input"
         id="input-search"
         name="search"
         type="search"
         placeholder={watermark}
-        style={{height: '50px'}}
+        style={{ height: '50px' }}
         onChange={(e): React.ChangeEvent<HTMLInputElement> =>
           textChangeHandler(e)
         }
@@ -35,7 +37,7 @@ export default function SearchBox({
         onClick={onSearch}
         className="govuk-button lbh-button"
         data-module="govuk-button"
-        style={{marginTop: '0', marginLeft: '1em', maxWidth: '110px'}}
+        style={{ marginTop: '0', marginLeft: '1em', maxWidth: '110px' }}
       >
         {buttonTitle}
       </button>

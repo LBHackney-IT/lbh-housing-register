@@ -79,7 +79,6 @@ export default function ApplicationListPage({
           </div>
           <div className="govuk-grid-column-three-quarters">
             <HeadingOne content="My worktray" />
-
             <button
               onClick={() => {
                 filterByStatus('new');
@@ -87,7 +86,7 @@ export default function ApplicationListPage({
               className="lbh-link lbh-link--no-visited-state"
             >
               New applications
-            </button>
+            </button>{' '}
             <button
               onClick={() => {
                 filterByStatus('pending');
@@ -96,7 +95,6 @@ export default function ApplicationListPage({
             >
               Pending applications
             </button>
-
             <ApplicationTable
               caption="Applications"
               applications={applications}
@@ -106,7 +104,6 @@ export default function ApplicationListPage({
             />
           </div>
         </div>
-
       </Layout>
     </UserContext.Provider>
   );

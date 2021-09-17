@@ -23,7 +23,7 @@ export default function PersonalDetails({
   return (
     <>
       <HeadingThree content={heading} />
-      <table className="govuk-table lbh-table" style={{marginTop: '1em'}}>
+      <table className="govuk-table lbh-table" style={{ marginTop: '1em' }}>
         <thead className="govuk-table__head">
           <tr className="govuk-table__row">
             <th scope="col" colSpan={2} className="govuk-table__header">
@@ -43,18 +43,16 @@ export default function PersonalDetails({
               <br />
               {getGenderName(applicant)},{' '}
               {applicant.person?.dateOfBirth &&
-                formatDob(new Date(applicant.person?.dateOfBirth))
-              }{' '}
+                formatDob(new Date(applicant.person?.dateOfBirth))}{' '}
               {applicant.person?.dateOfBirth &&
-                `(age ${getAgeInYears(applicant)})`
-              }
+                `(age ${getAgeInYears(applicant)})`}
               <br />
-              {applicant.contactInformation?.phoneNumber &&
+              {applicant.contactInformation?.phoneNumber && (
                 <>
                   <br />
                   {applicant.contactInformation?.phoneNumber}
                 </>
-              }
+              )}
               {applicant.contactInformation?.emailAddress && (
                 <Link
                   href={`mailto:${applicant.contactInformation.emailAddress}`}

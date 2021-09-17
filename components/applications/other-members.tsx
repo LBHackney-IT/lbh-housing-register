@@ -20,7 +20,7 @@ export default function OtherMembers({
   return (
     <>
       <HeadingThree content={heading} />
-      <table className="govuk-table lbh-table" style={{marginTop: '1em'}}>
+      <table className="govuk-table lbh-table" style={{ marginTop: '1em' }}>
         <thead className="govuk-table__head">
           <tr className="govuk-table__row">
             <th scope="col" colSpan={2} className="govuk-table__header">
@@ -36,20 +36,18 @@ export default function OtherMembers({
                   {applicant.person?.title} {applicant.person?.firstName}{' '}
                   {applicant.person?.surname}
                 </strong>
-                {applicant.person?.relationshipType &&
+                {applicant.person?.relationshipType && (
                   <>
                     <br />
                     {applicant.person?.relationshipType}
                   </>
-                }
+                )}
                 <br />
                 {getGenderName(applicant)},{' '}
                 {applicant.person?.dateOfBirth &&
-                  formatDob(new Date(applicant.person?.dateOfBirth))
-                }{' '}
+                  formatDob(new Date(applicant.person?.dateOfBirth))}{' '}
                 {applicant.person?.dateOfBirth &&
-                  `(age ${getAgeInYears(applicant)})`
-                }
+                  `(age ${getAgeInYears(applicant)})`}
               </td>
               <td className="govuk-table__cell govuk-table__cell--numeric">
                 <ButtonLink

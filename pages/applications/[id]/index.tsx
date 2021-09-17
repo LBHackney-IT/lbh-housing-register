@@ -120,9 +120,7 @@ export default function ApplicationPage({
             </div>
           </div>
         )}
-        {state == 'actions' && (
-          <Actions data={data} />
-        )}
+        {state == 'actions' && <Actions data={data} />}
       </Layout>
     </UserContext.Provider>
   );

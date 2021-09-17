@@ -63,7 +63,7 @@ export default function PersonalDetails({
             </td>
             <td className="govuk-table__cell govuk-table__cell--numeric">
               <ButtonLink
-                href={`/applications/${applicationId}/${applicant.person?.id}`}
+                href={`/applications/view/${applicationId}/${applicant.person?.id}`}
               >
                 Open
               </ButtonLink>

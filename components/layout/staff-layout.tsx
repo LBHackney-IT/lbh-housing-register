@@ -51,7 +51,7 @@ export default function StaffLayout({
         <div className="lbh-container">
           <nav>
             <strong className="lbh-heading-h5">
-              <Link href={`/applications/${id}`}>
+              <Link href={`/applications/view/${id}`}>
                 <a className="lbh-link">Back to household overview</a>
               </Link>
             </strong>

@@ -50,21 +50,21 @@ export default function ApplicationListPage({
 
   const onSearchSubmit = async () => {
     router.push({
-      pathname: '/applications',
+      pathname: '/applications/unassigned',
       query: { reference: searchInputValue },
     });
   };
 
   const filterByStatus = async (status: string) => {
     router.push({
-      pathname: '/applications',
+      pathname: '/applications/unassigned',
       query: { status: status },
     });
   };
 
   return (
     <UserContext.Provider value={{ user }}>
-      <Layout pageName="My worktray">
+      <Layout pageName="Group worktray">
         <SearchBox
           title="Housing Register"
           buttonTitle="Search"
@@ -78,7 +78,7 @@ export default function ApplicationListPage({
             <Sidebar />
           </div>
           <div className="govuk-grid-column-three-quarters">
-            <HeadingOne content="My worktray" />
+            <HeadingOne content="Group worktray" />
 
             <button
               onClick={() => {
@@ -139,12 +139,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     status: string;
   };
 
-  const pageUrl = `${process.env.APP_URL}/applications`;
+  const pageUrl = `${process.env.APP_URL}/applications/unassigned`;
 
   const applications =
     reference === '' && status === ''
-      ? await getApplications(page, user?.email)
-      : await searchApplications(page, reference, status, user?.email);
+      ? await getApplications(page)
+      : await searchApplications(page, reference, status);
 
   return {
     props: { user, applications, pageUrl, page, reference },

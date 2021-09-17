@@ -63,7 +63,7 @@ export default function ApplicationTable({
                     #{application.reference}
                   </th>
                   <td className="govuk-table__cell">
-                    <Link href={`/applications/${application.id}`}>
+                    <Link href={`/applications/view/${application.id}`}>
                       <a className="govuk-link govuk-custom-text-color">
                         {application.mainApplicant?.person?.title}{' '}
                         {application.mainApplicant?.person?.firstName}{' '}

@@ -1,19 +1,19 @@
 import { GetServerSideProps } from 'next';
 import React from 'react';
-import AddressDetails from '../../../../components/applications/address-details';
-import ContactDetails from '../../../../components/applications/contact-details';
-import PersonalDetails from '../../../../components/applications/personal-details';
+import AddressDetails from '../../../../../components/applications/address-details';
+import ContactDetails from '../../../../../components/applications/contact-details';
+import PersonalDetails from '../../../../../components/applications/personal-details';
 import {
   HeadingOne,
   HeadingTwo,
-} from '../../../../components/content/headings';
-import Layout from '../../../../components/layout/staff-layout';
-import { HackneyGoogleUser } from '../../../../domain/HackneyGoogleUser';
-import { Application } from '../../../../domain/HousingApi';
-import { UserContext } from '../../../../lib/contexts/user-context';
-import { getApplication } from '../../../../lib/gateways/applications-api';
-import { getRedirect, getSession } from '../../../../lib/utils/auth';
-import Custom404 from '../../../404';
+} from '../../../../../components/content/headings';
+import Layout from '../../../../../components/layout/staff-layout';
+import { HackneyGoogleUser } from '../../../../../domain/HackneyGoogleUser';
+import { Application } from '../../../../../domain/HousingApi';
+import { UserContext } from '../../../../../lib/contexts/user-context';
+import { getApplication } from '../../../../../lib/gateways/applications-api';
+import { getRedirect, getSession } from '../../../../../lib/utils/auth';
+import Custom404 from '../../../../404';
 
 export function formatDate(date: string | undefined) {
   if (!date) return '';

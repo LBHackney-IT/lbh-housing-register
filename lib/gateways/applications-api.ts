@@ -10,11 +10,13 @@ const headersWithKey = {
 };
 
 export const getApplications = async (
-  page: string
+  page: string,
+  user?: string
 ): Promise<PaginatedApplicationListResponse | null> => {
   try {
+    const assignedTo = user ?? '';
     const { data } = await axios.get(
-      `${process.env.HOUSING_REGISTER_API}/applications?page=${page}`,
+      `${process.env.HOUSING_REGISTER_API}/applications?page=${page}&assignedTo=${assignedTo}`,
       {
         headers: headersWithKey,
       }
@@ -28,11 +30,13 @@ export const getApplications = async (
 export const searchApplications = async (
   page: string,
   reference: string,
-  status: string
+  status: string,
+  user?: string
 ): Promise<PaginatedApplicationListResponse | null> => {
   try {
+    const assignedTo = user ?? '';
     const { data } = await axios.get(
-      `${process.env.HOUSING_REGISTER_API}/applications?page=${page}&reference=${reference}&status=${status}`,
+      `${process.env.HOUSING_REGISTER_API}/applications?page=${page}&reference=${reference}&status=${status}&assignedTo=${assignedTo}`,
       {
         headers: headersWithKey,
       }

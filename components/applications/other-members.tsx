@@ -1,5 +1,10 @@
 import { Applicant } from '../../domain/HousingApi';
-import Collapsible from '../collapsible';
+import { ButtonLink } from '../../components/button';
+import { formatDob, getAgeInYears } from '../../lib/utils/dateOfBirth';
+import React from 'react';
+import { HeadingThree } from '../content/headings';
+import { getGenderName } from '../../lib/utils/gender';
+import Hint from '../form/hint';
 
 interface SummaryProps {
   heading: string;
@@ -13,34 +18,48 @@ export default function OtherMembers({
   applicationId,
 }: SummaryProps): JSX.Element {
   return (
-    <Collapsible heading={heading}>
-      <dl className="govuk-summary-list lbh-summary-list">
-        {others.map((applicant, index) => (
-          <div key={index} className="govuk-summary-list__row">
-            <dt className="govuk-summary-list__key">Person {index + 1}</dt>
-            <dd className="govuk-summary-list__value">
-              {applicant.person?.title} {applicant.person?.firstName}{' '}
-              {applicant.person?.surname}
-            </dd>
-            <dd className="govuk-summary-list__actions">
-              <ul className="govuk-summary-list__actions-list">
-                <li className="govuk-summary-list__actions-list-item">
-                  <a
-                    className="govuk-link"
-                    href={`/applications/${applicationId}/${applicant.person?.id}`}
-                  >
-                    Review
-                    <span className="govuk-visually-hidden">
-                      {' '}
-                      {applicant.person?.firstName}
-                    </span>
-                  </a>
-                </li>
-              </ul>
-            </dd>
-          </div>
-        ))}
-      </dl>
-    </Collapsible>
+    <>
+      <HeadingThree content={heading} />
+      <table className="govuk-table lbh-table" style={{ marginTop: '1em' }}>
+        <thead className="govuk-table__head">
+          <tr className="govuk-table__row">
+            <th scope="col" colSpan={2} className="govuk-table__header">
+              <Hint content="Person details" />
+            </th>
+          </tr>
+        </thead>
+        <tbody className="govuk-table__body">
+          {others.map((applicant, index) => (
+            <tr className="govuk-table__row">
+              <td className="govuk-table__cell">
+                <strong>
+                  {applicant.person?.title} {applicant.person?.firstName}{' '}
+                  {applicant.person?.surname}
+                </strong>
+                {applicant.person?.relationshipType && (
+                  <>
+                    <br />
+                    {applicant.person?.relationshipType}
+                  </>
+                )}
+                <br />
+                {getGenderName(applicant)},{' '}
+                {applicant.person?.dateOfBirth &&
+                  formatDob(new Date(applicant.person?.dateOfBirth))}{' '}
+                {applicant.person?.dateOfBirth &&
+                  `(age ${getAgeInYears(applicant)})`}
+              </td>
+              <td className="govuk-table__cell govuk-table__cell--numeric">
+                <ButtonLink
+                  href={`/applications/${applicationId}/${applicant.person?.id}`}
+                >
+                  Open
+                </ButtonLink>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
   );
 }

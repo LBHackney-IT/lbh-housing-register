@@ -1,0 +1,63 @@
+{
+  "id": "admin-actions",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "Actions",
+          "name": "admin-actions",
+          "options": [
+            {
+              "label": "Awaiting Assessment",
+              "value": "awaiting-assessment"
+            },
+            {
+              "label": "Activate",
+              "value": "activate"
+            },
+            {
+              "label": "Refer for approval",
+              "value": "refer-for-approval"
+            },
+            {
+              "label": "Reject",
+              "value": "reject"
+            },
+            {
+              "label": "Move to Pending",
+              "value": "move-to-pending"
+            },
+            {
+              "label": "Cancel",
+              "value": "cancel"
+            },
+            {
+              "label": "Housed",
+              "value": "housed"
+            },
+            {
+              "label": "Active and under appeal",
+              "value": "active-and-under-appeal"
+            },
+            {
+              "label": "Inactive and under appeal",
+              "value": "inactive-and-under-appeal"
+            },
+            {
+              "label": "Suspend",
+              "value": "suspend"
+            },
+            {
+              "label": "Transition Band",
+              "value": "transition-band"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "concurrently -k \"npm:mocks\" \"next dev\"",
+    "dev": "next dev",
     "start": "next start -p $PORT",
     "test": "jest --watch",
     "mocks": "mocks-server",

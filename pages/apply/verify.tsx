@@ -43,6 +43,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
 
       router.push('/apply/agree-terms');
     } catch (e) {
+      // TODO: Display correct error in case of false code entered
       setUserError(Errors.VERIFY_ERROR);
       scrollToError();
     }

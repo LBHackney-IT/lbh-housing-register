@@ -103,6 +103,7 @@ export const completeApplication = async (
 ): Promise<Application | null> => {
   const { data } = await axios.patch(
     `${process.env.HOUSING_REGISTER_API}/applications/${id}/complete`,
+    null,
     {
       headers: headersWithKey,
     }

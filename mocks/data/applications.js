@@ -12,7 +12,7 @@ module.exports = [
         surname: 'Person',
         dateOfBirth: '1990-02-19',
         gender: 'F',
-        nationalInsuranceNumber: 'QQ 12 34 56 C'
+        nationalInsuranceNumber: 'QQ 12 34 56 C',
       },
       contactInformation: {
         emailAddress: 'test@email.com',
@@ -36,7 +36,7 @@ module.exports = [
           surname: 'Person',
           dateOfBirth: '1982-02-20',
           gender: 'F',
-        }
+        },
       },
       {
         person: {
@@ -53,7 +53,7 @@ module.exports = [
   {
     id: 'LBH-1234',
     status: 'In review',
-    assignedTo: "test@hackney.gov.uk",
+    assignedTo: 'test@hackney.gov.uk',
     createdAt: '2 days ago',
     mainApplicant: {
       person: {

@@ -46,23 +46,22 @@ const ApplicationConfirmation = (): JSX.Element => {
         <TimelineEvent heading="Application submitted" variant="action-needed">
           <Paragraph>{formatDate(application.submittedAt)}</Paragraph>
         </TimelineEvent>
-        <TimelineEvent heading="Application review">
-          <Paragraph>We aim to review applications within two weeks.</Paragraph>
-        </TimelineEvent>
-        <TimelineEvent heading="Medical checks">
+        <TimelineEvent heading="Upload Evidence">
           <Paragraph>
-            If you have provided information about medical conditions for people
-            in your application, these will be assessed by a specialist.
+            You'll shortly receive an email with instructions on how to submit
+            your documents and, if required, a medical form.
           </Paragraph>
         </TimelineEvent>
+        <TimelineEvent heading="Application review">{}</TimelineEvent>
         <TimelineEvent heading="Decision">
           <Paragraph>
-            We will contact you with a decision by SMS and email when your
-            application has been assessed.
+            We aim to contact you with a decision by email within 20 working
+            days after receiving all information and documents from yourself and
+            third parties.
           </Paragraph>
           <Paragraph>
-            If your application is not successful, we will be ale to offer
-            tailored adice based on your situation. You will have the right to
+            If your application is not successful, we will offer you advice on
+            next steps, based on your situation. You will have the right to
             appeal the decision.
           </Paragraph>
         </TimelineEvent>

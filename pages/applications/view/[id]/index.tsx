@@ -1,25 +1,25 @@
 import { GetServerSideProps } from 'next';
-import { useState } from 'react';
-import ContactDetails from '../../../components/applications/contact-details';
-import OtherMembers from '../../../components/applications/other-members';
-import PersonalDetails from '../../../components/applications/personal-details';
+import React, { useState } from 'react';
+import OtherMembers from '../../../../components/applications/other-members';
+import PersonalDetails from '../../../../components/applications/personal-details';
 import {
   HeadingOne,
   HeadingThree,
   HeadingTwo,
-} from '../../../components/content/headings';
-import Paragraph from '../../../components/content/paragraph';
-import Layout from '../../../components/layout/staff-layout';
-import Tag from '../../../components/tag';
-import { HackneyGoogleUser } from '../../../domain/HackneyGoogleUser';
-import { Application } from '../../../domain/HousingApi';
-import { UserContext } from '../../../lib/contexts/user-context';
-import { getApplication } from '../../../lib/gateways/applications-api';
-import { getRedirect, getSession } from '../../../lib/utils/auth';
-import { getStatusTag } from '../../../lib/utils/tag';
-import Custom404 from '../../404';
-import Snapshot from '../../../components/applications/snapshot';
-import Actions from '../../../components/applications/actions';
+} from '../../../../components/content/headings';
+import Paragraph from '../../../../components/content/paragraph';
+import Layout from '../../../../components/layout/staff-layout';
+import Tag from '../../../../components/tag';
+import { HackneyGoogleUser } from '../../../../domain/HackneyGoogleUser';
+import { Application } from '../../../../domain/HousingApi';
+import { UserContext } from '../../../../lib/contexts/user-context';
+import { getApplication } from '../../../../lib/gateways/applications-api';
+import { getRedirect, getSession } from '../../../../lib/utils/auth';
+import { getStatusTag } from '../../../../lib/utils/tag';
+import Custom404 from '../../../404';
+import Snapshot from '../../../../components/applications/snapshot';
+import Actions from '../../../../components/applications/actions';
+import AssignUser from '../../../../components/applications/assign-user';
 
 export function formatDate(date: string | undefined) {
   if (!date) return '';
@@ -117,6 +117,8 @@ export default function ApplicationPage({
                 <br />
                 {formatDate(data.submittedAt)}
               </Paragraph>
+
+              <AssignUser id={data.id} user={data.assignedTo} />
             </div>
           </div>
         )}

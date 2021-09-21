@@ -1,12 +1,5 @@
 import { GetServerSideProps } from 'next';
-import React from 'react';
-import AddressDetails from '../../../../../components/applications/address-details';
-import ContactDetails from '../../../../../components/applications/contact-details';
-import PersonalDetails from '../../../../../components/applications/personal-details';
-import {
-  HeadingOne,
-  HeadingTwo,
-} from '../../../../../components/content/headings';
+import React, { useState } from 'react';
 import Layout from '../../../../../components/layout/staff-layout';
 import { HackneyGoogleUser } from '../../../../../domain/HackneyGoogleUser';
 import { Application } from '../../../../../domain/HousingApi';
@@ -14,6 +7,19 @@ import { UserContext } from '../../../../../lib/contexts/user-context';
 import { getApplication } from '../../../../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../../../../lib/utils/auth';
 import Custom404 from '../../../../404';
+import CheckBoxList, {
+  CheckBoxListPageProps,
+} from '../../../../../components/applications/checkBoxList';
+import {
+  personalDetailsCheckboxList,
+  immigrationStatusCheckboxList,
+  livingSituationCheckboxList,
+  addressHistoryCheckboxList,
+  currentAccomodationCheckboxList,
+  situationCheckboxList,
+  employmentCheckboxList,
+  incomeAndSavingsCheckboxList,
+} from '../../../../../lib/utils/checkboxListData';
 
 export function formatDate(date: string | undefined) {
   if (!date) return '';
@@ -41,40 +47,88 @@ export default function ApplicationPersonPage({
     ? data.mainApplicant
     : data.otherMembers?.find((x) => x.person?.id === person);
 
+  type State =
+    | 'identity'
+    | 'livingsituation'
+    | 'money'
+    | 'health'
+    | 'checklist';
+  const [state, setState] = useState<State>('livingsituation');
+
+  const personalDetails = personalDetailsCheckboxList(applicant);
+  const immigrationStatus = immigrationStatusCheckboxList(applicant);
+  const livingSituation = livingSituationCheckboxList(applicant);
+  const addressHistory = addressHistoryCheckboxList(applicant);
+  const currentAccomodation = currentAccomodationCheckboxList(applicant);
+  const situation = situationCheckboxList(applicant);
+  const employment = employmentCheckboxList(applicant);
+  const incomeAndSavings = incomeAndSavingsCheckboxList(applicant);
+
   return (
     <UserContext.Provider value={{ user }}>
       <Layout>
-        <HeadingOne
-          content={
-            isMainApplicant
-              ? 'Review main applicant'
-              : 'Review household member'
-          }
-        />
-        <HeadingTwo
-          content={`${applicant?.person?.firstName} ${applicant?.person?.surname}`}
-        />
-
-        <hr />
-        {applicant && (
-          <PersonalDetails
-            heading="Personal details"
-            applicant={applicant}
-            applicationId={data.id}
-          />
+        <button
+          onClick={() => {
+            setState('identity');
+          }}
+          className="lbh-link lbh-link--no-visited-state"
+        >
+          Identity
+        </button>{' '}
+        <button
+          onClick={() => {
+            setState('livingsituation');
+          }}
+          className="lbh-link lbh-link--no-visited-state"
+        >
+          Living Situation
+        </button>{' '}
+        <button
+          onClick={() => {
+            setState('money');
+          }}
+          className="lbh-link lbh-link--no-visited-state"
+        >
+          Money
+        </button>{' '}
+        <button
+          onClick={() => {
+            setState('health');
+          }}
+          className="lbh-link lbh-link--no-visited-state"
+        >
+          Health
+        </button>{' '}
+        <button
+          onClick={() => {
+            setState('checklist');
+          }}
+          className="lbh-link lbh-link--no-visited-state"
+        >
+          Checklist
+        </button>
+        {state == 'identity' && (
+          <>
+            <CheckBoxList {...(personalDetails as CheckBoxListPageProps)} />
+            <CheckBoxList {...(immigrationStatus as CheckBoxListPageProps)} />
+          </>
         )}
-        {applicant?.contactInformation && (
-          <ContactDetails
-            heading="Contact details"
-            contact={applicant.contactInformation}
-          />
+        {state == 'livingsituation' && (
+          <>
+            <CheckBoxList {...(livingSituation as CheckBoxListPageProps)} />
+            <CheckBoxList {...(addressHistory as CheckBoxListPageProps)} />
+            <CheckBoxList {...(currentAccomodation as CheckBoxListPageProps)} />
+            <CheckBoxList {...(situation as CheckBoxListPageProps)} />
+          </>
         )}
-        {applicant?.address && (
-          <AddressDetails
-            heading="Address details"
-            address={applicant.address}
-          />
+        {state == 'money' && (
+          <>
+            <CheckBoxList {...(employment as CheckBoxListPageProps)} />
+            <CheckBoxList {...(incomeAndSavings as CheckBoxListPageProps)} />
+          </>
         )}
+        {state == 'health' && <h3>health</h3>}
+        {state == 'checklist' && <h3>checklist</h3>}
       </Layout>
     </UserContext.Provider>
   );

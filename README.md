@@ -4,7 +4,7 @@
 
 ## 🧐 What does it do?
 
-This application has two sides: the _officer dashboard_ side, for council officers to log in and manage applications, and the _resident_ side for residents to submit applications.
+This application has two sides: the _officer dashboard_ side, for council officers to log in and manage applications, and the _resident_ side for residents to submit applications for approval.
 
 ### Resident Flow
 
@@ -21,8 +21,9 @@ This app will form part of the user journey, allowing for an application to the 
 
 - **`/login`** - Login to the staff dashboard
 - **`/access-denied`** - Active user logged in, but without access to required page
-- **`/applications`** - The homepage for officers, which displays applications
-  - **`/applications/:id`** - View all information relating to a particular application
+- **`/applications`** - The homepage for officers, which displays applications assigned to them
+  - **`/applications/unassigned`** - View any unassigned applications, which can be assigned to an officer
+  - **`/applications/view/:id`** - View all information relating to a particular application
 
 ## 🧱 How it's made
 
@@ -80,7 +81,7 @@ If you have the right configuration setup within the `.env` file, you should be 
 
 ### Mock Server
 
-The app comes with a [mock server](http://mocks-server.org) for mock requests to external APIs. It runs automatically when you run the dev server, and is available on port 5000.
+The app comes with a [mock server](http://mocks-server.org) for mock requests to external APIs. This can be be run with `npm run mocks`, and will be available on port 5000.
 
 e.g. `http://localhost:5000/api/applications` will return a list of applications.
 
@@ -138,3 +139,4 @@ This has been extended to be used in a more generic way, which means forms can b
 [Gov.UK Notify](https://gov.uk/notify) is used to send emails (e.g. confirmation emails). Update the `NOTIFY_API_KEY` and relevant template ids in the `.env` file.
 
 - NOTIFY_TEMPLATE_NEW_APPLICATION: sent on completion of an application
+- NOTIFY_TEMPLATE_DISQUALIFY: sent on disqualification on an application

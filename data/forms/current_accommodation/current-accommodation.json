@@ -198,6 +198,19 @@
           }
         }
       ]
+    },
+    {
+      "fields": [
+        {
+          "as": "textarea",
+          "label": "Please describe why your current home is unsuitable",
+          "name": "why-home-unsuitable",
+          "validation": {
+            "required": true,
+            "max": 200
+          }
+        }
+      ]
     }
   ],
   "conditionals": [

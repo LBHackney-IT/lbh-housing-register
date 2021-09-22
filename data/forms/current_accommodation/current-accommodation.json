@@ -140,7 +140,7 @@
         {
           "type": "number",
           "min": 0,
-          "label": "How many bedrooms does your current home have?",
+          "label": "How many bedrooms do you and the people in your application have access to?",
           "name": "home-how-many-bedrooms",
           "hint": "For example, 1",
           "validation": {
@@ -150,7 +150,7 @@
         {
           "type": "number",
           "min": 0,
-          "label": "How many living rooms does your current home have?",
+          "label": "How many living rooms do you and the people in your application have access to?",
           "name": "home-how-many-livingrooms",
           "hint": "For example, 1",
           "validation": {
@@ -160,7 +160,7 @@
         {
           "type": "number",
           "min": 0,
-          "label": "How many dining rooms does your current home have?",
+          "label": "How many dining rooms do you and the people in your application have access to?",
           "name": "home-how-many-diningrooms",
           "hint": "For example, 1",
           "validation": {
@@ -170,7 +170,7 @@
         {
           "type": "number",
           "min": 0,
-          "label": "How many bathrooms does your current home have?",
+          "label": "How many bathrooms do you have access to?",
           "name": "home-how-many-bathrooms",
           "hint": "For example, 1",
           "validation": {
@@ -180,7 +180,7 @@
         {
           "type": "number",
           "min": 0,
-          "label": "How many kitchens does your current home have?",
+          "label": "How many kitchens do you have access to?",
           "name": "home-how-many-kitchens",
           "hint": "For example, 1",
           "validation": {
@@ -188,11 +188,9 @@
           }
         },
         {
-          "type": "number",
-          "min": 0,
-          "label": "How many other rooms does your current home have?",
+          "label": "What other rooms do you have access to?",
           "name": "home-how-many-other-rooms",
-          "hint": "For example, 1",
+          "hint": "Please specify any other rooms you have access to, for example: play room, office",
           "validation": {
             "required": true
           }

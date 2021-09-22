@@ -57,7 +57,7 @@ export default function ApplicationPersonPage({
     | 'money'
     | 'health'
     | 'checklist';
-  const [state, setState] = useState<State>('identity');
+  const [state, setState] = useState<State>('money');
 
   const personalDetails = personalDetailsCheckboxList(applicant);
   const immigrationStatus = immigrationStatusCheckboxList(applicant);
@@ -104,14 +104,14 @@ export default function ApplicationPersonPage({
         >
           Health
         </button>{' '}
-        <button
+        {/* <button
           onClick={() => {
             setState('checklist');
           }}
           className="lbh-link lbh-link--no-visited-state"
         >
           Checklist
-        </button>
+        </button> */}
         {state == 'identity' && (
           <>
             <CheckBoxList {...(personalDetails as CheckBoxListPageProps)} />

@@ -1,12 +1,17 @@
 import { Applicant } from '../../domain/HousingApi';
 import { CheckBoxListPageProps } from '../../components/applications/checkBoxList';
 import { MedicalDetailPageProps } from '../../components/applications/medical-details';
-import { questionLookup } from '../../lib/utils/applicationQuestions';
+import {
+  questionLookup,
+  getQuestionValue,
+} from '../../lib/utils/applicationQuestions';
 import { QuestionKey } from './question-data';
 import {
   AddressHistoryEntry,
   calculateDurations,
 } from '../../lib/utils/addressHistory';
+import { formatDate } from '../../lib/utils/dateOfBirth';
+import '../extensions/.stringExtensions';
 
 const legalStaus = (option: string): string => {
   switch (option) {
@@ -33,6 +38,78 @@ const legalStaus = (option: string): string => {
 
     default:
       return '';
+  }
+};
+
+const employmentStatus = (option: string): string => {
+  switch (option) {
+    case 'employed':
+      return 'Employed';
+
+    case 'selfemployed':
+      return 'Self Employed';
+
+    case 'fulltimestudent':
+      return 'Full time student';
+
+    case 'unemployed':
+      return 'Unemployed';
+
+    case 'retired':
+      return 'Retired';
+
+    default:
+      return 'N/A';
+  }
+};
+
+const incomeDetails = (option: string): string => {
+  switch (option) {
+    case 'under20000':
+      return 'Under £20,000';
+
+    case '20to40000':
+      return ' £20,000 to £39,999';
+
+    case '40to60000':
+      return '£40,000 to £59,999';
+
+    case '60to80000':
+      return '£60,000 to £79,999';
+
+    case '80to100000':
+      return '£80,000 to £99,999';
+
+    case '100000':
+      return '£100,000 or more';
+
+    default:
+      return 'N/A';
+  }
+};
+
+const savingDetails = (option: string): string => {
+  switch (option) {
+    case 'under5000':
+      return 'Under £5,000';
+
+    case '5to10000':
+      return '£5,000 to £9,999';
+
+    case '10to30000':
+      return '£10,000 to £29,999';
+
+    case '30to50000':
+      return '£30,000 to £49,999';
+
+    case '50to80000':
+      return '£50,000 to £79,999';
+
+    case '80000':
+      return '£80,000 or more';
+
+    default:
+      return 'N/A';
   }
 };
 
@@ -75,21 +152,18 @@ export const personalDetailsCheckboxList = (
 export const immigrationStatusCheckboxList = (
   applicant?: Applicant
 ): CheckBoxListPageProps => {
-  const citizenship =
-    questionLookup(QuestionKey.CITIZENSHIP, applicant) || 'N/A';
-  const studyStatus =
-    questionLookup(QuestionKey.UK_STUDYING, applicant) || 'N/A';
+  const citizenship = getQuestionValue(QuestionKey.CITIZENSHIP, applicant);
+  const studyStatus = getQuestionValue(QuestionKey.UK_STUDYING, applicant);
   const studyStatusText =
     studyStatus === 'yes' ? 'In the UK to study' : 'Not in the uk to study';
 
-  const visaStatus = questionLookup(QuestionKey.IMMIGRATION_VISA) || 'N/A';
-  const eeaNational =
-    questionLookup(QuestionKey.IMMIGRATION_EA_NATIONAL) || 'N/A';
-  const sponsership =
-    questionLookup(QuestionKey.IMMIGRATION_SPONSERSHIP) || 'N/A';
-  const legalStatus = questionLookup(QuestionKey.IMMIGRATION_STATUS) || 'N/A';
-  const settledStatus =
-    questionLookup(QuestionKey.IMMIGRATION_SETTLED_STATUS) || 'N/A';
+  const visaStatus = getQuestionValue(QuestionKey.IMMIGRATION_VISA);
+  const eeaNational = getQuestionValue(QuestionKey.IMMIGRATION_EA_NATIONAL);
+  const sponsership = getQuestionValue(QuestionKey.IMMIGRATION_SPONSERSHIP);
+  const legalStatus = getQuestionValue(QuestionKey.IMMIGRATION_STATUS);
+  const settledStatus = getQuestionValue(
+    QuestionKey.IMMIGRATION_SETTLED_STATUS
+  );
 
   let visaStatusText = '';
   visaStatusText +=
@@ -156,56 +230,60 @@ export const livingSituationCheckboxList = (
     institutionsText === 'N/A';
   }
 
-  const residentialStatus =
-    questionLookup(
-      QuestionKey.RESIDENTIAL_STATUS_RESIDENTIAL_STATUS,
-      applicant
-    ) || 'N/A';
+  const residentialStatus = getQuestionValue(
+    QuestionKey.RESIDENTIAL_STATUS_RESIDENTIAL_STATUS,
+    applicant
+  );
 
-  const armedForces =
-    questionLookup(QuestionKey.RESIDENTIAL_STATUS_ARMED_FORCES, applicant) ||
-    'N/A';
+  const armedForces = getQuestionValue(
+    QuestionKey.RESIDENTIAL_STATUS_ARMED_FORCES,
+    applicant
+  );
 
-  const mobilityScheme =
-    questionLookup(QuestionKey.RESIDENTIAL_STATUS_MOBILITY_SCHEME, applicant) ||
-    'N/A';
+  const mobilityScheme = getQuestionValue(
+    QuestionKey.RESIDENTIAL_STATUS_MOBILITY_SCHEME,
+    applicant
+  );
 
-  const domesticViolence =
-    questionLookup(
-      QuestionKey.RESIDENTIAL_STATUS_DOMESTIC_VIOLENCE,
-      applicant
-    ) || 'N/A';
+  const domesticViolence = getQuestionValue(
+    QuestionKey.RESIDENTIAL_STATUS_DOMESTIC_VIOLENCE,
+    applicant
+  );
 
-  const studyingOutsideHackney =
-    questionLookup(
-      QuestionKey.RESIDENTIAL_STATUS_STUDYING_OUTSIDE_BOROUGH,
-      applicant
-    ) || 'N/A';
+  const studyingOutsideHackney = getQuestionValue(
+    QuestionKey.RESIDENTIAL_STATUS_STUDYING_OUTSIDE_BOROUGH,
+    applicant
+  );
 
-  const providingCare =
-    questionLookup(QuestionKey.RESIDENTIAL_STATUS_PROVIDING_CARE, applicant) ||
-    'N/A';
+  const providingCare = getQuestionValue(
+    QuestionKey.RESIDENTIAL_STATUS_PROVIDING_CARE,
+    applicant
+  );
 
-  const homelessnessAccepted =
-    questionLookup(
-      QuestionKey.RESIDENTIAL_STATUS_HOMELESSNESS_ACCEPTED,
-      applicant
-    ) || 'N/A';
+  const homelessnessAccepted = getQuestionValue(
+    QuestionKey.RESIDENTIAL_STATUS_HOMELESSNESS_ACCEPTED,
+    applicant
+  );
 
-  const asboBehaviour =
-    questionLookup(QuestionKey.RESIDENTIAL_STATUS_ASBO_BEHAVIOUR, applicant) ||
-    'N/A';
+  const asboBehaviour = getQuestionValue(
+    QuestionKey.RESIDENTIAL_STATUS_ASBO_BEHAVIOUR,
+    applicant
+  );
 
-  const homeless =
-    questionLookup(QuestionKey.RESIDENTIAL_STATUS_HOMELESS, applicant) || 'N/A';
+  const homeless = getQuestionValue(
+    QuestionKey.RESIDENTIAL_STATUS_HOMELESS,
+    applicant
+  );
 
-  const socialHousing =
-    questionLookup(QuestionKey.RESIDENTIAL_STATUS_SOCIAL_HOUSING, applicant) ||
-    'N/A';
+  const socialHousing = getQuestionValue(
+    QuestionKey.RESIDENTIAL_STATUS_SOCIAL_HOUSING,
+    applicant
+  );
 
-  const movedBorough =
-    questionLookup(QuestionKey.RESIDENTIAL_STATUS_MOVED_BOROUGH, applicant) ||
-    'N/A';
+  const movedBorough = getQuestionValue(
+    QuestionKey.RESIDENTIAL_STATUS_MOVED_BOROUGH,
+    applicant
+  );
 
   const personalDetails: CheckBoxListPageProps = {
     title: 'Living Situation',
@@ -294,49 +372,51 @@ export const addressHistoryCheckboxList = (
     //Address Line one, Hackney, London, E8 1AB, From Jan 2021 (6 months)
     var addressHistorysArray: AddressHistoryEntry = JSON.parse(addressHistory);
 
-    if (addressHistorysArray.address.line1 !== '') {
-      addressHistoryText += `${addressHistorysArray.address.line1} `;
-    }
+    if (addressHistorysArray.address !== undefined) {
+      if (addressHistorysArray.address.line1 !== '') {
+        addressHistoryText += `${addressHistorysArray.address.line1} `;
+      }
 
-    if (addressHistorysArray.address.line2 !== '') {
-      addressHistoryText += `${addressHistorysArray.address.line2} `;
-    }
+      if (addressHistorysArray.address.line2 !== '') {
+        addressHistoryText += `${addressHistorysArray.address.line2} `;
+      }
 
-    if (addressHistorysArray.address.line3 !== '') {
-      addressHistoryText += `${addressHistorysArray.address.line3} `;
-    }
+      if (addressHistorysArray.address.line3 !== '') {
+        addressHistoryText += `${addressHistorysArray.address.line3} `;
+      }
 
-    if (addressHistorysArray.address.line4 !== '') {
-      addressHistoryText += `${addressHistorysArray.address.line4} `;
-    }
+      if (addressHistorysArray.address.line4 !== '') {
+        addressHistoryText += `${addressHistorysArray.address.line4} `;
+      }
 
-    if (addressHistorysArray.address.town !== '') {
-      addressHistoryText += `${addressHistorysArray.address.town}, `;
-    }
+      if (addressHistorysArray.address.town !== '') {
+        addressHistoryText += `${addressHistorysArray.address.town}, `;
+      }
 
-    if (addressHistorysArray.address.county !== '') {
-      addressHistoryText += `${addressHistorysArray.address.county}, `;
-    }
+      if (addressHistorysArray.address.county !== '') {
+        addressHistoryText += `${addressHistorysArray.address.county}, `;
+      }
 
-    if (addressHistorysArray.address.postcode !== '') {
-      addressHistoryText += `${addressHistorysArray.address.postcode} `;
-    }
+      if (addressHistorysArray.address.postcode !== '') {
+        addressHistoryText += `${addressHistorysArray.address.postcode} `;
+      }
 
-    if (
-      addressHistorysArray.date !== '' &&
-      addressHistorysArray.dateTo !== ''
-    ) {
-      const durations = calculateDurations([addressHistorysArray]);
+      if (
+        addressHistorysArray.date !== '' &&
+        addressHistorysArray.dateTo !== ''
+      ) {
+        const durations = calculateDurations([addressHistorysArray]);
 
-      addressHistoryText += `From ${durations[0].from.getMonth()} ${durations[0].from.getFullYear()}`;
+        addressHistoryText += `From ${durations[0].from.getMonth()} ${durations[0].from.getFullYear()}`;
 
-      if (durations.length !== 0) {
-        if (durations[0].years === 0 && durations[0].months <= 11) {
-          addressHistoryText += `(${durations[0].months} months)`;
-        }
+        if (durations.length !== 0) {
+          if (durations[0].years === 0 && durations[0].months <= 11) {
+            addressHistoryText += `(${durations[0].months} months)`;
+          }
 
-        if (durations[0].years >= 1) {
-          addressHistoryText += `(${durations[0].years} years and ${durations[0].months} months)`;
+          if (durations[0].years >= 1) {
+            addressHistoryText += `(${durations[0].years} years and ${durations[0].months} months)`;
+          }
         }
       }
     }
@@ -359,69 +439,65 @@ export const addressHistoryCheckboxList = (
 export const currentAccomodationCheckboxList = (
   applicant?: Applicant
 ): CheckBoxListPageProps => {
-  const accommodation =
-    questionLookup(
-      QuestionKey.CURRENT_ACCOMMODATION_LIVING_SITUATION,
-      applicant
-    ) || 'N/A';
+  const accommodation = getQuestionValue(
+    QuestionKey.CURRENT_ACCOMMODATION_LIVING_SITUATION,
+    applicant
+  );
 
-  const home =
-    questionLookup(QuestionKey.CURRENT_ACCOMMODATION_HOME, applicant) || 'N/A';
+  const home = getQuestionValue(
+    QuestionKey.CURRENT_ACCOMMODATION_HOME,
+    applicant
+  );
 
-  const floor =
-    questionLookup(QuestionKey.CURRENT_ACCOMMODATION_HOME_FLOOR, applicant) ||
-    'N/A';
+  const floor = getQuestionValue(
+    QuestionKey.CURRENT_ACCOMMODATION_HOME_FLOOR,
+    applicant
+  );
 
-  const sharedWith =
-    questionLookup(
-      QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_PEOPLE_SHARE,
-      applicant
-    ) || 'N/A';
-  const numberOfBedrooms =
-    questionLookup(
-      QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_BEDROOMS,
-      applicant
-    ) || 'N/A';
-  const livingrooms =
-    questionLookup(
-      QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_LIVINGROOMS,
-      applicant
-    ) || 'N/A';
-  const diningRoom =
-    questionLookup(
-      QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_DININGROOMS,
-      applicant
-    ) || 'N/A';
+  const sharedWith = getQuestionValue(
+    QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_PEOPLE_SHARE,
+    applicant
+  );
 
-  const bathrooms =
-    questionLookup(
-      QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_BATHROOMS,
-      applicant
-    ) || 'N/A';
+  const numberOfBedrooms = getQuestionValue(
+    QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_BEDROOMS,
+    applicant
+  );
 
-  const kitchens =
-    questionLookup(
-      QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_KITCHENS,
-      applicant
-    ) || 'N/A';
+  const livingrooms = getQuestionValue(
+    QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_LIVINGROOMS,
+    applicant
+  );
 
-  const otherRooms =
-    questionLookup(
-      QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_OTHER_ROOMS,
-      applicant
-    ) || 'N/A';
+  const diningRoom = getQuestionValue(
+    QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_DININGROOMS,
+    applicant
+  );
 
-  const hostName =
-    questionLookup(
-      QuestionKey.CURRENT_ACCOMMODATION_HOST_PERSON_NAME,
-      applicant
-    ) || 'N/A';
+  const bathrooms = getQuestionValue(
+    QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_BATHROOMS,
+    applicant
+  );
 
-  const hostNumber =
-    questionLookup(
-      QuestionKey.CURRENT_ACCOMMODATION_HOST_PERSON_NUMBER,
-      applicant
-    ) || 'N/A';
+  const kitchens = getQuestionValue(
+    QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_KITCHENS,
+    applicant
+  );
+
+  const otherRooms = getQuestionValue(
+    QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_OTHER_ROOMS,
+    applicant
+  );
+
+  const hostName = getQuestionValue(
+    QuestionKey.CURRENT_ACCOMMODATION_HOST_PERSON_NAME,
+    applicant
+  );
+
+  const hostNumber = getQuestionValue(
+    QuestionKey.CURRENT_ACCOMMODATION_HOST_PERSON_NUMBER,
+    applicant
+  );
 
   const personalDetails: CheckBoxListPageProps = {
     title: 'Current Accommodation',
@@ -497,37 +573,45 @@ export const currentAccomodationCheckboxList = (
 export const situationCheckboxList = (
   applicant?: Applicant
 ): CheckBoxListPageProps => {
-  const homeless =
-    questionLookup(QuestionKey.YOUR_SITUATION_HOMELESSNESS, applicant) || 'N/A';
+  const homeless = getQuestionValue(
+    QuestionKey.YOUR_SITUATION_HOMELESSNESS,
+    applicant
+  );
 
-  const propertyOwner =
-    questionLookup(QuestionKey.YOUR_SITUATION_PROPERTY_OWNERSHIP, applicant) ||
-    'N/A';
+  const propertyOwner = getQuestionValue(
+    QuestionKey.YOUR_SITUATION_PROPERTY_OWNERSHIP,
+    applicant
+  );
 
-  const soldProperty =
-    questionLookup(QuestionKey.YOUR_SITUATION_SOLD_PROPERTY, applicant) ||
-    'N/A';
+  const soldProperty = getQuestionValue(
+    QuestionKey.YOUR_SITUATION_SOLD_PROPERTY,
+    applicant
+  );
 
-  const arrears =
-    questionLookup(QuestionKey.YOUR_SITUATION_ARREARS, applicant) || 'N/A';
+  const arrears = getQuestionValue(
+    QuestionKey.YOUR_SITUATION_ARREARS,
+    applicant
+  );
 
-  const breachOfTennancy =
-    questionLookup(QuestionKey.YOUR_SITUATION_BREACH_OF_TENANCY, applicant) ||
-    'N/A';
+  const breachOfTennancy = getQuestionValue(
+    QuestionKey.YOUR_SITUATION_BREACH_OF_TENANCY,
+    applicant
+  );
 
-  const legalRestrictions =
-    questionLookup(QuestionKey.YOUR_SITUATION_LEGAL_RESTRICTIONS, applicant) ||
-    'N/A';
+  const legalRestrictions = getQuestionValue(
+    QuestionKey.YOUR_SITUATION_LEGAL_RESTRICTIONS,
+    applicant
+  );
 
-  const unspentConvictions =
-    questionLookup(QuestionKey.YOUR_SITUATION_UNSPENT_CONVICTIONS, applicant) ||
-    'N/A';
+  const unspentConvictions = getQuestionValue(
+    QuestionKey.YOUR_SITUATION_UNSPENT_CONVICTIONS,
+    applicant
+  );
 
-  const onAnotherHousingRegister =
-    questionLookup(
-      QuestionKey.YOUR_SITUATION_OTHER_HOUSING_REGISTER,
-      applicant
-    ) || 'N/A';
+  const onAnotherHousingRegister = getQuestionValue(
+    QuestionKey.YOUR_SITUATION_OTHER_HOUSING_REGISTER,
+    applicant
+  );
 
   const personalDetails: CheckBoxListPageProps = {
     title: 'Situation',
@@ -581,23 +665,39 @@ export const situationCheckboxList = (
 export const employmentCheckboxList = (
   applicant?: Applicant
 ): CheckBoxListPageProps => {
-  const employmentStatus =
-    questionLookup(QuestionKey.EMPLOYMENT_EMPLOYMENT_STATUS, applicant) ||
-    'N/A';
+  const employmentStatusValue = getQuestionValue(
+    QuestionKey.EMPLOYMENT_EMPLOYMENT_STATUS,
+    applicant
+  );
 
-  const addressFinder =
-    questionLookup(QuestionKey.EMPLOYMENT_ADDRESS_FINDER, applicant) || 'N/A';
+  let employmentStatusText = 'N/A';
 
-  const courseCompletionDate =
-    questionLookup(QuestionKey.EMPLOYMENT_COURSE_COMPLETION_DATE, applicant) ||
-    'N/A';
+  if (employmentStatusValue !== 'N/A') {
+    employmentStatusText = employmentStatus(employmentStatusValue);
+  }
+
+  const addressFinder = getQuestionValue(
+    QuestionKey.EMPLOYMENT_ADDRESS_FINDER,
+    applicant
+  );
+
+  const courseCompletionDate = getQuestionValue(
+    QuestionKey.EMPLOYMENT_COURSE_COMPLETION_DATE,
+    applicant
+  );
+
+  let courseCompletionDateText = 'N/A';
+
+  if (courseCompletionDate != 'N/A') {
+    courseCompletionDateText = formatDate(courseCompletionDate);
+  }
 
   const personalDetails: CheckBoxListPageProps = {
     title: 'Employment',
     data: [
       {
         title: 'Status',
-        value: `${employmentStatus}`,
+        value: `${employmentStatusText}`,
         isChecked: false,
       },
       {
@@ -607,7 +707,7 @@ export const employmentCheckboxList = (
       },
       {
         title: 'Course Completion date',
-        value: `${courseCompletionDate}`,
+        value: `${courseCompletionDateText}`,
         isChecked: false,
       },
     ],
@@ -619,20 +719,20 @@ export const employmentCheckboxList = (
 export const incomeAndSavingsCheckboxList = (
   applicant?: Applicant
 ): CheckBoxListPageProps => {
-  const income = questionLookup(QuestionKey.MONEY_INCOME, applicant) || 'N/A';
-  const savings = questionLookup(QuestionKey.MONEY_SAVINGS, applicant) || 'N/A';
+  const income = getQuestionValue(QuestionKey.MONEY_INCOME, applicant);
+  const savings = getQuestionValue(QuestionKey.MONEY_SAVINGS, applicant);
 
   const personalDetails: CheckBoxListPageProps = {
     title: 'Household income and savings',
     data: [
       {
         title: 'Yearly household income',
-        value: `${income}`,
+        value: `${incomeDetails(income)}`,
         isChecked: false,
       },
       {
         title: 'Household savings',
-        value: `${savings}`,
+        value: `${savingDetails(savings)}`,
         isChecked: false,
       },
     ],

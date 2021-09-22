@@ -14,12 +14,14 @@ import { FormID, getFormData } from '../../lib/utils/form-data';
 import ErrorSummary from '../../components/errors/error-summary';
 import { Errors } from '../../lib/utils/errors';
 import { scrollToError } from '../../lib/utils/scroll';
+import { confirmVerifyCode } from '../../lib/store/application';
 
 const ApplicationVerifyPage = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [userError, setUserError] = useState<string | null>(null);
 
+  const application = useAppSelector((store) => store.application);
   const emailAddress = useAppSelector(
     (store) =>
       store.application.mainApplicant?.contactInformation?.emailAddress ?? ''
@@ -30,16 +32,19 @@ const ApplicationVerifyPage = (): JSX.Element => {
 
   const confirmSignUp = async (values: FormData) => {
     try {
-      await Auth.confirmSignUp(emailAddress, values.code);
+      //await Auth.confirmSignUp(emailAddress, values.code);
 
       // TODO: turns out we also need to sign in at this point!
       // update so we don't need a password
-      dispatch(
-        signIn({
-          username: emailAddress,
-          password: 'Testing123!',
-        })
-      );
+      // dispatch(
+      //   signIn({
+      //     username: emailAddress,
+      //     password: 'Testing123!',
+      //   })
+      // );
+
+      const code = values.code as string;
+      dispatch(confirmVerifyCode({ application, code }));
 
       router.push('/apply/agree-terms');
     } catch (e) {

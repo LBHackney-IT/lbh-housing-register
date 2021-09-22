@@ -7,7 +7,13 @@ import {
   ThunkDispatch,
 } from '@reduxjs/toolkit';
 import { Store } from '.';
-import { Application } from '../../domain/HousingApi';
+import {
+  Application,
+  CreateAuthRequest,
+  CreateAuthResponse,
+  VerifyAuthRequest,
+  VerifyAuthResponse,
+} from '../../domain/HousingApi';
 import { signOut } from './cognitoUser';
 import mainApplicant from './mainApplicant';
 import otherMembers from './otherMembers';
@@ -29,6 +35,35 @@ export const createApplication = createAsyncThunk(
       body: JSON.stringify(application),
     });
     return (await res.json()) as Application;
+  }
+);
+
+export const createVerifyCode = createAsyncThunk(
+  'auth/create',
+  async (application: Application) => {
+    const request: CreateAuthRequest = {
+      email: application.mainApplicant?.contactInformation?.emailAddress ?? '',
+    };
+    const res = await fetch(`/api/auth/${application.id}/generate`, {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
+    return (await res.json()) as CreateAuthResponse;
+  }
+);
+
+export const confirmVerifyCode = createAsyncThunk(
+  'auth/confirm',
+  async ({ application, code }: { application: Application; code: string }) => {
+    const request: VerifyAuthRequest = {
+      email: application.mainApplicant?.contactInformation?.emailAddress ?? '',
+      code: code,
+    };
+    const res = await fetch(`/api/auth/${application.id}/verify`, {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
+    return (await res.json()) as VerifyAuthResponse;
   }
 );
 

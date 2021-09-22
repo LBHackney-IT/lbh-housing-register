@@ -5,7 +5,10 @@ import { useRouter } from 'next/router';
 import { HeadingOne } from '../../components/content/headings';
 import Form from '../../components/form/form';
 import Layout from '../../components/layout/resident-layout';
-import { createApplication } from '../../lib/store/application';
+import {
+  createApplication,
+  createVerifyCode,
+} from '../../lib/store/application';
 import {
   useAppDispatch,
   useAppSelector,
@@ -17,6 +20,7 @@ import processPhonenumber from '../../lib/utils/processPhonenumber';
 import ErrorSummary from '../../components/errors/error-summary';
 import { Errors } from '../../lib/utils/errors';
 import { scrollToError } from '../../lib/utils/scroll';
+import { Application } from '../../domain/HousingApi';
 
 const ApplicationStartPage = (): JSX.Element => {
   const router = useRouter();
@@ -34,17 +38,17 @@ const ApplicationStartPage = (): JSX.Element => {
     const phone = values.phoneNumber && processPhonenumber(values.phoneNumber);
 
     try {
-      await Auth.signUp({
-        username: values.emailAddress,
-        // See https://aws.amazon.com/blogs/mobile/implementing-passwordless-email-authentication-with-amazon-cognito/
-        // on how to generate a random password securely.
-        password: values.password,
-        attributes: {
-          given_name: values.firstName,
-          family_name: values.surname,
-          phone_number: phone, // E.164 number convention
-        },
-      });
+      // await Auth.signUp({
+      //   username: values.emailAddress,
+      //   // See https://aws.amazon.com/blogs/mobile/implementing-passwordless-email-authentication-with-amazon-cognito/
+      //   // on how to generate a random password securely.
+      //   password: values.password,
+      //   attributes: {
+      //     given_name: values.firstName,
+      //     family_name: values.surname,
+      //     phone_number: phone, // E.164 number convention
+      //   },
+      // });
 
       dispatch(
         updateBeforeFirstSave({
@@ -64,7 +68,11 @@ const ApplicationStartPage = (): JSX.Element => {
         })
       );
 
-      dispatch(createApplication(store.getState().application));
+      dispatch(createApplication(store.getState().application)).then(
+        (action: any) => {
+          dispatch(createVerifyCode(action.payload));
+        }
+      );
 
       router.push('/apply/verify');
     } catch (error) {

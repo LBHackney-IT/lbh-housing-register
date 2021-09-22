@@ -20,7 +20,9 @@ export default function ApplicantName({
   return (
     <>
       <Link href={`/apply/${applicant.person?.id}`}>
-        {`${applicant.person?.firstName} ${applicant.person?.surname}`}
+        <a className="lbh-link">
+          {`${applicant.person?.firstName} ${applicant.person?.surname}`}
+        </a>
       </Link>
       <Hint
         content={

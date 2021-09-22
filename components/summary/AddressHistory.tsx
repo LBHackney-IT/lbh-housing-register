@@ -41,7 +41,7 @@ export function AddressHistorySummary({
       {addressHistory &&
         addressHistory.map((address: AddressHistoryEntry, index: number) => {
           return (
-            <SummaryAnswer>
+            <SummaryAnswer key={index}>
               <Paragraph>
                 <Hint
                   content={index === 0 ? 'Current address' : 'Previous address'}

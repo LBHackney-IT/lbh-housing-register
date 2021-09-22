@@ -13,30 +13,10 @@ import ApplicantName from '../../components/application/ApplicantName';
 import { Applicant } from '../../domain/HousingApi';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { applicationStepsRemaining } from '../../lib/utils/resident';
-import {
-  sendConfirmation,
-  completeApplication,
-  sendDisqualifyEmail,
-} from '../../lib/store/application';
-import { checkEligible } from '../../lib/utils/form';
 import withApplication from '../../lib/hoc/withApplication';
-import Custom404 from '../404';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
   const router = useRouter();
-  const dispatch = useAppDispatch();
-
-  const mainResident = useAppSelector((s) => s.application.mainApplicant);
-  if (!mainResident) {
-    return <Custom404 />;
-  }
-
-  const application = useAppSelector((store) => store.application);
-  const applicants = useAppSelector((store) =>
-    [store.application.mainApplicant, store.application.otherMembers]
-      .filter((v): v is Applicant | Applicant[] => v !== undefined)
-      .flat()
-  );
 
   const breadcrumbs = [
     {
@@ -45,17 +25,16 @@ const ApplicationPersonsOverview = (): JSX.Element => {
     },
   ];
 
-  const submitApplication = async () => {
-    const [isEligible] = checkEligible(mainResident);
-    if (!isEligible) {
-      dispatch(sendDisqualifyEmail(application));
-      router.push('/apply/not-eligible');
-    } else {
-      dispatch(sendConfirmation(application));
-      dispatch(completeApplication(application));
-      router.push('/apply/submit/additional-questions');
-    }
+  const goToDeclaration = () => {
+    router.push('/apply/declaration');
   };
+
+  const application = useAppSelector((store) => store.application);
+  const applicants = useAppSelector((store) =>
+    [store.application.mainApplicant, store.application.otherMembers]
+      .filter((v): v is Applicant | Applicant[] => v !== undefined)
+      .flat()
+  );
 
   return (
     <Layout pageName="Application overview" breadcrumbs={breadcrumbs}>
@@ -106,7 +85,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
           <Paragraph>
             Please make sure you have checked your answers for each applicant.
           </Paragraph>
-          <Button onClick={submitApplication}>Submit application</Button>
+          <Button onClick={goToDeclaration}>Save and continue</Button>
         </>
       )}
     </Layout>

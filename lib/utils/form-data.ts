@@ -3,6 +3,7 @@ import agreementFormData from '../../data/forms/agreement.json';
 import currentAccommodationFormData from '../../data/forms/current_accommodation/current-accommodation.json';
 import currentAccommodationHostDetails from '../../data/forms/current_accommodation/current-accommodation-host-details.json';
 import currentAccommodationLandlordDetails from '../../data/forms/current_accommodation/current-accommodation-landlord-details.json';
+import declarationFormData from '../../data/forms/declaration.json';
 import employment from '../../data/forms/employment.json';
 import immigrationStatusFormData from '../../data/forms/immigration-status.json';
 import incomeSavings from '../../data/forms/income.json';
@@ -90,6 +91,7 @@ export enum FormID {
   ETHNICITY_CATEGORY_WHITE = 'ethnicity-extended-category-white',
   ETHNICITY_CATEGORY_OTHER_ETHNIC_GROUP = 'ethnicity-extended-category-other-ethnic-group',
   ADMIN_ACTIONS = 'admin-actions',
+  DECLARATION = 'declaration',
 }
 
 /**
@@ -239,6 +241,9 @@ export function getFormData(form: FormID): MultiStepForm {
     // this form isn't used anywhere
     case FormID.YOUR_SITUATION:
       return yourSituationFormData as MultiStepForm;
+
+    case FormID.DECLARATION:
+      return declarationFormData as MultiStepForm;
 
     default:
       return assertNever(form, 'Unknown form step: ' + form);

@@ -22,21 +22,21 @@ export default function CheckBoxList({
         <tr className="govuk-table__row">
           <th scope="col" className="govuk-table__header"></th>
           <th scope="col" className="govuk-table__header"></th>
-          <th scope="col" className="govuk-table__header">
+          {/* <th scope="col" className="govuk-table__header">
             checked
-          </th>
+          </th> */}
         </tr>
       </thead>
       <tbody className="govuk-table__body">
-        {data.map((info, index) => (
+        {data.map((info) => (
           <tr className="govuk-table__row">
             <th scope="row" className="govuk-table__header">
               {info.title}
             </th>
             <td className="govuk-table__cell">{info.value}</td>
-            <td className="govuk-table__cell">
+            {/* <td className="govuk-table__cell">
               <input type="checkbox" />{' '}
-            </td>
+            </td> */}
           </tr>
         ))}
       </tbody>

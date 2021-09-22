@@ -19,7 +19,11 @@ import {
   situationCheckboxList,
   employmentCheckboxList,
   incomeAndSavingsCheckboxList,
+  medicalDetailsPageData,
 } from '../../../../../lib/utils/checkboxListData';
+import MedicalDetail, {
+  MedicalDetailPageProps,
+} from '../../../../../components/applications/medical-details';
 
 export function formatDate(date: string | undefined) {
   if (!date) return '';
@@ -53,7 +57,7 @@ export default function ApplicationPersonPage({
     | 'money'
     | 'health'
     | 'checklist';
-  const [state, setState] = useState<State>('livingsituation');
+  const [state, setState] = useState<State>('identity');
 
   const personalDetails = personalDetailsCheckboxList(applicant);
   const immigrationStatus = immigrationStatusCheckboxList(applicant);
@@ -63,6 +67,7 @@ export default function ApplicationPersonPage({
   const situation = situationCheckboxList(applicant);
   const employment = employmentCheckboxList(applicant);
   const incomeAndSavings = incomeAndSavingsCheckboxList(applicant);
+  const medicalDetails = medicalDetailsPageData(applicant);
 
   return (
     <UserContext.Provider value={{ user }}>
@@ -127,7 +132,9 @@ export default function ApplicationPersonPage({
             <CheckBoxList {...(incomeAndSavings as CheckBoxListPageProps)} />
           </>
         )}
-        {state == 'health' && <h3>health</h3>}
+        {state == 'health' && (
+          <MedicalDetail {...(medicalDetails as MedicalDetailPageProps)} />
+        )}
         {state == 'checklist' && <h3>checklist</h3>}
       </Layout>
     </UserContext.Provider>

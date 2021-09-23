@@ -1,18 +1,17 @@
-import { HeadingOne } from '../../components/content/headings';
-import Paragraph from '../../components/content/paragraph';
-import Layout from '../../components/layout/resident-layout';
-import { getFormData, FormID } from '../../lib/utils/form-data';
-import Form from '../../components/form/form';
 import { useRouter } from 'next/router';
+import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import {
   sendConfirmation,
   completeApplication,
   sendDisqualifyEmail,
 } from '../../lib/store/application';
-import { checkEligible } from '../../lib/utils/form';
 import withApplication from '../../lib/hoc/withApplication';
-import { Applicant } from '../../domain/HousingApi';
-import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
+import { checkEligible } from '../../lib/utils/form';
+import { getFormData, FormID } from '../../lib/utils/form-data';
+import Form from '../../components/form/form';
+import Layout from '../../components/layout/resident-layout';
+import { HeadingOne } from '../../components/content/headings';
+import Paragraph from '../../components/content/paragraph';
 import Custom404 from '../404';
 
 const Declaration = (): JSX.Element => {
@@ -25,11 +24,7 @@ const Declaration = (): JSX.Element => {
   }
 
   const application = useAppSelector((store) => store.application);
-  const applicants = useAppSelector((store) =>
-    [store.application.mainApplicant, store.application.otherMembers]
-      .filter((v): v is Applicant | Applicant[] => v !== undefined)
-      .flat()
-  );
+  console.log(application);
 
   const submitApplication = async () => {
     const [isEligible] = checkEligible(mainResident);

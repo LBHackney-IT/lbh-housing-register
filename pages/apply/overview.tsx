@@ -30,6 +30,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
   };
 
   const application = useAppSelector((store) => store.application);
+
   const applicants = useAppSelector((store) =>
     [store.application.mainApplicant, store.application.otherMembers]
       .filter((v): v is Applicant | Applicant[] => v !== undefined)

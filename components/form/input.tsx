@@ -54,7 +54,7 @@ export default function Input({
               placeholder={placeholder}
               type={type}
               {...field}
-              maxLength={100000}
+              maxLength={500}
             />
           </FormGroup>
         )}

@@ -33,7 +33,7 @@
     {
       "fieldId": "situation-armed-forces",
       "value": "no",
-      "nextFormId": "routeSelectFunction"
+      "nextFormId": "route-select-function"
     }
   ]
 }

@@ -27,7 +27,7 @@ const YourSituation = (): JSX.Element => {
   }
 
   // If routeSelectFunction is set as the nextFormId in the question JSON
-  // we can pass multiple possible values. See if stament at end of nextStep() below
+  // we can pass multiple possible values. See if statement at end of nextStep() below
   const routeSelectFunction = () => {
     const livingSituation: string = getQuestionValue(
       applicant.questions,
@@ -89,8 +89,8 @@ const YourSituation = (): JSX.Element => {
     }
 
     // If routeSelectFunction is found as nextFormId in the JSON determine
-    // route based on switch statement above, or continue as normal
-    if (nextFormId === 'routeSelectFunction') {
+    // route based on switch statement above, or continue as normal.
+    if (nextFormId === 'route-select-function') {
       setActiveStepId(routeSelectFunction);
     } else {
       setActiveStepId(nextFormId);

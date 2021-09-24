@@ -20,6 +20,7 @@ import Custom404 from '../../../404';
 import Snapshot from '../../../../components/applications/snapshot';
 import Actions from '../../../../components/applications/actions';
 import AssignUser from '../../../../components/applications/assign-user';
+import SensitiveData from '../../../../components/applications/sensitive-data';
 
 export function formatDate(date: string | undefined) {
   if (!date) return '';
@@ -119,6 +120,11 @@ export default function ApplicationPage({
               </Paragraph>
 
               <AssignUser id={data.id} user={data.assignedTo} />
+
+              <SensitiveData
+                id={data.id}
+                isSensitive={data.sensativeData || false}
+              />
             </div>
           </div>
         )}

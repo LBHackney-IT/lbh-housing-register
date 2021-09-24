@@ -107,6 +107,13 @@ export interface Application {
   assignedTo?: string;
   /**
    *
+   * @type {boolean}
+   * @memberof Application
+   */
+  sensativeData?: boolean;
+
+  /**
+   *
    * @type {string}
    * @memberof Application
    */

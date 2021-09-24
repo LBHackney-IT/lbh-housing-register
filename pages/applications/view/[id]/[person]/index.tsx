@@ -24,6 +24,7 @@ import {
 import MedicalDetail, {
   MedicalDetailPageProps,
 } from '../../../../../components/applications/medical-details';
+import { HeadingOne } from '../../../../../components/content/headings';
 
 export function formatDate(date: string | undefined) {
   if (!date) return '';

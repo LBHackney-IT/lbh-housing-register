@@ -72,6 +72,14 @@ export default function ApplicationPersonPage({
   return (
     <UserContext.Provider value={{ user }}>
       <Layout>
+        <HeadingOne
+           content={
+            isMainApplicant
+              ? 'Review main applicant'
+              : 'Review household member'
+          }
+        />
+        
         <button
           onClick={() => {
             setState('identity');

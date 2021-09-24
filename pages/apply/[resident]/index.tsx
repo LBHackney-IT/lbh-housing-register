@@ -128,7 +128,7 @@ const ResidentIndex = (): JSX.Element => {
                 <SummaryListValue>
                   {isSectionActive(formStep.id) ? (
                     <Link href={`${baseHref}/${formStep.id}`}>
-                      {formStep.heading}
+                      <a className="lbh-link">{formStep.heading}</a>
                     </Link>
                   ) : (
                     formStep.heading

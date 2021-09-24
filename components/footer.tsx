@@ -49,7 +49,9 @@ const Footer = ({ referenceNumber }: FooterProps) => {
         <HeadingThree content="Lettings policy" />
         <Paragraph>
           All applications are assessed according to our{' '}
-          <a href="https://hackney.gov.uk/lettings-policy">Lettings policy</a>
+          <a className="lbh-link" href="https://hackney.gov.uk/lettings-policy">
+            Lettings policy
+          </a>
         </Paragraph>
 
         <HeadingThree content="Confidentiality and data protection" />

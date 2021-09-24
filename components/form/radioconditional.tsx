@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { Field, FieldInputProps, FieldMetaProps } from 'formik';
 import {
   BaseFormField,
@@ -113,7 +115,7 @@ export default function RadioConditional({
           {subheading && <Paragraph>{subheading}</Paragraph>}
           <div className="govuk-radios lbh-radios">
             {options?.map((radio, index) => (
-              <>
+              <React.Fragment key={index}>
                 <Radio
                   key={index}
                   index={index}
@@ -134,7 +136,7 @@ export default function RadioConditional({
                     display={meta.value == radio.value}
                   />
                 )}
-              </>
+              </React.Fragment>
             ))}
           </div>
         </FormGroup>

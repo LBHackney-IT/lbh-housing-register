@@ -122,7 +122,7 @@ export type FormStep = {
 export type Conditionals = {
   fieldId: string;
   value: string;
-  nextFormId: FormID | 'exit';
+  nextFormId: FormID | 'routeSelectFunction' | 'exit';
 };
 
 export type MultiStepForm = {

@@ -95,7 +95,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  console.log(context.params);
   const { id, person } = context.params as {
     id: string;
     person: string;

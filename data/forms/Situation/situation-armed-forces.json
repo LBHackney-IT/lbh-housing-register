@@ -1,0 +1,39 @@
+{
+  "id": "situation-armed-forces",
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "radios",
+          "label": "Have you or your partner ever served in the armed forces?",
+          "name": "situation-armed-forces",
+          "options": [
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ],
+  "conditionals": [
+    {
+      "fieldId": "situation-armed-forces",
+      "value": "yes",
+      "nextFormId": "exit"
+    },
+    {
+      "fieldId": "situation-armed-forces",
+      "value": "no",
+      "nextFormId": "routeSelectFunction"
+    }
+  ]
+}

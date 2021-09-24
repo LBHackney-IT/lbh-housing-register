@@ -42,6 +42,7 @@ export default function Textarea({
             placeholder={placeholder}
             rows={5}
             {...field}
+            maxLength={10000}
           />
         </FormGroup>
       )}

@@ -157,10 +157,12 @@ function Summary({
   const durations = calculateDurations(addressHistory);
   return (
     <>
-      {addressHistory.map((entry, i) => (
-        <>
-          {i === 1 && <h2 className="lbh-heading-h2">Previous address</h2>}
-          {i > 1 && <h2 className="lbh-heading-h2">Previous address {i}</h2>}
+      {addressHistory.map((entry, index) => (
+        <React.Fragment key={index}>
+          {index === 1 && <h2 className="lbh-heading-h2">Previous address</h2>}
+          {index > 1 && (
+            <h2 className="lbh-heading-h2">Previous address {index}</h2>
+          )}
           <InsetText>
             <Label content={'Postcode'} strong />
             <div
@@ -184,19 +186,19 @@ function Summary({
                 entry.address.county,
                 entry.postcode,
               ]
-                .filter((v) => !!v)
-                .map((v) => (
-                  <>
-                    {v}
+                .filter((addressLine) => !!addressLine)
+                .map((addressLine, index) => (
+                  <React.Fragment key={index}>
+                    {addressLine}
                     <br />
-                  </>
+                  </React.Fragment>
                 ))}
             </Paragraph>
 
             <Label content={'Time at address'} strong />
-            <Paragraph>{durations[i].label}</Paragraph>
+            <Paragraph>{durations[index].label}</Paragraph>
           </InsetText>
-        </>
+        </React.Fragment>
       ))}
     </>
   );

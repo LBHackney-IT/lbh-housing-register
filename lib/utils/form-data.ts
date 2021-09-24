@@ -43,7 +43,7 @@ import EthnicityCategoryMixedMultipleBackground from '../../data/forms/ethnicity
 import EthnicityCategoryWhite from '../../data/forms/ethnicity/ethnicity-category-white.json';
 import EthnicityCategoryOtherEthnicGroup from '../../data/forms/ethnicity/ethnicity-category-other-ethnic-group.json';
 
-import AdminActions from '../../data/admin/actions.json';
+import AdminActions from '../../data/admin/admin-actions.json';
 
 import { EligibilityCriteria, MultiStepForm } from '../types/form';
 import assertNever from './assertNever';

@@ -110,7 +110,7 @@ export interface Application {
    * @type {boolean}
    * @memberof Application
    */
-  sensativeData?: boolean;
+  sensitiveData?: boolean;
 
   /**
    *

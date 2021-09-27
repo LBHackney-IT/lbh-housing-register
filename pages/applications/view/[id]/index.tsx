@@ -123,7 +123,7 @@ export default function ApplicationPage({
 
               <SensitiveData
                 id={data.id}
-                isSensitive={data.sensativeData || false}
+                isSensitive={data.sensitiveData || false}
               />
             </div>
           </div>

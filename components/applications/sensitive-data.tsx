@@ -2,7 +2,7 @@ import { Application } from '../../domain/HousingApi';
 import { updateApplication } from '../../lib/store/application';
 import { useAppDispatch } from '../../lib/store/hooks';
 import Button from '../button';
-import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 interface sensitiveDataPageProps {
   id: string;
@@ -14,32 +14,31 @@ export default function SensitiveData({
   isSensitive,
 }: sensitiveDataPageProps): JSX.Element {
   const dispatch = useAppDispatch();
-  const router = useRouter();
+  const [sensitive, setSensitive] = useState<boolean>(isSensitive);
 
   const updateSensitiveDataStatus = async (markAs: boolean) => {
+    setSensitive(markAs);
     const request: Application = {
       id: id,
-      sensativeData: markAs,
+      sensitiveData: markAs,
     };
     dispatch(updateApplication(request));
-
-    router.push(`/applications/view/${id}`);
   };
 
   return (
     <>
-      {isSensitive && (
+      {sensitive && (
         <Button
           onClick={() => updateSensitiveDataStatus(false)}
-          secondary={true}
+          secondary={false}
         >
           Mark as not sensitive
         </Button>
       )}
-      {!isSensitive && (
+      {!sensitive && (
         <Button
           onClick={() => updateSensitiveDataStatus(true)}
-          secondary={true}
+          secondary={false}
         >
           Mark as sensitive
         </Button>

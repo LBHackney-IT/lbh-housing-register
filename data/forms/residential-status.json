@@ -306,6 +306,34 @@
             {
               "field": "residential-status",
               "is": "no"
+            },
+            {
+              "field": "moved-borough",
+              "is": "no"
+            },
+            {
+              "field": "homeless",
+              "is": "no"
+            },
+            {
+              "field": "asbo-behaviour",
+              "is": "no"
+            },
+            {
+              "field": "armed-forces",
+              "is": "no"
+            },
+            {
+              "field": "mobility-scheme",
+              "is": "no"
+            },
+            {
+              "field": "homelessness-accepted",
+              "is": "no"
+            },
+            {
+              "field": "social-housing",
+              "is": "no"
             }
           ]
         },
@@ -358,6 +386,10 @@
             {
               "field": "social-housing",
               "is": "no"
+            },
+            {
+              "field": "work-in-hackney",
+              "is": "no"
             }
           ]
         },
@@ -409,6 +441,10 @@
             },
             {
               "field": "social-housing",
+              "is": "no"
+            },
+            {
+              "field": "work-in-hackney",
               "is": "no"
             },
             {
@@ -465,6 +501,10 @@
             },
             {
               "field": "social-housing",
+              "is": "no"
+            },
+            {
+              "field": "work-in-hackney",
               "is": "no"
             },
             {
@@ -538,6 +578,10 @@
             },
             {
               "field": "social-housing",
+              "is": "no"
+            },
+            {
+              "field": "work-in-hackney",
               "is": "no"
             },
             {

@@ -1,18 +1,18 @@
 import { useRouter } from 'next/router';
-import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
+import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import {
   sendConfirmation,
   completeApplication,
   sendDisqualifyEmail,
-} from '../../lib/store/application';
-import withApplication from '../../lib/hoc/withApplication';
-import { checkEligible } from '../../lib/utils/form';
-import { getFormData, FormID } from '../../lib/utils/form-data';
-import Form from '../../components/form/form';
-import Layout from '../../components/layout/resident-layout';
-import { HeadingOne } from '../../components/content/headings';
-import Paragraph from '../../components/content/paragraph';
-import Custom404 from '../404';
+} from '../../../lib/store/application';
+import withApplication from '../../../lib/hoc/withApplication';
+import { checkEligible } from '../../../lib/utils/form';
+import { getFormData, FormID } from '../../../lib/utils/form-data';
+import Form from '../../../components/form/form';
+import Layout from '../../../components/layout/resident-layout';
+import { HeadingOne } from '../../../components/content/headings';
+import Paragraph from '../../../components/content/paragraph';
+import Custom404 from '../../404';
 
 const Declaration = (): JSX.Element => {
   const router = useRouter();
@@ -24,7 +24,6 @@ const Declaration = (): JSX.Element => {
   }
 
   const application = useAppSelector((store) => store.application);
-  console.log(application);
 
   const submitApplication = async () => {
     const [isEligible] = checkEligible(mainResident);
@@ -34,7 +33,7 @@ const Declaration = (): JSX.Element => {
     } else {
       dispatch(sendConfirmation(application));
       dispatch(completeApplication(application));
-      router.push('/apply/submit/additional-questions');
+      router.push('/apply/confirmation');
     }
   };
 
@@ -42,9 +41,9 @@ const Declaration = (): JSX.Element => {
     <Layout pageName="Declaration">
       <HeadingOne content="Declaration" />
 
-      <p className="lbh-body lbh-!-font-weight-bold">
-        Please read and confirm the following statement
-      </p>
+      <Paragraph>
+        <strong>Please read and confirm the following statement</strong>
+      </Paragraph>
 
       <Paragraph>
         I understand and agree that the information I have provided on this form

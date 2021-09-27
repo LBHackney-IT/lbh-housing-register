@@ -19,7 +19,6 @@ const EthnicityQuestions = (): JSX.Element => {
     return <Custom404 />;
   }
 
-  const returnHref = '/apply/confirmation';
   const [formId, setFormId] = useState('ethnicity-questions');
 
   const [activeStepID, setActiveStepId] = useState(() => {
@@ -60,7 +59,7 @@ const EthnicityQuestions = (): JSX.Element => {
           markAsComplete: true,
         })
       );
-      router.push(returnHref);
+      router.push('/apply/submit/declaration');
       return;
     }
 

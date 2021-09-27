@@ -27,6 +27,8 @@ export default function SensitiveData({
 
   return (
     <>
+      {sensitive && <h3>This application has been marked as sensitive.</h3>}
+
       {sensitive && (
         <Button
           onClick={() => updateSensitiveDataStatus(false)}

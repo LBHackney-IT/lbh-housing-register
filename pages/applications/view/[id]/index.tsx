@@ -58,6 +58,9 @@ export default function ApplicationPage({
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="View application">
+        {data.sensitiveData && (
+          <h2>This application has been marked as sensitive.</h2>
+        )}
         <HeadingOne content="View application" />
         <HeadingTwo content={getPersonName(data)} />
         <button

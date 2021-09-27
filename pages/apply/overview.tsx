@@ -52,8 +52,9 @@ const ApplicationPersonsOverview = (): JSX.Element => {
                   <Tag content="Completed" variant="green" />
                 ) : (
                   <Tag
-                    content={`${tasksRemaining} task${tasksRemaining > 1 ? 's' : ''
-                      } to do`}
+                    content={`${tasksRemaining} task${
+                      tasksRemaining > 1 ? 's' : ''
+                    } to do`}
                   />
                 )}
               </Actions>
@@ -73,15 +74,15 @@ const ApplicationPersonsOverview = (): JSX.Element => {
             applicant === application.mainApplicant
           ) == 0
       ) && (
-          <>
-            <Paragraph>
-              Please make sure you have checked your answers for each applicant.
-            </Paragraph>
-            <ButtonLink href='/apply/submit/additional-questions'>
-              Save and continue
-            </ButtonLink>
-          </>
-        )}
+        <>
+          <Paragraph>
+            Please make sure you have checked your answers for each applicant.
+          </Paragraph>
+          <ButtonLink href="/apply/submit/additional-questions">
+            Save and continue
+          </ButtonLink>
+        </>
+      )}
     </Layout>
   );
 };

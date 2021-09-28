@@ -94,7 +94,6 @@ export enum FormID {
   ETHNICITY_CATEGORY_OTHER_ETHNIC_GROUP = 'ethnicity-extended-category-other-ethnic-group',
   ADMIN_ACTIONS = 'admin-actions',
   DECLARATION = 'declaration',
-  // ROUTE_SELECT_FUNCTION = 'route-select-function',
 }
 
 /**
@@ -250,9 +249,6 @@ export function getFormData(form: FormID): MultiStepForm {
 
     case FormID.DECLARATION:
       return declarationFormData as MultiStepForm;
-
-    // case FormID.ROUTE_SELECT_FUNCTION:
-    //   return 'route-select-function' as RouteFunction;
 
     default:
       return assertNever(form, 'Unknown form step: ' + form);

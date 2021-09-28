@@ -5,6 +5,7 @@
         {
           "as": "select",
           "label": "Title",
+          "displayLabel": true,
           "name": "title",
           "options": [
             {
@@ -40,12 +41,14 @@
         {
           "label": "First name",
           "name": "firstName",
+          "displayLabel": true,
           "validation": {
             "required": true
           }
         },
         {
           "label": "Last name",
+          "displayLabel": true,
           "name": "surname",
           "validation": {
             "required": true
@@ -54,6 +57,7 @@
         {
           "as": "dateinput",
           "label": "Date of birth",
+          "displayLabel": true,
           "name": "dateOfBirth",
           "validation": {
             "required": true
@@ -62,6 +66,7 @@
         {
           "as": "radioconditional",
           "label": "Gender",
+          "displayLabel": true,
           "name": "gender",
           "options": [
             {
@@ -87,15 +92,18 @@
         },
         {
           "label": "National Insurance number",
+          "displayLabel": true,
           "hint": "For example, AB 12 34 56 C",
           "name": "nationalInsuranceNumber"
         },
         {
           "label": "Mobile number",
+          "displayLabel": true,
           "name": "phoneNumber"
         },
         {
           "label": "Email",
+          "displayLabel": true,
           "name": "emailAddress",
           "type": "email",
           "hint": "We’ll email you a verification code to continue your application",
@@ -106,7 +114,8 @@
         {
           "name": "password",
           "type": "hidden",
-          "initialValue": "Testing123!"
+          "initialValue": "Testing123!",
+          "displayLabel": true
         }
       ]
     }

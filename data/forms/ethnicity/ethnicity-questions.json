@@ -6,6 +6,7 @@
         {
           "as": "radios",
           "label": "What is your ethnic group?",
+          "displayLabel": true,
           "name": "ethnicity-main-category",
           "details": {
             "title": "Why we ask for this information",

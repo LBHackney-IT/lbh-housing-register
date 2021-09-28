@@ -6,6 +6,7 @@
         {
           "as": "radios",
           "label": "Which describes your employment status?",
+          "displayLabel": true,
           "hint": "If more than one applies, select the option that applies the most",
           "name": "employment",
           "options": [
@@ -37,6 +38,7 @@
         {
           "title": "Accommodation Address",
           "label": "Postcode",
+          "displayLabel": true,
           "name": "address-finder",
           "validation": {
             "required": false
@@ -51,6 +53,7 @@
         {
           "as": "dateinput",
           "label": "Course completion date",
+          "displayLabel": true,
           "name": "course-completion-date",
           "options": [
             {

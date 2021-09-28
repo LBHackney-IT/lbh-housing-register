@@ -6,6 +6,7 @@
         {
           "as": "radios",
           "label": "Do you have any significant medical conditions that affect the type of housing you need?",
+          "displayLabel": true,
           "hint": "We will carry out checks to assess your medical needs. This might restrict the types of properties you can bid for, which could increase your waiting time due to the number of properties which become available.",
           "details": {
             "title": "How do I answer this question",
@@ -28,6 +29,7 @@
         },
         {
           "name": "proof-of-medical-needs",
+          "displayLabel": true,
           "as": "announcement",
           "title": "You will need to complete a separate medical form",
           "content": "After you have submitted this application, we will email you a link to a form asking you to provide detailed information about your medical needs.",

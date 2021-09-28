@@ -6,6 +6,7 @@
         {
           "as": "radios",
           "label": "Are you fleeing domestic violence?",
+          "displayLabel": true,
           "name": "domestic-violence",
           "options": [
             {

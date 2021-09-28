@@ -5,7 +5,9 @@
         {
           "type": "verifycode",
           "label": "Verification code",
+          "displayLabel": true,
           "name": "code",
+
           "validation": {
             "required": true
           }

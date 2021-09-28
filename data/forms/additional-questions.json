@@ -5,6 +5,7 @@
         {
           "as": "checkboxes",
           "label": "Do any of the following apply to your household?",
+          "displayLabel": true,
           "hint": "Select all options that apply",
           "name": "household-info",
           "options": [
@@ -29,6 +30,7 @@
         {
           "as": "textarea",
           "label": "Please provide details if applicable",
+          "displayLabel": true,
           "name": "household-details"
         }
       ]

@@ -116,6 +116,7 @@ function ManualEntry() {
             <span className="govuk-visually-hidden">line 1 of 2</span>
           </>
         }
+        displayLabel={true}
       />
       <Input
         name="address.line2"
@@ -125,18 +126,21 @@ function ManualEntry() {
             Building and street line 2 of 2
           </span>
         }
+        displayLabel={true}
       />
       <Input
         name="address.town"
         autoComplete="address-level2"
         label={'Town or city'}
         className={'govuk-!-width-two-thirds'}
+        displayLabel={true}
       />
 
       <Input
         name="address.county"
         label={'County'}
         className={'govuk-!-width-two-thirds'}
+        displayLabel={true}
       />
 
       <Input
@@ -144,6 +148,7 @@ function ManualEntry() {
         autoComplete="postal-code"
         label={'Postcode'}
         className={'govuk-input--width-10'}
+        displayLabel={true}
       />
     </fieldset>
   );
@@ -366,6 +371,7 @@ const ApplicationStep = (): JSX.Element => {
                   name="postcode"
                   label="Postcode"
                   autoComplete="postal-code"
+                  displayLabel={true}
                 />
                 <Button type="submit">Find address</Button>
               </>
@@ -378,12 +384,14 @@ const ApplicationStep = (): JSX.Element => {
                   name={'date'}
                   label={'When did you move to this address?'}
                   showDay={false}
+                  displayLabel={true}
                 />
                 {addressHistory.length > 0 && (
                   <DateInput
                     name={'dateTo'}
                     label={'When did you leave this address?'}
                     showDay={false}
+                    displayLabel={true}
                   />
                 )}
               </InsetText>
@@ -415,6 +423,7 @@ const ApplicationStep = (): JSX.Element => {
                     label: address.line1 + ', ' + address.town,
                     value: address.UPRN.toString(),
                   }))}
+                  displayLabel={true}
                 />
 
                 <a
@@ -429,12 +438,14 @@ const ApplicationStep = (): JSX.Element => {
                   name={'date'}
                   label={'When did you move to this address?'}
                   showDay={false}
+                  displayLabel={true}
                 />
                 {addressHistory.length > 0 && (
                   <DateInput
                     name={'dateTo'}
                     label={'When did you leave this address?'}
                     showDay={false}
+                    displayLabel={true}
                   />
                 )}
               </InsetText>

@@ -6,6 +6,7 @@
         {
           "as": "radios",
           "label": "Have you been found intentionally homeless?",
+          "displayLabel": true,
           "name": "homelessness",
           "options": [
             {

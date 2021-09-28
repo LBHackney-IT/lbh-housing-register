@@ -32,6 +32,16 @@ const Declaration = (): JSX.Element => {
       router.push('/apply/not-eligible');
     } else {
       dispatch(sendConfirmation(application));
+
+      application.mainApplicant?.medicalNeed?.formLink === 'Form Link';
+      application.mainApplicant?.medicalNeed?.formRecieved === '';
+      application.mainApplicant?.medicalOutcome?.accessibileHousingRegister ===
+        '';
+      application.mainApplicant?.medicalOutcome?.additionalInformaton === 'N/a';
+      application.mainApplicant?.medicalOutcome?.assessmentDate === '';
+      application.mainApplicant?.medicalOutcome?.disability === '';
+      application.mainApplicant?.medicalOutcome?.outcome === '';
+
       dispatch(completeApplication(application));
       router.push('/apply/confirmation');
     }

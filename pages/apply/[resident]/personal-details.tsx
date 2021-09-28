@@ -147,6 +147,7 @@ const ApplicationStep = (): JSX.Element => {
     as: 'radioconditional',
     label: 'Gender',
     name: 'gender',
+    displayLabel: true,
     options: [
       {
         label: 'Male',
@@ -256,6 +257,7 @@ const ApplicationStep = (): JSX.Element => {
         {({ isSubmitting, values }) => (
           <Form>
             <Select
+              displayLabel={true}
               label={'Title'}
               name={'title'}
               options={titleOptions.map((title) => ({
@@ -263,14 +265,16 @@ const ApplicationStep = (): JSX.Element => {
                 value: title.value,
               }))}
             />
-            <Input name="firstName" label="First name" />
-            <Input name="surname" label="Last name" />
+            <Input name="firstName" label="First name" displayLabel={true} />
+            <Input name="surname" label="Last name" displayLabel={true} />
             <DateInput
+              displayLabel={true}
               name={'dateOfBirth'}
               label={'Date of birth'}
               showDay={true}
             />
             <RadioConditional
+              displayLabel={true}
               value={genderProps.value}
               as={genderProps.as}
               name={genderProps.name}
@@ -283,6 +287,7 @@ const ApplicationStep = (): JSX.Element => {
 
             {state === 'over-sixteen' && (
               <Input
+                displayLabel={true}
                 name="nationalInsuranceNumber"
                 label="National Insurance number"
                 hint="For example, AB 12 34 56 C"
@@ -291,8 +296,17 @@ const ApplicationStep = (): JSX.Element => {
 
             {isMainApplicant && (
               <>
-                <Input name="phoneNumber" label="Mobile number" />
-                <Input name="emailAddress" label="Email" type="email" />
+                <Input
+                  name="phoneNumber"
+                  label="Mobile number"
+                  displayLabel={true}
+                />
+                <Input
+                  name="emailAddress"
+                  label="Email"
+                  type="email"
+                  displayLabel={true}
+                />
               </>
             )}
 

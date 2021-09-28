@@ -5,6 +5,7 @@
       "fields": [
         {
           "label": "Link to medical form",
+          "displayLabel": false,
           "name": "linkToMedicalForm",
           "validation": {
             "required": true
@@ -22,6 +23,7 @@
         },
         {
           "label": "Outcome",
+          "displayLabel": false,
           "as": "select",
           "name": "outcome",
           "options": [
@@ -81,6 +83,7 @@
         },
         {
           "label": "Accessible housing register",
+          "displayLabel": false,
           "as": "select",
           "name": "accessible-housing-register",
           "options": [
@@ -124,6 +127,7 @@
         },
         {
           "label": "Disability",
+          "displayLabel": false,
           "as": "select",
           "name": "disability",
           "options": [
@@ -151,6 +155,7 @@
         },
         {
           "label": "Additional information",
+          "displayLabel": false,
           "as": "textarea",
           "name": "additional-information"
         }

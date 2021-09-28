@@ -6,6 +6,7 @@
         {
           "as": "radios",
           "label": "What best describes your current living situation?",
+          "displayLabel": true,
           "name": "living-situation",
           "options": [
             {

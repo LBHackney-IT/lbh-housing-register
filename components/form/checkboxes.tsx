@@ -102,6 +102,7 @@ export default function Checkboxes({
                       label={checkbox.label!}
                       name={field.name}
                       value={checkbox.value}
+                      displayLabel={displayLabel}
                     />
                   ))}
                 </>

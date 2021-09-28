@@ -32,6 +32,7 @@
         {
           "as": "radios",
           "label": "What citizenship do you hold?",
+          "displayLabel": true,
           "name": "citizenship",
           "options": [
             {
@@ -54,6 +55,7 @@
         {
           "as": "radios",
           "label": "Are you in the UK to study?",
+          "displayLabel": true,
           "name": "uk-studying",
           "options": [
             {
@@ -78,6 +80,7 @@
         {
           "as": "radios",
           "label": "Have you been granted settled status or pre-settled status?",
+          "displayLabel": true,
           "details": {
             "content": "Pre settled status means a person is granted permission to remain in the UK for five years. Settled status means a person is granted indefinite permission to remain in the UK."
           },
@@ -109,6 +112,7 @@
         {
           "as": "radios",
           "label": "Do you have a work or study visa?",
+          "displayLabel": true,
           "name": "work-or-study-visa",
           "options": [
             {
@@ -133,6 +137,7 @@
         {
           "as": "radios",
           "label": "Are you a family member of an EEA national?",
+          "displayLabel": true,
           "name": "eea-national",
           "options": [
             {
@@ -161,6 +166,7 @@
         {
           "as": "radios",
           "label": "Are you receiving sponsorship to stay in the UK?",
+          "displayLabel": true,
           "name": "receiving-sponsorship",
           "options": [
             {
@@ -193,6 +199,7 @@
         {
           "as": "radios",
           "label": "What is your legal status?",
+          "displayLabel": true,
           "name": "legal-status",
           "options": [
             {

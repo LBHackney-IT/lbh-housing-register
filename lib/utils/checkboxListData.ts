@@ -1,4 +1,4 @@
-import { Applicant } from '../../domain/HousingApi';
+import { Applicant, Application } from '../../domain/HousingApi';
 import { CheckBoxListPageProps } from '../../components/applications/checkBoxList';
 import { MedicalDetailPageProps } from '../../components/applications/medical-details';
 import {
@@ -742,17 +742,10 @@ export const incomeAndSavingsCheckboxList = (
 };
 
 export const medicalDetailsPageData = (
-  applicant?: Applicant
+  application: Application
 ): MedicalDetailPageProps => {
   var details: MedicalDetailPageProps = {
-    assessmentRequested: 'Yes',
-    linkToMedicalForm: 'some link',
-    dateFormRecieved: new Date(),
-    assessmentDate: undefined,
-    outcome: '',
-    accessibleHousingRegister: '',
-    disability: '',
-    additionalInformation: '',
+    data: application,
   };
 
   return details;

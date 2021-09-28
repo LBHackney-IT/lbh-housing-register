@@ -79,6 +79,72 @@ export interface Applicant {
    * @memberof Applicant
    */
   questions?: Array<Question>;
+
+  /**
+   *
+   * @type {MedicalNeed}
+   * @memberof Applicant
+   */
+  medicalNeed?: MedicalNeed;
+
+  /**
+   *
+   * @type {MedicalOutCome}
+   * @memberof Applicant
+   */
+  medicalOutcome?: MedicalOutcome;
+}
+
+export interface MedicalNeed {
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalNeed
+   */
+  formRecieved?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalNeed
+   */
+  formLink?: string;
+}
+
+export interface MedicalOutcome {
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalOutCome
+   */
+  accessibileHousingRegister?: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalOutCome
+   */
+  additionalInformaton?: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalOutCome
+   */
+  assessmentDate?: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalOutCome
+   */
+  disability?: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalOutCome
+   */
+  outcome?: string;
 }
 
 /**

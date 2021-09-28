@@ -68,7 +68,7 @@ export default function ApplicationPersonPage({
   const situation = situationCheckboxList(applicant);
   const employment = employmentCheckboxList(applicant);
   const incomeAndSavings = incomeAndSavingsCheckboxList(applicant);
-  const medicalDetails = medicalDetailsPageData(applicant);
+  const medicalDetails = medicalDetailsPageData(data);
 
   return (
     <UserContext.Provider value={{ user }}>

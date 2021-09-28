@@ -21,6 +21,7 @@ export default function Input({
   placeholder,
   type,
   person,
+  displayLabel,
   ...additionalInputProps
 }: InputProps): JSX.Element {
   return (
@@ -39,7 +40,9 @@ export default function Input({
                 <strong>{person}</strong>
               </Paragraph>
             )}
-            {label && <Label content={label} htmlFor={name} strong={true} />}
+            {displayLabel && label && (
+              <Label content={label} htmlFor={name} strong={true} />
+            )}
             {hint && <Hint content={hint} />}
             {meta.touched && meta.error && (
               <ErrorMessage message={meta.error} />

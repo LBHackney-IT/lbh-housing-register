@@ -7,7 +7,8 @@ import { scrollToTop } from '../../lib/utils/scroll';
 import Button from '../button';
 import { HeadingTwo } from '../content/headings';
 import Paragraph from '../content/paragraph';
-import DynamicField from './dynamic-field';
+import DynamicField from '../form/dynamic-field';
+
 interface FormProps {
   buttonText?: string;
   formData: MultiStepForm;
@@ -17,7 +18,7 @@ interface FormProps {
   activeStep?: string;
 }
 
-export default function Form({
+export default function AdminForm({
   buttonText,
   formData,
   onSave,
@@ -77,27 +78,43 @@ export default function Form({
           <FormikForm>
             {step.heading && <HeadingTwo content={step.heading} />}
             {step.copy && <Paragraph>{step.copy}</Paragraph>}
-            {step.fields.map((field, index) => {
-              const display: boolean = getDisplayStateOfField(field, values);
-              if (display) {
-                field.displayLabel = true;
-                return <DynamicField key={index} field={field} />;
-              }
-            })}
+
+            <table className="govuk-table lbh-table">
+              <caption className="govuk-table__caption lbh-heading-h3 lbh-table__caption">
+                Medical Outcome
+              </caption>
+              <thead className="govuk-table__head">
+                <tr className="govuk-table__row">
+                  <th scope="col" className="govuk-table__header"></th>
+                  <th scope="col" className="govuk-table__header"></th>
+                </tr>
+              </thead>
+              <tbody className="govuk-table__body">
+                {step.fields.map((field, index) => {
+                  const display: boolean = getDisplayStateOfField(
+                    field,
+                    values
+                  );
+                  if (display) {
+                    field.displayLabel = false;
+                    return (
+                      <>
+                        <tr className="govuk-table__row">
+                          <th scope="row" className="govuk-table__header">
+                            {field.label}
+                          </th>
+                          <td className="govuk-table__cell">
+                            <DynamicField key={index} field={field} />
+                          </td>
+                        </tr>
+                      </>
+                    );
+                  }
+                })}
+              </tbody>
+            </table>
 
             <div className="c-flex lbh-simple-pagination">
-              {stepNumber > 0 && (
-                <div className="c-flex__1">
-                  <Button
-                    onClick={() => previous()}
-                    secondary={true}
-                    type="button"
-                  >
-                    Previous step
-                  </Button>
-                </div>
-              )}
-
               <div className="c-flex__1 text-right">
                 <Button disabled={isSubmitting} type="submit">
                   {buttonText ? buttonText : 'Save'}

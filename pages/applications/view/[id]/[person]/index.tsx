@@ -58,7 +58,7 @@ export default function ApplicationPersonPage({
     | 'money'
     | 'health'
     | 'checklist';
-  const [state, setState] = useState<State>('identity');
+  const [state, setState] = useState<State>('health');
 
   const personalDetails = personalDetailsCheckboxList(applicant);
   const immigrationStatus = immigrationStatusCheckboxList(applicant);

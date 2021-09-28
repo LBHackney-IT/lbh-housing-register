@@ -12,6 +12,7 @@ export default function Textarea({
   label,
   name,
   placeholder,
+  displayLabel,
 }: TextareaFormField): JSX.Element {
   return (
     <Field name={name}>
@@ -23,7 +24,7 @@ export default function Textarea({
         meta: FieldMetaProps<string>;
       }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
-          {label && (
+          {displayLabel && label && (
             <Label content={label} htmlFor={field.name} strong={true} />
           )}
           {hint && <Hint content={hint} />}

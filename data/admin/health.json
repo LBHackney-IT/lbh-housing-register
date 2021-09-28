@@ -1,0 +1,160 @@
+{
+  "heading": "Employment",
+  "steps": [
+    {
+      "fields": [
+        {
+          "label": "Link to medical form",
+          "name": "linkToMedicalForm",
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "label": "Date form recieved",
+          "as": "dateinput",
+          "name": "dateFormRecieved"
+        },
+        {
+          "label": "Assessment Date",
+          "as": "dateinput",
+          "name": "assessmentDate"
+        },
+        {
+          "label": "Outcome",
+          "as": "select",
+          "name": "outcome",
+          "options": [
+            {
+              "label": "Select an option",
+              "value": ""
+            },
+            {
+              "label": "'A' Medical awarded",
+              "value": "a-medical-awarded"
+            },
+            {
+              "label": "'B' Medical awarded",
+              "value": "b-medical-awarded"
+            },
+            {
+              "label": "'A' Medical awarded with additional bedroom",
+              "value": "a-medical-awarded-with-additional-bedroom"
+            },
+            {
+              "label": "'B' Medical awarded with additional bedroom",
+              "value": "b-medical-awarded-with-additional-bedroom"
+            },
+            {
+              "label": "Additional bedroom awarded",
+              "value": "additional-bedroom-awarded"
+            },
+            {
+              "label": "No medical awarded",
+              "value": "no-medical-awarded"
+            },
+            {
+              "label": "Vulnerable",
+              "value": "vulnerable"
+            },
+            {
+              "label": "Not vulnerable",
+              "value": "not-vulnerable"
+            },
+            {
+              "label": "Suitable",
+              "value": "suitable"
+            },
+            {
+              "label": "Not suitable",
+              "value": "not-suitable"
+            },
+            {
+              "label": "Recommendation",
+              "value": "recommendation"
+            },
+            {
+              "label": "No recommendation",
+              "value": "no-recommendation"
+            }
+          ]
+        },
+        {
+          "label": "Accessible housing register",
+          "as": "select",
+          "name": "accessible-housing-register",
+          "options": [
+            {
+              "label": "Select an option",
+              "value": ""
+            },
+            {
+              "label": "A/B wheelchair standard",
+              "value": "a-b-wheelchair-standard"
+            },
+            {
+              "label": "C/D Large level access",
+              "value": "c-d-large-level-access"
+            },
+            {
+              "label": "E step free - level access",
+              "value": "e-step-free-level-access"
+            },
+            {
+              "label": "E+ minimal steps up to 4 steps",
+              "value": "e-minimal-steps-up-to-4-steps"
+            },
+            {
+              "label": "E Ground floor and level access shower",
+              "value": "e-ground-floor-and-level-access-shower"
+            },
+            {
+              "label": "E+ Up to 4 steps and level access shower",
+              "value": "e-up-to-4-steps-and-level-access-shower"
+            },
+            {
+              "label": "F general needs - any floor",
+              "value": "f-general-needs-any-floor"
+            },
+            {
+              "label": "F any floor with level access shower",
+              "value": "f-any-floor-with-level-access-shower"
+            }
+          ]
+        },
+        {
+          "label": "Disability",
+          "as": "select",
+          "name": "disability",
+          "options": [
+            {
+              "label": "Select an option",
+              "value": ""
+            },
+            {
+              "label": "Visual impairment",
+              "value": "visual-impairment"
+            },
+            {
+              "label": "Mobility",
+              "value": "mobility"
+            },
+            {
+              "label": "Learning difficulties",
+              "value": "learning-difficulties"
+            },
+            {
+              "label": "Mental Health",
+              "value": "mental-health"
+            }
+          ]
+        },
+        {
+          "label": "Additional information",
+          "as": "textarea",
+          "name": "additional-information"
+        }
+      ]
+    }
+  ]
+}

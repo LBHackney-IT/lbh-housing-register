@@ -93,6 +93,7 @@ export default function RadioConditional({
   name,
   options,
   subheading,
+  displayLabel,
 }: RadioConditionalProps): JSX.Element {
   return (
     <Field name={name}>
@@ -124,6 +125,7 @@ export default function RadioConditional({
                   name={field.name}
                   value={radio.value}
                   containerId={radio.conditionalFieldInput?.containerId}
+                  displayLabel={displayLabel}
                 />
 
                 {radio.conditionalFieldInput && (

@@ -745,9 +745,9 @@ export const medicalDetailsPageData = (
   applicant?: Applicant
 ): MedicalDetailPageProps => {
   var details: MedicalDetailPageProps = {
-    assessmentRequested: '',
-    linkToMedicalForm: '',
-    dateFormRecieved: undefined,
+    assessmentRequested: 'Yes',
+    linkToMedicalForm: 'some link',
+    dateFormRecieved: new Date(),
     assessmentDate: undefined,
     outcome: '',
     accessibleHousingRegister: '',

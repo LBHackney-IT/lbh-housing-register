@@ -359,5 +359,5 @@ export interface VerifyAuthRequest {
   code: string;
 }
 export interface VerifyAuthResponse {
-  success: boolean;
+  accessToken: string;
 }

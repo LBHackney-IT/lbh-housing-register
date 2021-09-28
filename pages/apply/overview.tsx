@@ -10,21 +10,37 @@ import SummaryList, {
 } from '../../components/summary-list';
 import Tag from '../../components/tag';
 import ApplicantName from '../../components/application/ApplicantName';
-import { Applicant } from '../../domain/HousingApi';
+import { Applicant, Application } from '../../domain/HousingApi';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { applicationStepsRemaining } from '../../lib/utils/resident';
 import {
   sendConfirmation,
   completeApplication,
   sendDisqualifyEmail,
+  loadApplication,
+  importApplication,
 } from '../../lib/store/application';
 import { checkEligible } from '../../lib/utils/form';
 import withApplication from '../../lib/hoc/withApplication';
 import Custom404 from '../404';
+import { GetServerSideProps } from 'next';
+import { getApplication } from '../../lib/gateways/applications-api';
+import { getUser } from '../../lib/utils/users';
+import { useEffect } from 'react';
 
-const ApplicationPersonsOverview = (): JSX.Element => {
+interface PageProps {
+  data: Application;
+}
+
+const ApplicationPersonsOverview = ({data}: PageProps): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(
+      importApplication(data)
+    );
+  }, []);
 
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
   if (!mainResident) {
@@ -113,4 +129,26 @@ const ApplicationPersonsOverview = (): JSX.Element => {
   );
 };
 
-export default withApplication(ApplicationPersonsOverview);
+export default ApplicationPersonsOverview;
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  // get current user from session (JWT cookie)
+  const user = getUser(context.req);
+  console.log(user);
+
+  // the JWT should have an application id
+  const id = user?.application_id;
+  if (!id) {
+    return {
+      props: {},
+      redirect: {
+        destination: '/',
+      },
+    };
+  }
+
+  const data = await getApplication(id);
+  return {
+    props: { data },
+  };
+};

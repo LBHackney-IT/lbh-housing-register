@@ -27,8 +27,8 @@ const YourSituation = (): JSX.Element => {
     return <Custom404 />;
   }
 
-  // If routeSelectFunction is set as the nextFormId in the question JSON
-  // we can pass multiple possible values. See if statement at end of nextStep() below
+  // If JSON has routeSelect set to true we can pass multiple possible values to activeStepID.
+  // See if statement at end of nextStep() below
   const routeSelectFunction = () => {
     const livingSituation: string = getQuestionValue(
       applicant.questions,
@@ -72,10 +72,9 @@ const YourSituation = (): JSX.Element => {
   ];
 
   const nextStep = (values: FormikValues) => {
-    const { nextFormId } = formData.conditionals?.find(
+    const { nextFormId, routeSelect } = formData.conditionals?.find(
       (element) => getIn(values, element.fieldId) === element.value
-    ) ?? { nextFormId: 'exit' };
-    // console.log(nextFormId);
+    ) ?? { nextFormId: 'exit', routeSelect: false };
 
     if (nextFormId === 'exit') {
       dispatch(
@@ -90,9 +89,9 @@ const YourSituation = (): JSX.Element => {
       return;
     }
 
-    // If routeSelectFunction is found as nextFormId in the JSON determine
+    // If JSON has routeSelect set to true determine
     // route based on switch statement above, or continue as normal.
-    if (nextFormId === 'route-select-function') {
+    if (routeSelect) {
       setActiveStepId(routeSelectFunction);
     } else {
       setActiveStepId(nextFormId);

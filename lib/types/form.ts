@@ -1,3 +1,4 @@
+import { SetStateAction } from 'react';
 import { FormikValues } from 'formik';
 import { FormID } from '../utils/form-data';
 
@@ -122,7 +123,8 @@ export type FormStep = {
 export type Conditionals = {
   fieldId: string;
   value: string;
-  nextFormId: FormID | 'exit' | 'route-select-function';
+  nextFormId: FormID | 'exit';
+  routeSelect?: boolean;
 };
 
 export type MultiStepForm = {

@@ -19,17 +19,10 @@ import mainApplicant from './mainApplicant';
 import otherMembers from './otherMembers';
 import { NotifyRequest, NotifyResponse } from '../../domain/govukNotify';
 
-export const importApplication = createAsyncThunk(
-  'applicant/import',
-  async (application: Application) => {
-    return application as Application;
-  }
-);
-
 export const loadApplication = createAsyncThunk(
   'application/load',
-  async (id: string) => {
-    const r = await fetch(`/api/applications/${id}`);
+  async () => {
+    const r = await fetch(`/api/applications/`);
     return (await r.json()) as Application;
   }
 );
@@ -147,7 +140,6 @@ const slice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(importApplication.fulfilled, (state, action) => action.payload)
       .addCase(loadApplication.fulfilled, (state, action) => action.payload)
       .addCase(createApplication.fulfilled, (state, action) => action.payload)
       .addCase(updateApplication.fulfilled, (state, action) => action.payload)

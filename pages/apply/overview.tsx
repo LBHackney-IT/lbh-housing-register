@@ -20,7 +20,6 @@ import {
 } from '../../lib/store/application';
 import { checkEligible } from '../../lib/utils/form';
 import withApplication from '../../lib/hoc/withApplication';
-import Custom404 from '../404';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
   const router = useRouter();
@@ -28,7 +27,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
 
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
   if (!mainResident) {
-    return <Custom404 />;
+    return <></>;
   }
 
   const application = useAppSelector((store) => store.application);

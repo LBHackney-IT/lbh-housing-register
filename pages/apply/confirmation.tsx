@@ -7,6 +7,7 @@ import Layout from '../../components/layout/resident-layout';
 import Panel from '../../components/panel';
 import Timeline, { TimelineEvent } from '../../components/timeline';
 import withApplication from '../../lib/hoc/withApplication';
+import { exit } from '../../lib/store/auth';
 import { useAppSelector } from '../../lib/store/hooks';
 import { formatDate } from '../../lib/utils/dateOfBirth';
 
@@ -15,12 +16,11 @@ const ApplicationConfirmation = (): JSX.Element => {
   const dispatch = useDispatch();
   const application = useAppSelector((store) => store.application);
   const residentEmail = useAppSelector(
-    (store) => store.cognitoUser?.attributes.email
+    (store) => store.application.mainApplicant?.contactInformation?.emailAddress
   );
 
   const signOut = () => {
-    dispatch(signOut());
-    router.push('/');
+    dispatch(exit());
   };
 
   return (

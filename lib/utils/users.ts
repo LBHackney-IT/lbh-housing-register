@@ -1,6 +1,7 @@
 import cookie from 'cookie';
 import jsonwebtoken from 'jsonwebtoken';
 import { HackneyResident } from '../../domain/HackneyResident';
+import { VerifyAuthResponse } from '../../domain/HousingApi';
 
 export function getUser(req: any) {
   try {
@@ -26,7 +27,22 @@ export function getUser(req: any) {
   }
 }
 
-export const signOut = (): void => {
-  // TODO: clear cookie
-  window.location.href = '/';
+export const setAuthCookie = (res: any, data: VerifyAuthResponse): void => {
+  const jwtCookie = cookie.serialize('housing_user', data.accessToken, {
+    maxAge: 7 * 24 * 60 * 60,
+    domain: '.hackney.gov.uk',
+    path: '/',
+  });
+
+  res.setHeader('Set-Cookie', jwtCookie);
+};
+
+export const removeAuthCookie = (res: any): void => {
+  const jwtCookie = cookie.serialize('housing_user', '', {
+    maxAge: -1,
+    domain: '.hackney.gov.uk',
+    path: '/',
+  });
+
+  res.setHeader('Set-Cookie', jwtCookie);
 };

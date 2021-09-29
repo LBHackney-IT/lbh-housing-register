@@ -1,7 +1,10 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { Application } from '../../../domain/HousingApi';
-import { addApplication, getApplication } from '../../../lib/gateways/applications-api';
+import {
+  addApplication,
+  getApplication,
+} from '../../../lib/gateways/applications-api';
 import { getUser } from '../../../lib/utils/users';
 
 const endpoint: NextApiHandler = async (
@@ -15,9 +18,7 @@ const endpoint: NextApiHandler = async (
         const id = user?.application_id;
         if (id) {
           const data = await getApplication(id);
-          res
-            .status(StatusCodes.OK)
-            .json(data);
+          res.status(StatusCodes.OK).json(data);
         } else {
           res
             .status(StatusCodes.FORBIDDEN)

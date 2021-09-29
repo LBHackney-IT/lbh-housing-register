@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { confirmVerifyCode } from '../../../../lib/gateways/applications-api';
-import cookie from 'cookie';
+import { setAuthCookie } from '../../../../lib/utils/users';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -16,17 +16,7 @@ const endpoint: NextApiHandler = async (
 
         // set cookie with access token (JWT)
         if (data) {
-          const jwtCookie = cookie.serialize(
-            'housing_user',
-            data.accessToken,
-            {
-              maxAge: (7 * 24 * 60 * 60),
-              domain: '.hackney.gov.uk',
-              path: '/',
-            }
-          );
-
-          res.setHeader('Set-Cookie', jwtCookie);
+          setAuthCookie(res, data);
         }
 
         res.status(StatusCodes.OK).json(data);

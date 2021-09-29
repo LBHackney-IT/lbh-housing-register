@@ -1,4 +1,3 @@
-import Auth from '@aws-amplify/auth';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Button from '../../components/button';
@@ -7,14 +6,13 @@ import Announcement from '../../components/announcement';
 import Paragraph from '../../components/content/paragraph';
 import Form from '../../components/form/form';
 import Layout from '../../components/layout/resident-layout';
-import { signIn } from '../../lib/store/cognitoUser';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { FormData } from '../../lib/types/form';
 import { FormID, getFormData } from '../../lib/utils/form-data';
 import ErrorSummary from '../../components/errors/error-summary';
 import { Errors } from '../../lib/utils/errors';
 import { scrollToError } from '../../lib/utils/scroll';
-import { confirmVerifyCode } from '../../lib/store/application';
+import { confirmVerifyCode, createVerifyCode } from '../../lib/store/auth';
 
 const ApplicationVerifyPage = (): JSX.Element => {
   const router = useRouter();
@@ -32,17 +30,6 @@ const ApplicationVerifyPage = (): JSX.Element => {
 
   const confirmSignUp = async (values: FormData) => {
     try {
-      //await Auth.confirmSignUp(emailAddress, values.code);
-
-      // TODO: turns out we also need to sign in at this point!
-      // update so we don't need a password
-      // dispatch(
-      //   signIn({
-      //     username: emailAddress,
-      //     password: 'Testing123!',
-      //   })
-      // );
-
       const code = values.code as string;
       dispatch(confirmVerifyCode({ application, code }));
 
@@ -53,8 +40,8 @@ const ApplicationVerifyPage = (): JSX.Element => {
     }
   };
 
-  const resendCode = async (emailAddress: string) => {
-    await Auth.resendSignUp(emailAddress);
+  const resendCode = async () => {
+    dispatch(createVerifyCode(application));
   };
 
   return (
@@ -67,7 +54,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
           <strong>{emailAddress}</strong>.
         </Paragraph>
         <Paragraph>Haven't received an email?</Paragraph>
-        <Button onClick={() => resendCode(emailAddress)} secondary>
+        <Button onClick={() => resendCode()} secondary>
           Send again
         </Button>
       </Announcement>

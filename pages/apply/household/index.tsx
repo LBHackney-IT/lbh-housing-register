@@ -11,8 +11,8 @@ import SummaryList, {
 } from '../../../components/summary-list';
 import { Applicant } from '../../../domain/HousingApi';
 import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
-import { signOut } from '../../../lib/store/cognitoUser';
 import withApplication from '../../../lib/hoc/withApplication';
+import { exit } from '../../../lib/store/auth';
 
 const ApplicationHouseholdOverview = (): JSX.Element => {
   const router = useRouter();
@@ -37,8 +37,7 @@ const ApplicationHouseholdOverview = (): JSX.Element => {
 
   const onDelete = () => {
     // TODO: delete application
-    dispatch(signOut());
-    router.push('/');
+    dispatch(exit());
   };
 
   return (

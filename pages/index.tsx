@@ -19,7 +19,7 @@ import { useAppSelector } from '../lib/store/hooks';
 
 export default function ApplicationHomePage(): JSX.Element {
   const router = useRouter();
-  const isLoggedIn = useAppSelector((store) => store.cognitoUser?.username);
+  const isLoggedIn = useAppSelector((store) => store.application.id);
   useEffect(() => {
     if (isLoggedIn) {
       router.push('/apply/overview');

@@ -7,14 +7,8 @@ import {
   ThunkDispatch,
 } from '@reduxjs/toolkit';
 import { Store } from '.';
-import {
-  Application,
-  CreateAuthRequest,
-  CreateAuthResponse,
-  VerifyAuthRequest,
-  VerifyAuthResponse,
-} from '../../domain/HousingApi';
-import { signOut } from './cognitoUser';
+import { Application } from '../../domain/HousingApi';
+import { exit } from './auth';
 import mainApplicant from './mainApplicant';
 import otherMembers from './otherMembers';
 import { NotifyRequest, NotifyResponse } from '../../domain/govukNotify';
@@ -22,8 +16,9 @@ import { NotifyRequest, NotifyResponse } from '../../domain/govukNotify';
 export const loadApplication = createAsyncThunk(
   'application/load',
   async () => {
-    const r = await fetch(`/api/applications/`);
-    return (await r.json()) as Application;
+    const res = await fetch(`/api/applications`);
+    const application = (await res.json()) as Application;
+    return application.id ? application : null;
   }
 );
 
@@ -35,35 +30,6 @@ export const createApplication = createAsyncThunk(
       body: JSON.stringify(application),
     });
     return (await res.json()) as Application;
-  }
-);
-
-export const createVerifyCode = createAsyncThunk(
-  'auth/create',
-  async (application: Application) => {
-    const request: CreateAuthRequest = {
-      email: application.mainApplicant?.contactInformation?.emailAddress ?? '',
-    };
-    const res = await fetch(`/api/auth/${application.id}/generate`, {
-      method: 'POST',
-      body: JSON.stringify(request),
-    });
-    return (await res.json()) as CreateAuthResponse;
-  }
-);
-
-export const confirmVerifyCode = createAsyncThunk(
-  'auth/confirm',
-  async ({ application, code }: { application: Application; code: string }) => {
-    const request: VerifyAuthRequest = {
-      email: application.mainApplicant?.contactInformation?.emailAddress ?? '',
-      code: code,
-    };
-    const res = await fetch(`/api/auth/${application.id}/verify`, {
-      method: 'POST',
-      body: JSON.stringify(request),
-    });
-    return (await res.json()) as VerifyAuthResponse;
   }
 );
 
@@ -140,11 +106,14 @@ const slice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(loadApplication.fulfilled, (state, action) => action.payload)
+      .addCase(
+        loadApplication.fulfilled,
+        (state, action) => action.payload ?? {}
+      )
       .addCase(createApplication.fulfilled, (state, action) => action.payload)
       .addCase(updateApplication.fulfilled, (state, action) => action.payload)
       .addCase(completeApplication.fulfilled, (state, action) => action.payload)
-      .addCase(signOut.fulfilled, (state, action) => ({}))
+      .addCase(exit.fulfilled, (state, action) => ({}))
 
       .addDefaultCase((state, action) => {
         state.mainApplicant = mainApplicant.reducer(

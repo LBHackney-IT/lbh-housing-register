@@ -1,8 +1,12 @@
-import { Applicant } from '../../domain/HousingApi';
+import { Applicant, Application } from '../../domain/HousingApi';
 import { getQuestionValue } from '../store/applicant';
 import { FormData, FormField } from '../types/form';
 import { FormID, getEligibilityCriteria } from './form-data';
 import { isOver18 } from '../../lib/utils/dateOfBirth';
+
+import { getGenderName } from '../../lib/utils/gender';
+import { getAgeInYears } from '../../lib/utils/dateOfBirth';
+import { calculateBedrooms } from '../../lib/utils/bedroomCalculator';
 
 /**
  * Determines if the field should be displayed based on the values passed in
@@ -32,13 +36,27 @@ export function getDisplayStateOfField(
 }
 
 /**
- * Is the form data for the applicant eligible?
- * @param applicant The applicant
+ * Is the form data for the application eligible?
+ * @param application The application
  * @returns {[boolean, string[]]} - A tuple of state (isValid) and error message
  */
-export function checkEligible(applicant: Applicant): [boolean, string[]] {
+export function checkEligible(application: Application): [boolean, string[]] {
   let isValid = true;
   let reasons: string[] = [];
+  const applicants = [application.mainApplicant, application.otherMembers]
+    .filter((v): v is Applicant | Applicant[] => v !== undefined)
+    .flat();
+  const mainApplicant = applicants[0];
+  const bedroomArray = applicants.map((applicant) => ({
+    age: getAgeInYears(applicant),
+    gender: getGenderName(applicant),
+  }));
+
+  const hasPartnerSharing = !!applicants.find(
+    (applicant) => applicant.person?.relationshipType === 'partner'
+  );
+
+  const bedroomNeed = calculateBedrooms(bedroomArray, hasPartnerSharing);
 
   const setInvalid = (reasoning?: string): void => {
     isValid = false;
@@ -48,7 +66,20 @@ export function checkEligible(applicant: Applicant): [boolean, string[]] {
     }
   };
 
-  if (!isOver18(applicant)) {
+  const requestedNumberOfBedrooms = getQuestionValue(
+    mainApplicant.questions,
+    FormID.CURRENT_ACCOMMODATION,
+    'home-how-many-bedrooms'
+  );
+
+  if (bedroomNeed <= requestedNumberOfBedrooms) {
+    setInvalid(
+      "You already have the required number of bedrooms in your current property, therefore it's unlikely that you will qualify for social housing."
+    );
+  }
+  //******** *//
+
+  if (!isOver18(mainApplicant)) {
     setInvalid('Applicant is not over 18');
   }
 
@@ -56,7 +87,7 @@ export function checkEligible(applicant: Applicant): [boolean, string[]] {
     const eligibilityCriteria = getEligibilityCriteria(values);
     eligibilityCriteria?.forEach((criteria) => {
       const fieldValue = getQuestionValue(
-        applicant.questions,
+        mainApplicant.questions,
         values,
         criteria.field
       );

@@ -3,68 +3,56 @@ import AdminForm from './admin-form';
 import { FormID, getFormData } from '../../lib/utils/form-data';
 import { FormikValues } from 'formik';
 import { useAppDispatch } from '../../lib/store/hooks';
-import { updateApplicant, applicantHasId } from '../../lib/store/applicant';
+import { applicantHasId } from '../../lib/store/applicant';
+import { updateApplication } from '../../lib/store/application';
+import { useRouter } from 'next/router';
 
 export interface MedicalDetailPageProps {
   data: Application;
+  initialValues: FormikValues;
 }
 
 export default function MedicalDetail({
   data,
+  initialValues,
 }: MedicalDetailPageProps): JSX.Element {
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const formData = getFormData(FormID.ADMIN_HEALTH_ACTIONS);
 
+  const returnUrl = `/applications/view/${data.id}`;
+
   const nextStep = (values: FormikValues) => {
     if (applicantHasId(data.mainApplicant)) {
-      dispatch(
-        updateApplicant({
-          person: { id: data.mainApplicant.person.id },
+      const request: Application = {
+        ...data,
+        mainApplicant: {
+          ...data.mainApplicant,
           medicalNeed: {
-            formRecieved: '',
-            formLink: 'This is the form link',
+            formRecieved: values.dateFormRecieved,
+            formLink: values.linkToMedicalForm,
           },
           medicalOutcome: {
-            accessibileHousingRegister: '',
-            additionalInformaton: '',
-            assessmentDate: '',
-            disability: '',
-            outcome: '',
+            accessibileHousingRegister: values.accessibleHousingRegister,
+            additionalInformaton: values.additionalInformation,
+            assessmentDate: values.assessmentDate,
+            disability: values.disability,
+            outcome: values.outcome,
           },
-        })
-      );
-    }
-  };
+        },
+      };
 
-  const onSave = (values: FormikValues) => {
-    alert('on save');
-    if (applicantHasId(data.mainApplicant)) {
-      dispatch(
-        updateApplicant({
-          person: { id: data.mainApplicant.person.id },
-          medicalNeed: {
-            formRecieved: '',
-            formLink: 'This is the form link',
-          },
-          medicalOutcome: {
-            accessibileHousingRegister: '',
-            additionalInformaton: '',
-            assessmentDate: '',
-            disability: '',
-            outcome: '',
-          },
-        })
-      );
+      dispatch(updateApplication(request));
+      router.push(returnUrl);
     }
-    alert('saved');
   };
 
   return (
     <AdminForm
+      initialValues={initialValues}
       buttonText="Update Application"
       formData={formData}
-      onSave={onSave}
       onSubmit={nextStep}
     />
   );

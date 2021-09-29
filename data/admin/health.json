@@ -85,7 +85,7 @@
           "label": "Accessible housing register",
           "displayLabel": false,
           "as": "select",
-          "name": "accessible-housing-register",
+          "name": "accessibleHousingRegister",
           "options": [
             {
               "label": "Select an option",
@@ -157,7 +157,7 @@
           "label": "Additional information",
           "displayLabel": false,
           "as": "textarea",
-          "name": "additional-information"
+          "name": "additionalInformation"
         }
       ]
     }

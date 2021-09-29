@@ -34,10 +34,12 @@ export default function AdminForm({
 
   const schema = buildValidationSchema(step.fields);
 
-  const calculatedInitialValues = useMemo(
-    () => initialValues || schema.getDefault(),
-    [initialValues, schema]
-  );
+  // const calculatedInitialValues = useMemo(
+  //   () => initialValues || schema.getDefault(),
+  //   [initialValues, schema]
+  // );
+
+  const calculatedInitialValues = initialValues || {};
 
   const next = () => {
     // TODO: Scroll to top + set focus to first field

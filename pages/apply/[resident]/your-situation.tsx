@@ -17,6 +17,8 @@ import Custom404 from '../../404';
 const YourSituation = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const [activeStepID, setActiveStepId] = useState(FormID.ARMED_FORCES);
+
   const { resident } = router.query as { resident: string };
 
   const applicant = useAppSelector(selectApplicant(resident));
@@ -25,14 +27,15 @@ const YourSituation = (): JSX.Element => {
     return <Custom404 />;
   }
 
-  // TODO work this out.
-  const livingSituation: string = getQuestionValue(
-    applicant.questions,
-    FormID.CURRENT_ACCOMMODATION,
-    'living-situation'
-  );
+  // If JSON has routeSelect set to true we can pass multiple possible values to activeStepID.
+  // See if statement at end of nextStep() below
+  const routeSelectFunction = () => {
+    const livingSituation: string = getQuestionValue(
+      applicant.questions,
+      FormID.CURRENT_ACCOMMODATION,
+      'living-situation'
+    );
 
-  const [activeStepID, setActiveStepId] = useState(() => {
     switch (livingSituation) {
       case 'squatter':
         return FormID.COURT_ORDER;
@@ -46,7 +49,8 @@ const YourSituation = (): JSX.Element => {
       default:
         return FormID.HOMELESSNESS;
     }
-  });
+  };
+
   const formData = getFormData(activeStepID);
 
   const baseHref = `/apply/${applicant.person?.id}`;
@@ -68,9 +72,9 @@ const YourSituation = (): JSX.Element => {
   ];
 
   const nextStep = (values: FormikValues) => {
-    const { nextFormId } = formData.conditionals?.find(
+    const { nextFormId, routeSelect } = formData.conditionals?.find(
       (element) => getIn(values, element.fieldId) === element.value
-    ) ?? { nextFormId: 'exit' };
+    ) ?? { nextFormId: 'exit', routeSelect: false };
 
     if (nextFormId === 'exit') {
       dispatch(
@@ -85,7 +89,13 @@ const YourSituation = (): JSX.Element => {
       return;
     }
 
-    setActiveStepId(nextFormId);
+    // If JSON has routeSelect set to true determine
+    // route based on switch statement above, or continue as normal.
+    if (routeSelect) {
+      setActiveStepId(routeSelectFunction);
+    } else {
+      setActiveStepId(nextFormId);
+    }
   };
 
   const onSave = (values: FormikValues) => {

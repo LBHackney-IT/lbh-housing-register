@@ -16,6 +16,9 @@ export function getSession(req: any) {
         : jsonwebtoken.decode(parsedToken)
     ) as HackneyGoogleUser | undefined;
 
+    if (user) {
+      setPermissions(user);
+    }
     return user;
   } catch (err) {
     if (err instanceof jsonwebtoken.JsonWebTokenError) {
@@ -28,7 +31,29 @@ export function getSession(req: any) {
 
 export const signOut = (): void => {
   // TODO: clear cookie
-  window.location.href = '/login';
+};
+
+export const setPermissions = (user: HackneyGoogleUser): HackneyGoogleUser => {
+  const {
+    AUTHORISED_ADMIN_GROUP,
+    AUTHORISED_MANAGER_GROUP,
+    AUTHORISED_OFFICER_GROUP,
+  } = process.env;
+
+  user.hasAnyPermissions = user.groups.length > 0;
+  user.hasAdminPermissions = hasUserGroup(
+    AUTHORISED_ADMIN_GROUP as string,
+    user
+  );
+  user.hasManagerPermissions = hasUserGroup(
+    AUTHORISED_MANAGER_GROUP as string,
+    user
+  );
+  user.hasOfficerPermissions = hasUserGroup(
+    AUTHORISED_OFFICER_GROUP as string,
+    user
+  );
+  return user;
 };
 
 export const hasUserGroup = (
@@ -38,14 +63,11 @@ export const hasUserGroup = (
   return user?.groups?.includes(group);
 };
 
-export const getRedirect = (
-  group: string,
-  user?: HackneyGoogleUser
-): string | undefined => {
+export const getRedirect = (user?: HackneyGoogleUser): string | undefined => {
   if (!user) {
     return '/login';
   }
-  if (!hasUserGroup(group, user)) {
+  if (!user.hasAnyPermissions) {
     return '/access-denied';
   }
 };

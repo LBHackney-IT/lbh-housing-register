@@ -3,6 +3,7 @@ import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import {
   sendNewApplicationEmail,
   sendDisqualifyEmail,
+  sendMedicalNeedEmail,
 } from '../../../lib/gateways/notify-api';
 
 const endpoint: NextApiHandler = async (
@@ -21,6 +22,12 @@ const endpoint: NextApiHandler = async (
               notification
             );
             res.status(StatusCodes.OK).json(sendNewApplicationData);
+            break;
+          case 'medical':
+            const sendMedicalEmailData = await sendMedicalNeedEmail(
+              notification
+            );
+            res.status(StatusCodes.OK).json(sendMedicalEmailData);
             break;
           case 'disqualify':
             const sendDisqualifyEmailData = await sendDisqualifyEmail(

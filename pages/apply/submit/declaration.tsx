@@ -4,8 +4,10 @@ import {
   sendConfirmation,
   completeApplication,
   sendDisqualifyEmail,
+  sendMedicalNeed,
 } from '../../../lib/store/application';
 import withApplication from '../../../lib/hoc/withApplication';
+import { applicantsWithMedicalNeed } from '../../../lib/utils/medicalNeed';
 import { checkEligible } from '../../../lib/utils/form';
 import { getFormData, FormID } from '../../../lib/utils/form-data';
 import Form from '../../../components/form/form';
@@ -32,6 +34,11 @@ const Declaration = (): JSX.Element => {
       router.push('/apply/not-eligible');
     } else {
       dispatch(sendConfirmation(application));
+
+      if (applicantsWithMedicalNeed(application) > 0) {
+        dispatch(sendMedicalNeed(application));
+      }
+
       dispatch(completeApplication(application));
       router.push('/apply/confirmation');
     }

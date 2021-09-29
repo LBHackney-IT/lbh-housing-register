@@ -1,8 +1,10 @@
+import { IncomingMessage } from 'http';
 import cookie from 'cookie';
 import jsonwebtoken from 'jsonwebtoken';
+import { Redirect } from 'next';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 
-export function getSession(req: any) {
+export function getSession(req: IncomingMessage) {
   try {
     const cookies = cookie.parse(req.headers.cookie ?? '');
     const parsedToken = cookies['hackneyToken'];
@@ -49,3 +51,16 @@ export const getRedirect = (
     return '/access-denied';
   }
 };
+
+export function getAuth(
+  group: string,
+  user?: HackneyGoogleUser
+): { redirect: Redirect } | { user: HackneyGoogleUser } {
+  if (!user) {
+    return { redirect: { statusCode: 302, destination: '/login' } };
+  }
+  if (!hasUserGroup(group, user)) {
+    return { redirect: { statusCode: 302, destination: '/access-denied' } };
+  }
+  return { user };
+}

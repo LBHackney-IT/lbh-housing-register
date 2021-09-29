@@ -269,10 +269,10 @@ export namespace Person {
    * @enum {string}
    */
   export enum TitleEnum {
-    Mrs = <any>'Mrs',
-    Mr = <any>'Mr',
-    Miss = <any>'Miss',
-    Mx = <any>'Mx',
+    Mrs = 'Mrs',
+    Mr = 'Mr',
+    Miss = 'Miss',
+    Mx = 'Mx',
   }
 }
 

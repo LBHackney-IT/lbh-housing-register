@@ -9,7 +9,6 @@ import immigrationStatusFormData from '../../data/forms/immigration-status.json'
 import incomeSavings from '../../data/forms/income.json';
 import medicalNeeds from '../../data/forms/medical-needs.json';
 import personalDetailsFormData from '../../data/forms/person-details.json';
-import newPersonDetailsFormData from '../../data/forms/new-person-details.json';
 import residentialStatusFormData from '../../data/forms/residential-status.json';
 import signInVerifyFormData from '../../data/forms/sign-in-verify.json';
 import signInFormData from '../../data/forms/sign-in.json';
@@ -53,7 +52,6 @@ export enum FormID {
   SIGN_IN = 'sign-in',
   SIGN_IN_VERIFY = 'sign-in-verify',
   SIGN_UP_DETAILS = 'sign-up-details',
-  NEW_PERSON_DETAILS = 'add-person',
   PERSONAL_DETAILS = 'personal-details',
   IMMIGRATION_STATUS = 'immigration-status',
   RESIDENTIAL_STATUS = 'residential-status',
@@ -124,9 +122,6 @@ export function getFormData(form: FormID): MultiStepForm {
 
     case FormID.SIGN_UP_DETAILS:
       return signUpDetailsFormData as MultiStepForm;
-
-    case FormID.NEW_PERSON_DETAILS:
-      return newPersonDetailsFormData as MultiStepForm;
 
     case FormID.PERSONAL_DETAILS:
       return personalDetailsFormData as MultiStepForm;

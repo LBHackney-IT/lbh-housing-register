@@ -60,7 +60,7 @@ export default function ApplicationPersonPage({
     | 'checklist';
   const [state, setState] = useState<State>('identity');
 
-  function isActive (selected: string) {
+  function isActive(selected: string) {
     return state == selected ? 'active' : '';
   }
 
@@ -84,7 +84,10 @@ export default function ApplicationPersonPage({
               : 'Review household member'
           }
         />
-        <h2 className="lbh-heading-h2" style={{ marginTop: '0.5em', color: '#525a5b' }}>
+        <h2
+          className="lbh-heading-h2"
+          style={{ marginTop: '0.5em', color: '#525a5b' }}
+        >
           {applicant?.person?.firstName} {applicant?.person?.surname}
         </h2>
 
@@ -93,7 +96,9 @@ export default function ApplicationPersonPage({
             onClick={() => {
               setState('identity');
             }}
-            className={`lbh-link lbh-link--no-visited-state ${isActive('identity')}`}
+            className={`lbh-link lbh-link--no-visited-state ${isActive(
+              'identity'
+            )}`}
           >
             Identity
           </button>{' '}
@@ -101,7 +106,9 @@ export default function ApplicationPersonPage({
             onClick={() => {
               setState('livingsituation');
             }}
-            className={`lbh-link lbh-link--no-visited-state ${isActive('livingsituation')}`}
+            className={`lbh-link lbh-link--no-visited-state ${isActive(
+              'livingsituation'
+            )}`}
           >
             Living Situation
           </button>{' '}
@@ -109,7 +116,9 @@ export default function ApplicationPersonPage({
             onClick={() => {
               setState('money');
             }}
-            className={`lbh-link lbh-link--no-visited-state ${isActive('money')}`}
+            className={`lbh-link lbh-link--no-visited-state ${isActive(
+              'money'
+            )}`}
           >
             Money
           </button>{' '}
@@ -117,7 +126,9 @@ export default function ApplicationPersonPage({
             onClick={() => {
               setState('health');
             }}
-            className={`lbh-link lbh-link--no-visited-state ${isActive('health')}`}
+            className={`lbh-link lbh-link--no-visited-state ${isActive(
+              'health'
+            )}`}
           >
             Health
           </button>{' '}

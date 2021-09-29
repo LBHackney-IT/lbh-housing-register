@@ -20,7 +20,11 @@ export default function CheckBoxList({
       </caption>
       <thead className="govuk-table__head">
         <tr className="govuk-table__row">
-          <th scope="col" className="govuk-table__header" style={{width: '45%'}} ></th>
+          <th
+            scope="col"
+            className="govuk-table__header"
+            style={{ width: '45%' }}
+          ></th>
           <th scope="col" className="govuk-table__header"></th>
           {/* <th scope="col" className="govuk-table__header">
             checked

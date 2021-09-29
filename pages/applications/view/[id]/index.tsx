@@ -51,7 +51,7 @@ export default function ApplicationPage({
   type State = 'overview' | 'actions';
   const [state, setState] = useState<State>('overview');
 
-  function isActive (selected: string) {
+  function isActive(selected: string) {
     return state == selected ? 'active' : '';
   }
 
@@ -59,7 +59,10 @@ export default function ApplicationPage({
     <UserContext.Provider value={{ user }}>
       <Layout pageName="View application">
         <HeadingOne content="View application" />
-        <h2 className="lbh-heading-h2" style={{ marginTop: '0.5em', color: '#525a5b' }}>
+        <h2
+          className="lbh-heading-h2"
+          style={{ marginTop: '0.5em', color: '#525a5b' }}
+        >
           {getPersonName(data)}
         </h2>
 
@@ -68,7 +71,9 @@ export default function ApplicationPage({
             onClick={() => {
               setState('overview');
             }}
-            className={`lbh-link lbh-link--no-visited-state ${isActive('overview')}`}
+            className={`lbh-link lbh-link--no-visited-state ${isActive(
+              'overview'
+            )}`}
           >
             Overview
           </button>{' '}
@@ -76,7 +81,9 @@ export default function ApplicationPage({
             onClick={() => {
               setState('actions');
             }}
-            className={`lbh-link lbh-link--no-visited-state ${isActive('actions')}`}
+            className={`lbh-link lbh-link--no-visited-state ${isActive(
+              'actions'
+            )}`}
           >
             Actions
           </button>
@@ -119,13 +126,13 @@ export default function ApplicationPage({
                 <br />
                 {formatDate(data.createdAt)}
               </Paragraph>
-              {data.submittedAt &&
+              {data.submittedAt && (
                 <Paragraph>
                   <strong>Submission date</strong>
                   <br />
                   {formatDate(data.submittedAt)}
                 </Paragraph>
-              }
+              )}
               <AssignUser id={data.id} user={data.assignedTo} />
             </div>
           </div>

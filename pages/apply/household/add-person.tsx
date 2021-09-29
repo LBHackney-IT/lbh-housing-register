@@ -46,7 +46,7 @@ const AddPersonToApplication = (): JSX.Element => {
         initialValues={formFields}
         onSubmit={onSubmit}
         isMainApplicant={false}
-        buttonText="Save and continue"
+        buttonText="Add person"
         isOver16={isOver16State}
         setIsOver16State={setIsOver16State}
       />

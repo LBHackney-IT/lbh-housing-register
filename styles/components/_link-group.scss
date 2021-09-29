@@ -1,0 +1,18 @@
+.lbh-link-group {
+  border-bottom: 1px solid #0b0c0c;
+
+  .lbh-link {
+    margin-right: 1em;
+    text-decoration: none;
+
+    &.active {
+      color: #0b0c0c;
+      border-bottom: 5px solid #025EA6;
+    }
+
+    &:focus {
+      box-shadow: none;
+      border-bottom: 5px solid #025EA6;
+    }
+  }
+}

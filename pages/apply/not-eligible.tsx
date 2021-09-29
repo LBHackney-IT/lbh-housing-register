@@ -20,7 +20,7 @@ const NotEligible = (): JSX.Element => {
   );
 
   const [isEligible, reasons] = useMemo(
-    () => (mainApplicant && checkEligible(mainApplicant)) ?? [],
+    () => (mainApplicant && checkEligible(application)) ?? [],
     [mainApplicant]
   );
 

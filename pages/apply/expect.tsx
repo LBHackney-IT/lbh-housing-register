@@ -37,6 +37,7 @@ const WhatToExpect = (): JSX.Element => {
   const hasPartnerSharing = !!applicants.find(
     (applicant) => applicant.person?.relationshipType === 'partner'
   );
+
   const bedroomNeed = calculateBedrooms(bedroomArray, hasPartnerSharing);
 
   const waitingTime = getWaitingTime(bedroomNeed);

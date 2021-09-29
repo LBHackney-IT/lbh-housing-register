@@ -26,7 +26,7 @@ const Declaration = (): JSX.Element => {
   const application = useAppSelector((store) => store.application);
 
   const submitApplication = async () => {
-    const [isEligible] = checkEligible(mainResident);
+    const [isEligible] = checkEligible(application);
     if (!isEligible) {
       dispatch(sendDisqualifyEmail(application));
       router.push('/apply/not-eligible');

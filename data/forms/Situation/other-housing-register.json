@@ -13,7 +13,7 @@
         {
           "as": "radios",
           "label": "Are you or your partner on another local authority’s housing register?",
-          "displayLabel": true,
+
           "name": "other-housing-register",
           "options": [
             {

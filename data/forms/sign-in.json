@@ -4,7 +4,7 @@
       "fields": [
         {
           "label": "Email",
-          "displayLabel": true,
+
           "name": "emailAddress",
           "type": "email",
           "hint": "We’ll email you a verification code to continue your application",
@@ -15,8 +15,7 @@
         {
           "name": "password",
           "type": "hidden",
-          "initialValue": "Testing123!",
-          "displayLabel": true
+          "initialValue": "Testing123!"
         }
       ]
     }

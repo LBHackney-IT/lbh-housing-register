@@ -6,7 +6,7 @@
         {
           "as": "radios",
           "label": "Does anyone in your household have any unspent convictions? (If Yes, provide details)",
-          "displayLabel": true,
+
           "name": "unspent-convictions",
           "options": [
             {
@@ -25,7 +25,7 @@
         {
           "as": "textarea",
           "label": "Details of unspent convictions",
-          "displayLabel": true,
+
           "name": "details",
           "validation": {
             "required": true

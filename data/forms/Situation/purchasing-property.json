@@ -6,7 +6,7 @@
         {
           "as": "radios",
           "label": "Are you able to buy a property to meet your needs?",
-          "displayLabel": true,
+
           "name": "purchasing-property",
           "options": [
             {

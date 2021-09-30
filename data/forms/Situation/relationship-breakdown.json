@@ -6,7 +6,7 @@
         {
           "as": "radios",
           "label": "Was this due to a relationship breakdown?",
-          "displayLabel": true,
+
           "name": "relationship-breakdown",
           "options": [
             {

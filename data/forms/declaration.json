@@ -6,7 +6,6 @@
           "as": "checkbox",
           "initialValue": false,
           "label": "I agree",
-          "displayLabel": true,
           "name": "declaration",
           "validation": {
             "required": true

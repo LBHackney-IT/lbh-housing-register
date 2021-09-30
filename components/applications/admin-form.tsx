@@ -1,5 +1,5 @@
 import { Form as FormikForm, Formik, FormikValues } from 'formik';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { FormData, MultiStepForm } from '../../lib/types/form';
 import { getDisplayStateOfField } from '../../lib/utils/form';
 import { buildValidationSchema } from '../../lib/utils/validation';
@@ -31,30 +31,19 @@ export default function AdminForm({
   const step = formData.steps[stepNumber];
   const totalSteps = formData.steps.length;
   const isLastStep = stepNumber === totalSteps - 1;
-
-  const schema = buildValidationSchema(step.fields);
-
-  // const calculatedInitialValues = useMemo(
-  //   () => initialValues || schema.getDefault(),
-  //   [initialValues, schema]
-  // );
-
   const calculatedInitialValues = initialValues || {};
 
   const next = () => {
-    // TODO: Scroll to top + set focus to first field
     scrollToTop();
     setStepNumber(Math.min(stepNumber + 1, totalSteps - 1));
   };
 
   const previous = () => {
-    // TODO: Scroll to top + set focus to first field
     scrollToTop();
     setStepNumber(Math.max(stepNumber - 1, 0));
   };
 
   const handleSubmit = async (values: FormData, bag: any) => {
-    // TODO Do we really need two handlers for onSave and onSubmit?
     if (onSave) {
       onSave(values);
     }
@@ -70,8 +59,6 @@ export default function AdminForm({
   return (
     <>
       <Formik
-        // If you notice that initial values aren't working then it's probably because of the way that _app is loading state incrementally through multiple renders.
-        // A loading screen that waited for initial state to be avaialble would do the trick.
         initialValues={calculatedInitialValues}
         onSubmit={handleSubmit}
         validationSchema={buildValidationSchema(step.fields)}
@@ -98,7 +85,6 @@ export default function AdminForm({
                     values
                   );
                   if (display) {
-                    field.displayLabel = false;
                     return (
                       <>
                         <tr className="govuk-table__row">

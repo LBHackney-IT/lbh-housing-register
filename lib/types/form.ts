@@ -20,7 +20,7 @@ export interface BaseFormField {
   validation?: FormFieldValidation;
   placeholder?: string;
   initialValue?: any;
-  displayLabel: boolean;
+  hideLabel?: boolean;
 }
 
 export interface TextFormField extends BaseFormField {

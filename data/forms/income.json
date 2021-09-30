@@ -24,7 +24,6 @@
           "as": "radios",
           "name": "income",
           "label": "What is your household’s total yearly income?",
-          "displayLabel": true,
           "hint": "Please include salary, benefits and any other income for everyone in your household.",
           "subheading": "You will need to provide the last two months' payslips for all the working adults in your household.",
           "options": [
@@ -60,7 +59,6 @@
         {
           "as": "radioconditional",
           "label": "How much money does your household have in total savings and capital?",
-          "displayLabel": true,
           "hint": "This includes the total amount in all your current accounts, saving accounts, and any other types of savings.",
           "subheading": "You will need to provide the last two months' bank statements for each account you hold.",
           "name": "savings",

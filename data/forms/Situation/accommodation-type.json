@@ -6,7 +6,7 @@
         {
           "as": "radios",
           "label": "Are you a social tenant or in temporary accommodation?",
-          "displayLabel": true,
+
           "name": "accommodation-type",
           "options": [
             {

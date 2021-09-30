@@ -6,7 +6,6 @@
         {
           "as": "radios",
           "label": "Actions",
-          "displayLabel": true,
           "name": "admin-actions",
           "options": [
             {

@@ -21,7 +21,7 @@ export default function Input({
   placeholder,
   type,
   person,
-  displayLabel,
+  hideLabel,
   ...additionalInputProps
 }: InputProps): JSX.Element {
   return (
@@ -40,7 +40,7 @@ export default function Input({
                 <strong>{person}</strong>
               </Paragraph>
             )}
-            {displayLabel && label && (
+            {!hideLabel && label && (
               <Label content={label} htmlFor={name} strong={true} />
             )}
             {hint && <Hint content={hint} />}

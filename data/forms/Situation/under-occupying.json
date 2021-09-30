@@ -6,7 +6,7 @@
         {
           "as": "radios",
           "label": "Are you under-occupying?",
-          "displayLabel": true,
+
           "name": "under-occupying",
           "options": [
             {

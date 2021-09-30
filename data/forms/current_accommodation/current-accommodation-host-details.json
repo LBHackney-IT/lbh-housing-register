@@ -5,7 +5,7 @@
       "fields": [
         {
           "label": "Name of the person who hosts you in their home",
-          "displayLabel": true,
+
           "name": "host-person-name",
           "hint": "If you are street homeless, please state below",
           "validation": {
@@ -14,7 +14,7 @@
         },
         {
           "label": "Phone number of your host",
-          "displayLabel": true,
+
           "name": "host-person-number",
           "hint": "Please provide this information if you know it. This may help assess your application more quickly.",
           "validation": {

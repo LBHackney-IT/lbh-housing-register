@@ -6,7 +6,7 @@
         {
           "as": "radios",
           "label": "Have you sold property in the last 5 years?",
-          "displayLabel": true,
+
           "name": "sold-property",
           "options": [
             {

@@ -6,7 +6,6 @@
       "fields": [
         {
           "label": "Postcode",
-          "displayLabel": true,
           "name": "address-finder",
           "validation": {
             "required": false

@@ -80,7 +80,6 @@ export default function Form({
             {step.fields.map((field, index) => {
               const display: boolean = getDisplayStateOfField(field, values);
               if (display) {
-                field.displayLabel = true;
                 return <DynamicField key={index} field={field} />;
               }
             })}

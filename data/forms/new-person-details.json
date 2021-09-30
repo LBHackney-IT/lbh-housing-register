@@ -6,7 +6,7 @@
         {
           "as": "select",
           "label": "Title",
-          "displayLabel": true,
+
           "name": "title",
           "options": [
             {
@@ -41,7 +41,7 @@
         },
         {
           "label": "First name",
-          "displayLabel": true,
+
           "name": "firstName",
           "validation": {
             "required": true
@@ -49,7 +49,7 @@
         },
         {
           "label": "Last name",
-          "displayLabel": true,
+
           "name": "surname",
           "validation": {
             "required": true
@@ -58,7 +58,7 @@
         {
           "as": "select",
           "label": "Relationship to you",
-          "displayLabel": true,
+
           "name": "relationshipType",
           "options": [
             {
@@ -126,7 +126,7 @@
         {
           "as": "dateinput",
           "label": "Date of birth",
-          "displayLabel": true,
+
           "name": "dateOfBirth",
           "validation": {
             "required": true
@@ -135,7 +135,7 @@
         {
           "as": "radioconditional",
           "label": "Gender",
-          "displayLabel": true,
+
           "name": "gender",
           "options": [
             {
@@ -161,7 +161,7 @@
         },
         {
           "label": "National Insurance number",
-          "displayLabel": true,
+
           "hint": "For example, AB 12 34 56 C",
           "name": "nationalInsuranceNumber"
         }

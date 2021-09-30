@@ -6,7 +6,6 @@
           "as": "checkbox",
           "initialValue": false,
           "label": "I understand and accept",
-          "displayLabel": true,
           "name": "agreement",
           "validation": {
             "required": true

@@ -59,7 +59,7 @@ export default function Checkboxes({
   options,
   name,
   value,
-  displayLabel,
+  hideLabel,
 }: CheckboxesProps): JSX.Element {
   const checkboxes: FormFieldOption[] = options || [{ hint, label, value }];
   const hasMultipleOptions: boolean = checkboxes.length > 1;
@@ -74,7 +74,7 @@ export default function Checkboxes({
         meta: FieldMetaProps<string>;
       }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
-          {displayLabel && hasMultipleOptions && label && (
+          {!hideLabel && hasMultipleOptions && label && (
             <Label content={label} strong={true} />
           )}
           {hasMultipleOptions && hint && <Hint content={hint} />}
@@ -102,7 +102,7 @@ export default function Checkboxes({
                       label={checkbox.label!}
                       name={field.name}
                       value={checkbox.value}
-                      displayLabel={displayLabel}
+                      hideLabel={hideLabel}
                     />
                   ))}
                 </>

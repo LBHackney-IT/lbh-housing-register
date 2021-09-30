@@ -121,33 +121,6 @@ const NotEligible = (): JSX.Element => {
         Please note that on average, only 6% of cases are accepted after being
         re-assessed.
       </Paragraph>
-      {/* <Paragraph>
-        <strong>
-          We can provide support to help you move into a privately rented home
-        </strong>
-      </Paragraph>
-      <Paragraph>
-        If you choose to rent privately, the Council may be able to help provide
-        the following assistance:
-      </Paragraph>
-      <List>
-        <ListItem>One months rent in advance</ListItem>
-        <ListItem>Security deposit paid</ListItem>
-        <ListItem>Landlord compliance check</ListItem>
-        <ListItem>Longest possible tenancy terms</ListItem>
-        <ListItem>Pre-inspection of the property</ListItem>
-        <ListItem>Practical and financial help with removals</ListItem>
-        <ListItem>
-          Transport costs for viewing and moving if outside of London
-        </ListItem>
-        <ListItem>
-          Financial assistance to provide white goods if they aren't provided by
-          the landlord
-        </ListItem>
-      </List>
-      <ButtonLink href="https://hackney.gov.uk/housing-application">
-        Contact us for advice
-      </ButtonLink> */}
     </Layout>
   );
 };

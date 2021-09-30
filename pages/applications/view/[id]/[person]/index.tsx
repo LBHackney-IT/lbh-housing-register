@@ -25,6 +25,7 @@ import MedicalDetail, {
   MedicalDetailPageProps,
 } from '../../../../../components/applications/medical-details';
 import { HeadingOne } from '../../../../../components/content/headings';
+import Button from '../../../../../components/button';
 
 export function formatDate(date: string | undefined) {
   if (!date) return '';
@@ -77,19 +78,31 @@ export default function ApplicationPersonPage({
   return (
     <UserContext.Provider value={{ user }}>
       <Layout>
-        <HeadingOne
-          content={
-            isMainApplicant
-              ? 'Review main applicant'
-              : 'Review household member'
-          }
-        />
-        <h2
-          className="lbh-heading-h2"
-          style={{ marginTop: '0.5em', color: '#525a5b' }}
-        >
-          {applicant?.person?.firstName} {applicant?.person?.surname}
-        </h2>
+        <div className="govuk-grid-row">
+          <div className="govuk-grid-column-two-thirds">
+            <HeadingOne
+              content={
+                isMainApplicant
+                  ? 'Review main applicant'
+                  : 'Review household member'
+              }
+            />
+            <h2
+              className="lbh-heading-h2"
+              style={{ marginTop: '0.5em', color: '#525a5b' }}
+            >
+              {applicant?.person?.firstName} {applicant?.person?.surname}
+            </h2>
+          </div>
+          <div className="govuk-grid-column-one-thirds">
+            <a
+              href="https://evidence-store-staging.hackney.gov.uk/teams/7/dashboard"
+              target="_blank"
+            >
+              <Button>View Documents</Button>
+            </a>
+          </div>
+        </div>
 
         <div className="lbh-link-group">
           <button

@@ -8,7 +8,6 @@
           "as": "checkboxes",
           "hint": "Select all that apply",
           "label": "Are you in danger from any of the following?",
-
           "name": "your-situation",
           "options": [
             {

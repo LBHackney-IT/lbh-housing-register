@@ -6,7 +6,6 @@
         {
           "as": "radios",
           "label": "Do you have a court order allowing you to be on the register?",
-
           "name": "court-order",
           "options": [
             {

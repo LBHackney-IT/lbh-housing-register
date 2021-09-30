@@ -6,7 +6,6 @@
         {
           "as": "radios",
           "label": "Do you have medical need?",
-
           "name": "medical-need",
           "options": [
             {

@@ -6,7 +6,6 @@
         {
           "as": "radios",
           "label": "Which of the following best describes your Black or Black British background?",
-
           "name": "ethnicity-extended-category",
           "options": [
             {

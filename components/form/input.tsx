@@ -41,7 +41,12 @@ export default function Input({
               </Paragraph>
             )}
             {label && (
-              <Label content={label} htmlFor={name} strong={true} hideLabel={hideLabel} />
+              <Label
+                content={label}
+                htmlFor={name}
+                strong={true}
+                hideLabel={hideLabel}
+              />
             )}
             {hint && <Hint content={hint} />}
             {meta.touched && meta.error && (

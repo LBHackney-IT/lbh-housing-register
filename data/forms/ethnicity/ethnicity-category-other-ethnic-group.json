@@ -6,7 +6,6 @@
         {
           "as": "radios",
           "label": "Which of the following best describes your ethnic background?",
-
           "name": "ethnicity-extended-category",
           "options": [
             {

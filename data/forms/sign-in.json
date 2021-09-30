@@ -4,7 +4,6 @@
       "fields": [
         {
           "label": "Email",
-
           "name": "emailAddress",
           "type": "email",
           "hint": "We’ll email you a verification code to continue your application",

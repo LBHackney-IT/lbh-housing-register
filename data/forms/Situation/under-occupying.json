@@ -6,7 +6,6 @@
         {
           "as": "radios",
           "label": "Are you under-occupying?",
-
           "name": "under-occupying",
           "options": [
             {

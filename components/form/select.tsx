@@ -26,7 +26,12 @@ export default function Select({
       }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
           {label && (
-            <Label content={label} htmlFor={field.name} strong={true} hideLabel={hideLabel} />
+            <Label
+              content={label}
+              htmlFor={field.name}
+              strong={true}
+              hideLabel={hideLabel}
+            />
           )}
           {hint && <Hint content={hint} />}
           {details && (

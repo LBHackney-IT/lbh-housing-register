@@ -291,15 +291,8 @@ const ApplicationStep = (): JSX.Element => {
 
             {isMainApplicant && (
               <>
-                <Input
-                  name="phoneNumber"
-                  label="Mobile number"
-                />
-                <Input
-                  name="emailAddress"
-                  label="Email"
-                  type="email"
-                />
+                <Input name="phoneNumber" label="Mobile number" />
+                <Input name="emailAddress" label="Email" type="email" />
               </>
             )}
 

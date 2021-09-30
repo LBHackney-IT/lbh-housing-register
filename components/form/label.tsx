@@ -18,8 +18,8 @@ export default function Label({
   if (strong) {
     content = <strong>{content}</strong>;
   }
-  if (hideLabel){
-    className += " govuk-visually-hidden";
+  if (hideLabel) {
+    className += ' govuk-visually-hidden';
   }
 
   return (

@@ -40,14 +40,12 @@
         {
           "label": "First name",
           "name": "firstName",
-
           "validation": {
             "required": true
           }
         },
         {
           "label": "Last name",
-
           "name": "surname",
           "validation": {
             "required": true
@@ -56,7 +54,6 @@
         {
           "as": "dateinput",
           "label": "Date of birth",
-
           "name": "dateOfBirth",
           "validation": {
             "required": true

@@ -6,7 +6,6 @@
         {
           "as": "radios",
           "label": "Have you sublet without permission?",
-
           "name": "subletting",
           "options": [
             {

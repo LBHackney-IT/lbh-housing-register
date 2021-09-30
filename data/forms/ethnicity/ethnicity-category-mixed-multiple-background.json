@@ -6,7 +6,6 @@
         {
           "as": "radios",
           "label": "Which of the following best describes your Mixed or Multiple background background?",
-
           "name": "ethnicity-extended-category",
           "options": [
             {

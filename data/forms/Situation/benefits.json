@@ -6,7 +6,6 @@
         {
           "as": "radios",
           "label": "Are the arrears due to a delay in processing your housing benefits or universal credit claim?",
-
           "name": "benefits",
           "options": [
             {

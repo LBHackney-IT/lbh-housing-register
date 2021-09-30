@@ -18,7 +18,6 @@
         {
           "as": "radios",
           "label": "Has Hackney been your main residence for the last 3 years?",
-
           "name": "residential-status",
           "options": [
             {
@@ -37,7 +36,6 @@
         {
           "as": "radios",
           "label": "In the last 3 years have you moved out and moved back into the borough within 3 months?",
-
           "name": "moved-borough",
           "options": [
             {
@@ -62,7 +60,6 @@
         {
           "as": "radios",
           "label": "Are you currently homeless and placed in temporary accommodation outside of the borough?",
-
           "name": "homeless",
           "options": [
             {
@@ -91,7 +88,6 @@
         {
           "as": "radios",
           "label": "Are you unable to reside in the borough due to a court order or an injunction due to unacceptable behaviour?",
-
           "name": "asbo-behaviour",
           "options": [
             {
@@ -124,7 +120,6 @@
         {
           "as": "radios",
           "label": "Are you or your partner serving, or ex-serving member of the armed forces?",
-
           "name": "armed-forces",
           "options": [
             {
@@ -161,7 +156,6 @@
         {
           "as": "radios",
           "label": "Are you or your partner a nominee under National Witness Mobility Scheme?",
-
           "name": "mobility-scheme",
           "options": [
             {
@@ -202,7 +196,6 @@
         {
           "as": "radios",
           "label": "Have you been accepted as Homeless by the Council with a duty to provide accomodation under the Housing Act 1996?",
-
           "name": "homelessness-accepted",
           "options": [
             {
@@ -247,7 +240,6 @@
         {
           "as": "radios",
           "label": "Are you an existing social housing tenant in Hackney who has a secure, assured or fixed term tenancy?",
-
           "name": "social-housing",
           "options": [
             {
@@ -296,7 +288,6 @@
         {
           "as": "radios",
           "label": "Do you either work in Hackney or have you been offered a permanent job in Hackney?",
-
           "name": "work-in-hackney",
           "options": [
             {
@@ -349,7 +340,6 @@
         {
           "as": "radios",
           "label": "Are you moving to Hackney to provide care to a Hackney resident that has been agreed by the Council's medical advisor?",
-
           "name": "providing-care",
           "options": [
             {
@@ -406,7 +396,6 @@
         {
           "as": "radios",
           "label": "Are you fleeing domestic or familial violence, or need to move to Hackney due to social or welfare reasons?",
-
           "name": "domestic-violence",
           "options": [
             {
@@ -467,7 +456,6 @@
         {
           "as": "radios",
           "label": "Are you a student living and studying away from the borough?",
-
           "name": "studying-outside-borough",
           "options": [
             {
@@ -532,7 +520,6 @@
         {
           "as": "checkboxes",
           "label": "Have you been in the following institutions for the last 3 years or more?",
-
           "name": "institutions",
           "options": [
             {

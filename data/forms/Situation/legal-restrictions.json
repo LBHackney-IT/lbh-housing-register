@@ -6,7 +6,6 @@
         {
           "as": "radios",
           "label": "Does anyone in your household(including you) have any legal restrictions about where they can live in the borough? (If Y, provide details)",
-
           "name": "legal-restrictions",
           "options": [
             {

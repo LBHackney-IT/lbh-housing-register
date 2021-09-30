@@ -6,7 +6,6 @@
         {
           "as": "radios",
           "label": "Do you own any property?",
-
           "name": "property-ownership",
           "options": [
             {

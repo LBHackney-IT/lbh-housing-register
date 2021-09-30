@@ -6,7 +6,6 @@
         {
           "as": "select",
           "label": "Title",
-
           "name": "title",
           "options": [
             {
@@ -41,7 +40,6 @@
         },
         {
           "label": "First name",
-
           "name": "firstName",
           "validation": {
             "required": true
@@ -49,7 +47,6 @@
         },
         {
           "label": "Last name",
-
           "name": "surname",
           "validation": {
             "required": true
@@ -58,7 +55,6 @@
         {
           "as": "dateinput",
           "label": "Date of birth",
-
           "name": "dateOfBirth",
           "validation": {
             "required": true
@@ -67,7 +63,6 @@
         {
           "as": "radioconditional",
           "label": "Gender",
-
           "name": "gender",
           "options": [
             {
@@ -93,18 +88,15 @@
         },
         {
           "label": "National Insurance number",
-
           "hint": "For example, AB 12 34 56 C",
           "name": "nationalInsuranceNumber"
         },
         {
           "label": "Mobile number",
-
           "name": "phoneNumber"
         },
         {
           "label": "Email",
-
           "name": "emailAddress",
           "type": "email",
           "validation": {

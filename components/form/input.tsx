@@ -40,8 +40,8 @@ export default function Input({
                 <strong>{person}</strong>
               </Paragraph>
             )}
-            {!hideLabel && label && (
-              <Label content={label} htmlFor={name} strong={true} />
+            {label && (
+              <Label content={label} htmlFor={name} strong={true} hideLabel={hideLabel} />
             )}
             {hint && <Hint content={hint} />}
             {meta.touched && meta.error && (

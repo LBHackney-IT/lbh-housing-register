@@ -25,8 +25,8 @@ export default function Select({
         meta: FieldMetaProps<string>;
       }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
-          {!hideLabel && label && (
-            <Label content={label} htmlFor={field.name} strong={true} />
+          {label && (
+            <Label content={label} htmlFor={field.name} strong={true} hideLabel={hideLabel} />
           )}
           {hint && <Hint content={hint} />}
           {details && (

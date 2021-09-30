@@ -79,7 +79,7 @@ export default function DateInput({
 
   return (
     <FormGroup error={!!meta.touched && !!meta.error}>
-      {!hideLabel && label && <Label content={label} strong={true} />}
+      {label && <Label content={label} strong={true} hideLabel={hideLabel} />}
       {hint && <Hint content={hint} />}
       {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 

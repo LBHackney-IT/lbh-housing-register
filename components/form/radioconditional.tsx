@@ -105,7 +105,7 @@ export default function RadioConditional({
         meta: FieldMetaProps<string>;
       }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
-          {label && <Label content={label} strong={true} />}
+          {label && <Label content={label} strong={true} hideLabel={hideLabel} />}
           {hint && <Hint content={hint} />}
           {details && (
             <Details summary={details.title ?? 'Help with this question'}>

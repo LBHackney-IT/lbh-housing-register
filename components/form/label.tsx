@@ -5,6 +5,7 @@ interface LabelProps {
   content: ReactNode;
   htmlFor?: string;
   strong?: boolean;
+  hideLabel?: boolean;
 }
 
 export default function Label({
@@ -12,9 +13,13 @@ export default function Label({
   content,
   htmlFor,
   strong,
+  hideLabel,
 }: LabelProps): JSX.Element {
   if (strong) {
     content = <strong>{content}</strong>;
+  }
+  if (hideLabel){
+    className += " govuk-visually-hidden";
   }
 
   return (

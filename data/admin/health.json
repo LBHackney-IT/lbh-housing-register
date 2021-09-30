@@ -13,11 +13,13 @@
         },
         {
           "label": "Date form recieved",
+          "hideLabel": true,
           "as": "dateinput",
           "name": "dateFormRecieved"
         },
         {
           "label": "Assessment Date",
+          "hideLabel": true,
           "as": "dateinput",
           "name": "assessmentDate"
         },

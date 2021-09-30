@@ -74,8 +74,8 @@ export default function Checkboxes({
         meta: FieldMetaProps<string>;
       }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
-          {!hideLabel && hasMultipleOptions && label && (
-            <Label content={label} strong={true} />
+          {hasMultipleOptions && label && (
+            <Label content={label} strong={true} hideLabel={hideLabel} />
           )}
           {hasMultipleOptions && hint && <Hint content={hint} />}
           {hasMultipleOptions && details && (

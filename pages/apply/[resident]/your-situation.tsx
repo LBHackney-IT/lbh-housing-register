@@ -77,6 +77,14 @@ const YourSituation = (): JSX.Element => {
     ) ?? { nextFormId: 'exit', routeSelect: false };
 
     if (nextFormId === 'exit') {
+      dispatch(
+        updateWithFormValues({
+          formID: FormID.YOUR_SITUATION,
+          personID: applicant.person.id,
+          values,
+          markAsComplete: true,
+        })
+      );
       router.push(baseHref);
       return;
     }

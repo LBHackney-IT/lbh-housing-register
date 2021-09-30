@@ -1,9 +1,8 @@
 export interface HackneyGoogleUser {
-  name: string;
+  sub: string;
   email: string;
+  iss: string;
+  name: string;
   groups: string[];
-  hasAnyPermissions: boolean;
-  hasAdminPermissions: boolean;
-  hasManagerPermissions: boolean;
-  hasOfficerPermissions: boolean;
+  iat: number;
 }

@@ -173,6 +173,13 @@ export interface Application {
   assignedTo?: string;
   /**
    *
+   * @type {boolean}
+   * @memberof Application
+   */
+  sensitiveData?: boolean;
+
+  /**
+   *
    * @type {string}
    * @memberof Application
    */

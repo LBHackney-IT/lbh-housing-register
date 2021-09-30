@@ -17,6 +17,7 @@ import Custom404 from '../../../404';
 import Snapshot from '../../../../components/applications/snapshot';
 import Actions from '../../../../components/applications/actions';
 import AssignUser from '../../../../components/applications/assign-user';
+import SensitiveData from '../../../../components/applications/sensitive-data';
 
 export function formatDate(date: string | undefined) {
   if (!date) return '';
@@ -58,6 +59,9 @@ export default function ApplicationPage({
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="View application">
+        {data.sensitiveData && (
+          <h2>This application has been marked as sensitive.</h2>
+        )}
         <HeadingOne content="View application" />
         <h2
           className="lbh-heading-h2"
@@ -134,6 +138,11 @@ export default function ApplicationPage({
                 </Paragraph>
               )}
               <AssignUser id={data.id} user={data.assignedTo} />
+
+              <SensitiveData
+                id={data.id}
+                isSensitive={data.sensitiveData || false}
+              />
             </div>
           </div>
         )}

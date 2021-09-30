@@ -38,12 +38,16 @@ functions:
       NEXT_PUBLIC_COGNITO_CLIENT_ID: ${ssm:/housing-register/${self:provider.stage}/cognito-client-id}
       HACKNEY_JWT_SECRET: ${ssm:/housing-register/${self:provider.stage}/hackney-jwt-secret}
       AUTHORISED_ADMIN_GROUP: ${ssm:/housing-register/${self:provider.stage}/authorised_admin_group}
+      AUTHORISED_MANAGER_GROUP: ${ssm:/housing-register/${self:provider.stage}/authorised_manager_group}
+      AUTHORISED_OFFICER_GROUP: ${ssm:/housing-register/${self:provider.stage}/authorised_officer_group}
       HOUSING_REGISTER_API: ${ssm:/housing-register/${self:provider.stage}/housing-register-api-url}
       HOUSING_REGISTER_KEY: ${ssm:/housing-register/${self:provider.stage}/housing-register-api-key}
       LOOKUP_API_URL: ${ssm:/housing-register/${self:provider.stage}/lookup-api-url}
       LOOKUP_API_TOKEN: ${ssm:/housing-register/${self:provider.stage}/lookup-api-key}
       NOTIFY_API_KEY: ${ssm:/housing-register/${self:provider.stage}/notify-api-key}
       NOTIFY_TEMPLATE_NEW_APPLICATION: ${ssm:/housing-register/${self:provider.stage}/notify-template-new-application}
+      NOTIFY_TEMPLATE_DISQUALIFY: ${ssm:/housing-register/${self:provider.stage}/notify-template-disqualify}
+      NOTIFY_TEMPLATE_MEDICAL_NEED: ${ssm:/housing-register/${self:provider.stage}/notify-template-medical-need}
 
 resources:
   Resources:

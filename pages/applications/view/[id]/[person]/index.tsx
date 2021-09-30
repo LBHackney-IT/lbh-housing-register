@@ -60,6 +60,10 @@ export default function ApplicationPersonPage({
     | 'checklist';
   const [state, setState] = useState<State>('identity');
 
+  function isActive(selected: string) {
+    return state == selected ? 'active' : '';
+  }
+
   const personalDetails = personalDetailsCheckboxList(applicant);
   const immigrationStatus = immigrationStatusCheckboxList(applicant);
   const livingSituation = livingSituationCheckboxList(applicant);
@@ -80,46 +84,64 @@ export default function ApplicationPersonPage({
               : 'Review household member'
           }
         />
-        <button
-          onClick={() => {
-            setState('identity');
-          }}
-          className="lbh-link lbh-link--no-visited-state"
+        <h2
+          className="lbh-heading-h2"
+          style={{ marginTop: '0.5em', color: '#525a5b' }}
         >
-          Identity
-        </button>{' '}
-        <button
-          onClick={() => {
-            setState('livingsituation');
-          }}
-          className="lbh-link lbh-link--no-visited-state"
-        >
-          Living Situation
-        </button>{' '}
-        <button
-          onClick={() => {
-            setState('money');
-          }}
-          className="lbh-link lbh-link--no-visited-state"
-        >
-          Money
-        </button>{' '}
-        <button
-          onClick={() => {
-            setState('health');
-          }}
-          className="lbh-link lbh-link--no-visited-state"
-        >
-          Health
-        </button>{' '}
-        {/* <button
-          onClick={() => {
-            setState('checklist');
-          }}
-          className="lbh-link lbh-link--no-visited-state"
-        >
-          Checklist
-        </button> */}
+          {applicant?.person?.firstName} {applicant?.person?.surname}
+        </h2>
+
+        <div className="lbh-link-group">
+          <button
+            onClick={() => {
+              setState('identity');
+            }}
+            className={`lbh-link lbh-link--no-visited-state ${isActive(
+              'identity'
+            )}`}
+          >
+            Identity
+          </button>{' '}
+          <button
+            onClick={() => {
+              setState('livingsituation');
+            }}
+            className={`lbh-link lbh-link--no-visited-state ${isActive(
+              'livingsituation'
+            )}`}
+          >
+            Living Situation
+          </button>{' '}
+          <button
+            onClick={() => {
+              setState('money');
+            }}
+            className={`lbh-link lbh-link--no-visited-state ${isActive(
+              'money'
+            )}`}
+          >
+            Money
+          </button>{' '}
+          <button
+            onClick={() => {
+              setState('health');
+            }}
+            className={`lbh-link lbh-link--no-visited-state ${isActive(
+              'health'
+            )}`}
+          >
+            Health
+          </button>{' '}
+          {/* <button
+            onClick={() => {
+              setState('checklist');
+            }}
+            className={`lbh-link lbh-link--no-visited-state ${isActive('checklist')}`}
+          >
+            Checklist
+          </button> */}
+        </div>
+
         {state == 'identity' && (
           <>
             <CheckBoxList {...(personalDetails as CheckBoxListPageProps)} />

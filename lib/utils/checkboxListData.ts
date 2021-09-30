@@ -1,4 +1,4 @@
-import { Applicant } from '../../domain/HousingApi';
+import { Applicant, Application } from '../../domain/HousingApi';
 import { CheckBoxListPageProps } from '../../components/applications/checkBoxList';
 import { MedicalDetailPageProps } from '../../components/applications/medical-details';
 import {
@@ -12,6 +12,7 @@ import {
 } from '../../lib/utils/addressHistory';
 import { formatDate } from '../../lib/utils/dateOfBirth';
 import '../extensions/.stringExtensions';
+import { FormikValues } from 'formik';
 
 const legalStaus = (option: string): string => {
   switch (option) {
@@ -742,17 +743,26 @@ export const incomeAndSavingsCheckboxList = (
 };
 
 export const medicalDetailsPageData = (
-  applicant?: Applicant
+  application: Application
 ): MedicalDetailPageProps => {
+  var initialValues: FormikValues = {
+    linkToMedicalForm: application.mainApplicant?.medicalNeed?.formLink ?? '',
+    dateFormRecieved:
+      application.mainApplicant?.medicalNeed?.formRecieved ?? '',
+    assessmentDate:
+      application.mainApplicant?.medicalOutcome?.assessmentDate ?? '',
+    outcome: application.mainApplicant?.medicalOutcome?.outcome ?? '',
+    accessibleHousingRegister:
+      application.mainApplicant?.medicalOutcome?.accessibileHousingRegister ??
+      '',
+    disability: application.mainApplicant?.medicalOutcome?.disability ?? '',
+    additionalInformation:
+      application.mainApplicant?.medicalOutcome?.additionalInformaton ?? '',
+  };
+
   var details: MedicalDetailPageProps = {
-    assessmentRequested: '',
-    linkToMedicalForm: '',
-    dateFormRecieved: undefined,
-    assessmentDate: undefined,
-    outcome: '',
-    accessibleHousingRegister: '',
-    disability: '',
-    additionalInformation: '',
+    data: application,
+    initialValues: initialValues,
   };
 
   return details;

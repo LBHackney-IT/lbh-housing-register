@@ -17,6 +17,7 @@ export default function DateInput({
   label,
   name,
   showDay = true,
+  hideLabel,
 }: Omit<DateInputProps, 'as'>): JSX.Element {
   const [field, meta, helpers] = useField<string>({
     name,
@@ -78,7 +79,7 @@ export default function DateInput({
 
   return (
     <FormGroup error={!!meta.touched && !!meta.error}>
-      {label && <Label content={label} strong={true} />}
+      {label && <Label content={label} strong={true} hideLabel={hideLabel} />}
       {hint && <Hint content={hint} />}
       {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 

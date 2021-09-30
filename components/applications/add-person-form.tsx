@@ -164,18 +164,38 @@ const AddPersonForm = ({
   setIsOver16State,
 }: AddPersonFormProps): JSX.Element => {
   function generateValidationSchema(isOver16: boolean) {
-    const min = Math.min(+new Date());
+    const currentDateTimestamp = Math.min(+new Date());
 
     const schema = Yup.object({
+      title: Yup.string().label('Title').required(),
+      firstName: Yup.string().label('First name').required(),
+      surname: Yup.string().label('Last name').required(),
       dateOfBirth: Yup.string()
         .notOneOf([INVALID_DATE], 'Invalid date')
         .label('Date of birth')
         .required()
         .test(
-          'min',
-          '${path} must be before ' + formatDate(new Date(min)),
+          'futureDate',
+          'Your date of birth must be in the past',
           (value) => {
             if (typeof value !== 'string' || value === INVALID_DATE) {
+              return false;
+            }
+
+            const dateOfBirth = +new Date(value);
+
+            if (currentDateTimestamp < dateOfBirth) {
+              return false;
+            }
+
+            return true;
+          }
+        )
+        .test(
+          'isOver16',
+          'Main applicant must be over 16 years old',
+          (value) => {
+            if (typeof value !== 'string') {
               return false;
             }
 
@@ -187,13 +207,14 @@ const AddPersonForm = ({
               return true;
             }
 
+            if (ageInYears < 16 && isMainApplicant) {
+              return false;
+            }
+
             setIsOver16State(false);
             return true;
           }
         ),
-      title: Yup.string().label('Title').required(),
-      firstName: Yup.string().label('First name').required(),
-      surname: Yup.string().label('Last name').required(),
       gender: Yup.string().label('Gender').required(),
       nationalInsuranceNumber: Yup.string()
         .label('National Insurance number')
@@ -203,32 +224,16 @@ const AddPersonForm = ({
     });
 
     if (isOver16) {
-      return isMainApplicant
-        ? schema.pick([
-            'title',
-            'firstName',
-            'surname',
-            'dateOfBirth',
-            'gender',
-            'nationalInsuranceNumber',
-            'phoneNumber',
-            'emailAddress',
-          ])
-        : schema.pick([
-            'title',
-            'firstName',
-            'surname',
-            'dateOfBirth',
-            'gender',
-            'nationalInsuranceNumber',
-          ]);
+      if (isMainApplicant) {
+        return schema;
+      } else {
+        return schema.omit(['phoneNumber', 'emailAddress']);
+      }
     } else {
-      return schema.pick([
-        'title',
-        'firstName',
-        'surname',
-        'dateOfBirth',
-        'gender',
+      return schema.omit([
+        'nationalInsuranceNumber',
+        'phoneNumber',
+        'emailAddress',
       ]);
     }
   }
@@ -278,17 +283,18 @@ const AddPersonForm = ({
           />
 
           {isOver16 ? (
-            <Input
-              name="nationalInsuranceNumber"
-              label="National Insurance number"
-              hint="For example, AB 12 34 56 C"
-            />
-          ) : null}
-
-          {isMainApplicant ? (
             <>
-              <Input name="phoneNumber" label="Mobile number" />
-              <Input name="emailAddress" label="Email" type="email" />
+              <Input
+                name="nationalInsuranceNumber"
+                label="National Insurance number"
+                hint="For example, AB 12 34 56 C"
+              />
+              {isMainApplicant ? (
+                <>
+                  <Input name="phoneNumber" label="Mobile number" />
+                  <Input name="emailAddress" label="Email" type="email" />
+                </>
+              ) : null}
             </>
           ) : null}
 

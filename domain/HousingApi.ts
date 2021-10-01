@@ -419,3 +419,18 @@ export interface PaginatedApplicationListResponse {
    */
   results: Array<Application>;
 }
+
+export interface CreateAuthRequest {
+  email: string;
+}
+export interface CreateAuthResponse {
+  success: boolean;
+}
+
+export interface VerifyAuthRequest {
+  email: string;
+  code: string;
+}
+export interface VerifyAuthResponse {
+  accessToken: string;
+}

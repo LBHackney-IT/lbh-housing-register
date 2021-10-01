@@ -6,21 +6,21 @@ import Paragraph from '../../components/content/paragraph';
 import Layout from '../../components/layout/resident-layout';
 import DeleteLink from '../../components/delete-link';
 import Announcement from '../../components/announcement';
-import { signOut } from '../../lib/store/cognitoUser';
 import { Applicant } from '../../domain/HousingApi';
 import { calculateBedrooms } from '../../lib/utils/bedroomCalculator';
 import { getGenderName } from '../../lib/utils/gender';
 import { getAgeInYears } from '../../lib/utils/dateOfBirth';
 import { getWaitingTime } from '../../lib/utils/bedroomWaitingTime';
 import withApplication from '../../lib/hoc/withApplication';
+import { exit } from '../../lib/store/auth';
 
 const WhatToExpect = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
   const onCancel = () => {
-    dispatch(signOut());
-    router.push('/');
+    // TODO: delete application
+    dispatch(exit());
   };
 
   const applicants = useAppSelector((store) =>

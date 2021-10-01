@@ -4,8 +4,8 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import Layout from '../components/layout/resident-layout';
 import Loading from '../components/loading';
 import { wrapper } from '../lib/store';
+import { loadApplication } from '../lib/store/application';
 import { useAppDispatch } from '../lib/store/hooks';
-import { initStore } from '../lib/store/init';
 import '../styles/global.scss';
 
 function App({ Component, pageProps }: AppProps): ReactElement {
@@ -13,7 +13,7 @@ function App({ Component, pageProps }: AppProps): ReactElement {
 
   const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(initStore()).then(() => setLoaded(true));
+    dispatch(loadApplication()).then(() => setLoaded(true));
   }, []);
 
   return (

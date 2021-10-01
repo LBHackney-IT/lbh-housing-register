@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react';
-import { signOut } from '../../lib/store/cognitoUser';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { hasPhaseBanner } from '../../lib/utils/phase-banner';
 import Breadcrumbs from '../breadcrumbs';
@@ -9,6 +8,7 @@ import PhaseBanner from '../phase-banner';
 import SkipLink from '../skip-link';
 import Seo from '../seo';
 import Footer from '../footer';
+import { exit } from '../../lib/store/auth';
 
 interface ResidentLayoutProps {
   pageName?: string;
@@ -21,18 +21,11 @@ export default function ResidentLayout({
   breadcrumbs,
   children,
 }: ResidentLayoutProps): JSX.Element {
-  const router = useRouter();
   const dispatch = useAppDispatch();
-  const username = useAppSelector(
-    (store) => store.cognitoUser?.attributes.given_name
-  );
-  const referenceNumber = useAppSelector(
-    (store) => store.application.reference || ''
-  );
+  const application = useAppSelector((store) => store.application);
 
   const onSignOut = async () => {
-    dispatch(signOut());
-    router.push('/');
+    dispatch(exit());
   };
 
   return (
@@ -40,7 +33,7 @@ export default function ResidentLayout({
       {pageName && <Seo title={pageName} />}
       <SkipLink />
       <Header
-        username={username}
+        username={application.mainApplicant?.person?.firstName}
         signOutText="Save and exit"
         onSignOut={onSignOut}
       />
@@ -54,7 +47,7 @@ export default function ResidentLayout({
         <div className="lbh-container">{children}</div>
       </main>
 
-      <Footer referenceNumber={referenceNumber} />
+      <Footer referenceNumber={application.reference ?? ''} />
     </>
   );
 }

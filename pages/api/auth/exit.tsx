@@ -1,23 +1,21 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { updateApplication } from '../../../../lib/gateways/applications-api';
+import { removeAuthCookie } from '../../../lib/utils/users';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
   switch (req.method) {
-    case 'PATCH':
+    case 'GET':
       try {
-        const application = JSON.parse(req.body);
-        const id = req.query.id as string;
-        const data = await updateApplication(application, id);
-        res.status(StatusCodes.OK).json(data);
+        removeAuthCookie(res);
+        res.status(StatusCodes.OK).json({ message: 'Sign out' });
       } catch (error) {
         console.error(error);
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Unable to update application' });
+          .json({ message: 'Unable to sign out' });
       }
       break;
 

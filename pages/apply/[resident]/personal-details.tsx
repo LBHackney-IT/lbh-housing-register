@@ -61,7 +61,6 @@ const ApplicationStep = (): JSX.Element => {
     }
 
     if (!isMainApplicant) {
-      nationalInsuranceNumber = '';
       phoneNumber = '';
       emailAddress = '';
     }

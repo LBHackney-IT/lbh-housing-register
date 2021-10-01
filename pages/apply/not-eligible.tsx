@@ -69,7 +69,10 @@ const NotEligible = (): JSX.Element => {
       <Paragraph>
         <strong>If you are living in any other accommodation</strong> and you
         are concerned about your housing, please contact the Housing Options and
-        Advice team on <a href="tel:02083562929">020 8356 2929</a>
+        Advice team on{' '}
+        <a className="lbh-link" href="tel:02083562929">
+          020 8356 2929
+        </a>
       </Paragraph>
       <Paragraph>
         <strong>If you are interested in renting private accommodation</strong>{' '}
@@ -111,7 +114,7 @@ const NotEligible = (): JSX.Element => {
       </Paragraph>
       <Paragraph>
         If you still think you meet the criteria in our Lettings policy, you can
-        request a review in writing within 21 days of the decision, by emailing
+        request a review in writing within 21 days of the decision, by emailing{' '}
         <a className="lbh-link" href="mailto:ReviewsandAppeals@hackney.gov.uk">
           ReviewsandAppeals@hackney.gov.uk
         </a>{' '}

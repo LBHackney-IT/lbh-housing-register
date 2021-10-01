@@ -8,11 +8,14 @@ import {
 } from '../../../../components/content/headings';
 import Paragraph from '../../../../components/content/paragraph';
 import Layout from '../../../../components/layout/staff-layout';
-import { HackneyGoogleUser } from '../../../../domain/HackneyGoogleUser';
 import { Application } from '../../../../domain/HousingApi';
 import { UserContext } from '../../../../lib/contexts/user-context';
 import { getApplication } from '../../../../lib/gateways/applications-api';
-import { getRedirect, getSession } from '../../../../lib/utils/auth';
+import {
+  getRedirect,
+  getSession,
+  HackneyGoogleUserWithPermissions,
+} from '../../../../lib/utils/auth';
 import Custom404 from '../../../404';
 import Snapshot from '../../../../components/applications/snapshot';
 import Actions from '../../../../components/applications/actions';
@@ -39,7 +42,7 @@ export function getPersonName(application: Application | undefined) {
 }
 
 export interface PageProps {
-  user: HackneyGoogleUser;
+  user: HackneyGoogleUserWithPermissions;
   data: Application;
 }
 
@@ -59,94 +62,104 @@ export default function ApplicationPage({
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="View application">
-        {data.sensitiveData && (
+        {data.sensitiveData &&
+        !user.hasAdminPermissions &&
+        !user.hasManagerPermissions &&
+        !user.hasOfficerPermissions ? (
           <h2>This application has been marked as sensitive.</h2>
-        )}
-        <HeadingOne content="View application" />
-        <h2
-          className="lbh-heading-h2"
-          style={{ marginTop: '0.5em', color: '#525a5b' }}
-        >
-          {getPersonName(data)}
-        </h2>
+        ) : (
+          <>
+            <HeadingOne content="View application" />
+            <h2
+              className="lbh-heading-h2"
+              style={{ marginTop: '0.5em', color: '#525a5b' }}
+            >
+              {getPersonName(data)}
+            </h2>
 
-        <div className="lbh-link-group">
-          <button
-            onClick={() => {
-              setState('overview');
-            }}
-            className={`lbh-link lbh-link--no-visited-state ${isActive(
-              'overview'
-            )}`}
-          >
-            Overview
-          </button>{' '}
-          <button
-            onClick={() => {
-              setState('actions');
-            }}
-            className={`lbh-link lbh-link--no-visited-state ${isActive(
-              'actions'
-            )}`}
-          >
-            Actions
-          </button>
-        </div>
-
-        {state == 'overview' && (
-          <div className="govuk-grid-row">
-            <div className="govuk-grid-column-two-thirds">
-              <HeadingThree content="Snapshot" />
-              <Snapshot data={data} />
-              {data.mainApplicant && (
-                <PersonalDetails
-                  heading="Main Applicant"
-                  applicant={data.mainApplicant}
-                  applicationId={data.id}
-                />
-              )}
-              {data.otherMembers && data.otherMembers.length > 0 && (
-                <OtherMembers
-                  heading="Other Members"
-                  others={data.otherMembers}
-                  applicationId={data.id}
-                />
-              )}
+            <div className="lbh-link-group">
+              <button
+                onClick={() => {
+                  setState('overview');
+                }}
+                className={`lbh-link lbh-link--no-visited-state ${isActive(
+                  'overview'
+                )}`}
+              >
+                Overview
+              </button>{' '}
+              <button
+                onClick={() => {
+                  setState('actions');
+                }}
+                className={`lbh-link lbh-link--no-visited-state ${isActive(
+                  'actions'
+                )}`}
+              >
+                Actions
+              </button>
             </div>
-            <div className="govuk-grid-column-one-third">
-              <HeadingThree content="Case details" />
-              <Paragraph>
-                <strong>Application reference</strong>
-                <br />
-                {data.reference}
-              </Paragraph>
-              <Paragraph>
-                <strong>Status</strong>
-                <br />
-                {data.status}
-              </Paragraph>
-              <Paragraph>
-                <strong>Created date</strong>
-                <br />
-                {formatDate(data.createdAt)}
-              </Paragraph>
-              {data.submittedAt && (
-                <Paragraph>
-                  <strong>Submission date</strong>
-                  <br />
-                  {formatDate(data.submittedAt)}
-                </Paragraph>
-              )}
-              <AssignUser id={data.id} user={data.assignedTo} />
 
-              <SensitiveData
-                id={data.id}
-                isSensitive={data.sensitiveData || false}
-              />
-            </div>
-          </div>
+            {state == 'overview' && (
+              <div className="govuk-grid-row">
+                <div className="govuk-grid-column-two-thirds">
+                  <HeadingThree content="Snapshot" />
+                  <Snapshot data={data} />
+                  {data.mainApplicant && (
+                    <PersonalDetails
+                      heading="Main Applicant"
+                      applicant={data.mainApplicant}
+                      applicationId={data.id}
+                    />
+                  )}
+                  {data.otherMembers && data.otherMembers.length > 0 && (
+                    <OtherMembers
+                      heading="Other Members"
+                      others={data.otherMembers}
+                      applicationId={data.id}
+                    />
+                  )}
+                </div>
+                <div className="govuk-grid-column-one-third">
+                  <HeadingThree content="Case details" />
+                  <Paragraph>
+                    <strong>Application reference</strong>
+                    <br />
+                    {data.reference}
+                  </Paragraph>
+                  <Paragraph>
+                    <strong>Status</strong>
+                    <br />
+                    {data.status}
+                  </Paragraph>
+                  <Paragraph>
+                    <strong>Created date</strong>
+                    <br />
+                    {formatDate(data.createdAt)}
+                  </Paragraph>
+                  {data.submittedAt && (
+                    <Paragraph>
+                      <strong>Submission date</strong>
+                      <br />
+                      {formatDate(data.submittedAt)}
+                    </Paragraph>
+                  )}
+
+                  {user.hasManagerPermissions && (
+                    <>
+                      <AssignUser id={data.id} user={data.assignedTo} />
+                      <SensitiveData
+                        id={data.id}
+                        isSensitive={data.sensitiveData || false}
+                      />
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+            {state == 'actions' && <Actions data={data} />}
+          </>
         )}
-        {state == 'actions' && <Actions data={data} />}
       </Layout>
     </UserContext.Provider>
   );

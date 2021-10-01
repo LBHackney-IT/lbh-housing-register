@@ -1,8 +1,7 @@
 import { Application } from '../../domain/HousingApi';
-import { updateApplication } from '../../lib/store/application';
-import { useAppDispatch } from '../../lib/store/hooks';
 import Button from '../button';
 import { useState } from 'react';
+import { updateApplication } from '../../lib/gateways/internal-api';
 
 interface sensitiveDataPageProps {
   id: string;
@@ -13,7 +12,6 @@ export default function SensitiveData({
   id,
   isSensitive,
 }: sensitiveDataPageProps): JSX.Element {
-  const dispatch = useAppDispatch();
   const [sensitive, setSensitive] = useState<boolean>(isSensitive);
 
   const updateSensitiveDataStatus = async (markAs: boolean) => {
@@ -22,7 +20,7 @@ export default function SensitiveData({
       id: id,
       sensitiveData: markAs,
     };
-    dispatch(updateApplication(request));
+    updateApplication(request);
   };
 
   return (

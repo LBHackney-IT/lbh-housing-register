@@ -1,23 +1,23 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { updateApplication } from '../../../../lib/gateways/applications-api';
+import { createVerifyCode } from '../../../../lib/gateways/applications-api';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
   switch (req.method) {
-    case 'PATCH':
+    case 'POST':
       try {
-        const application = JSON.parse(req.body);
+        const request = JSON.parse(req.body);
         const id = req.query.id as string;
-        const data = await updateApplication(application, id);
+        const data = await createVerifyCode(id, request);
         res.status(StatusCodes.OK).json(data);
       } catch (error) {
         console.error(error);
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Unable to update application' });
+          .json({ message: 'Unable to create verify code' });
       }
       break;
 

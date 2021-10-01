@@ -8,16 +8,17 @@ import {
 } from '@reduxjs/toolkit';
 import { Store } from '.';
 import { Application } from '../../domain/HousingApi';
-import { signOut } from './cognitoUser';
+import { exit } from './auth';
 import mainApplicant from './mainApplicant';
 import otherMembers from './otherMembers';
 import { NotifyRequest, NotifyResponse } from '../../domain/govukNotify';
 
 export const loadApplication = createAsyncThunk(
   'application/load',
-  async (id: string) => {
-    const r = await fetch(`/api/applications/${id}`);
-    return (await r.json()) as Application;
+  async () => {
+    const res = await fetch(`/api/applications`);
+    const application = (await res.json()) as Application;
+    return application.id ? application : null;
   }
 );
 
@@ -127,11 +128,14 @@ const slice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(loadApplication.fulfilled, (state, action) => action.payload)
+      .addCase(
+        loadApplication.fulfilled,
+        (state, action) => action.payload ?? {}
+      )
       .addCase(createApplication.fulfilled, (state, action) => action.payload)
       .addCase(updateApplication.fulfilled, (state, action) => action.payload)
       .addCase(completeApplication.fulfilled, (state, action) => action.payload)
-      .addCase(signOut.fulfilled, (state, action) => ({}))
+      .addCase(exit.fulfilled, (state, action) => ({}))
 
       .addDefaultCase((state, action) => {
         state.mainApplicant = mainApplicant.reducer(

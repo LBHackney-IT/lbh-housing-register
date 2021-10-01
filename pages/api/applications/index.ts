@@ -1,13 +1,38 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { Application } from '../../../domain/HousingApi';
-import { addApplication } from '../../../lib/gateways/applications-api';
+import {
+  addApplication,
+  getApplication,
+} from '../../../lib/gateways/applications-api';
+import { getUser } from '../../../lib/utils/users';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
   switch (req.method) {
+    case 'GET': {
+      try {
+        const user = getUser(req);
+        const id = user?.application_id;
+        if (id) {
+          const data = await getApplication(id);
+          res.status(StatusCodes.OK).json(data);
+        } else {
+          res
+            .status(StatusCodes.FORBIDDEN)
+            .json({ message: 'Unable to get application' });
+        }
+      } catch (error) {
+        console.error(error);
+        res
+          .status(StatusCodes.INTERNAL_SERVER_ERROR)
+          .json({ message: 'Unable to get application' });
+      }
+
+      break;
+    }
     case 'POST':
       try {
         const application: Application = JSON.parse(req.body);

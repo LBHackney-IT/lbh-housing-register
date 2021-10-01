@@ -21,7 +21,7 @@ import { checkEligible } from '../lib/utils/form';
 
 export default function ApplicationHomePage(): JSX.Element {
   const router = useRouter();
-  const isLoggedIn = useAppSelector((store) => store.cognitoUser?.username);
+  const isLoggedIn = useAppSelector((store) => store.application.id);
 
   const application = useAppSelector((store) => store.application);
   const mainApplicant = useAppSelector(

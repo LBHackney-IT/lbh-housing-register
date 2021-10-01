@@ -1,5 +1,12 @@
 {
   "id": "arrears",
+  "eligibility": [
+    {
+      "field": "arrears",
+      "is": "no",
+      "reasoning": "You are in 4 or more weeks of rent arrears, council tax or service charges which is not due to a delay in processing your housing benefits or Universal Credit claim, and you have not made an agreement with the landlord"
+    }
+  ],
   "steps": [
     {
       "fields": [

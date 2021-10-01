@@ -4,7 +4,7 @@
     {
       "field": "other-housing-register",
       "isNot": "yes",
-      "reasoning": "It's unlikely that you will qualify for social housing when you are on another register"
+      "reasoning": "You have been accepted onto another local authority’s housing register"
     }
   ],
   "steps": [

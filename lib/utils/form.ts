@@ -74,13 +74,13 @@ export function checkEligible(application: Application): [boolean, string[]] {
 
   if (bedroomNeed <= requestedNumberOfBedrooms) {
     setInvalid(
-      "You already have the required number of bedrooms in your current property, therefore it's unlikely that you will qualify for social housing."
+      'Based on our calculations, you are not lacking two or more rooms'
     );
   }
   //******** *//
 
   if (!isOver18(mainApplicant)) {
-    setInvalid('Applicant is not over 18');
+    setInvalid('You are under 18 years old');
   }
 
   for (const [form, values] of Object.entries(FormID)) {

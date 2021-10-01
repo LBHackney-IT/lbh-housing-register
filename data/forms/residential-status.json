@@ -17,7 +17,7 @@
       "fields": [
         {
           "as": "radios",
-          "label": "Are you currently and have you continuously resided in the borough for 3 years or more?",
+          "label": "Has Hackney been your main residence for the last 3 years?",
           "name": "residential-status",
           "options": [
             {
@@ -287,6 +287,58 @@
         },
         {
           "as": "radios",
+          "label": "Do you either work in Hackney or have you been offered a permanent job in Hackney?",
+          "name": "work-in-hackney",
+          "options": [
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
+          ],
+          "validation": {
+            "required": true
+          },
+          "conditionalDisplay": [
+            {
+              "field": "residential-status",
+              "is": "no"
+            },
+            {
+              "field": "moved-borough",
+              "is": "no"
+            },
+            {
+              "field": "homeless",
+              "is": "no"
+            },
+            {
+              "field": "asbo-behaviour",
+              "is": "no"
+            },
+            {
+              "field": "armed-forces",
+              "is": "no"
+            },
+            {
+              "field": "mobility-scheme",
+              "is": "no"
+            },
+            {
+              "field": "homelessness-accepted",
+              "is": "no"
+            },
+            {
+              "field": "social-housing",
+              "is": "no"
+            }
+          ]
+        },
+        {
+          "as": "radios",
           "label": "Are you moving to Hackney to provide care to a Hackney resident that has been agreed by the Council's medical advisor?",
           "name": "providing-care",
           "options": [
@@ -333,6 +385,10 @@
             },
             {
               "field": "social-housing",
+              "is": "no"
+            },
+            {
+              "field": "work-in-hackney",
               "is": "no"
             }
           ]
@@ -385,6 +441,10 @@
             },
             {
               "field": "social-housing",
+              "is": "no"
+            },
+            {
+              "field": "work-in-hackney",
               "is": "no"
             },
             {
@@ -441,6 +501,10 @@
             },
             {
               "field": "social-housing",
+              "is": "no"
+            },
+            {
+              "field": "work-in-hackney",
               "is": "no"
             },
             {
@@ -514,6 +578,10 @@
             },
             {
               "field": "social-housing",
+              "is": "no"
+            },
+            {
+              "field": "work-in-hackney",
               "is": "no"
             },
             {

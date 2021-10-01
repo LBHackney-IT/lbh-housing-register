@@ -1,5 +1,4 @@
-import { useRouter } from 'next/router';
-import Button, { ButtonLink } from '../../components/button';
+import { ButtonLink } from '../../components/button';
 import { HeadingOne } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
 import Layout from '../../components/layout/resident-layout';
@@ -11,19 +10,17 @@ import SummaryList, {
 import Tag from '../../components/tag';
 import ApplicantName from '../../components/application/ApplicantName';
 import { Applicant } from '../../domain/HousingApi';
-import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
+import { useAppSelector } from '../../lib/store/hooks';
 import { applicationStepsRemaining } from '../../lib/utils/resident';
-import {
-  sendConfirmation,
-  completeApplication,
-  sendDisqualifyEmail,
-} from '../../lib/store/application';
-import { checkEligible } from '../../lib/utils/form';
 import withApplication from '../../lib/hoc/withApplication';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
-  const router = useRouter();
-  const dispatch = useAppDispatch();
+  const breadcrumbs = [
+    {
+      href: '/apply/overview',
+      name: 'Application',
+    },
+  ];
 
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
   if (!mainResident) {
@@ -36,25 +33,6 @@ const ApplicationPersonsOverview = (): JSX.Element => {
       .filter((v): v is Applicant | Applicant[] => v !== undefined)
       .flat()
   );
-
-  const breadcrumbs = [
-    {
-      href: '/apply/overview',
-      name: 'Application',
-    },
-  ];
-
-  const submitApplication = async () => {
-    const [isEligible] = checkEligible(mainResident);
-    if (!isEligible) {
-      dispatch(sendDisqualifyEmail(application));
-      router.push('/apply/not-eligible');
-    } else {
-      dispatch(sendConfirmation(application));
-      dispatch(completeApplication(application));
-      router.push('/apply/submit/additional-questions');
-    }
-  };
 
   return (
     <Layout pageName="Application overview" breadcrumbs={breadcrumbs}>
@@ -105,7 +83,9 @@ const ApplicationPersonsOverview = (): JSX.Element => {
           <Paragraph>
             Please make sure you have checked your answers for each applicant.
           </Paragraph>
-          <Button onClick={submitApplication}>Submit application</Button>
+          <ButtonLink href="/apply/submit/additional-questions">
+            Save and continue
+          </ButtonLink>
         </>
       )}
     </Layout>

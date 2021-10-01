@@ -60,14 +60,6 @@ const CurrentAccommodation = (): JSX.Element => {
     ) ?? { nextFormId: 'exit' };
 
     if (nextFormId === 'exit') {
-      dispatch(
-        updateWithFormValues({
-          formID: FormID.CURRENT_ACCOMMODATION,
-          personID: applicant.person.id,
-          values,
-          markAsComplete: true,
-        })
-      );
       router.push(baseHref);
       return;
     }

@@ -1,0 +1,17 @@
+{
+  "steps": [
+    {
+      "fields": [
+        {
+          "as": "checkbox",
+          "initialValue": false,
+          "label": "I agree",
+          "name": "declaration",
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ]
+}

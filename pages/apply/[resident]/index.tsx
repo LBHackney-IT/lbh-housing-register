@@ -34,6 +34,7 @@ const ResidentIndex = (): JSX.Element => {
 
   const currentResident = useAppSelector(selectApplicant(resident));
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
+  const application = useAppSelector((store) => store.application);
 
   if (!currentResident || !mainResident) {
     return <Custom404 />;
@@ -43,7 +44,7 @@ const ResidentIndex = (): JSX.Element => {
   const returnHref = '/apply/overview';
   const checkAnswers = `${baseHref}/summary`;
 
-  const [isEligible] = checkEligible(mainResident);
+  const [isEligible] = checkEligible(application);
   if (!isEligible) {
     router.push(checkAnswers);
   }
@@ -128,7 +129,7 @@ const ResidentIndex = (): JSX.Element => {
                 <SummaryListValue>
                   {isSectionActive(formStep.id) ? (
                     <Link href={`${baseHref}/${formStep.id}`}>
-                      {formStep.heading}
+                      <a className="lbh-link">{formStep.heading}</a>
                     </Link>
                   ) : (
                     formStep.heading

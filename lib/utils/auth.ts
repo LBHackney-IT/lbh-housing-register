@@ -2,7 +2,18 @@ import cookie from 'cookie';
 import jsonwebtoken from 'jsonwebtoken';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 
-export function getSession(req: any) {
+type Permissions = {
+  hasAnyPermissions: boolean;
+  hasAdminPermissions: boolean;
+  hasManagerPermissions: boolean;
+  hasOfficerPermissions: boolean;
+};
+
+export type HackneyGoogleUserWithPermissions = HackneyGoogleUser & Permissions;
+
+export function getSession(
+  req: any
+): HackneyGoogleUserWithPermissions | undefined {
   try {
     const cookies = cookie.parse(req.headers.cookie ?? '');
     const parsedToken = cookies['hackneyToken'];
@@ -16,10 +27,16 @@ export function getSession(req: any) {
         : jsonwebtoken.decode(parsedToken)
     ) as HackneyGoogleUser | undefined;
 
-    return user;
+    if (user) {
+      return {
+        ...user,
+        ...getPermissions(user),
+      };
+    }
+    return undefined;
   } catch (err) {
     if (err instanceof jsonwebtoken.JsonWebTokenError) {
-      return;
+      return undefined;
     }
 
     throw err;
@@ -28,24 +45,37 @@ export function getSession(req: any) {
 
 export const signOut = (): void => {
   // TODO: clear cookie
-  window.location.href = '/login';
+};
+
+export const getPermissions = (user: HackneyGoogleUser): Permissions => {
+  const {
+    AUTHORISED_ADMIN_GROUP,
+    AUTHORISED_MANAGER_GROUP,
+    AUTHORISED_OFFICER_GROUP,
+  } = process.env;
+
+  return {
+    hasAnyPermissions: user.groups.length > 0,
+    hasAdminPermissions: hasUserGroup(AUTHORISED_ADMIN_GROUP!, user),
+    hasManagerPermissions: hasUserGroup(AUTHORISED_MANAGER_GROUP!, user),
+    hasOfficerPermissions: hasUserGroup(AUTHORISED_OFFICER_GROUP!, user),
+  };
 };
 
 export const hasUserGroup = (
   group: string,
   user: HackneyGoogleUser
 ): boolean => {
-  return user?.groups?.includes(group);
+  return user.groups.includes(group);
 };
 
 export const getRedirect = (
-  group: string,
-  user?: HackneyGoogleUser
+  user?: HackneyGoogleUser & { hasAnyPermissions: boolean }
 ): string | undefined => {
   if (!user) {
     return '/login';
   }
-  if (!hasUserGroup(group, user)) {
+  if (!user.hasAnyPermissions) {
     return '/access-denied';
   }
 };

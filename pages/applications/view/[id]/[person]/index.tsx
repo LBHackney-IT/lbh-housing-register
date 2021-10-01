@@ -1,12 +1,5 @@
 import { GetServerSideProps } from 'next';
-import React from 'react';
-import AddressDetails from '../../../../../components/applications/address-details';
-import ContactDetails from '../../../../../components/applications/contact-details';
-import PersonalDetails from '../../../../../components/applications/personal-details';
-import {
-  HeadingOne,
-  HeadingTwo,
-} from '../../../../../components/content/headings';
+import React, { useState } from 'react';
 import Layout from '../../../../../components/layout/staff-layout';
 import { HackneyGoogleUser } from '../../../../../domain/HackneyGoogleUser';
 import { Application } from '../../../../../domain/HousingApi';
@@ -14,6 +7,25 @@ import { UserContext } from '../../../../../lib/contexts/user-context';
 import { getApplication } from '../../../../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../../../../lib/utils/auth';
 import Custom404 from '../../../../404';
+import CheckBoxList, {
+  CheckBoxListPageProps,
+} from '../../../../../components/applications/checkBoxList';
+import {
+  personalDetailsCheckboxList,
+  immigrationStatusCheckboxList,
+  livingSituationCheckboxList,
+  addressHistoryCheckboxList,
+  currentAccomodationCheckboxList,
+  situationCheckboxList,
+  employmentCheckboxList,
+  incomeAndSavingsCheckboxList,
+  medicalDetailsPageData,
+} from '../../../../../lib/utils/checkboxListData';
+import MedicalDetail, {
+  MedicalDetailPageProps,
+} from '../../../../../components/applications/medical-details';
+import { HeadingOne } from '../../../../../components/content/headings';
+import Button from '../../../../../components/button';
 
 export function formatDate(date: string | undefined) {
   if (!date) return '';
@@ -41,40 +53,132 @@ export default function ApplicationPersonPage({
     ? data.mainApplicant
     : data.otherMembers?.find((x) => x.person?.id === person);
 
+  type State =
+    | 'identity'
+    | 'livingsituation'
+    | 'money'
+    | 'health'
+    | 'checklist';
+  const [state, setState] = useState<State>('identity');
+
+  function isActive(selected: string) {
+    return state == selected ? 'active' : '';
+  }
+
+  const personalDetails = personalDetailsCheckboxList(applicant);
+  const immigrationStatus = immigrationStatusCheckboxList(applicant);
+  const livingSituation = livingSituationCheckboxList(applicant);
+  const addressHistory = addressHistoryCheckboxList(applicant);
+  const currentAccomodation = currentAccomodationCheckboxList(applicant);
+  const situation = situationCheckboxList(applicant);
+  const employment = employmentCheckboxList(applicant);
+  const incomeAndSavings = incomeAndSavingsCheckboxList(applicant);
+  const medicalDetails = medicalDetailsPageData(data);
+
   return (
     <UserContext.Provider value={{ user }}>
       <Layout>
-        <HeadingOne
-          content={
-            isMainApplicant
-              ? 'Review main applicant'
-              : 'Review household member'
-          }
-        />
-        <HeadingTwo
-          content={`${applicant?.person?.firstName} ${applicant?.person?.surname}`}
-        />
+        <div className="govuk-grid-row">
+          <div className="govuk-grid-column-two-thirds">
+            <HeadingOne
+              content={
+                isMainApplicant
+                  ? 'Review main applicant'
+                  : 'Review household member'
+              }
+            />
+            <h2
+              className="lbh-heading-h2"
+              style={{ marginTop: '0.5em', color: '#525a5b' }}
+            >
+              {applicant?.person?.firstName} {applicant?.person?.surname}
+            </h2>
+          </div>
+          <div className="govuk-grid-column-one-thirds">
+            <a
+              href="https://evidence-store-staging.hackney.gov.uk/teams/7/dashboard"
+              target="_blank"
+            >
+              <Button>View Documents</Button>
+            </a>
+          </div>
+        </div>
 
-        <hr />
-        {applicant && (
-          <PersonalDetails
-            heading="Personal details"
-            applicant={applicant}
-            applicationId={data.id}
-          />
+        <div className="lbh-link-group">
+          <button
+            onClick={() => {
+              setState('identity');
+            }}
+            className={`lbh-link lbh-link--no-visited-state ${isActive(
+              'identity'
+            )}`}
+          >
+            Identity
+          </button>{' '}
+          <button
+            onClick={() => {
+              setState('livingsituation');
+            }}
+            className={`lbh-link lbh-link--no-visited-state ${isActive(
+              'livingsituation'
+            )}`}
+          >
+            Living Situation
+          </button>{' '}
+          <button
+            onClick={() => {
+              setState('money');
+            }}
+            className={`lbh-link lbh-link--no-visited-state ${isActive(
+              'money'
+            )}`}
+          >
+            Money
+          </button>{' '}
+          <button
+            onClick={() => {
+              setState('health');
+            }}
+            className={`lbh-link lbh-link--no-visited-state ${isActive(
+              'health'
+            )}`}
+          >
+            Health
+          </button>{' '}
+          {/* <button
+            onClick={() => {
+              setState('checklist');
+            }}
+            className={`lbh-link lbh-link--no-visited-state ${isActive('checklist')}`}
+          >
+            Checklist
+          </button> */}
+        </div>
+
+        {state == 'identity' && (
+          <>
+            <CheckBoxList {...(personalDetails as CheckBoxListPageProps)} />
+            <CheckBoxList {...(immigrationStatus as CheckBoxListPageProps)} />
+          </>
         )}
-        {applicant?.contactInformation && (
-          <ContactDetails
-            heading="Contact details"
-            contact={applicant.contactInformation}
-          />
+        {state == 'livingsituation' && (
+          <>
+            <CheckBoxList {...(livingSituation as CheckBoxListPageProps)} />
+            <CheckBoxList {...(addressHistory as CheckBoxListPageProps)} />
+            <CheckBoxList {...(currentAccomodation as CheckBoxListPageProps)} />
+            <CheckBoxList {...(situation as CheckBoxListPageProps)} />
+          </>
         )}
-        {applicant?.address && (
-          <AddressDetails
-            heading="Address details"
-            address={applicant.address}
-          />
+        {state == 'money' && (
+          <>
+            <CheckBoxList {...(employment as CheckBoxListPageProps)} />
+            <CheckBoxList {...(incomeAndSavings as CheckBoxListPageProps)} />
+          </>
         )}
+        {state == 'health' && (
+          <MedicalDetail {...(medicalDetails as MedicalDetailPageProps)} />
+        )}
+        {state == 'checklist' && <h3>checklist</h3>}
       </Layout>
     </UserContext.Provider>
   );
@@ -82,10 +186,7 @@ export default function ApplicationPersonPage({
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const user = getSession(context.req);
-  const redirect = getRedirect(
-    process.env.AUTHORISED_ADMIN_GROUP as string,
-    user
-  );
+  const redirect = getRedirect(user);
   if (redirect) {
     return {
       props: {},
@@ -95,7 +196,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  console.log(context.params);
   const { id, person } = context.params as {
     id: string;
     person: string;

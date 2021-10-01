@@ -1,3 +1,4 @@
+import { SetStateAction } from 'react';
 import { FormikValues } from 'formik';
 import { FormID } from '../utils/form-data';
 
@@ -20,6 +21,7 @@ export interface BaseFormField {
   validation?: FormFieldValidation;
   placeholder?: string;
   initialValue?: any;
+  hideLabel?: boolean;
 }
 
 export interface TextFormField extends BaseFormField {
@@ -123,6 +125,7 @@ export type Conditionals = {
   fieldId: string;
   value: string;
   nextFormId: FormID | 'exit';
+  routeSelect?: boolean;
 };
 
 export type MultiStepForm = {

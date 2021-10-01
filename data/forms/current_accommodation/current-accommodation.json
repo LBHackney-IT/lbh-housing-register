@@ -9,52 +9,60 @@
           "name": "living-situation",
           "options": [
             {
-              "label": "Living with parents",
-              "value": "living-with-parents"
-            },
-            {
-              "label": "Living with friends",
-              "value": "living-with-friends"
-            },
-            {
-              "label": "Living with relatives",
-              "value": "living-with-relatives"
-            },
-            {
-              "label": "Temporary accommodation",
-              "value": "temp-accomodation"
+              "label": "Owner occupier",
+              "value": "owner-occupier"
             },
             {
               "label": "Private rental",
               "value": "private-rental"
             },
             {
-              "label": "Owner occupier",
-              "value": "owner-occupier"
+              "label": "Council tenant",
+              "value": "council-tenant"
             },
             {
-              "label": "No fixed abode",
-              "value": "no-fixed-abode"
-            },
-            {
-              "label": "Squatter",
-              "value": "squatter"
+              "label": "Housing Association tenant",
+              "value": "housing-association-tenant"
             },
             {
               "label": "B&B, Hotel or Hostel",
               "value": "b&b-hotel-hostel"
             },
             {
+              "label": "Tied accommodation",
+              "value": "tied-accommodation"
+            },
+            {
+              "label": "Temporary accommodation",
+              "value": "temp-accomodation"
+            },
+            {
+              "label": "Living with parents",
+              "value": "living-with-parents"
+            },
+            {
+              "label": "Living with relatives",
+              "value": "living-with-relatives"
+            },
+            {
+              "label": "Living with friends",
+              "value": "living-with-friends"
+            },
+            {
               "label": "Lodger",
               "value": "lodger"
+            },
+            {
+              "label": "Squatter",
+              "value": "squatter"
             },
             {
               "label": "Unauthorised occupant",
               "value": "unauthorised-occupant"
             },
             {
-              "label": "Tied accommodation",
-              "value": "tied-accommodation"
+              "label": "No fixed abode",
+              "value": "no-fixed-abode"
             }
           ],
           "validation": {
@@ -191,6 +199,18 @@
           "label": "What other rooms do you have access to?",
           "name": "home-how-many-other-rooms",
           "hint": "Please specify any other rooms you have access to, for example: play room, office",
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    },
+    {
+      "fields": [
+        {
+          "as": "textarea",
+          "label": "Please describe why your current home is unsuitable",
+          "name": "why-home-unsuitable",
           "validation": {
             "required": true
           }

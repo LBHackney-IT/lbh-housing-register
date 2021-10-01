@@ -3,12 +3,12 @@ import agreementFormData from '../../data/forms/agreement.json';
 import currentAccommodationFormData from '../../data/forms/current_accommodation/current-accommodation.json';
 import currentAccommodationHostDetails from '../../data/forms/current_accommodation/current-accommodation-host-details.json';
 import currentAccommodationLandlordDetails from '../../data/forms/current_accommodation/current-accommodation-landlord-details.json';
+import declarationFormData from '../../data/forms/declaration.json';
 import employment from '../../data/forms/employment.json';
 import immigrationStatusFormData from '../../data/forms/immigration-status.json';
 import incomeSavings from '../../data/forms/income.json';
 import medicalNeeds from '../../data/forms/medical-needs.json';
 import personalDetailsFormData from '../../data/forms/person-details.json';
-import newPersonDetailsFormData from '../../data/forms/new-person-details.json';
 import residentialStatusFormData from '../../data/forms/residential-status.json';
 import signInVerifyFormData from '../../data/forms/sign-in-verify.json';
 import signInFormData from '../../data/forms/sign-in.json';
@@ -19,6 +19,7 @@ import AccommodationType from '../../data/forms/Situation/accommodation-type.jso
 import Arrears from '../../data/forms/Situation/arrears.json';
 import Benefits from '../../data/forms/Situation/benefits.json';
 import BreachOfTenancy from '../../data/forms/Situation/breach-of-tenancy.json';
+import ArmedForces from '../../data/forms/Situation/situation-armed-forces.json';
 import CourtOrder from '../../data/forms/Situation/court-order.json';
 import DomesticViolence from '../../data/forms/Situation/domestic-violence.json';
 import Homelessness from '../../data/forms/Situation/homelessness.json';
@@ -42,17 +43,18 @@ import EthnicityCategoryMixedMultipleBackground from '../../data/forms/ethnicity
 import EthnicityCategoryWhite from '../../data/forms/ethnicity/ethnicity-category-white.json';
 import EthnicityCategoryOtherEthnicGroup from '../../data/forms/ethnicity/ethnicity-category-other-ethnic-group.json';
 
-import AdminActions from '../../data/admin/actions.json';
+import AdminActions from '../../data/admin/admin-actions.json';
+import AdminHealthActions from '../../data/admin/health.json';
 
 import { EligibilityCriteria, MultiStepForm } from '../types/form';
 import assertNever from './assertNever';
+import { FormikProvider } from 'formik';
 
 export enum FormID {
   AGREEMENT = 'agreement',
   SIGN_IN = 'sign-in',
   SIGN_IN_VERIFY = 'sign-in-verify',
   SIGN_UP_DETAILS = 'sign-up-details',
-  NEW_PERSON_DETAILS = 'add-person',
   PERSONAL_DETAILS = 'personal-details',
   IMMIGRATION_STATUS = 'immigration-status',
   RESIDENTIAL_STATUS = 'residential-status',
@@ -64,6 +66,7 @@ export enum FormID {
   INCOME_SAVINGS = 'income-savings',
   MEDICAL_NEEDS = 'medical-needs',
   YOUR_SITUATION = 'your-situation',
+  ARMED_FORCES = 'situation-armed-forces',
   COURT_ORDER = 'court-order',
   ACCOMODATION_TYPE = 'accommodation-type',
   DOMESTIC_VIOLENCE = 'domestic-violence',
@@ -90,6 +93,8 @@ export enum FormID {
   ETHNICITY_CATEGORY_WHITE = 'ethnicity-extended-category-white',
   ETHNICITY_CATEGORY_OTHER_ETHNIC_GROUP = 'ethnicity-extended-category-other-ethnic-group',
   ADMIN_ACTIONS = 'admin-actions',
+  DECLARATION = 'declaration',
+  ADMIN_HEALTH_ACTIONS = 'admin-health-actions',
 }
 
 /**
@@ -123,9 +128,6 @@ export function getFormData(form: FormID): MultiStepForm {
     case FormID.SIGN_UP_DETAILS:
       return signUpDetailsFormData as MultiStepForm;
 
-    case FormID.NEW_PERSON_DETAILS:
-      return newPersonDetailsFormData as MultiStepForm;
-
     case FormID.PERSONAL_DETAILS:
       return personalDetailsFormData as MultiStepForm;
 
@@ -151,6 +153,9 @@ export function getFormData(form: FormID): MultiStepForm {
       return medicalNeeds as MultiStepForm;
 
     // your situation
+    case FormID.ARMED_FORCES:
+      return ArmedForces as MultiStepForm;
+
     case FormID.COURT_ORDER:
       return CourtOrder as MultiStepForm;
 
@@ -239,6 +244,12 @@ export function getFormData(form: FormID): MultiStepForm {
     // this form isn't used anywhere
     case FormID.YOUR_SITUATION:
       return yourSituationFormData as MultiStepForm;
+
+    case FormID.DECLARATION:
+      return declarationFormData as MultiStepForm;
+
+    case FormID.ADMIN_HEALTH_ACTIONS:
+      return AdminHealthActions as MultiStepForm;
 
     default:
       return assertNever(form, 'Unknown form step: ' + form);

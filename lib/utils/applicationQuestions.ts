@@ -1,4 +1,5 @@
 import { Applicant } from '../../domain/HousingApi';
+import capitalize from './capitalize';
 
 export const questionLookup = (
   questionId: string,
@@ -13,4 +14,23 @@ export const questionLookup = (
   }
 
   return applicant?.questions?.find((q) => q.id === questionId)?.answer;
+};
+
+export const jsonParse = (parseItem: string): string => {
+  try {
+    return JSON.parse(parseItem);
+  } catch {
+    return '';
+  }
+};
+
+export const getQuestionValue = (
+  questionId: string,
+  applicant?: Applicant
+): string => {
+  const questionValue = questionLookup(questionId, applicant) || 'N/A';
+
+  return questionValue !== 'N/A'
+    ? capitalize(jsonParse(questionValue))
+    : questionValue;
 };

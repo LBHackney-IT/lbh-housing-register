@@ -12,6 +12,7 @@ export default function Textarea({
   label,
   name,
   placeholder,
+  hideLabel,
 }: TextareaFormField): JSX.Element {
   return (
     <Field name={name}>
@@ -24,7 +25,12 @@ export default function Textarea({
       }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
           {label && (
-            <Label content={label} htmlFor={field.name} strong={true} />
+            <Label
+              content={label}
+              htmlFor={field.name}
+              strong={true}
+              hideLabel={hideLabel}
+            />
           )}
           {hint && <Hint content={hint} />}
           {details && (
@@ -42,6 +48,7 @@ export default function Textarea({
             placeholder={placeholder}
             rows={5}
             {...field}
+            maxLength={10000}
           />
         </FormGroup>
       )}

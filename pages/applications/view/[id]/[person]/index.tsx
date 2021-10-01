@@ -94,7 +94,10 @@ export default function ApplicationPersonPage({
               {applicant?.person?.firstName} {applicant?.person?.surname}
             </h2>
           </div>
-          <div className="govuk-grid-column-one-third" style={{textAlign: 'right'}}>
+          <div
+            className="govuk-grid-column-one-third"
+            style={{ textAlign: 'right' }}
+          >
             <a
               href={`${process.env.NEXT_PUBLIC_EVIDENCE_STORE}`}
               target="_blank"

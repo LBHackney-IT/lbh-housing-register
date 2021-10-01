@@ -6,7 +6,6 @@ import {
   HeadingOne,
   HeadingThree,
 } from '../../../../components/content/headings';
-import Paragraph from '../../../../components/content/paragraph';
 import Layout from '../../../../components/layout/staff-layout';
 import { HackneyGoogleUser } from '../../../../domain/HackneyGoogleUser';
 import { Application } from '../../../../domain/HousingApi';
@@ -18,15 +17,7 @@ import Snapshot from '../../../../components/applications/snapshot';
 import Actions from '../../../../components/applications/actions';
 import AssignUser from '../../../../components/applications/assign-user';
 import SensitiveData from '../../../../components/applications/sensitive-data';
-
-export function formatDate(date: string | undefined) {
-  if (!date) return '';
-  return `${new Date(date).toLocaleString('default', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  })}`;
-}
+import CaseDetails from '../../../../components/applications/case-details';
 
 export function getPersonName(application: Application | undefined) {
   if (!application?.mainApplicant?.person) return '';
@@ -114,31 +105,8 @@ export default function ApplicationPage({
               )}
             </div>
             <div className="govuk-grid-column-one-third">
-              <HeadingThree content="Case details" />
-              <Paragraph>
-                <strong>Application reference</strong>
-                <br />
-                {data.reference}
-              </Paragraph>
-              <Paragraph>
-                <strong>Status</strong>
-                <br />
-                {data.status}
-              </Paragraph>
-              <Paragraph>
-                <strong>Created date</strong>
-                <br />
-                {formatDate(data.createdAt)}
-              </Paragraph>
-              {data.submittedAt && (
-                <Paragraph>
-                  <strong>Submission date</strong>
-                  <br />
-                  {formatDate(data.submittedAt)}
-                </Paragraph>
-              )}
+              <CaseDetails application={data} />
               <AssignUser id={data.id} user={data.assignedTo} />
-
               <SensitiveData
                 id={data.id}
                 isSensitive={data.sensitiveData || false}

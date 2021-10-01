@@ -12,6 +12,7 @@ import { Application } from '../../../../domain/HousingApi';
 import { UserContext } from '../../../../lib/contexts/user-context';
 import { getApplication } from '../../../../lib/gateways/applications-api';
 import {
+  canViewSensitiveApplication,
   getRedirect,
   getSession,
   HackneyGoogleUserWithPermissions,
@@ -63,11 +64,11 @@ export default function ApplicationPage({
     <UserContext.Provider value={{ user }}>
       <Layout pageName="View application">
         {data.sensitiveData &&
-        ((!user.hasAdminPermissions &&
-          !user.hasManagerPermissions &&
-          !user.hasOfficerPermissions) ||
-          (user.hasOfficerPermissions && data.assignedTo !== user.email)) ? (
-          <h2>This application has been marked as sensitive.</h2>
+        !canViewSensitiveApplication(data.assignedTo!, user) ? (
+          <>
+            <h2>Access denied</h2>
+            <Paragraph>You are unable to view this application.</Paragraph>
+          </>
         ) : (
           <>
             <HeadingOne content="View application" />

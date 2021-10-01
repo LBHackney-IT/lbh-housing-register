@@ -7,7 +7,10 @@ import Layout from '../../components/layout/resident-layout';
 import DeleteLink from '../../components/delete-link';
 import Announcement from '../../components/announcement';
 import { Applicant } from '../../domain/HousingApi';
-import { calculateBedrooms } from '../../lib/utils/bedroomCalculator';
+import {
+  calculateBedrooms,
+  calculateBedroomsFromApplication,
+} from '../../lib/utils/bedroomCalculator';
 import { getGenderName } from '../../lib/utils/gender';
 import { getAgeInYears } from '../../lib/utils/dateOfBirth';
 import { getWaitingTime } from '../../lib/utils/bedroomWaitingTime';
@@ -23,22 +26,8 @@ const WhatToExpect = (): JSX.Element => {
     dispatch(exit());
   };
 
-  const applicants = useAppSelector((store) =>
-    [store.application.mainApplicant, store.application.otherMembers]
-      .filter((v): v is Applicant | Applicant[] => v !== undefined)
-      .flat()
-  );
-
-  const bedroomArray = applicants.map((applicant) => ({
-    age: getAgeInYears(applicant),
-    gender: getGenderName(applicant),
-  }));
-
-  const hasPartnerSharing = !!applicants.find(
-    (applicant) => applicant.person?.relationshipType === 'partner'
-  );
-
-  const bedroomNeed = calculateBedrooms(bedroomArray, hasPartnerSharing);
+  const application = useAppSelector((store) => store.application);
+  const bedroomNeed = calculateBedroomsFromApplication(application);
 
   const waitingTime = getWaitingTime(bedroomNeed);
 

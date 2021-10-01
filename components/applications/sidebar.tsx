@@ -10,6 +10,9 @@ export default function Sidebar(): JSX.Element {
       <li>
         <Link href={`/applications/unassigned`}>Group worktray</Link>
       </li>
+      <li>
+        <Link href="/applications/reports">Reports</Link>
+      </li>
     </ul>
   );
 }

@@ -1,5 +1,7 @@
+import { IncomingMessage } from 'http';
 import cookie from 'cookie';
 import jsonwebtoken from 'jsonwebtoken';
+import { Redirect } from 'next';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 
 type Permissions = {
@@ -79,3 +81,16 @@ export const getRedirect = (
     return '/access-denied';
   }
 };
+
+export function getAuth(
+  group: string,
+  user?: HackneyGoogleUser
+): { redirect: Redirect } | { user: HackneyGoogleUser } {
+  if (!user) {
+    return { redirect: { statusCode: 302, destination: '/login' } };
+  }
+  if (!hasUserGroup(group, user)) {
+    return { redirect: { statusCode: 302, destination: '/access-denied' } };
+  }
+  return { user };
+}

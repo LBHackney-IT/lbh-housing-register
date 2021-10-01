@@ -287,7 +287,19 @@ export interface Evidence {
    * @type {string}
    * @memberof Assessment
    */
-   band?: string;
+  informationReceivedDate?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Assessment
+   */
+  band?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Assessment
+   */
+  reason?: string;
    /**
    *
    * @type {string}

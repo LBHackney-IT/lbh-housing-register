@@ -8,6 +8,7 @@ import Radios from '../form/radios';
 import Input from '../form/input';
 import InsetText from '../content/inset-text';
 import { updateApplication } from '../../lib/gateways/internal-api';
+import router from 'next/router';
 
 interface PageProps {
   data: Application;
@@ -15,54 +16,54 @@ interface PageProps {
 
 export default function Actions({ data }: PageProps): JSX.Element {
 
-  const actionOptions = [
+  const statusOptions = [
     {
       label: 'Select an option',
       value: '',
     },
     {
-      label: 'Awaiting Assessment',
-      value: 'awaiting-assessment',
+      label: 'Submitted',
+      value: 'Submitted',
     },
     {
-      label: 'Activate',
-      value: 'activate',
+      label: 'Awaiting assessment',
+      value: 'AwaitingAssessment',
     },
     {
-      label: 'Refer for approval',
-      value: 'refer-for-approval',
+      label: 'Active',
+      value: 'Active',
     },
     {
-      label: 'Reject',
-      value: 'reject',
+      label: 'Referred for approval',
+      value: 'Referred',
     },
     {
-      label: 'Move to Pending',
-      value: 'move-to-pending',
+      label: 'Rejected',
+      value: 'Rejected',
     },
     {
-      label: 'Cancel',
-      value: 'cancel',
+      label: 'Pending',
+      value: 'Pending',
+    },
+    {
+      label: 'Cancelled',
+      value: 'Cancelled',
     },
     {
       label: 'Housed',
-      value: 'housed',
+      value: 'Housed',
     },
     {
       label: 'Active and under appeal',
-      value: 'active-and-under-appeal',
+      value: 'ActiveUnderAppeal',
     },
     {
       label: 'Inactive and under appeal',
-      value: 'inactive-and-under-appeal',
+      value: 'InactiveUnderAppeal',
     },
     {
-      label: 'Suspend',
-      value: 'suspend',
-    },
-    {
-      label: 'Transition Band',
-      value: 'transition-band',
+      label: 'Suspended',
+      value: 'Suspended',
     },
   ];
 
@@ -175,10 +176,10 @@ export default function Actions({ data }: PageProps): JSX.Element {
   ];
 
   const schema = Yup.object({
-    action: Yup.string()
-      .label('Action')
+    status: Yup.string()
+      .label('Status')
       .required()
-      .oneOf(actionOptions.map(({ value }) => value)),
+      .oneOf(statusOptions.map(({ value }) => value)),
     reason: Yup.string()
       .label('Reason')
       .oneOf(reasonOptions.map(({ value }) => value)),
@@ -190,10 +191,10 @@ export default function Actions({ data }: PageProps): JSX.Element {
   });
 
   const initialValues = {
-    action: '',
-    reason: '',
+    status: data.status ?? '',
+    reason: data.assessment?.reason ?? '',
     applicationDate: data.assessment?.effectiveDate ?? '',
-    informationRecieved: '',
+    informationRecieved: data.assessment?.informationReceivedDate ?? '',
     band: data.assessment?.band ?? '',
     biddingNumberType: data.assessment?.biddingNumber ? 'manual' : 'generate',
     biddingNumber: data.assessment?.biddingNumber ?? ''
@@ -202,13 +203,17 @@ export default function Actions({ data }: PageProps): JSX.Element {
   function onSubmit(values: FormikValues) {
     const request: Application = {
       id: data.id,
+      status: data.status,
       assessment: {
         effectiveDate: values.applicationDate,
+        informationReceivedDate: values.informationReceivedDate,
         band: values.band,
+        reason: values.reason,
         biddingNumber: values.biddingNumber
       },
     };
     updateApplication(request);
+    router.reload();
   }
 
   return (
@@ -219,7 +224,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
     >
       {({ isSubmitting, values }) => (
         <Form>
-          <Select label="Action" name="action" options={actionOptions} />
+          <Select label="Status" name="status" options={statusOptions} />
           <Select label="Reason" name="reason" options={reasonOptions} />
           <DateInput name={'applicationDate'} label={'Application date'} />
           <DateInput

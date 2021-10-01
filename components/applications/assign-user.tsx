@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Application } from '../../domain/HousingApi';
 import { updateApplication } from '../../lib/gateways/internal-api';
-import Button from '../button';
 
 interface AssignUserProps {
   id: string;
@@ -27,7 +26,7 @@ export default function AssignUser({ id, user }: AssignUserProps): JSX.Element {
   };
 
   return (
-    <>
+    <div>
       <label className="govuk-label lbh-label" htmlFor="input-assignee">
         <strong>Assigned to</strong>
       </label>
@@ -39,9 +38,13 @@ export default function AssignUser({ id, user }: AssignUserProps): JSX.Element {
         value={assignedTo}
         onChange={textChangeHandler}
       />
-      <Button onClick={() => assignTo()} secondary={true}>
+      <button
+        onClick={() => assignTo()}
+        className="lbh-link lbh-link--no-visited-state"
+        style={{marginTop: '0.5em'}}
+      >
         Assign
-      </Button>
-    </>
+      </button>
+    </div>
   );
 }

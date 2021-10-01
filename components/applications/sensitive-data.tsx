@@ -30,7 +30,7 @@ export default function SensitiveData({
       {sensitive && (
         <Button
           onClick={() => updateSensitiveDataStatus(false)}
-          secondary={false}
+          secondary={true}
         >
           Mark as not sensitive
         </Button>
@@ -38,7 +38,7 @@ export default function SensitiveData({
       {!sensitive && (
         <Button
           onClick={() => updateSensitiveDataStatus(true)}
-          secondary={false}
+          secondary={true}
         >
           Mark as sensitive
         </Button>

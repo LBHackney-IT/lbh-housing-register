@@ -17,7 +17,8 @@ import Snapshot from '../../../../components/applications/snapshot';
 import Actions from '../../../../components/applications/actions';
 import AssignUser from '../../../../components/applications/assign-user';
 import SensitiveData from '../../../../components/applications/sensitive-data';
-import CaseDetails from '../../../../components/applications/case-details';
+import Paragraph from '../../../../components/content/paragraph';
+import { formatDate } from '../../../../components/applications/application-table';
 
 export function getPersonName(application: Application | undefined) {
   if (!application?.mainApplicant?.person) return '';
@@ -40,8 +41,8 @@ export default function ApplicationPage({
 }: PageProps): JSX.Element {
   if (!data.id) return <Custom404 />;
 
-  type State = 'overview' | 'actions';
-  const [state, setState] = useState<State>('overview');
+  type AssessmentState = 'overview' | 'actions';
+  const [state, setState] = useState<AssessmentState>('overview');
 
   function isActive(selected: string) {
     return state == selected ? 'active' : '';
@@ -105,7 +106,66 @@ export default function ApplicationPage({
               )}
             </div>
             <div className="govuk-grid-column-one-third">
-              <CaseDetails application={data} />
+              <HeadingThree content="Case details" />
+              <Paragraph>
+                <strong>Application reference</strong>
+                <br />
+                {data.reference}
+              </Paragraph>
+              {data.assessment?.biddingNumber && (
+                <Paragraph>
+                  <strong>Bidding number</strong>
+                  <br />
+                  {data.assessment?.biddingNumber}
+                </Paragraph>
+              )}
+              <Paragraph>
+                <strong>Status</strong>
+                <br />
+                {data.status}
+                <button
+                  onClick={() => setState('actions')}
+                  className="lbh-link lbh-link--no-visited-state"
+                  style={{ marginTop: '0', marginLeft: '0.5em' }}
+                >
+                  Change
+                </button>
+              </Paragraph>
+              {data.submittedAt && (
+                <Paragraph>
+                  <strong>Date submitted</strong>
+                  <br />
+                  {formatDate(data.submittedAt)}
+                </Paragraph>
+              )}
+              {data.assessment?.effectiveDate && (
+                <Paragraph>
+                  <strong>Application date</strong>
+                  <br />
+                  {formatDate(data.assessment?.effectiveDate)}
+                  <button
+                    onClick={() => setState('actions')}
+                    className="lbh-link lbh-link--no-visited-state"
+                    style={{ marginTop: '0', marginLeft: '0.5em' }}
+                  >
+                    Change
+                  </button>
+                </Paragraph>
+              )}
+              {data.assessment?.band && (
+                <Paragraph>
+                  <strong>Band</strong>
+                  <br />
+                  Band {data.assessment?.band}
+                  <button
+                    onClick={() => setState('actions')}
+                    className="lbh-link lbh-link--no-visited-state"
+                    style={{ marginTop: '0', marginLeft: '0.5em' }}
+                  >
+                    Change
+                  </button>
+                </Paragraph>
+              )}
               <AssignUser id={data.id} user={data.assignedTo} />
               <SensitiveData
                 id={data.id}

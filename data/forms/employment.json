@@ -35,9 +35,9 @@
           }
         },
         {
-          "title": "Accommodation Address",
+          "title": "Accommodation address",
           "label": "Postcode",
-          "name": "address-finder",
+          "name": "student-address-finder",
           "validation": {
             "required": false
           },

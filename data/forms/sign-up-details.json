@@ -88,11 +88,17 @@
         {
           "label": "National Insurance number",
           "hint": "For example, AB 12 34 56 C",
-          "name": "nationalInsuranceNumber"
+          "name": "nationalInsuranceNumber",
+          "validation": {
+            "required": true
+          }
         },
         {
           "label": "Mobile number",
-          "name": "phoneNumber"
+          "name": "phoneNumber",
+          "validation": {
+            "required": true
+          }
         },
         {
           "label": "Email",
@@ -102,11 +108,6 @@
           "validation": {
             "required": true
           }
-        },
-        {
-          "name": "password",
-          "type": "hidden",
-          "initialValue": "Testing123!"
         }
       ]
     }

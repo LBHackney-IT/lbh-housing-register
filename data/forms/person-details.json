@@ -93,7 +93,8 @@
         },
         {
           "label": "Mobile number",
-          "name": "phoneNumber"
+          "name": "phoneNumber",
+          "type": "text"
         },
         {
           "label": "Email",

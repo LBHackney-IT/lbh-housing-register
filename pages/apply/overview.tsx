@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { ButtonLink } from '../../components/button';
 import { HeadingOne } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
@@ -11,8 +12,10 @@ import Tag from '../../components/tag';
 import ApplicantName from '../../components/application/ApplicantName';
 import { Applicant } from '../../domain/HousingApi';
 import { useAppSelector } from '../../lib/store/hooks';
+import { checkEligible } from '../../lib/utils/form';
 import { applicationStepsRemaining } from '../../lib/utils/resident';
 import withApplication from '../../lib/hoc/withApplication';
+import router from 'next/router';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
   const breadcrumbs = [
@@ -28,6 +31,19 @@ const ApplicationPersonsOverview = (): JSX.Element => {
       .filter((v): v is Applicant | Applicant[] => v !== undefined)
       .flat()
   );
+
+  const mainApplicant = useAppSelector(
+    (store) => store.application.mainApplicant
+  );
+
+  const [isEligible] = useMemo(
+    () => (mainApplicant && checkEligible(application)) ?? [],
+    [mainApplicant]
+  );
+
+  if (!isEligible) {
+    router.push('/apply/not-eligible');
+  }
 
   return (
     <Layout pageName="Application overview" breadcrumbs={breadcrumbs}>

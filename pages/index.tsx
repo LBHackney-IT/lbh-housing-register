@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -16,15 +17,31 @@ import Table, {
 } from '../components/content/table';
 import Layout from '../components/layout/resident-layout';
 import { useAppSelector } from '../lib/store/hooks';
+import { checkEligible } from '../lib/utils/form';
 
 export default function ApplicationHomePage(): JSX.Element {
   const router = useRouter();
   const isLoggedIn = useAppSelector((store) => store.cognitoUser?.username);
+
+  const application = useAppSelector((store) => store.application);
+  const mainApplicant = useAppSelector(
+    (store) => store.application.mainApplicant
+  );
+
+  const [isEligible] = useMemo(
+    () => (mainApplicant && checkEligible(application)) ?? [],
+    [mainApplicant]
+  );
+
   useEffect(() => {
     if (isLoggedIn) {
-      router.push('/apply/overview');
+      if (isEligible) {
+        router.push('/apply/overview');
+      } else {
+        router.push('/apply/not-eligible');
+      }
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, isEligible]);
 
   return (
     <Layout pageName="Home">

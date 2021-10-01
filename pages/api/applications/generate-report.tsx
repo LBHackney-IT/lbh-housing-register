@@ -78,7 +78,7 @@ const endpoint: NextApiHandler = async (
         res.setHeader('Content-Type', 'text/csv');
         res.setHeader(
           'Content-Disposition',
-          `attachment;filename=LBH-housing-register-${new Date().toLocaleDateString()}`
+          `attachment;filename=LBH-housing-register-${new Date().toLocaleDateString()}.csv`
         );
         res.send(csv.getHeaderString() + csv.stringifyRecords(pages.flat()));
       } catch (error) {

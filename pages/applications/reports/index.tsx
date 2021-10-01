@@ -1,5 +1,8 @@
 import { GetServerSideProps, GetServerSidePropsResult } from 'next';
+import React from 'react';
+import Sidebar from '../../../components/applications/sidebar';
 import { ButtonLink } from '../../../components/button';
+import { HeadingOne } from '../../../components/content/headings';
 import Layout from '../../../components/layout/staff-layout';
 import { HackneyGoogleUser } from '../../../domain/HackneyGoogleUser';
 import { UserContext } from '../../../lib/contexts/user-context';
@@ -13,9 +16,17 @@ export default function Reports({ user }: ReportsProps) {
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="Reports">
-        <ButtonLink href="/api/applications/generate-report">
-          Download .CSV file
-        </ButtonLink>
+        <div className="govuk-grid-row">
+          <div className="govuk-grid-column-one-quarter">
+            <Sidebar />
+          </div>
+          <div className="govuk-grid-column-three-quarters">
+            <HeadingOne content="Generate a report" />
+            <ButtonLink href="/api/applications/generate-report">
+              Download .CSV file
+            </ButtonLink>
+          </div>
+        </div>
       </Layout>
     </UserContext.Provider>
   );

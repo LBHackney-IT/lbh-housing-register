@@ -14,7 +14,7 @@ const headersWithKey = {
 };
 
 export const getApplications = async (
-  page: string,
+  page: string | number,
   user?: string
 ): Promise<PaginatedApplicationListResponse | null> => {
   try {

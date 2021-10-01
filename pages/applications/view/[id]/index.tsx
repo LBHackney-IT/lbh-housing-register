@@ -6,7 +6,6 @@ import {
   HeadingOne,
   HeadingThree,
 } from '../../../../components/content/headings';
-import Paragraph from '../../../../components/content/paragraph';
 import Layout from '../../../../components/layout/staff-layout';
 import { Application } from '../../../../domain/HousingApi';
 import { UserContext } from '../../../../lib/contexts/user-context';
@@ -22,15 +21,8 @@ import Snapshot from '../../../../components/applications/snapshot';
 import Actions from '../../../../components/applications/actions';
 import AssignUser from '../../../../components/applications/assign-user';
 import SensitiveData from '../../../../components/applications/sensitive-data';
-
-export function formatDate(date: string | undefined) {
-  if (!date) return '';
-  return `${new Date(date).toLocaleString('default', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  })}`;
-}
+import Paragraph from '../../../../components/content/paragraph';
+import { formatDate } from '../../../../components/applications/application-table';
 
 export function getPersonName(application: Application | undefined) {
   if (!application?.mainApplicant?.person) return '';
@@ -53,8 +45,8 @@ export default function ApplicationPage({
 }: PageProps): JSX.Element {
   if (!data.id) return <Custom404 />;
 
-  type State = 'overview' | 'actions';
-  const [state, setState] = useState<State>('overview');
+  type AssessmentState = 'overview' | 'actions';
+  const [state, setState] = useState<AssessmentState>('overview');
 
   function isActive(selected: string) {
     return state == selected ? 'active' : '';
@@ -129,21 +121,58 @@ export default function ApplicationPage({
                     <br />
                     {data.reference}
                   </Paragraph>
+                  {data.assessment?.biddingNumber && (
+                    <Paragraph>
+                      <strong>Bidding number</strong>
+                      <br />
+                      {data.assessment?.biddingNumber}
+                    </Paragraph>
+                  )}
                   <Paragraph>
                     <strong>Status</strong>
                     <br />
                     {data.status}
-                  </Paragraph>
-                  <Paragraph>
-                    <strong>Created date</strong>
-                    <br />
-                    {formatDate(data.createdAt)}
+                    <button
+                      onClick={() => setState('actions')}
+                      className="lbh-link lbh-link--no-visited-state"
+                      style={{ marginTop: '0', marginLeft: '0.5em' }}
+                    >
+                      Change
+                    </button>
                   </Paragraph>
                   {data.submittedAt && (
                     <Paragraph>
-                      <strong>Submission date</strong>
+                      <strong>Date submitted</strong>
                       <br />
                       {formatDate(data.submittedAt)}
+                    </Paragraph>
+                  )}
+                  {data.assessment?.effectiveDate && (
+                    <Paragraph>
+                      <strong>Application date</strong>
+                      <br />
+                      {formatDate(data.assessment?.effectiveDate)}
+                      <button
+                        onClick={() => setState('actions')}
+                        className="lbh-link lbh-link--no-visited-state"
+                        style={{ marginTop: '0', marginLeft: '0.5em' }}
+                      >
+                        Change
+                      </button>
+                    </Paragraph>
+                  )}
+                  {data.assessment?.band && (
+                    <Paragraph>
+                      <strong>Band</strong>
+                      <br />
+                      Band {data.assessment?.band}
+                      <button
+                        onClick={() => setState('actions')}
+                        className="lbh-link lbh-link--no-visited-state"
+                        style={{ marginTop: '0', marginLeft: '0.5em' }}
+                      >
+                        Change
+                      </button>
                     </Paragraph>
                   )}
 

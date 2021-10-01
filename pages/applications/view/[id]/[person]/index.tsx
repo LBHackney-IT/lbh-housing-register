@@ -107,9 +107,12 @@ export default function ApplicationPersonPage({
                   {applicant?.person?.firstName} {applicant?.person?.surname}
                 </h2>
               </div>
-              <div className="govuk-grid-column-one-thirds">
+              <div
+                className="govuk-grid-column-one-third"
+                style={{ textAlign: 'right' }}
+              >
                 <a
-                  href="https://evidence-store-staging.hackney.gov.uk/teams/7/dashboard"
+                  href={`${process.env.NEXT_PUBLIC_EVIDENCE_STORE}`}
                   target="_blank"
                 >
                   <Button>View Documents</Button>

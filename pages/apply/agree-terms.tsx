@@ -1,7 +1,6 @@
 import { HeadingOne } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
 import Layout from '../../components/layout/resident-layout';
-import { updateUserAttribute } from '../../lib/store/cognitoUser';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { agree } from '../../lib/store/mainApplicant';
 import { getFormData, FormID } from '../../lib/utils/form-data';
@@ -20,8 +19,6 @@ const ApplicationTermsPage = (): JSX.Element => {
     }
 
     dispatch(agree());
-    dispatch(updateUserAttribute({ applicationId: applicationId }));
-
     router.push('/apply/household');
   };
 

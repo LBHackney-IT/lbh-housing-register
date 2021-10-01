@@ -22,6 +22,11 @@ const ApplicationPersonsOverview = (): JSX.Element => {
     },
   ];
 
+  const mainResident = useAppSelector((s) => s.application.mainApplicant);
+  if (!mainResident) {
+    return <></>;
+  }
+
   const application = useAppSelector((store) => store.application);
   const applicants = useAppSelector((store) =>
     [store.application.mainApplicant, store.application.otherMembers]

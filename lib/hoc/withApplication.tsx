@@ -7,12 +7,7 @@ export default function withApplication<P>(
 ) {
   return (props: P) => {
     const router = useRouter();
-
-    const isLoggedIn = useAppSelector((store) => store.cognitoUser?.username);
-    if (!isLoggedIn) {
-      router.push('/');
-    }
-    const application = useAppSelector((store) => store.application);
+    const application = useAppSelector((store) => store.application.id);
     if (!application) {
       router.push('/');
     }

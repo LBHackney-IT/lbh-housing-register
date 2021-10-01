@@ -5,21 +5,19 @@ import PersonalDetails from '../../../../components/applications/personal-detail
 import {
   HeadingOne,
   HeadingThree,
-  HeadingTwo,
 } from '../../../../components/content/headings';
 import Paragraph from '../../../../components/content/paragraph';
 import Layout from '../../../../components/layout/staff-layout';
-import Tag from '../../../../components/tag';
 import { HackneyGoogleUser } from '../../../../domain/HackneyGoogleUser';
 import { Application } from '../../../../domain/HousingApi';
 import { UserContext } from '../../../../lib/contexts/user-context';
 import { getApplication } from '../../../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../../../lib/utils/auth';
-import { getStatusTag } from '../../../../lib/utils/tag';
 import Custom404 from '../../../404';
 import Snapshot from '../../../../components/applications/snapshot';
 import Actions from '../../../../components/applications/actions';
 import AssignUser from '../../../../components/applications/assign-user';
+import SensitiveData from '../../../../components/applications/sensitive-data';
 
 export function formatDate(date: string | undefined) {
   if (!date) return '';
@@ -40,7 +38,7 @@ export function getPersonName(application: Application | undefined) {
   return name;
 }
 
-interface PageProps {
+export interface PageProps {
   user: HackneyGoogleUser;
   data: Application;
 }
@@ -54,28 +52,47 @@ export default function ApplicationPage({
   type State = 'overview' | 'actions';
   const [state, setState] = useState<State>('overview');
 
+  function isActive(selected: string) {
+    return state == selected ? 'active' : '';
+  }
+
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="View application">
+        {data.sensitiveData && (
+          <h2>This application has been marked as sensitive.</h2>
+        )}
         <HeadingOne content="View application" />
-        <HeadingTwo content={getPersonName(data)} />
-        <button
-          onClick={() => {
-            setState('overview');
-          }}
-          className="lbh-link lbh-link--no-visited-state"
+        <h2
+          className="lbh-heading-h2"
+          style={{ marginTop: '0.5em', color: '#525a5b' }}
         >
-          Overview
-        </button>{' '}
-        <button
-          onClick={() => {
-            setState('actions');
-          }}
-          className="lbh-link lbh-link--no-visited-state"
-        >
-          Actions
-        </button>
-        <hr />
+          {getPersonName(data)}
+        </h2>
+
+        <div className="lbh-link-group">
+          <button
+            onClick={() => {
+              setState('overview');
+            }}
+            className={`lbh-link lbh-link--no-visited-state ${isActive(
+              'overview'
+            )}`}
+          >
+            Overview
+          </button>{' '}
+          <button
+            onClick={() => {
+              setState('actions');
+            }}
+            className={`lbh-link lbh-link--no-visited-state ${isActive(
+              'actions'
+            )}`}
+          >
+            Actions
+          </button>
+        </div>
+
         {state == 'overview' && (
           <div className="govuk-grid-row">
             <div className="govuk-grid-column-two-thirds">
@@ -98,27 +115,34 @@ export default function ApplicationPage({
             </div>
             <div className="govuk-grid-column-one-third">
               <HeadingThree content="Case details" />
-              <Tag
-                content={data.status || ''}
-                className={getStatusTag(data.status || '')}
-              />
               <Paragraph>
                 <strong>Application reference</strong>
                 <br />
                 {data.reference}
               </Paragraph>
               <Paragraph>
+                <strong>Status</strong>
+                <br />
+                {data.status}
+              </Paragraph>
+              <Paragraph>
                 <strong>Created date</strong>
                 <br />
                 {formatDate(data.createdAt)}
               </Paragraph>
-              <Paragraph>
-                <strong>Submission date</strong>
-                <br />
-                {formatDate(data.submittedAt)}
-              </Paragraph>
-
+              {data.submittedAt && (
+                <Paragraph>
+                  <strong>Submission date</strong>
+                  <br />
+                  {formatDate(data.submittedAt)}
+                </Paragraph>
+              )}
               <AssignUser id={data.id} user={data.assignedTo} />
+
+              <SensitiveData
+                id={data.id}
+                isSensitive={data.sensitiveData || false}
+              />
             </div>
           </div>
         )}
@@ -130,10 +154,7 @@ export default function ApplicationPage({
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const user = getSession(context.req);
-  const redirect = getRedirect(
-    process.env.AUTHORISED_ADMIN_GROUP as string,
-    user
-  );
+  const redirect = getRedirect(user);
   if (redirect) {
     return {
       props: {},

@@ -79,6 +79,72 @@ export interface Applicant {
    * @memberof Applicant
    */
   questions?: Array<Question>;
+
+  /**
+   *
+   * @type {MedicalNeed}
+   * @memberof Applicant
+   */
+  medicalNeed?: MedicalNeed;
+
+  /**
+   *
+   * @type {MedicalOutCome}
+   * @memberof Applicant
+   */
+  medicalOutcome?: MedicalOutcome;
+}
+
+export interface MedicalNeed {
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalNeed
+   */
+  formRecieved?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalNeed
+   */
+  formLink?: string;
+}
+
+export interface MedicalOutcome {
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalOutCome
+   */
+  accessibileHousingRegister?: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalOutCome
+   */
+  additionalInformaton?: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalOutCome
+   */
+  assessmentDate?: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalOutCome
+   */
+  disability?: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalOutCome
+   */
+  outcome?: string;
 }
 
 /**
@@ -105,6 +171,13 @@ export interface Application {
    * @memberof Application
    */
   assignedTo?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Application
+   */
+  sensitiveData?: boolean;
+
   /**
    *
    * @type {string}
@@ -345,4 +418,19 @@ export interface PaginatedApplicationListResponse {
    * @memberof PaginatedApplicationListResponse
    */
   results: Array<Application>;
+}
+
+export interface CreateAuthRequest {
+  email: string;
+}
+export interface CreateAuthResponse {
+  success: boolean;
+}
+
+export interface VerifyAuthRequest {
+  email: string;
+  code: string;
+}
+export interface VerifyAuthResponse {
+  accessToken: string;
 }

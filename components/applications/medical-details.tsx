@@ -1,105 +1,59 @@
-import { Applicant } from '../../domain/HousingApi';
+import { Application } from '../../domain/HousingApi';
+import AdminForm from './admin-form';
+import { FormID, getFormData } from '../../lib/utils/form-data';
+import { FormikValues } from 'formik';
+import { useAppDispatch } from '../../lib/store/hooks';
+import { applicantHasId } from '../../lib/store/applicant';
+import { updateApplication } from '../../lib/store/application';
+import { useRouter } from 'next/router';
 
 export interface MedicalDetailPageProps {
-  assessmentRequested: string;
-  linkToMedicalForm: string;
-  dateFormRecieved?: Date;
-  assessmentDate?: Date;
-  outcome: string;
-  accessibleHousingRegister: string;
-  disability: string;
-  additionalInformation: string;
+  data: Application;
+  initialValues: FormikValues;
 }
 
 export default function MedicalDetail({
-  assessmentRequested,
-  linkToMedicalForm,
-  dateFormRecieved,
-  assessmentDate,
-  outcome,
-  accessibleHousingRegister,
-  disability,
-  additionalInformation,
-}: MedicalDetailPageProps) {
+  data,
+  initialValues,
+}: MedicalDetailPageProps): JSX.Element {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
+  const formData = getFormData(FormID.ADMIN_HEALTH_ACTIONS);
+
+  const returnUrl = `/applications/view/${data.id}`;
+
+  const nextStep = (values: FormikValues) => {
+    if (applicantHasId(data.mainApplicant)) {
+      const request: Application = {
+        ...data,
+        mainApplicant: {
+          ...data.mainApplicant,
+          medicalNeed: {
+            formRecieved: values.dateFormRecieved,
+            formLink: values.linkToMedicalForm,
+          },
+          medicalOutcome: {
+            accessibileHousingRegister: values.accessibleHousingRegister,
+            additionalInformaton: values.additionalInformation,
+            assessmentDate: values.assessmentDate,
+            disability: values.disability,
+            outcome: values.outcome,
+          },
+        },
+      };
+
+      dispatch(updateApplication(request));
+      router.push(returnUrl);
+    }
+  };
+
   return (
-    <>
-      <table className="govuk-table lbh-table">
-        <caption className="govuk-table__caption lbh-heading-h3 lbh-table__caption">
-          Medical Need
-        </caption>
-        <thead className="govuk-table__head">
-          <tr className="govuk-table__row">
-            <th scope="col" className="govuk-table__header"></th>
-            <th scope="col" className="govuk-table__header"></th>
-          </tr>
-        </thead>
-        <tbody className="govuk-table__body">
-          <tr className="govuk-table__row">
-            <th scope="row" className="govuk-table__header">
-              Assessment requested
-            </th>
-            <td className="govuk-table__cell">{assessmentRequested}</td>
-          </tr>
-          <tr className="govuk-table__row">
-            <th scope="row" className="govuk-table__header">
-              Link to medical form
-            </th>
-            <td className="govuk-table__cell">{linkToMedicalForm}</td>
-          </tr>
-          <tr className="govuk-table__row">
-            <th scope="row" className="govuk-table__header">
-              Date form recieved
-            </th>
-            <td className="govuk-table__cell">{dateFormRecieved}</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <table className="govuk-table lbh-table">
-        <caption className="govuk-table__caption lbh-heading-h3 lbh-table__caption">
-          Medical Outcome
-        </caption>
-        <thead className="govuk-table__head">
-          <tr className="govuk-table__row">
-            <th scope="col" className="govuk-table__header"></th>
-            <th scope="col" className="govuk-table__header"></th>
-          </tr>
-        </thead>
-        <tbody className="govuk-table__body">
-          <tr className="govuk-table__row">
-            <th scope="row" className="govuk-table__header">
-              Assessment date
-            </th>
-            <td className="govuk-table__cell">{assessmentDate}</td>
-          </tr>
-          <tr className="govuk-table__row">
-            <th scope="row" className="govuk-table__header">
-              Outcome
-            </th>
-            <td className="govuk-table__cell">{outcome}</td>
-          </tr>
-          <tr className="govuk-table__row">
-            <th scope="row" className="govuk-table__header">
-              Accessible housing register
-            </th>
-            <td className="govuk-table__cell">{accessibleHousingRegister}</td>
-          </tr>
-
-          <tr className="govuk-table__row">
-            <th scope="row" className="govuk-table__header">
-              Disability
-            </th>
-            <td className="govuk-table__cell">{disability}</td>
-          </tr>
-
-          <tr className="govuk-table__row">
-            <th scope="row" className="govuk-table__header">
-              Additional information
-            </th>
-            <td className="govuk-table__cell">{additionalInformation}</td>
-          </tr>
-        </tbody>
-      </table>
-    </>
+    <AdminForm
+      initialValues={initialValues}
+      buttonText="Update Application"
+      formData={formData}
+      onSubmit={nextStep}
+    />
   );
 }

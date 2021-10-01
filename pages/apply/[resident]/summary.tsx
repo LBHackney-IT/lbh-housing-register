@@ -45,7 +45,7 @@ const UserSummary = (): JSX.Element => {
   const returnHref = '/apply/overview';
 
   const onConfirmData = () => {
-    const [isEligible] = checkEligible(mainResident);
+    const [isEligible] = checkEligible(application);
     if (!isEligible) {
       dispatch(sendDisqualifyEmail(application));
       router.push('/apply/not-eligible');

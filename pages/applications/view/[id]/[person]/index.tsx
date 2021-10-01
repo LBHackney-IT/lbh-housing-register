@@ -25,6 +25,7 @@ import MedicalDetail, {
   MedicalDetailPageProps,
 } from '../../../../../components/applications/medical-details';
 import { HeadingOne } from '../../../../../components/content/headings';
+import Button from '../../../../../components/button';
 
 export function formatDate(date: string | undefined) {
   if (!date) return '';
@@ -60,6 +61,10 @@ export default function ApplicationPersonPage({
     | 'checklist';
   const [state, setState] = useState<State>('identity');
 
+  function isActive(selected: string) {
+    return state == selected ? 'active' : '';
+  }
+
   const personalDetails = personalDetailsCheckboxList(applicant);
   const immigrationStatus = immigrationStatusCheckboxList(applicant);
   const livingSituation = livingSituationCheckboxList(applicant);
@@ -68,58 +73,88 @@ export default function ApplicationPersonPage({
   const situation = situationCheckboxList(applicant);
   const employment = employmentCheckboxList(applicant);
   const incomeAndSavings = incomeAndSavingsCheckboxList(applicant);
-  const medicalDetails = medicalDetailsPageData(applicant);
+  const medicalDetails = medicalDetailsPageData(data);
 
   return (
     <UserContext.Provider value={{ user }}>
       <Layout>
-        <HeadingOne
-          content={
-            isMainApplicant
-              ? 'Review main applicant'
-              : 'Review household member'
-          }
-        />
-        <button
-          onClick={() => {
-            setState('identity');
-          }}
-          className="lbh-link lbh-link--no-visited-state"
-        >
-          Identity
-        </button>{' '}
-        <button
-          onClick={() => {
-            setState('livingsituation');
-          }}
-          className="lbh-link lbh-link--no-visited-state"
-        >
-          Living Situation
-        </button>{' '}
-        <button
-          onClick={() => {
-            setState('money');
-          }}
-          className="lbh-link lbh-link--no-visited-state"
-        >
-          Money
-        </button>{' '}
-        <button
-          onClick={() => {
-            setState('health');
-          }}
-          className="lbh-link lbh-link--no-visited-state"
-        >
-          Health
-        </button>{' '}
-        {/* <button
-          onClick={() => {
-            setState('checklist');
-          }}
-          className="lbh-link lbh-link--no-visited-state"
-        >
-          Checklist
-        </button> */}
+        <div className="govuk-grid-row">
+          <div className="govuk-grid-column-two-thirds">
+            <HeadingOne
+              content={
+                isMainApplicant
+                  ? 'Review main applicant'
+                  : 'Review household member'
+              }
+            />
+            <h2
+              className="lbh-heading-h2"
+              style={{ marginTop: '0.5em', color: '#525a5b' }}
+            >
+              {applicant?.person?.firstName} {applicant?.person?.surname}
+            </h2>
+          </div>
+          <div className="govuk-grid-column-one-thirds">
+            <a
+              href="https://evidence-store-staging.hackney.gov.uk/teams/7/dashboard"
+              target="_blank"
+            >
+              <Button>View Documents</Button>
+            </a>
+          </div>
+        </div>
+
+        <div className="lbh-link-group">
+          <button
+            onClick={() => {
+              setState('identity');
+            }}
+            className={`lbh-link lbh-link--no-visited-state ${isActive(
+              'identity'
+            )}`}
+          >
+            Identity
+          </button>{' '}
+          <button
+            onClick={() => {
+              setState('livingsituation');
+            }}
+            className={`lbh-link lbh-link--no-visited-state ${isActive(
+              'livingsituation'
+            )}`}
+          >
+            Living Situation
+          </button>{' '}
+          <button
+            onClick={() => {
+              setState('money');
+            }}
+            className={`lbh-link lbh-link--no-visited-state ${isActive(
+              'money'
+            )}`}
+          >
+            Money
+          </button>{' '}
+          <button
+            onClick={() => {
+              setState('health');
+            }}
+            className={`lbh-link lbh-link--no-visited-state ${isActive(
+              'health'
+            )}`}
+          >
+            Health
+          </button>{' '}
+          {/* <button
+            onClick={() => {
+              setState('checklist');
+            }}
+            className={`lbh-link lbh-link--no-visited-state ${isActive('checklist')}`}
+          >
+            Checklist
+          </button> */}
+        </div>
+
         {state == 'identity' && (
           <>
             <CheckBoxList {...(personalDetails as CheckBoxListPageProps)} />
@@ -151,10 +186,7 @@ export default function ApplicationPersonPage({
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const user = getSession(context.req);
-  const redirect = getRedirect(
-    process.env.AUTHORISED_ADMIN_GROUP as string,
-    user
-  );
+  const redirect = getRedirect(user);
   if (redirect) {
     return {
       props: {},
@@ -164,7 +196,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  console.log(context.params);
   const { id, person } = context.params as {
     id: string;
     person: string;

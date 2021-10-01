@@ -1,6 +1,6 @@
 import { Application } from '../../domain/HousingApi';
 import Paragraph from '../../components/content/paragraph';
-import { applicantHasMedicalNeed } from '../../lib/utils/medicalNeed';
+import { applicantsWithMedicalNeed } from '../../lib/utils/medicalNeed';
 import { questionLookup } from '../../lib/utils/applicationQuestions';
 
 interface PageProps {
@@ -20,20 +20,7 @@ export default function Snapshot({ data }: PageProps): JSX.Element {
   }
 
   function medicalNeedText() {
-    const mainApplicantHasMedicalNeed = applicantHasMedicalNeed(
-      data.mainApplicant
-    );
-
-    const otherApplicantsWithMedicalNeeds = data.otherMembers?.map(
-      (applicant) => applicantHasMedicalNeed(applicant)
-    );
-
-    const totalNumberOfPeopleWithMedicalNeeds =
-      (mainApplicantHasMedicalNeed === true ? 1 : 0) +
-      (otherApplicantsWithMedicalNeeds?.length === undefined
-        ? 0
-        : otherApplicantsWithMedicalNeeds.length);
-
+    const totalNumberOfPeopleWithMedicalNeeds = applicantsWithMedicalNeed(data);
     switch (totalNumberOfPeopleWithMedicalNeeds) {
       case 0:
         return 'No one has a medical need';

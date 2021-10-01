@@ -13,6 +13,7 @@ export default function Select({
   label,
   name,
   options,
+  hideLabel,
 }: Omit<SelectFormField, 'as'>): ReactElement {
   return (
     <Field name={name}>
@@ -25,7 +26,12 @@ export default function Select({
       }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
           {label && (
-            <Label content={label} htmlFor={field.name} strong={true} />
+            <Label
+              content={label}
+              htmlFor={field.name}
+              strong={true}
+              hideLabel={hideLabel}
+            />
           )}
           {hint && <Hint content={hint} />}
           {details && (

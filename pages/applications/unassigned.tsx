@@ -111,10 +111,7 @@ export default function ApplicationListPage({
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const user = getSession(context.req);
-  const redirect = getRedirect(
-    process.env.AUTHORISED_ADMIN_GROUP as string,
-    user
-  );
+  const redirect = getRedirect(user);
   if (redirect) {
     return {
       props: {},

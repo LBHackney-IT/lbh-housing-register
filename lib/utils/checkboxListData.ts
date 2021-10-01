@@ -11,7 +11,6 @@ import {
   calculateDurations,
 } from '../../lib/utils/addressHistory';
 import { formatDate } from '../../lib/utils/dateOfBirth';
-import '../extensions/.stringExtensions';
 import { FormikValues } from 'formik';
 
 const legalStaus = (option: string): string => {

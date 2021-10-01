@@ -71,6 +71,19 @@ export const hasUserGroup = (
   return user.groups.includes(group);
 };
 
+export const canViewSensitiveApplication = (
+  assignedTo: string,
+  user: HackneyGoogleUserWithPermissions
+): boolean => {
+  if (user.hasAdminPermissions || user.hasManagerPermissions) {
+    // can see everything
+    return true;
+  } else {
+    // check assigned
+    return user.hasOfficerPermissions && assignedTo === user.email;
+  }
+};
+
 export const getRedirect = (
   user?: HackneyGoogleUser & { hasAnyPermissions: boolean }
 ): string | undefined => {

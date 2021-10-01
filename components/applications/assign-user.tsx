@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Application } from '../../domain/HousingApi';
-import { updateApplication } from '../../lib/store/application';
-import { useAppDispatch } from '../../lib/store/hooks';
+import { updateApplication } from '../../lib/gateways/internal-api';
 import Button from '../button';
 
 interface AssignUserProps {
@@ -11,7 +10,6 @@ interface AssignUserProps {
 
 export default function AssignUser({ id, user }: AssignUserProps): JSX.Element {
   const [assignedTo, setAssignedTo] = useState(user);
-  const dispatch = useAppDispatch();
 
   const textChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -25,7 +23,7 @@ export default function AssignUser({ id, user }: AssignUserProps): JSX.Element {
       id: id,
       assignedTo: assignedTo,
     };
-    dispatch(updateApplication(request));
+    updateApplication(request);
   };
 
   return (

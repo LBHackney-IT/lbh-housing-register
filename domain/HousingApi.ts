@@ -208,6 +208,12 @@ export interface Application {
    * @memberof Application
    */
   otherMembers?: Array<Applicant>;
+  /**
+   *
+   * @type {Assessment}
+   * @memberof Application
+   */
+  assessment?: Assessment;
 }
 
 /**
@@ -262,6 +268,44 @@ export interface Evidence {
    * @memberof Evidence
    */
   id?: string;
+}
+
+/**
+ *
+ * @export
+ * @interface Assessment
+ */
+export interface Assessment {
+  /**
+   *
+   * @type {string}
+   * @memberof Assessment
+   */
+  effectiveDate?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Assessment
+   */
+  informationReceivedDate?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Assessment
+   */
+  band?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Assessment
+   */
+  reason?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Assessment
+   */
+  biddingNumber?: string;
 }
 
 /**

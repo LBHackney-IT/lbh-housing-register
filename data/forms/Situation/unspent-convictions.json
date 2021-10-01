@@ -5,7 +5,7 @@
       "fields": [
         {
           "as": "radios",
-          "label": "Does anyone in your household have any unspent convictions? (If Yes, provide details)",
+          "label": "Does anyone in your household have any unspent convictions?",
           "name": "unspent-convictions",
           "options": [
             {

@@ -5,7 +5,7 @@
       "fields": [
         {
           "as": "radios",
-          "label": "Do you have medical need?",
+          "label": "Does anyone in your household have any significant medical conditions that affect the type of housing you need?",
           "name": "medical-need",
           "options": [
             {

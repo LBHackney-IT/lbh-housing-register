@@ -17,7 +17,7 @@
       "fields": [
         {
           "as": "radios",
-          "label": "Has Hackney been your main residence for the last 3 years?",
+          "label": "Are you currently and continually resided in the borough for 3 years or more?",
           "name": "residential-status",
           "options": [
             {
@@ -519,7 +519,7 @@
         },
         {
           "as": "checkboxes",
-          "label": "Have you been in the following institutions for the last 3 years or more?",
+          "label": "Have you been staying in any of the following institutions for the last 3 years or more?",
           "name": "institutions",
           "options": [
             {

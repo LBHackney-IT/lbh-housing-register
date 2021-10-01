@@ -41,7 +41,7 @@ export default function AssignUser({ id, user }: AssignUserProps): JSX.Element {
       <button
         onClick={() => assignTo()}
         className="lbh-link lbh-link--no-visited-state"
-        style={{marginTop: '0.5em'}}
+        style={{ marginTop: '0.5em' }}
       >
         Assign
       </button>

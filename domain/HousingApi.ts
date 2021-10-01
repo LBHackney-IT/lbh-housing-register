@@ -213,7 +213,7 @@ export interface Application {
    * @type {Assessment}
    * @memberof Application
    */
-   assessment?: Assessment;
+  assessment?: Assessment;
 }
 
 /**
@@ -275,7 +275,7 @@ export interface Evidence {
  * @export
  * @interface Assessment
  */
- export interface Assessment {
+export interface Assessment {
   /**
    *
    * @type {string}
@@ -300,7 +300,7 @@ export interface Evidence {
    * @memberof Assessment
    */
   reason?: string;
-   /**
+  /**
    *
    * @type {string}
    * @memberof Assessment

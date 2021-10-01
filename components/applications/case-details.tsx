@@ -9,7 +9,7 @@ interface CaseDetailsProps {
 }
 
 export default function CaseDetails({
-  application
+  application,
 }: CaseDetailsProps): JSX.Element {
   return (
     <>

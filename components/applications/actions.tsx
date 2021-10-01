@@ -15,7 +15,6 @@ interface PageProps {
 }
 
 export default function Actions({ data }: PageProps): JSX.Element {
-
   const statusOptions = [
     {
       label: 'Select an option',
@@ -197,7 +196,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
     informationRecieved: data.assessment?.informationReceivedDate ?? '',
     band: data.assessment?.band ?? '',
     biddingNumberType: data.assessment?.biddingNumber ? 'manual' : 'generate',
-    biddingNumber: data.assessment?.biddingNumber ?? ''
+    biddingNumber: data.assessment?.biddingNumber ?? '',
   };
 
   function onSubmit(values: FormikValues) {
@@ -209,7 +208,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
         informationReceivedDate: values.informationReceivedDate,
         band: values.band,
         reason: values.reason,
-        biddingNumber: values.biddingNumber
+        biddingNumber: values.biddingNumber,
       },
     };
     updateApplication(request);

@@ -37,7 +37,7 @@
         {
           "title": "Accommodation address",
           "label": "Postcode",
-          "name": "student-address-finder",
+          "name": "address-finder",
           "validation": {
             "required": false
           },

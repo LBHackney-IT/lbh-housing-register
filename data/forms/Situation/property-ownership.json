@@ -5,7 +5,7 @@
       "fields": [
         {
           "as": "radios",
-          "label": "Do you own any property?",
+          "label": "Do you own or co-own any properties within the UK or abroad?",
           "name": "property-ownership",
           "options": [
             {

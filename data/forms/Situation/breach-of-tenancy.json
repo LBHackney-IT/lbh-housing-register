@@ -5,7 +5,7 @@
       "fields": [
         {
           "as": "radios",
-          "label": "Has anyone in your household ever received a warning for a breach of tenancy? (If Yes, provide details)",
+          "label": "Has anyone in your household ever received a warning for a breach of tenancy?",
           "name": "breach-of-tenancy",
           "options": [
             {

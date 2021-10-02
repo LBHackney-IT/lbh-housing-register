@@ -108,9 +108,3 @@ export function checkEligible(application: Application): [boolean, string[]] {
 
   return [isValid, reasons];
 }
-
-export function formatDate(date: Date) {
-  return `${date.toLocaleString('default', {
-    month: 'long',
-  })} ${date.getFullYear()}`;
-}

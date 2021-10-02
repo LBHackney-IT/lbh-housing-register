@@ -5,15 +5,7 @@ import { getStatusTag } from '../../lib/utils/tag';
 import Paragraph from '../content/paragraph';
 import Tag from '../tag';
 import Pagination from '../pagination';
-
-export function formatDate(date: string | undefined) {
-  if (!date) return '';
-  return `${new Date(date).toLocaleString('default', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  })}`;
-}
+import { formatDate } from '../../lib/utils/dateOfBirth';
 
 interface TableProps {
   caption?: string;

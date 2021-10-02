@@ -8,7 +8,6 @@ import RadioConditional, {
 } from '../form/radioconditional';
 import * as Yup from 'yup';
 import { getAgeInYearsFromDate } from '../../lib/utils/dateOfBirth';
-import { formatDate } from '../../lib/utils/form';
 import { Person } from '../../domain/HousingApi';
 
 interface FormValues {

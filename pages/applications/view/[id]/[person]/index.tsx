@@ -32,15 +32,6 @@ import { HeadingOne } from '../../../../../components/content/headings';
 import Button from '../../../../../components/button';
 import Paragraph from '../../../../../components/content/paragraph';
 
-export function formatDate(date: string | undefined) {
-  if (!date) return '';
-  return `${new Date(date).toLocaleString('default', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  })}`;
-}
-
 interface PageProps {
   user: HackneyGoogleUserWithPermissions;
   data: Application;

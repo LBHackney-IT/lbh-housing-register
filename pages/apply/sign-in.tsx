@@ -7,8 +7,6 @@ import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { FormData } from '../../lib/types/form';
 import { FormID, getFormData } from '../../lib/utils/form-data';
 import ErrorSummary from '../../components/errors/error-summary';
-import { Errors } from '../../lib/utils/errors';
-import { scrollToError } from '../../lib/utils/scroll';
 
 const ApplicationSignInPage = (): JSX.Element => {
   const dispatch = useAppDispatch();

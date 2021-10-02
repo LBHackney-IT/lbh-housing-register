@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { PaginatedApplicationListResponse } from '../../../domain/HousingApi';
 import { getApplications } from '../../../lib/gateways/applications-api';
-import { getAuth, getSession } from '../../../lib/utils/auth';
+import { getAuth, getSession } from '../../../lib/utils/googleAuth';
 import { calculateBedroomsFromApplication } from '../../../lib/utils/bedroomCalculator';
 
 const CSVColumns = [

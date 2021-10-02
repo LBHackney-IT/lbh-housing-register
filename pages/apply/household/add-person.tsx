@@ -6,7 +6,7 @@ import { useAppDispatch } from '../../../lib/store/hooks';
 import { addResidentFromFormData } from '../../../lib/store/otherMembers';
 import { FormData } from '../../../lib/types/form';
 import withApplication from '../../../lib/hoc/withApplication';
-import AddPersonForm from '../../../components/applications/add-person-form';
+import AddPersonForm from '../../../components/application/add-person-form';
 
 const AddPersonToApplication = (): JSX.Element => {
   const returnHref = '/apply/household';

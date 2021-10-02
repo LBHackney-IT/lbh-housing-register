@@ -1,20 +1,19 @@
 import { GetServerSideProps } from 'next';
-import ApplicationTable from '../../components/applications/application-table';
-import { HeadingOne } from '../../components/content/headings';
-import Layout from '../../components/layout/staff-layout';
+import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
-import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
+import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 import { UserContext } from '../../lib/contexts/user-context';
+import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
 import {
   searchApplications,
   getApplications,
 } from '../../lib/gateways/applications-api';
-import { getRedirect, getSession } from '../../lib/utils/auth';
-import SearchBox from '../../components/applications/searchBox';
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
-import Sidebar from '../../components/applications/sidebar';
+import Layout from '../../components/layout/staff-layout';
+import SearchBox from '../../components/admin/search-box';
+import Sidebar from '../../components/admin/sidebar';
+import ApplicationTable from '../../components/admin/application-table';
+import { HeadingOne } from '../../components/content/headings';
 
 interface PageProps {
   user: HackneyGoogleUser;

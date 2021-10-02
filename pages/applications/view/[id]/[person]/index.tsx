@@ -13,7 +13,7 @@ import {
 import Custom404 from '../../../../404';
 import CheckBoxList, {
   CheckBoxListPageProps,
-} from '../../../../../components/applications/checkBoxList';
+} from '../../../../../components/admin/checkbox-list';
 import {
   personalDetailsCheckboxList,
   immigrationStatusCheckboxList,
@@ -27,7 +27,7 @@ import {
 } from '../../../../../lib/utils/checkboxListData';
 import MedicalDetail, {
   MedicalDetailPageProps,
-} from '../../../../../components/applications/medical-details';
+} from '../../../../../components/admin/medical-details';
 import { HeadingOne } from '../../../../../components/content/headings';
 import Button from '../../../../../components/button';
 import Paragraph from '../../../../../components/content/paragraph';

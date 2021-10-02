@@ -2,7 +2,7 @@ import { Applicant } from '../../domain/HousingApi';
 import { formatDob, getAgeInYears } from '../../lib/utils/dateOfBirth';
 import { getGenderName } from '../../lib/utils/gender';
 import Collapsible from '../collapsible';
-import Button, { ButtonLink } from '../../components/button';
+import Button, { ButtonLink } from '../button';
 import app from 'next/app';
 import Link from 'next/link';
 import React from 'react';

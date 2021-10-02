@@ -1,13 +1,13 @@
 import { Form, Formik } from 'formik';
-import Input from '../../components/form/input';
-import Select from '../../components/form/select';
-import DateInput, { INVALID_DATE } from '../../components/form/dateinput';
-import Button from '../../components/button';
+import Input from '../form/input';
+import Select from '../form/select';
+import DateInput, { INVALID_DATE } from '../form/dateinput';
+import Button from '../button';
 import RadioConditional, {
   RadioConditionalProps,
-} from '../../components/form/radioconditional';
+} from '../form/radioconditional';
 import * as Yup from 'yup';
-import { getAgeInYearsFromDate } from '../../lib//utils/dateOfBirth';
+import { getAgeInYearsFromDate } from '../../lib/utils/dateOfBirth';
 import { formatDate } from '../../lib/utils/form';
 import { Person } from '../../domain/HousingApi';
 

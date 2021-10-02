@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import React, { useState } from 'react';
-import OtherMembers from '../../../../components/applications/other-members';
-import PersonalDetails from '../../../../components/applications/personal-details';
+import OtherMembers from '../../../../components/admin/other-members';
+import PersonalDetails from '../../../../components/admin/personal-details';
 import {
   HeadingOne,
   HeadingThree,
@@ -17,12 +17,12 @@ import {
   HackneyGoogleUserWithPermissions,
 } from '../../../../lib/utils/auth';
 import Custom404 from '../../../404';
-import Snapshot from '../../../../components/applications/snapshot';
-import Actions from '../../../../components/applications/actions';
-import AssignUser from '../../../../components/applications/assign-user';
-import SensitiveData from '../../../../components/applications/sensitive-data';
+import Snapshot from '../../../../components/admin/snapshot';
+import Actions from '../../../../components/admin/actions';
+import AssignUser from '../../../../components/admin/assign-user';
+import SensitiveData from '../../../../components/admin/sensitive-data';
 import Paragraph from '../../../../components/content/paragraph';
-import { formatDate } from '../../../../components/applications/application-table';
+import { formatDate } from '../../../../components/admin/application-table';
 
 export function getPersonName(application: Application | undefined) {
   if (!application?.mainApplicant?.person) return '';

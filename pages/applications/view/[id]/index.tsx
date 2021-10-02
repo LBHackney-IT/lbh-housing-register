@@ -176,16 +176,15 @@ export default function ApplicationPage({
                     </Paragraph>
                   )}
 
-                  {user.hasAdminPermissions ||
-                    (user.hasManagerPermissions && (
-                      <>
-                        <AssignUser id={data.id} user={data.assignedTo} />
-                        <SensitiveData
-                          id={data.id}
-                          isSensitive={data.sensitiveData || false}
-                        />
-                      </>
-                    ))}
+                  {(user.hasAdminPermissions || user.hasManagerPermissions) && (
+                    <>
+                      <AssignUser id={data.id} user={data.assignedTo} />
+                      <SensitiveData
+                        id={data.id}
+                        isSensitive={data.sensitiveData || false}
+                      />
+                    </>
+                  )}
                 </div>
               </div>
             )}

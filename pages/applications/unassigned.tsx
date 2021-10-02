@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next';
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
-import { getRedirect, getSession } from '../../lib/utils/auth';
+import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 import { UserContext } from '../../lib/contexts/user-context';
 import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
 import {

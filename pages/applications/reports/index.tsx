@@ -2,7 +2,7 @@ import { GetServerSideProps, GetServerSidePropsResult } from 'next';
 import React from 'react';
 import { HackneyGoogleUser } from '../../../domain/HackneyGoogleUser';
 import { UserContext } from '../../../lib/contexts/user-context';
-import { getAuth, getSession } from '../../../lib/utils/auth';
+import { getAuth, getSession } from '../../../lib/utils/googleAuth';
 import Layout from '../../../components/layout/staff-layout';
 import Sidebar from '../../../components/admin/sidebar';
 import { ButtonLink } from '../../../components/button';

@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import React, { useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/router';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { getRedirect, getSession } from '../../lib/utils/googleAuth';
@@ -30,7 +30,6 @@ export default function ApplicationListPage({
   page = '1',
   reference = '',
 }: PageProps): JSX.Element {
-  const [searchInputValue, setsearchInputValue] = useState('');
   const router = useRouter();
   const parameters = new URLSearchParams();
 
@@ -39,20 +38,6 @@ export default function ApplicationListPage({
   }
 
   const parsedPage = parseInt(page);
-
-  const textChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ): React.ChangeEvent<HTMLInputElement> => {
-    setsearchInputValue(event.target.value);
-    return event;
-  };
-
-  const onSearchSubmit = async () => {
-    router.push({
-      pathname: '/applications',
-      query: { reference: searchInputValue },
-    });
-  };
 
   const filterByStatus = async (status: string) => {
     router.push({
@@ -68,8 +53,6 @@ export default function ApplicationListPage({
           title="Housing Register"
           buttonTitle="Search"
           watermark="Search application reference"
-          onSearch={onSearchSubmit}
-          textChangeHandler={textChangeHandler}
         />
 
         <div className="govuk-grid-row">

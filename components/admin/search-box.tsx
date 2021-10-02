@@ -1,22 +1,34 @@
-import React from 'react';
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
 
 interface SearchBoxProps {
   title: string;
   watermark: string;
   buttonTitle: string;
-  onSearch: () => void;
-  textChangeHandler: (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => React.ChangeEvent<HTMLInputElement>;
 }
 
 export default function SearchBox({
   title,
   watermark,
   buttonTitle,
-  onSearch,
-  textChangeHandler,
 }: SearchBoxProps): JSX.Element {
+  const [searchInputValue, setsearchInputValue] = useState('');
+  const router = useRouter();
+
+  const textChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): React.ChangeEvent<HTMLInputElement> => {
+    setsearchInputValue(event.target.value);
+    return event;
+  };
+
+  const onSearchSubmit = async () => {
+    router.push({
+      pathname: '/applications/view-register',
+      query: { reference: searchInputValue },
+    });
+  };
+
   return (
     <div className="govuk-form-group c-flex">
       <label className="govuk-visually-hidden" htmlFor="input-search">
@@ -34,7 +46,7 @@ export default function SearchBox({
         }
       />
       <button
-        onClick={onSearch}
+        onClick={onSearchSubmit}
         className="govuk-button lbh-button"
         data-module="govuk-button"
         style={{ marginTop: '0', marginLeft: '1em', maxWidth: '110px' }}

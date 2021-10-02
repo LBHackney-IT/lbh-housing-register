@@ -15,7 +15,7 @@ import {
   getRedirect,
   getSession,
   HackneyGoogleUserWithPermissions,
-} from '../../../../lib/utils/auth';
+} from '../../../../lib/utils/googleAuth';
 import Custom404 from '../../../404';
 import Snapshot from '../../../../components/admin/snapshot';
 import Actions from '../../../../components/admin/actions';

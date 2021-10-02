@@ -1,4 +1,3 @@
-import { IncomingMessage } from 'http';
 import cookie from 'cookie';
 import jsonwebtoken from 'jsonwebtoken';
 import { Redirect } from 'next';

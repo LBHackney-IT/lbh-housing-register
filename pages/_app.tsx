@@ -1,6 +1,7 @@
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import React, { ReactElement, useEffect, useState } from 'react';
+import TagManager from 'react-gtm-module';
 import Layout from '../components/layout/resident-layout';
 import Loading from '../components/loading';
 import { wrapper } from '../lib/store';
@@ -13,6 +14,7 @@ function App({ Component, pageProps }: AppProps): ReactElement {
 
   const dispatch = useAppDispatch();
   useEffect(() => {
+    TagManager.initialize({ gtmId: process.env.NEXT_PUBLIC_GTM_ID! });
     dispatch(loadApplication()).then(() => setLoaded(true));
   }, []);
 

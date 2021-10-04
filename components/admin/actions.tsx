@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import { Formik, Form, FormikValues } from 'formik';
 import { Application } from '../../domain/HousingApi';
 import Button from '../button';
-import DateInput from '../form/dateinput';
+import DateInput, { INVALID_DATE } from '../form/dateinput';
 import Select from '../form/select';
 import Radios from '../form/radios';
 import Input from '../form/input';
@@ -182,11 +182,14 @@ export default function Actions({ data }: PageProps): JSX.Element {
     reason: Yup.string()
       .label('Reason')
       .oneOf(reasonOptions.map(({ value }) => value)),
-    applicationDate: Yup.string(),
-    informationReceived: Yup.string(),
+    applicationDate: Yup.string().notOneOf([INVALID_DATE], 'Invalid date'),
+    informationReceived: Yup.string().notOneOf([INVALID_DATE], 'Invalid date'),
     band: Yup.string(),
     biddingNumberType: Yup.string().oneOf(['generate', 'manual']),
-    biddingNumber: Yup.string(),
+    biddingNumber: Yup.string().matches(
+      /^\d{7}$/,
+      'Bidding number should be a 7 digit number'
+    ),
   });
 
   const initialValues = {

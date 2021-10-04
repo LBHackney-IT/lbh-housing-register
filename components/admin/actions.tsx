@@ -9,6 +9,7 @@ import Input from '../form/input';
 import InsetText from '../content/inset-text';
 import { updateApplication } from '../../lib/gateways/internal-api';
 import router from 'next/router';
+import _ from 'lodash';
 
 interface PageProps {
   data: Application;
@@ -212,10 +213,11 @@ export default function Actions({ data }: PageProps): JSX.Element {
         band: values.band,
         reason: values.reason,
         biddingNumber: values.biddingNumber,
+        generateBiddingNumber: values.biddingNumberType === 'generate',
       },
     };
     updateApplication(request);
-    router.reload();
+    _.delay(() => router.reload(), 500);
   }
 
   return (

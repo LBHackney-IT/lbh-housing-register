@@ -43,9 +43,6 @@ functions:
       LOOKUP_API_TOKEN: ${ssm:/housing-register/${self:provider.stage}/lookup-api-key}
       NEXT_PUBLIC_ENV: ${opt:stage}
       NEXT_PUBLIC_EVIDENCE_STORE: ${ssm:/housing-register/${self:provider.stage}/evidence-store-url}
-      NEXT_PUBLIC_AWS_REGION: ${ssm:/housing-register/${self:provider.stage}/cognito-aws-region}
-      NEXT_PUBLIC_COGNITO_USERPOOL_ID: ${ssm:/housing-register/${self:provider.stage}/cognito-userpool-id}
-      NEXT_PUBLIC_COGNITO_CLIENT_ID: ${ssm:/housing-register/${self:provider.stage}/cognito-client-id}
       NOTIFY_API_KEY: ${ssm:/housing-register/${self:provider.stage}/notify-api-key}
       NOTIFY_TEMPLATE_NEW_APPLICATION: ${ssm:/housing-register/${self:provider.stage}/notify-template-new-application}
       NOTIFY_TEMPLATE_DISQUALIFY: ${ssm:/housing-register/${self:provider.stage}/notify-template-disqualify}

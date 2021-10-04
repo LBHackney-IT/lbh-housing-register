@@ -13,7 +13,7 @@ import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import { FormID } from '../../../lib/utils/form-data';
 import Custom404 from '../../404';
 import { isOver16 } from '../../../lib//utils/dateOfBirth';
-import AddPersonForm from '../../../components/applications/add-person-form';
+import AddPersonForm from '../../../components/application/add-person-form';
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter();
@@ -61,7 +61,6 @@ const ApplicationStep = (): JSX.Element => {
     }
 
     if (!isMainApplicant) {
-      nationalInsuranceNumber = '';
       phoneNumber = '';
       emailAddress = '';
     }

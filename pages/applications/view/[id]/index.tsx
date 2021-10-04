@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import React, { useState } from 'react';
-import OtherMembers from '../../../../components/applications/other-members';
-import PersonalDetails from '../../../../components/applications/personal-details';
+import OtherMembers from '../../../../components/admin/other-members';
+import PersonalDetails from '../../../../components/admin/personal-details';
 import {
   HeadingOne,
   HeadingThree,
@@ -15,14 +15,14 @@ import {
   getRedirect,
   getSession,
   HackneyGoogleUserWithPermissions,
-} from '../../../../lib/utils/auth';
+} from '../../../../lib/utils/googleAuth';
 import Custom404 from '../../../404';
-import Snapshot from '../../../../components/applications/snapshot';
-import Actions from '../../../../components/applications/actions';
-import AssignUser from '../../../../components/applications/assign-user';
-import SensitiveData from '../../../../components/applications/sensitive-data';
+import Snapshot from '../../../../components/admin/snapshot';
+import Actions from '../../../../components/admin/actions';
+import AssignUser from '../../../../components/admin/assign-user';
+import SensitiveData from '../../../../components/admin/sensitive-data';
 import Paragraph from '../../../../components/content/paragraph';
-import { formatDate } from '../../../../components/applications/application-table';
+import { formatDate } from '../../../../lib/utils/dateOfBirth';
 
 export function getPersonName(application: Application | undefined) {
   if (!application?.mainApplicant?.person) return '';
@@ -176,16 +176,15 @@ export default function ApplicationPage({
                     </Paragraph>
                   )}
 
-                  {user.hasAdminPermissions ||
-                    (user.hasManagerPermissions && (
-                      <>
-                        <AssignUser id={data.id} user={data.assignedTo} />
-                        <SensitiveData
-                          id={data.id}
-                          isSensitive={data.sensitiveData || false}
-                        />
-                      </>
-                    ))}
+                  {(user.hasAdminPermissions || user.hasManagerPermissions) && (
+                    <>
+                      <AssignUser id={data.id} user={data.assignedTo} />
+                      <SensitiveData
+                        id={data.id}
+                        isSensitive={data.sensitiveData || false}
+                      />
+                    </>
+                  )}
                 </div>
               </div>
             )}

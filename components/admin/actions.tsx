@@ -183,7 +183,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
       .label('Reason')
       .oneOf(reasonOptions.map(({ value }) => value)),
     applicationDate: Yup.string(),
-    informationRecieved: Yup.string(),
+    informationReceived: Yup.string(),
     band: Yup.string(),
     biddingNumberType: Yup.string().oneOf(['generate', 'manual']),
     biddingNumber: Yup.string(),
@@ -193,7 +193,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
     status: data.status ?? '',
     reason: data.assessment?.reason ?? '',
     applicationDate: data.assessment?.effectiveDate ?? '',
-    informationRecieved: data.assessment?.informationReceivedDate ?? '',
+    informationReceived: data.assessment?.informationReceivedDate ?? '',
     band: data.assessment?.band ?? '',
     biddingNumberType: data.assessment?.biddingNumber ? 'manual' : 'generate',
     biddingNumber: data.assessment?.biddingNumber ?? '',
@@ -202,10 +202,10 @@ export default function Actions({ data }: PageProps): JSX.Element {
   function onSubmit(values: FormikValues) {
     const request: Application = {
       id: data.id,
-      status: data.status,
+      status: values.status,
       assessment: {
         effectiveDate: values.applicationDate,
-        informationReceivedDate: values.informationReceivedDate,
+        informationReceivedDate: values.informationReceived,
         band: values.band,
         reason: values.reason,
         biddingNumber: values.biddingNumber,

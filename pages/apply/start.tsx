@@ -14,7 +14,7 @@ import { updateBeforeFirstSave } from '../../lib/store/mainApplicant';
 import { FormID, getFormData } from '../../lib/utils/form-data';
 import processPhonenumber from '../../lib/utils/processPhonenumber';
 import ErrorSummary from '../../components/errors/error-summary';
-import { Errors } from '../../lib/utils/errors';
+import { Errors } from '../../lib/types/errors';
 import { scrollToError } from '../../lib/utils/scroll';
 import { createVerifyCode } from '../../lib/store/auth';
 

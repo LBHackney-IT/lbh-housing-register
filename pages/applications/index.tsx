@@ -17,7 +17,7 @@ import { HeadingOne } from '../../components/content/headings';
 
 interface PageProps {
   user: HackneyGoogleUser;
-  applications: PaginatedApplicationListResponse;
+  applications: PaginatedApplicationListResponse | null;
   pageUrl: string;
   page: string;
   reference: string;

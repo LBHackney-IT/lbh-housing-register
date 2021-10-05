@@ -9,7 +9,7 @@ import { formatDate } from '../../lib/utils/dateOfBirth';
 
 interface TableProps {
   caption?: string;
-  applications: PaginatedApplicationListResponse;
+  applications: PaginatedApplicationListResponse | null;
   currentPage: number;
   pageUrl: string;
   parameters: URLSearchParams;
@@ -24,7 +24,7 @@ export default function ApplicationTable({
 }: TableProps): JSX.Element {
   return (
     <>
-      {applications?.results.length > 0 ? (
+      {applications && applications.results.length > 0 ? (
         <>
           <table className="govuk-table lbh-table">
             {caption && (

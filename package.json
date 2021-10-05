@@ -10,7 +10,8 @@
     "mocks": "mocks-server",
     "lint": "eslint . --max-warnings 0 --ext .js,.jsx,.ts,.tsx",
     "prettier:test": "npx prettier -c .",
-    "prettier:fix": "npx prettier --write ."
+    "prettier:fix": "npx prettier --write .",
+    "test:ci": "prettier --check . && tsc --noEmit && jest --ci"
   },
   "eslintConfig": {
     "extends": [

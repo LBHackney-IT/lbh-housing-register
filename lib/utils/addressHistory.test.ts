@@ -20,6 +20,7 @@ describe('checkAddressHistory', () => {
           {
             ...partialEntry,
             date: '2019-06-01',
+            dateTo: '',
           },
         ],
         1
@@ -31,10 +32,12 @@ describe('checkAddressHistory', () => {
           {
             ...partialEntry,
             date: '2020-01-01',
+            dateTo: '',
           },
           {
             ...partialEntry,
             date: '2019-06-01',
+            dateTo: '2020-01-01',
           },
         ],
         1
@@ -48,10 +51,12 @@ describe('checkAddressHistory', () => {
           {
             ...partialEntry,
             date: '2019-06-01',
+            dateTo: '2020-01-01',
           },
           {
             ...partialEntry,
             date: '2020-01-01',
+            dateTo: '',
           },
         ],
         1
@@ -70,10 +75,12 @@ test('calculateDurations calculates accurately', () => {
       {
         ...partialEntry,
         date: '2020-01-01',
+        dateTo: '',
       },
       {
         ...partialEntry,
         date: '2019-06-01',
+        dateTo: '2020-01-01',
       },
     ])
   ).toMatchSnapshot();

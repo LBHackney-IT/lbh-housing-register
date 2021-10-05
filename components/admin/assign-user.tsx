@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { Application } from '../../domain/HousingApi';
-import { updateApplication } from '../../lib/store/application';
-import { useAppDispatch } from '../../lib/store/hooks';
-import Button from '../button';
+import { updateApplication } from '../../lib/gateways/internal-api';
 
 interface AssignUserProps {
   id: string;
@@ -11,7 +9,6 @@ interface AssignUserProps {
 
 export default function AssignUser({ id, user }: AssignUserProps): JSX.Element {
   const [assignedTo, setAssignedTo] = useState(user);
-  const dispatch = useAppDispatch();
 
   const textChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -25,11 +22,11 @@ export default function AssignUser({ id, user }: AssignUserProps): JSX.Element {
       id: id,
       assignedTo: assignedTo,
     };
-    dispatch(updateApplication(request));
+    updateApplication(request);
   };
 
   return (
-    <>
+    <div>
       <label className="govuk-label lbh-label" htmlFor="input-assignee">
         <strong>Assigned to</strong>
       </label>
@@ -41,9 +38,13 @@ export default function AssignUser({ id, user }: AssignUserProps): JSX.Element {
         value={assignedTo}
         onChange={textChangeHandler}
       />
-      <Button onClick={() => assignTo()} secondary={true}>
+      <button
+        onClick={() => assignTo()}
+        className="lbh-link lbh-link--no-visited-state"
+        style={{ marginTop: '0.5em' }}
+      >
         Assign
-      </Button>
-    </>
+      </button>
+    </div>
   );
 }

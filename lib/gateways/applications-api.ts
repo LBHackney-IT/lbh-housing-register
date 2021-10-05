@@ -1,7 +1,11 @@
 import axios from 'axios';
 import {
   Application,
+  CreateAuthRequest,
+  CreateAuthResponse,
   PaginatedApplicationListResponse,
+  VerifyAuthRequest,
+  VerifyAuthResponse,
 } from '../../domain/HousingApi';
 import { Stat } from '../../domain/stat';
 
@@ -10,7 +14,7 @@ const headersWithKey = {
 };
 
 export const getApplications = async (
-  page: string,
+  page: string | number,
   user?: string
 ): Promise<PaginatedApplicationListResponse | null> => {
   try {
@@ -106,6 +110,42 @@ export const completeApplication = async (
     null,
     {
       headers: headersWithKey,
+    }
+  );
+  return data;
+};
+
+export const createVerifyCode = async (
+  id: string,
+  request: CreateAuthRequest
+): Promise<CreateAuthResponse | null> => {
+  const headers = {
+    'x-api-key': process.env.HOUSING_REGISTER_KEY,
+    'Content-Type': 'application/json',
+  };
+  const { data } = await axios.post(
+    `${process.env.HOUSING_REGISTER_API}/auth/${id}/generate`,
+    request,
+    {
+      headers: headers,
+    }
+  );
+  return data;
+};
+
+export const confirmVerifyCode = async (
+  id: string,
+  request: VerifyAuthRequest
+): Promise<VerifyAuthResponse | null> => {
+  const headers = {
+    'x-api-key': process.env.HOUSING_REGISTER_KEY,
+    'Content-Type': 'application/json',
+  };
+  const { data } = await axios.post(
+    `${process.env.HOUSING_REGISTER_API}/auth/${id}/verify`,
+    request,
+    {
+      headers: headers,
     }
   );
   return data;

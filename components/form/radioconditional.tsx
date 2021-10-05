@@ -93,6 +93,7 @@ export default function RadioConditional({
   name,
   options,
   subheading,
+  hideLabel,
 }: RadioConditionalProps): JSX.Element {
   return (
     <Field name={name}>
@@ -104,7 +105,9 @@ export default function RadioConditional({
         meta: FieldMetaProps<string>;
       }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
-          {label && <Label content={label} strong={true} />}
+          {label && (
+            <Label content={label} strong={true} hideLabel={hideLabel} />
+          )}
           {hint && <Hint content={hint} />}
           {details && (
             <Details summary={details.title ?? 'Help with this question'}>
@@ -124,6 +127,7 @@ export default function RadioConditional({
                   name={field.name}
                   value={radio.value}
                   containerId={radio.conditionalFieldInput?.containerId}
+                  hideLabel={hideLabel}
                 />
 
                 {radio.conditionalFieldInput && (

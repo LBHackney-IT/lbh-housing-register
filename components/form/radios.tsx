@@ -46,7 +46,6 @@ export function Radio({
 }
 
 export interface RadiosProps extends RadioFormField {
-  value: string;
   subheading?: string;
 }
 
@@ -57,7 +56,8 @@ export default function Radios({
   name,
   options,
   subheading,
-}: RadiosProps): JSX.Element {
+  hideLabel,
+}: Omit<RadiosProps, 'as'>): JSX.Element {
   return (
     <Field name={name}>
       {({
@@ -68,7 +68,9 @@ export default function Radios({
         meta: FieldMetaProps<string>;
       }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
-          {label && <Label content={label} strong={true} />}
+          {label && (
+            <Label content={label} strong={true} hideLabel={hideLabel} />
+          )}
           {hint && <Hint content={hint} />}
           {details && (
             <Details summary={details.title ?? 'Help with this question'}>
@@ -87,6 +89,7 @@ export default function Radios({
                 label={radio.label!}
                 name={field.name}
                 value={radio.value}
+                hideLabel={hideLabel}
               />
             ))}
           </div>

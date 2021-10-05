@@ -1,3 +1,7 @@
+import { Applicant, Application } from '../../domain/HousingApi';
+import { getAgeInYears } from './dateOfBirth';
+import { getGenderName } from './gender';
+
 type BedroomNeed = {
   age: number;
   gender: string;
@@ -46,4 +50,20 @@ export function calculateBedrooms(
     over10.reduce((acc, [g, c]) => acc + Math.ceil(c), 0);
 
   return total;
+}
+
+export function calculateBedroomsFromApplication(application: Application) {
+  const applicants = [application.mainApplicant, application.otherMembers]
+    .filter((v): v is Applicant | Applicant[] => v !== undefined)
+    .flat();
+
+  const bedroomArray = applicants.map((applicant) => ({
+    age: getAgeInYears(applicant),
+    gender: getGenderName(applicant),
+  }));
+
+  const hasPartnerSharing = !!applicants.find(
+    (applicant) => applicant.person?.relationshipType === 'partner'
+  );
+  return calculateBedrooms(bedroomArray, hasPartnerSharing);
 }

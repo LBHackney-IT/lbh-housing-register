@@ -5,7 +5,7 @@
       "fields": [
         {
           "as": "radios",
-          "label": "Does anyone in your household(including you) have any legal restrictions about where they can live in the borough? (If Y, provide details)",
+          "label": "Does anyone in your household have any legal restrictions in where you can live?",
           "name": "legal-restrictions",
           "options": [
             {

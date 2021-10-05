@@ -21,6 +21,7 @@ export interface BaseFormField {
   validation?: FormFieldValidation;
   placeholder?: string;
   initialValue?: any;
+  hideLabel?: boolean;
 }
 
 export interface TextFormField extends BaseFormField {

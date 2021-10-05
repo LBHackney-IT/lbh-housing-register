@@ -79,6 +79,72 @@ export interface Applicant {
    * @memberof Applicant
    */
   questions?: Array<Question>;
+
+  /**
+   *
+   * @type {MedicalNeed}
+   * @memberof Applicant
+   */
+  medicalNeed?: MedicalNeed;
+
+  /**
+   *
+   * @type {MedicalOutCome}
+   * @memberof Applicant
+   */
+  medicalOutcome?: MedicalOutcome;
+}
+
+export interface MedicalNeed {
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalNeed
+   */
+  formRecieved?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalNeed
+   */
+  formLink?: string;
+}
+
+export interface MedicalOutcome {
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalOutCome
+   */
+  accessibileHousingRegister?: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalOutCome
+   */
+  additionalInformaton?: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalOutCome
+   */
+  assessmentDate?: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalOutCome
+   */
+  disability?: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalOutCome
+   */
+  outcome?: string;
 }
 
 /**
@@ -105,6 +171,13 @@ export interface Application {
    * @memberof Application
    */
   assignedTo?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Application
+   */
+  sensitiveData?: boolean;
+
   /**
    *
    * @type {string}
@@ -135,6 +208,12 @@ export interface Application {
    * @memberof Application
    */
   otherMembers?: Array<Applicant>;
+  /**
+   *
+   * @type {Assessment}
+   * @memberof Application
+   */
+  assessment?: Assessment;
 }
 
 /**
@@ -189,6 +268,44 @@ export interface Evidence {
    * @memberof Evidence
    */
   id?: string;
+}
+
+/**
+ *
+ * @export
+ * @interface Assessment
+ */
+export interface Assessment {
+  /**
+   *
+   * @type {string}
+   * @memberof Assessment
+   */
+  effectiveDate?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Assessment
+   */
+  informationReceivedDate?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Assessment
+   */
+  band?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Assessment
+   */
+  reason?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Assessment
+   */
+  biddingNumber?: string;
 }
 
 /**
@@ -269,10 +386,10 @@ export namespace Person {
    * @enum {string}
    */
   export enum TitleEnum {
-    Mrs = <any>'Mrs',
-    Mr = <any>'Mr',
-    Miss = <any>'Miss',
-    Mx = <any>'Mx',
+    Mrs = 'Mrs',
+    Mr = 'Mr',
+    Miss = 'Miss',
+    Mx = 'Mx',
   }
 }
 
@@ -345,4 +462,19 @@ export interface PaginatedApplicationListResponse {
    * @memberof PaginatedApplicationListResponse
    */
   results: Array<Application>;
+}
+
+export interface CreateAuthRequest {
+  email: string;
+}
+export interface CreateAuthResponse {
+  success: boolean;
+}
+
+export interface VerifyAuthRequest {
+  email: string;
+  code: string;
+}
+export interface VerifyAuthResponse {
+  accessToken: string;
 }

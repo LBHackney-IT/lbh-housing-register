@@ -1,4 +1,5 @@
 import { Applicant } from '../../domain/HousingApi';
+import capitalize from './capitalize';
 
 export const questionLookup = (
   questionId: string,
@@ -30,6 +31,6 @@ export const getQuestionValue = (
   const questionValue = questionLookup(questionId, applicant) || 'N/A';
 
   return questionValue !== 'N/A'
-    ? jsonParse(questionValue).Capitalize()
+    ? capitalize(jsonParse(questionValue))
     : questionValue;
 };

@@ -15,7 +15,7 @@ const headersWithKey = {
 
 export const getApplications = async (
   page: string | number,
-  user?: string
+  user?: string | 'unassigned'
 ): Promise<PaginatedApplicationListResponse | null> => {
   try {
     const assignedTo = user ?? '';
@@ -35,7 +35,7 @@ export const searchApplications = async (
   page: string,
   reference: string,
   status: string,
-  user?: string
+  user?: string | 'unassigned'
 ): Promise<PaginatedApplicationListResponse | null> => {
   try {
     const assignedTo = user ?? '';

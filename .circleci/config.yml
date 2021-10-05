@@ -44,7 +44,7 @@ jobs:
       - *attach_workspace
       - run:
           name: Run Tests
-          command: npm run all-tests
+          command: npm run test:ci
 
   build-deploy-development:
     executor: aws-cli/default

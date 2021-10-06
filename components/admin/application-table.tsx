@@ -13,6 +13,7 @@ interface TableProps {
   currentPage: number;
   pageUrl: string;
   parameters: URLSearchParams;
+  showStatus: boolean;
 }
 
 export default function ApplicationTable({
@@ -21,6 +22,7 @@ export default function ApplicationTable({
   currentPage,
   pageUrl,
   parameters,
+  showStatus,
 }: TableProps): JSX.Element {
   return (
     <>
@@ -43,9 +45,11 @@ export default function ApplicationTable({
                 <th scope="col" className="govuk-table__header">
                   Submitted
                 </th>
-                <th scope="col" className="govuk-table__header">
-                  Status
-                </th>
+                {showStatus &&
+                  <th scope="col" className="govuk-table__header">
+                    Status
+                  </th>
+                }
               </tr>
             </thead>
             <tbody className="govuk-table__body">
@@ -67,14 +71,16 @@ export default function ApplicationTable({
                     </Link>
                   </td>
                   <td className="govuk-table__cell">
-                    {formatDate(application.createdAt)}
+                    {formatDate(application.submittedAt)}
                   </td>
-                  <td className="govuk-table__cell">
-                    <Tag
-                      content={application.status || ''}
-                      className={getStatusTag(application.status || '')}
-                    />
-                  </td>
+                  {showStatus &&
+                    <td className="govuk-table__cell">
+                      <Tag
+                        content={application.status || ''}
+                        className={getStatusTag(application.status || '')}
+                      />
+                    </td>
+                  }
                 </tr>
               ))}
             </tbody>

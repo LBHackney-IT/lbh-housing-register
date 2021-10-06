@@ -1,14 +1,22 @@
-import { useState } from 'react';
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
 import { Application } from '../../domain/HousingApi';
 import { updateApplication } from '../../lib/gateways/internal-api';
+import { HackneyGoogleUserWithPermissions } from '../../lib/utils/googleAuth';
 
 interface AssignUserProps {
   id: string;
-  user?: string;
+  user: HackneyGoogleUserWithPermissions;
+  assignee?: string;
 }
 
-export default function AssignUser({ id, user }: AssignUserProps): JSX.Element {
-  const [assignedTo, setAssignedTo] = useState(user);
+export default function AssignUser({
+  id,
+  user,
+  assignee,
+}: AssignUserProps): JSX.Element {
+  const router = useRouter();
+  const [assignedTo, setAssignedTo] = useState(assignee);
 
   const textChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -23,28 +31,39 @@ export default function AssignUser({ id, user }: AssignUserProps): JSX.Element {
       assignedTo: assignedTo,
     };
     updateApplication(request);
+    router.push(`/applications/view/${id}`);
   };
 
   return (
     <div>
       <label className="govuk-label lbh-label" htmlFor="input-assignee">
         <strong>Assigned to</strong>
+        {!user.hasAdminPermissions && !user.hasManagerPermissions && (
+          <>
+            <br />
+            {assignedTo}
+          </>
+        )}
       </label>
-      <input
-        className="govuk-input lbh-input"
-        id="input-assignee"
-        name="assignedTo"
-        type="text"
-        value={assignedTo}
-        onChange={textChangeHandler}
-      />
-      <button
-        onClick={() => assignTo()}
-        className="lbh-link lbh-link--no-visited-state"
-        style={{ marginTop: '0.5em' }}
-      >
-        Assign
-      </button>
+      {(user.hasAdminPermissions || user.hasManagerPermissions) && (
+        <>
+          <input
+            className="govuk-input lbh-input"
+            id="input-assignee"
+            name="assignedTo"
+            type="text"
+            value={assignedTo}
+            onChange={textChangeHandler}
+          />
+          <button
+            onClick={() => assignTo()}
+            className="lbh-link lbh-link--no-visited-state"
+            style={{ marginTop: '0.5em' }}
+          >
+            Assign
+          </button>
+        </>
+      )}
     </div>
   );
 }

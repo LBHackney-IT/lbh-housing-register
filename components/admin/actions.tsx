@@ -21,12 +21,8 @@ export default function Actions({ data }: PageProps): JSX.Element {
       value: '',
     },
     {
-      label: 'Submitted',
-      value: 'Submitted',
-    },
-    {
       label: 'Awaiting assessment',
-      value: 'AwaitingAssessment',
+      value: 'Submitted',
     },
     {
       label: 'Active',

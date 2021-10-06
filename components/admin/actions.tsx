@@ -1,3 +1,4 @@
+import router from 'next/router';
 import * as Yup from 'yup';
 import { Formik, Form, FormikValues } from 'formik';
 import { Application } from '../../domain/HousingApi';
@@ -8,8 +9,6 @@ import Radios from '../form/radios';
 import Input from '../form/input';
 import InsetText from '../content/inset-text';
 import { updateApplication } from '../../lib/gateways/internal-api';
-import router from 'next/router';
-import _ from 'lodash';
 
 interface PageProps {
   data: Application;
@@ -203,21 +202,45 @@ export default function Actions({ data }: PageProps): JSX.Element {
     biddingNumber: data.assessment?.biddingNumber ?? '',
   };
 
+  function showDecisionOptions(values: FormikValues): boolean {
+    return values.status === 'Active' || values.status === 'ActiveUnderAppeal';
+  }
+
+  function showInformationReceived(values: FormikValues): boolean {
+    return (
+      values.status === 'Active' ||
+      values.status === 'ActiveUnderAppeal' ||
+      values.status === 'Rejected' ||
+      values.status === 'Cancelled'
+    );
+  }
+
   function onSubmit(values: FormikValues) {
     const request: Application = {
       id: data.id,
       status: values.status,
       assessment: {
-        effectiveDate: values.applicationDate,
-        informationReceivedDate: values.informationReceived,
-        band: values.band,
+        ...data.assessment,
         reason: values.reason,
-        biddingNumber: values.biddingNumber,
-        generateBiddingNumber: values.biddingNumberType === 'generate',
       },
     };
+
+    if (values.applicationDate && request.assessment) {
+      request.assessment.effectiveDate = values.applicationDate;
+    }
+    if (values.informationReceived && request.assessment) {
+      request.assessment.informationReceivedDate = values.applicationDate;
+    }
+
+    if (showDecisionOptions(values) && request.assessment) {
+      request.assessment.band = values.band;
+      request.assessment.biddingNumber = values.biddingNumber;
+      request.assessment.generateBiddingNumber =
+        values.biddingNumberType === 'generate';
+    }
+
     updateApplication(request);
-    _.delay(() => router.reload(), 500);
+    setTimeout(() => router.reload(), 500);
   }
 
   return (
@@ -231,33 +254,44 @@ export default function Actions({ data }: PageProps): JSX.Element {
           <Select label="Status" name="status" options={statusOptions} />
           <Select label="Reason" name="reason" options={reasonOptions} />
           <DateInput name={'applicationDate'} label={'Application date'} />
-          <DateInput
-            name={'informationReceived'}
-            label={'All information received'}
-          />
-          <Radios
-            label="Band"
-            name="band"
-            options={[
-              { label: 'Band A', value: 'A' },
-              { label: 'Band B', value: 'B' },
-              { label: 'Band C', value: 'C' },
-              { label: 'Band C (transitional)', value: 'C-transitional' },
-            ]}
-          />
-          <Radios
-            label="Bidding number"
-            name="biddingNumberType"
-            options={[
-              { label: 'Generate bidding number', value: 'generate' },
-              { label: 'Use existing bidding number', value: 'manual' },
-            ]}
-          />
-          {values.biddingNumberType === 'manual' && (
-            <InsetText>
-              <Input name="biddingNumber" label="Bidding number" className="" />
-            </InsetText>
+          {showInformationReceived(values) && (
+            <DateInput
+              name={'informationReceived'}
+              label={'All information received'}
+            />
           )}
+          {showDecisionOptions(values) && (
+            <>
+              <Radios
+                label="Band"
+                name="band"
+                options={[
+                  { label: 'Band A', value: 'A' },
+                  { label: 'Band B', value: 'B' },
+                  { label: 'Band C', value: 'C' },
+                  { label: 'Band C (transitional)', value: 'C-transitional' },
+                ]}
+              />
+              <Radios
+                label="Bidding number"
+                name="biddingNumberType"
+                options={[
+                  { label: 'Generate bidding number', value: 'generate' },
+                  { label: 'Use existing bidding number', value: 'manual' },
+                ]}
+              />
+              {values.biddingNumberType === 'manual' && (
+                <InsetText>
+                  <Input
+                    name="biddingNumber"
+                    label="Bidding number"
+                    className=""
+                  />
+                </InsetText>
+              )}
+            </>
+          )}
+
           <div className="c-flex lbh-simple-pagination">
             <div className="c-flex__1 text-right">
               <Button disabled={isSubmitting} type="submit">

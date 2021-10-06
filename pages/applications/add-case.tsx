@@ -4,6 +4,7 @@ import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { Form, Formik, FormikValues } from 'formik';
 import Button from '../../components/button';
 import Input from '../../components/form/input';
+import Textarea from '../../components/form/textarea';
 import DateInput, { INVALID_DATE } from '../../components/form/dateinput';
 import Select from '../../components/form/select';
 import SummaryListNoBorder, {
@@ -13,13 +14,96 @@ import SummaryListNoBorder, {
   SummaryListValue,
 } from '../../components/summary-list';
 import { getFormData, FormID } from '../../lib/utils/form-data';
+import { Checkbox } from '../../components/form/checkboxes';
 
+// Helpers
+
+const allFormIds = Object.keys(FormID);
+
+const idsToIgnore = [
+  'AGREEMENT',
+  'SIGN_IN',
+  'SIGN_IN_VERIFY',
+  'SIGN_UP_DETAILS',
+];
+
+// Form field data
 const personalDetailsFormData = getFormData(FormID.PERSONAL_DETAILS);
 const immigrationStatusFormData = getFormData(FormID.IMMIGRATION_STATUS);
-console.log(personalDetailsFormData, immigrationStatusFormData);
+const residentialStatusFormData = getFormData(FormID.RESIDENTIAL_STATUS);
+const addressHistoryFormData = getFormData(FormID.ADDRESS_HISTORY);
+const currentAccommodationFormData = getFormData(FormID.CURRENT_ACCOMMODATION);
+const homelessnessFormData = getFormData(FormID.HOMELESSNESS);
 
 interface PageProps {
   user: HackneyGoogleUser;
+}
+
+function FormFieldsMarkup({ sectionData }: any): JSX.Element {
+  // console.log(sectionData);
+
+  const allFormFields = sectionData.steps
+    .map((step: any) => step.fields)
+    .flat();
+
+  // console.log(allFormFields);
+
+  const markup = allFormFields.map((field: any, index: number) => {
+    const inputType = field.as ? field.as : 'text';
+    // console.log(field, inputType);
+
+    let inputField: JSX.Element = <></>;
+
+    if (inputType === 'text') {
+      inputField = <Input name={field.name} />;
+    }
+
+    if (inputType === 'textarea') {
+      inputField = <Textarea name={field.name} label="" as="textarea" />;
+    }
+
+    if (inputType === 'dateinput') {
+      inputField = (
+        <DateInput name={field.name} label={field.label} showDay={true} />
+      );
+    }
+
+    if (inputType === 'checkbox') {
+      inputField = <Checkbox name={field.name} label="" value="" />;
+    }
+
+    if (
+      inputType === 'select' ||
+      inputType === 'radioconditional' ||
+      inputType === 'radios' ||
+      inputType === 'checkboxes'
+    ) {
+      inputField = (
+        <Select
+          label=""
+          name={field.name}
+          options={field.options.map((option: any) => ({
+            label: option.label,
+            value: option.value,
+          }))}
+        />
+      );
+    }
+
+    const title = index === 0 ? sectionData.heading : '';
+
+    return (
+      <SummaryListRow>
+        <SummaryListKey>{title}</SummaryListKey>
+        <SummaryListValue>
+          <label htmlFor={field.name}>{field.label}</label>
+        </SummaryListValue>
+        <SummaryListActions wideActions={true}>{inputField}</SummaryListActions>
+      </SummaryListRow>
+    );
+  });
+
+  return <SummaryListNoBorder>{markup}</SummaryListNoBorder>;
 }
 
 export default function AddCasePage({ user }: PageProps): JSX.Element {
@@ -107,84 +191,26 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="Group worktray">
-        {/* <ApplicantStep
-          applicant={applicant}
-          stepName="Personal details"
-          formID={FormID.PERSONAL_DETAILS}
-        >
-          <AddPersonForm
-            initialValues={formFields}
-            onSubmit={onSubmit}
-            isMainApplicant={isMainApplicant}
-            buttonText="Save and continue"
-            isOver16={isOver16State}
-            setIsOver16State={setIsOver16State}
-          />
-        </ApplicantStep> */}
-        <Formik initialValues={{}} onSubmit={onSubmit} validationSchema={{}}>
+        <Formik initialValues={{}} onSubmit={onSubmit}>
           {({ isSubmitting }) => (
             <Form>
-              <SummaryListNoBorder>
-                <SummaryListRow>
-                  <SummaryListKey>Personal Details</SummaryListKey>
-                  <SummaryListValue>First Name</SummaryListValue>
+              {allFormIds.map((id) => {
+                if (idsToIgnore.includes(id)) {
+                  return null;
+                }
 
-                  <SummaryListActions wideActions={true}>
-                    <Input name="firstName" label="" />
-                  </SummaryListActions>
-                </SummaryListRow>
+                return (
+                  <FormFieldsMarkup sectionData={getFormData(FormID[id])} />
+                );
+              })}
+              {/* <FormFieldsMarkup sectionData={personalDetailsFormData} />
+              <FormFieldsMarkup sectionData={immigrationStatusFormData} />
+              <FormFieldsMarkup sectionData={residentialStatusFormData} />
+              <FormFieldsMarkup sectionData={addressHistoryFormData} />
+              <FormFieldsMarkup sectionData={currentAccommodationFormData} />
+              <FormFieldsMarkup sectionData={homelessnessFormData} /> */}
 
-                <SummaryListRow>
-                  <SummaryListKey></SummaryListKey>
-                  <SummaryListValue>Last Name</SummaryListValue>
-
-                  <SummaryListActions wideActions={true}>
-                    <Input name="lastName" label="" />
-                  </SummaryListActions>
-                </SummaryListRow>
-
-                <SummaryListRow>
-                  <SummaryListKey></SummaryListKey>
-                  <SummaryListValue>NI Number</SummaryListValue>
-
-                  <SummaryListActions wideActions={true}>
-                    <Input name="nINumber" label="" />
-                  </SummaryListActions>
-                </SummaryListRow>
-
-                <SummaryListRow>
-                  <SummaryListKey></SummaryListKey>
-                  <SummaryListValue>Date of Birth</SummaryListValue>
-
-                  <SummaryListActions wideActions={true}>
-                    <DateInput
-                      name={'dateOfBirth'}
-                      label={'Date of birth'}
-                      showDay={true}
-                    />
-                  </SummaryListActions>
-                </SummaryListRow>
-
-                <SummaryListRow>
-                  <SummaryListKey></SummaryListKey>
-                  <SummaryListValue>Phone number</SummaryListValue>
-
-                  <SummaryListActions wideActions={true}>
-                    <Input name="phoneNumbner" label="" />
-                  </SummaryListActions>
-                </SummaryListRow>
-
-                <SummaryListRow>
-                  <SummaryListKey></SummaryListKey>
-                  <SummaryListValue>Email</SummaryListValue>
-
-                  <SummaryListActions wideActions={true}>
-                    <Input name="email" label="" />
-                  </SummaryListActions>
-                </SummaryListRow>
-              </SummaryListNoBorder>
-
-              <SummaryListNoBorder>
+              {/* <SummaryListNoBorder>
                 <SummaryListRow>
                   <SummaryListKey>Immigration status</SummaryListKey>
                   <SummaryListValue>Citizenship</SummaryListValue>
@@ -232,9 +258,9 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
                     />
                   </SummaryListActions>
                 </SummaryListRow>
-              </SummaryListNoBorder>
+              </SummaryListNoBorder> */}
 
-              <SummaryListNoBorder>
+              {/* <SummaryListNoBorder>
                 <SummaryListRow>
                   <SummaryListKey>Residential status</SummaryListKey>
                   <SummaryListValue>3 year residential status</SummaryListValue>
@@ -377,7 +403,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
                     />
                   </SummaryListActions>
                 </SummaryListRow>
-              </SummaryListNoBorder>
+              </SummaryListNoBorder> */}
 
               <div className="c-flex__1 text-right">
                 <Button disabled={isSubmitting} type="submit">

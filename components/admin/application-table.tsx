@@ -24,7 +24,7 @@ export default function ApplicationTable({
 }: TableProps): JSX.Element {
   return (
     <>
-      {applications.results.length > 0 ? (
+      {applications?.results.length > 0 ? (
         <>
           <table className="govuk-table lbh-table">
             {caption && (

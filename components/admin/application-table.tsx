@@ -35,20 +35,28 @@ export default function ApplicationTable({
             )}
             <thead className="govuk-table__head">
               <tr className="govuk-table__row">
-                <th scope="col" className="govuk-table__header" style={{width: '150px'}}>
+                <th
+                  scope="col"
+                  className="govuk-table__header"
+                  style={{ width: '150px' }}
+                >
                   Reference
                 </th>
                 <th scope="col" className="govuk-table__header">
                   Applicant
                 </th>
-                <th scope="col" className="govuk-table__header" style={{width: '150px'}}>
+                <th
+                  scope="col"
+                  className="govuk-table__header"
+                  style={{ width: '150px' }}
+                >
                   Submitted
                 </th>
-                {showStatus &&
+                {showStatus && (
                   <th scope="col" className="govuk-table__header">
                     Status
                   </th>
-                }
+                )}
               </tr>
             </thead>
             <tbody className="govuk-table__body">
@@ -67,11 +75,9 @@ export default function ApplicationTable({
                   <td className="govuk-table__cell">
                     {formatDate(application.submittedAt)}
                   </td>
-                  {showStatus &&
-                    <td className="govuk-table__cell">
-                      {application.status}
-                    </td>
-                  }
+                  {showStatus && (
+                    <td className="govuk-table__cell">{application.status}</td>
+                  )}
                 </tr>
               ))}
             </tbody>

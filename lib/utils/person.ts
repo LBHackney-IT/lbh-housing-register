@@ -1,4 +1,4 @@
-import { Application } from "../../domain/HousingApi";
+import { Application } from '../../domain/HousingApi';
 
 /**
  * Get the applicants name as a string, with household members in brackets.

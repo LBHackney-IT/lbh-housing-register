@@ -69,28 +69,28 @@ export default function ApplicationListPage({
           <div className="govuk-grid-column-three-quarters">
             <HeadingOne content="My worktray" />
             <div className="lbh-link-group">
-            <button
-              onClick={() => {
-                setState('Submitted');
-                filterByStatus('Submitted');
-              }}
-              className={`lbh-link lbh-link--no-visited-state ${isActive(
-                'Submitted'
-              )}`}
-            >
-              New applications
-            </button>{' '}
-            <button
-              onClick={() => {
-                setState('Pending');
-                filterByStatus('Pending');
-              }}
-              className={`lbh-link lbh-link--no-visited-state ${isActive(
-                'Pending'
-              )}`}
-            >
-              Pending applications
-            </button>
+              <button
+                onClick={() => {
+                  setState('Submitted');
+                  filterByStatus('Submitted');
+                }}
+                className={`lbh-link lbh-link--no-visited-state ${isActive(
+                  'Submitted'
+                )}`}
+              >
+                New applications
+              </button>{' '}
+              <button
+                onClick={() => {
+                  setState('Pending');
+                  filterByStatus('Pending');
+                }}
+                className={`lbh-link lbh-link--no-visited-state ${isActive(
+                  'Pending'
+                )}`}
+              >
+                Pending applications
+              </button>
             </div>
             <ApplicationTable
               applications={applications}

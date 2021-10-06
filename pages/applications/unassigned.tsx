@@ -62,14 +62,14 @@ export default function ApplicationListPage({
           <div className="govuk-grid-column-three-quarters">
             <HeadingOne content="Group worktray" />
             <div className="lbh-link-group">
-            <button
-              onClick={() => {
-                filterByStatus('Submitted');
-              }}
-              className='lbh-link lbh-link--no-visited-state active'
-            >
-              Unassigned applications
-            </button>
+              <button
+                onClick={() => {
+                  filterByStatus('Submitted');
+                }}
+                className="lbh-link lbh-link--no-visited-state active"
+              >
+                Unassigned applications
+              </button>
             </div>
             <ApplicationTable
               applications={applications}

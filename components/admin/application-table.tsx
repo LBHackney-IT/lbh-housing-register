@@ -75,10 +75,7 @@ export default function ApplicationTable({
                   </td>
                   {showStatus &&
                     <td className="govuk-table__cell">
-                      <Tag
-                        content={application.status || ''}
-                        className={getStatusTag(application.status || '')}
-                      />
+                      {application.status}
                     </td>
                   }
                 </tr>

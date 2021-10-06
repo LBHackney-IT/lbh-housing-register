@@ -306,6 +306,12 @@ export interface Assessment {
    * @memberof Assessment
    */
   biddingNumber?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Assessment
+   */
+  generateBiddingNumber?: boolean;
 }
 
 /**

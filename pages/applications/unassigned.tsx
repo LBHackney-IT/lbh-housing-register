@@ -61,28 +61,22 @@ export default function ApplicationListPage({
           </div>
           <div className="govuk-grid-column-three-quarters">
             <HeadingOne content="Group worktray" />
-            <button
-              onClick={() => {
-                filterByStatus('new');
-              }}
-              className="lbh-link lbh-link--no-visited-state"
-            >
-              New applications
-            </button>{' '}
-            <button
-              onClick={() => {
-                filterByStatus('pending');
-              }}
-              className="lbh-link lbh-link--no-visited-state"
-            >
-              Pending applications
-            </button>
+            <div className="lbh-link-group">
+              <button
+                onClick={() => {
+                  filterByStatus('Submitted');
+                }}
+                className="lbh-link lbh-link--no-visited-state active"
+              >
+                Unassigned applications
+              </button>
+            </div>
             <ApplicationTable
-              caption="Applications"
               applications={applications}
               currentPage={parsedPage}
               parameters={parameters}
               pageUrl={pageUrl}
+              showStatus={false}
             />
           </div>
         </div>
@@ -107,7 +101,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     page = '1',
     reference = '',
     orderby = '',
-    status = '',
+    status = 'Submitted',
   } = context.query as {
     page: string;
     reference: string;
@@ -120,7 +114,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const applications =
     reference === '' && status === ''
       ? await getApplications(page, 'unassigned')
-      : await searchApplications(page, reference, status);
+      : await searchApplications(page, reference, status, 'unassigned');
 
   return {
     props: { user, applications, pageUrl, page, reference },

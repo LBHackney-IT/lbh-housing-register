@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { getRedirect, getSession } from '../../lib/utils/googleAuth';
@@ -46,6 +46,13 @@ export default function ApplicationListPage({
     });
   };
 
+  type State = 'Submitted' | 'Pending';
+  const [state, setState] = useState<State>('Submitted');
+
+  function isActive(selected: string) {
+    return state == selected ? 'active' : '';
+  }
+
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="My worktray">
@@ -61,28 +68,36 @@ export default function ApplicationListPage({
           </div>
           <div className="govuk-grid-column-three-quarters">
             <HeadingOne content="My worktray" />
-            <button
-              onClick={() => {
-                filterByStatus('new');
-              }}
-              className="lbh-link lbh-link--no-visited-state"
-            >
-              New applications
-            </button>{' '}
-            <button
-              onClick={() => {
-                filterByStatus('pending');
-              }}
-              className="lbh-link lbh-link--no-visited-state"
-            >
-              Pending applications
-            </button>
+            <div className="lbh-link-group">
+              <button
+                onClick={() => {
+                  setState('Submitted');
+                  filterByStatus('Submitted');
+                }}
+                className={`lbh-link lbh-link--no-visited-state ${isActive(
+                  'Submitted'
+                )}`}
+              >
+                New applications
+              </button>{' '}
+              <button
+                onClick={() => {
+                  setState('Pending');
+                  filterByStatus('Pending');
+                }}
+                className={`lbh-link lbh-link--no-visited-state ${isActive(
+                  'Pending'
+                )}`}
+              >
+                Pending applications
+              </button>
+            </div>
             <ApplicationTable
-              caption="Applications"
               applications={applications}
               currentPage={parsedPage}
               parameters={parameters}
               pageUrl={pageUrl}
+              showStatus={false}
             />
           </div>
         </div>
@@ -107,7 +122,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     page = '1',
     reference = '',
     orderby = '',
-    status = '',
+    status = 'Submitted',
   } = context.query as {
     page: string;
     reference: string;

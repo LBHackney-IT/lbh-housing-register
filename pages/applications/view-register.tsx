@@ -58,6 +58,7 @@ export default function ViewAllApplicationsPage({
               currentPage={parsedPage}
               parameters={parameters}
               pageUrl={pageUrl}
+              showStatus={true}
             />
           </div>
         </div>

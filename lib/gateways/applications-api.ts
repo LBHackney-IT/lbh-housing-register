@@ -3,6 +3,8 @@ import {
   Application,
   CreateAuthRequest,
   CreateAuthResponse,
+  CreateEvidenceRequest,
+  EvidenceRequestResponse,
   PaginatedApplicationListResponse,
   VerifyAuthRequest,
   VerifyAuthResponse,
@@ -108,6 +110,20 @@ export const completeApplication = async (
   const { data } = await axios.patch(
     `${process.env.HOUSING_REGISTER_API}/applications/${id}/complete`,
     null,
+    {
+      headers: headersWithKey,
+    }
+  );
+  return data;
+};
+
+export const createEvidenceRequest = async (
+  id: string,
+  request: CreateEvidenceRequest
+): Promise<EvidenceRequestResponse | null> => {
+  const { data } = await axios.post(
+    `${process.env.HOUSING_REGISTER_API}/applications/${id}/evidence`,
+    request,
     {
       headers: headersWithKey,
     }

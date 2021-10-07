@@ -3,7 +3,7 @@
   "eligibility": [
     {
       "field": "homelessness",
-      "is": "no",
+      "is": "yes",
       "reasoning": "You have previously been found to be Intentionally Homeless within the last two years"
     }
   ],

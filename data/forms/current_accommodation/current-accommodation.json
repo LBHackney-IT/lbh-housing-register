@@ -1,12 +1,5 @@
 {
   "heading": "Current accommodation",
-  "eligibility": [
-    {
-      "field": "living-situation",
-      "isNot": "squatter",
-      "reasoning": "You are squatting and you have not been granted a court order allowing you to join the housing register"
-    }
-  ],
   "steps": [
     {
       "fields": [

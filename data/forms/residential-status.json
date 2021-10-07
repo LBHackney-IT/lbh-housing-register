@@ -2,11 +2,6 @@
   "heading": "Residential status",
   "eligibility": [
     {
-      "field": "residential-status",
-      "is": "yes",
-      "reasoning": "You have not been continuously residing in Hackney for the last 3 years and you do not fall within any of the listed exceptions"
-    },
-    {
       "field": "asbo-behaviour",
       "is": "yes",
       "reasoning": "You are unable to reside in the borough due to a court order or an injunction"

@@ -36,12 +36,14 @@ interface PageProps {
   user: HackneyGoogleUserWithPermissions;
   data: Application;
   person: string;
+  evidenceLink: string;
 }
 
 export default function ApplicationPersonPage({
   user,
   data,
   person,
+  evidenceLink,
 }: PageProps): JSX.Element {
   if (!data.id) return <Custom404 />;
   let isMainApplicant = data.mainApplicant?.person?.id === person;
@@ -102,10 +104,7 @@ export default function ApplicationPersonPage({
                 className="govuk-grid-column-one-third"
                 style={{ textAlign: 'right' }}
               >
-                <a
-                  href={`${process.env.NEXT_PUBLIC_EVIDENCE_STORE}`}
-                  target="_blank"
-                >
+                <a href={evidenceLink} target="_blank">
                   <Button>View Documents</Button>
                 </a>
               </div>
@@ -223,5 +222,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  return { props: { user, data, person } };
+  const evidenceLink = process.env.NEXT_PUBLIC_EVIDENCE_STORE;
+  return { props: { user, data, person, evidenceLink } };
 };

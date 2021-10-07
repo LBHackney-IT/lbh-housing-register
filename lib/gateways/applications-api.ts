@@ -120,7 +120,7 @@ export const completeApplication = async (
 export const createEvidenceRequest = async (
   id: string,
   request: CreateEvidenceRequest
-): Promise<EvidenceRequestResponse | null> => {
+): Promise<Array<EvidenceRequestResponse> | null> => {
   const { data } = await axios.post(
     `${process.env.HOUSING_REGISTER_API}/applications/${id}/evidence`,
     request,

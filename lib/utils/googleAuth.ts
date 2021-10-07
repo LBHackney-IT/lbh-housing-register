@@ -4,7 +4,6 @@ import { Redirect } from 'next';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 
 type Permissions = {
-  hasAnyPermissions: boolean;
   hasAdminPermissions: boolean;
   hasManagerPermissions: boolean;
   hasOfficerPermissions: boolean;
@@ -56,7 +55,6 @@ export const getPermissions = (user: HackneyGoogleUser): Permissions => {
   } = process.env;
 
   return {
-    hasAnyPermissions: user.groups.length > 0,
     hasAdminPermissions: hasUserGroup(AUTHORISED_ADMIN_GROUP!, user),
     hasManagerPermissions: hasUserGroup(AUTHORISED_MANAGER_GROUP!, user),
     hasOfficerPermissions: hasUserGroup(AUTHORISED_OFFICER_GROUP!, user),
@@ -68,6 +66,16 @@ export const hasUserGroup = (
   user: HackneyGoogleUser
 ): boolean => {
   return user.groups.includes(group);
+};
+
+export const hasAnyPermissions = (
+  user: HackneyGoogleUserWithPermissions
+): boolean => {
+  return (
+    user.hasAdminPermissions ||
+    user.hasManagerPermissions ||
+    user.hasOfficerPermissions
+  );
 };
 
 export const canViewSensitiveApplication = (
@@ -84,12 +92,12 @@ export const canViewSensitiveApplication = (
 };
 
 export const getRedirect = (
-  user?: HackneyGoogleUser & { hasAnyPermissions: boolean }
+  user?: HackneyGoogleUserWithPermissions
 ): string | undefined => {
   if (!user) {
     return '/login';
   }
-  if (!user.hasAnyPermissions) {
+  if (!hasAnyPermissions(user)) {
     return '/access-denied';
   }
 };

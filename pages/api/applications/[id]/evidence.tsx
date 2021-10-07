@@ -15,11 +15,9 @@ const endpoint: NextApiHandler = async (
         res.status(StatusCodes.OK).json(data);
       } catch (error) {
         console.error(error);
-        res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({
-            message: 'Unable to create evidence request for application',
-          });
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+          message: 'Unable to create evidence request for application',
+        });
       }
       break;
 

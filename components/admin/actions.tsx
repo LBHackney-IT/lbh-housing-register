@@ -9,6 +9,7 @@ import Radios from '../form/radios';
 import Input from '../form/input';
 import InsetText from '../content/inset-text';
 import { updateApplication } from '../../lib/gateways/internal-api';
+import { ApplicationStatus } from '../../lib/types/application-status';
 
 interface PageProps {
   data: Application;
@@ -22,43 +23,43 @@ export default function Actions({ data }: PageProps): JSX.Element {
     },
     {
       label: 'Awaiting assessment',
-      value: 'Submitted',
+      value: ApplicationStatus.SUBMITTED,
     },
     {
       label: 'Active',
-      value: 'Active',
+      value: ApplicationStatus.ACTIVE,
     },
     {
       label: 'Referred for approval',
-      value: 'Referred',
+      value: ApplicationStatus.REFERRED,
     },
     {
       label: 'Rejected',
-      value: 'Rejected',
+      value: ApplicationStatus.REJECTED,
     },
     {
       label: 'Pending',
-      value: 'Pending',
+      value: ApplicationStatus.PENDING,
     },
     {
       label: 'Cancelled',
-      value: 'Cancelled',
+      value: ApplicationStatus.CANCELLED,
     },
     {
       label: 'Housed',
-      value: 'Housed',
+      value: ApplicationStatus.HOUSED,
     },
     {
       label: 'Active and under appeal',
-      value: 'ActiveUnderAppeal',
+      value: ApplicationStatus.ACTIVE_UNDER_APPEAL,
     },
     {
       label: 'Inactive and under appeal',
-      value: 'InactiveUnderAppeal',
+      value: ApplicationStatus.INACTIVE_UNDER_APPEAL,
     },
     {
       label: 'Suspended',
-      value: 'Suspended',
+      value: ApplicationStatus.SUSPENDED,
     },
   ];
 
@@ -199,15 +200,18 @@ export default function Actions({ data }: PageProps): JSX.Element {
   };
 
   function showDecisionOptions(values: FormikValues): boolean {
-    return values.status === 'Active' || values.status === 'ActiveUnderAppeal';
+    return (
+      values.status === ApplicationStatus.ACTIVE ||
+      values.status === ApplicationStatus.ACTIVE_UNDER_APPEAL
+    );
   }
 
   function showInformationReceived(values: FormikValues): boolean {
     return (
-      values.status === 'Active' ||
-      values.status === 'ActiveUnderAppeal' ||
-      values.status === 'Rejected' ||
-      values.status === 'Cancelled'
+      values.status === ApplicationStatus.ACTIVE ||
+      values.status === ApplicationStatus.ACTIVE_UNDER_APPEAL ||
+      values.status === ApplicationStatus.REJECTED ||
+      values.status === ApplicationStatus.CANCELLED
     );
   }
 

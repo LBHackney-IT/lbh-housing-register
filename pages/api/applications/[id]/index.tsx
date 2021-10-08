@@ -1,7 +1,11 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { updateApplication } from '../../../../lib/gateways/applications-api';
-import { canUpdateApplication } from '../../../../lib/utils/requestAuth';
+import {
+  canUpdateApplication,
+  hasStaffPermissions,
+  isStaffAction,
+} from '../../../../lib/utils/requestAuth';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -13,7 +17,10 @@ const endpoint: NextApiHandler = async (
         const application = JSON.parse(req.body);
         const id = req.query.id as string;
 
-        if (canUpdateApplication(req, id)) {
+        if (
+          canUpdateApplication(req, id) ||
+          (isStaffAction(application) && hasStaffPermissions(req))
+        ) {
           const data = await updateApplication(application, id);
           res.status(StatusCodes.OK).json(data);
         } else {

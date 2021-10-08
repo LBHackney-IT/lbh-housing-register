@@ -487,7 +487,7 @@ export interface VerifyAuthResponse {
 
 export interface CreateEvidenceRequest {
   userRequestedBy?: string;
-  documentTypes: Array<string>;
+  documentTypes: string[];
 }
 export interface EvidenceRequestResponse {
   id: string;

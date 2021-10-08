@@ -24,7 +24,7 @@ import { FormID } from '../../../lib/utils/form-data';
 import withApplication from '../../../lib/hoc/withApplication';
 import { removeApplicant } from '../../../lib/store/otherMembers';
 import { useDispatch } from 'react-redux';
-import { sendDisqualifyEmail } from '../../../lib/store/application';
+import { disqualifyApplication, sendDisqualifyEmail } from '../../../lib/store/application';
 
 const UserSummary = (): JSX.Element => {
   const router = useRouter();
@@ -48,6 +48,7 @@ const UserSummary = (): JSX.Element => {
     const [isEligible] = checkEligible(application);
     if (!isEligible) {
       dispatch(sendDisqualifyEmail(application));
+      dispatch(disqualifyApplication(application.id!));
       router.push('/apply/not-eligible');
     } else {
       router.push('/apply/overview');

@@ -31,6 +31,8 @@ export default function StaffLayout({
       <SkipLink />
       <Header
         username={user?.name}
+        logoLink="/applications"
+        serviceName="Housing Register admin"
         signOutText="Sign out"
         onSignOut={signOut}
       />

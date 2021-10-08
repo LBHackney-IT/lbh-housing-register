@@ -484,3 +484,12 @@ export interface VerifyAuthRequest {
 export interface VerifyAuthResponse {
   accessToken: string;
 }
+
+export interface CreateEvidenceRequest {
+  userRequestedBy?: string;
+  documentTypes: string[];
+}
+export interface EvidenceRequestResponse {
+  id: string;
+  createdAt: string;
+}

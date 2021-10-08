@@ -5,6 +5,7 @@ import {
   completeApplication,
   sendDisqualifyEmail,
   sendMedicalNeed,
+  createEvidenceRequest,
 } from '../../../lib/store/application';
 import withApplication from '../../../lib/hoc/withApplication';
 import { applicantsWithMedicalNeed } from '../../../lib/utils/medicalNeed';
@@ -40,6 +41,7 @@ const Declaration = (): JSX.Element => {
       }
 
       dispatch(completeApplication(application));
+      dispatch(createEvidenceRequest(application));
       router.push('/apply/confirmation');
     }
   };

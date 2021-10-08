@@ -149,7 +149,10 @@ const slice = createSlice({
       )
       .addCase(createApplication.fulfilled, (state, action) => action.payload)
       .addCase(updateApplication.fulfilled, (state, action) => action.payload)
-      .addCase(disqualifyApplication.fulfilled, (state, action) => action.payload)
+      .addCase(
+        disqualifyApplication.fulfilled,
+        (state, action) => action.payload
+      )
       .addCase(completeApplication.fulfilled, (state, action) => action.payload)
       .addCase(exit.fulfilled, (state, action) => ({}))
 

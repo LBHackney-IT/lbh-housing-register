@@ -24,7 +24,10 @@ import { FormID } from '../../../lib/utils/form-data';
 import withApplication from '../../../lib/hoc/withApplication';
 import { removeApplicant } from '../../../lib/store/otherMembers';
 import { useDispatch } from 'react-redux';
-import { disqualifyApplication, sendDisqualifyEmail } from '../../../lib/store/application';
+import {
+  disqualifyApplication,
+  sendDisqualifyEmail,
+} from '../../../lib/store/application';
 
 const UserSummary = (): JSX.Element => {
   const router = useRouter();

@@ -30,18 +30,23 @@ export const allFormSections = (keysToIgnore: string[]) => {
 };
 
 export const generateInitialValues = (sections: SectionData[]) => {
-  const allFields = sections
+  const allFieldNames = sections
     .map((section: any) =>
       section.fields.map((field: FormField) => {
         const updatedFieldName = generateUniqueFieldName(
           section.sectionId,
           field.name
         );
-        return { ...field, updatedFieldName };
+        return updatedFieldName;
       })
     )
     .flat();
-  return allFields;
+
+  const initialValuesObject = allFieldNames.reduce(
+    (acc, current) => ((acc[current] = ''), acc),
+    {}
+  );
+  return initialValuesObject;
 };
 
 export const generateUniqueFieldName = (sectionId: string, fieldName: string) =>

@@ -34,8 +34,12 @@ export default function Actions({ data }: PageProps): JSX.Element {
       value: ApplicationStatus.REFERRED,
     },
     {
-      label: 'Rejected',
+      label: 'Rejected by officer',
       value: ApplicationStatus.REJECTED,
+    },
+    {
+      label: 'Rejected by system',
+      value: ApplicationStatus.DISQUALIFIED,
     },
     {
       label: 'Pending',
@@ -60,6 +64,10 @@ export default function Actions({ data }: PageProps): JSX.Element {
     {
       label: 'Suspended',
       value: ApplicationStatus.SUSPENDED,
+    },
+    {
+      label: 'Incomplete',
+      value: ApplicationStatus.DRAFT,
     },
   ];
 

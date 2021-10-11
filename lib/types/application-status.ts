@@ -5,6 +5,7 @@ export enum ApplicationStatus {
   PENDING = 'Pending',
   REFERRED = 'Referred',
   REJECTED = 'Rejected',
+  DISQUALIFIED = 'Disqualified',
   CANCELLED = 'Cancelled',
   SUSPENDED = 'Suspended',
   HOUSED = 'Housed',

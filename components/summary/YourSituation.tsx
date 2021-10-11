@@ -15,6 +15,31 @@ export function YourSituationSummary({
   currentResident,
 }: YourSituationSummaryProps) {
   // TODO: this could be nicer, but we've got a mixture of questions and forms to get answers for
+  const armedForces = getQuestionValue(
+    currentResident.questions,
+    FormID.ARMED_FORCES,
+    'situation-armed-forces'
+  );
+  const courtOrder = getQuestionValue(
+    currentResident.questions,
+    FormID.COURT_ORDER,
+    'court-order'
+  );
+  const accommodationType = getQuestionValue(
+    currentResident.questions,
+    FormID.ACCOMODATION_TYPE,
+    'accommodation-type'
+  );
+  const subletting = getQuestionValue(
+    currentResident.questions,
+    FormID.SUBLETTING,
+    'subletting'
+  );
+  const domesticViolence = getQuestionValue(
+    currentResident.questions,
+    FormID.DOMESTIC_VIOLENCE,
+    'domestic-violence'
+  );
   const homelessness = getQuestionValue(
     currentResident.questions,
     FormID.HOMELESSNESS,
@@ -30,10 +55,20 @@ export function YourSituationSummary({
     FormID.SOLD_PROPERTY,
     'sold-property'
   );
+  const buyProperty = getQuestionValue(
+    currentResident.questions,
+    FormID.PURCHASING_PROPERTY,
+    'purchasing-property'
+  );
   const arrears = getQuestionValue(
     currentResident.questions,
     FormID.ARREARS,
     'arrears'
+  );
+  const underOccupying = getQuestionValue(
+    currentResident.questions,
+    FormID.UNDER_OCCUPYING,
+    'under-occupying'
   );
   const otherHousingRegister = getQuestionValue(
     currentResident.questions,
@@ -68,9 +103,53 @@ export function YourSituationSummary({
         href={`/apply/${currentResident.person.id}/${FormID.YOUR_SITUATION}`}
       />
 
-      {!homelessness && (
+      {!armedForces && (
         <SummaryAnswer>
           <Paragraph>Not provided yet</Paragraph>
+        </SummaryAnswer>
+      )}
+      {armedForces && (
+        <SummaryAnswer>
+          <Paragraph>
+            <strong>
+              {armedForces === 'yes'
+                ? 'I have, or my partner has'
+                : 'I have not, and my partner has not'}
+            </strong>{' '}
+            served in the armed forces
+          </Paragraph>
+        </SummaryAnswer>
+      )}
+      {courtOrder && (
+        <SummaryAnswer>
+          <Paragraph>
+            <strong>{courtOrder === 'yes' ? 'I have' : 'I do not have'}</strong>{' '}
+            a court order allowing me to be on the register
+          </Paragraph>
+        </SummaryAnswer>
+      )}
+      {accommodationType && (
+        <SummaryAnswer>
+          <Paragraph>
+            <strong>{accommodationType === 'yes' ? 'I am' : 'I am not'}</strong>{' '}
+            a social tenant or in temporary accommodation
+          </Paragraph>
+        </SummaryAnswer>
+      )}
+      {subletting && (
+        <SummaryAnswer>
+          <Paragraph>
+            <strong>{subletting === 'yes' ? 'I have' : 'I have not'}</strong>{' '}
+            sublet my accommodation without permission
+          </Paragraph>
+        </SummaryAnswer>
+      )}
+      {domesticViolence && (
+        <SummaryAnswer>
+          <Paragraph>
+            <strong>{domesticViolence === 'yes' ? 'I am' : 'I am not'}</strong>{' '}
+            fleeing domestic violence
+          </Paragraph>
         </SummaryAnswer>
       )}
       {homelessness && (
@@ -101,11 +180,27 @@ export function YourSituationSummary({
           </Paragraph>
         </SummaryAnswer>
       )}
+      {buyProperty && (
+        <SummaryAnswer>
+          <Paragraph>
+            <strong>{buyProperty === 'yes' ? 'I am' : 'I am not'}</strong> able
+            to buy a property to meet my needs
+          </Paragraph>
+        </SummaryAnswer>
+      )}
       {arrears && (
         <SummaryAnswer>
           <Paragraph>
             <strong>{arrears === 'yes' ? 'I am' : 'I am not'}</strong> in four
             or more weeks arrears with rent, council tax or service charges
+          </Paragraph>
+        </SummaryAnswer>
+      )}
+      {underOccupying && (
+        <SummaryAnswer>
+          <Paragraph>
+            <strong>{underOccupying === 'yes' ? 'I am' : 'I am not'}</strong>
+            under occupying
           </Paragraph>
         </SummaryAnswer>
       )}

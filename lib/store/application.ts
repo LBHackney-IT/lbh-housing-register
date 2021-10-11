@@ -49,6 +49,21 @@ export const updateApplication = createAsyncThunk(
   }
 );
 
+export const disqualifyApplication = createAsyncThunk(
+  'application/disqualify',
+  async (id: string) => {
+    const request: Application = {
+      id: id,
+      status: 'Rejected',
+    };
+    const res = await fetch(`/api/applications/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(request),
+    });
+    return (await res.json()) as Application;
+  }
+);
+
 export const completeApplication = createAsyncThunk(
   'application/complete',
   async (application: Application) => {
@@ -155,6 +170,10 @@ const slice = createSlice({
       )
       .addCase(createApplication.fulfilled, (state, action) => action.payload)
       .addCase(updateApplication.fulfilled, (state, action) => action.payload)
+      .addCase(
+        disqualifyApplication.fulfilled,
+        (state, action) => action.payload
+      )
       .addCase(completeApplication.fulfilled, (state, action) => action.payload)
       .addCase(exit.fulfilled, (state, action) => ({}))
 

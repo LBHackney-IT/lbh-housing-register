@@ -43,6 +43,8 @@ export default function ApplicationPersonPage({
   data,
   person,
 }: PageProps): JSX.Element {
+  console.log(user, data, person);
+
   if (!data.id) return <Custom404 />;
   let isMainApplicant = data.mainApplicant?.person?.id === person;
   let applicant = isMainApplicant

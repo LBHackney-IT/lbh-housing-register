@@ -45,6 +45,7 @@ export interface RadioFormField extends BaseFormField {
 
 export interface SelectFormField extends BaseFormField {
   as: 'select';
+  modifierClasses?: string;
   options: FormFieldOption[];
 }
 
@@ -129,6 +130,7 @@ export type Conditionals = {
 };
 
 export type MultiStepForm = {
+  id: string;
   copy?: string;
   eligibility?: EligibilityCriteria[];
   heading?: string;

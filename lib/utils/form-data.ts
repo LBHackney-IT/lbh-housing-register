@@ -64,7 +64,7 @@ export enum FormID {
   INCOME_SAVINGS = 'income-savings',
   MEDICAL_NEEDS = 'medical-needs',
   YOUR_SITUATION = 'your-situation',
-  ARMED_FORCES = 'situation-armed-forces',
+  SITUATION_ARMED_FORCES = 'situation-armed-forces',
   COURT_ORDER = 'court-order',
   ACCOMODATION_TYPE = 'accommodation-type',
   DOMESTIC_VIOLENCE = 'domestic-violence',
@@ -150,7 +150,7 @@ export function getFormData(form: FormID): MultiStepForm {
       return medicalNeeds as MultiStepForm;
 
     // your situation
-    case FormID.ARMED_FORCES:
+    case FormID.SITUATION_ARMED_FORCES:
       return ArmedForces as MultiStepForm;
 
     case FormID.COURT_ORDER:

@@ -16,3 +16,11 @@ export const updateApplication = async (application: Application) => {
   });
   return (await res.json()) as Application;
 };
+
+export const createApplication = async (application: Application) => {
+  const res = await fetch(`/api/applications/${application.id}`, {
+    method: 'POST',
+    body: JSON.stringify(application),
+  });
+  return (await res.json()) as Application;
+};

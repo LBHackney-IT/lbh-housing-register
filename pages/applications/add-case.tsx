@@ -3,407 +3,189 @@ import { UserContext } from '../../lib/contexts/user-context';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { Form, Formik, FormikValues } from 'formik';
 import Button from '../../components/button';
-import Input from '../../components/form/input';
-import Textarea from '../../components/form/textarea';
-import DateInput, { INVALID_DATE } from '../../components/form/dateinput';
-import Select from '../../components/form/select';
-import SummaryListNoBorder, {
-  SummaryListActions,
-  SummaryListRow,
-  SummaryListKey,
-  SummaryListValue,
-} from '../../components/summary-list';
 import { getFormData, FormID } from '../../lib/utils/form-data';
-import { Checkbox } from '../../components/form/checkboxes';
+import AllFormFieldsMarkup from '../../components/admin/AllFormFieldsMarkup';
+import { Application } from '../../domain/HousingApi';
+import { createApplication } from '../../lib/gateways/internal-api';
+import {
+  allFormSections,
+  generateInitialValues,
+} from '../../lib/utils/adminHelpers';
 
-// Helpers
-
-const allFormIds = Object.keys(FormID);
-
-const idsToIgnore = [
+const keysToIgnore = [
   'AGREEMENT',
   'SIGN_IN',
   'SIGN_IN_VERIFY',
   'SIGN_UP_DETAILS',
+  'DECLARATION',
 ];
-
-// Form field data
-const personalDetailsFormData = getFormData(FormID.PERSONAL_DETAILS);
-const immigrationStatusFormData = getFormData(FormID.IMMIGRATION_STATUS);
-const residentialStatusFormData = getFormData(FormID.RESIDENTIAL_STATUS);
-const addressHistoryFormData = getFormData(FormID.ADDRESS_HISTORY);
-const currentAccommodationFormData = getFormData(FormID.CURRENT_ACCOMMODATION);
-const homelessnessFormData = getFormData(FormID.HOMELESSNESS);
 
 interface PageProps {
   user: HackneyGoogleUser;
-}
-
-function FormFieldsMarkup({ sectionData }: any): JSX.Element {
-  // console.log(sectionData);
-
-  const allFormFields = sectionData.steps
-    .map((step: any) => step.fields)
-    .flat();
-
-  // console.log(allFormFields);
-
-  const markup = allFormFields.map((field: any, index: number) => {
-    const inputType = field.as ? field.as : 'text';
-    // console.log(field, inputType);
-
-    let inputField: JSX.Element = <></>;
-
-    if (inputType === 'text') {
-      inputField = <Input name={field.name} />;
-    }
-
-    if (inputType === 'textarea') {
-      inputField = <Textarea name={field.name} label="" as="textarea" />;
-    }
-
-    if (inputType === 'dateinput') {
-      inputField = (
-        <DateInput name={field.name} label={field.label} showDay={true} />
-      );
-    }
-
-    if (inputType === 'checkbox') {
-      inputField = <Checkbox name={field.name} label="" value="" />;
-    }
-
-    if (
-      inputType === 'select' ||
-      inputType === 'radioconditional' ||
-      inputType === 'radios' ||
-      inputType === 'checkboxes'
-    ) {
-      inputField = (
-        <Select
-          label=""
-          name={field.name}
-          options={field.options.map((option: any) => ({
-            label: option.label,
-            value: option.value,
-          }))}
-        />
-      );
-    }
-
-    const title = index === 0 ? sectionData.heading : '';
-
-    return (
-      <SummaryListRow>
-        <SummaryListKey>{title}</SummaryListKey>
-        <SummaryListValue>
-          <label htmlFor={field.name}>{field.label}</label>
-        </SummaryListValue>
-        <SummaryListActions wideActions={true}>{inputField}</SummaryListActions>
-      </SummaryListRow>
-    );
-  });
-
-  return <SummaryListNoBorder>{markup}</SummaryListNoBorder>;
+  data: Application;
 }
 
 export default function AddCasePage({ user }: PageProps): JSX.Element {
   const onSubmit = (values: FormikValues) => {
-    console.log('submitted');
+    console.log(FormID.ACCOMODATION_TYPE);
+
+    // const test = getQuestionsForFormAsValues(FormID.ACCOMODATION_TYPE);
+
+    console.log('submitted: ', values);
+    const request: Application = {
+      id: '123345678910',
+      reference: '31a1de3271',
+      status: 'New',
+      sensitiveData: true,
+      assignedTo: 'thomas.morris@hackney.gov.uk',
+      createdAt: '2021-09-14T19:23:42.7573803Z',
+      mainApplicant: {
+        person: {},
+        address: {},
+        contactInformation: {},
+        questions: [],
+      },
+      otherMembers: [],
+    };
+    // console.log(request);
+
+    // createApplication(request);
+    // router.reload();
   };
 
-  const citizenshipOptions = [
-    {
-      label: 'Select an option',
-      value: '',
-    },
-  ];
+  // const schema = Yup.object({
+  //   status: Yup.string()
+  //     .label('Status')
+  //     .required()
+  //     .oneOf(statusOptions.map(({ value }) => value)),
+  //   reason: Yup.string()
+  //     .label('Reason')
+  //     .oneOf(reasonOptions.map(({ value }) => value)),
+  //   applicationDate: Yup.string(),
+  //   informationReceived: Yup.string(),
+  //   band: Yup.string(),
+  //   biddingNumberType: Yup.string().oneOf(['generate', 'manual']),
+  //   biddingNumber: Yup.string(),
+  // });
 
-  const studyStatusOptions = [
-    {
-      label: 'Select an option',
-      value: '',
-    },
-  ];
+  const initialValues = {
+    personalDetails_title: '',
+    personalDetails_firstName: '',
+    personalDetails_surname: '',
+    personalDetails_dateOfBirth: '',
+    personalDetails_gender: '',
+    personalDetails_nationalInsuranceNumber: '',
+    personalDetails_phoneNumber: '',
+    personalDetails_emailAddress: '',
+    immigrationStatus_citizenship: '',
+    immigrationStatus_ukStudying: '',
+    immigrationStatus_settledStatus: '',
+    immigrationStatus_workOrStudyVisa: '',
+    immigrationStatus_eeaNational: '',
+    immigrationStatus_receivingSponsorship: '',
+    immigrationStatus_legalStatus: '',
+    residentialStatus_residentialStatus: '',
+    residentialStatus_movedBorough: '',
+    residentialStatus_homeless: '',
+    residentialStatus_asboBehaviour: '',
+    residentialStatus_armedForces: '',
+    residentialStatus_mobilityScheme: '',
+    residentialStatus_homelessnessAccepted: '',
+    residentialStatus_socialHousing: '',
+    residentialStatus_workInHackney: '',
+    residentialStatus_providingCare: '',
+    residentialStatus_domesticViolence: '',
+    residentialStatus_studyingOutsideBorough: '',
+    residentialStatus_institutions: '',
+    addressHistory_addressFinder: '',
+    currentAccommodation_livingSituation: '',
+    currentAccommodation_home: '',
+    currentAccommodation_homeFloor: '',
+    currentAccommodation_homeHowManyPeopleShare: '',
+    currentAccommodation_homeHowManyBedrooms: '',
+    currentAccommodation_homeHowManyLivingrooms: '',
+    currentAccommodation_homeHowManyDiningrooms: '',
+    currentAccommodation_homeHowManyBathrooms: '',
+    currentAccommodation_homeHowManyKitchens: '',
+    currentAccommodation_homeHowManyOtherRooms: '',
+    currentAccommodation_whyHomeUnsuitable: '',
+    currentAccommodationHostDetails_hostPersonName: '',
+    currentAccommodationHostDetails_hostPersonNumber: '',
+    currentAccommodationLandlordDetails_landlordName: '',
+    employment_employment: '',
+    employment_addressFinder: '',
+    employment_courseCompletionDate: '',
+    employment_proofOfIncomeEmployeed: '',
+    employment_proofOfIncomeSelfEmployeed: '',
+    employment_proofOfIncomeRetired: '',
+    incomeSavings_income: '',
+    incomeSavings_savings: '',
+    medicalNeeds_medicalNeeds: '',
+    medicalNeeds_proofOfMedicalNeeds: '',
+    yourSituation_yourSituation: '',
+    situationArmedForces_situationArmedForces: '',
+    courtOrder_courtOrder: '',
+    courtOrder_details: '',
+    accommodationType_accommodationType: '',
+    domesticViolence_domesticViolence: '',
+    homelessness_homelessness: '',
+    subletting_subletting: '',
+    medicalNeed_medicalNeed: '',
+    purchasingProperty_purchasingProperty: '',
+    propertyOwnership_propertyOwnership: '',
+    soldProperty_soldProperty: '',
+    relationshipBreakdown_relationshipBreakdown: '',
+    arrears_arrears: '',
+    underOccupying_underOccupying: '',
+    benefits_benefits: '',
+    landlord_landlord: '',
+    otherHousingRegister_otherHousingRegister: '',
+    breachOfTenancy_breachOfTenancy: '',
+    breachOfTenancy_details: '',
+    legalRestrictions_legalRestrictions: '',
+    legalRestrictions_details: '',
+    unspentConvictions_unspentConvictions: '',
+    unspentConvictions_details: '',
+    additionalQuestions_householdInfo: '',
+    additionalQuestions_householdDetails: '',
+    ethnicityQuestions_ethnicityMainCategory: '',
+    ethnicityExtendedCategoryAsianAsianBritish_ethnicityExtendedCategory: '',
+    ethnicityExtendedCategoryBlackBlackBritish_ethnicityExtendedCategory: '',
+    ethnicityExtendedCategoryMixedMultipleBackground_ethnicityExtendedCategory:
+      '',
+    ethnicityExtendedCategoryWhite_ethnicityExtendedCategory: '',
+    ethnicityExtendedCategoryOtherEthnicGroup_ethnicityExtendedCategory: '',
+    adminHealthActions_linkToMedicalForm: '',
+    adminHealthActions_dateFormRecieved: '',
+    adminHealthActions_assessmentDate: '',
+    adminHealthActions_outcome: '',
+    adminHealthActions_accessibleHousingRegister: '',
+    adminHealthActions_disability: '',
+    adminHealthActions_additionalInformation: '',
+  };
 
-  const visaStatusOptions = [
-    {
-      label: 'Select an option',
-      value: '',
-    },
-  ];
+  // console.log(allFormSections(keysToIgnore));
 
-  const threeYearResidentialStatus = [
-    {
-      label: 'Select an option',
-      value: '',
-    },
-  ];
+  const sections = allFormSections(keysToIgnore);
 
-  const PeriodsAwayFromHackneylStatus = [
-    {
-      label: 'Select an option',
-      value: '',
-    },
-  ];
-
-  const homelessStatus = [
-    {
-      label: 'Select an option',
-      value: '',
-    },
-  ];
-
-  const injunctionStatus = [
-    {
-      label: 'Select an option',
-      value: '',
-    },
-  ];
-
-  const armedForcesStatus = [
-    {
-      label: 'Select an option',
-      value: '',
-    },
-  ];
-
-  const nationalWitnessMobilitySchemeStatus = [
-    {
-      label: 'Select an option',
-      value: '',
-    },
-  ];
-
-  const HomelessWithMainDutyStatus = [
-    {
-      label: 'Select an option',
-      value: '',
-    },
-  ];
-
-  const existingHackneySocialTenantStatus = [
-    {
-      label: 'Select an option',
-      value: '',
-    },
-  ];
+  // THIS NEEDS TO RETURN IN THE FORMAT ABOVE
+  const flatSections = generateInitialValues(sections);
+  // console.log(flatSections);
 
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="Group worktray">
-        <Formik initialValues={{}} onSubmit={onSubmit}>
+        <Formik initialValues={initialValues} onSubmit={onSubmit}>
           {({ isSubmitting }) => (
             <Form>
-              {allFormIds.map((id) => {
-                if (idsToIgnore.includes(id)) {
-                  return null;
-                }
-
-                return (
-                  <FormFieldsMarkup sectionData={getFormData(FormID[id])} />
-                );
-              })}
-              {/* <FormFieldsMarkup sectionData={personalDetailsFormData} />
-              <FormFieldsMarkup sectionData={immigrationStatusFormData} />
-              <FormFieldsMarkup sectionData={residentialStatusFormData} />
-              <FormFieldsMarkup sectionData={addressHistoryFormData} />
-              <FormFieldsMarkup sectionData={currentAccommodationFormData} />
-              <FormFieldsMarkup sectionData={homelessnessFormData} /> */}
-
-              {/* <SummaryListNoBorder>
-                <SummaryListRow>
-                  <SummaryListKey>Immigration status</SummaryListKey>
-                  <SummaryListValue>Citizenship</SummaryListValue>
-
-                  <SummaryListActions wideActions={true}>
-                    <Select
-                      label=""
-                      name={'relationshipType'}
-                      options={citizenshipOptions.map((options) => ({
-                        label: options.label,
-                        value: options.value,
-                      }))}
-                    />
-                  </SummaryListActions>
-                </SummaryListRow>
-
-                <SummaryListRow>
-                  <SummaryListKey></SummaryListKey>
-                  <SummaryListValue>Study status</SummaryListValue>
-
-                  <SummaryListActions wideActions={true}>
-                    <Select
-                      label=""
-                      name={'studyStatus'}
-                      options={studyStatusOptions.map((options) => ({
-                        label: options.label,
-                        value: options.value,
-                      }))}
-                    />
-                  </SummaryListActions>
-                </SummaryListRow>
-
-                <SummaryListRow>
-                  <SummaryListKey></SummaryListKey>
-                  <SummaryListValue>Visa status</SummaryListValue>
-
-                  <SummaryListActions wideActions={true}>
-                    <Select
-                      label=""
-                      name={'studyStatus'}
-                      options={visaStatusOptions.map((options) => ({
-                        label: options.label,
-                        value: options.value,
-                      }))}
-                    />
-                  </SummaryListActions>
-                </SummaryListRow>
-              </SummaryListNoBorder> */}
-
-              {/* <SummaryListNoBorder>
-                <SummaryListRow>
-                  <SummaryListKey>Residential status</SummaryListKey>
-                  <SummaryListValue>3 year residential status</SummaryListValue>
-
-                  <SummaryListActions wideActions={true}>
-                    <Select
-                      label=""
-                      name={'threeYearResidentialStatus'}
-                      options={threeYearResidentialStatus.map((options) => ({
-                        label: options.label,
-                        value: options.value,
-                      }))}
-                    />
-                  </SummaryListActions>
-                </SummaryListRow>
-                <SummaryListRow>
-                  <SummaryListKey></SummaryListKey>
-                  <SummaryListValue>Periods away from Hackney</SummaryListValue>
-
-                  <SummaryListActions wideActions={true}>
-                    <Select
-                      label=""
-                      name={'PeriodsAwayFromHackney'}
-                      options={PeriodsAwayFromHackneylStatus.map((options) => ({
-                        label: options.label,
-                        value: options.value,
-                      }))}
-                    />
-                  </SummaryListActions>
-                </SummaryListRow>
-
-                <SummaryListRow>
-                  <SummaryListKey></SummaryListKey>
-                  <SummaryListValue>
-                    Homeless and living in temporary accommodation outside of
-                  </SummaryListValue>
-
-                  <SummaryListActions wideActions={true}>
-                    <Select
-                      label=""
-                      name={'homeless'}
-                      options={homelessStatus.map((options) => ({
-                        label: options.label,
-                        value: options.value,
-                      }))}
-                    />
-                  </SummaryListActions>
-                </SummaryListRow>
-
-                <SummaryListRow>
-                  <SummaryListKey></SummaryListKey>
-                  <SummaryListValue>
-                    Unable to live in the borough due to a court order or
-                  </SummaryListValue>
-
-                  <SummaryListActions wideActions={true}>
-                    <Select
-                      label=""
-                      name={'injunction'}
-                      options={injunctionStatus.map((options) => ({
-                        label: options.label,
-                        value: options.value,
-                      }))}
-                    />
-                  </SummaryListActions>
-                </SummaryListRow>
-
-                <SummaryListRow>
-                  <SummaryListKey></SummaryListKey>
-                  <SummaryListValue>
-                    Applicant or partner has served in the armed forces
-                  </SummaryListValue>
-
-                  <SummaryListActions wideActions={true}>
-                    <Select
-                      label=""
-                      name={'armedForces'}
-                      options={armedForcesStatus.map((options) => ({
-                        label: options.label,
-                        value: options.value,
-                      }))}
-                    />
-                  </SummaryListActions>
-                </SummaryListRow>
-
-                <SummaryListRow>
-                  <SummaryListKey></SummaryListKey>
-                  <SummaryListValue>
-                    Applicant or partner is a nominee under the National Scheme
-                  </SummaryListValue>
-
-                  <SummaryListActions wideActions={true}>
-                    <Select
-                      label=""
-                      name={'nationalWitnessMobilityScheme'}
-                      options={nationalWitnessMobilitySchemeStatus.map(
-                        (options) => ({
-                          label: options.label,
-                          value: options.value,
-                        })
-                      )}
-                    />
-                  </SummaryListActions>
-                </SummaryListRow>
-
-                <SummaryListRow>
-                  <SummaryListKey></SummaryListKey>
-                  <SummaryListValue>
-                    Accepted with homeless with main duty
-                  </SummaryListValue>
-
-                  <SummaryListActions wideActions={true}>
-                    <Select
-                      label=""
-                      name={'HomelessWithMainDuty'}
-                      options={HomelessWithMainDutyStatus.map((options) => ({
-                        label: options.label,
-                        value: options.value,
-                      }))}
-                    />
-                  </SummaryListActions>
-                </SummaryListRow>
-
-                <SummaryListRow>
-                  <SummaryListKey></SummaryListKey>
-                  <SummaryListValue>
-                    Existing Hackney social tenant with an assured or fixed
-                  </SummaryListValue>
-
-                  <SummaryListActions wideActions={true}>
-                    <Select
-                      label=""
-                      name={'existingHackneySocialTenant'}
-                      options={existingHackneySocialTenantStatus.map(
-                        (options) => ({
-                          label: options.label,
-                          value: options.value,
-                        })
-                      )}
-                    />
-                  </SummaryListActions>
-                </SummaryListRow>
-              </SummaryListNoBorder> */}
+              {sections.map((section, index) => (
+                <AllFormFieldsMarkup
+                  key={index}
+                  sectionHeading={section.sectionHeading}
+                  sectionId={section.sectionId}
+                  sectionData={section.fields}
+                />
+              ))}
 
               <div className="c-flex__1 text-right">
                 <Button disabled={isSubmitting} type="submit">

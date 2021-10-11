@@ -14,6 +14,7 @@ export default function Select({
   name,
   options,
   hideLabel,
+  modifierClasses,
 }: Omit<SelectFormField, 'as'>): ReactElement {
   return (
     <Field name={name}>
@@ -44,6 +45,8 @@ export default function Select({
           <select
             className={`${
               !!meta.touched && !!meta.error ? 'govuk-select--error' : ''
+            } ${
+              modifierClasses ? modifierClasses : ''
             } govuk-select lbh-select`}
             id={field.name}
             {...field}

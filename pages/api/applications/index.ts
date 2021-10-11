@@ -5,6 +5,10 @@ import {
   addApplication,
   getApplication,
 } from '../../../lib/gateways/applications-api';
+import {
+  hasStaffPermissions,
+  isStaffAction,
+} from '../../../lib/utils/requestAuth';
 import { getUser } from '../../../lib/utils/users';
 
 const endpoint: NextApiHandler = async (
@@ -36,8 +40,14 @@ const endpoint: NextApiHandler = async (
     case 'POST':
       try {
         const application: Application = JSON.parse(req.body);
-        const data = await addApplication(application);
-        res.status(StatusCodes.OK).json(data);
+        if (isStaffAction(application) && !hasStaffPermissions(req)) {
+          res
+            .status(StatusCodes.FORBIDDEN)
+            .json({ message: 'Unable to add application with assessment' });
+        } else {
+          const data = await addApplication(application);
+          res.status(StatusCodes.OK).json(data);
+        }
       } catch (error) {
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)

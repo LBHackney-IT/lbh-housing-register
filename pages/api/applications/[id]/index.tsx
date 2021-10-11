@@ -1,6 +1,11 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { updateApplication } from '../../../../lib/gateways/applications-api';
+import {
+  canUpdateApplication,
+  hasStaffPermissions,
+  isStaffAction,
+} from '../../../../lib/utils/requestAuth';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -11,8 +16,18 @@ const endpoint: NextApiHandler = async (
       try {
         const application = JSON.parse(req.body);
         const id = req.query.id as string;
-        const data = await updateApplication(application, id);
-        res.status(StatusCodes.OK).json(data);
+
+        if (
+          canUpdateApplication(req, id) ||
+          (isStaffAction(application) && hasStaffPermissions(req))
+        ) {
+          const data = await updateApplication(application, id);
+          res.status(StatusCodes.OK).json(data);
+        } else {
+          res
+            .status(StatusCodes.FORBIDDEN)
+            .json({ message: 'Unable to update application' });
+        }
       } catch (error) {
         console.error(error);
         res

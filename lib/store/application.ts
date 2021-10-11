@@ -17,6 +17,7 @@ import mainApplicant from './mainApplicant';
 import otherMembers from './otherMembers';
 import { NotifyRequest, NotifyResponse } from '../../domain/govukNotify';
 import { getRequiredDocumentsForApplication } from '../utils/evidence';
+import { ApplicationStatus } from '../types/application-status';
 
 export const loadApplication = createAsyncThunk(
   'application/load',
@@ -54,7 +55,7 @@ export const disqualifyApplication = createAsyncThunk(
   async (id: string) => {
     const request: Application = {
       id: id,
-      status: 'Rejected',
+      status: ApplicationStatus.DISQUALIFIED,
     };
     const res = await fetch(`/api/applications/${id}`, {
       method: 'PATCH',

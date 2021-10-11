@@ -7,11 +7,16 @@ import {
   ThunkDispatch,
 } from '@reduxjs/toolkit';
 import { Store } from '.';
-import { Application } from '../../domain/HousingApi';
+import {
+  Application,
+  CreateEvidenceRequest,
+  EvidenceRequestResponse,
+} from '../../domain/HousingApi';
 import { exit } from './auth';
 import mainApplicant from './mainApplicant';
 import otherMembers from './otherMembers';
 import { NotifyRequest, NotifyResponse } from '../../domain/govukNotify';
+import { getRequiredDocumentsForApplication } from '../utils/evidence';
 
 export const loadApplication = createAsyncThunk(
   'application/load',
@@ -66,6 +71,22 @@ export const completeApplication = createAsyncThunk(
       method: 'PATCH',
     });
     return (await res.json()) as Application;
+  }
+);
+
+export const createEvidenceRequest = createAsyncThunk(
+  'application/evidence',
+  async (application: Application) => {
+    const request: CreateEvidenceRequest = {
+      documentTypes: getRequiredDocumentsForApplication(
+        application.mainApplicant!
+      ),
+    };
+    const res = await fetch(`/api/applications/${application.id}/evidence`, {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
+    return (await res.json()) as EvidenceRequestResponse;
   }
 );
 

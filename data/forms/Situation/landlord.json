@@ -1,11 +1,18 @@
 {
   "id": "landlord",
+  "eligibility": [
+    {
+      "field": "landlord",
+      "is": "no",
+      "reasoning": "You are in 4 or more weeks of rent arrears, council tax or service charges which is not due to a delay in processing your housing benefits or Universal Credit claim, and you have not made an agreement with the landlord"
+    }
+  ],
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
-          "label": "Have you made an agreement with landlord?",
+          "label": "Have you made a recorded agreement with your landlord or the council to pay off the rent arrears and kept to this agreement for 6 months?",
           "name": "landlord",
           "options": [
             {
@@ -33,7 +40,7 @@
     {
       "fieldId": "landlord",
       "value": "no",
-      "nextFormId": "save-application-and-advise"
+      "nextFormId": "exit"
     }
   ]
 }

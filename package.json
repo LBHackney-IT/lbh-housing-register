@@ -10,7 +10,8 @@
     "mocks": "mocks-server",
     "lint": "eslint . --max-warnings 0 --ext .js,.jsx,.ts,.tsx",
     "prettier:test": "npx prettier -c .",
-    "prettier:fix": "npx prettier --write ."
+    "prettier:fix": "npx prettier --write .",
+    "test:ci": "prettier --check . && tsc --noEmit && jest --ci"
   },
   "eslintConfig": {
     "extends": [
@@ -34,11 +35,10 @@
     ]
   },
   "dependencies": {
-    "@aws-amplify/auth": "^4.3.1",
-    "@aws-amplify/core": "^4.2.5",
     "@reduxjs/toolkit": "^1.5.1",
     "axios": "^0.21.1",
     "cookie": "^0.4.1",
+    "csv-writer": "^1.6.0",
     "formik": "^2.2.6",
     "http-status-codes": "^2.1.4",
     "jsonwebtoken": "^8.5.1",

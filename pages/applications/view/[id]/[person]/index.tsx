@@ -1,15 +1,19 @@
 import { GetServerSideProps } from 'next';
 import React, { useState } from 'react';
 import Layout from '../../../../../components/layout/staff-layout';
-import { HackneyGoogleUser } from '../../../../../domain/HackneyGoogleUser';
 import { Application } from '../../../../../domain/HousingApi';
 import { UserContext } from '../../../../../lib/contexts/user-context';
 import { getApplication } from '../../../../../lib/gateways/applications-api';
-import { getRedirect, getSession } from '../../../../../lib/utils/auth';
+import {
+  canViewSensitiveApplication,
+  getRedirect,
+  getSession,
+  HackneyGoogleUserWithPermissions,
+} from '../../../../../lib/utils/googleAuth';
 import Custom404 from '../../../../404';
 import CheckBoxList, {
   CheckBoxListPageProps,
-} from '../../../../../components/applications/checkBoxList';
+} from '../../../../../components/admin/checkbox-list';
 import {
   personalDetailsCheckboxList,
   immigrationStatusCheckboxList,
@@ -23,29 +27,23 @@ import {
 } from '../../../../../lib/utils/checkboxListData';
 import MedicalDetail, {
   MedicalDetailPageProps,
-} from '../../../../../components/applications/medical-details';
+} from '../../../../../components/admin/medical-details';
 import { HeadingOne } from '../../../../../components/content/headings';
 import Button from '../../../../../components/button';
-
-export function formatDate(date: string | undefined) {
-  if (!date) return '';
-  return `${new Date(date).toLocaleString('default', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  })}`;
-}
+import Paragraph from '../../../../../components/content/paragraph';
 
 interface PageProps {
-  user: HackneyGoogleUser;
+  user: HackneyGoogleUserWithPermissions;
   data: Application;
   person: string;
+  evidenceLink: string;
 }
 
 export default function ApplicationPersonPage({
   user,
   data,
   person,
+  evidenceLink,
 }: PageProps): JSX.Element {
   if (!data.id) return <Custom404 />;
   let isMainApplicant = data.mainApplicant?.person?.id === person;
@@ -78,74 +76,82 @@ export default function ApplicationPersonPage({
   return (
     <UserContext.Provider value={{ user }}>
       <Layout>
-        <div className="govuk-grid-row">
-          <div className="govuk-grid-column-two-thirds">
-            <HeadingOne
-              content={
-                isMainApplicant
-                  ? 'Review main applicant'
-                  : 'Review household member'
-              }
-            />
-            <h2
-              className="lbh-heading-h2"
-              style={{ marginTop: '0.5em', color: '#525a5b' }}
-            >
-              {applicant?.person?.firstName} {applicant?.person?.surname}
-            </h2>
-          </div>
-          <div className="govuk-grid-column-one-thirds">
-            <a
-              href="https://evidence-store-staging.hackney.gov.uk/teams/7/dashboard"
-              target="_blank"
-            >
-              <Button>View Documents</Button>
-            </a>
-          </div>
-        </div>
+        {data.sensitiveData &&
+        !canViewSensitiveApplication(data.assignedTo!, user) ? (
+          <>
+            <h2>Access denied</h2>
+            <Paragraph>You are unable to view this application.</Paragraph>
+          </>
+        ) : (
+          <>
+            <div className="govuk-grid-row">
+              <div className="govuk-grid-column-two-thirds">
+                <HeadingOne
+                  content={
+                    isMainApplicant
+                      ? 'Review main applicant'
+                      : 'Review household member'
+                  }
+                />
+                <h2
+                  className="lbh-heading-h2"
+                  style={{ marginTop: '0.5em', color: '#525a5b' }}
+                >
+                  {applicant?.person?.firstName} {applicant?.person?.surname}
+                </h2>
+              </div>
+              <div
+                className="govuk-grid-column-one-third"
+                style={{ textAlign: 'right' }}
+              >
+                <a href={evidenceLink} target="_blank">
+                  <Button>View Documents</Button>
+                </a>
+              </div>
+            </div>
 
-        <div className="lbh-link-group">
-          <button
-            onClick={() => {
-              setState('identity');
-            }}
-            className={`lbh-link lbh-link--no-visited-state ${isActive(
-              'identity'
-            )}`}
-          >
-            Identity
-          </button>{' '}
-          <button
-            onClick={() => {
-              setState('livingsituation');
-            }}
-            className={`lbh-link lbh-link--no-visited-state ${isActive(
-              'livingsituation'
-            )}`}
-          >
-            Living Situation
-          </button>{' '}
-          <button
-            onClick={() => {
-              setState('money');
-            }}
-            className={`lbh-link lbh-link--no-visited-state ${isActive(
-              'money'
-            )}`}
-          >
-            Money
-          </button>{' '}
-          <button
-            onClick={() => {
-              setState('health');
-            }}
-            className={`lbh-link lbh-link--no-visited-state ${isActive(
-              'health'
-            )}`}
-          >
-            Health
-          </button>{' '}
-          {/* <button
+            <div className="lbh-link-group">
+              <button
+                onClick={() => {
+                  setState('identity');
+                }}
+                className={`lbh-link lbh-link--no-visited-state ${isActive(
+                  'identity'
+                )}`}
+              >
+                Identity
+              </button>{' '}
+              <button
+                onClick={() => {
+                  setState('livingsituation');
+                }}
+                className={`lbh-link lbh-link--no-visited-state ${isActive(
+                  'livingsituation'
+                )}`}
+              >
+                Living Situation
+              </button>{' '}
+              <button
+                onClick={() => {
+                  setState('money');
+                }}
+                className={`lbh-link lbh-link--no-visited-state ${isActive(
+                  'money'
+                )}`}
+              >
+                Money
+              </button>{' '}
+              <button
+                onClick={() => {
+                  setState('health');
+                }}
+                className={`lbh-link lbh-link--no-visited-state ${isActive(
+                  'health'
+                )}`}
+              >
+                Health
+              </button>{' '}
+              {/* <button
             onClick={() => {
               setState('checklist');
             }}
@@ -153,32 +159,40 @@ export default function ApplicationPersonPage({
           >
             Checklist
           </button> */}
-        </div>
+            </div>
 
-        {state == 'identity' && (
-          <>
-            <CheckBoxList {...(personalDetails as CheckBoxListPageProps)} />
-            <CheckBoxList {...(immigrationStatus as CheckBoxListPageProps)} />
+            {state == 'identity' && (
+              <>
+                <CheckBoxList {...(personalDetails as CheckBoxListPageProps)} />
+                <CheckBoxList
+                  {...(immigrationStatus as CheckBoxListPageProps)}
+                />
+              </>
+            )}
+            {state == 'livingsituation' && (
+              <>
+                <CheckBoxList {...(livingSituation as CheckBoxListPageProps)} />
+                <CheckBoxList {...(addressHistory as CheckBoxListPageProps)} />
+                <CheckBoxList
+                  {...(currentAccomodation as CheckBoxListPageProps)}
+                />
+                <CheckBoxList {...(situation as CheckBoxListPageProps)} />
+              </>
+            )}
+            {state == 'money' && (
+              <>
+                <CheckBoxList {...(employment as CheckBoxListPageProps)} />
+                <CheckBoxList
+                  {...(incomeAndSavings as CheckBoxListPageProps)}
+                />
+              </>
+            )}
+            {state == 'health' && (
+              <MedicalDetail {...(medicalDetails as MedicalDetailPageProps)} />
+            )}
+            {state == 'checklist' && <h3>checklist</h3>}
           </>
         )}
-        {state == 'livingsituation' && (
-          <>
-            <CheckBoxList {...(livingSituation as CheckBoxListPageProps)} />
-            <CheckBoxList {...(addressHistory as CheckBoxListPageProps)} />
-            <CheckBoxList {...(currentAccomodation as CheckBoxListPageProps)} />
-            <CheckBoxList {...(situation as CheckBoxListPageProps)} />
-          </>
-        )}
-        {state == 'money' && (
-          <>
-            <CheckBoxList {...(employment as CheckBoxListPageProps)} />
-            <CheckBoxList {...(incomeAndSavings as CheckBoxListPageProps)} />
-          </>
-        )}
-        {state == 'health' && (
-          <MedicalDetail {...(medicalDetails as MedicalDetailPageProps)} />
-        )}
-        {state == 'checklist' && <h3>checklist</h3>}
       </Layout>
     </UserContext.Provider>
   );
@@ -208,5 +222,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  return { props: { user, data, person } };
+  const evidenceLink = process.env.NEXT_PUBLIC_EVIDENCE_STORE;
+  return { props: { user, data, person, evidenceLink } };
 };

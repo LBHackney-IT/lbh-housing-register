@@ -1,5 +1,5 @@
 import { Applicant } from '../../domain/HousingApi';
-import { ButtonLink } from '../../components/button';
+import { ButtonLink } from '../button';
 import { formatDob, getAgeInYears } from '../../lib/utils/dateOfBirth';
 import React from 'react';
 import { HeadingThree } from '../content/headings';

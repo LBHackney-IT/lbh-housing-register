@@ -1,6 +1,6 @@
 import { Applicant, Application } from '../../domain/HousingApi';
-import { CheckBoxListPageProps } from '../../components/applications/checkBoxList';
-import { MedicalDetailPageProps } from '../../components/applications/medical-details';
+import { CheckBoxListPageProps } from '../../components/admin/checkbox-list';
+import { MedicalDetailPageProps } from '../../components/admin/medical-details';
 import {
   questionLookup,
   getQuestionValue,

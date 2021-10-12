@@ -1,11 +1,18 @@
 {
   "id": "homelessness",
+  "eligibility": [
+    {
+      "field": "homelessness",
+      "is": "yes",
+      "reasoning": "You have previously been found to be Intentionally Homeless within the last two years"
+    }
+  ],
   "steps": [
     {
       "fields": [
         {
           "as": "radios",
-          "label": "Have you been found intentionally homeless?",
+          "label": "Have you been found to be intentionally homeless by any local housing authority (in accordance with the Housing Act 1996 Section 184) within the last two years?",
           "name": "homelessness",
           "options": [
             {

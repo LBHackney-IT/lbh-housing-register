@@ -46,7 +46,6 @@ export function Radio({
 }
 
 export interface RadiosProps extends RadioFormField {
-  value: string;
   subheading?: string;
 }
 
@@ -58,7 +57,7 @@ export default function Radios({
   options,
   subheading,
   hideLabel,
-}: RadiosProps): JSX.Element {
+}: Omit<RadiosProps, 'as'>): JSX.Element {
   return (
     <Field name={name}>
       {({

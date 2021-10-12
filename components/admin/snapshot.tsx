@@ -1,5 +1,5 @@
 import { Application } from '../../domain/HousingApi';
-import Paragraph from '../../components/content/paragraph';
+import Paragraph from '../content/paragraph';
 import { applicantsWithMedicalNeed } from '../../lib/utils/medicalNeed';
 import { questionLookup } from '../../lib/utils/applicationQuestions';
 

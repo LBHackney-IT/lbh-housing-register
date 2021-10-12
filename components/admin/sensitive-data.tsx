@@ -1,19 +1,21 @@
 import { Application } from '../../domain/HousingApi';
-import { updateApplication } from '../../lib/store/application';
-import { useAppDispatch } from '../../lib/store/hooks';
 import Button from '../button';
 import { useState } from 'react';
+import { updateApplication } from '../../lib/gateways/internal-api';
+import Paragraph from '../content/paragraph';
+import { HackneyGoogleUserWithPermissions } from '../../lib/utils/googleAuth';
 
 interface sensitiveDataPageProps {
   id: string;
   isSensitive: boolean;
+  user: HackneyGoogleUserWithPermissions;
 }
 
 export default function SensitiveData({
   id,
   isSensitive,
+  user,
 }: sensitiveDataPageProps): JSX.Element {
-  const dispatch = useAppDispatch();
   const [sensitive, setSensitive] = useState<boolean>(isSensitive);
 
   const updateSensitiveDataStatus = async (markAs: boolean) => {
@@ -22,28 +24,30 @@ export default function SensitiveData({
       id: id,
       sensitiveData: markAs,
     };
-    dispatch(updateApplication(request));
+    updateApplication(request);
   };
 
   return (
     <>
-      {sensitive && <h3>This application has been marked as sensitive.</h3>}
-
-      {sensitive && (
+      {(user.hasAdminPermissions || user.hasManagerPermissions) && sensitive && (
         <Button
           onClick={() => updateSensitiveDataStatus(false)}
-          secondary={false}
+          secondary={true}
         >
           Mark as not sensitive
         </Button>
       )}
-      {!sensitive && (
+      {(user.hasAdminPermissions || user.hasManagerPermissions) && !sensitive && (
         <Button
           onClick={() => updateSensitiveDataStatus(true)}
-          secondary={false}
+          secondary={true}
         >
           Mark as sensitive
         </Button>
+      )}
+
+      {sensitive && (
+        <Paragraph>This application has been marked as sensitive.</Paragraph>
       )}
     </>
   );

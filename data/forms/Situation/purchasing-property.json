@@ -1,5 +1,12 @@
 {
   "id": "purchasing-property",
+  "eligibility": [
+    {
+      "field": "purchasing-property",
+      "is": "yes",
+      "reasoning": "You are able to buy a property to meet your needs"
+    }
+  ],
   "steps": [
     {
       "fields": [

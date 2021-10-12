@@ -3,6 +3,8 @@ import {
   Application,
   CreateAuthRequest,
   CreateAuthResponse,
+  CreateEvidenceRequest,
+  EvidenceRequestResponse,
   PaginatedApplicationListResponse,
   VerifyAuthRequest,
   VerifyAuthResponse,
@@ -14,8 +16,8 @@ const headersWithKey = {
 };
 
 export const getApplications = async (
-  page: string,
-  user?: string
+  page: string | number,
+  user?: string | 'unassigned'
 ): Promise<PaginatedApplicationListResponse | null> => {
   try {
     const assignedTo = user ?? '';
@@ -35,7 +37,7 @@ export const searchApplications = async (
   page: string,
   reference: string,
   status: string,
-  user?: string
+  user?: string | 'unassigned'
 ): Promise<PaginatedApplicationListResponse | null> => {
   try {
     const assignedTo = user ?? '';
@@ -108,6 +110,20 @@ export const completeApplication = async (
   const { data } = await axios.patch(
     `${process.env.HOUSING_REGISTER_API}/applications/${id}/complete`,
     null,
+    {
+      headers: headersWithKey,
+    }
+  );
+  return data;
+};
+
+export const createEvidenceRequest = async (
+  id: string,
+  request: CreateEvidenceRequest
+): Promise<Array<EvidenceRequestResponse> | null> => {
+  const { data } = await axios.post(
+    `${process.env.HOUSING_REGISTER_API}/applications/${id}/evidence`,
+    request,
     {
       headers: headersWithKey,
     }

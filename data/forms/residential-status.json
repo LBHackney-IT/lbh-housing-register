@@ -4,12 +4,12 @@
     {
       "field": "asbo-behaviour",
       "is": "yes",
-      "reasoning": "It's unlikely that you will qualify for social housing."
+      "reasoning": "You are unable to reside in the borough due to a court order or an injunction"
     },
     {
       "field": "institutions",
       "is": "none",
-      "reasoning": "It's unlikely that you will qualify for social housing."
+      "reasoning": "You have not been continuously residing in Hackney for the last 3 years and you do not fall within any of the listed exceptions"
     }
   ],
   "steps": [
@@ -17,7 +17,7 @@
       "fields": [
         {
           "as": "radios",
-          "label": "Has Hackney been your main residence for the last 3 years?",
+          "label": "Are you currently and continually resided in the borough for 3 years or more?",
           "name": "residential-status",
           "options": [
             {
@@ -519,7 +519,7 @@
         },
         {
           "as": "checkboxes",
-          "label": "Have you been in the following institutions for the last 3 years or more?",
+          "label": "Have you been staying in any of the following institutions for the last 3 years or more?",
           "name": "institutions",
           "options": [
             {

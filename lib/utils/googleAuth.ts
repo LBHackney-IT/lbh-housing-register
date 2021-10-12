@@ -1,9 +1,9 @@
 import cookie from 'cookie';
 import jsonwebtoken from 'jsonwebtoken';
+import { Redirect } from 'next';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 
 type Permissions = {
-  hasAnyPermissions: boolean;
   hasAdminPermissions: boolean;
   hasManagerPermissions: boolean;
   hasOfficerPermissions: boolean;
@@ -55,7 +55,6 @@ export const getPermissions = (user: HackneyGoogleUser): Permissions => {
   } = process.env;
 
   return {
-    hasAnyPermissions: user.groups.length > 0,
     hasAdminPermissions: hasUserGroup(AUTHORISED_ADMIN_GROUP!, user),
     hasManagerPermissions: hasUserGroup(AUTHORISED_MANAGER_GROUP!, user),
     hasOfficerPermissions: hasUserGroup(AUTHORISED_OFFICER_GROUP!, user),
@@ -69,13 +68,49 @@ export const hasUserGroup = (
   return user.groups.includes(group);
 };
 
+export const hasAnyPermissions = (
+  user: HackneyGoogleUserWithPermissions
+): boolean => {
+  return (
+    user.hasAdminPermissions ||
+    user.hasManagerPermissions ||
+    user.hasOfficerPermissions
+  );
+};
+
+export const canViewSensitiveApplication = (
+  assignedTo: string,
+  user: HackneyGoogleUserWithPermissions
+): boolean => {
+  if (user.hasAdminPermissions || user.hasManagerPermissions) {
+    // can see everything
+    return true;
+  } else {
+    // check assigned
+    return user.hasOfficerPermissions && assignedTo === user.email;
+  }
+};
+
 export const getRedirect = (
-  user?: HackneyGoogleUser & { hasAnyPermissions: boolean }
+  user?: HackneyGoogleUserWithPermissions
 ): string | undefined => {
   if (!user) {
     return '/login';
   }
-  if (!user.hasAnyPermissions) {
+  if (!hasAnyPermissions(user)) {
     return '/access-denied';
   }
 };
+
+export function getAuth(
+  group: string,
+  user?: HackneyGoogleUser
+): { redirect: Redirect } | { user: HackneyGoogleUser } {
+  if (!user) {
+    return { redirect: { statusCode: 302, destination: '/login' } };
+  }
+  if (!hasUserGroup(group, user)) {
+    return { redirect: { statusCode: 302, destination: '/access-denied' } };
+  }
+  return { user };
+}

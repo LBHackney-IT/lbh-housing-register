@@ -4,26 +4,27 @@
     {
       "field": "uk-studying",
       "isNot": "yes",
-      "reasoning": "It's unlikely that you will qualify for social housing when in the UK studying"
+      "reasoning": "You are in the UK to study"
     },
     {
       "field": "work-or-study-visa",
       "isNot": "yes",
-      "reasoning": "It's unlikely that you will qualify for social housing when in the UK to work or study"
+      "reasoning": "You are in the UK on a work or study visa"
     },
     {
       "field": "settled-status",
       "isNot": "no",
-      "reasoning": "It's unlikely that you will qualify for social housing when in the UK without settled status or pre-settled status"
+      "reasoning": "You have not been granted settled status or pre-settled status"
     },
     {
       "field": "receiving-sponsorship",
       "isNot": "yes",
-      "reasoning": "It's unlikely that you will qualify for social housing while receiving sponsorship to be in the UK"
+      "reasoning": "You are receiving sponsorship to stay in the UK"
     },
     {
       "field": "legal-status",
-      "isNot": "limited-leave-to-remain-no-public-funds"
+      "isNot": "limited-leave-to-remain-no-public-funds",
+      "reasoning": "You have Limited Leave to Remain with no recourse to public funds"
     }
   ],
   "steps": [

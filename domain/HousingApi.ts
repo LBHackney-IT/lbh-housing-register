@@ -208,6 +208,12 @@ export interface Application {
    * @memberof Application
    */
   otherMembers?: Array<Applicant>;
+  /**
+   *
+   * @type {Assessment}
+   * @memberof Application
+   */
+  assessment?: Assessment;
 }
 
 /**
@@ -262,6 +268,50 @@ export interface Evidence {
    * @memberof Evidence
    */
   id?: string;
+}
+
+/**
+ *
+ * @export
+ * @interface Assessment
+ */
+export interface Assessment {
+  /**
+   *
+   * @type {string}
+   * @memberof Assessment
+   */
+  effectiveDate?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Assessment
+   */
+  informationReceivedDate?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Assessment
+   */
+  band?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Assessment
+   */
+  reason?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Assessment
+   */
+  biddingNumber?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Assessment
+   */
+  generateBiddingNumber?: boolean;
 }
 
 /**
@@ -342,10 +392,10 @@ export namespace Person {
    * @enum {string}
    */
   export enum TitleEnum {
-    Mrs = <any>'Mrs',
-    Mr = <any>'Mr',
-    Miss = <any>'Miss',
-    Mx = <any>'Mx',
+    Mrs = 'Mrs',
+    Mr = 'Mr',
+    Miss = 'Miss',
+    Mx = 'Mx',
   }
 }
 
@@ -433,4 +483,13 @@ export interface VerifyAuthRequest {
 }
 export interface VerifyAuthResponse {
   accessToken: string;
+}
+
+export interface CreateEvidenceRequest {
+  userRequestedBy?: string;
+  documentTypes: string[];
+}
+export interface EvidenceRequestResponse {
+  id: string;
+  createdAt: string;
 }

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import router from 'next/router';
 import Layout from '../../components/layout/staff-layout';
 import { UserContext } from '../../lib/contexts/user-context';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
@@ -6,7 +7,6 @@ import { Form, Formik, FormikValues } from 'formik';
 import Button from '../../components/button';
 import AddCaseSection from '../../components/admin/AddCaseSection';
 import { Application } from '../../domain/HousingApi';
-import { FormID } from '../../lib/utils/form-data';
 import { createApplication } from '../../lib/gateways/internal-api';
 import {
   allFormSections,
@@ -32,7 +32,7 @@ interface PageProps {
 }
 
 export default function AddCasePage({ user }: PageProps): JSX.Element {
-  const [isMainApplicant, setIsMainApplicant] = useState(true);
+  // const [isMainApplicant, setIsMainApplicant] = useState(true);
 
   const onSubmit = (values: FormikValues) => {
     const questionValues = generateQuestionArray(values);
@@ -42,7 +42,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
       createdAt: '',
       submittedAt: '',
       assignedTo: '',
-      isSensitive: false,
+      // isSensitive: false,
       assessment: {
         effectiveDate: '',
         band: '',
@@ -51,7 +51,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
       mainApplicant: {
         person: {
           id: '',
-          reference: '',
+          // reference: '',
           title: values.personalDetails_title,
           firstName: values.personalDetails_firstName,
           middleName: '',
@@ -67,7 +67,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
           addressLine1: '1 Hillman Street',
           addressLine2: 'Hackney',
           addressLine3: 'London',
-          postCode: values.addressHistory_addressFinder,
+          // postCode: values.addressHistory_addressFinder,
           addressType: 'string',
         },
         contactInformation: {
@@ -85,7 +85,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
       otherMembers: [],
     };
     createApplication(request);
-    // router.reload();
+    router.reload();
   };
 
   const schema = Yup.object({

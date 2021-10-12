@@ -290,6 +290,12 @@ export interface Assessment {
   informationReceivedDate?: string;
   /**
    *
+   * @type {number}
+   * @memberof Assessment
+   */
+  bedroomNeed?: number;
+  /**
+   *
    * @type {string}
    * @memberof Assessment
    */

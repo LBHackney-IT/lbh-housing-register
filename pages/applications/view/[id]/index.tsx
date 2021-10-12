@@ -23,16 +23,7 @@ import AssignUser from '../../../../components/admin/assign-user';
 import SensitiveData from '../../../../components/admin/sensitive-data';
 import Paragraph from '../../../../components/content/paragraph';
 import { formatDate } from '../../../../lib/utils/dateOfBirth';
-
-export function getPersonName(application: Application | undefined) {
-  if (!application?.mainApplicant?.person) return '';
-  let person = application?.mainApplicant?.person;
-  let name = `${person.firstName} ${person.surname}`;
-  if (application.otherMembers && application.otherMembers.length > 0) {
-    name += ` (+${application.otherMembers?.length})`;
-  }
-  return name;
-}
+import { getPersonName } from '../../../../lib/utils/person';
 
 export interface PageProps {
   user: HackneyGoogleUserWithPermissions;
@@ -176,15 +167,16 @@ export default function ApplicationPage({
                     </Paragraph>
                   )}
 
-                  {(user.hasAdminPermissions || user.hasManagerPermissions) && (
-                    <>
-                      <AssignUser id={data.id} user={data.assignedTo} />
-                      <SensitiveData
-                        id={data.id}
-                        isSensitive={data.sensitiveData || false}
-                      />
-                    </>
-                  )}
+                  <AssignUser
+                    id={data.id}
+                    user={user}
+                    assignee={data.assignedTo}
+                  />
+                  <SensitiveData
+                    id={data.id}
+                    isSensitive={data.sensitiveData || false}
+                    user={user}
+                  />
                 </div>
               </div>
             )}

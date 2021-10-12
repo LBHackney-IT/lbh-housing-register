@@ -1,18 +1,18 @@
 import Link from 'next/link';
 import React from 'react';
 import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
-import { getStatusTag } from '../../lib/utils/tag';
 import Paragraph from '../content/paragraph';
-import Tag from '../tag';
 import Pagination from '../pagination';
 import { formatDate } from '../../lib/utils/dateOfBirth';
+import { getPersonName } from '../../lib/utils/person';
 
 interface TableProps {
   caption?: string;
-  applications: PaginatedApplicationListResponse;
+  applications: PaginatedApplicationListResponse | null;
   currentPage: number;
   pageUrl: string;
   parameters: URLSearchParams;
+  showStatus: boolean;
 }
 
 export default function ApplicationTable({
@@ -21,10 +21,11 @@ export default function ApplicationTable({
   currentPage,
   pageUrl,
   parameters,
+  showStatus,
 }: TableProps): JSX.Element {
   return (
     <>
-      {applications?.results.length > 0 ? (
+      {applications && applications.results.length > 0 ? (
         <>
           <table className="govuk-table lbh-table">
             {caption && (
@@ -34,18 +35,28 @@ export default function ApplicationTable({
             )}
             <thead className="govuk-table__head">
               <tr className="govuk-table__row">
-                <th scope="col" className="govuk-table__header">
+                <th
+                  scope="col"
+                  className="govuk-table__header"
+                  style={{ width: '150px' }}
+                >
                   Reference
                 </th>
                 <th scope="col" className="govuk-table__header">
                   Applicant
                 </th>
-                <th scope="col" className="govuk-table__header">
+                <th
+                  scope="col"
+                  className="govuk-table__header"
+                  style={{ width: '150px' }}
+                >
                   Submitted
                 </th>
-                <th scope="col" className="govuk-table__header">
-                  Status
-                </th>
+                {showStatus && (
+                  <th scope="col" className="govuk-table__header">
+                    Status
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody className="govuk-table__body">
@@ -57,24 +68,16 @@ export default function ApplicationTable({
                   <td className="govuk-table__cell">
                     <Link href={`/applications/view/${application.id}`}>
                       <a className="govuk-link govuk-custom-text-color">
-                        {application.mainApplicant?.person?.title}{' '}
-                        {application.mainApplicant?.person?.firstName}{' '}
-                        {application.mainApplicant?.person?.surname}
-                        {application.otherMembers && (
-                          <span> + {application.otherMembers.length}</span>
-                        )}
+                        {getPersonName(application)}
                       </a>
                     </Link>
                   </td>
                   <td className="govuk-table__cell">
-                    {formatDate(application.createdAt)}
+                    {formatDate(application.submittedAt)}
                   </td>
-                  <td className="govuk-table__cell">
-                    <Tag
-                      content={application.status || ''}
-                      className={getStatusTag(application.status || '')}
-                    />
-                  </td>
+                  {showStatus && (
+                    <td className="govuk-table__cell">{application.status}</td>
+                  )}
                 </tr>
               ))}
             </tbody>

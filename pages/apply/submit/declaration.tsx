@@ -5,6 +5,8 @@ import {
   completeApplication,
   sendDisqualifyEmail,
   sendMedicalNeed,
+  disqualifyApplication,
+  createEvidenceRequest,
 } from '../../../lib/store/application';
 import withApplication from '../../../lib/hoc/withApplication';
 import { applicantsWithMedicalNeed } from '../../../lib/utils/medicalNeed';
@@ -31,6 +33,7 @@ const Declaration = (): JSX.Element => {
     const [isEligible] = checkEligible(application);
     if (!isEligible) {
       dispatch(sendDisqualifyEmail(application));
+      dispatch(disqualifyApplication(application.id!));
       router.push('/apply/not-eligible');
     } else {
       dispatch(sendConfirmation(application));
@@ -40,6 +43,7 @@ const Declaration = (): JSX.Element => {
       }
 
       dispatch(completeApplication(application));
+      dispatch(createEvidenceRequest(application));
       router.push('/apply/confirmation');
     }
   };

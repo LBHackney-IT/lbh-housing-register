@@ -1,27 +1,20 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { updateApplication } from '../../../../lib/gateways/applications-api';
-import {
-  canUpdateApplication,
-  hasStaffPermissions,
-  isStaffAction,
-} from '../../../../lib/utils/requestAuth';
+import { createEvidenceRequest } from '../../../../lib/gateways/applications-api';
+import { canUpdateApplication } from '../../../../lib/utils/requestAuth';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
   switch (req.method) {
-    case 'PATCH':
+    case 'POST':
       try {
-        const application = JSON.parse(req.body);
+        const request = JSON.parse(req.body);
         const id = req.query.id as string;
 
-        if (
-          canUpdateApplication(req, id) ||
-          (isStaffAction(application) && hasStaffPermissions(req))
-        ) {
-          const data = await updateApplication(application, id);
+        if (canUpdateApplication(req, id)) {
+          const data = await createEvidenceRequest(id, request);
           res.status(StatusCodes.OK).json(data);
         } else {
           res
@@ -30,9 +23,9 @@ const endpoint: NextApiHandler = async (
         }
       } catch (error) {
         console.error(error);
-        res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Unable to update application' });
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+          message: 'Unable to create evidence request for application',
+        });
       }
       break;
 

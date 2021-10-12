@@ -38,8 +38,9 @@ const Declaration = (): JSX.Element => {
     } else {
       dispatch(sendConfirmation(application));
 
-      if (applicantsWithMedicalNeed(application) > 0) {
-        dispatch(sendMedicalNeed(application));
+      const medicalNeeds = applicantsWithMedicalNeed(application);
+      if (medicalNeeds > 0) {
+        dispatch(sendMedicalNeed({ application, medicalNeeds }));
       }
 
       dispatch(completeApplication(application));

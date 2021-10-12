@@ -115,12 +115,18 @@ export const sendConfirmation = createAsyncThunk(
 
 export const sendMedicalNeed = createAsyncThunk(
   'application/medical',
-  async (application: Application) => {
+  async ({
+    application,
+    medicalNeeds,
+  }: {
+    application: Application;
+    medicalNeeds: number;
+  }) => {
     const notifyRequest: NotifyRequest = {
       emailAddress:
         application.mainApplicant?.contactInformation?.emailAddress ?? '',
       personalisation: {
-        household_members_with_medical_need: '',
+        household_members_with_medical_need: medicalNeeds.toString(),
         resident_name: application.mainApplicant?.person?.firstName ?? '',
       },
       reference: `${application.reference}`,

@@ -10,6 +10,7 @@ import Input from '../form/input';
 import InsetText from '../content/inset-text';
 import { updateApplication } from '../../lib/gateways/internal-api';
 import { ApplicationStatus } from '../../lib/types/application-status';
+import { calculateBedroomsFromApplication } from '../../lib/utils/bedroomCalculator';
 
 interface PageProps {
   data: Application;
@@ -189,6 +190,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
       .oneOf(reasonOptions.map(({ value }) => value)),
     applicationDate: Yup.string().notOneOf([INVALID_DATE], 'Invalid date'),
     informationReceived: Yup.string().notOneOf([INVALID_DATE], 'Invalid date'),
+    bedroomNeed: Yup.number().label('Bedroom need').min(1),
     band: Yup.string(),
     biddingNumberType: Yup.string().oneOf(['generate', 'manual']),
     biddingNumber: Yup.string().matches(
@@ -202,6 +204,8 @@ export default function Actions({ data }: PageProps): JSX.Element {
     reason: data.assessment?.reason ?? '',
     applicationDate: data.assessment?.effectiveDate ?? '',
     informationReceived: data.assessment?.informationReceivedDate ?? '',
+    bedroomNeed:
+      data.assessment?.bedroomNeed ?? calculateBedroomsFromApplication(data),
     band: data.assessment?.band ?? '',
     biddingNumberType: data.assessment?.biddingNumber ? 'manual' : 'generate',
     biddingNumber: data.assessment?.biddingNumber ?? '',
@@ -241,6 +245,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
     }
 
     if (showDecisionOptions(values) && request.assessment) {
+      request.assessment.bedroomNeed = values.bedroomNeed;
       request.assessment.band = values.band;
       request.assessment.biddingNumber = values.biddingNumber;
       request.assessment.generateBiddingNumber =
@@ -270,6 +275,11 @@ export default function Actions({ data }: PageProps): JSX.Element {
           )}
           {showDecisionOptions(values) && (
             <>
+              <Input
+                name="bedroomNeed"
+                label="Bedroom need"
+                className="govuk-input--width-2"
+              />
               <Radios
                 label="Band"
                 name="band"
@@ -293,7 +303,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
                   <Input
                     name="biddingNumber"
                     label="Bidding number"
-                    className=""
+                    className="govuk-input--width-10"
                   />
                 </InsetText>
               )}

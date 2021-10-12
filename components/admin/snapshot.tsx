@@ -33,7 +33,9 @@ export default function Snapshot({ data }: PageProps): JSX.Element {
   }
 
   function bedroomNeedText() {
-    const requiredBedrooms = data.assessment?.bedroomNeed ? data.assessment?.bedroomNeed : calculateBedroomsFromApplication(data);
+    const requiredBedrooms = data.assessment?.bedroomNeed
+      ? data.assessment?.bedroomNeed
+      : calculateBedroomsFromApplication(data);
     return requiredBedrooms === 1
       ? `1 bedroom is needed for this application.`
       : `${requiredBedrooms} bedrooms are needed for this application.`;

@@ -1,7 +1,6 @@
-import { useMemo } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import Announcement from '../components/announcement';
 import { ButtonLink } from '../components/button';
 import {
@@ -17,31 +16,16 @@ import Table, {
 } from '../components/content/table';
 import Layout from '../components/layout/resident-layout';
 import { useAppSelector } from '../lib/store/hooks';
-import { checkEligible } from '../lib/utils/form';
 
 export default function ApplicationHomePage(): JSX.Element {
   const router = useRouter();
   const isLoggedIn = useAppSelector((store) => store.application.id);
 
-  const application = useAppSelector((store) => store.application);
-  const mainApplicant = useAppSelector(
-    (store) => store.application.mainApplicant
-  );
-
-  const [isEligible] = useMemo(
-    () => (mainApplicant && checkEligible(application)) ?? [],
-    [mainApplicant]
-  );
-
   useEffect(() => {
     if (isLoggedIn) {
-      if (isEligible) {
-        router.push('/apply/overview');
-      } else {
-        router.push('/apply/not-eligible');
-      }
+      router.push('/apply/overview');
     }
-  }, [isLoggedIn, isEligible]);
+  }, [isLoggedIn]);
 
   return (
     <Layout pageName="Home">

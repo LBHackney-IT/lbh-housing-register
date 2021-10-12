@@ -1,6 +1,7 @@
 import { getFormData, FormID } from '../utils/form-data';
 import { FormField } from '../../lib/types/form';
-import { kebabToCamelCase } from '../../lib/utils/capitalize';
+import { kebabToCamelCase, camelCaseToKebab } from '../../lib/utils/capitalize';
+import { FormikValues } from 'formik';
 
 interface SectionData {
   fields: FormField[];
@@ -31,7 +32,7 @@ export const allFormSections = (keysToIgnore: string[]) => {
 
 export const generateInitialValues = (sections: SectionData[]) => {
   const allFieldNames = sections
-    .map((section: any) =>
+    .map((section) =>
       section.fields.map((field: FormField) => {
         const updatedFieldName = generateUniqueFieldName(
           section.sectionId,
@@ -43,7 +44,7 @@ export const generateInitialValues = (sections: SectionData[]) => {
     .flat();
 
   const initialValuesObject = allFieldNames.reduce(
-    (acc, current) => ((acc[current] = ''), acc),
+    (acc: { [key: string]: string }, current) => ((acc[current] = ''), acc),
     {}
   );
   return initialValuesObject;
@@ -51,3 +52,18 @@ export const generateInitialValues = (sections: SectionData[]) => {
 
 export const generateUniqueFieldName = (sectionId: string, fieldName: string) =>
   `${kebabToCamelCase(sectionId)}_${kebabToCamelCase(fieldName)}`;
+
+export const generateQuestionArray = (values: FormikValues) => {
+  const questionArray = [];
+  for (const [key, value] of Object.entries(values)) {
+    const questionId = camelCaseToKebab(key).replace('_', '/');
+    if (questionId.startsWith('personal-details/')) continue;
+
+    questionArray.push({
+      id: questionId,
+      answer: value,
+    });
+  }
+
+  return questionArray;
+};

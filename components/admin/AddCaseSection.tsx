@@ -19,7 +19,7 @@ interface PageProps {
   sectionHeading: string | undefined;
 }
 
-export default function AllFormFieldsMarkup({
+export default function AddCaseSection({
   sectionData,
   sectionId,
   sectionHeading,

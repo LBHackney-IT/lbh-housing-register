@@ -1,15 +1,17 @@
+import { useState } from 'react';
 import Layout from '../../components/layout/staff-layout';
 import { UserContext } from '../../lib/contexts/user-context';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { Form, Formik, FormikValues } from 'formik';
 import Button from '../../components/button';
-import { FormID } from '../../lib/utils/form-data';
-import AllFormFieldsMarkup from '../../components/admin/AllFormFieldsMarkup';
+import AddCaseSection from '../../components/admin/AddCaseSection';
 import { Application } from '../../domain/HousingApi';
+import { FormID } from '../../lib/utils/form-data';
 import { createApplication } from '../../lib/gateways/internal-api';
 import {
   allFormSections,
   generateInitialValues,
+  generateQuestionArray,
 } from '../../lib/utils/adminHelpers';
 import * as Yup from 'yup';
 
@@ -30,51 +32,76 @@ interface PageProps {
 }
 
 export default function AddCasePage({ user }: PageProps): JSX.Element {
+  const [isMainApplicant, setIsMainApplicant] = useState(true);
+
   const onSubmit = (values: FormikValues) => {
-    console.log(FormID.ACCOMODATION_TYPE);
-
-    // const test = getQuestionsForFormAsValues(FormID.ACCOMODATION_TYPE);
-
-    console.log('submitted: ', values);
+    const questionValues = generateQuestionArray(values);
     const request: Application = {
-      id: '123345678910',
-      reference: '31a1de3271',
+      id: 'd701748f0851',
       status: 'New',
-      sensitiveData: true,
-      assignedTo: 'thomas.morris@hackney.gov.uk',
-      createdAt: '2021-09-14T19:23:42.7573803Z',
+      createdAt: '',
+      submittedAt: '',
+      assignedTo: '',
+      isSensitive: false,
+      assessment: {
+        effectiveDate: '',
+        band: '',
+        biddingNumber: '',
+      },
       mainApplicant: {
-        person: {},
-        address: {},
-        contactInformation: {},
-        questions: [],
+        person: {
+          id: '',
+          reference: '',
+          title: values.personalDetails_title,
+          firstName: values.personalDetails_firstName,
+          middleName: '',
+          surname: values.personalDetails_surname,
+          dateOfBirth: values.personalDetails_dateOfBirth,
+          gender: values.personalDetails_gender,
+          genderDescription: '',
+          nationalInsuranceNumber:
+            values.personalDetails_nationalInsuranceNumber,
+          relationshipType: '',
+        },
+        address: {
+          addressLine1: '1 Hillman Street',
+          addressLine2: 'Hackney',
+          addressLine3: 'London',
+          postCode: values.addressHistory_addressFinder,
+          addressType: 'string',
+        },
+        contactInformation: {
+          emailAddress: values.personalDetails_emailAddress,
+          phoneNumber: values.personalDetails_phoneNumber,
+          preferredMethodOfContact: '',
+        },
+        evidence: [
+          {
+            id: '',
+          },
+        ],
+        questions: questionValues,
       },
       otherMembers: [],
     };
-    // console.log(request);
-
-    // createApplication(request);
+    createApplication(request);
     // router.reload();
   };
 
   const schema = Yup.object({
     personalDetails_title: Yup.string().label('Title').required(),
+    personalDetails_firstName: Yup.string().label('First name').required(),
+    personalDetails_surname: Yup.string().label('Surname').required(),
+    personalDetails_dateOfBirth: Yup.string().label('Date of birth').required(),
+    personalDetails_gender: Yup.string().label('Gender').required(),
+    personalDetails_nationalInsuranceNumber: Yup.string()
+      .label('NI number')
+      .required(),
+    immigrationStatus_citizenship: Yup.string().label('Citizenship').required(),
+    currentAccommodation_livingSituation: Yup.string()
+      .label('Living situation')
+      .required(),
   });
-
-  // const schema = Yup.object({
-  //   status: Yup.string()
-  //     .label('Status')
-  //     .required()
-  //     .oneOf(statusOptions.map(({ value }) => value)),
-  //   reason: Yup.string()
-  //     .label('Reason')
-  //     .oneOf(reasonOptions.map(({ value }) => value)),
-  //   applicationDate: Yup.string(),
-  //   informationReceived: Yup.string(),
-  //   band: Yup.string(),
-  //   biddingNumberType: Yup.string().oneOf(['generate', 'manual']),
-  //   biddingNumber: Yup.string(),
-  // });
 
   return (
     <UserContext.Provider value={{ user }}>
@@ -87,7 +114,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
           {({ isSubmitting }) => (
             <Form>
               {sections.map((section, index) => (
-                <AllFormFieldsMarkup
+                <AddCaseSection
                   key={index}
                   sectionHeading={section.sectionHeading}
                   sectionId={section.sectionId}

@@ -16,7 +16,9 @@ export const canUpdateApplication = (
 
 export const hasStaffPermissions = (req: NextApiRequest): boolean => {
   const staff = getSession(req);
-  return hasAnyPermissions(staff!);
+  if (!staff) return false;
+
+  return hasAnyPermissions(staff);
 };
 
 export const isStaffAction = (application: Application): boolean => {
@@ -24,7 +26,7 @@ export const isStaffAction = (application: Application): boolean => {
     application.sensitiveData ||
     application.assessment ||
     application.assignedTo ||
-    application.status !== ApplicationStatus.DRAFT
+    application.status && application.status !== ApplicationStatus.DRAFT
   ) {
     return true;
   }

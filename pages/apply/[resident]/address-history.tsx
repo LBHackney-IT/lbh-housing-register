@@ -210,6 +210,17 @@ const ApplicationStep = (): JSX.Element => {
   const applicant = useAppSelector(selectApplicant(resident));
   const dispatch = useAppDispatch();
 
+  /* ADDED */
+  const application = useAppSelector((store) => store.application);
+  const isMainResident = applicant === application.mainApplicant;
+  const isPartner = applicant?.person.relationshipType === 'partner';
+
+  console.log('Is main resident: ', isMainResident);
+
+  console.log('Is partner of main resident: ', isPartner);
+
+  /* /ADDED */
+
   if (!applicant) {
     return <Custom404 />;
   }

@@ -569,6 +569,26 @@ export const currentAccomodationCheckboxList = (
 export const situationCheckboxList = (
   applicant?: Applicant
 ): CheckBoxListPageProps => {
+  const armedForces = getQuestionValue(
+    QuestionKey.YOUR_SITUATION_ARMED_FORCES,
+    applicant
+  );
+  const courtOrder = getQuestionValue(
+    QuestionKey.YOUR_SITUATION_COURT_ORDER,
+    applicant
+  );
+  const socialTenant = getQuestionValue(
+    QuestionKey.YOUR_SITUATION_SOCIAL_TENANT,
+    applicant
+  );
+  const domesticViolence = getQuestionValue(
+    QuestionKey.YOUR_SITUATION_DOMESTIC_VIOLENCE,
+    applicant
+  );
+  const subletting = getQuestionValue(
+    QuestionKey.YOUR_SITUATION_SUBLETTING,
+    applicant
+  );
   const homeless = getQuestionValue(
     QuestionKey.YOUR_SITUATION_HOMELESSNESS,
     applicant
@@ -581,11 +601,23 @@ export const situationCheckboxList = (
     QuestionKey.YOUR_SITUATION_SOLD_PROPERTY,
     applicant
   );
+  const buyProperty = getQuestionValue(
+    QuestionKey.YOUR_SITUATION_BUY_PROPERTY,
+    applicant
+  );
   const arrears = getQuestionValue(
     QuestionKey.YOUR_SITUATION_ARREARS,
     applicant
   );
-  const breachOfTennancy = getQuestionValue(
+  const underOccupying = getQuestionValue(
+    QuestionKey.YOUR_SITUATION_UNDER_OCCUPYING,
+    applicant
+  );
+  const landlordAgreement = getQuestionValue(
+    QuestionKey.YOUR_SITUATION_LANDLORD_AGREEMENT,
+    applicant
+  );
+  const breachOfTenancy = getQuestionValue(
     QuestionKey.YOUR_SITUATION_BREACH_OF_TENANCY,
     applicant
   );
@@ -606,6 +638,31 @@ export const situationCheckboxList = (
     title: 'Situation',
     data: [
       {
+        title: 'Served in armed forces',
+        value: `${armedForces}`,
+        isChecked: false,
+      },
+      {
+        title: 'Court order',
+        value: `${courtOrder}`,
+        isChecked: false,
+      },
+      {
+        title: 'Social tenant or in TA',
+        value: `${socialTenant}`,
+        isChecked: false,
+      },
+      {
+        title: 'Fleeing domestic violence',
+        value: `${domesticViolence}`,
+        isChecked: false,
+      },
+      {
+        title: 'Subletting',
+        value: `${subletting}`,
+        isChecked: false,
+      },
+      {
         title: 'Found intentionally homeless',
         value: `${homeless}`,
         isChecked: false,
@@ -621,8 +678,23 @@ export const situationCheckboxList = (
         isChecked: false,
       },
       {
+        title: 'Able to buy property',
+        value: `${buyProperty}`,
+        isChecked: false,
+      },
+      {
         title: 'In 4+ weeks rent arrears',
         value: `${arrears}`,
+        isChecked: false,
+      },
+      {
+        title: 'Under occupying',
+        value: `${underOccupying}`,
+        isChecked: false,
+      },
+      {
+        title: 'Landlord agreement',
+        value: `${landlordAgreement}`,
         isChecked: false,
       },
       {
@@ -632,7 +704,7 @@ export const situationCheckboxList = (
       },
       {
         title: 'Previous warning for breach of tenancy',
-        value: `${breachOfTennancy}`,
+        value: `${breachOfTenancy}`,
         isChecked: false,
       },
       {

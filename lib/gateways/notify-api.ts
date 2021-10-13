@@ -14,8 +14,8 @@ export const sendNewApplicationEmail = async (
         reference: request.reference,
       }
     )
-    .then((response: any) => console.log(response))
-    .catch((err: any) => console.error(err));
+    .then((response: any) => console.log(response.data))
+    .catch((err: any) => console.error(err.response.data.errors));
 
   return response as NotifyResponse;
 };
@@ -29,8 +29,8 @@ export const sendMedicalNeedEmail = async (
       personalisation: request.personalisation,
       reference: request.reference,
     })
-    .then((response: any) => console.log(response))
-    .catch((err: any) => console.error(err));
+    .then((response: any) => console.log(response.data))
+    .catch((err: any) => console.error(err.response.data.errors));
 
   return response as NotifyResponse;
 };
@@ -44,8 +44,8 @@ export const sendDisqualifyEmail = async (
       personalisation: request.personalisation,
       reference: request.reference,
     })
-    .then((response: any) => console.log(response))
-    .catch((err: any) => console.error(err));
+    .then((response: any) => console.log(response.data))
+    .catch((err: any) => console.error(err.response.data.errors));
 
   return response as NotifyResponse;
 };

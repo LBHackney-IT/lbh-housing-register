@@ -657,7 +657,6 @@ export const employmentCheckboxList = (
   );
 
   let employmentStatusText = 'N/A';
-
   if (employmentStatusValue !== 'N/A') {
     employmentStatusText = employmentStatus(employmentStatusValue);
   }
@@ -666,19 +665,26 @@ export const employmentCheckboxList = (
     QuestionKey.EMPLOYMENT_ADDRESS_FINDER,
     applicant
   );
-
   const courseCompletionDate = getQuestionValue(
     QuestionKey.EMPLOYMENT_COURSE_COMPLETION_DATE,
     applicant
   );
 
   let courseCompletionDateText = 'N/A';
-
   if (courseCompletionDate != 'N/A') {
     courseCompletionDateText = formatDate(courseCompletionDate);
   }
 
-  const personalDetails: CheckBoxListPageProps = {
+  const employmentSection: CheckBoxListPageProps = employmentStatusText !== 'Fulltimestudent' ? {
+    title: 'Employment',
+    data: [
+      {
+        title: 'Status',
+        value: `${employmentStatusText}`,
+        isChecked: false,
+      },
+    ],
+  } : {
     title: 'Employment',
     data: [
       {
@@ -687,19 +693,19 @@ export const employmentCheckboxList = (
         isChecked: false,
       },
       {
-        title: 'Accommodation Address',
+        title: 'Accommodation address',
         value: `${addressFinder}`,
         isChecked: false,
       },
       {
-        title: 'Course Completion date',
+        title: 'Course completion date',
         value: `${courseCompletionDateText}`,
         isChecked: false,
       },
     ],
   };
 
-  return personalDetails;
+  return employmentSection;
 };
 
 export const incomeAndSavingsCheckboxList = (

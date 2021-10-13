@@ -51,7 +51,7 @@ const UserSummary = (): JSX.Element => {
     const [isEligible, reasons] = checkEligible(application);
     if (!isEligible) {
       const reason = reasons.join(',');
-      dispatch(sendDisqualifyEmail({application, reason}));
+      dispatch(sendDisqualifyEmail({ application, reason }));
       dispatch(disqualifyApplication(application.id!));
       router.push('/apply/not-eligible');
     } else {

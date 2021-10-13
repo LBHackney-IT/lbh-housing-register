@@ -156,7 +156,7 @@ export const sendDisqualifyEmail = createAsyncThunk(
       personalisation: {
         ref_number: application.reference ?? '',
         resident_name: application.mainApplicant?.person?.firstName ?? '',
-        reason: reason
+        reason: reason,
       },
       reference: `${application.reference}`,
     };

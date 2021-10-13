@@ -206,35 +206,38 @@ export const immigrationStatusCheckboxList = (
         : 'I do not have settled status';
   }
 
-  const immigrationStatusSection: CheckBoxListPageProps = citizenship === 'British' ? {
-    title: 'Immigration status',
-    data: [
-      {
-        title: 'Citizenship',
-        value: `${citizenship}`,
-        isChecked: false,
-      },
-    ],
-  } : {
-    title: 'Immigration status',
-    data: [
-      {
-        title: 'Citizenship',
-        value: `${citizenship}`,
-        isChecked: false,
-      },
-      {
-        title: 'Study Status',
-        value: `${studyStatusText}`,
-        isChecked: false,
-      },
-      {
-        title: 'Visa Status',
-        value: `${visaStatusText}`,
-        isChecked: false,
-      },
-    ],
-  };
+  const immigrationStatusSection: CheckBoxListPageProps =
+    citizenship === 'British'
+      ? {
+          title: 'Immigration status',
+          data: [
+            {
+              title: 'Citizenship',
+              value: `${citizenship}`,
+              isChecked: false,
+            },
+          ],
+        }
+      : {
+          title: 'Immigration status',
+          data: [
+            {
+              title: 'Citizenship',
+              value: `${citizenship}`,
+              isChecked: false,
+            },
+            {
+              title: 'Study Status',
+              value: `${studyStatusText}`,
+              isChecked: false,
+            },
+            {
+              title: 'Visa Status',
+              value: `${visaStatusText}`,
+              isChecked: false,
+            },
+          ],
+        };
 
   return immigrationStatusSection;
 };
@@ -242,8 +245,9 @@ export const immigrationStatusCheckboxList = (
 export const residentialStatusCheckboxList = (
   applicant?: Applicant
 ): CheckBoxListPageProps => {
-  const institutions =
-    questionLookup(QuestionKey.RESIDENTIAL_STATUS_INSTITUTIONS);
+  const institutions = questionLookup(
+    QuestionKey.RESIDENTIAL_STATUS_INSTITUTIONS
+  );
 
   let institutionsText = '';
   if (institutions) {
@@ -387,8 +391,7 @@ export const residentialStatusCheckboxList = (
 export const addressHistoryCheckboxList = (
   applicant?: Applicant
 ): CheckBoxListPageProps => {
-  const addressHistory =
-    questionLookup(QuestionKey.ADDRESS_HISTORY, applicant);
+  const addressHistory = questionLookup(QuestionKey.ADDRESS_HISTORY, applicant);
 
   const addressHistorySection: CheckBoxListPageProps = {
     title: 'Address History',
@@ -400,32 +403,32 @@ export const addressHistoryCheckboxList = (
     var addressHistorysArray = JSON.parse(addressHistory);
 
     const durations = calculateDurations(addressHistorysArray);
-    const history = addressHistorysArray.map((historyEntry: AddressHistoryEntry, index: number) => {
-      let addressHistoryText = '';
-      if (historyEntry.address.line1) {
-        addressHistoryText += `${historyEntry.address.line1}, `;
-      }
-      if (historyEntry.address.line2) {
-        addressHistoryText += `${historyEntry.address.line2}, `;
-      }
-      if (historyEntry.address.town) {
-        addressHistoryText += `${historyEntry.address.town}, `;
-      }
-      if (historyEntry.address.county) {
-        addressHistoryText += `${historyEntry.address.county}, `;
-      }
-      if (historyEntry.postcode) {
-        addressHistoryText += `${historyEntry.postcode} `;
-      }
+    const history = addressHistorysArray.map(
+      (historyEntry: AddressHistoryEntry, index: number) => {
+        let addressHistoryText = '';
+        if (historyEntry.address.line1) {
+          addressHistoryText += `${historyEntry.address.line1}, `;
+        }
+        if (historyEntry.address.line2) {
+          addressHistoryText += `${historyEntry.address.line2}, `;
+        }
+        if (historyEntry.address.town) {
+          addressHistoryText += `${historyEntry.address.town}, `;
+        }
+        if (historyEntry.address.county) {
+          addressHistoryText += `${historyEntry.address.county}, `;
+        }
+        if (historyEntry.postcode) {
+          addressHistoryText += `${historyEntry.postcode} `;
+        }
 
-      return (
-        {
+        return {
           title: index === 0 ? 'Current address' : 'Previous address',
           value: `${addressHistoryText} - ${durations[index].label}`,
           isChecked: false,
-        }
-      );
-    });
+        };
+      }
+    );
 
     addressHistorySection.data = history;
   }
@@ -675,35 +678,38 @@ export const employmentCheckboxList = (
     courseCompletionDateText = formatDate(courseCompletionDate);
   }
 
-  const employmentSection: CheckBoxListPageProps = employmentStatusText !== 'Fulltimestudent' ? {
-    title: 'Employment',
-    data: [
-      {
-        title: 'Status',
-        value: `${employmentStatusText}`,
-        isChecked: false,
-      },
-    ],
-  } : {
-    title: 'Employment',
-    data: [
-      {
-        title: 'Status',
-        value: `${employmentStatusText}`,
-        isChecked: false,
-      },
-      {
-        title: 'Accommodation address',
-        value: `${addressFinder}`,
-        isChecked: false,
-      },
-      {
-        title: 'Course completion date',
-        value: `${courseCompletionDateText}`,
-        isChecked: false,
-      },
-    ],
-  };
+  const employmentSection: CheckBoxListPageProps =
+    employmentStatusText !== 'Fulltimestudent'
+      ? {
+          title: 'Employment',
+          data: [
+            {
+              title: 'Status',
+              value: `${employmentStatusText}`,
+              isChecked: false,
+            },
+          ],
+        }
+      : {
+          title: 'Employment',
+          data: [
+            {
+              title: 'Status',
+              value: `${employmentStatusText}`,
+              isChecked: false,
+            },
+            {
+              title: 'Accommodation address',
+              value: `${addressFinder}`,
+              isChecked: false,
+            },
+            {
+              title: 'Course completion date',
+              value: `${courseCompletionDateText}`,
+              isChecked: false,
+            },
+          ],
+        };
 
   return employmentSection;
 };

@@ -171,7 +171,9 @@ export default function ApplicationPersonPage({
             )}
             {state == 'livingsituation' && (
               <>
-                <CheckBoxList {...(residentialStatus as CheckBoxListPageProps)} />
+                <CheckBoxList
+                  {...(residentialStatus as CheckBoxListPageProps)}
+                />
                 <CheckBoxList {...(addressHistory as CheckBoxListPageProps)} />
                 <CheckBoxList
                   {...(currentAccomodation as CheckBoxListPageProps)}

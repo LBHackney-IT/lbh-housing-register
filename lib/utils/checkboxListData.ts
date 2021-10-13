@@ -440,64 +440,57 @@ export const currentAccomodationCheckboxList = (
     QuestionKey.CURRENT_ACCOMMODATION_LIVING_SITUATION,
     applicant
   );
-
   const home = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOME,
     applicant
   );
-
   const floor = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOME_FLOOR,
     applicant
   );
-
   const sharedWith = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_PEOPLE_SHARE,
     applicant
   );
-
   const numberOfBedrooms = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_BEDROOMS,
     applicant
   );
-
   const livingrooms = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_LIVINGROOMS,
     applicant
   );
-
   const diningRoom = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_DININGROOMS,
     applicant
   );
-
   const bathrooms = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_BATHROOMS,
     applicant
   );
-
   const kitchens = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_KITCHENS,
     applicant
   );
-
   const otherRooms = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_OTHER_ROOMS,
     applicant
   );
-
   const hostName = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOST_PERSON_NAME,
     applicant
   );
-
   const hostNumber = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOST_PERSON_NUMBER,
     applicant
   );
+  const landlordName = getQuestionValue(
+    QuestionKey.CURRENT_ACCOMMODATION_LANDLORD_PERSON_NAME,
+    applicant
+  );
 
-  const personalDetails: CheckBoxListPageProps = {
-    title: 'Current Accommodation',
+  const currentAccomodationSection: CheckBoxListPageProps = {
+    title: 'Current accommodation',
     data: [
       {
         title: 'Accommodation',
@@ -530,7 +523,7 @@ export const currentAccomodationCheckboxList = (
         isChecked: false,
       },
       {
-        title: 'Dining Rooms',
+        title: 'Dining rooms',
         value: `${diningRoom}`,
         isChecked: false,
       },
@@ -549,22 +542,25 @@ export const currentAccomodationCheckboxList = (
         value: `${otherRooms}`,
         isChecked: false,
       },
-
       {
-        title: 'Host Name',
+        title: 'Host name',
         value: `${hostName}`,
         isChecked: false,
       },
-
       {
-        title: 'Host Number',
+        title: 'Host number',
         value: `${hostNumber}`,
+        isChecked: false,
+      },
+      {
+        title: 'Landlord name',
+        value: `${landlordName}`,
         isChecked: false,
       },
     ],
   };
 
-  return personalDetails;
+  return currentAccomodationSection;
 };
 
 export const situationCheckboxList = (

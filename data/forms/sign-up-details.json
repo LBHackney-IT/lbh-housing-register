@@ -55,6 +55,7 @@
           "as": "dateinput",
           "label": "Date of birth",
           "name": "dateOfBirth",
+          "hint": "For example, 31 3 1980",
           "validation": {
             "required": true
           }

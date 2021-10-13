@@ -52,6 +52,7 @@
           "as": "dateinput",
           "label": "When will you complete your course?",
           "name": "course-completion-date",
+          "hint": "For example, 3 2023",
           "showDay": false,
           "options": [
             {

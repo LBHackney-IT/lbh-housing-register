@@ -268,6 +268,7 @@ const AddPersonForm = ({
           <DateInput
             name={'dateOfBirth'}
             label={'Date of birth'}
+            hint={'For example, 31 3 1980'}
             showDay={true}
           />
           <RadioConditional

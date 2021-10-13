@@ -166,7 +166,7 @@ export const immigrationStatusCheckboxList = (
   const citizenship = getQuestionValue(QuestionKey.CITIZENSHIP, applicant);
   const studyStatus = getQuestionValue(QuestionKey.UK_STUDYING, applicant);
   const studyStatusText =
-    studyStatus === 'yes' ? 'In the UK to study' : 'Not in the uk to study';
+    studyStatus === 'Yes' ? 'In the UK to study' : 'Not in the uk to study';
 
   const visaStatus = getQuestionValue(QuestionKey.IMMIGRATION_VISA);
   const eeaNational = getQuestionValue(QuestionKey.IMMIGRATION_EA_NATIONAL);
@@ -177,31 +177,45 @@ export const immigrationStatusCheckboxList = (
   );
 
   let visaStatusText = '';
-  visaStatusText +=
-    visaStatus === 'yes'
-      ? 'I have a work study visa. '
-      : 'I do not have a work study visa. ';
+  if (visaStatus !== 'N/A') {
+    visaStatusText +=
+      visaStatus === 'Yes'
+        ? 'I have a work study visa. '
+        : 'I do not have a work study visa. ';
+  }
+  if (eeaNational !== 'N/A') {
+    visaStatusText +=
+      eeaNational === 'Yes'
+        ? 'I am an EEA national. '
+        : 'I am not an EEA national. ';
+  }
+  if (sponsership !== 'N/A') {
+    visaStatusText +=
+      sponsership === 'Yes'
+        ? 'I am recieving sponsorship. '
+        : 'I am not recieving sponsorship. ';
 
-  visaStatusText +=
-    eeaNational === 'yes'
-      ? 'I am an EEA national. '
-      : 'I am not an EEA national. ';
-
-  visaStatusText +=
-    sponsership === 'yes'
-      ? 'I am recieving sponsorship. '
-      : 'I am not recieving sponsorship. ';
-
-  if (sponsership === 'no') {
-    visaStatusText += legalStaus(legalStatus);
+    if (sponsership === 'No') {
+      visaStatusText += legalStatusText(legalStatus);
+    }
+  }
+  if (settledStatus !== 'N/A') {
+    visaStatusText +=
+      settledStatus === 'Yes'
+        ? 'I have settled status'
+        : 'I do not have settled status';
   }
 
-  visaStatusText +=
-    settledStatus === 'yes'
-      ? 'I have settled status'
-      : 'I do not have settled status';
-
-  const personalDetails: CheckBoxListPageProps = {
+  const immigrationStatusSection: CheckBoxListPageProps = citizenship === 'British' ? {
+    title: 'Immigration status',
+    data: [
+      {
+        title: 'Citizenship',
+        value: `${citizenship}`,
+        isChecked: false,
+      },
+    ],
+  } : {
     title: 'Immigration status',
     data: [
       {
@@ -222,7 +236,7 @@ export const immigrationStatusCheckboxList = (
     ],
   };
 
-  return personalDetails;
+  return immigrationStatusSection;
 };
 
 export const livingSituationCheckboxList = (

@@ -189,9 +189,7 @@ export default function ApplicationPersonPage({
                 />
               </>
             )}
-            {state == 'health' && (
-              <MedicalDetail {...(medicalDetails as MedicalDetailPageProps)} />
-            )}
+            {state == 'health' && <MedicalDetail data={applicant} />}
             {state == 'checklist' && <h3>checklist</h3>}
           </>
         )}

@@ -1,4 +1,5 @@
 import addressHistory from '../../data/forms/address-history.json';
+import singleAddress from '../../data/forms/single-address.json';
 import agreementFormData from '../../data/forms/agreement.json';
 import currentAccommodationFormData from '../../data/forms/current_accommodation/current-accommodation.json';
 import currentAccommodationHostDetails from '../../data/forms/current_accommodation/current-accommodation-host-details.json';
@@ -56,6 +57,7 @@ export enum FormID {
   PERSONAL_DETAILS = 'personal-details',
   IMMIGRATION_STATUS = 'immigration-status',
   RESIDENTIAL_STATUS = 'residential-status',
+  SINGLE_ADDRESS = 'single-address',
   ADDRESS_HISTORY = 'address-history',
   CURRENT_ACCOMMODATION = 'current-accommodation',
   CURRENT_ACCOMMODATION_HOST_DETAILS = 'current-accommodation-host-details',
@@ -136,6 +138,9 @@ export function getFormData(form: FormID): MultiStepForm {
 
     case FormID.ADDRESS_HISTORY:
       return addressHistory as MultiStepForm;
+
+    case FormID.SINGLE_ADDRESS:
+      return singleAddress as MultiStepForm;
 
     case FormID.CURRENT_ACCOMMODATION:
       return currentAccommodationFormData as MultiStepForm;

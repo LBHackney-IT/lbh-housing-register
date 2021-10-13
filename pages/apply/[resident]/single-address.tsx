@@ -1,6 +1,6 @@
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import * as Yup from 'yup';
 import ApplicantStep from '../../../components/application/ApplicantStep';
 import Button from '../../../components/button';
@@ -30,8 +30,6 @@ import {
 } from '../../../lib/utils/addressHistory';
 import { FormID } from '../../../lib/utils/form-data';
 import Custom404 from '../../404';
-
-const REQUIRED_YEARS = 5;
 
 type State = 'postcode-entry' | 'manual-entry' | 'choose-address' | 'review';
 
@@ -89,13 +87,9 @@ function generateValidationSchema(
     case 'postcode-entry':
       return schema.pick(['postcode']);
     case 'manual-entry':
-      return addressHistory.length === 0
-        ? schema.pick(['postcode', 'address', 'date'])
-        : schema.pick(['postcode', 'address', 'date', 'dateTo']);
+      return schema.pick(['postcode', 'address', 'date']);
     case 'choose-address':
-      return addressHistory.length === 0
-        ? schema.pick(['uprn', 'date'])
-        : schema.pick(['uprn', 'date', 'dateTo']);
+      return schema.pick(['uprn', 'date']);
   }
 }
 
@@ -159,10 +153,6 @@ function Summary({
     <>
       {addressHistory.map((entry, index) => (
         <React.Fragment key={index}>
-          {index === 1 && <h2 className="lbh-heading-h2">Previous address</h2>}
-          {index > 1 && (
-            <h2 className="lbh-heading-h2">Previous address {index}</h2>
-          )}
           <InsetText>
             <Label content={'Postcode'} strong />
             <div
@@ -210,6 +200,21 @@ const ApplicationStep = (): JSX.Element => {
   const applicant = useAppSelector(selectApplicant(resident));
   const dispatch = useAppDispatch();
 
+  /* ADDED */
+  // const application = useAppSelector((store) => store.application);
+
+  // const isMainResidentOrPartner =
+  //   applicant === application.mainApplicant ||
+  //   applicant?.person.relationshipType === 'partner';
+
+  // console.log('Is main resident or partner: ', isMainResidentOrPartner);
+
+  // if (!isMainResidentOrPartner) {
+  //   return <Fragment />;
+  // }
+
+  /* /ADDED */
+
   if (!applicant) {
     return <Custom404 />;
   }
@@ -230,7 +235,7 @@ const ApplicationStep = (): JSX.Element => {
 
   const savedAddressHistory = getQuestionValue(
     applicant.questions,
-    FormID.ADDRESS_HISTORY,
+    FormID.SINGLE_ADDRESS,
     'addressHistory'
   );
   const [state, setState] = useState<State>(
@@ -258,11 +263,8 @@ const ApplicationStep = (): JSX.Element => {
       const newHistory = [...addressHistory, address];
       setAddressHistory(newHistory);
       formikHelpers.resetForm();
-      if (checkAddressHistory(newHistory, REQUIRED_YEARS)) {
-        setState('review');
-      } else {
-        setState('postcode-entry');
-      }
+
+      setState('review');
     }
 
     switch (state) {
@@ -324,7 +326,7 @@ const ApplicationStep = (): JSX.Element => {
         dispatch(
           updateWithFormValues({
             personID: applicant.person.id,
-            formID: FormID.ADDRESS_HISTORY,
+            formID: FormID.SINGLE_ADDRESS,
             values: { addressHistory },
             markAsComplete: true,
           })
@@ -339,9 +341,9 @@ const ApplicationStep = (): JSX.Element => {
     <ApplicantStep
       applicant={applicant}
       stepName="Address History"
-      formID={FormID.ADDRESS_HISTORY}
+      formID={FormID.SINGLE_ADDRESS}
     >
-      <h2 className="lbh-heading-h2">Current address</h2>
+      <h2 className="lbh-heading-h2">Current address LKNNLKN</h2>
       <Details summary="Help with your address">
         If you have no fixed abode or if you are sofa surfing, use the address
         where you sleep for the majority of the week. If you are living on the
@@ -359,9 +361,6 @@ const ApplicationStep = (): JSX.Element => {
           <Form>
             {state === 'postcode-entry' && (
               <>
-                {addressHistory.length > 0 && (
-                  <h2 className="lbh-heading-h2">Previous address</h2>
-                )}
                 <Input
                   name="postcode"
                   label="Postcode"
@@ -379,13 +378,6 @@ const ApplicationStep = (): JSX.Element => {
                   label={'When did you move to this address?'}
                   showDay={false}
                 />
-                {addressHistory.length > 0 && (
-                  <DateInput
-                    name={'dateTo'}
-                    label={'When did you leave this address?'}
-                    showDay={false}
-                  />
-                )}
               </InsetText>
             )}
 
@@ -430,13 +422,6 @@ const ApplicationStep = (): JSX.Element => {
                   label={'When did you move to this address?'}
                   showDay={false}
                 />
-                {addressHistory.length > 0 && (
-                  <DateInput
-                    name={'dateTo'}
-                    label={'When did you leave this address?'}
-                    showDay={false}
-                  />
-                )}
               </InsetText>
             )}
 

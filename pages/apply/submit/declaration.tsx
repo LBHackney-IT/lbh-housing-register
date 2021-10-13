@@ -30,9 +30,10 @@ const Declaration = (): JSX.Element => {
   const application = useAppSelector((store) => store.application);
 
   const submitApplication = async () => {
-    const [isEligible] = checkEligible(application);
+    const [isEligible, reasons] = checkEligible(application);
     if (!isEligible) {
-      dispatch(sendDisqualifyEmail(application));
+      const reason = reasons.join(',');
+      dispatch(sendDisqualifyEmail({application, reason}));
       dispatch(disqualifyApplication(application.id!));
       router.push('/apply/not-eligible');
     } else {

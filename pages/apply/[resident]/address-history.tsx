@@ -51,13 +51,13 @@ function generateValidationSchema(
       .required()
       .test(
         'min',
-        '${path} must be before ' + formatDate(new Date(min)),
+        '${path} must be ' + formatDate(new Date(min)) + ' or before',
         (value) => {
           if (typeof value !== 'string' || value === INVALID_DATE) {
             return false;
           }
           const d = +new Date(value);
-          return d < min;
+          return d <= min;
         }
       ),
     dateTo: Yup.string()
@@ -66,13 +66,13 @@ function generateValidationSchema(
       .required()
       .test(
         'min',
-        '${path} must be before ' + formatDate(new Date(min)),
+        '${path} must be ' + formatDate(new Date(min)) + ' or before',
         (value) => {
           if (typeof value !== 'string' || value === INVALID_DATE) {
             return false;
           }
           const d = +new Date(value);
-          return d < min;
+          return d <= min;
         }
       ),
     postcode: Yup.string().label('Postcode').required(),

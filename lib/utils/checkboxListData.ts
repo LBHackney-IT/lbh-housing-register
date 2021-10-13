@@ -12,6 +12,7 @@ import {
 } from '../../lib/utils/addressHistory';
 import { formatDate } from '../../lib/utils/dateOfBirth';
 import { FormikValues } from 'formik';
+import { getGenderName } from './gender';
 
 const legalStaus = (option: string): string => {
   switch (option) {
@@ -120,12 +121,22 @@ export const personalDetailsCheckboxList = (
   const phonNumber = applicant?.contactInformation?.phoneNumber || '';
   const email = applicant?.contactInformation?.emailAddress || '';
 
-  const personalDetails: CheckBoxListPageProps = {
+  const personalDetailsSection: CheckBoxListPageProps = {
     title: 'Personal Details',
     data: [
       {
         title: 'Name',
         value: `${applicant?.person?.title} ${applicant?.person?.firstName} ${applicant?.person?.surname}`,
+        isChecked: false,
+      },
+      {
+        title: 'Date of birth',
+        value: `${formatDate(applicant?.person?.dateOfBirth)}`,
+        isChecked: false,
+      },
+      {
+        title: 'Gender',
+        value: `${getGenderName(applicant!)}`,
         isChecked: false,
       },
       {
@@ -146,7 +157,7 @@ export const personalDetailsCheckboxList = (
     ],
   };
 
-  return personalDetails;
+  return personalDetailsSection;
 };
 
 export const immigrationStatusCheckboxList = (

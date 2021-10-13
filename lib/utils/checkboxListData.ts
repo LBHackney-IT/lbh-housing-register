@@ -570,43 +570,36 @@ export const situationCheckboxList = (
     QuestionKey.YOUR_SITUATION_HOMELESSNESS,
     applicant
   );
-
   const propertyOwner = getQuestionValue(
     QuestionKey.YOUR_SITUATION_PROPERTY_OWNERSHIP,
     applicant
   );
-
   const soldProperty = getQuestionValue(
     QuestionKey.YOUR_SITUATION_SOLD_PROPERTY,
     applicant
   );
-
   const arrears = getQuestionValue(
     QuestionKey.YOUR_SITUATION_ARREARS,
     applicant
   );
-
   const breachOfTennancy = getQuestionValue(
     QuestionKey.YOUR_SITUATION_BREACH_OF_TENANCY,
     applicant
   );
-
   const legalRestrictions = getQuestionValue(
     QuestionKey.YOUR_SITUATION_LEGAL_RESTRICTIONS,
     applicant
   );
-
   const unspentConvictions = getQuestionValue(
     QuestionKey.YOUR_SITUATION_UNSPENT_CONVICTIONS,
     applicant
   );
-
   const onAnotherHousingRegister = getQuestionValue(
     QuestionKey.YOUR_SITUATION_OTHER_HOUSING_REGISTER,
     applicant
   );
 
-  const personalDetails: CheckBoxListPageProps = {
+  const yourSituationSection: CheckBoxListPageProps = {
     title: 'Situation',
     data: [
       {
@@ -652,7 +645,7 @@ export const situationCheckboxList = (
     ],
   };
 
-  return personalDetails;
+  return yourSituationSection;
 };
 
 export const employmentCheckboxList = (
@@ -715,7 +708,7 @@ export const incomeAndSavingsCheckboxList = (
   const income = getQuestionValue(QuestionKey.MONEY_INCOME, applicant);
   const savings = getQuestionValue(QuestionKey.MONEY_SAVINGS, applicant);
 
-  const personalDetails: CheckBoxListPageProps = {
+  const incomeAndSavingsSection: CheckBoxListPageProps = {
     title: 'Household income and savings',
     data: [
       {
@@ -731,7 +724,7 @@ export const incomeAndSavingsCheckboxList = (
     ],
   };
 
-  return personalDetails;
+  return incomeAndSavingsSection;
 };
 
 export const medicalDetailsPageData = (
@@ -752,10 +745,10 @@ export const medicalDetailsPageData = (
       application.mainApplicant?.medicalOutcome?.additionalInformaton ?? '',
   };
 
-  var details: MedicalDetailPageProps = {
+  var medicalDetailsSection: MedicalDetailPageProps = {
     data: application,
     initialValues: initialValues,
   };
 
-  return details;
+  return medicalDetailsSection;
 };

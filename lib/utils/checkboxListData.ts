@@ -14,28 +14,28 @@ import { formatDate } from '../../lib/utils/dateOfBirth';
 import { FormikValues } from 'formik';
 import { getGenderName } from './gender';
 
-const legalStaus = (option: string): string => {
+const legalStatusText = (option: string): string => {
   switch (option) {
-    case 'indefinite-leave-to-remain':
+    case 'Indefinite-leave-to-remain':
       return 'I have Indefinite Leave to Remain';
 
-    case 'discretionary-leave-to-remain':
+    case 'Discretionary-leave-to-remain':
       return 'I have Discretionary Leave to Remain';
 
-    case 'exceptional-leave-to-remain':
+    case 'Exceptional-leave-to-remain':
       return 'I have Exceptional Leave to Remain';
 
-    case 'refugee-status':
+    case 'Refugee-status':
       return 'I have been granted refugee status';
 
-    case 'humanitarian-protection':
+    case 'Humanitarian-protection':
       return 'I have been granted humanitarian protection';
 
-    case 'limited-leave-to-remain-no-public-funds':
+    case 'Limited-leave-to-remain-no-public-funds':
       return 'I have limited Leave to Remain with no recourse to public funds';
 
-    case 'other':
-      return 'other';
+    case 'Other':
+      return 'Other';
 
     default:
       return '';
@@ -44,19 +44,19 @@ const legalStaus = (option: string): string => {
 
 const employmentStatus = (option: string): string => {
   switch (option) {
-    case 'employed':
+    case 'Employed':
       return 'Employed';
 
-    case 'selfemployed':
+    case 'Selfemployed':
       return 'Self Employed';
 
-    case 'fulltimestudent':
+    case 'Fulltimestudent':
       return 'Full time student';
 
-    case 'unemployed':
+    case 'Unemployed':
       return 'Unemployed';
 
-    case 'retired':
+    case 'Retired':
       return 'Retired';
 
     default:
@@ -66,7 +66,7 @@ const employmentStatus = (option: string): string => {
 
 const incomeDetails = (option: string): string => {
   switch (option) {
-    case 'under20000':
+    case 'Under20000':
       return 'Under £20,000';
 
     case '20to40000':
@@ -91,7 +91,7 @@ const incomeDetails = (option: string): string => {
 
 const savingDetails = (option: string): string => {
   switch (option) {
-    case 'under5000':
+    case 'Under5000':
       return 'Under £5,000';
 
     case '5to10000':

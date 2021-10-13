@@ -388,76 +388,49 @@ export const addressHistoryCheckboxList = (
   applicant?: Applicant
 ): CheckBoxListPageProps => {
   const addressHistory =
-    questionLookup(QuestionKey.ADDRESS_HISTORY, applicant) || 'N/A';
+    questionLookup(QuestionKey.ADDRESS_HISTORY, applicant);
 
-  let addressHistoryText = '';
-
-  if (addressHistory !== 'N/A') {
-    //Address Line one, Hackney, London, E8 1AB, From Jan 2021 (6 months)
-    var addressHistorysArray: AddressHistoryEntry = JSON.parse(addressHistory);
-
-    if (addressHistorysArray.address !== undefined) {
-      if (addressHistorysArray.address.line1 !== '') {
-        addressHistoryText += `${addressHistorysArray.address.line1} `;
-      }
-
-      if (addressHistorysArray.address.line2 !== '') {
-        addressHistoryText += `${addressHistorysArray.address.line2} `;
-      }
-
-      if (addressHistorysArray.address.line3 !== '') {
-        addressHistoryText += `${addressHistorysArray.address.line3} `;
-      }
-
-      if (addressHistorysArray.address.line4 !== '') {
-        addressHistoryText += `${addressHistorysArray.address.line4} `;
-      }
-
-      if (addressHistorysArray.address.town !== '') {
-        addressHistoryText += `${addressHistorysArray.address.town}, `;
-      }
-
-      if (addressHistorysArray.address.county !== '') {
-        addressHistoryText += `${addressHistorysArray.address.county}, `;
-      }
-
-      if (addressHistorysArray.address.postcode !== '') {
-        addressHistoryText += `${addressHistorysArray.address.postcode} `;
-      }
-
-      if (
-        addressHistorysArray.date !== '' &&
-        addressHistorysArray.dateTo !== ''
-      ) {
-        const durations = calculateDurations([addressHistorysArray]);
-
-        addressHistoryText += `From ${durations[0].from.getMonth()} ${durations[0].from.getFullYear()}`;
-
-        if (durations.length !== 0) {
-          if (durations[0].years === 0 && durations[0].months <= 11) {
-            addressHistoryText += `(${durations[0].months} months)`;
-          }
-
-          if (durations[0].years >= 1) {
-            addressHistoryText += `(${durations[0].years} years and ${durations[0].months} months)`;
-          }
-        }
-      }
-    }
-  }
-
-  const personalDetails: CheckBoxListPageProps = {
+  const addressHistorySection: CheckBoxListPageProps = {
     title: 'Address History',
-    data: [
-      {
-        title: 'Current Address',
-        value: `${addressHistoryText}`,
-        isChecked: false,
-      },
-    ],
+    data: [],
   };
 
-  return personalDetails;
+  if (addressHistory) {
+    //Address Line one, Hackney, London, E8 1AB, From Jan 2021 (6 months)
+    var addressHistorysArray = JSON.parse(addressHistory);
+
+    const durations = calculateDurations(addressHistorysArray);
+    const history = addressHistorysArray.map((historyEntry: AddressHistoryEntry, index: number) => {
+      let addressHistoryText = '';
+      if (historyEntry.address.line1) {
+        addressHistoryText += `${historyEntry.address.line1}, `;
+      }
+      if (historyEntry.address.line2) {
+        addressHistoryText += `${historyEntry.address.line2}, `;
+      }
+      if (historyEntry.address.town) {
+        addressHistoryText += `${historyEntry.address.town}, `;
+      }
+      if (historyEntry.address.county) {
+        addressHistoryText += `${historyEntry.address.county}, `;
+      }
+      if (historyEntry.postcode) {
+        addressHistoryText += `${historyEntry.postcode} `;
+      }
+
+      return (
+        {
+          title: index === 0 ? 'Current address' : 'Previous address',
+          value: `${addressHistoryText} - ${durations[index].label}`,
+          isChecked: false,
+        }
+      );
+    });
+
+    addressHistorySection.data = history;
+  }
+
+  return addressHistorySection;
 };
 
 export const currentAccomodationCheckboxList = (

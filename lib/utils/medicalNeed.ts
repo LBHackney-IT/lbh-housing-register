@@ -12,7 +12,7 @@ export const applicantHasMedicalNeed = (applicant?: Applicant): boolean => {
     FormID.MEDICAL_NEEDS,
     'medical-needs'
   );
-  console.log(medicalNeeds);
+
   return medicalNeeds === 'yes' ?? false;
 };
 

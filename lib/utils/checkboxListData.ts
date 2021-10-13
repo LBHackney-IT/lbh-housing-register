@@ -239,79 +239,73 @@ export const immigrationStatusCheckboxList = (
   return immigrationStatusSection;
 };
 
-export const livingSituationCheckboxList = (
+export const residentialStatusCheckboxList = (
   applicant?: Applicant
 ): CheckBoxListPageProps => {
   const institutions =
-    questionLookup(QuestionKey.RESIDENTIAL_STATUS_INSTITUTIONS) || '';
-  let institutionsText = '';
+    questionLookup(QuestionKey.RESIDENTIAL_STATUS_INSTITUTIONS);
 
-  if (institutions !== '') {
+  let institutionsText = '';
+  if (institutions) {
     var institutionsArray = JSON.parse(institutions);
     institutionsArray.map((item: string) => {
       institutionsText += item;
     });
   } else {
-    institutionsText === 'N/A';
+    institutionsText = 'N/A';
   }
 
   const residentialStatus = getQuestionValue(
     QuestionKey.RESIDENTIAL_STATUS_RESIDENTIAL_STATUS,
     applicant
   );
-
+  const movedBorough = getQuestionValue(
+    QuestionKey.RESIDENTIAL_STATUS_MOVED_BOROUGH,
+    applicant
+  );
+  const homeless = getQuestionValue(
+    QuestionKey.RESIDENTIAL_STATUS_HOMELESS,
+    applicant
+  );
+  const asboBehaviour = getQuestionValue(
+    QuestionKey.RESIDENTIAL_STATUS_ASBO_BEHAVIOUR,
+    applicant
+  );
   const armedForces = getQuestionValue(
     QuestionKey.RESIDENTIAL_STATUS_ARMED_FORCES,
     applicant
   );
-
   const mobilityScheme = getQuestionValue(
     QuestionKey.RESIDENTIAL_STATUS_MOBILITY_SCHEME,
     applicant
   );
-
+  const homelessnessAccepted = getQuestionValue(
+    QuestionKey.RESIDENTIAL_STATUS_HOMELESSNESS_ACCEPTED,
+    applicant
+  );
+  const socialHousing = getQuestionValue(
+    QuestionKey.RESIDENTIAL_STATUS_SOCIAL_HOUSING,
+    applicant
+  );
+  const workInHackney = getQuestionValue(
+    QuestionKey.RESIDENTIAL_STATUS_WORK_IN_HACKNEY,
+    applicant
+  );
+  const providingCare = getQuestionValue(
+    QuestionKey.RESIDENTIAL_STATUS_PROVIDING_CARE,
+    applicant
+  );
   const domesticViolence = getQuestionValue(
     QuestionKey.RESIDENTIAL_STATUS_DOMESTIC_VIOLENCE,
     applicant
   );
-
   const studyingOutsideHackney = getQuestionValue(
     QuestionKey.RESIDENTIAL_STATUS_STUDYING_OUTSIDE_BOROUGH,
     applicant
   );
 
-  const providingCare = getQuestionValue(
-    QuestionKey.RESIDENTIAL_STATUS_PROVIDING_CARE,
-    applicant
-  );
-
-  const homelessnessAccepted = getQuestionValue(
-    QuestionKey.RESIDENTIAL_STATUS_HOMELESSNESS_ACCEPTED,
-    applicant
-  );
-
-  const asboBehaviour = getQuestionValue(
-    QuestionKey.RESIDENTIAL_STATUS_ASBO_BEHAVIOUR,
-    applicant
-  );
-
-  const homeless = getQuestionValue(
-    QuestionKey.RESIDENTIAL_STATUS_HOMELESS,
-    applicant
-  );
-
-  const socialHousing = getQuestionValue(
-    QuestionKey.RESIDENTIAL_STATUS_SOCIAL_HOUSING,
-    applicant
-  );
-
-  const movedBorough = getQuestionValue(
-    QuestionKey.RESIDENTIAL_STATUS_MOVED_BOROUGH,
-    applicant
-  );
-
-  const personalDetails: CheckBoxListPageProps = {
-    title: 'Living Situation',
+  const residentialStatusSection: CheckBoxListPageProps = {
+    title: 'Residential status',
     data: [
       {
         title: '3 year residential status',
@@ -358,6 +352,11 @@ export const livingSituationCheckboxList = (
         isChecked: false,
       },
       {
+        title: 'Work in Hackney or offered a permanent job in Hackney',
+        value: `${workInHackney}`,
+        isChecked: false,
+      },
+      {
         title: 'Moving to Hackney to provide care to a Hackney resident',
         value: `${providingCare}`,
         isChecked: false,
@@ -382,7 +381,7 @@ export const livingSituationCheckboxList = (
     ],
   };
 
-  return personalDetails;
+  return residentialStatusSection;
 };
 
 export const addressHistoryCheckboxList = (

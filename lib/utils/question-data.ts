@@ -7,6 +7,7 @@ export enum QuestionKey {
   RESIDENTIAL_STATUS_MOBILITY_SCHEME = 'residential-status/mobility-scheme',
   RESIDENTIAL_STATUS_HOMELESSNESS_ACCEPTED = 'residential-status/homelessness-accepted',
   RESIDENTIAL_STATUS_SOCIAL_HOUSING = 'residential-status/social-housing',
+  RESIDENTIAL_STATUS_WORK_IN_HACKNEY = 'residential-status/work-in-hackney',
   RESIDENTIAL_STATUS_PROVIDING_CARE = 'residential-status/providing-care',
   RESIDENTIAL_STATUS_DOMESTIC_VIOLENCE = 'residential-status/domestic-violence',
   RESIDENTIAL_STATUS_STUDYING_OUTSIDE_BOROUGH = 'residential-status/studying-outside-borough',

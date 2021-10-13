@@ -25,6 +25,12 @@ export function CurrentAccommodationSummary({
     'home'
   );
 
+  const unsuitable = getQuestionValue(
+    currentResident.questions,
+    FormID.CURRENT_ACCOMMODATION,
+    'why-home-unsuitable'
+  );
+
   function lookupAnswer(question: string) {
     return getQuestionValue(
       currentResident.questions,
@@ -57,6 +63,12 @@ export function CurrentAccommodationSummary({
         return 'as an unauthorised occupant';
       case 'tied-accommodation':
         return 'in tied accommodation';
+      case 'council-tenant':
+        return 'as a council tenant';
+      case 'housing-association-tenant':
+        return 'as a housing association tenant';
+      case 'b&b-hotel-hostel':
+        return 'in a B&B, hotel or hostel';
     }
   }
 
@@ -106,14 +118,13 @@ export function CurrentAccommodationSummary({
           </SummaryAnswer>
           <SummaryAnswer>
             <Paragraph>
-              I am living in a{' '}
-              <strong>{getHomeSituation(homeSituation)}</strong>
+              I live in a <strong>{getHomeSituation(homeSituation)}</strong>
             </Paragraph>
           </SummaryAnswer>
 
           <SummaryAnswer>
             <Paragraph>
-              My home is on <strong>floor {lookupAnswer('home-floor')}</strong>
+              My home is on the <strong>{lookupAnswer('home-floor')}</strong>
             </Paragraph>
           </SummaryAnswer>
           <SummaryAnswer>
@@ -174,6 +185,11 @@ export function CurrentAccommodationSummary({
               </strong>
             </Paragraph>
           </SummaryAnswer>
+          {unsuitable && (
+            <SummaryAnswer>
+              <Paragraph>My current home is unsuitable: {unsuitable}</Paragraph>
+            </SummaryAnswer>
+          )}
         </>
       )}
     </SummarySection>

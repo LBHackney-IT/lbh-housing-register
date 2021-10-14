@@ -48,7 +48,7 @@ export default function ApplicationPage({
     <UserContext.Provider value={{ user }}>
       <Layout pageName="View application">
         {data.sensitiveData &&
-          !canViewSensitiveApplication(data.assignedTo!, user) ? (
+        !canViewSensitiveApplication(data.assignedTo!, user) ? (
           <>
             <h2>Access denied</h2>
             <Paragraph>You are unable to view this application.</Paragraph>

@@ -25,7 +25,6 @@ import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import {
   AddressHistoryEntry,
   calculateDurations,
-  checkAddressHistory,
   formatDate,
 } from '../../../lib/utils/addressHistory';
 import { FormID } from '../../../lib/utils/form-data';
@@ -199,21 +198,6 @@ const ApplicationStep = (): JSX.Element => {
   const { resident } = router.query as { resident: string };
   const applicant = useAppSelector(selectApplicant(resident));
   const dispatch = useAppDispatch();
-
-  /* ADDED */
-  // const application = useAppSelector((store) => store.application);
-
-  // const isMainResidentOrPartner =
-  //   applicant === application.mainApplicant ||
-  //   applicant?.person.relationshipType === 'partner';
-
-  // console.log('Is main resident or partner: ', isMainResidentOrPartner);
-
-  // if (!isMainResidentOrPartner) {
-  //   return <Fragment />;
-  // }
-
-  /* /ADDED */
 
   if (!applicant) {
     return <Custom404 />;

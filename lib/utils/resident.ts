@@ -8,13 +8,8 @@ export const applicationStepsRemaining = (
   applicant: Applicant,
   isMainApplicant: boolean
 ): number => {
-  const isPartner = applicant?.person?.relationshipType === 'partner';
   const steps = getFormIdsFromApplicationSections(
-    getApplicationSectionsForResident(
-      isMainApplicant,
-      isPartner,
-      isOver18(applicant)
-    )
+    getApplicationSectionsForResident(isMainApplicant, isOver18(applicant))
   );
   let completeSteps = 0;
 
@@ -41,13 +36,12 @@ export const generateSlug = (input: string): string => {
  */
 export const getApplicationSectionsForResident = (
   isMainApplicant: boolean,
-  isPartner: boolean,
   isOver18?: boolean
 ): ApplicationSectionGroup[] => {
   if (isMainApplicant) {
     return getMainApplicantQuestions();
   } else {
-    return getOtherMemberQuestions(isPartner, isOver18);
+    return getOtherMemberQuestions(isOver18);
   }
 };
 
@@ -128,10 +122,9 @@ export const getMainApplicantQuestions = (): ApplicationSectionGroup[] => {
 };
 
 export const getOtherMemberQuestions = (
-  isPartner: boolean,
   isOver18?: boolean
 ): ApplicationSectionGroup[] => {
-  if (isOver18 && isPartner) {
+  if (isOver18) {
     return [
       {
         heading: 'Identity',
@@ -185,8 +178,8 @@ export const getOtherMemberQuestions = (
         heading: 'Living situation',
         sections: [
           {
-            heading: 'Address',
-            id: FormID.SINGLE_ADDRESS,
+            heading: 'Address history',
+            id: FormID.ADDRESS_HISTORY,
           },
         ],
       },

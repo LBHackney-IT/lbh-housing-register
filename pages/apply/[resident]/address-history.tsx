@@ -32,8 +32,6 @@ import {
 import { FormID } from '../../../lib/utils/form-data';
 import Custom404 from '../../404';
 
-// const requiredYears = 5;
-
 type State = 'postcode-entry' | 'manual-entry' | 'choose-address' | 'review';
 
 function generateValidationSchema(

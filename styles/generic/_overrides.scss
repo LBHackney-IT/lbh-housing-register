@@ -11,3 +11,10 @@ body {
     margin-left: 1em;
   }
 }
+
+.lbh-cookie-banner {
+  .js-enabled & {
+    top: auto;
+    bottom: 0;
+  }
+}

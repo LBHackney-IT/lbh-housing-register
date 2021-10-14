@@ -810,29 +810,3 @@ export const incomeAndSavingsCheckboxList = (
 
   return incomeAndSavingsSection;
 };
-
-export const medicalDetailsPageData = (
-  application: Application
-): MedicalDetailPageProps => {
-  var initialValues: FormikValues = {
-    linkToMedicalForm: application.mainApplicant?.medicalNeed?.formLink ?? '',
-    dateFormRecieved:
-      application.mainApplicant?.medicalNeed?.formRecieved ?? '',
-    assessmentDate:
-      application.mainApplicant?.medicalOutcome?.assessmentDate ?? '',
-    outcome: application.mainApplicant?.medicalOutcome?.outcome ?? '',
-    accessibleHousingRegister:
-      application.mainApplicant?.medicalOutcome?.accessibileHousingRegister ??
-      '',
-    disability: application.mainApplicant?.medicalOutcome?.disability ?? '',
-    additionalInformation:
-      application.mainApplicant?.medicalOutcome?.additionalInformaton ?? '',
-  };
-
-  var medicalDetailsSection: MedicalDetailPageProps = {
-    data: application,
-    initialValues: initialValues,
-  };
-
-  return medicalDetailsSection;
-};

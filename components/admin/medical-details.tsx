@@ -14,11 +14,13 @@ import Textarea from '../form/textarea';
 import { applicantHasMedicalNeed } from '../../lib/utils/medicalNeed';
 
 export interface MedicalDetailPageProps {
-  data: Applicant;
+  data: Application;
+  memberIndex: number;
 }
 
 export default function MedicalDetail({
   data,
+  memberIndex,
 }: MedicalDetailPageProps): JSX.Element {
   const router = useRouter();
 
@@ -156,43 +158,62 @@ export default function MedicalDetail({
     additionalInformation: Yup.string(),
   });
 
+  const applicant =
+    data.otherMembers && memberIndex > -1
+      ? data.otherMembers[memberIndex]
+      : data.mainApplicant;
   var initialValues: FormikValues = {
-    dateFormRecieved: data.medicalNeed?.formRecieved ?? '',
-    assessmentDate: data.medicalOutcome?.assessmentDate ?? '',
-    outcome: data.medicalOutcome?.outcome ?? '',
+    dateFormRecieved: applicant?.medicalNeed?.formRecieved ?? '',
+    assessmentDate: applicant?.medicalOutcome?.assessmentDate ?? '',
+    outcome: applicant?.medicalOutcome?.outcome ?? '',
     accessibleHousingRegister:
-      data.medicalOutcome?.accessibileHousingRegister ?? '',
-    disability: data.medicalOutcome?.disability ?? '',
-    additionalInformation: data.medicalOutcome?.additionalInformaton ?? '',
+      applicant?.medicalOutcome?.accessibileHousingRegister ?? '',
+    disability: applicant?.medicalOutcome?.disability ?? '',
+    additionalInformation:
+      applicant?.medicalOutcome?.additionalInformaton ?? '',
   };
 
   function onSubmit(values: FormikValues) {
-    if (applicantHasId(data)) {
-      // TODO: update other member or main applicant
-
-      const request: Application = {
-        mainApplicant: {
-          ...data,
-          medicalNeed: {
-            formRecieved: values.dateFormRecieved,
-            formLink: '',
+    if (applicantHasId(applicant)) {
+      // update household member or main applicant
+      if (data.otherMembers && memberIndex > -1) {
+        data.otherMembers[memberIndex].medicalNeed = {
+          formRecieved: values.dateFormRecieved,
+          formLink: '',
+        };
+        const request: Application = {
+          id: data.id,
+          otherMembers: {
+            ...data.otherMembers,
           },
-          medicalOutcome: {
-            accessibileHousingRegister: values.accessibleHousingRegister,
-            additionalInformaton: values.additionalInformation,
-            assessmentDate: values.assessmentDate,
-            disability: values.disability,
-            outcome: values.outcome,
+        };
+        updateApplication(request);
+      } else {
+        const request: Application = {
+          id: data.id,
+          mainApplicant: {
+            ...data.mainApplicant,
+            medicalNeed: {
+              formRecieved: values.dateFormRecieved,
+              formLink: '',
+            },
+            medicalOutcome: {
+              accessibileHousingRegister: values.accessibleHousingRegister,
+              additionalInformaton: values.additionalInformation,
+              assessmentDate: values.assessmentDate,
+              disability: values.disability,
+              outcome: values.outcome,
+            },
           },
-        },
-      };
+        };
+        updateApplication(request);
+      }
 
-      updateApplication(request);
       setTimeout(() => router.reload(), 500);
     }
   }
 
-  const hasMedicalNeed = applicantHasMedicalNeed(data);
+  const hasMedicalNeed = applicantHasMedicalNeed(applicant);
   return (
     <Formik
       initialValues={initialValues}
@@ -254,13 +275,15 @@ export default function MedicalDetail({
             </div>
           )}
 
-          <div className="c-flex lbh-simple-pagination">
-            <div className="c-flex__1 text-right">
-              <Button disabled={isSubmitting} type="submit">
-                Save changes
-              </Button>
+          {hasMedicalNeed && (
+            <div className="c-flex lbh-simple-pagination">
+              <div className="c-flex__1 text-right">
+                <Button disabled={isSubmitting} type="submit">
+                  Save changes
+                </Button>
+              </div>
             </div>
-          </div>
+          )}
         </Form>
       )}
     </Formik>

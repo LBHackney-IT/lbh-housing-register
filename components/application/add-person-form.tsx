@@ -215,6 +215,7 @@ const AddPersonForm = ({
           }
         ),
       gender: Yup.string().label('Gender').required(),
+      relationshipType: Yup.string(),
       nationalInsuranceNumber: Yup.string()
         .label('National Insurance number')
         .required(),
@@ -224,7 +225,7 @@ const AddPersonForm = ({
 
     if (isOver16) {
       if (isMainApplicant) {
-        return schema;
+        return schema.omit(['relationshipType']);
       } else {
         return schema.omit(['phoneNumber', 'emailAddress']);
       }

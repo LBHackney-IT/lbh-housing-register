@@ -24,6 +24,7 @@ import SensitiveData from '../../../../components/admin/sensitive-data';
 import Paragraph from '../../../../components/content/paragraph';
 import { formatDate } from '../../../../lib/utils/dateOfBirth';
 import { getPersonName } from '../../../../lib/utils/person';
+import { lookupStatus } from '../../../../lib/types/application-status';
 
 export interface PageProps {
   user: HackneyGoogleUserWithPermissions;
@@ -47,7 +48,7 @@ export default function ApplicationPage({
     <UserContext.Provider value={{ user }}>
       <Layout pageName="View application">
         {data.sensitiveData &&
-        !canViewSensitiveApplication(data.assignedTo!, user) ? (
+          !canViewSensitiveApplication(data.assignedTo!, user) ? (
           <>
             <h2>Access denied</h2>
             <Paragraph>You are unable to view this application.</Paragraph>
@@ -122,7 +123,7 @@ export default function ApplicationPage({
                   <Paragraph>
                     <strong>Status</strong>
                     <br />
-                    {data.status}
+                    {lookupStatus(data.status!)}
                     <button
                       onClick={() => setState('actions')}
                       className="lbh-link lbh-link--no-visited-state"

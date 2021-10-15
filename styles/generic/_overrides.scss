@@ -2,8 +2,19 @@ body {
   margin: 0;
 }
 
+#__next {
+  margin: 0;
+}
+
 @media (min-width: 1020px) {
   .lbh-header__service-name {
     margin-left: 1em;
+  }
+}
+
+.lbh-cookie-banner {
+  .js-enabled & {
+    top: auto;
+    bottom: 0;
   }
 }

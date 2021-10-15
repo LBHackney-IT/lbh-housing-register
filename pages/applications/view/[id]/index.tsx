@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import React, { useState } from 'react';
-import OtherMembers from '../../../../components/applications/other-members';
-import PersonalDetails from '../../../../components/applications/personal-details';
+import OtherMembers from '../../../../components/admin/other-members';
+import PersonalDetails from '../../../../components/admin/personal-details';
 import {
   HeadingOne,
   HeadingThree,
@@ -15,24 +15,16 @@ import {
   getRedirect,
   getSession,
   HackneyGoogleUserWithPermissions,
-} from '../../../../lib/utils/auth';
+} from '../../../../lib/utils/googleAuth';
 import Custom404 from '../../../404';
-import Snapshot from '../../../../components/applications/snapshot';
-import Actions from '../../../../components/applications/actions';
-import AssignUser from '../../../../components/applications/assign-user';
-import SensitiveData from '../../../../components/applications/sensitive-data';
+import Snapshot from '../../../../components/admin/snapshot';
+import Actions from '../../../../components/admin/actions';
+import AssignUser from '../../../../components/admin/assign-user';
+import SensitiveData from '../../../../components/admin/sensitive-data';
 import Paragraph from '../../../../components/content/paragraph';
-import { formatDate } from '../../../../components/applications/application-table';
-
-export function getPersonName(application: Application | undefined) {
-  if (!application?.mainApplicant?.person) return '';
-  let person = application?.mainApplicant?.person;
-  let name = `${person.firstName} ${person.surname}`;
-  if (application.otherMembers && application.otherMembers.length > 0) {
-    name += ` (+${application.otherMembers?.length})`;
-  }
-  return name;
-}
+import { formatDate } from '../../../../lib/utils/dateOfBirth';
+import { getPersonName } from '../../../../lib/utils/person';
+import { lookupStatus } from '../../../../lib/types/application-status';
 
 export interface PageProps {
   user: HackneyGoogleUserWithPermissions;
@@ -131,7 +123,7 @@ export default function ApplicationPage({
                   <Paragraph>
                     <strong>Status</strong>
                     <br />
-                    {data.status}
+                    {lookupStatus(data.status!)}
                     <button
                       onClick={() => setState('actions')}
                       className="lbh-link lbh-link--no-visited-state"
@@ -176,16 +168,16 @@ export default function ApplicationPage({
                     </Paragraph>
                   )}
 
-                  {user.hasAdminPermissions ||
-                    (user.hasManagerPermissions && (
-                      <>
-                        <AssignUser id={data.id} user={data.assignedTo} />
-                        <SensitiveData
-                          id={data.id}
-                          isSensitive={data.sensitiveData || false}
-                        />
-                      </>
-                    ))}
+                  <AssignUser
+                    id={data.id}
+                    user={user}
+                    assignee={data.assignedTo}
+                  />
+                  <SensitiveData
+                    id={data.id}
+                    isSensitive={data.sensitiveData || false}
+                    user={user}
+                  />
                 </div>
               </div>
             )}

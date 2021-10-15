@@ -1,7 +1,7 @@
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useAppSelector } from '../../lib/store/hooks';
 import { checkEligible } from '../../lib/utils/form';
-import { ButtonLink } from '../../components/button';
+import Button from '../../components/button';
 import { HeadingTwo, HeadingThree } from '../../components/content/headings';
 import InsetText from '../../components/content/inset-text';
 import List, { ListItem } from '../../components/content/list';
@@ -10,10 +10,12 @@ import Layout from '../../components/layout/resident-layout';
 import Panel from '../../components/panel';
 import withApplication from '../../lib/hoc/withApplication';
 import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
+import { exit } from '../../lib/store/auth';
 
 const NotEligible = (): JSX.Element => {
   const router = useRouter();
-
+  const dispatch = useDispatch();
   const application = useAppSelector((store) => store.application);
   const mainApplicant = useAppSelector(
     (store) => store.application.mainApplicant
@@ -27,6 +29,10 @@ const NotEligible = (): JSX.Element => {
   if (isEligible) {
     router.push('/apply/overview');
   }
+
+  const signOut = () => {
+    dispatch(exit());
+  };
 
   return (
     <Layout>
@@ -69,7 +75,10 @@ const NotEligible = (): JSX.Element => {
       <Paragraph>
         <strong>If you are living in any other accommodation</strong> and you
         are concerned about your housing, please contact the Housing Options and
-        Advice team on <a href="tel:02083562929">020 8356 2929</a>
+        Advice team on{' '}
+        <a className="lbh-link" href="tel:02083562929">
+          020 8356 2929
+        </a>
       </Paragraph>
       <Paragraph>
         <strong>If you are interested in renting private accommodation</strong>{' '}
@@ -111,7 +120,7 @@ const NotEligible = (): JSX.Element => {
       </Paragraph>
       <Paragraph>
         If you still think you meet the criteria in our Lettings policy, you can
-        request a review in writing within 21 days of the decision, by emailing
+        request a review in writing within 21 days of the decision, by emailing{' '}
         <a className="lbh-link" href="mailto:ReviewsandAppeals@hackney.gov.uk">
           ReviewsandAppeals@hackney.gov.uk
         </a>{' '}
@@ -121,6 +130,8 @@ const NotEligible = (): JSX.Element => {
         Please note that on average, only 6% of cases are accepted after being
         re-assessed.
       </Paragraph>
+
+      <Button onClick={signOut}>Sign out</Button>
     </Layout>
   );
 };

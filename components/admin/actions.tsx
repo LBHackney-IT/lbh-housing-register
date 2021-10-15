@@ -1,14 +1,16 @@
+import router from 'next/router';
 import * as Yup from 'yup';
 import { Formik, Form, FormikValues } from 'formik';
 import { Application } from '../../domain/HousingApi';
 import Button from '../button';
-import DateInput from '../form/dateinput';
+import DateInput, { INVALID_DATE } from '../form/dateinput';
 import Select from '../form/select';
 import Radios from '../form/radios';
 import Input from '../form/input';
 import InsetText from '../content/inset-text';
 import { updateApplication } from '../../lib/gateways/internal-api';
-import router from 'next/router';
+import { ApplicationStatus } from '../../lib/types/application-status';
+import { calculateBedroomsFromApplication } from '../../lib/utils/bedroomCalculator';
 
 interface PageProps {
   data: Application;
@@ -21,48 +23,52 @@ export default function Actions({ data }: PageProps): JSX.Element {
       value: '',
     },
     {
-      label: 'Submitted',
-      value: 'Submitted',
-    },
-    {
       label: 'Awaiting assessment',
-      value: 'AwaitingAssessment',
+      value: ApplicationStatus.SUBMITTED,
     },
     {
       label: 'Active',
-      value: 'Active',
+      value: ApplicationStatus.ACTIVE,
     },
     {
       label: 'Referred for approval',
-      value: 'Referred',
+      value: ApplicationStatus.REFERRED,
     },
     {
-      label: 'Rejected',
-      value: 'Rejected',
+      label: 'Rejected by officer',
+      value: ApplicationStatus.REJECTED,
+    },
+    {
+      label: 'Rejected by system',
+      value: ApplicationStatus.DISQUALIFIED,
     },
     {
       label: 'Pending',
-      value: 'Pending',
+      value: ApplicationStatus.PENDING,
     },
     {
       label: 'Cancelled',
-      value: 'Cancelled',
+      value: ApplicationStatus.CANCELLED,
     },
     {
       label: 'Housed',
-      value: 'Housed',
+      value: ApplicationStatus.HOUSED,
     },
     {
       label: 'Active and under appeal',
-      value: 'ActiveUnderAppeal',
+      value: ApplicationStatus.ACTIVE_UNDER_APPEAL,
     },
     {
       label: 'Inactive and under appeal',
-      value: 'InactiveUnderAppeal',
+      value: ApplicationStatus.INACTIVE_UNDER_APPEAL,
     },
     {
       label: 'Suspended',
-      value: 'Suspended',
+      value: ApplicationStatus.SUSPENDED,
+    },
+    {
+      label: 'Incomplete',
+      value: ApplicationStatus.DRAFT,
     },
   ];
 
@@ -182,37 +188,72 @@ export default function Actions({ data }: PageProps): JSX.Element {
     reason: Yup.string()
       .label('Reason')
       .oneOf(reasonOptions.map(({ value }) => value)),
-    applicationDate: Yup.string(),
-    informationRecieved: Yup.string(),
+    applicationDate: Yup.string().notOneOf([INVALID_DATE], 'Invalid date'),
+    informationReceived: Yup.string().notOneOf([INVALID_DATE], 'Invalid date'),
+    bedroomNeed: Yup.number().label('Bedroom need').min(1),
     band: Yup.string(),
     biddingNumberType: Yup.string().oneOf(['generate', 'manual']),
-    biddingNumber: Yup.string(),
+    biddingNumber: Yup.string().matches(
+      /^\d{7}$/,
+      'Bidding number should be a 7 digit number'
+    ),
   });
 
   const initialValues = {
     status: data.status ?? '',
     reason: data.assessment?.reason ?? '',
     applicationDate: data.assessment?.effectiveDate ?? '',
-    informationRecieved: data.assessment?.informationReceivedDate ?? '',
+    informationReceived: data.assessment?.informationReceivedDate ?? '',
+    bedroomNeed:
+      data.assessment?.bedroomNeed ?? calculateBedroomsFromApplication(data),
     band: data.assessment?.band ?? '',
     biddingNumberType: data.assessment?.biddingNumber ? 'manual' : 'generate',
     biddingNumber: data.assessment?.biddingNumber ?? '',
   };
 
+  function showDecisionOptions(values: FormikValues): boolean {
+    return (
+      values.status === ApplicationStatus.ACTIVE ||
+      values.status === ApplicationStatus.ACTIVE_UNDER_APPEAL
+    );
+  }
+
+  function showInformationReceived(values: FormikValues): boolean {
+    return (
+      values.status === ApplicationStatus.ACTIVE ||
+      values.status === ApplicationStatus.ACTIVE_UNDER_APPEAL ||
+      values.status === ApplicationStatus.REJECTED ||
+      values.status === ApplicationStatus.CANCELLED
+    );
+  }
+
   function onSubmit(values: FormikValues) {
     const request: Application = {
       id: data.id,
-      status: data.status,
+      status: values.status,
       assessment: {
-        effectiveDate: values.applicationDate,
-        informationReceivedDate: values.informationReceivedDate,
-        band: values.band,
+        ...data.assessment,
         reason: values.reason,
-        biddingNumber: values.biddingNumber,
       },
     };
+
+    if (values.applicationDate && request.assessment) {
+      request.assessment.effectiveDate = values.applicationDate;
+    }
+    if (values.informationReceived && request.assessment) {
+      request.assessment.informationReceivedDate = values.applicationDate;
+    }
+
+    if (showDecisionOptions(values) && request.assessment) {
+      request.assessment.bedroomNeed = values.bedroomNeed;
+      request.assessment.band = values.band;
+      request.assessment.biddingNumber = values.biddingNumber;
+      request.assessment.generateBiddingNumber =
+        values.biddingNumberType === 'generate';
+    }
+
     updateApplication(request);
-    router.reload();
+    setTimeout(() => router.reload(), 500);
   }
 
   return (
@@ -226,33 +267,49 @@ export default function Actions({ data }: PageProps): JSX.Element {
           <Select label="Status" name="status" options={statusOptions} />
           <Select label="Reason" name="reason" options={reasonOptions} />
           <DateInput name={'applicationDate'} label={'Application date'} />
-          <DateInput
-            name={'informationReceived'}
-            label={'All information received'}
-          />
-          <Radios
-            label="Band"
-            name="band"
-            options={[
-              { label: 'Band A', value: 'A' },
-              { label: 'Band B', value: 'B' },
-              { label: 'Band C', value: 'C' },
-              { label: 'Band C (transitional)', value: 'C-transitional' },
-            ]}
-          />
-          <Radios
-            label="Bidding number"
-            name="biddingNumberType"
-            options={[
-              { label: 'Generate bidding number', value: 'generate' },
-              { label: 'Use existing bidding number', value: 'manual' },
-            ]}
-          />
-          {values.biddingNumberType === 'manual' && (
-            <InsetText>
-              <Input name="biddingNumber" label="Bidding number" className="" />
-            </InsetText>
+          {showInformationReceived(values) && (
+            <DateInput
+              name={'informationReceived'}
+              label={'All information received'}
+            />
           )}
+          {showDecisionOptions(values) && (
+            <>
+              <Input
+                name="bedroomNeed"
+                label="Bedroom need"
+                className="govuk-input--width-2"
+              />
+              <Radios
+                label="Band"
+                name="band"
+                options={[
+                  { label: 'Band A', value: 'A' },
+                  { label: 'Band B', value: 'B' },
+                  { label: 'Band C', value: 'C' },
+                  { label: 'Band C (transitional)', value: 'C-transitional' },
+                ]}
+              />
+              <Radios
+                label="Bidding number"
+                name="biddingNumberType"
+                options={[
+                  { label: 'Generate bidding number', value: 'generate' },
+                  { label: 'Use existing bidding number', value: 'manual' },
+                ]}
+              />
+              {values.biddingNumberType === 'manual' && (
+                <InsetText>
+                  <Input
+                    name="biddingNumber"
+                    label="Bidding number"
+                    className="govuk-input--width-10"
+                  />
+                </InsetText>
+              )}
+            </>
+          )}
+
           <div className="c-flex lbh-simple-pagination">
             <div className="c-flex__1 text-right">
               <Button disabled={isSubmitting} type="submit">

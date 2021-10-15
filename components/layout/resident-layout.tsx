@@ -8,6 +8,7 @@ import PhaseBanner from '../phase-banner';
 import SkipLink from '../skip-link';
 import Seo from '../seo';
 import Footer from '../footer';
+import CookieBanner from '../content/CookieBanner';
 import { exit } from '../../lib/store/auth';
 
 interface ResidentLayoutProps {
@@ -34,8 +35,8 @@ export default function ResidentLayout({
       <SkipLink />
       <Header
         username={application.mainApplicant?.person?.firstName}
-        signOutText="Save and exit"
-        onSignOut={onSignOut}
+        logoLink="/"
+        serviceName="Housing Register application"
       />
       {hasPhaseBanner() && <PhaseBanner />}
 
@@ -48,6 +49,7 @@ export default function ResidentLayout({
       </main>
 
       <Footer referenceNumber={application.reference ?? ''} />
+      <CookieBanner />
     </>
   );
 }

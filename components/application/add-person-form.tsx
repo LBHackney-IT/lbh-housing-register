@@ -1,14 +1,13 @@
 import { Form, Formik } from 'formik';
-import Input from '../../components/form/input';
-import Select from '../../components/form/select';
-import DateInput, { INVALID_DATE } from '../../components/form/dateinput';
-import Button from '../../components/button';
+import Input from '../form/input';
+import Select from '../form/select';
+import DateInput, { INVALID_DATE } from '../form/dateinput';
+import Button from '../button';
 import RadioConditional, {
   RadioConditionalProps,
-} from '../../components/form/radioconditional';
+} from '../form/radioconditional';
 import * as Yup from 'yup';
-import { getAgeInYearsFromDate } from '../../lib//utils/dateOfBirth';
-import { formatDate } from '../../lib/utils/form';
+import { getAgeInYearsFromDate } from '../../lib/utils/dateOfBirth';
 import { Person } from '../../domain/HousingApi';
 
 interface FormValues {
@@ -216,6 +215,7 @@ const AddPersonForm = ({
           }
         ),
       gender: Yup.string().label('Gender').required(),
+      relationshipType: Yup.string(),
       nationalInsuranceNumber: Yup.string()
         .label('National Insurance number')
         .required(),
@@ -225,7 +225,7 @@ const AddPersonForm = ({
 
     if (isOver16) {
       if (isMainApplicant) {
-        return schema;
+        return schema.omit(['relationshipType']);
       } else {
         return schema.omit(['phoneNumber', 'emailAddress']);
       }
@@ -269,6 +269,7 @@ const AddPersonForm = ({
           <DateInput
             name={'dateOfBirth'}
             label={'Date of birth'}
+            hint={'For example, 31 3 1980'}
             showDay={true}
           />
           <RadioConditional

@@ -9,15 +9,15 @@ import {
   getRedirect,
   getSession,
   HackneyGoogleUserWithPermissions,
-} from '../../../../../lib/utils/auth';
+} from '../../../../../lib/utils/googleAuth';
 import Custom404 from '../../../../404';
 import CheckBoxList, {
   CheckBoxListPageProps,
-} from '../../../../../components/applications/checkBoxList';
+} from '../../../../../components/admin/checkbox-list';
 import {
   personalDetailsCheckboxList,
   immigrationStatusCheckboxList,
-  livingSituationCheckboxList,
+  residentialStatusCheckboxList,
   addressHistoryCheckboxList,
   currentAccomodationCheckboxList,
   situationCheckboxList,
@@ -27,30 +27,23 @@ import {
 } from '../../../../../lib/utils/checkboxListData';
 import MedicalDetail, {
   MedicalDetailPageProps,
-} from '../../../../../components/applications/medical-details';
+} from '../../../../../components/admin/medical-details';
 import { HeadingOne } from '../../../../../components/content/headings';
 import Button from '../../../../../components/button';
 import Paragraph from '../../../../../components/content/paragraph';
-
-export function formatDate(date: string | undefined) {
-  if (!date) return '';
-  return `${new Date(date).toLocaleString('default', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  })}`;
-}
 
 interface PageProps {
   user: HackneyGoogleUserWithPermissions;
   data: Application;
   person: string;
+  evidenceLink: string;
 }
 
 export default function ApplicationPersonPage({
   user,
   data,
   person,
+  evidenceLink,
 }: PageProps): JSX.Element {
   if (!data.id) return <Custom404 />;
   let isMainApplicant = data.mainApplicant?.person?.id === person;
@@ -72,7 +65,7 @@ export default function ApplicationPersonPage({
 
   const personalDetails = personalDetailsCheckboxList(applicant);
   const immigrationStatus = immigrationStatusCheckboxList(applicant);
-  const livingSituation = livingSituationCheckboxList(applicant);
+  const residentialStatus = residentialStatusCheckboxList(applicant);
   const addressHistory = addressHistoryCheckboxList(applicant);
   const currentAccomodation = currentAccomodationCheckboxList(applicant);
   const situation = situationCheckboxList(applicant);
@@ -111,10 +104,7 @@ export default function ApplicationPersonPage({
                 className="govuk-grid-column-one-third"
                 style={{ textAlign: 'right' }}
               >
-                <a
-                  href={`${process.env.NEXT_PUBLIC_EVIDENCE_STORE}`}
-                  target="_blank"
-                >
+                <a href={evidenceLink} target="_blank">
                   <Button>View Documents</Button>
                 </a>
               </div>
@@ -181,7 +171,9 @@ export default function ApplicationPersonPage({
             )}
             {state == 'livingsituation' && (
               <>
-                <CheckBoxList {...(livingSituation as CheckBoxListPageProps)} />
+                <CheckBoxList
+                  {...(residentialStatus as CheckBoxListPageProps)}
+                />
                 <CheckBoxList {...(addressHistory as CheckBoxListPageProps)} />
                 <CheckBoxList
                   {...(currentAccomodation as CheckBoxListPageProps)}
@@ -232,5 +224,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  return { props: { user, data, person } };
+  const evidenceLink = process.env.NEXT_PUBLIC_EVIDENCE_STORE;
+  return { props: { user, data, person, evidenceLink } };
 };

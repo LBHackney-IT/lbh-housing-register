@@ -5,6 +5,8 @@ import {
   completeApplication,
   sendDisqualifyEmail,
   sendMedicalNeed,
+  disqualifyApplication,
+  createEvidenceRequest,
 } from '../../../lib/store/application';
 import withApplication from '../../../lib/hoc/withApplication';
 import { applicantsWithMedicalNeed } from '../../../lib/utils/medicalNeed';
@@ -28,18 +30,22 @@ const Declaration = (): JSX.Element => {
   const application = useAppSelector((store) => store.application);
 
   const submitApplication = async () => {
-    const [isEligible] = checkEligible(application);
+    const [isEligible, reasons] = checkEligible(application);
     if (!isEligible) {
-      dispatch(sendDisqualifyEmail(application));
+      const reason = reasons.join(',');
+      dispatch(sendDisqualifyEmail({ application, reason }));
+      dispatch(disqualifyApplication(application.id!));
       router.push('/apply/not-eligible');
     } else {
       dispatch(sendConfirmation(application));
 
-      if (applicantsWithMedicalNeed(application) > 0) {
-        dispatch(sendMedicalNeed(application));
+      const medicalNeeds = applicantsWithMedicalNeed(application);
+      if (medicalNeeds > 0) {
+        dispatch(sendMedicalNeed({ application, medicalNeeds }));
       }
 
       dispatch(completeApplication(application));
+      dispatch(createEvidenceRequest(application));
       router.push('/apply/confirmation');
     }
   };

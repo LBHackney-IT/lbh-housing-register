@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { PaginatedApplicationListResponse } from '../../../domain/HousingApi';
 import { getApplications } from '../../../lib/gateways/applications-api';
-import { getAuth, getSession } from '../../../lib/utils/auth';
+import { getAuth, getSession } from '../../../lib/utils/googleAuth';
 import { calculateBedroomsFromApplication } from '../../../lib/utils/bedroomCalculator';
 
 const CSVColumns = [
@@ -51,7 +51,10 @@ const endpoint: NextApiHandler = async (
     case 'GET':
       const user = getSession(req);
 
-      const auth = getAuth(process.env.AUTHORISED_ADMIN_GROUP as string, user);
+      const auth = getAuth(
+        process.env.AUTHORISED_MANAGER_GROUP as string,
+        user
+      );
       if (!('user' in auth)) {
         res.status(StatusCodes.FORBIDDEN).json({ message: 'access denied' });
         return;
@@ -134,7 +137,9 @@ AutoBidPref_AdaptedStandard       ?
 
 function batchToCSV(page: PaginatedApplicationListResponse): CSVRow[] {
   return page.results.map((result): CSVRow => {
-    const bedroomNeed = calculateBedroomsFromApplication(result);
+    const bedroomNeed =
+      result.assessment?.bedroomNeed ??
+      calculateBedroomsFromApplication(result);
     return {
       HousingRegisterRef: null,
       Title: result.mainApplicant?.person?.title ?? null,
@@ -152,8 +157,8 @@ function batchToCSV(page: PaginatedApplicationListResponse): CSVRow[] {
       Email: result.mainApplicant?.contactInformation?.emailAddress ?? null,
       NINumber: result.mainApplicant?.person?.nationalInsuranceNumber ?? null,
       Sex: result.mainApplicant?.person?.gender ?? null,
-      RegistrationDate: '',
-      EffectiveDate: '',
+      RegistrationDate: result.submittedAt ?? '',
+      EffectiveDate: result.assessment?.effectiveDate ?? '',
       ApplicantType: '',
       MinimumBedSize: (bedroomNeed - 1).toString(),
       MaximumBedSize: bedroomNeed.toString(),

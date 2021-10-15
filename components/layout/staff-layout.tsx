@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react';
 import { useUser } from '../../lib/contexts/user-context';
-import { signOut } from '../../lib/utils/auth';
+import { signOut } from '../../lib/utils/googleAuth';
 import { hasPhaseBanner } from '../../lib/utils/phase-banner';
 import Header from '../header';
 import PhaseBanner from '../phase-banner';
@@ -31,6 +31,8 @@ export default function StaffLayout({
       <SkipLink />
       <Header
         username={user?.name}
+        logoLink="/applications"
+        serviceName="Housing Register admin"
         signOutText="Sign out"
         onSignOut={signOut}
       />

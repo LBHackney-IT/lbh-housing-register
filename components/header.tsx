@@ -1,11 +1,15 @@
 interface HeaderProps {
   username?: string;
-  signOutText: string;
+  logoLink: string;
+  serviceName: string;
+  signOutText?: string;
   onSignOut?: () => void;
 }
 
 export default function Header({
   username,
+  logoLink,
+  serviceName,
   signOutText,
   onSignOut,
 }: HeaderProps): JSX.Element {
@@ -14,7 +18,7 @@ export default function Header({
       <div className="lbh-header__main">
         <div className="lbh-container lbh-header__wrapper lbh-header__wrapper--stacked">
           <div className="lbh-header__title">
-            <a href="/" className="lbh-header__title-link">
+            <a href={logoLink} className="lbh-header__title-link">
               <svg
                 className="lbh-header__logo"
                 role="presentation"
@@ -40,18 +44,18 @@ export default function Header({
                 </g>
               </svg>
               <span className="lbh-header__logo-text"> Hackney </span>
-              <span className="lbh-header__service-name">
-                Housing Register application
-              </span>
+              <span className="lbh-header__service-name">{serviceName}</span>
             </a>
           </div>
           <div className="lbh-header__links">
             {username && (
               <>
                 <p>{username}</p>
-                <a href="" onClick={onSignOut}>
-                  {signOutText}
-                </a>
+                {signOutText && (
+                  <a href="" onClick={onSignOut}>
+                    {signOutText}
+                  </a>
+                )}
               </>
             )}
           </div>

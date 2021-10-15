@@ -15,6 +15,13 @@ export interface AddressHistoryEntry {
   >;
 }
 
+export interface AddressHistoryDuration {
+  from: Date;
+  years: number;
+  months: number;
+  label: string;
+}
+
 export function checkAddressHistory(
   entries: AddressHistoryEntry[],
   requiredYears: number
@@ -33,14 +40,16 @@ export function formatDate(date: Date) {
   })} ${date.getFullYear()}`;
 }
 
-export function calculateDurations(entries: AddressHistoryEntry[]) {
+export function calculateDurations(
+  entries: AddressHistoryEntry[]
+): AddressHistoryDuration[] {
   if (!entries) return [];
 
-  return entries.map((entry) => {
+  return entries.map((entry): AddressHistoryDuration => {
     const from = new Date(entry.date);
 
     if (entry.dateTo) {
-      let until = new Date(entry.dateTo);
+      const until = new Date(entry.dateTo);
 
       const untilInMonths = until.getFullYear() * 12 + until.getMonth();
       const fromInMonths = from.getFullYear() * 12 + from.getMonth();
@@ -49,7 +58,6 @@ export function calculateDurations(entries: AddressHistoryEntry[]) {
       const months = (untilInMonths - fromInMonths) % 12;
 
       const r = {
-        until,
         from,
         years,
         months,
@@ -57,8 +65,6 @@ export function calculateDurations(entries: AddressHistoryEntry[]) {
           months !== 1 ? 's' : ''
         } (${formatDate(from)} – ${formatDate(until)})`,
       };
-
-      until = from;
       return r;
     }
 

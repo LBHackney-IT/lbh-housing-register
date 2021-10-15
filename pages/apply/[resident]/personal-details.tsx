@@ -13,7 +13,7 @@ import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import { FormID } from '../../../lib/utils/form-data';
 import Custom404 from '../../404';
 import { isOver16 } from '../../../lib//utils/dateOfBirth';
-import AddPersonForm from '../../../components/applications/add-person-form';
+import AddPersonForm from '../../../components/application/add-person-form';
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter();
@@ -38,6 +38,7 @@ const ApplicationStep = (): JSX.Element => {
     surname: applicant.person?.surname ?? '',
     gender: applicant.person?.gender ?? '',
     genderDescription: applicant.person?.genderDescription ?? '',
+    relationshipType: applicant.person.relationshipType ?? '',
     dateOfBirth: applicant.person?.dateOfBirth ?? '',
     nationalInsuranceNumber: applicant.person?.nationalInsuranceNumber ?? '',
     phoneNumber: applicant.contactInformation?.phoneNumber ?? '',
@@ -50,6 +51,7 @@ const ApplicationStep = (): JSX.Element => {
     surname,
     gender,
     genderDescription,
+    relationshipType,
     dateOfBirth,
     nationalInsuranceNumber,
     phoneNumber,
@@ -61,7 +63,6 @@ const ApplicationStep = (): JSX.Element => {
     }
 
     if (!isMainApplicant) {
-      nationalInsuranceNumber = '';
       phoneNumber = '';
       emailAddress = '';
     }
@@ -76,6 +77,7 @@ const ApplicationStep = (): JSX.Element => {
           dateOfBirth,
           gender,
           genderDescription,
+          relationshipType,
           nationalInsuranceNumber,
         },
         contactInformation: {

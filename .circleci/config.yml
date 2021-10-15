@@ -43,8 +43,8 @@ jobs:
     steps:
       - *attach_workspace
       - run:
-          name: Run Prettier
-          command: npm run prettier:test
+          name: Run Tests
+          command: npm run test:ci
 
   build-deploy-development:
     executor: aws-cli/default

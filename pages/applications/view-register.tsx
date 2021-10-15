@@ -1,6 +1,5 @@
 import { GetServerSideProps } from 'next';
 import React from 'react';
-import { useRouter } from 'next/router';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 import { UserContext } from '../../lib/contexts/user-context';
@@ -23,14 +22,13 @@ interface PageProps {
   reference: string;
 }
 
-export default function ApplicationListPage({
+export default function ViewAllApplicationsPage({
   user,
   applications,
   pageUrl,
   page = '1',
   reference = '',
 }: PageProps): JSX.Element {
-  const router = useRouter();
   const parameters = new URLSearchParams();
 
   if (reference !== '') {
@@ -39,16 +37,9 @@ export default function ApplicationListPage({
 
   const parsedPage = parseInt(page);
 
-  const filterByStatus = async (status: string) => {
-    router.push({
-      pathname: '/applications/unassigned',
-      query: { status: status },
-    });
-  };
-
   return (
     <UserContext.Provider value={{ user }}>
-      <Layout pageName="Group worktray">
+      <Layout pageName="All applications">
         <SearchBox
           title="Housing Register"
           buttonTitle="Search"
@@ -60,23 +51,14 @@ export default function ApplicationListPage({
             <Sidebar />
           </div>
           <div className="govuk-grid-column-three-quarters">
-            <HeadingOne content="Group worktray" />
-            <div className="lbh-link-group">
-              <button
-                onClick={() => {
-                  filterByStatus('Submitted');
-                }}
-                className="lbh-link lbh-link--no-visited-state active"
-              >
-                Unassigned applications
-              </button>
-            </div>
+            <HeadingOne content="All applications" />
             <ApplicationTable
+              caption="Applications"
               applications={applications}
               currentPage={parsedPage}
               parameters={parameters}
               pageUrl={pageUrl}
-              showStatus={false}
+              showStatus={true}
             />
           </div>
         </div>
@@ -101,7 +83,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     page = '1',
     reference = '',
     orderby = '',
-    status = 'Submitted',
+    status = '',
   } = context.query as {
     page: string;
     reference: string;
@@ -109,12 +91,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     status: string;
   };
 
-  const pageUrl = `${process.env.APP_URL}/applications/unassigned`;
+  const pageUrl = `${process.env.APP_URL}/applications/view-register`;
 
   const applications =
     reference === '' && status === ''
-      ? await getApplications(page, 'unassigned')
-      : await searchApplications(page, reference, status, 'unassigned');
+      ? await getApplications(page)
+      : await searchApplications(page, reference, status);
 
   return {
     props: { user, applications, pageUrl, page, reference },

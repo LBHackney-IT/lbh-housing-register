@@ -1,7 +1,8 @@
 import { Application } from '../../domain/HousingApi';
-import Paragraph from '../../components/content/paragraph';
+import Paragraph from '../content/paragraph';
 import { applicantsWithMedicalNeed } from '../../lib/utils/medicalNeed';
 import { questionLookup } from '../../lib/utils/applicationQuestions';
+import { calculateBedroomsFromApplication } from '../../lib/utils/bedroomCalculator';
 
 interface PageProps {
   data: Application;
@@ -23,12 +24,21 @@ export default function Snapshot({ data }: PageProps): JSX.Element {
     const totalNumberOfPeopleWithMedicalNeeds = applicantsWithMedicalNeed(data);
     switch (totalNumberOfPeopleWithMedicalNeeds) {
       case 0:
-        return 'No one has a medical need';
+        return 'No one has a medical need.';
       case 1:
-        return '1 person who has stated a medical need';
+        return '1 person who has stated a medical need.';
       default:
     }
-    return `${totalNumberOfPeopleWithMedicalNeeds} have stated a medical need`;
+    return `${totalNumberOfPeopleWithMedicalNeeds} people have stated a medical need.`;
+  }
+
+  function bedroomNeedText() {
+    const requiredBedrooms = data.assessment?.bedroomNeed
+      ? data.assessment?.bedroomNeed
+      : calculateBedroomsFromApplication(data);
+    return requiredBedrooms === 1
+      ? `1 bedroom is needed for this application.`
+      : `${requiredBedrooms} bedrooms are needed for this application.`;
   }
 
   function livingSituation() {
@@ -56,7 +66,8 @@ export default function Snapshot({ data }: PageProps): JSX.Element {
   return (
     <Paragraph>
       {`${totalPeopleInApplication()} `}
-      {`${livingSituation()}`} <br />
+      {`${livingSituation()} `}
+      {`${bedroomNeedText()} `}
       {`${medicalNeedText()}`}
     </Paragraph>
   );

@@ -1,24 +1,23 @@
 import { GetServerSideProps } from 'next';
-import ApplicationTable from '../../components/applications/application-table';
-import { HeadingOne } from '../../components/content/headings';
-import Layout from '../../components/layout/staff-layout';
+import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
-import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
+import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 import { UserContext } from '../../lib/contexts/user-context';
+import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
 import {
   searchApplications,
   getApplications,
 } from '../../lib/gateways/applications-api';
-import { getRedirect, getSession } from '../../lib/utils/auth';
-import SearchBox from '../../components/applications/searchBox';
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
-import Sidebar from '../../components/applications/sidebar';
+import Layout from '../../components/layout/staff-layout';
+import SearchBox from '../../components/admin/search-box';
+import Sidebar from '../../components/admin/sidebar';
+import ApplicationTable from '../../components/admin/application-table';
+import { HeadingOne } from '../../components/content/headings';
 
 interface PageProps {
   user: HackneyGoogleUser;
-  applications: PaginatedApplicationListResponse;
+  applications: PaginatedApplicationListResponse | null;
   pageUrl: string;
   page: string;
   reference: string;
@@ -31,7 +30,6 @@ export default function ApplicationListPage({
   page = '1',
   reference = '',
 }: PageProps): JSX.Element {
-  const [searchInputValue, setsearchInputValue] = useState('');
   const router = useRouter();
   const parameters = new URLSearchParams();
 
@@ -41,26 +39,19 @@ export default function ApplicationListPage({
 
   const parsedPage = parseInt(page);
 
-  const textChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ): React.ChangeEvent<HTMLInputElement> => {
-    setsearchInputValue(event.target.value);
-    return event;
-  };
-
-  const onSearchSubmit = async () => {
-    router.push({
-      pathname: '/applications',
-      query: { reference: searchInputValue },
-    });
-  };
-
   const filterByStatus = async (status: string) => {
     router.push({
       pathname: '/applications',
       query: { status: status },
     });
   };
+
+  type State = 'Submitted' | 'Pending';
+  const [state, setState] = useState<State>('Submitted');
+
+  function isActive(selected: string) {
+    return state == selected ? 'active' : '';
+  }
 
   return (
     <UserContext.Provider value={{ user }}>
@@ -69,8 +60,6 @@ export default function ApplicationListPage({
           title="Housing Register"
           buttonTitle="Search"
           watermark="Search application reference"
-          onSearch={onSearchSubmit}
-          textChangeHandler={textChangeHandler}
         />
 
         <div className="govuk-grid-row">
@@ -79,28 +68,36 @@ export default function ApplicationListPage({
           </div>
           <div className="govuk-grid-column-three-quarters">
             <HeadingOne content="My worktray" />
-            <button
-              onClick={() => {
-                filterByStatus('new');
-              }}
-              className="lbh-link lbh-link--no-visited-state"
-            >
-              New applications
-            </button>{' '}
-            <button
-              onClick={() => {
-                filterByStatus('pending');
-              }}
-              className="lbh-link lbh-link--no-visited-state"
-            >
-              Pending applications
-            </button>
+            <div className="lbh-link-group">
+              <button
+                onClick={() => {
+                  setState('Submitted');
+                  filterByStatus('Submitted');
+                }}
+                className={`lbh-link lbh-link--no-visited-state ${isActive(
+                  'Submitted'
+                )}`}
+              >
+                New applications
+              </button>{' '}
+              <button
+                onClick={() => {
+                  setState('Pending');
+                  filterByStatus('Pending');
+                }}
+                className={`lbh-link lbh-link--no-visited-state ${isActive(
+                  'Pending'
+                )}`}
+              >
+                Pending applications
+              </button>
+            </div>
             <ApplicationTable
-              caption="Applications"
               applications={applications}
               currentPage={parsedPage}
               parameters={parameters}
               pageUrl={pageUrl}
+              showStatus={false}
             />
           </div>
         </div>
@@ -125,7 +122,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     page = '1',
     reference = '',
     orderby = '',
-    status = '',
+    status = 'Submitted',
   } = context.query as {
     page: string;
     reference: string;

@@ -7,11 +7,17 @@ import {
   ThunkDispatch,
 } from '@reduxjs/toolkit';
 import { Store } from '.';
-import { Application } from '../../domain/HousingApi';
+import {
+  Application,
+  CreateEvidenceRequest,
+  EvidenceRequestResponse,
+} from '../../domain/HousingApi';
 import { exit } from './auth';
 import mainApplicant from './mainApplicant';
 import otherMembers from './otherMembers';
 import { NotifyRequest, NotifyResponse } from '../../domain/govukNotify';
+import { getRequiredDocumentsForApplication } from '../utils/evidence';
+import { ApplicationStatus } from '../types/application-status';
 
 export const loadApplication = createAsyncThunk(
   'application/load',
@@ -44,6 +50,21 @@ export const updateApplication = createAsyncThunk(
   }
 );
 
+export const disqualifyApplication = createAsyncThunk(
+  'application/disqualify',
+  async (id: string) => {
+    const request: Application = {
+      id: id,
+      status: ApplicationStatus.DISQUALIFIED,
+    };
+    const res = await fetch(`/api/applications/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(request),
+    });
+    return (await res.json()) as Application;
+  }
+);
+
 export const completeApplication = createAsyncThunk(
   'application/complete',
   async (application: Application) => {
@@ -51,6 +72,22 @@ export const completeApplication = createAsyncThunk(
       method: 'PATCH',
     });
     return (await res.json()) as Application;
+  }
+);
+
+export const createEvidenceRequest = createAsyncThunk(
+  'application/evidence',
+  async (application: Application) => {
+    const request: CreateEvidenceRequest = {
+      documentTypes: getRequiredDocumentsForApplication(
+        application.mainApplicant!
+      ),
+    };
+    const res = await fetch(`/api/applications/${application.id}/evidence`, {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
+    return (await res.json()) as EvidenceRequestResponse;
   }
 );
 
@@ -78,12 +115,18 @@ export const sendConfirmation = createAsyncThunk(
 
 export const sendMedicalNeed = createAsyncThunk(
   'application/medical',
-  async (application: Application) => {
+  async ({
+    application,
+    medicalNeeds,
+  }: {
+    application: Application;
+    medicalNeeds: number;
+  }) => {
     const notifyRequest: NotifyRequest = {
       emailAddress:
         application.mainApplicant?.contactInformation?.emailAddress ?? '',
       personalisation: {
-        household_members_with_medical_need: '',
+        household_members_with_medical_need: medicalNeeds.toString(),
         resident_name: application.mainApplicant?.person?.firstName ?? '',
       },
       reference: `${application.reference}`,
@@ -100,13 +143,20 @@ export const sendMedicalNeed = createAsyncThunk(
 
 export const sendDisqualifyEmail = createAsyncThunk(
   'application/disqualify',
-  async (application: Application) => {
+  async ({
+    application,
+    reason,
+  }: {
+    application: Application;
+    reason: string;
+  }) => {
     const notifyRequest: NotifyRequest = {
       emailAddress:
         application.mainApplicant?.contactInformation?.emailAddress ?? '',
       personalisation: {
         ref_number: application.reference ?? '',
         resident_name: application.mainApplicant?.person?.firstName ?? '',
+        reason: reason,
       },
       reference: `${application.reference}`,
     };
@@ -134,6 +184,10 @@ const slice = createSlice({
       )
       .addCase(createApplication.fulfilled, (state, action) => action.payload)
       .addCase(updateApplication.fulfilled, (state, action) => action.payload)
+      .addCase(
+        disqualifyApplication.fulfilled,
+        (state, action) => action.payload
+      )
       .addCase(completeApplication.fulfilled, (state, action) => action.payload)
       .addCase(exit.fulfilled, (state, action) => ({}))
 

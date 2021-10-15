@@ -2,15 +2,19 @@ import { Application } from '../../domain/HousingApi';
 import Button from '../button';
 import { useState } from 'react';
 import { updateApplication } from '../../lib/gateways/internal-api';
+import Paragraph from '../content/paragraph';
+import { HackneyGoogleUserWithPermissions } from '../../lib/utils/googleAuth';
 
 interface sensitiveDataPageProps {
   id: string;
   isSensitive: boolean;
+  user: HackneyGoogleUserWithPermissions;
 }
 
 export default function SensitiveData({
   id,
   isSensitive,
+  user,
 }: sensitiveDataPageProps): JSX.Element {
   const [sensitive, setSensitive] = useState<boolean>(isSensitive);
 
@@ -25,9 +29,7 @@ export default function SensitiveData({
 
   return (
     <>
-      {sensitive && <h3>This application has been marked as sensitive.</h3>}
-
-      {sensitive && (
+      {(user.hasAdminPermissions || user.hasManagerPermissions) && sensitive && (
         <Button
           onClick={() => updateSensitiveDataStatus(false)}
           secondary={true}
@@ -35,13 +37,17 @@ export default function SensitiveData({
           Mark as not sensitive
         </Button>
       )}
-      {!sensitive && (
+      {(user.hasAdminPermissions || user.hasManagerPermissions) && !sensitive && (
         <Button
           onClick={() => updateSensitiveDataStatus(true)}
           secondary={true}
         >
           Mark as sensitive
         </Button>
+      )}
+
+      {sensitive && (
+        <Paragraph>This application has been marked as sensitive.</Paragraph>
       )}
     </>
   );

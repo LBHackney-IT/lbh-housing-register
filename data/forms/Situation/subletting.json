@@ -1,5 +1,12 @@
 {
   "id": "subletting",
+  "eligibility": [
+    {
+      "field": "subletting",
+      "is": "yes",
+      "reasoning": "You have sublet your accommodation without permission"
+    }
+  ],
   "steps": [
     {
       "fields": [
@@ -28,12 +35,12 @@
     {
       "fieldId": "subletting",
       "value": "yes",
-      "nextFormId": ""
+      "nextFormId": "exit"
     },
     {
       "fieldId": "subletting",
       "value": "no",
-      "nextFormId": ""
+      "nextFormId": "exit"
     }
   ]
 }

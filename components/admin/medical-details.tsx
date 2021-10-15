@@ -164,13 +164,12 @@ export default function MedicalDetail({
       : data.mainApplicant;
   var initialValues: FormikValues = {
     dateFormRecieved: applicant?.medicalNeed?.formRecieved ?? '',
-    assessmentDate: applicant?.medicalOutcome?.assessmentDate ?? '',
-    outcome: applicant?.medicalOutcome?.outcome ?? '',
+    assessmentDate: applicant?.medicalNeed?.assessmentDate ?? '',
+    outcome: applicant?.medicalNeed?.outcome ?? '',
     accessibleHousingRegister:
-      applicant?.medicalOutcome?.accessibileHousingRegister ?? '',
-    disability: applicant?.medicalOutcome?.disability ?? '',
-    additionalInformation:
-      applicant?.medicalOutcome?.additionalInformaton ?? '',
+      applicant?.medicalNeed?.accessibileHousingRegister ?? '',
+    disability: applicant?.medicalNeed?.disability ?? '',
+    additionalInformation: applicant?.medicalNeed?.additionalInformaton ?? '',
   };
 
   function onSubmit(values: FormikValues) {
@@ -179,7 +178,12 @@ export default function MedicalDetail({
       if (data.otherMembers && memberIndex > -1) {
         data.otherMembers[memberIndex].medicalNeed = {
           formRecieved: values.dateFormRecieved,
-          formLink: '',
+          assessmentDate:
+            values.assessmentDate !== '' ? values.assessmentDate : null,
+          outcome: values.outcome,
+          accessibileHousingRegister: values.accessibleHousingRegister,
+          disability: values.disability,
+          additionalInformaton: values.additionalInformation,
         };
         const request: Application = {
           id: data.id,
@@ -195,14 +199,12 @@ export default function MedicalDetail({
             ...data.mainApplicant,
             medicalNeed: {
               formRecieved: values.dateFormRecieved,
-              formLink: '',
-            },
-            medicalOutcome: {
-              accessibileHousingRegister: values.accessibleHousingRegister,
-              additionalInformaton: values.additionalInformation,
-              assessmentDate: values.assessmentDate,
-              disability: values.disability,
+              assessmentDate:
+                values.assessmentDate !== '' ? values.assessmentDate : null,
               outcome: values.outcome,
+              accessibileHousingRegister: values.accessibleHousingRegister,
+              disability: values.disability,
+              additionalInformaton: values.additionalInformation,
             },
           },
         };

@@ -97,7 +97,10 @@
         {
           "label": "Mobile number",
           "name": "phoneNumber",
-          "type": "text"
+          "type": "text",
+          "validation": {
+            "required": true
+          }
         },
         {
           "label": "Email",

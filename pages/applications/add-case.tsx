@@ -13,7 +13,8 @@ import {
   generateInitialValues,
   generateQuestionArray,
 } from '../../lib/utils/adminHelpers';
-import { scrollToError } from '../../lib/utils/scroll';
+import { INVALID_DATE } from '../../components/form/dateinput';
+
 import * as Yup from 'yup';
 
 const keysToIgnore = [
@@ -89,11 +90,28 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
     router.reload();
   };
 
+  const currentDateTimestamp = Math.min(+new Date());
   const schema = Yup.object({
     personalDetails_title: Yup.string().label('Title').required(),
     personalDetails_firstName: Yup.string().label('First name').required(),
     personalDetails_surname: Yup.string().label('Surname').required(),
-    personalDetails_dateOfBirth: Yup.string().label('Date of birth').required(),
+    personalDetails_dateOfBirth: Yup.string()
+      .notOneOf([INVALID_DATE], 'Invalid date')
+      .label('Date of birth')
+      .required()
+      .test('futureDate', 'Date of birth must be in the past', (value) => {
+        if (typeof value !== 'string' || value === INVALID_DATE) {
+          return false;
+        }
+
+        const dateOfBirth = +new Date(value);
+
+        if (currentDateTimestamp < dateOfBirth) {
+          return false;
+        }
+
+        return true;
+      }),
     personalDetails_gender: Yup.string().label('Gender').required(),
     personalDetails_nationalInsuranceNumber: Yup.string()
       .label('NI number')
@@ -106,7 +124,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
 
   const scrollToErrors = (errors: any) => {
     const errorKeys = Object.keys(errors);
-    if (errorKeys.length > 0) {
+    if (document.getElementsByName(errorKeys[0])[0]) {
       document.getElementsByName(errorKeys[0])[0].focus();
     }
   };

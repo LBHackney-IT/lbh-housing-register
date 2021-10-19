@@ -24,6 +24,7 @@ import SensitiveData from '../../../../components/admin/sensitive-data';
 import Paragraph from '../../../../components/content/paragraph';
 import { formatDate } from '../../../../lib/utils/dateOfBirth';
 import { getPersonName } from '../../../../lib/utils/person';
+import { lookupStatus } from '../../../../lib/types/application-status';
 
 export interface PageProps {
   user: HackneyGoogleUserWithPermissions;
@@ -122,7 +123,7 @@ export default function ApplicationPage({
                   <Paragraph>
                     <strong>Status</strong>
                     <br />
-                    {data.status}
+                    {lookupStatus(data.status!)}
                     <button
                       onClick={() => setState('actions')}
                       className="lbh-link lbh-link--no-visited-state"

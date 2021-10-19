@@ -1,32 +1,34 @@
 import { Applicant, Application } from '../../domain/HousingApi';
+import { getQuestionValue } from '../store/applicant';
+import { FormID } from './form-data';
 
 export const applicantHasMedicalNeed = (applicant?: Applicant): boolean => {
   if (applicant === undefined) {
     return false;
   }
 
-  return (
-    applicant.questions?.find((q) => q.id === `medical-needs/medical-needs`)
-      ?.answer === 'true'
+  const medicalNeeds = getQuestionValue(
+    applicant.questions,
+    FormID.MEDICAL_NEEDS,
+    'medical-needs'
   );
+
+  return medicalNeeds === 'yes' ?? false;
 };
 
 export const applicantsWithMedicalNeed = (application: Application): number => {
-  let medicalNeeds = 0;
-
   const mainApplicantHasMedicalNeed = applicantHasMedicalNeed(
     application.mainApplicant
   );
-  if (mainApplicantHasMedicalNeed) {
-    medicalNeeds = 1;
-  }
+  const otherApplicantsWithMedicalNeeds = application.otherMembers
+    ?.map((applicant) => applicantHasMedicalNeed(applicant))
+    .filter((x) => x);
 
-  const otherApplicantsWithMedicalNeeds = application.otherMembers?.map(
-    (applicant) => applicantHasMedicalNeed(applicant)
-  );
-  if (otherApplicantsWithMedicalNeeds) {
-    medicalNeeds = medicalNeeds + otherApplicantsWithMedicalNeeds.length;
-  }
+  const totalNumberOfPeopleWithMedicalNeeds =
+    (mainApplicantHasMedicalNeed === true ? 1 : 0) +
+    (otherApplicantsWithMedicalNeeds?.length === undefined
+      ? 0
+      : otherApplicantsWithMedicalNeeds.length);
 
-  return medicalNeeds;
+  return totalNumberOfPeopleWithMedicalNeeds;
 };

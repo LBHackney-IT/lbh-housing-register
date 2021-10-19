@@ -17,7 +17,7 @@ import CheckBoxList, {
 import {
   personalDetailsCheckboxList,
   immigrationStatusCheckboxList,
-  livingSituationCheckboxList,
+  residentialStatusCheckboxList,
   addressHistoryCheckboxList,
   currentAccomodationCheckboxList,
   situationCheckboxList,
@@ -67,7 +67,7 @@ export default function ApplicationPersonPage({
 
   const personalDetails = personalDetailsCheckboxList(applicant);
   const immigrationStatus = immigrationStatusCheckboxList(applicant);
-  const livingSituation = livingSituationCheckboxList(applicant);
+  const residentialStatus = residentialStatusCheckboxList(applicant);
   const addressHistory = addressHistoryCheckboxList(applicant);
   const currentAccomodation = currentAccomodationCheckboxList(applicant);
   const situation = situationCheckboxList(applicant);
@@ -173,7 +173,9 @@ export default function ApplicationPersonPage({
             )}
             {state == 'livingsituation' && (
               <>
-                <CheckBoxList {...(livingSituation as CheckBoxListPageProps)} />
+                <CheckBoxList
+                  {...(residentialStatus as CheckBoxListPageProps)}
+                />
                 <CheckBoxList {...(addressHistory as CheckBoxListPageProps)} />
                 <CheckBoxList
                   {...(currentAccomodation as CheckBoxListPageProps)}

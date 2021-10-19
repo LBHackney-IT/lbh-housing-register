@@ -15,3 +15,10 @@ body {
 .lbh-select--full-width {
   width: 100%;
 }
+
+.lbh-cookie-banner {
+  .js-enabled & {
+    top: auto;
+    bottom: 0;
+  }
+}

@@ -115,12 +115,18 @@ export const sendConfirmation = createAsyncThunk(
 
 export const sendMedicalNeed = createAsyncThunk(
   'application/medical',
-  async (application: Application) => {
+  async ({
+    application,
+    medicalNeeds,
+  }: {
+    application: Application;
+    medicalNeeds: number;
+  }) => {
     const notifyRequest: NotifyRequest = {
       emailAddress:
         application.mainApplicant?.contactInformation?.emailAddress ?? '',
       personalisation: {
-        household_members_with_medical_need: '',
+        household_members_with_medical_need: medicalNeeds.toString(),
         resident_name: application.mainApplicant?.person?.firstName ?? '',
       },
       reference: `${application.reference}`,
@@ -137,13 +143,20 @@ export const sendMedicalNeed = createAsyncThunk(
 
 export const sendDisqualifyEmail = createAsyncThunk(
   'application/disqualify',
-  async (application: Application) => {
+  async ({
+    application,
+    reason,
+  }: {
+    application: Application;
+    reason: string;
+  }) => {
     const notifyRequest: NotifyRequest = {
       emailAddress:
         application.mainApplicant?.contactInformation?.emailAddress ?? '',
       personalisation: {
         ref_number: application.reference ?? '',
         resident_name: application.mainApplicant?.person?.firstName ?? '',
+        reason: reason,
       },
       reference: `${application.reference}`,
     };

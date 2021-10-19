@@ -37,7 +37,7 @@ export const getServerSideProps: GetServerSideProps = async (
 ): Promise<GetServerSidePropsResult<ReportsProps>> => {
   const user = getSession(context.req);
 
-  const auth = getAuth(process.env.AUTHORISED_ADMIN_GROUP as string, user);
+  const auth = getAuth(process.env.AUTHORISED_MANAGER_GROUP as string, user);
 
   if ('redirect' in auth) {
     return { redirect: auth.redirect };

@@ -4,8 +4,9 @@ import React, { useState } from 'react';
 import * as Yup from 'yup';
 import ApplicantStep from '../../../components/application/ApplicantStep';
 import Button from '../../../components/button';
-import InsetText from '../../../components/content/inset-text';
+import { HeadingOne } from '../../../components/content/headings';
 import Paragraph from '../../../components/content/paragraph';
+import InsetText from '../../../components/content/inset-text';
 import Details from '../../../components/details';
 import DateInput, { INVALID_DATE } from '../../../components/form/dateinput';
 import Input from '../../../components/form/input';
@@ -31,8 +32,6 @@ import {
 import { FormID } from '../../../lib/utils/form-data';
 import Custom404 from '../../404';
 
-const REQUIRED_YEARS = 5;
-
 type State = 'postcode-entry' | 'manual-entry' | 'choose-address' | 'review';
 
 function generateValidationSchema(
@@ -51,13 +50,13 @@ function generateValidationSchema(
       .required()
       .test(
         'min',
-        '${path} must be before ' + formatDate(new Date(min)),
+        '${path} must be ' + formatDate(new Date(min)) + ' or before',
         (value) => {
           if (typeof value !== 'string' || value === INVALID_DATE) {
             return false;
           }
           const d = +new Date(value);
-          return d < min;
+          return d <= min;
         }
       ),
     dateTo: Yup.string()
@@ -66,13 +65,13 @@ function generateValidationSchema(
       .required()
       .test(
         'min',
-        '${path} must be before ' + formatDate(new Date(min)),
+        '${path} must be ' + formatDate(new Date(min)) + ' or before',
         (value) => {
           if (typeof value !== 'string' || value === INVALID_DATE) {
             return false;
           }
           const d = +new Date(value);
-          return d < min;
+          return d <= min;
         }
       ),
     postcode: Yup.string().label('Postcode').required(),
@@ -210,6 +209,13 @@ const ApplicationStep = (): JSX.Element => {
   const applicant = useAppSelector(selectApplicant(resident));
   const dispatch = useAppDispatch();
 
+  const application = useAppSelector((store) => store.application);
+  const isMainResidentOrPartner =
+    applicant === application.mainApplicant ||
+    applicant?.person.relationshipType === 'partner';
+
+  const requiredYears = isMainResidentOrPartner ? 5 : 0;
+
   if (!applicant) {
     return <Custom404 />;
   }
@@ -258,7 +264,7 @@ const ApplicationStep = (): JSX.Element => {
       const newHistory = [...addressHistory, address];
       setAddressHistory(newHistory);
       formikHelpers.resetForm();
-      if (checkAddressHistory(newHistory, REQUIRED_YEARS)) {
+      if (checkAddressHistory(newHistory, requiredYears)) {
         setState('review');
       } else {
         setState('postcode-entry');
@@ -341,6 +347,18 @@ const ApplicationStep = (): JSX.Element => {
       stepName="Address History"
       formID={FormID.ADDRESS_HISTORY}
     >
+      {isMainResidentOrPartner ? (
+        <>
+          <HeadingOne content="Address history" />
+          <Paragraph>
+            <strong>
+              Tell us where you have been living for the last five years.
+            </strong>
+          </Paragraph>
+        </>
+      ) : (
+        <HeadingOne content="Address" />
+      )}
       <h2 className="lbh-heading-h2">Current address</h2>
       <Details summary="Help with your address">
         If you have no fixed abode or if you are sofa surfing, use the address

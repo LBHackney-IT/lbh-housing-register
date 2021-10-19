@@ -3,7 +3,7 @@ import router from 'next/router';
 import Layout from '../../components/layout/staff-layout';
 import { UserContext } from '../../lib/contexts/user-context';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
-import { Form, Formik, FormikValues } from 'formik';
+import { Form, Formik, FormikValues, FormikErrors } from 'formik';
 import Button from '../../components/button';
 import AddCaseSection from '../../components/admin/AddCaseSection';
 import { Application } from '../../domain/HousingApi';
@@ -13,6 +13,7 @@ import {
   generateInitialValues,
   generateQuestionArray,
 } from '../../lib/utils/adminHelpers';
+import { scrollToError } from '../../lib/utils/scroll';
 import * as Yup from 'yup';
 
 const keysToIgnore = [
@@ -103,6 +104,13 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
       .required(),
   });
 
+  const scrollToErrors = (errors: any) => {
+    const errorKeys = Object.keys(errors);
+    if (errorKeys.length > 0) {
+      document.getElementsByName(errorKeys[0])[0].focus();
+    }
+  };
+
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="Group worktray">
@@ -111,7 +119,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
           onSubmit={onSubmit}
           validationSchema={schema}
         >
-          {({ isSubmitting }) => (
+          {({ isSubmitting, errors }) => (
             <Form>
               {sections.map((section, index) => (
                 <AddCaseSection
@@ -123,7 +131,11 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
               ))}
 
               <div className="c-flex__1 text-right">
-                <Button disabled={isSubmitting} type="submit">
+                <Button
+                  onClick={() => scrollToErrors(errors)}
+                  disabled={isSubmitting}
+                  type="submit"
+                >
                   Save new Application
                 </Button>
               </div>

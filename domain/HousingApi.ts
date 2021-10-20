@@ -79,20 +79,18 @@ export interface Applicant {
    * @memberof Applicant
    */
   questions?: Array<Question>;
-
+  /**
+   *
+   * @type {boolean}
+   * @memberof Applicant
+   */
+  requiresMedical?: boolean;
   /**
    *
    * @type {MedicalNeed}
    * @memberof Applicant
    */
   medicalNeed?: MedicalNeed;
-
-  /**
-   *
-   * @type {MedicalOutCome}
-   * @memberof Applicant
-   */
-  medicalOutcome?: MedicalOutcome;
 }
 
 export interface MedicalNeed {
@@ -105,46 +103,33 @@ export interface MedicalNeed {
   /**
    *
    * @type {string}
-   * @memberof MedicalNeed
-   */
-  formLink?: string;
-}
-
-export interface MedicalOutcome {
-  /**
-   *
-   * @type {string}
-   * @memberof MedicalOutCome
-   */
-  accessibileHousingRegister?: string;
-
-  /**
-   *
-   * @type {string}
-   * @memberof MedicalOutCome
-   */
-  additionalInformaton?: string;
-
-  /**
-   *
-   * @type {string}
    * @memberof MedicalOutCome
    */
   assessmentDate?: string;
-
-  /**
-   *
-   * @type {string}
-   * @memberof MedicalOutCome
-   */
-  disability?: string;
-
   /**
    *
    * @type {string}
    * @memberof MedicalOutCome
    */
   outcome?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalOutCome
+   */
+  accessibileHousingRegister?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalOutCome
+   */
+  disability?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof MedicalOutCome
+   */
+  additionalInformaton?: string;
 }
 
 /**
@@ -177,7 +162,6 @@ export interface Application {
    * @memberof Application
    */
   sensitiveData?: boolean;
-
   /**
    *
    * @type {string}

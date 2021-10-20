@@ -24,7 +24,10 @@ import SensitiveData from '../../../../components/admin/sensitive-data';
 import Paragraph from '../../../../components/content/paragraph';
 import { formatDate } from '../../../../lib/utils/dateOfBirth';
 import { getPersonName } from '../../../../lib/utils/person';
-import { lookupStatus } from '../../../../lib/types/application-status';
+import {
+  ApplicationStatus,
+  lookupStatus,
+} from '../../../../lib/types/application-status';
 
 export interface PageProps {
   user: HackneyGoogleUserWithPermissions;
@@ -37,7 +40,7 @@ export default function ApplicationPage({
 }: PageProps): JSX.Element {
   if (!data.id) return <Custom404 />;
 
-  type AssessmentState = 'overview' | 'actions';
+  type AssessmentState = 'overview' | 'assessment';
   const [state, setState] = useState<AssessmentState>('overview');
 
   function isActive(selected: string) {
@@ -74,16 +77,18 @@ export default function ApplicationPage({
               >
                 Overview
               </button>{' '}
-              <button
-                onClick={() => {
-                  setState('actions');
-                }}
-                className={`lbh-link lbh-link--no-visited-state ${isActive(
-                  'actions'
-                )}`}
-              >
-                Actions
-              </button>
+              {data.status !== ApplicationStatus.DRAFT && (
+                <button
+                  onClick={() => {
+                    setState('assessment');
+                  }}
+                  className={`lbh-link lbh-link--no-visited-state ${isActive(
+                    'assessment'
+                  )}`}
+                >
+                  Assessment
+                </button>
+              )}
             </div>
 
             {state == 'overview' && (
@@ -124,13 +129,15 @@ export default function ApplicationPage({
                     <strong>Status</strong>
                     <br />
                     {lookupStatus(data.status!)}
-                    <button
-                      onClick={() => setState('actions')}
-                      className="lbh-link lbh-link--no-visited-state"
-                      style={{ marginTop: '0', marginLeft: '0.5em' }}
-                    >
-                      Change
-                    </button>
+                    {data.status !== ApplicationStatus.DRAFT && (
+                      <button
+                        onClick={() => setState('assessment')}
+                        className="lbh-link lbh-link--no-visited-state"
+                        style={{ marginTop: '0', marginLeft: '0.5em' }}
+                      >
+                        Change
+                      </button>
+                    )}
                   </Paragraph>
                   {data.submittedAt && (
                     <Paragraph>
@@ -145,7 +152,7 @@ export default function ApplicationPage({
                       <br />
                       {formatDate(data.assessment?.effectiveDate)}
                       <button
-                        onClick={() => setState('actions')}
+                        onClick={() => setState('assessment')}
                         className="lbh-link lbh-link--no-visited-state"
                         style={{ marginTop: '0', marginLeft: '0.5em' }}
                       >
@@ -159,7 +166,7 @@ export default function ApplicationPage({
                       <br />
                       Band {data.assessment?.band}
                       <button
-                        onClick={() => setState('actions')}
+                        onClick={() => setState('assessment')}
                         className="lbh-link lbh-link--no-visited-state"
                         style={{ marginTop: '0', marginLeft: '0.5em' }}
                       >
@@ -181,7 +188,7 @@ export default function ApplicationPage({
                 </div>
               </div>
             )}
-            {state == 'actions' && <Actions data={data} />}
+            {state == 'assessment' && <Actions data={data} />}
           </>
         )}
       </Layout>

@@ -24,13 +24,6 @@ export default function PersonalDetails({
     <>
       <HeadingThree content={heading} />
       <table className="govuk-table lbh-table" style={{ marginTop: '1em' }}>
-        <thead className="govuk-table__head">
-          <tr className="govuk-table__row">
-            <th scope="col" colSpan={2} className="govuk-table__header">
-              <Hint content="Person details" />
-            </th>
-          </tr>
-        </thead>
         <tbody className="govuk-table__body">
           <tr className="govuk-table__row">
             <td className="govuk-table__cell">
@@ -59,7 +52,9 @@ export default function PersonalDetails({
                   <Link
                     href={`mailto:${applicant.contactInformation.emailAddress}`}
                   >
-                    {applicant.contactInformation.emailAddress}
+                    <a className="lbh-link">
+                      {applicant.contactInformation.emailAddress}
+                    </a>
                   </Link>
                 </>
               )}

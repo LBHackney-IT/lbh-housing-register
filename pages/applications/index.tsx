@@ -74,7 +74,7 @@ export default function ApplicationListPage({
                   setState('Submitted');
                   filterByStatus('Submitted');
                 }}
-                className={`lbh-link lbh-link--no-visited-state ${isActive(
+                className={`lbh-link lbh-link--no-visited-state lbh-!-font-weight-bold ${isActive(
                   'Submitted'
                 )}`}
               >
@@ -85,7 +85,7 @@ export default function ApplicationListPage({
                   setState('Pending');
                   filterByStatus('Pending');
                 }}
-                className={`lbh-link lbh-link--no-visited-state ${isActive(
+                className={`lbh-link lbh-link--no-visited-state lbh-!-font-weight-bold ${isActive(
                   'Pending'
                 )}`}
               >

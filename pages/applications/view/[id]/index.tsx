@@ -56,10 +56,7 @@ export default function ApplicationPage({
         ) : (
           <>
             <HeadingOne content="View application" />
-            <h2
-              className="lbh-heading-h2"
-              style={{ marginTop: '0.5em', color: '#525a5b' }}
-            >
+            <h2 className="lbh-caption-xl lbh-caption govuk-!-margin-top-1">
               {getPersonName(data)}
             </h2>
 
@@ -68,7 +65,7 @@ export default function ApplicationPage({
                 onClick={() => {
                   setState('overview');
                 }}
-                className={`lbh-link lbh-link--no-visited-state ${isActive(
+                className={`lbh-link lbh-link--no-visited-state lbh-!-font-weight-bold ${isActive(
                   'overview'
                 )}`}
               >
@@ -78,11 +75,11 @@ export default function ApplicationPage({
                 onClick={() => {
                   setState('actions');
                 }}
-                className={`lbh-link lbh-link--no-visited-state ${isActive(
+                className={`lbh-link lbh-link--no-visited-state lbh-!-font-weight-bold ${isActive(
                   'actions'
                 )}`}
               >
-                Actions
+                Assessment
               </button>
             </div>
 
@@ -93,14 +90,14 @@ export default function ApplicationPage({
                   <Snapshot data={data} />
                   {data.mainApplicant && (
                     <PersonalDetails
-                      heading="Main Applicant"
+                      heading="Main applicant"
                       applicant={data.mainApplicant}
                       applicationId={data.id}
                     />
                   )}
                   {data.otherMembers && data.otherMembers.length > 0 && (
                     <OtherMembers
-                      heading="Other Members"
+                      heading="Other household members"
                       others={data.otherMembers}
                       applicationId={data.id}
                     />
@@ -124,10 +121,11 @@ export default function ApplicationPage({
                     <strong>Status</strong>
                     <br />
                     {lookupStatus(data.status!)}
+                    <br />
                     <button
                       onClick={() => setState('actions')}
                       className="lbh-link lbh-link--no-visited-state"
-                      style={{ marginTop: '0', marginLeft: '0.5em' }}
+                      style={{ marginTop: '0.3em' }}
                     >
                       Change
                     </button>
@@ -144,10 +142,11 @@ export default function ApplicationPage({
                       <strong>Application date</strong>
                       <br />
                       {formatDate(data.assessment?.effectiveDate)}
+                      <br />
                       <button
                         onClick={() => setState('actions')}
                         className="lbh-link lbh-link--no-visited-state"
-                        style={{ marginTop: '0', marginLeft: '0.5em' }}
+                        style={{ marginTop: '0.3em' }}
                       >
                         Change
                       </button>
@@ -158,10 +157,11 @@ export default function ApplicationPage({
                       <strong>Band</strong>
                       <br />
                       Band {data.assessment?.band}
+                      <br />
                       <button
                         onClick={() => setState('actions')}
                         className="lbh-link lbh-link--no-visited-state"
-                        style={{ marginTop: '0', marginLeft: '0.5em' }}
+                        style={{ marginTop: '0.3em' }}
                       >
                         Change
                       </button>

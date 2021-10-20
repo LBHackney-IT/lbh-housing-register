@@ -18,3 +18,37 @@ body {
     bottom: 0;
   }
 }
+
+.lbh-\!-margin-top-0 {
+  margin-top: 0 !important;
+}
+
+.lbh-\!-font-weight-bold {
+  font-weight: bold !important;
+}
+
+.lbh-caption-xl {
+  @include lbh-heading-h1;
+  color: #525a5b;
+  margin-top: 0.2em;
+}
+
+// .lbh-body-m,
+// .lbh-table,
+// .lbh-input,
+// .lbh-list {
+//   font-weight: 400;
+// }
+
+// @mixin lbh-body-m {
+//   @include lbh-font;
+//   color: $lbh-text-colour;
+//   @include lbh-rem(font-size, 16);
+//   font-weight: $lbh-font-weight-regular;
+//   @include lbh-rem(line-height, 26);
+
+//   @include govuk-media-query($from: tablet) {
+//     @include lbh-rem(font-size, 19);
+//     @include lbh-rem(line-height, 30);
+//   }
+// }

@@ -21,13 +21,6 @@ export default function OtherMembers({
     <>
       <HeadingThree content={heading} />
       <table className="govuk-table lbh-table" style={{ marginTop: '1em' }}>
-        <thead className="govuk-table__head">
-          <tr className="govuk-table__row">
-            <th scope="col" colSpan={2} className="govuk-table__header">
-              <Hint content="Person details" />
-            </th>
-          </tr>
-        </thead>
         <tbody className="govuk-table__body">
           {others.map((applicant, index) => (
             <tr className="govuk-table__row">

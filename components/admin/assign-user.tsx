@@ -58,7 +58,7 @@ export default function AssignUser({
           <button
             onClick={() => assignTo()}
             className="lbh-link lbh-link--no-visited-state"
-            style={{ marginTop: '0.5em' }}
+            style={{ marginTop: '0.3em' }}
           >
             Assign
           </button>

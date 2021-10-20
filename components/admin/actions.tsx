@@ -66,10 +66,6 @@ export default function Actions({ data }: PageProps): JSX.Element {
       label: 'Suspended',
       value: ApplicationStatus.SUSPENDED,
     },
-    {
-      label: 'Incomplete',
-      value: ApplicationStatus.DRAFT,
-    },
   ];
 
   const reasonOptions = [

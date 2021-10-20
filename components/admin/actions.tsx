@@ -241,7 +241,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
       request.assessment.effectiveDate = values.applicationDate;
     }
     if (values.informationReceived && request.assessment) {
-      request.assessment.informationReceivedDate = values.applicationDate;
+      request.assessment.informationReceivedDate = values.informationReceived;
     }
 
     if (showDecisionOptions(values) && request.assessment) {

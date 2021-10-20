@@ -245,7 +245,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
     }
 
     if (showDecisionOptions(values) && request.assessment) {
-      request.assessment.bedroomNeed = values.bedroomNeed;
+      request.assessment.bedroomNeed = +values.bedroomNeed;
       request.assessment.band = values.band;
       request.assessment.biddingNumber = values.biddingNumber;
       request.assessment.generateBiddingNumber =

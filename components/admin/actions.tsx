@@ -198,7 +198,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
   const initialValues = {
     status: data.status ?? '',
     reason: data.assessment?.reason ?? '',
-    applicationDate: data.assessment?.effectiveDate ?? '',
+    applicationDate: data.assessment?.effectiveDate ?? data.submittedAt,
     informationReceived: data.assessment?.informationReceivedDate ?? '',
     bedroomNeed:
       data.assessment?.bedroomNeed ?? calculateBedroomsFromApplication(data),

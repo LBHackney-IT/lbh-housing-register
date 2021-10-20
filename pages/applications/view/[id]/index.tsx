@@ -60,7 +60,7 @@ export default function ApplicationPage({
               {getPersonName(data)}
             </h2>
 
-            <div className="lbh-link-group">
+            <div className="lbh-link-group lbh-link-group--spaced">
               <button
                 onClick={() => {
                   setState('overview');
@@ -105,67 +105,75 @@ export default function ApplicationPage({
                 </div>
                 <div className="govuk-grid-column-one-third">
                   <HeadingThree content="Case details" />
-                  <Paragraph>
-                    <strong>Application reference</strong>
-                    <br />
-                    {data.reference}
-                  </Paragraph>
+                  <ul className="lbh-list lbh-list--compressed">
+                    <li>
+                      <strong>Application reference</strong>
+                    </li>
+                    <li>{data.reference}</li>
+                  </ul>
                   {data.assessment?.biddingNumber && (
-                    <Paragraph>
-                      <strong>Bidding number</strong>
-                      <br />
-                      {data.assessment?.biddingNumber}
-                    </Paragraph>
+                    <ul className="lbh-list lbh-list--compressed">
+                      <li>
+                        <strong>Bidding number</strong>
+                      </li>
+                      <li>{data.assessment?.biddingNumber}</li>
+                    </ul>
                   )}
-                  <Paragraph>
-                    <strong>Status</strong>
-                    <br />
-                    {lookupStatus(data.status!)}
-                    <br />
-                    <button
-                      onClick={() => setState('actions')}
-                      className="lbh-link lbh-link--no-visited-state"
-                      style={{ marginTop: '0.3em' }}
-                    >
-                      Change
-                    </button>
-                  </Paragraph>
+                  <ul className="lbh-list lbh-list--compressed">
+                    <li>
+                      <strong>Status</strong>
+                    </li>
+                    <li>{lookupStatus(data.status!)}</li>
+                    <li>
+                      <button
+                        onClick={() => setState('actions')}
+                        className="lbh-link lbh-link--no-visited-state"
+                      >
+                        Change
+                      </button>
+                    </li>
+                  </ul>
+
                   {data.submittedAt && (
-                    <Paragraph>
-                      <strong>Date submitted</strong>
-                      <br />
-                      {formatDate(data.submittedAt)}
-                    </Paragraph>
+                    <ul className="lbh-list lbh-list--compressed">
+                      <li>
+                        <strong>Date submitted</strong>
+                      </li>
+                      <li>{formatDate(data.submittedAt)}</li>
+                    </ul>
                   )}
                   {data.assessment?.effectiveDate && (
-                    <Paragraph>
-                      <strong>Application date</strong>
-                      <br />
-                      {formatDate(data.assessment?.effectiveDate)}
-                      <br />
-                      <button
-                        onClick={() => setState('actions')}
-                        className="lbh-link lbh-link--no-visited-state"
-                        style={{ marginTop: '0.3em' }}
-                      >
-                        Change
-                      </button>
-                    </Paragraph>
+                    <ul className="lbh-list lbh-list--compressed">
+                      <li>
+                        <strong>Application date</strong>
+                      </li>
+                      <li>{formatDate(data.assessment?.effectiveDate)}</li>
+                      <li>
+                        <button
+                          onClick={() => setState('actions')}
+                          className="lbh-link lbh-link--no-visited-state"
+                        >
+                          Change
+                        </button>
+                      </li>
+                    </ul>
                   )}
                   {data.assessment?.band && (
-                    <Paragraph>
-                      <strong>Band</strong>
-                      <br />
-                      Band {data.assessment?.band}
-                      <br />
-                      <button
-                        onClick={() => setState('actions')}
-                        className="lbh-link lbh-link--no-visited-state"
-                        style={{ marginTop: '0.3em' }}
-                      >
-                        Change
-                      </button>
-                    </Paragraph>
+                    <ul className="lbh-list lbh-list--compressed">
+                      <li>
+                        <strong>Band</strong>
+                      </li>
+                      <li>Band {data.assessment?.band}</li>
+                      <li>
+                        <button
+                          onClick={() => setState('actions')}
+                          className="lbh-link lbh-link--no-visited-state"
+                          style={{ marginTop: '0.3em' }}
+                        >
+                          Change
+                        </button>
+                      </li>
+                    </ul>
                   )}
 
                   <AssignUser

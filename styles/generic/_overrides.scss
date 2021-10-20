@@ -33,22 +33,11 @@ body {
   margin-top: 0.2em;
 }
 
-// .lbh-body-m,
-// .lbh-table,
-// .lbh-input,
-// .lbh-list {
-//   font-weight: 400;
-// }
+.lbh-list--compressed > li + li {
+  margin-top: 7px;
+  margin-top: 0.44rem;
+}
 
-// @mixin lbh-body-m {
-//   @include lbh-font;
-//   color: $lbh-text-colour;
-//   @include lbh-rem(font-size, 16);
-//   font-weight: $lbh-font-weight-regular;
-//   @include lbh-rem(line-height, 26);
-
-//   @include govuk-media-query($from: tablet) {
-//     @include lbh-rem(font-size, 19);
-//     @include lbh-rem(line-height, 30);
-//   }
-// }
+.lbh-link-group--spaced {
+  margin-bottom: 4em;
+}

@@ -43,6 +43,7 @@ export default function Button({
 interface ButtonLinkProps extends ButtonProps {
   href: string;
   svg?: any;
+  additionalCssClasses?: string;
 }
 
 export function ButtonLink({
@@ -51,6 +52,7 @@ export function ButtonLink({
   href,
   secondary,
   svg,
+  additionalCssClasses,
 }: ButtonLinkProps) {
   let className = 'govuk-button lbh-button';
 
@@ -65,7 +67,7 @@ export function ButtonLink({
   return (
     <Link href={href}>
       <a
-        className={className}
+        className={`${className} ${additionalCssClasses}`}
         draggable="false"
         {...(disabled && `disabled aria-disabled="true"`)}
       >

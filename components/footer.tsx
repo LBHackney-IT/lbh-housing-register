@@ -11,14 +11,7 @@ interface FooterProps {
 const Footer = ({ referenceNumber }: FooterProps) => {
   const [open, setOpen] = useState(false);
   return (
-    <footer
-      className="lbh-footer"
-      style={{
-        backgroundColor: '#F8F8F8',
-        paddingTop: '2rem',
-        paddingBottom: '5rem',
-      }}
-    >
+    <footer className="lbh-footer">
       <div className="lbh-container">
         <HeadingThree content="Help" />
         <Paragraph>

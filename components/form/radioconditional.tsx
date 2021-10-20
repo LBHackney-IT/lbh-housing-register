@@ -20,6 +20,7 @@ export function ConditionalInput({
   fieldName,
   label,
   display,
+  value,
 }: ConditionalFormFieldOptionInput) {
   return (
     <>
@@ -34,6 +35,7 @@ export function ConditionalInput({
           id={fieldId}
           name={fieldName}
           data-aria-controls={containerId}
+          value={value}
         />
       </div>
     </>
@@ -138,6 +140,7 @@ export default function RadioConditional({
                     fieldName={radio.conditionalFieldInput.fieldName}
                     label={radio.conditionalFieldInput.label}
                     display={meta.value == radio.value}
+                    value={radio.conditionalFieldInput.value}
                   />
                 )}
               </React.Fragment>

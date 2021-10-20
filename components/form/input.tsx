@@ -55,12 +55,12 @@ export default function Input({
             <input
               // Lowest priority to prevent accidental override of component defined props
               {...additionalInputProps}
-              className={`${className} ${
-                meta.touched && meta.error && 'govuk-input--error'
-              } govuk-input lbh-input`}
+              className={`govuk-input lbh-input ${className ? className : ''} ${
+                meta.touched && meta.error ? 'govuk-input--error' : ''
+              }`}
               id={name}
               placeholder={placeholder}
-              type={type}
+              type={type ? type : 'text'}
               {...field}
               maxLength={500}
             />

@@ -11,9 +11,9 @@ export default function FormGroup({
 }: FormGroupProps): JSX.Element {
   return (
     <div
-      className={`${
-        error && 'govuk-form-group--error'
-      } govuk-form-group lbh-form-group`}
+      className={`govuk-form-group lbh-form-group${
+        error ? ' govuk-form-group--error' : ''
+      }`}
     >
       {children}
     </div>

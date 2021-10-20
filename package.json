@@ -39,7 +39,7 @@
     "axios": "^0.21.1",
     "cookie": "^0.4.1",
     "csv-writer": "^1.6.0",
-    "formik": "^2.2.6",
+    "formik": "^2.2.9",
     "http-status-codes": "^2.1.4",
     "jsonwebtoken": "^8.5.1",
     "lbh-frontend": "^3.5.2",

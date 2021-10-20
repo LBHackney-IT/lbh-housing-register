@@ -149,6 +149,7 @@ const genderProps: RadioConditionalProps = {
         fieldName: 'genderDescription',
         label: 'Please enter your self-description',
         display: true,
+        value: '',
       },
     },
   ],

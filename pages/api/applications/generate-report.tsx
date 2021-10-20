@@ -138,7 +138,9 @@ AutoBidPref_AdaptedStandard       ?
 
 function batchToCSV(page: PaginatedApplicationListResponse): CSVRow[] {
   return page.results
-    .filter((x) => x.status !== ApplicationStatus.DRAFT && x.assessment?.biddingNumber)
+    .filter(
+      (x) => x.status !== ApplicationStatus.DRAFT && x.assessment?.biddingNumber
+    )
     .map((result): CSVRow => {
       const bedroomNeed =
         result.assessment?.bedroomNeed ??

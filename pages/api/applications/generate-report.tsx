@@ -5,6 +5,7 @@ import { PaginatedApplicationListResponse } from '../../../domain/HousingApi';
 import { getApplications } from '../../../lib/gateways/applications-api';
 import { getAuth, getSession } from '../../../lib/utils/googleAuth';
 import { calculateBedroomsFromApplication } from '../../../lib/utils/bedroomCalculator';
+import { ApplicationStatus } from '../../../lib/types/application-status';
 
 const CSVColumns = [
   'HousingRegisterRef',
@@ -116,8 +117,8 @@ WorkTelephone                     [we're not collecting]
 Email                             ''
 NINumber                          MainApplicant
 Sex                               "M" or "F"
-RegistrationDate                  ? Date application made or approved?
-EffectiveDate                     ? Effective Band Date.
+RegistrationDate                  Submitted date
+EffectiveDate                     Application date
 ApplicantType                     ? Could this be band? Sample data included URG and RES as values. Urgent?
 MinimumBedSize                    Calculated bedroom count minus one min zero.
 MaximumBedSize                    Calculated bedroom count
@@ -136,44 +137,46 @@ AutoBidPref_AdaptedStandard       ?
 */
 
 function batchToCSV(page: PaginatedApplicationListResponse): CSVRow[] {
-  return page.results.map((result): CSVRow => {
-    const bedroomNeed =
-      result.assessment?.bedroomNeed ??
-      calculateBedroomsFromApplication(result);
-    return {
-      HousingRegisterRef: null,
-      Title: result.mainApplicant?.person?.title ?? null,
-      FirstName: result.mainApplicant?.person?.firstName ?? null,
-      FamilyName: result.mainApplicant?.person?.surname ?? null,
-      Address1: result.mainApplicant?.address?.addressLine1 ?? null,
-      Address2: result.mainApplicant?.address?.addressLine2 ?? null,
-      Address3: result.mainApplicant?.address?.addressLine3 ?? null,
-      Address4: null,
-      Address5: null,
-      Postcode: result.mainApplicant?.address?.postcode ?? null,
-      HomeTelephone:
-        result.mainApplicant?.contactInformation?.phoneNumber ?? null,
-      WorkTelephone: null,
-      Email: result.mainApplicant?.contactInformation?.emailAddress ?? null,
-      NINumber: result.mainApplicant?.person?.nationalInsuranceNumber ?? null,
-      Sex: result.mainApplicant?.person?.gender ?? null,
-      RegistrationDate: result.submittedAt ?? '',
-      EffectiveDate: result.assessment?.effectiveDate ?? '',
-      ApplicantType: '',
-      MinimumBedSize: (bedroomNeed - 1).toString(),
-      MaximumBedSize: bedroomNeed.toString(),
-      DateOfBirth: result.mainApplicant?.person?.dateOfBirth ?? null,
-      OlderPersonsAssessement: '',
-      MobilityAssessment: '',
-      AdditionalBandingInfo: '',
-      MedicalRequirements: '',
-      Offered: '',
-      EthnicOrigin: '',
-      Decant: '',
-      AHRCode: '',
-      AutoBidPref_MobilityStandard: '',
-      AutoBidPref_WheelChairStandard: '',
-      AutoBidPref_AdaptedStandard: '',
-    };
-  });
+  return page.results
+    .filter((x) => x.status !== ApplicationStatus.DRAFT && x.assessment?.biddingNumber)
+    .map((result): CSVRow => {
+      const bedroomNeed =
+        result.assessment?.bedroomNeed ??
+        calculateBedroomsFromApplication(result);
+      return {
+        HousingRegisterRef: result.assessment?.biddingNumber ?? null,
+        Title: result.mainApplicant?.person?.title ?? null,
+        FirstName: result.mainApplicant?.person?.firstName ?? null,
+        FamilyName: result.mainApplicant?.person?.surname ?? null,
+        Address1: result.mainApplicant?.address?.addressLine1 ?? null,
+        Address2: result.mainApplicant?.address?.addressLine2 ?? null,
+        Address3: result.mainApplicant?.address?.addressLine3 ?? null,
+        Address4: null,
+        Address5: null,
+        Postcode: result.mainApplicant?.address?.postcode ?? null,
+        HomeTelephone:
+          result.mainApplicant?.contactInformation?.phoneNumber ?? null,
+        WorkTelephone: null,
+        Email: result.mainApplicant?.contactInformation?.emailAddress ?? null,
+        NINumber: result.mainApplicant?.person?.nationalInsuranceNumber ?? null,
+        Sex: result.mainApplicant?.person?.gender ?? null,
+        RegistrationDate: result.submittedAt ?? '',
+        EffectiveDate: result.assessment?.effectiveDate ?? '',
+        ApplicantType: '',
+        MinimumBedSize: Math.max(0, bedroomNeed - 1).toString(),
+        MaximumBedSize: Math.max(0, bedroomNeed).toString(),
+        DateOfBirth: result.mainApplicant?.person?.dateOfBirth ?? null,
+        OlderPersonsAssessement: '',
+        MobilityAssessment: '',
+        AdditionalBandingInfo: '',
+        MedicalRequirements: '',
+        Offered: '',
+        EthnicOrigin: '',
+        Decant: '',
+        AHRCode: '',
+        AutoBidPref_MobilityStandard: '',
+        AutoBidPref_WheelChairStandard: '',
+        AutoBidPref_AdaptedStandard: '',
+      };
+    });
 }

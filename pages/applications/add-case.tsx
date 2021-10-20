@@ -39,24 +39,11 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
   const onSubmit = (values: FormikValues) => {
     const questionValues = generateQuestionArray(values);
     const request: Application = {
-      id: 'd701748f0851',
-      status: 'New',
-      createdAt: '',
-      submittedAt: '',
-      assignedTo: '',
-      // isSensitive: false,
-      assessment: {
-        effectiveDate: '',
-        band: '',
-        biddingNumber: '',
-      },
       mainApplicant: {
         person: {
           id: '',
-          // reference: '',
           title: values.personalDetails_title,
           firstName: values.personalDetails_firstName,
-          middleName: '',
           surname: values.personalDetails_surname,
           dateOfBirth: values.personalDetails_dateOfBirth,
           gender: values.personalDetails_gender,
@@ -77,11 +64,6 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
           phoneNumber: values.personalDetails_phoneNumber,
           preferredMethodOfContact: '',
         },
-        evidence: [
-          {
-            id: '',
-          },
-        ],
         questions: questionValues,
       },
       otherMembers: [],

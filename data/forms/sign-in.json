@@ -10,11 +10,6 @@
           "validation": {
             "required": true
           }
-        },
-        {
-          "name": "password",
-          "type": "hidden",
-          "initialValue": "Testing123!"
         }
       ]
     }

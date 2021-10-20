@@ -1,4 +1,5 @@
 import { Fragment, useMemo } from 'react';
+import { useRouter } from 'next/router';
 import { ButtonLink } from '../../components/button';
 import { HeadingOne } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
@@ -15,9 +16,9 @@ import { useAppSelector } from '../../lib/store/hooks';
 import { ApplicationStatus } from '../../lib/types/application-status';
 import { applicationStepsRemaining } from '../../lib/utils/resident';
 import withApplication from '../../lib/hoc/withApplication';
-import router from 'next/router';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
+  const router = useRouter();
   const breadcrumbs = [
     {
       href: '/apply/overview',

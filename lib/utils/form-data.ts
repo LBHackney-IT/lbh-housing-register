@@ -43,8 +43,6 @@ import EthnicityCategoryMixedMultipleBackground from '../../data/forms/ethnicity
 import EthnicityCategoryWhite from '../../data/forms/ethnicity/ethnicity-category-white.json';
 import EthnicityCategoryOtherEthnicGroup from '../../data/forms/ethnicity/ethnicity-category-other-ethnic-group.json';
 
-import AdminHealthActions from '../../data/admin/health.json';
-
 import { EligibilityCriteria, MultiStepForm } from '../types/form';
 import assertNever from './assertNever';
 
@@ -91,7 +89,6 @@ export enum FormID {
   ETHNICITY_CATEGORY_WHITE = 'ethnicity-extended-category-white',
   ETHNICITY_CATEGORY_OTHER_ETHNIC_GROUP = 'ethnicity-extended-category-other-ethnic-group',
   DECLARATION = 'declaration',
-  ADMIN_HEALTH_ACTIONS = 'admin-health-actions',
 }
 
 /**
@@ -241,9 +238,6 @@ export function getFormData(form: FormID): MultiStepForm {
 
     case FormID.DECLARATION:
       return declarationFormData as MultiStepForm;
-
-    case FormID.ADMIN_HEALTH_ACTIONS:
-      return AdminHealthActions as MultiStepForm;
 
     default:
       return assertNever(form, 'Unknown form step: ' + form);

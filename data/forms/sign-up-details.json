@@ -97,7 +97,10 @@
         {
           "label": "Mobile number",
           "name": "phoneNumber",
-          "type": "text"
+          "type": "text",
+          "validation": {
+            "required": true
+          }
         },
         {
           "label": "Email",
@@ -107,11 +110,6 @@
           "validation": {
             "required": true
           }
-        },
-        {
-          "name": "password",
-          "type": "hidden",
-          "initialValue": "Testing123!"
         }
       ]
     }

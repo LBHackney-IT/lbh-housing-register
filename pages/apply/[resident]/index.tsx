@@ -45,7 +45,7 @@ const ResidentIndex = (): JSX.Element => {
   const checkAnswers = `${baseHref}/summary`;
 
   const [isEligible] = checkEligible(application);
-  if (!isEligible) {
+  if (!isEligible && currentResident === mainResident) {
     router.push(checkAnswers);
   }
 
@@ -60,8 +60,8 @@ const ResidentIndex = (): JSX.Element => {
   );
 
   let sectionNames: FormID[] = [];
-  steps.map((step, index) => {
-    step.sections.map((section, i) => {
+  steps.map((step) => {
+    step.sections.map((section) => {
       sectionNames.push(section.id);
     });
   });
@@ -124,8 +124,8 @@ const ResidentIndex = (): JSX.Element => {
         <div key={index}>
           <HeadingTwo content={step.heading} />
           <SummaryList>
-            {step.sections.map((formStep, i) => (
-              <SummaryListRow key={i}>
+            {step.sections.map((formStep, index) => (
+              <SummaryListRow key={index}>
                 <SummaryListValue>
                   {isSectionActive(formStep.id) ? (
                     <Link href={`${baseHref}/${formStep.id}`}>

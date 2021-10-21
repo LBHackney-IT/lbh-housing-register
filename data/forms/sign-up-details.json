@@ -55,6 +55,7 @@
           "as": "dateinput",
           "label": "Date of birth",
           "name": "dateOfBirth",
+          "hint": "For example, 31 3 1980",
           "validation": {
             "required": true
           }
@@ -96,7 +97,10 @@
         {
           "label": "Mobile number",
           "name": "phoneNumber",
-          "type": "text"
+          "type": "text",
+          "validation": {
+            "required": true
+          }
         },
         {
           "label": "Email",
@@ -106,11 +110,6 @@
           "validation": {
             "required": true
           }
-        },
-        {
-          "name": "password",
-          "type": "hidden",
-          "initialValue": "Testing123!"
         }
       ]
     }

@@ -26,7 +26,7 @@ export const isStaffAction = (application: Application): boolean => {
     application.sensitiveData ||
     application.assessment ||
     application.assignedTo ||
-    application.status && application.status !== ApplicationStatus.DRAFT
+    (application.status && application.status !== ApplicationStatus.DRAFT)
   ) {
     return true;
   }

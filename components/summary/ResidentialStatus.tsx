@@ -30,6 +30,7 @@ export function ResidentialStatusSummary({
   const mobilityScheme = lookupAnswer('mobility-scheme');
   const homelessnessAccepted = lookupAnswer('homelessness-accepted');
   const socialHousing = lookupAnswer('social-housing');
+  const workInHackney = lookupAnswer('work-in-hackney');
   const providingCare = lookupAnswer('providing-care');
   const domesticViolence = lookupAnswer('domestic-violence');
   const studyingOutsideBorough = lookupAnswer('studying-outside-borough');
@@ -120,6 +121,14 @@ export function ResidentialStatusSummary({
                 <strong>I am{socialHousing !== 'yes' && ' not'}</strong> an
                 existing social housing tenant in Hackney who has a secure,
                 assured or fixed term tenancy.
+              </Paragraph>
+            </SummaryAnswer>
+          )}
+          {workInHackney && (
+            <SummaryAnswer>
+              <Paragraph>
+                <strong>I do{workInHackney !== 'yes' && ' not'}</strong> work in
+                Hackney or have been offered a permanent job in Hackney.
               </Paragraph>
             </SummaryAnswer>
           )}

@@ -149,6 +149,7 @@ const genderProps: RadioConditionalProps = {
         fieldName: 'genderDescription',
         label: 'Please enter your self-description',
         display: true,
+        value: '',
       },
     },
   ],
@@ -215,6 +216,7 @@ const AddPersonForm = ({
           }
         ),
       gender: Yup.string().label('Gender').required(),
+      relationshipType: Yup.string(),
       nationalInsuranceNumber: Yup.string()
         .label('National Insurance number')
         .required(),
@@ -224,7 +226,7 @@ const AddPersonForm = ({
 
     if (isOver16) {
       if (isMainApplicant) {
-        return schema;
+        return schema.omit(['relationshipType']);
       } else {
         return schema.omit(['phoneNumber', 'emailAddress']);
       }
@@ -268,6 +270,7 @@ const AddPersonForm = ({
           <DateInput
             name={'dateOfBirth'}
             label={'Date of birth'}
+            hint={'For example, 31 3 1980'}
             showDay={true}
           />
           <RadioConditional

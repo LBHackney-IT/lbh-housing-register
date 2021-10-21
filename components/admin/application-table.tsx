@@ -5,6 +5,7 @@ import Paragraph from '../content/paragraph';
 import Pagination from '../pagination';
 import { formatDate } from '../../lib/utils/dateOfBirth';
 import { getPersonName } from '../../lib/utils/person';
+import { lookupStatus } from '../../lib/types/application-status';
 
 interface TableProps {
   caption?: string;
@@ -76,7 +77,9 @@ export default function ApplicationTable({
                     {formatDate(application.submittedAt)}
                   </td>
                   {showStatus && (
-                    <td className="govuk-table__cell">{application.status}</td>
+                    <td className="govuk-table__cell">
+                      {lookupStatus(application.status!)}
+                    </td>
                   )}
                 </tr>
               ))}

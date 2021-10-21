@@ -17,17 +17,14 @@ import CheckBoxList, {
 import {
   personalDetailsCheckboxList,
   immigrationStatusCheckboxList,
-  livingSituationCheckboxList,
+  residentialStatusCheckboxList,
   addressHistoryCheckboxList,
   currentAccomodationCheckboxList,
   situationCheckboxList,
   employmentCheckboxList,
   incomeAndSavingsCheckboxList,
-  medicalDetailsPageData,
 } from '../../../../../lib/utils/checkboxListData';
-import MedicalDetail, {
-  MedicalDetailPageProps,
-} from '../../../../../components/admin/medical-details';
+import MedicalDetail from '../../../../../components/admin/medical-details';
 import { HeadingOne } from '../../../../../components/content/headings';
 import Button from '../../../../../components/button';
 import Paragraph from '../../../../../components/content/paragraph';
@@ -46,10 +43,15 @@ export default function ApplicationPersonPage({
   evidenceLink,
 }: PageProps): JSX.Element {
   if (!data.id) return <Custom404 />;
+
   let isMainApplicant = data.mainApplicant?.person?.id === person;
   let applicant = isMainApplicant
     ? data.mainApplicant
     : data.otherMembers?.find((x) => x.person?.id === person);
+
+  const index = data.otherMembers?.findIndex((x) => {
+    return x.person?.id === person;
+  });
 
   type State =
     | 'identity'
@@ -65,13 +67,12 @@ export default function ApplicationPersonPage({
 
   const personalDetails = personalDetailsCheckboxList(applicant);
   const immigrationStatus = immigrationStatusCheckboxList(applicant);
-  const livingSituation = livingSituationCheckboxList(applicant);
+  const residentialStatus = residentialStatusCheckboxList(applicant);
   const addressHistory = addressHistoryCheckboxList(applicant);
   const currentAccomodation = currentAccomodationCheckboxList(applicant);
   const situation = situationCheckboxList(applicant);
   const employment = employmentCheckboxList(applicant);
   const incomeAndSavings = incomeAndSavingsCheckboxList(applicant);
-  const medicalDetails = medicalDetailsPageData(data);
 
   return (
     <UserContext.Provider value={{ user }}>
@@ -171,7 +172,9 @@ export default function ApplicationPersonPage({
             )}
             {state == 'livingsituation' && (
               <>
-                <CheckBoxList {...(livingSituation as CheckBoxListPageProps)} />
+                <CheckBoxList
+                  {...(residentialStatus as CheckBoxListPageProps)}
+                />
                 <CheckBoxList {...(addressHistory as CheckBoxListPageProps)} />
                 <CheckBoxList
                   {...(currentAccomodation as CheckBoxListPageProps)}
@@ -188,7 +191,7 @@ export default function ApplicationPersonPage({
               </>
             )}
             {state == 'health' && (
-              <MedicalDetail {...(medicalDetails as MedicalDetailPageProps)} />
+              <MedicalDetail data={data} memberIndex={index ?? -1} />
             )}
             {state == 'checklist' && <h3>checklist</h3>}
           </>

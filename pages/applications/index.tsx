@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import React, { useState } from 'react';
+import React, { useState, SyntheticEvent } from 'react';
 import { useRouter } from 'next/router';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { getRedirect, getSession } from '../../lib/utils/googleAuth';
@@ -14,6 +14,10 @@ import SearchBox from '../../components/admin/search-box';
 import Sidebar from '../../components/admin/sidebar';
 import ApplicationTable from '../../components/admin/application-table';
 import { HeadingOne } from '../../components/content/headings';
+import {
+  HorizontalNav,
+  HorizontalNavItem,
+} from '../../components/admin/HorizontalNav';
 
 interface PageProps {
   user: HackneyGoogleUser;
@@ -39,19 +43,20 @@ export default function ApplicationListPage({
 
   const parsedPage = parseInt(page);
 
-  const filterByStatus = async (status: string) => {
+  const [activeNavItem, setActiveNavItem] = useState('Submitted');
+
+  const handleClick = async (event: SyntheticEvent) => {
+    event.preventDefault();
+
+    const { name } = event.target as HTMLButtonElement;
+
     router.push({
       pathname: '/applications',
-      query: { status: status },
+      query: { status: name },
     });
+
+    setActiveNavItem(name);
   };
-
-  type State = 'Submitted' | 'Pending';
-  const [state, setState] = useState<State>('Submitted');
-
-  function isActive(selected: string) {
-    return state == selected ? 'active' : '';
-  }
 
   return (
     <UserContext.Provider value={{ user }}>
@@ -68,30 +73,22 @@ export default function ApplicationListPage({
           </div>
           <div className="govuk-grid-column-three-quarters">
             <HeadingOne content="My worktray" />
-            <div className="lbh-link-group">
-              <button
-                onClick={() => {
-                  setState('Submitted');
-                  filterByStatus('Submitted');
-                }}
-                className={`lbh-link lbh-link--no-visited-state lbh-!-font-weight-bold ${isActive(
-                  'Submitted'
-                )}`}
+            <HorizontalNav>
+              <HorizontalNavItem
+                handleClick={handleClick}
+                itemName="Submitted"
+                isActive={activeNavItem === 'Submitted'}
               >
-                New applications
-              </button>{' '}
-              <button
-                onClick={() => {
-                  setState('Pending');
-                  filterByStatus('Pending');
-                }}
-                className={`lbh-link lbh-link--no-visited-state lbh-!-font-weight-bold ${isActive(
-                  'Pending'
-                )}`}
+                New Applications
+              </HorizontalNavItem>
+              <HorizontalNavItem
+                handleClick={handleClick}
+                itemName="Pending"
+                isActive={activeNavItem === 'Pending'}
               >
-                Pending applications
-              </button>
-            </div>
+                Pending application
+              </HorizontalNavItem>
+            </HorizontalNav>
             <ApplicationTable
               applications={applications}
               currentPage={parsedPage}

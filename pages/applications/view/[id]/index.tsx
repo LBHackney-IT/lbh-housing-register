@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import React, { useState } from 'react';
+import React, { useState, SyntheticEvent } from 'react';
 import OtherMembers from '../../../../components/admin/other-members';
 import PersonalDetails from '../../../../components/admin/personal-details';
 import {
@@ -29,6 +29,10 @@ import {
   lookupStatus,
 } from '../../../../lib/types/application-status';
 import CaseDetailsItem from '../../../../components/admin/CaseDetailsItem';
+import {
+  HorizontalNav,
+  HorizontalNavItem,
+} from '../../../../components/admin/HorizontalNav';
 
 export interface PageProps {
   user: HackneyGoogleUserWithPermissions;
@@ -38,15 +42,16 @@ export interface PageProps {
 export default function ApplicationPage({
   user,
   data,
-}: PageProps): JSX.Element {
+}: PageProps): JSX.Element | null {
   if (!data.id) return <Custom404 />;
 
-  type AssessmentState = 'overview' | 'assessment';
-  const [state, setState] = useState<AssessmentState>('overview');
+  const [activeNavItem, setActiveNavItem] = useState('overview');
 
-  function isActive(selected: string) {
-    return state == selected ? 'active' : '';
-  }
+  const handleClick = async (event: SyntheticEvent) => {
+    event.preventDefault();
+    const { name } = event.target as HTMLButtonElement;
+    setActiveNavItem(name);
+  };
 
   return (
     <UserContext.Provider value={{ user }}>
@@ -64,32 +69,28 @@ export default function ApplicationPage({
               {getPersonName(data)}
             </h2>
 
-            <div className="lbh-link-group lbh-link-group--spaced">
-              <button
-                onClick={() => {
-                  setState('overview');
-                }}
-                className={`lbh-link lbh-link--no-visited-state lbh-!-font-weight-bold ${isActive(
-                  'overview'
-                )}`}
+            <HorizontalNav spaced={true}>
+              <HorizontalNavItem
+                handleClick={handleClick}
+                itemName="overview"
+                isActive={activeNavItem === 'overview'}
               >
                 Overview
-              </button>{' '}
-              {data.status !== ApplicationStatus.DRAFT && (
-                <button
-                  onClick={() => {
-                    setState('assessment');
-                  }}
-                  className={`lbh-link lbh-link--no-visited-state lbh-!-font-weight-bold ${isActive(
-                    'assessment'
-                  )}`}
+              </HorizontalNavItem>
+              {data.status !== ApplicationStatus.DRAFT ? (
+                <HorizontalNavItem
+                  handleClick={handleClick}
+                  itemName="assessment"
+                  isActive={activeNavItem === 'assessment'}
                 >
                   Assessment
-                </button>
+                </HorizontalNavItem>
+              ) : (
+                <></>
               )}
-            </div>
+            </HorizontalNav>
 
-            {state == 'overview' && (
+            {activeNavItem === 'overview' && (
               <div className="govuk-grid-row">
                 <div className="govuk-grid-column-two-thirds">
                   <HeadingThree content="Snapshot" />
@@ -128,7 +129,7 @@ export default function ApplicationPage({
                     itemHeading="Status"
                     itemValue={lookupStatus(data.status!)}
                     buttonText="Change"
-                    onClick={() => setState('assessment')}
+                    onClick={() => setActiveNavItem('assessment')}
                   />
 
                   <CaseDetailsItem
@@ -141,7 +142,7 @@ export default function ApplicationPage({
                       itemHeading="Application date"
                       itemValue={formatDate(data.assessment?.effectiveDate)}
                       buttonText="Change"
-                      onClick={() => setState('assessment')}
+                      onClick={() => setActiveNavItem('assessment')}
                     />
                   )}
 
@@ -150,7 +151,7 @@ export default function ApplicationPage({
                       itemHeading="Band"
                       itemValue={`Band ${data.assessment?.band}`}
                       buttonText="Change"
-                      onClick={() => setState('assessment')}
+                      onClick={() => setActiveNavItem('assessment')}
                     />
                   )}
 
@@ -168,7 +169,7 @@ export default function ApplicationPage({
                 </div>
               </div>
             )}
-            {state == 'assessment' && <Actions data={data} />}
+            {activeNavItem === 'assessment' && <Actions data={data} />}
           </>
         )}
       </Layout>

@@ -94,10 +94,7 @@ export default function ApplicationPersonPage({
                       : 'Review household member'
                   }
                 />
-                <h2
-                  className="lbh-heading-h2"
-                  style={{ marginTop: '0.5em', color: '#525a5b' }}
-                >
+                <h2 className="lbh-caption-xl lbh-caption govuk-!-margin-top-1">
                   {applicant?.person?.firstName} {applicant?.person?.surname}
                 </h2>
               </div>

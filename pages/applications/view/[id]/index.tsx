@@ -132,13 +132,6 @@ export default function ApplicationPage({
                   />
 
                   <CaseDetailsItem
-                    itemHeading="Status"
-                    itemValue={lookupStatus(data.status!)}
-                    buttonText="Change"
-                    onClick={() => setState('assessment')}
-                  />
-
-                  <CaseDetailsItem
                     itemHeading="Date submitted"
                     itemValue={formatDate(data.submittedAt)}
                   />

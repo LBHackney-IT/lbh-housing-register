@@ -28,6 +28,7 @@ import {
   ApplicationStatus,
   lookupStatus,
 } from '../../../../lib/types/application-status';
+import CaseDetailsItem from '../../../../components/admin/CaseDetailsItem';
 
 export interface PageProps {
   user: HackneyGoogleUserWithPermissions;
@@ -110,75 +111,54 @@ export default function ApplicationPage({
                 </div>
                 <div className="govuk-grid-column-one-third">
                   <HeadingThree content="Case details" />
-                  <ul className="lbh-list lbh-list--compressed">
-                    <li>
-                      <strong>Application reference</strong>
-                    </li>
-                    <li>{data.reference}</li>
-                  </ul>
-                  {data.assessment?.biddingNumber && (
-                    <ul className="lbh-list lbh-list--compressed">
-                      <li>
-                        <strong>Bidding number</strong>
-                      </li>
-                      <li>{data.assessment?.biddingNumber}</li>
-                    </ul>
-                  )}
-                  <ul className="lbh-list lbh-list--compressed">
-                    <li>
-                      <strong>Status</strong>
-                    </li>
-                    <li>{lookupStatus(data.status!)}</li>
-                    <li>
-                      <button
-                        onClick={() => setState('assessment')}
-                        className="lbh-link lbh-link--no-visited-state"
-                      >
-                        Change
-                      </button>
-                    </li>
-                  </ul>
 
-                  {data.submittedAt && (
-                    <ul className="lbh-list lbh-list--compressed">
-                      <li>
-                        <strong>Date submitted</strong>
-                      </li>
-                      <li>{formatDate(data.submittedAt)}</li>
-                    </ul>
+                  <CaseDetailsItem
+                    itemHeading="Application reference"
+                    itemValue={data.reference}
+                  />
+
+                  {data.assessment?.biddingNumber && (
+                    <CaseDetailsItem
+                      itemHeading="Bidding number"
+                      itemValue={data.assessment?.biddingNumber}
+                    />
                   )}
+
+                  <CaseDetailsItem
+                    itemHeading="Status"
+                    itemValue={lookupStatus(data.status!)}
+                    buttonText="Change"
+                    onClick={() => setState('assessment')}
+                  />
+
+                  <CaseDetailsItem
+                    itemHeading="Status"
+                    itemValue={lookupStatus(data.status!)}
+                    buttonText="Change"
+                    onClick={() => setState('assessment')}
+                  />
+
+                  <CaseDetailsItem
+                    itemHeading="Date submitted"
+                    itemValue={formatDate(data.submittedAt)}
+                  />
+
                   {data.assessment?.effectiveDate && (
-                    <ul className="lbh-list lbh-list--compressed">
-                      <li>
-                        <strong>Application date</strong>
-                      </li>
-                      <li>{formatDate(data.assessment?.effectiveDate)}</li>
-                      <li>
-                        <button
-                          onClick={() => setState('assessment')}
-                          className="lbh-link lbh-link--no-visited-state"
-                        >
-                          Change
-                        </button>
-                      </li>
-                    </ul>
+                    <CaseDetailsItem
+                      itemHeading="Application date"
+                      itemValue={formatDate(data.assessment?.effectiveDate)}
+                      buttonText="Change"
+                      onClick={() => setState('assessment')}
+                    />
                   )}
+
                   {data.assessment?.band && (
-                    <ul className="lbh-list lbh-list--compressed">
-                      <li>
-                        <strong>Band</strong>
-                      </li>
-                      <li>Band {data.assessment?.band}</li>
-                      <li>
-                        <button
-                          onClick={() => setState('assessment')}
-                          className="lbh-link lbh-link--no-visited-state"
-                          style={{ marginTop: '0.3em' }}
-                        >
-                          Change
-                        </button>
-                      </li>
-                    </ul>
+                    <CaseDetailsItem
+                      itemHeading="Band"
+                      itemValue={`Band ${data.assessment?.band}`}
+                      buttonText="Change"
+                      onClick={() => setState('assessment')}
+                    />
                   )}
 
                   <AssignUser
@@ -186,6 +166,7 @@ export default function ApplicationPage({
                     user={user}
                     assignee={data.assignedTo}
                   />
+
                   <SensitiveData
                     id={data.id}
                     isSensitive={data.sensitiveData || false}

@@ -35,12 +35,11 @@ export default function SearchBox({
         Search {title}
       </label>
       <input
-        className="govuk-input lbh-input"
+        className="govuk-input lbh-input lbh-input--large"
         id="input-search"
         name="search"
         type="search"
         placeholder={watermark}
-        style={{ height: '50px' }}
         onChange={(e): React.ChangeEvent<HTMLInputElement> =>
           textChangeHandler(e)
         }

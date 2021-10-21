@@ -37,15 +37,6 @@ const ApplicationPersonsOverview = (): JSX.Element => {
       .flat()
   );
 
-  const isDisqualified = useMemo(
-    () => application.status === ApplicationStatus.DISQUALIFIED,
-    [application]
-  );
-
-  if (isDisqualified) {
-    router.push('/apply/not-eligible');
-  }
-
   return (
     <Layout pageName="Application overview" breadcrumbs={breadcrumbs}>
       <HeadingOne content="Tasks to complete" />

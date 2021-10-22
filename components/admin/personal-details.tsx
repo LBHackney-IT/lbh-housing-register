@@ -24,48 +24,48 @@ export default function PersonalDetails({
     <>
       <HeadingThree content={heading} />
       <table className="govuk-table lbh-table" style={{ marginTop: '1em' }}>
-        <thead className="govuk-table__head">
-          <tr className="govuk-table__row">
-            <th scope="col" colSpan={2} className="govuk-table__header">
-              <Hint content="Person details" />
-            </th>
-          </tr>
-        </thead>
         <tbody className="govuk-table__body">
           <tr className="govuk-table__row">
             <td className="govuk-table__cell">
-              <strong>
-                {applicant.person?.title} {applicant.person?.firstName}{' '}
-                {applicant.person?.surname}
-              </strong>
-              <br />
-              Applicant
-              <br />
-              {getGenderName(applicant)},{' '}
-              {applicant.person?.dateOfBirth &&
-                formatDob(new Date(applicant.person?.dateOfBirth))}{' '}
-              {applicant.person?.dateOfBirth &&
-                `(age ${getAgeInYears(applicant)})`}
-              <br />
-              {applicant.contactInformation?.phoneNumber && (
-                <>
-                  <br />
-                  {applicant.contactInformation?.phoneNumber}
-                </>
-              )}
-              {applicant.contactInformation?.emailAddress && (
-                <>
-                  <br />
-                  <Link
-                    href={`mailto:${applicant.contactInformation.emailAddress}`}
-                  >
-                    {applicant.contactInformation.emailAddress}
-                  </Link>
-                </>
-              )}
+              <ul className="lbh-list lbh-list--compressed">
+                <li>
+                  <strong>
+                    {applicant.person?.title} {applicant.person?.firstName}{' '}
+                    {applicant.person?.surname}
+                  </strong>
+                </li>
+                <li>Applicant</li>
+                <li>
+                  {getGenderName(applicant)},{' '}
+                  {applicant.person?.dateOfBirth &&
+                    formatDob(new Date(applicant.person?.dateOfBirth))}{' '}
+                  {applicant.person?.dateOfBirth &&
+                    `(age ${getAgeInYears(applicant)})`}
+                </li>
+              </ul>
+              <ul className="lbh-list lbh-list--compressed">
+                <li>
+                  {applicant.contactInformation?.phoneNumber &&
+                    applicant.contactInformation?.phoneNumber}
+                </li>
+                <li>
+                  {applicant.contactInformation?.emailAddress && (
+                    <>
+                      <Link
+                        href={`mailto:${applicant.contactInformation.emailAddress}`}
+                      >
+                        <a className="lbh-link">
+                          {applicant.contactInformation.emailAddress}
+                        </a>
+                      </Link>
+                    </>
+                  )}
+                </li>
+              </ul>
             </td>
             <td className="govuk-table__cell govuk-table__cell--numeric">
               <ButtonLink
+                additionalCssClasses="lbh-!-margin-top-0"
                 href={`/applications/view/${applicationId}/${applicant.person?.id}`}
               >
                 Open

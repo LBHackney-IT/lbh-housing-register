@@ -37,13 +37,16 @@ export default function AssignUser({
   return (
     <div>
       <label className="govuk-label lbh-label" htmlFor="input-assignee">
-        <strong>Assigned to</strong>
-        {!user.hasAdminPermissions && !user.hasManagerPermissions && (
-          <>
-            <br />
-            {assignedTo}
-          </>
-        )}
+        <ul className="lbh-list lbh-list--compressed">
+          <li>
+            <strong>Assigned to</strong>
+          </li>
+          <li>
+            {!user.hasAdminPermissions &&
+              !user.hasManagerPermissions &&
+              assignedTo}
+          </li>
+        </ul>
       </label>
       {(user.hasAdminPermissions || user.hasManagerPermissions) && (
         <>
@@ -58,7 +61,7 @@ export default function AssignUser({
           <button
             onClick={() => assignTo()}
             className="lbh-link lbh-link--no-visited-state"
-            style={{ marginTop: '0.5em' }}
+            style={{ marginTop: '0.3em' }}
           >
             Assign
           </button>

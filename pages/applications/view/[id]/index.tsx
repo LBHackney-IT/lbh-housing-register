@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import React, { useState } from 'react';
+import React, { useState, SyntheticEvent } from 'react';
 import OtherMembers from '../../../../components/admin/other-members';
 import PersonalDetails from '../../../../components/admin/personal-details';
 import {
@@ -28,6 +28,11 @@ import {
   ApplicationStatus,
   lookupStatus,
 } from '../../../../lib/types/application-status';
+import CaseDetailsItem from '../../../../components/admin/CaseDetailsItem';
+import {
+  HorizontalNav,
+  HorizontalNavItem,
+} from '../../../../components/admin/HorizontalNav';
 
 export interface PageProps {
   user: HackneyGoogleUserWithPermissions;
@@ -37,15 +42,16 @@ export interface PageProps {
 export default function ApplicationPage({
   user,
   data,
-}: PageProps): JSX.Element {
+}: PageProps): JSX.Element | null {
   if (!data.id) return <Custom404 />;
 
-  type AssessmentState = 'overview' | 'assessment';
-  const [state, setState] = useState<AssessmentState>('overview');
+  const [activeNavItem, setActiveNavItem] = useState('overview');
 
-  function isActive(selected: string) {
-    return state == selected ? 'active' : '';
-  }
+  const handleClick = async (event: SyntheticEvent) => {
+    event.preventDefault();
+    const { name } = event.target as HTMLButtonElement;
+    setActiveNavItem(name);
+  };
 
   return (
     <UserContext.Provider value={{ user }}>
@@ -59,53 +65,46 @@ export default function ApplicationPage({
         ) : (
           <>
             <HeadingOne content="View application" />
-            <h2
-              className="lbh-heading-h2"
-              style={{ marginTop: '0.5em', color: '#525a5b' }}
-            >
+            <h2 className="lbh-caption-xl lbh-caption govuk-!-margin-top-1">
               {getPersonName(data)}
             </h2>
 
-            <div className="lbh-link-group">
-              <button
-                onClick={() => {
-                  setState('overview');
-                }}
-                className={`lbh-link lbh-link--no-visited-state ${isActive(
-                  'overview'
-                )}`}
+            <HorizontalNav spaced={true}>
+              <HorizontalNavItem
+                handleClick={handleClick}
+                itemName="overview"
+                isActive={activeNavItem === 'overview'}
               >
                 Overview
-              </button>{' '}
-              {data.status !== ApplicationStatus.DRAFT && (
-                <button
-                  onClick={() => {
-                    setState('assessment');
-                  }}
-                  className={`lbh-link lbh-link--no-visited-state ${isActive(
-                    'assessment'
-                  )}`}
+              </HorizontalNavItem>
+              {data.status !== ApplicationStatus.DRAFT ? (
+                <HorizontalNavItem
+                  handleClick={handleClick}
+                  itemName="assessment"
+                  isActive={activeNavItem === 'assessment'}
                 >
                   Assessment
-                </button>
+                </HorizontalNavItem>
+              ) : (
+                <></>
               )}
-            </div>
+            </HorizontalNav>
 
-            {state == 'overview' && (
+            {activeNavItem === 'overview' && (
               <div className="govuk-grid-row">
                 <div className="govuk-grid-column-two-thirds">
                   <HeadingThree content="Snapshot" />
                   <Snapshot data={data} />
                   {data.mainApplicant && (
                     <PersonalDetails
-                      heading="Main Applicant"
+                      heading="Main applicant"
                       applicant={data.mainApplicant}
                       applicationId={data.id}
                     />
                   )}
                   {data.otherMembers && data.otherMembers.length > 0 && (
                     <OtherMembers
-                      heading="Other Members"
+                      heading="Other household members"
                       others={data.otherMembers}
                       applicationId={data.id}
                     />
@@ -113,66 +112,47 @@ export default function ApplicationPage({
                 </div>
                 <div className="govuk-grid-column-one-third">
                   <HeadingThree content="Case details" />
-                  <Paragraph>
-                    <strong>Application reference</strong>
-                    <br />
-                    {data.reference}
-                  </Paragraph>
+
+                  <CaseDetailsItem
+                    itemHeading="Application reference"
+                    itemValue={data.reference}
+                  />
+
                   {data.assessment?.biddingNumber && (
-                    <Paragraph>
-                      <strong>Bidding number</strong>
-                      <br />
-                      {data.assessment?.biddingNumber}
-                    </Paragraph>
+                    <CaseDetailsItem
+                      itemHeading="Bidding number"
+                      itemValue={data.assessment?.biddingNumber}
+                    />
                   )}
-                  <Paragraph>
-                    <strong>Status</strong>
-                    <br />
-                    {lookupStatus(data.status!)}
-                    {data.status !== ApplicationStatus.DRAFT && (
-                      <button
-                        onClick={() => setState('assessment')}
-                        className="lbh-link lbh-link--no-visited-state"
-                        style={{ marginTop: '0', marginLeft: '0.5em' }}
-                      >
-                        Change
-                      </button>
-                    )}
-                  </Paragraph>
-                  {data.submittedAt && (
-                    <Paragraph>
-                      <strong>Date submitted</strong>
-                      <br />
-                      {formatDate(data.submittedAt)}
-                    </Paragraph>
-                  )}
+
+                  <CaseDetailsItem
+                    itemHeading="Status"
+                    itemValue={lookupStatus(data.status!)}
+                    buttonText="Change"
+                    onClick={() => setActiveNavItem('assessment')}
+                  />
+
+                  <CaseDetailsItem
+                    itemHeading="Date submitted"
+                    itemValue={formatDate(data.submittedAt)}
+                  />
+
                   {data.assessment?.effectiveDate && (
-                    <Paragraph>
-                      <strong>Application date</strong>
-                      <br />
-                      {formatDate(data.assessment?.effectiveDate)}
-                      <button
-                        onClick={() => setState('assessment')}
-                        className="lbh-link lbh-link--no-visited-state"
-                        style={{ marginTop: '0', marginLeft: '0.5em' }}
-                      >
-                        Change
-                      </button>
-                    </Paragraph>
+                    <CaseDetailsItem
+                      itemHeading="Application date"
+                      itemValue={formatDate(data.assessment?.effectiveDate)}
+                      buttonText="Change"
+                      onClick={() => setActiveNavItem('assessment')}
+                    />
                   )}
+
                   {data.assessment?.band && (
-                    <Paragraph>
-                      <strong>Band</strong>
-                      <br />
-                      Band {data.assessment?.band}
-                      <button
-                        onClick={() => setState('assessment')}
-                        className="lbh-link lbh-link--no-visited-state"
-                        style={{ marginTop: '0', marginLeft: '0.5em' }}
-                      >
-                        Change
-                      </button>
-                    </Paragraph>
+                    <CaseDetailsItem
+                      itemHeading="Band"
+                      itemValue={`Band ${data.assessment?.band}`}
+                      buttonText="Change"
+                      onClick={() => setActiveNavItem('assessment')}
+                    />
                   )}
 
                   <AssignUser
@@ -180,6 +160,7 @@ export default function ApplicationPage({
                     user={user}
                     assignee={data.assignedTo}
                   />
+
                   <SensitiveData
                     id={data.id}
                     isSensitive={data.sensitiveData || false}
@@ -188,7 +169,7 @@ export default function ApplicationPage({
                 </div>
               </div>
             )}
-            {state == 'assessment' && <Actions data={data} />}
+            {activeNavItem === 'assessment' && <Actions data={data} />}
           </>
         )}
       </Layout>

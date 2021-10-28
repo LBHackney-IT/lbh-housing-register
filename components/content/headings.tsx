@@ -13,3 +13,7 @@ export function HeadingTwo({ content }: HeadingsProps): JSX.Element {
 export function HeadingThree({ content }: HeadingsProps): JSX.Element {
   return <h3 className="lbh-heading-h3">{content}</h3>;
 }
+
+export function HeadingFour({ content }: HeadingsProps): JSX.Element {
+  return <h4 className="lbh-heading-h4">{content}</h4>;
+}

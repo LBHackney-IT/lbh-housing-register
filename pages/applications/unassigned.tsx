@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import React from 'react';
+import React, { SyntheticEvent } from 'react';
 import { useRouter } from 'next/router';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { getRedirect, getSession } from '../../lib/utils/googleAuth';
@@ -14,6 +14,10 @@ import SearchBox from '../../components/admin/search-box';
 import Sidebar from '../../components/admin/sidebar';
 import ApplicationTable from '../../components/admin/application-table';
 import { HeadingOne } from '../../components/content/headings';
+import {
+  HorizontalNav,
+  HorizontalNavItem,
+} from '../../components/admin/HorizontalNav';
 
 interface PageProps {
   user: HackneyGoogleUser;
@@ -39,10 +43,12 @@ export default function ApplicationListPage({
 
   const parsedPage = parseInt(page);
 
-  const filterByStatus = async (status: string) => {
+  const handleClick = async (event: SyntheticEvent) => {
+    event.preventDefault();
+    const { name } = event.target as HTMLButtonElement;
     router.push({
       pathname: '/applications/unassigned',
-      query: { status: status },
+      query: { status: name },
     });
   };
 
@@ -61,16 +67,16 @@ export default function ApplicationListPage({
           </div>
           <div className="govuk-grid-column-three-quarters">
             <HeadingOne content="Group worktray" />
-            <div className="lbh-link-group">
-              <button
-                onClick={() => {
-                  filterByStatus('Submitted');
-                }}
-                className="lbh-link lbh-link--no-visited-state active"
+            <HorizontalNav>
+              <HorizontalNavItem
+                handleClick={handleClick}
+                itemName="Submitted"
+                isActive={true}
               >
                 Unassigned applications
-              </button>
-            </div>
+              </HorizontalNavItem>
+            </HorizontalNav>
+
             <ApplicationTable
               applications={applications}
               currentPage={parsedPage}

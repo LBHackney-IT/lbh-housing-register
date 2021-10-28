@@ -1,19 +1,33 @@
 .lbh-link-group {
-  border-bottom: 1px solid #0b0c0c;
+  margin-top: 4em;
+  border-bottom: 1px solid #e5e5e5;
 
-  .lbh-link {
-    margin-top: 1em;
-    margin-right: 1em;
-    text-decoration: none;
+  &.lbh-link-group--spaced {
+    margin-bottom: 4em;
+  }
 
-    &.active {
-      color: #0b0c0c;
-      border-bottom: 5px solid #025ea6;
-    }
+  > ul {
+    display: flex;
+    list-style: none;
+    margin-bottom: -1px;
+  }
 
-    &:focus {
-      box-shadow: none;
-      border-bottom: 5px solid #025ea6;
+  .lbh-link-group__item {
+    margin: 0 1.5em 0 0;
+
+    .lbh-link {
+      padding: 0.25em 0;
+      text-decoration: none;
+
+      &.active {
+        color: #0b0c0c;
+        border-bottom: 5px solid #025ea6;
+      }
+
+      &:focus {
+        box-shadow: none;
+        border-bottom: 5px solid #025ea6;
+      }
     }
   }
 }

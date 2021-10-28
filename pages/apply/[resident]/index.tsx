@@ -51,7 +51,8 @@ const ResidentIndex = (): JSX.Element => {
 
   const steps = getApplicationSectionsForResident(
     currentResident === mainResident,
-    isOver18(currentResident)
+    isOver18(currentResident),
+    currentResident.person.relationshipType === 'partner'
   );
 
   const tasksRemaining = applicationStepsRemaining(

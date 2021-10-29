@@ -33,8 +33,9 @@ const ApplicationVerifyPage = (): JSX.Element => {
 
   const confirmSignUp = async (values: FormData) => {
     try {
+      // retrieve
       const code = values.code as string;
-      dispatch(confirmVerifyCode({ application, code }));
+      dispatch(confirmVerifyCode({ email, code }));
 
       // router.push('/apply/agree-terms');
       router.push('/apply/start');

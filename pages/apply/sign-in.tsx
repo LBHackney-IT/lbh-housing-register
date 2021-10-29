@@ -26,6 +26,7 @@ const ApplicationSignInPage = (): JSX.Element => {
   }, [isLoggedIn]);
 
   const onSubmit = async (values: FormData) => {
+    // save email to state
     dispatch(createVerifyCode(values.emailAddress));
 
     // TODO create a verify code based on email provided and send to verify page

@@ -24,9 +24,14 @@ import {
 export const createVerifyCode = createAsyncThunk(
   'auth/create',
   async (emailAddress: string) => {
+
+    const request : CreateAuthRequest = {
+      email : emailAddress
+    };
+
     const res = await fetch(`/api/auth/generate`, {
       method: 'POST',
-      body: JSON.stringify(emailAddress),
+      body: JSON.stringify(request),
     });
     return (await res.json()) as CreateAuthResponse;
   }
@@ -34,12 +39,12 @@ export const createVerifyCode = createAsyncThunk(
 
 export const confirmVerifyCode = createAsyncThunk(
   'auth/confirm',
-  async ({ application, code }: { application: Application; code: string }) => {
+  async ({ email, code }: { email: string; code: string }) => {
     const request: VerifyAuthRequest = {
-      email: application.mainApplicant?.contactInformation?.emailAddress ?? '',
-      code: code,
+      email,
+      code,
     };
-    const res = await fetch(`/api/auth/${application.id}/verify`, {
+    const res = await fetch(`/api/auth/verify`, {
       method: 'POST',
       body: JSON.stringify(request),
     });

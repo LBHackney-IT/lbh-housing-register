@@ -21,7 +21,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
   const [userError, setUserError] = useState<string | null>(null);
 
   const application = useAppSelector((store) => store.application);
-  console.log(application);
+  // console.log(application);
 
   const emailAddress = useAppSelector(
     (store) =>

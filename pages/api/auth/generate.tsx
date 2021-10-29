@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { createVerifyCode } from '../../../../lib/gateways/applications-api';
+import { createVerifyCode } from '../../../lib/gateways/applications-api';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -11,7 +11,7 @@ const endpoint: NextApiHandler = async (
       try {
         const request = JSON.parse(req.body);
         const id = req.query.id as string;
-        const data = await createVerifyCode(id, request);
+        const data = await createVerifyCode(request);
         res.status(StatusCodes.OK).json(data);
       } catch (error) {
         console.error(error);

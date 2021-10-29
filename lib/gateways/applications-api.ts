@@ -139,6 +139,7 @@ export const createVerifyCode = async (
     'x-api-key': process.env.HOUSING_REGISTER_KEY,
     'Content-Type': 'application/json',
   };
+ 
   const { data } = await axios.post(
     `${process.env.HOUSING_REGISTER_API}/auth/generate`,
     request,

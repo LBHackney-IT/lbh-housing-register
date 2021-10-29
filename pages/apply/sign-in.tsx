@@ -9,6 +9,7 @@ import { FormID, getFormData } from '../../lib/utils/form-data';
 import ErrorSummary from '../../components/errors/error-summary';
 import Paragraph from '../../components/content/paragraph';
 import { createVerifyCode } from '../../lib/gateways/applications-api';
+import { CreateAuthRequest } from '../../domain/HousingApi';
 
 const ApplicationSignInPage = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -24,8 +25,15 @@ const ApplicationSignInPage = (): JSX.Element => {
   }, [isLoggedIn]);
 
   const onSubmit = async (values: FormData) => {
+    
+    const request : CreateAuthRequest = {
+      email : values.emailAddress
+    };
+
+    const f = () => createVerifyCode(request);
+
     // TODO create a verify code based on email provided and send to verify page
-    // dispatch(createVerifyCode(values.emailAddress));
+    dispatch(f);
     router.push('/apply/verify');
   };
 

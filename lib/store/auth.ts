@@ -7,15 +7,26 @@ import {
   VerifyAuthResponse,
 } from '../../domain/HousingApi';
 
+// export const createVerifyCode = createAsyncThunk(
+//   'auth/create',
+//   async (application: Application) => {
+//     const request: CreateAuthRequest = {
+//       email: application.mainApplicant?.contactInformation?.emailAddress ?? '',
+//     };
+//     const res = await fetch(`/api/auth/generate`, {
+//       method: 'POST',
+//       body: JSON.stringify(request),
+//     });
+//     return (await res.json()) as CreateAuthResponse;
+//   }
+// );
+
 export const createVerifyCode = createAsyncThunk(
   'auth/create',
-  async (application: Application) => {
-    const request: CreateAuthRequest = {
-      email: application.mainApplicant?.contactInformation?.emailAddress ?? '',
-    };
-    const res = await fetch(`/api/auth/${application.id}/generate`, {
+  async (emailAddress: string) => {
+    const res = await fetch(`/api/auth/generate`, {
       method: 'POST',
-      body: JSON.stringify(request),
+      body: JSON.stringify(emailAddress),
     });
     return (await res.json()) as CreateAuthResponse;
   }

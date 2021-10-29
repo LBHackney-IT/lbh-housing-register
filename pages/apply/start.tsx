@@ -41,7 +41,7 @@ const ApplicationStartPage = (): JSX.Element => {
             nationalInsuranceNumber: values.nationalInsuranceNumber,
           },
           contactInformation: {
-            emailAddress: values.emailAddress,
+            // emailAddress: values.emailAddress,
             phoneNumber: phone,
           },
         })
@@ -53,7 +53,8 @@ const ApplicationStartPage = (): JSX.Element => {
         }
       );
 
-      router.push('/apply/verify');
+      router.push('/apply/agree-terms');
+      // router.push('/apply/overview');
     } catch (error) {
       setUserError(Errors.GENERIC_ERROR);
       scrollToError();
@@ -66,7 +67,7 @@ const ApplicationStartPage = (): JSX.Element => {
       {userError && <ErrorSummary>{userError}</ErrorSummary>}
       <Form
         formData={getFormData(FormID.SIGN_UP_DETAILS)}
-        buttonText="Save and continue"
+        buttonText="Continue"
         onSubmit={signUp}
       />
     </Layout>

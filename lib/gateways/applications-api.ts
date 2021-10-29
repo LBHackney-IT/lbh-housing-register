@@ -132,7 +132,7 @@ export const createEvidenceRequest = async (
 };
 
 export const createVerifyCode = async (
-  id: string,
+  // id: string,
   request: CreateAuthRequest
 ): Promise<CreateAuthResponse | null> => {
   const headers = {
@@ -140,7 +140,7 @@ export const createVerifyCode = async (
     'Content-Type': 'application/json',
   };
   const { data } = await axios.post(
-    `${process.env.HOUSING_REGISTER_API}/auth/${id}/generate`,
+    `${process.env.HOUSING_REGISTER_API}/auth/generate`,
     request,
     {
       headers: headers,

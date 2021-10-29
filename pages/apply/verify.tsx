@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import Button from '../../components/button';
+import Link from 'next/link';
 import { HeadingOne } from '../../components/content/headings';
 import Announcement from '../../components/announcement';
 import Paragraph from '../../components/content/paragraph';
@@ -13,6 +13,7 @@ import ErrorSummary from '../../components/errors/error-summary';
 import { Errors } from '../../lib/types/errors';
 import { scrollToError } from '../../lib/utils/scroll';
 import { confirmVerifyCode, createVerifyCode } from '../../lib/store/auth';
+import { ApplicationStatus } from '../../lib/types/application-status';
 
 const ApplicationVerifyPage = (): JSX.Element => {
   const router = useRouter();
@@ -20,20 +21,29 @@ const ApplicationVerifyPage = (): JSX.Element => {
   const [userError, setUserError] = useState<string | null>(null);
 
   const application = useAppSelector((store) => store.application);
+  console.log(application);
+
   const emailAddress = useAppSelector(
     (store) =>
       store.application.mainApplicant?.contactInformation?.emailAddress ?? ''
   );
-  if (emailAddress === '') {
-    router.push('/apply/start');
-  }
+  // if (emailAddress === '') {
+  //   router.push('/apply/start');
+  // }
 
   const confirmSignUp = async (values: FormData) => {
     try {
       const code = values.code as string;
       dispatch(confirmVerifyCode({ application, code }));
 
-      router.push('/apply/agree-terms');
+      // router.push('/apply/agree-terms');
+      router.push('/apply/start');
+
+      // if (status === ApplicationStatus.INCOMPLETE) {
+      //   router.push('/apply/start');
+      // } else {
+      //   router.push('apply/overview');
+      // }
     } catch (e) {
       setUserError(Errors.VERIFY_ERROR);
       scrollToError();
@@ -50,13 +60,21 @@ const ApplicationVerifyPage = (): JSX.Element => {
       {userError && <ErrorSummary>{userError}</ErrorSummary>}
       <Announcement variant="success">
         <Paragraph>
-          We've sent an email containing a six-digit verification code to{' '}
+          We have sent an email containing a six digit verification code to:{' '}
           <strong>{emailAddress}</strong>.
         </Paragraph>
-        <Paragraph>Haven't received an email?</Paragraph>
-        <Button onClick={() => resendCode()} secondary>
-          Send again
-        </Button>
+        <Paragraph>
+          Haven't received an email?
+          <br />
+          <a
+            role="button"
+            href="#"
+            className="lbh-link lbh-link--announcement"
+            onClick={() => resendCode()}
+          >
+            Send a new code
+          </a>
+        </Paragraph>
       </Announcement>
 
       <Form

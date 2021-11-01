@@ -33,9 +33,6 @@ const ApplicationVerifyPage = (): JSX.Element => {
       // retrieve
 
       const code = values.code as string;
-
-      console.log(confirmVerifyCode({ email, code }));
-
       dispatch(confirmVerifyCode({ email, code }));
 
       // router.push('/apply/agree-terms');

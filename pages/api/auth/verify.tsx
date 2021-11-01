@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { confirmVerifyCode } from '../../../../lib/gateways/applications-api';
-import { setAuthCookie } from '../../../../lib/utils/users';
+import { confirmVerifyCode } from '../../../lib/gateways/applications-api';
+import { setAuthCookie } from '../../../lib/utils/users';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -11,8 +11,7 @@ const endpoint: NextApiHandler = async (
     case 'POST':
       try {
         const request = JSON.parse(req.body);
-        const id = req.query.id as string;
-        const data = await confirmVerifyCode(id, request);
+        const data = await confirmVerifyCode(request);
 
         // set cookie with access token (JWT)
         if (data) {

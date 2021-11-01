@@ -30,7 +30,12 @@ const ApplicationSignInPage = (): JSX.Element => {
     dispatch(createVerifyCode(values.emailAddress));
 
     // TODO create a verify code based on email provided and send to verify page
-    router.push('/apply/verify');
+    // router.push('/apply/verify');
+
+    router.push({
+      pathname: '/apply/verify',
+      query: { email: values.emailAddress },
+    });
   };
 
   return (

@@ -20,25 +20,29 @@ const ApplicationVerifyPage = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const [userError, setUserError] = useState<string | null>(null);
 
-  const application = useAppSelector((store) => store.application);
-  // console.log(application);
+  // const application = useAppSelector((store) => store.application);
 
-  const emailAddress = useAppSelector(
-    (store) =>
-      store.application.mainApplicant?.contactInformation?.emailAddress ?? ''
-  );
-  // if (emailAddress === '') {
-  //   router.push('/apply/start');
-  // }
+  const email = router.query.email as string;
+
+  if (email === '') {
+    router.push('/apply/start');
+  }
 
   const confirmSignUp = async (values: FormData) => {
     try {
       // retrieve
+
       const code = values.code as string;
+
+      console.log(confirmVerifyCode({ email, code }));
+
       dispatch(confirmVerifyCode({ email, code }));
 
       // router.push('/apply/agree-terms');
-      router.push('/apply/start');
+      router.push({
+        pathname: '/apply/start',
+        query: { email },
+      });
 
       // if (status === ApplicationStatus.INCOMPLETE) {
       //   router.push('/apply/start');
@@ -52,7 +56,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
   };
 
   const resendCode = async () => {
-    dispatch(createVerifyCode(application));
+    dispatch(createVerifyCode(email));
   };
 
   return (
@@ -62,7 +66,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
       <Announcement variant="success">
         <Paragraph>
           We have sent an email containing a six digit verification code to:{' '}
-          <strong>{emailAddress}</strong>.
+          <strong>{email}</strong>.
         </Paragraph>
         <Paragraph>
           Haven't received an email?

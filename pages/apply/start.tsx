@@ -41,17 +41,13 @@ const ApplicationStartPage = (): JSX.Element => {
             nationalInsuranceNumber: values.nationalInsuranceNumber,
           },
           contactInformation: {
-            emailAddress: values.emailAddress : state,
+            emailAddress: router.query.email as string,
             phoneNumber: phone,
           },
         })
-      );     
-
-      dispatch(updateApplication(store.getState().application)).then(
-        // (action: any) => {
-        //   dispatch(createVerifyCode(action.payload));
-        // }
       );
+
+      dispatch(createApplication(store.getState().application));
 
       router.push('/apply/agree-terms');
       // router.push('/apply/overview');

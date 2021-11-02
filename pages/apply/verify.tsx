@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { HeadingOne } from '../../components/content/headings';
 import Announcement from '../../components/announcement';
 import Paragraph from '../../components/content/paragraph';
@@ -13,40 +12,39 @@ import ErrorSummary from '../../components/errors/error-summary';
 import { Errors } from '../../lib/types/errors';
 import { scrollToError } from '../../lib/utils/scroll';
 import { confirmVerifyCode, createVerifyCode } from '../../lib/store/auth';
-import { ApplicationStatus } from '../../lib/types/application-status';
+import { updateBeforeFirstSave } from '../../lib/store/mainApplicant';
 
 const ApplicationVerifyPage = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [userError, setUserError] = useState<string | null>(null);
 
-  // const application = useAppSelector((store) => store.application);
-
   const email = router.query.email as string;
 
-  if (email === '') {
+  if (!email) {
     router.push('/apply/start');
   }
 
   const confirmSignUp = async (values: FormData) => {
     try {
       // retrieve
-
       const code = values.code as string;
       dispatch(confirmVerifyCode({ email, code }));
 
-      // router.push('/apply/agree-terms');
-      router.push({
-        pathname: '/apply/start',
-        query: { email },
-      });
-
-      // if (status === ApplicationStatus.INCOMPLETE) {
-      //   router.push('/apply/start');
+      // if (isExistingApplication) {
+      //   router.push('/apply/overview');
       // } else {
-      //   router.push('apply/overview');
+      dispatch(
+        updateBeforeFirstSave({
+          contactInformation: {
+            emailAddress: email as string,
+          },
+        })
+      );
+      router.push('/apply/start');
       // }
     } catch (e) {
+      console.error(e);
       setUserError(Errors.VERIFY_ERROR);
       scrollToError();
     }

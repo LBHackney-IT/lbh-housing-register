@@ -41,7 +41,6 @@ const ApplicationStartPage = (): JSX.Element => {
             nationalInsuranceNumber: values.nationalInsuranceNumber,
           },
           contactInformation: {
-            emailAddress: router.query.email as string,
             phoneNumber: phone,
           },
         })

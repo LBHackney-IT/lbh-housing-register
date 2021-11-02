@@ -10,7 +10,6 @@ const endpoint: NextApiHandler = async (
     case 'POST':
       try {
         const request = JSON.parse(req.body);
-        const id = req.query.id as string;
         const data = await createVerifyCode(request);
         res.status(StatusCodes.OK).json(data);
       } catch (error) {

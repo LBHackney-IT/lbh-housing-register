@@ -28,7 +28,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
   useEffect(() => {
     if (application.mainApplicant?.person) {
       router.push('/apply/overview');
-    } else {
+    } else if (application.id) {
       router.push('/apply/start');
     }
   }, [application]);

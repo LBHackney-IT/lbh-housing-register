@@ -19,6 +19,8 @@ const ApplicationVerifyPage = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const [userError, setUserError] = useState<string | null>(null);
 
+  const applicationId = useAppSelector((store) => store.application.id);
+
   const email = router.query.email as string;
 
   if (!email) {
@@ -27,22 +29,21 @@ const ApplicationVerifyPage = (): JSX.Element => {
 
   const confirmSignUp = async (values: FormData) => {
     try {
-      // retrieve
       const code = values.code as string;
       dispatch(confirmVerifyCode({ email, code }));
 
-      // if (isExistingApplication) {
-      //   router.push('/apply/overview');
-      // } else {
-      dispatch(
-        updateBeforeFirstSave({
-          contactInformation: {
-            emailAddress: email as string,
-          },
-        })
-      );
-      router.push('/apply/start');
-      // }
+      if (applicationId) {
+        router.push('/apply/overview');
+      } else {
+        dispatch(
+          updateBeforeFirstSave({
+            contactInformation: {
+              emailAddress: email as string,
+            },
+          })
+        );
+        router.push('/apply/start');
+      }
     } catch (e) {
       console.error(e);
       setUserError(Errors.VERIFY_ERROR);

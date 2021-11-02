@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { HeadingOne } from '../../components/content/headings';
 import Announcement from '../../components/announcement';
@@ -12,38 +12,33 @@ import ErrorSummary from '../../components/errors/error-summary';
 import { Errors } from '../../lib/types/errors';
 import { scrollToError } from '../../lib/utils/scroll';
 import { confirmVerifyCode, createVerifyCode } from '../../lib/store/auth';
-import { updateBeforeFirstSave } from '../../lib/store/mainApplicant';
+import { loadApplication } from '../../lib/store/application';
 
 const ApplicationVerifyPage = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [userError, setUserError] = useState<string | null>(null);
 
-  const applicationId = useAppSelector((store) => store.application.id);
-
   const email = router.query.email as string;
-
   if (!email) {
-    router.push('/apply/start');
+    router.push('/apply/sign-in');
   }
+
+  const application = useAppSelector((store) => store.application);
+  useEffect(() => {
+    if (application.mainApplicant?.person) {
+      router.push('/apply/overview');
+    } else {
+      router.push('/apply/start');
+    }
+  }, [application]);
 
   const confirmSignUp = async (values: FormData) => {
     try {
       const code = values.code as string;
-      dispatch(confirmVerifyCode({ email, code }));
-
-      if (applicationId) {
-        router.push('/apply/overview');
-      } else {
-        dispatch(
-          updateBeforeFirstSave({
-            contactInformation: {
-              emailAddress: email as string,
-            },
-          })
-        );
-        router.push('/apply/start');
-      }
+      dispatch(confirmVerifyCode({ email, code })).then(() =>
+        dispatch(loadApplication())
+      );
     } catch (e) {
       console.error(e);
       setUserError(Errors.VERIFY_ERROR);

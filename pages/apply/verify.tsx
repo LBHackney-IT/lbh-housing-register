@@ -1,6 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Button from '../../components/button';
 import { HeadingOne } from '../../components/content/headings';
 import Announcement from '../../components/announcement';
 import Paragraph from '../../components/content/paragraph';
@@ -13,35 +12,42 @@ import ErrorSummary from '../../components/errors/error-summary';
 import { Errors } from '../../lib/types/errors';
 import { scrollToError } from '../../lib/utils/scroll';
 import { confirmVerifyCode, createVerifyCode } from '../../lib/store/auth';
+import { loadApplication } from '../../lib/store/application';
 
 const ApplicationVerifyPage = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [userError, setUserError] = useState<string | null>(null);
 
-  const application = useAppSelector((store) => store.application);
-  const emailAddress = useAppSelector(
-    (store) =>
-      store.application.mainApplicant?.contactInformation?.emailAddress ?? ''
-  );
-  if (emailAddress === '') {
-    router.push('/apply/start');
+  const email = router.query.email as string;
+  if (!email) {
+    router.push('/apply/sign-in');
   }
+
+  const application = useAppSelector((store) => store.application);
+  useEffect(() => {
+    if (application.mainApplicant?.person) {
+      router.push('/apply/overview');
+    } else if (application.id) {
+      router.push('/apply/start');
+    }
+  }, [application]);
 
   const confirmSignUp = async (values: FormData) => {
     try {
       const code = values.code as string;
-      dispatch(confirmVerifyCode({ application, code }));
-
-      router.push('/apply/agree-terms');
+      dispatch(confirmVerifyCode({ email, code })).then(() =>
+        dispatch(loadApplication())
+      );
     } catch (e) {
+      console.error(e);
       setUserError(Errors.VERIFY_ERROR);
       scrollToError();
     }
   };
 
   const resendCode = async () => {
-    dispatch(createVerifyCode(application));
+    dispatch(createVerifyCode(email));
   };
 
   return (
@@ -50,13 +56,21 @@ const ApplicationVerifyPage = (): JSX.Element => {
       {userError && <ErrorSummary>{userError}</ErrorSummary>}
       <Announcement variant="success">
         <Paragraph>
-          We've sent an email containing a six-digit verification code to{' '}
-          <strong>{emailAddress}</strong>.
+          We have sent an email containing a six digit verification code to:{' '}
+          <strong>{email}</strong>.
         </Paragraph>
-        <Paragraph>Haven't received an email?</Paragraph>
-        <Button onClick={() => resendCode()} secondary>
-          Send again
-        </Button>
+        <Paragraph>
+          Haven't received an email?
+          <br />
+          <a
+            role="button"
+            href="#"
+            className="lbh-link lbh-link--announcement"
+            onClick={() => resendCode()}
+          >
+            Send a new code
+          </a>
+        </Paragraph>
       </Announcement>
 
       <Form

@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { HeadingOne } from '../../components/content/headings';
 import Form from '../../components/form/form';
 import Layout from '../../components/layout/resident-layout';
-import { createApplication } from '../../lib/store/application';
 import {
   useAppDispatch,
   useAppSelector,
@@ -41,19 +40,13 @@ const ApplicationStartPage = (): JSX.Element => {
             nationalInsuranceNumber: values.nationalInsuranceNumber,
           },
           contactInformation: {
-            emailAddress: values.emailAddress,
             phoneNumber: phone,
           },
         })
       );
 
-      dispatch(createApplication(store.getState().application)).then(
-        (action: any) => {
-          dispatch(createVerifyCode(action.payload));
-        }
-      );
-
-      router.push('/apply/verify');
+      router.push('/apply/agree-terms');
+      // router.push('/apply/overview');
     } catch (error) {
       setUserError(Errors.GENERIC_ERROR);
       scrollToError();
@@ -66,7 +59,7 @@ const ApplicationStartPage = (): JSX.Element => {
       {userError && <ErrorSummary>{userError}</ErrorSummary>}
       <Form
         formData={getFormData(FormID.SIGN_UP_DETAILS)}
-        buttonText="Save and continue"
+        buttonText="Continue"
         onSubmit={signUp}
       />
     </Layout>

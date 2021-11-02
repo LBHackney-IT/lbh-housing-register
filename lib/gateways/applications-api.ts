@@ -132,15 +132,16 @@ export const createEvidenceRequest = async (
 };
 
 export const createVerifyCode = async (
-  id: string,
+  // id: string,
   request: CreateAuthRequest
 ): Promise<CreateAuthResponse | null> => {
   const headers = {
     'x-api-key': process.env.HOUSING_REGISTER_KEY,
     'Content-Type': 'application/json',
   };
+
   const { data } = await axios.post(
-    `${process.env.HOUSING_REGISTER_API}/auth/${id}/generate`,
+    `${process.env.HOUSING_REGISTER_API}/auth/generate`,
     request,
     {
       headers: headers,
@@ -150,7 +151,6 @@ export const createVerifyCode = async (
 };
 
 export const confirmVerifyCode = async (
-  id: string,
   request: VerifyAuthRequest
 ): Promise<VerifyAuthResponse | null> => {
   const headers = {
@@ -158,7 +158,7 @@ export const confirmVerifyCode = async (
     'Content-Type': 'application/json',
   };
   const { data } = await axios.post(
-    `${process.env.HOUSING_REGISTER_API}/auth/${id}/verify`,
+    `${process.env.HOUSING_REGISTER_API}/auth/verify`,
     request,
     {
       headers: headers,

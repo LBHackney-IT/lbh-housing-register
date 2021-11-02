@@ -116,7 +116,7 @@ export default function ApplicationHomePage(): JSX.Element {
 
       <HeadingTwo content="I still want to apply" />
       <ButtonLink
-        href="/apply/start"
+        href="/apply/sign-in"
         svg={
           <svg
             className="govuk-button__start-icon"

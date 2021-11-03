@@ -18,6 +18,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [userError, setUserError] = useState<string | null>(null);
+  const [codeSent, setCodeSent] = useState(false);
 
   const email = router.query.email as string;
   if (!email) {
@@ -48,6 +49,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
 
   const resendCode = async () => {
     dispatch(createVerifyCode(email));
+    setCodeSent(true);
   };
 
   return (
@@ -60,16 +62,22 @@ const ApplicationVerifyPage = (): JSX.Element => {
           <strong>{email}</strong>.
         </Paragraph>
         <Paragraph>
-          Haven't received an email?
-          <br />
-          <a
-            role="button"
-            href="#"
-            className="lbh-link lbh-link--announcement"
-            onClick={() => resendCode()}
-          >
-            Send a new code
-          </a>
+          {codeSent ? (
+            <>Code sent to {email}.</>
+          ) : (
+            <>
+              Haven't received an email?
+              <br />
+              <a
+                role="button"
+                href="#"
+                className="lbh-link lbh-link--announcement"
+                onClick={resendCode}
+              >
+                Send a new code
+              </a>
+            </>
+          )}
         </Paragraph>
       </Announcement>
 

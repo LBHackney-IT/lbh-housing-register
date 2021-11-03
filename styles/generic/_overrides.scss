@@ -60,6 +60,7 @@ body {
   padding: 5px 10px;
 }
 
-.lbh-link--announcement:link {
+.lbh-link--announcement:link,
+.lbh-link--announcement:visited {
   color: #0b0c0c;
 }

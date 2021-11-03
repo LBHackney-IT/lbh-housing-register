@@ -5,12 +5,14 @@ import { HeadingOne } from '../../components/content/headings';
 import Form from '../../components/form/form';
 import Layout from '../../components/layout/resident-layout';
 import { useAppDispatch } from '../../lib/store/hooks';
-import { updateBeforeFirstSave } from '../../lib/store/mainApplicant';
+import { updateApplicant } from '../../lib/store/applicant';
 import { FormID, getFormData } from '../../lib/utils/form-data';
 import processPhonenumber from '../../lib/utils/processPhonenumber';
 import ErrorSummary from '../../components/errors/error-summary';
 import { Errors } from '../../lib/types/errors';
 import { scrollToError } from '../../lib/utils/scroll';
+
+import { useAppSelector } from '../../lib/store/hooks';
 
 const ApplicationStartPage = (): JSX.Element => {
   const router = useRouter();
@@ -23,7 +25,7 @@ const ApplicationStartPage = (): JSX.Element => {
 
     try {
       dispatch(
-        updateBeforeFirstSave({
+        updateApplicant({
           person: {
             title: values.title,
             firstName: values.firstName,

@@ -7,6 +7,8 @@ import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { FormData } from '../../lib/types/form';
 import { FormID, getFormData } from '../../lib/utils/form-data';
 import ErrorSummary from '../../components/errors/error-summary';
+import { Errors } from '../../lib/types/errors';
+import { scrollToError } from '../../lib/utils/scroll';
 import Paragraph from '../../components/content/paragraph';
 import { createVerifyCode } from '../../lib/store/auth';
 
@@ -23,11 +25,18 @@ const ApplicationSignInPage = (): JSX.Element => {
   }, [isLoggedIn]);
 
   const onSubmit = async (values: FormData) => {
-    dispatch(createVerifyCode(values.emailAddress));
-    router.push({
-      pathname: '/apply/verify',
-      query: { email: values.emailAddress },
-    });
+    try {
+      dispatch(createVerifyCode(values.emailAddress));
+
+      router.push({
+        pathname: '/apply/verify',
+        query: { email: values.emailAddress },
+      });
+    } catch (e) {
+      console.error(e);
+      setUserError(Errors.SIGNIN_ERROR);
+      scrollToError();
+    }
   };
 
   return (

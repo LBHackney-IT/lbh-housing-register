@@ -5,7 +5,7 @@ import { Applicant, Question } from '../../domain/HousingApi';
 import { FormID } from '../utils/form-data';
 
 export type ApplicantWithPersonID = Applicant & {
-  person: Applicant['person'] & { id?: string };
+  person: Applicant['person'] & { id: string };
 };
 
 export function applicantHasId(

@@ -28,7 +28,8 @@ const ApplicationSection = (): JSX.Element => {
 
   const sectionGroups = getApplicationSectionsForResident(
     applicant === mainResident,
-    isOver18(applicant)
+    isOver18(applicant),
+    applicant.person.relationshipType === 'partner'
   );
 
   const sectionName =

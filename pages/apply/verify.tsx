@@ -58,12 +58,14 @@ const ApplicationVerifyPage = (): JSX.Element => {
       {userError && <ErrorSummary>{userError}</ErrorSummary>}
       <Announcement variant="success">
         <Paragraph>
-          We have sent an email containing a six digit verification code to:{' '}
-          <strong>{email}</strong>.
+          We have sent an email containing a six digit verification code to{' '}
+          <strong>{email}</strong>
         </Paragraph>
         <Paragraph>
           {codeSent ? (
-            <>Code sent to {email}.</>
+            <>
+              New code sent to <strong>{email}</strong>
+            </>
           ) : (
             <>
               Haven't received an email?

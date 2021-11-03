@@ -4,23 +4,17 @@ import { useRouter } from 'next/router';
 import { HeadingOne } from '../../components/content/headings';
 import Form from '../../components/form/form';
 import Layout from '../../components/layout/resident-layout';
-import {
-  useAppDispatch,
-  useAppSelector,
-  useAppStore,
-} from '../../lib/store/hooks';
+import { useAppDispatch } from '../../lib/store/hooks';
 import { updateBeforeFirstSave } from '../../lib/store/mainApplicant';
 import { FormID, getFormData } from '../../lib/utils/form-data';
 import processPhonenumber from '../../lib/utils/processPhonenumber';
 import ErrorSummary from '../../components/errors/error-summary';
 import { Errors } from '../../lib/types/errors';
 import { scrollToError } from '../../lib/utils/scroll';
-import { createVerifyCode } from '../../lib/store/auth';
 
 const ApplicationStartPage = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const store = useAppStore();
 
   const [userError, setUserError] = useState<string | null>(null);
 
@@ -46,7 +40,6 @@ const ApplicationStartPage = (): JSX.Element => {
       );
 
       router.push('/apply/agree-terms');
-      // router.push('/apply/overview');
     } catch (error) {
       setUserError(Errors.GENERIC_ERROR);
       scrollToError();

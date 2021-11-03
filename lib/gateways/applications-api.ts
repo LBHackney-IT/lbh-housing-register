@@ -132,7 +132,6 @@ export const createEvidenceRequest = async (
 };
 
 export const createVerifyCode = async (
-  // id: string,
   request: CreateAuthRequest
 ): Promise<CreateAuthResponse | null> => {
   const headers = {

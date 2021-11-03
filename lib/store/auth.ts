@@ -1,25 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
-  Application,
   CreateAuthRequest,
   CreateAuthResponse,
   VerifyAuthRequest,
   VerifyAuthResponse,
 } from '../../domain/HousingApi';
-
-// export const createVerifyCode = createAsyncThunk(
-//   'auth/create',
-//   async (application: Application) => {
-//     const request: CreateAuthRequest = {
-//       email: application.mainApplicant?.contactInformation?.emailAddress ?? '',
-//     };
-//     const res = await fetch(`/api/auth/generate`, {
-//       method: 'POST',
-//       body: JSON.stringify(request),
-//     });
-//     return (await res.json()) as CreateAuthResponse;
-//   }
-// );
 
 export const createVerifyCode = createAsyncThunk(
   'auth/create',

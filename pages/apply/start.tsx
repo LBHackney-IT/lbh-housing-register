@@ -11,8 +11,6 @@ import processPhonenumber from '../../lib/utils/processPhonenumber';
 import ErrorSummary from '../../components/errors/error-summary';
 import { Errors } from '../../lib/types/errors';
 import { scrollToError } from '../../lib/utils/scroll';
-import { useAppSelector } from '../../lib/store/hooks';
-import { updateApplicant } from '../../lib/store/applicant';
 
 const ApplicationStartPage = (): JSX.Element => {
   const router = useRouter();
@@ -20,18 +18,13 @@ const ApplicationStartPage = (): JSX.Element => {
 
   const [userError, setUserError] = useState<string | null>(null);
 
-  const mainApplicantId = useAppSelector(
-    (store) => store.application.mainApplicant?.person?.id
-  );
-
   const signUp = async (values: FormikValues) => {
     const phone = values.phoneNumber && processPhonenumber(values.phoneNumber);
 
     try {
       dispatch(
-        updateApplicant({
+        updateBeforeFirstSave({
           person: {
-            id: mainApplicantId as string,
             title: values.title,
             firstName: values.firstName,
             surname: values.surname,

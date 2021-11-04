@@ -483,3 +483,6 @@ export interface EvidenceRequestResponse {
   id: string;
   createdAt: string;
 }
+export interface SimpleTypeResponse<T> {
+  value: T;
+}

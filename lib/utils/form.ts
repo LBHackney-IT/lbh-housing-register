@@ -6,7 +6,7 @@ import { isOver18 } from '../../lib/utils/dateOfBirth';
 
 import { getGenderName } from '../../lib/utils/gender';
 import { getAgeInYears } from '../../lib/utils/dateOfBirth';
-import { calculateBedrooms } from '../../lib/utils/bedroomCalculator';
+import { calculateBedrooms } from '../../lib/gateways/internal-api';
 
 /**
  * Determines if the field should be displayed based on the values passed in
@@ -47,16 +47,8 @@ export function checkEligible(application: Application): [boolean, string[]] {
     .filter((v): v is Applicant | Applicant[] => v !== undefined)
     .flat();
   const mainApplicant = applicants[0];
-  const bedroomArray = applicants.map((applicant) => ({
-    age: getAgeInYears(applicant),
-    gender: getGenderName(applicant),
-  }));
 
-  const hasPartnerSharing = !!applicants.find(
-    (applicant) => applicant.person?.relationshipType === 'partner'
-  );
-
-  const bedroomNeed = calculateBedrooms(bedroomArray, hasPartnerSharing);
+  const bedroomNeed = calculateBedrooms(application);
 
   const setInvalid = (reasoning?: string): void => {
     isValid = false;

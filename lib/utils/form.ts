@@ -3,9 +3,6 @@ import { getQuestionValue } from '../store/applicant';
 import { FormData, FormField } from '../types/form';
 import { FormID, getEligibilityCriteria } from './form-data';
 import { isOver18 } from '../../lib/utils/dateOfBirth';
-
-import { getGenderName } from '../../lib/utils/gender';
-import { getAgeInYears } from '../../lib/utils/dateOfBirth';
 import { calculateBedrooms } from '../../lib/gateways/internal-api';
 
 /**

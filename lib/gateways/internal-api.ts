@@ -19,7 +19,7 @@ export const updateApplication = async (application: Application) => {
 
 export const calculateBedrooms = async (application: Application) => {
   const res = await fetch(`/api/applications/${application.id}/bedrooms`, {
-    method: 'GET'
+    method: 'GET',
   });
   return ((await res.json()) as SimpleTypeResponse<Number>).value;
 };

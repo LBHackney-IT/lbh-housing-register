@@ -142,8 +142,7 @@ function batchToCSV(page: PaginatedApplicationListResponse): CSVRow[] {
     )
     .map((result): CSVRow => {
       const bedroomNeed =
-        result.assessment?.bedroomNeed ??
-        result.calculatedBedroomNeed!;
+        result.assessment?.bedroomNeed ?? result.calculatedBedroomNeed!;
       return {
         HousingRegisterRef: result.assessment?.biddingNumber ?? null,
         Title: result.mainApplicant?.person?.title ?? null,

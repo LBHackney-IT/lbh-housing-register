@@ -8,9 +8,7 @@ import Select from '../form/select';
 import Radios from '../form/radios';
 import Input from '../form/input';
 import InsetText from '../content/inset-text';
-import {
-  updateApplication,
-} from '../../lib/gateways/internal-api';
+import { updateApplication } from '../../lib/gateways/internal-api';
 import { ApplicationStatus } from '../../lib/types/application-status';
 
 interface PageProps {

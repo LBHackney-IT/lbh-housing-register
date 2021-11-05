@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
-  Application,
   CreateAuthRequest,
   CreateAuthResponse,
   VerifyAuthRequest,
@@ -9,11 +8,12 @@ import {
 
 export const createVerifyCode = createAsyncThunk(
   'auth/create',
-  async (application: Application) => {
+  async (emailAddress: string) => {
     const request: CreateAuthRequest = {
-      email: application.mainApplicant?.contactInformation?.emailAddress ?? '',
+      email: emailAddress,
     };
-    const res = await fetch(`/api/auth/${application.id}/generate`, {
+
+    const res = await fetch(`/api/auth/generate`, {
       method: 'POST',
       body: JSON.stringify(request),
     });
@@ -23,12 +23,12 @@ export const createVerifyCode = createAsyncThunk(
 
 export const confirmVerifyCode = createAsyncThunk(
   'auth/confirm',
-  async ({ application, code }: { application: Application; code: string }) => {
+  async ({ email, code }: { email: string; code: string }) => {
     const request: VerifyAuthRequest = {
-      email: application.mainApplicant?.contactInformation?.emailAddress ?? '',
-      code: code,
+      email,
+      code,
     };
-    const res = await fetch(`/api/auth/${application.id}/verify`, {
+    const res = await fetch(`/api/auth/verify`, {
       method: 'POST',
       body: JSON.stringify(request),
     });

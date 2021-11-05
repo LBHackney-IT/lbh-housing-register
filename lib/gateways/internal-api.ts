@@ -1,5 +1,5 @@
 import { AddressLookupResult } from '../../domain/addressLookup';
-import { Application, SimpleTypeResponse } from '../../domain/HousingApi';
+import { Application } from '../../domain/HousingApi';
 
 export const lookUpAddress = async (postCode: string) => {
   const res = await fetch(`/api/address/${postCode}`, {

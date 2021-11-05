@@ -198,6 +198,12 @@ export interface Application {
    * @memberof Application
    */
   assessment?: Assessment;
+  /**
+   *
+   * @type {number}
+   * @memberof Application
+   */
+  calculatedBedroomNeed?: number;
 }
 
 /**

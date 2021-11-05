@@ -3,7 +3,6 @@ import { getQuestionValue } from '../store/applicant';
 import { FormData, FormField } from '../types/form';
 import { FormID, getEligibilityCriteria } from './form-data';
 import { isOver18 } from '../../lib/utils/dateOfBirth';
-import { calculateBedrooms } from '../../lib/gateways/internal-api';
 
 /**
  * Determines if the field should be displayed based on the values passed in
@@ -45,7 +44,7 @@ export function checkEligible(application: Application): [boolean, string[]] {
     .flat();
   const mainApplicant = applicants[0];
 
-  const bedroomNeed = calculateBedrooms(application);
+  const bedroomNeed = application.calculatedBedroomNeed!;
 
   const setInvalid = (reasoning?: string): void => {
     isValid = false;

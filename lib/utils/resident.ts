@@ -76,6 +76,15 @@ export const getMainApplicantQuestions = (): ApplicationSectionGroup[] => {
       ],
     },
     {
+      heading: 'Health',
+      sections: [
+        {
+          heading: 'Medical needs',
+          id: FormID.MEDICAL_NEEDS,
+        },
+      ],
+    },
+    {
       heading: 'Living situation',
       sections: [
         {
@@ -109,15 +118,6 @@ export const getMainApplicantQuestions = (): ApplicationSectionGroup[] => {
         },
       ],
     },
-    {
-      heading: 'Health',
-      sections: [
-        {
-          heading: 'Medical needs',
-          id: FormID.MEDICAL_NEEDS,
-        },
-      ],
-    },
   ];
 };
 
@@ -132,6 +132,15 @@ export const getOtherMemberQuestions = (
           {
             heading: 'Personal details',
             id: FormID.PERSONAL_DETAILS,
+          },
+        ],
+      },
+      {
+        heading: 'Health',
+        sections: [
+          {
+            heading: 'Medical needs',
+            id: FormID.MEDICAL_NEEDS,
           },
         ],
       },
@@ -153,15 +162,6 @@ export const getOtherMemberQuestions = (
           },
         ],
       },
-      {
-        heading: 'Health',
-        sections: [
-          {
-            heading: 'Medical needs',
-            id: FormID.MEDICAL_NEEDS,
-          },
-        ],
-      },
     ];
   } else {
     return [
@@ -175,20 +175,20 @@ export const getOtherMemberQuestions = (
         ],
       },
       {
-        heading: 'Living situation',
-        sections: [
-          {
-            heading: 'Address history',
-            id: FormID.ADDRESS_HISTORY,
-          },
-        ],
-      },
-      {
         heading: 'Health',
         sections: [
           {
             heading: 'Medical needs',
             id: FormID.MEDICAL_NEEDS,
+          },
+        ],
+      },
+      {
+        heading: 'Living situation',
+        sections: [
+          {
+            heading: 'Address history',
+            id: FormID.ADDRESS_HISTORY,
           },
         ],
       },

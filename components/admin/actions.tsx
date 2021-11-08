@@ -10,7 +10,6 @@ import Input from '../form/input';
 import InsetText from '../content/inset-text';
 import { updateApplication } from '../../lib/gateways/internal-api';
 import { ApplicationStatus } from '../../lib/types/application-status';
-import { calculateBedroomsFromApplication } from '../../lib/utils/bedroomCalculator';
 
 interface PageProps {
   data: Application;
@@ -200,8 +199,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
     reason: data.assessment?.reason ?? '',
     applicationDate: data.assessment?.effectiveDate ?? data.submittedAt,
     informationReceived: data.assessment?.informationReceivedDate ?? '',
-    bedroomNeed:
-      data.assessment?.bedroomNeed ?? calculateBedroomsFromApplication(data),
+    bedroomNeed: data.assessment?.bedroomNeed ?? data.calculatedBedroomNeed!,
     band: data.assessment?.band ?? '',
     biddingNumberType: data.assessment?.biddingNumber ? 'manual' : 'generate',
     biddingNumber: data.assessment?.biddingNumber ?? '',

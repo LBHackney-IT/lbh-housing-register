@@ -2,7 +2,6 @@ import { Application } from '../../domain/HousingApi';
 import Paragraph from '../content/paragraph';
 import { applicantsWithMedicalNeed } from '../../lib/utils/medicalNeed';
 import { questionLookup } from '../../lib/utils/applicationQuestions';
-import { calculateBedroomsFromApplication } from '../../lib/utils/bedroomCalculator';
 
 interface PageProps {
   data: Application;
@@ -35,7 +34,7 @@ export default function Snapshot({ data }: PageProps): JSX.Element {
   function bedroomNeedText() {
     const requiredBedrooms = data.assessment?.bedroomNeed
       ? data.assessment?.bedroomNeed
-      : calculateBedroomsFromApplication(data);
+      : data.calculatedBedroomNeed!;
     return `This household has a ${requiredBedrooms} bedroom need.`;
   }
 

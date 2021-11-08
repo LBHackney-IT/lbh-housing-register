@@ -198,6 +198,12 @@ export interface Application {
    * @memberof Application
    */
   assessment?: Assessment;
+  /**
+   *
+   * @type {number}
+   * @memberof Application
+   */
+  calculatedBedroomNeed?: number;
 }
 
 /**
@@ -482,4 +488,7 @@ export interface CreateEvidenceRequest {
 export interface EvidenceRequestResponse {
   id: string;
   createdAt: string;
+}
+export interface SimpleTypeResponse<T> {
+  value: T;
 }

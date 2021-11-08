@@ -6,13 +6,6 @@ import Paragraph from '../../components/content/paragraph';
 import Layout from '../../components/layout/resident-layout';
 import DeleteLink from '../../components/delete-link';
 import Announcement from '../../components/announcement';
-import { Applicant } from '../../domain/HousingApi';
-import {
-  calculateBedrooms,
-  calculateBedroomsFromApplication,
-} from '../../lib/utils/bedroomCalculator';
-import { getGenderName } from '../../lib/utils/gender';
-import { getAgeInYears } from '../../lib/utils/dateOfBirth';
 import { getWaitingTime } from '../../lib/utils/bedroomWaitingTime';
 import withApplication from '../../lib/hoc/withApplication';
 import { exit } from '../../lib/store/auth';
@@ -27,7 +20,7 @@ const WhatToExpect = (): JSX.Element => {
   };
 
   const application = useAppSelector((store) => store.application);
-  const bedroomNeed = calculateBedroomsFromApplication(application);
+  const bedroomNeed = application.calculatedBedroomNeed!;
 
   const waitingTime = getWaitingTime(bedroomNeed);
 

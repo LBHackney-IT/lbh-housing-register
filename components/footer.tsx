@@ -35,7 +35,11 @@ const Footer = ({ referenceNumber }: FooterProps) => {
           <Dialog
             isOpen={open}
             title="Contact us"
-            copy={`Call 020 8356 2929 Lines open Monday to Friday, from 9am to 5pm`}
+            copy={`
+              Call 020 8356 2929
+              Open Monday to Friday, from 9am to 5pm.
+              An emergency line operates outside these hours.
+            `}
             onCancel={() => setOpen(false)}
             onCancelText="close"
           />

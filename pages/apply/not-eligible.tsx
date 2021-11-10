@@ -57,6 +57,15 @@ const NotEligible = (): JSX.Element => {
         support you to find somewhere to live. Please contact the relevant
         support services team for advice on next steps.
       </Paragraph>
+
+      <Paragraph>
+        <strong>
+          If you are at risk of domestic abuse, gang violence or threatened with
+          homelessness,
+        </strong>{' '}
+        please call 020 8356 2929 for immediate support.
+      </Paragraph>
+
       <Paragraph>
         <strong>If you are a Council tenant</strong>{' '}
         <a className="lbh-link" href="https://hackney.gov.uk/housing-options">

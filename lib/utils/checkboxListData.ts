@@ -621,10 +621,14 @@ export const situationCheckboxList = (
     QuestionKey.YOUR_SITUATION_BREACH_OF_TENANCY,
     applicant
   );
+  console.log(breachOfTenancy);
+
   const legalRestrictions = getQuestionValue(
     QuestionKey.YOUR_SITUATION_LEGAL_RESTRICTIONS,
     applicant
   );
+  console.log(legalRestrictions);
+
   const unspentConvictions = getQuestionValue(
     QuestionKey.YOUR_SITUATION_UNSPENT_CONVICTIONS,
     applicant
@@ -704,12 +708,12 @@ export const situationCheckboxList = (
       },
       {
         title: 'Previous warning for breach of tenancy',
-        value: `${breachOfTenancy}`,
+        value: `${breachOfTenancy || 'N/A'}`,
         isChecked: false,
       },
       {
         title: 'Legal housing restrictions',
-        value: `${legalRestrictions}`,
+        value: `${legalRestrictions || 'N/A'}`,
         isChecked: false,
       },
       {

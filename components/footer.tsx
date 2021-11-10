@@ -1,6 +1,6 @@
 import react from 'react';
 import Paragraph from '../components/content/paragraph';
-import { HeadingThree } from './content/headings';
+import { HeadingThree, HeadingTwo } from './content/headings';
 import React, { useState } from 'react';
 import Dialog from '../components/dialog';
 
@@ -35,14 +35,17 @@ const Footer = ({ referenceNumber }: FooterProps) => {
           <Dialog
             isOpen={open}
             title="Contact us"
-            copy={`
-              Call 020 8356 2929
-              Open Monday to Friday, from 9am to 5pm.
-              An emergency line operates outside these hours.
-            `}
             onCancel={() => setOpen(false)}
-            onCancelText="close"
-          />
+            onCancelText="Close"
+          >
+            <HeadingTwo content="Call 020 8356 2929" />
+            <p className="lbh-body-m">
+              Open Monday to Friday, from 9am to 5pm.
+            </p>
+            <p className="lbh-body-m lbh-!-margin-top-0">
+              An emergency line operates outside these hours.
+            </p>
+          </Dialog>
 
           <hr />
 

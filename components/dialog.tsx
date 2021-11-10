@@ -2,13 +2,12 @@ import React from 'react';
 import { Dialog as ReachDialog } from '@reach/dialog';
 import '@reach/dialog/styles.css';
 import Button from './button';
-import { HeadingTwo } from './content/headings';
-import Paragraph from './content/paragraph';
+import { HeadingThree } from './content/headings';
 
 interface DialogProps {
   isOpen: boolean;
-  copy?: string;
   title?: string;
+  children: React.ReactNode;
   onCancelText?: string;
   onConfirmationText?: string;
   onCancel?: () => void;
@@ -17,8 +16,8 @@ interface DialogProps {
 
 export default function Dialog({
   isOpen,
-  copy,
   title,
+  children,
   onCancelText,
   onConfirmationText,
   onCancel,
@@ -31,8 +30,8 @@ export default function Dialog({
       aria-label={title}
       className="lbh-dialog"
     >
-      {title && <HeadingTwo content={title} />}
-      {copy && <Paragraph>{copy}</Paragraph>}
+      {title && <HeadingThree content={title} />}
+      {children}
 
       <div className="lbh-dialog__actions">
         {onConfirmation && (

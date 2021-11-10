@@ -67,14 +67,15 @@ export default function ApplicationHomePage(): JSX.Element {
         <Dialog
           isOpen={open}
           title="Contact us"
-          copy={`
-            Call 020 8356 2929
-            Open Monday to Friday, from 9am to 5pm.
-            An emergency line operates outside these hours.
-          `}
           onCancel={() => setOpen(false)}
-          onCancelText="close"
-        />
+          onCancelText="Close"
+        >
+          <HeadingTwo content="Call 020 8356 2929" />
+          <p className="lbh-body-m">Open Monday to Friday, from 9am to 5pm.</p>
+          <p className="lbh-body-m lbh-!-margin-top-0">
+            An emergency line operates outside these hours.
+          </p>
+        </Dialog>
 
         <HeadingTwo content="What happens next" />
         <Paragraph>

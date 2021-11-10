@@ -2,7 +2,7 @@ import react from 'react';
 import Paragraph from '../components/content/paragraph';
 import { HeadingThree, HeadingTwo } from './content/headings';
 import React, { useState } from 'react';
-import Dialog from '../components/dialog';
+import Dialog from './dialog';
 
 interface FooterProps {
   referenceNumber: string;

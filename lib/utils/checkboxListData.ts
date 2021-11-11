@@ -724,12 +724,12 @@ export const situationCheckboxList = (
       },
       {
         title: 'Previous warning for breach of tenancy',
-        value: `${breachOfTenancy}`,
+        value: `${breachOfTenancy || 'N/A'}`,
         isChecked: false,
       },
       {
         title: 'Legal housing restrictions',
-        value: `${legalRestrictions}`,
+        value: `${legalRestrictions || 'N/A'}`,
         isChecked: false,
       },
       {

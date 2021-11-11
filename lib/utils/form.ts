@@ -3,6 +3,7 @@ import { getQuestionValue } from '../store/applicant';
 import { FormData, FormField } from '../types/form';
 import { FormID, getEligibilityCriteria } from './form-data';
 import { isOver18 } from '../../lib/utils/dateOfBirth';
+import { applicantsWithMedicalNeed } from '../../lib/utils/medicalNeed';
 
 /**
  * Determines if the field should be displayed based on the values passed in
@@ -46,6 +47,9 @@ export function checkEligible(application: Application): [boolean, string[]] {
 
   const bedroomNeed = application.calculatedBedroomNeed!;
 
+  const numberOfApplicantsWithMedicalNeeds =
+    applicantsWithMedicalNeed(application);
+
   const setInvalid = (reasoning?: string): void => {
     isValid = false;
 
@@ -60,7 +64,10 @@ export function checkEligible(application: Application): [boolean, string[]] {
     'home-how-many-bedrooms'
   );
 
-  if (bedroomNeed <= requestedNumberOfBedrooms) {
+  if (
+    bedroomNeed <= requestedNumberOfBedrooms &&
+    numberOfApplicantsWithMedicalNeeds === 0
+  ) {
     setInvalid(
       'Based on our calculations, you are not lacking two or more rooms'
     );

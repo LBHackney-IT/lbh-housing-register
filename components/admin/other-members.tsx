@@ -4,7 +4,6 @@ import { formatDob, getAgeInYears } from '../../lib/utils/dateOfBirth';
 import React from 'react';
 import { HeadingThree } from '../content/headings';
 import { getGenderName } from '../../lib/utils/gender';
-import Hint from '../form/hint';
 
 interface SummaryProps {
   heading: string;
@@ -23,7 +22,7 @@ export default function OtherMembers({
       <table className="govuk-table lbh-table" style={{ marginTop: '1em' }}>
         <tbody className="govuk-table__body">
           {others.map((applicant, index) => (
-            <tr className="govuk-table__row">
+            <tr key={index} className="govuk-table__row">
               <td className="govuk-table__cell">
                 <ul className="lbh-list lbh-list--compressed">
                   <li>

@@ -55,7 +55,7 @@ export default function AssignUser({
             id="input-assignee"
             name="assignedTo"
             type="text"
-            value={assignedTo}
+            value={assignedTo ? assignedTo : ''}
             onChange={textChangeHandler}
           />
           <button

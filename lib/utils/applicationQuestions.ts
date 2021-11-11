@@ -28,8 +28,8 @@ export const getQuestionValue = (
   questionId: string,
   applicant?: Applicant
 ): string => {
-  const questionValue = questionLookup(questionId, applicant) || 'N/A';
-  return questionValue !== 'N/A'
+  const questionValue = questionLookup(questionId, applicant);
+  return questionValue
     ? capitalize(jsonParse(questionValue).toString())
-    : questionValue;
+    : 'N/A';
 };

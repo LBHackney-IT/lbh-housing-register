@@ -14,8 +14,10 @@ import {
   generateQuestionArray,
 } from '../../lib/utils/adminHelpers';
 import { INVALID_DATE } from '../../components/form/dateinput';
-
+import { scrollToTop } from '../../lib/utils/scroll';
 import * as Yup from 'yup';
+import ErrorSummary from '../../components/errors/error-summary';
+import { Errors } from '../../lib/types/errors';
 
 const keysToIgnore = [
   'AGREEMENT',
@@ -35,6 +37,7 @@ interface PageProps {
 
 export default function AddCasePage({ user }: PageProps): JSX.Element {
   // const [isMainApplicant, setIsMainApplicant] = useState(true);
+  const [isSumbitted, setIsSumbitted] = useState(false);
 
   const onSubmit = (values: FormikValues) => {
     const questionValues = generateQuestionArray(values);
@@ -69,7 +72,13 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
       otherMembers: [],
     };
     createApplication(request);
+
     router.reload();
+  };
+
+  const handleClick = () => {
+    setIsSumbitted(true);
+    scrollToTop();
   };
 
   const currentDateTimestamp = Math.min(+new Date());
@@ -104,13 +113,6 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
       .required(),
   });
 
-  const scrollToErrors = (errors: any) => {
-    const errorKeys = Object.keys(errors);
-    if (document.getElementsByName(errorKeys[0])[0]) {
-      document.getElementsByName(errorKeys[0])[0].focus();
-    }
-  };
-
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="Group worktray">
@@ -119,28 +121,43 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
           onSubmit={onSubmit}
           validationSchema={schema}
         >
-          {({ isSubmitting, errors }) => (
-            <Form>
-              {sections.map((section, index) => (
-                <AddCaseSection
-                  key={index}
-                  sectionHeading={section.sectionHeading}
-                  sectionId={section.sectionId}
-                  sectionData={section.fields}
-                />
-              ))}
+          {({ isSubmitting, errors, isValid }) => {
+            return (
+              <>
+                {!isValid && isSumbitted ? (
+                  <ErrorSummary title="There is a problem">
+                    <ul className="govuk-list govuk-error-summary__list">
+                      {Object.entries(errors).map(([inputName, errorTitle]) => (
+                        <li key={inputName}>
+                          <a href={`#${inputName}`}>{errorTitle}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  </ErrorSummary>
+                ) : null}
+                <Form>
+                  {sections.map((section, index) => (
+                    <AddCaseSection
+                      key={index}
+                      sectionHeading={section.sectionHeading}
+                      sectionId={section.sectionId}
+                      sectionData={section.fields}
+                    />
+                  ))}
 
-              <div className="c-flex__1 text-right">
-                <Button
-                  onClick={() => scrollToErrors(errors)}
-                  disabled={isSubmitting}
-                  type="submit"
-                >
-                  Save new Application
-                </Button>
-              </div>
-            </Form>
-          )}
+                  <div className="c-flex__1 text-right">
+                    <Button
+                      onClick={handleClick}
+                      disabled={isSubmitting}
+                      type="submit"
+                    >
+                      Save new Application
+                    </Button>
+                  </div>
+                </Form>
+              </>
+            );
+          }}
         </Formik>
       </Layout>
     </UserContext.Provider>

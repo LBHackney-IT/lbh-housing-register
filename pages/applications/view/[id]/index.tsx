@@ -33,6 +33,7 @@ import {
   HorizontalNav,
   HorizontalNavItem,
 } from '../../../../components/admin/HorizontalNav';
+import loadConfig from 'next/dist/next-server/server/config';
 
 export interface PageProps {
   user: HackneyGoogleUserWithPermissions;
@@ -52,6 +53,8 @@ export default function ApplicationPage({
     const { name } = event.target as HTMLButtonElement;
     setActiveNavItem(name);
   };
+
+  console.log(data.status);
 
   return (
     <UserContext.Provider value={{ user }}>

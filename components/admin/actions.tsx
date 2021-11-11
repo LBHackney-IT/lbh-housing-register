@@ -184,14 +184,14 @@ export default function Actions({ data }: PageProps): JSX.Element {
       .label('Reason')
       .oneOf(reasonOptions.map(({ value }) => value)),
     applicationDate: Yup.string().notOneOf([INVALID_DATE], 'Invalid date'),
-    // informationReceived: Yup.string().notOneOf([INVALID_DATE], 'Invalid date'),
-    // bedroomNeed: Yup.number().label('Bedroom need').min(1),
-    // band: Yup.string(),
-    // biddingNumberType: Yup.string().oneOf(['generate', 'manual']),
-    // biddingNumber: Yup.string().matches(
-    //   /^\d{7}$/,
-    //   'Bidding number should be a 7 digit number'
-    // ),
+    informationReceived: Yup.string().notOneOf([INVALID_DATE], 'Invalid date'),
+    bedroomNeed: Yup.number().label('Bedroom need').min(1),
+    band: Yup.string(),
+    biddingNumberType: Yup.string().oneOf(['generate', 'manual']),
+    biddingNumber: Yup.string().matches(
+      /^\d{7}$/,
+      'Bidding number should be a 7 digit number'
+    ),
   });
 
   const initialValues = {

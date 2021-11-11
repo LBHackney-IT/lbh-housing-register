@@ -1,6 +1,5 @@
-import { Applicant, Application } from '../../domain/HousingApi';
+import { Applicant } from '../../domain/HousingApi';
 import { CheckBoxListPageProps } from '../../components/admin/checkbox-list';
-import { MedicalDetailPageProps } from '../../components/admin/medical-details';
 import {
   questionLookup,
   getQuestionValue,
@@ -11,34 +10,33 @@ import {
   calculateDurations,
 } from '../../lib/utils/addressHistory';
 import { formatDate } from '../../lib/utils/dateOfBirth';
-import { FormikValues } from 'formik';
 import { getGenderName } from './gender';
 
 const legalStatusText = (option: string): string => {
   switch (option) {
     case 'Indefinite-leave-to-remain':
-      return 'I have Indefinite Leave to Remain';
+      return 'Indefinite Leave to Remain';
 
     case 'Discretionary-leave-to-remain':
-      return 'I have Discretionary Leave to Remain';
+      return 'Discretionary Leave to Remain';
 
     case 'Exceptional-leave-to-remain':
-      return 'I have Exceptional Leave to Remain';
+      return 'Exceptional Leave to Remain';
 
     case 'Refugee-status':
-      return 'I have been granted refugee status';
+      return 'Granted refugee status';
 
     case 'Humanitarian-protection':
-      return 'I have been granted humanitarian protection';
+      return 'Granted humanitarian protection';
 
     case 'Limited-leave-to-remain-no-public-funds':
-      return 'I have limited Leave to Remain with no recourse to public funds';
+      return 'Limited Leave to Remain with no recourse to public funds';
 
     case 'Other':
       return 'Other';
 
     default:
-      return '';
+      return 'N/A';
   }
 };
 
@@ -164,47 +162,34 @@ export const immigrationStatusCheckboxList = (
   applicant?: Applicant
 ): CheckBoxListPageProps => {
   const citizenship = getQuestionValue(QuestionKey.CITIZENSHIP, applicant);
-  const studyStatus = getQuestionValue(QuestionKey.UK_STUDYING, applicant);
-  const studyStatusText =
-    studyStatus === 'Yes' ? 'In the UK to study' : 'Not in the uk to study';
+  const citizenshipText =
+    citizenship === 'European'
+      ? 'EEA citizen'
+      : citizenship === 'Other'
+      ? 'Non-EEA citizen'
+      : citizenship;
 
-  const visaStatus = getQuestionValue(QuestionKey.IMMIGRATION_VISA);
-  const eeaNational = getQuestionValue(QuestionKey.IMMIGRATION_EA_NATIONAL);
-  const sponsership = getQuestionValue(QuestionKey.IMMIGRATION_SPONSERSHIP);
-  const legalStatus = getQuestionValue(QuestionKey.IMMIGRATION_STATUS);
+  // EEA citizen
+  const studyStatus = getQuestionValue(QuestionKey.UK_STUDYING, applicant);
   const settledStatus = getQuestionValue(
-    QuestionKey.IMMIGRATION_SETTLED_STATUS
+    QuestionKey.IMMIGRATION_SETTLED_STATUS,
+    applicant
   );
 
-  let visaStatusText = '';
-  if (visaStatus !== 'N/A') {
-    visaStatusText +=
-      visaStatus === 'Yes'
-        ? 'I have a work study visa. '
-        : 'I do not have a work study visa. ';
-  }
-  if (eeaNational !== 'N/A') {
-    visaStatusText +=
-      eeaNational === 'Yes'
-        ? 'I am an EEA national. '
-        : 'I am not an EEA national. ';
-  }
-  if (sponsership !== 'N/A') {
-    visaStatusText +=
-      sponsership === 'Yes'
-        ? 'I am recieving sponsorship. '
-        : 'I am not recieving sponsorship. ';
-
-    if (sponsership === 'No') {
-      visaStatusText += legalStatusText(legalStatus);
-    }
-  }
-  if (settledStatus !== 'N/A') {
-    visaStatusText +=
-      settledStatus === 'Yes'
-        ? 'I have settled status'
-        : 'I do not have settled status';
-  }
+  // Non-EEA citizen
+  const visaStatus = getQuestionValue(QuestionKey.IMMIGRATION_VISA, applicant);
+  const eeaNational = getQuestionValue(
+    QuestionKey.IMMIGRATION_EA_NATIONAL,
+    applicant
+  );
+  const sponsership = getQuestionValue(
+    QuestionKey.IMMIGRATION_SPONSERSHIP,
+    applicant
+  );
+  const legalStatus = getQuestionValue(
+    QuestionKey.IMMIGRATION_STATUS,
+    applicant
+  );
 
   const immigrationStatusSection: CheckBoxListPageProps =
     citizenship === 'British'
@@ -213,7 +198,28 @@ export const immigrationStatusCheckboxList = (
           data: [
             {
               title: 'Citizenship',
-              value: `${citizenship}`,
+              value: `${citizenshipText}`,
+              isChecked: false,
+            },
+          ],
+        }
+      : citizenship === 'European'
+      ? {
+          title: 'Immigration status',
+          data: [
+            {
+              title: 'Citizenship',
+              value: `${citizenshipText}`,
+              isChecked: false,
+            },
+            {
+              title: 'In the UK to study',
+              value: `${studyStatus}`,
+              isChecked: false,
+            },
+            {
+              title: 'Settled or pre-settled status',
+              value: `${settledStatus}`,
               isChecked: false,
             },
           ],
@@ -223,17 +229,27 @@ export const immigrationStatusCheckboxList = (
           data: [
             {
               title: 'Citizenship',
-              value: `${citizenship}`,
+              value: `${citizenshipText}`,
               isChecked: false,
             },
             {
-              title: 'Study Status',
-              value: `${studyStatusText}`,
+              title: 'In the UK on work or study visa',
+              value: `${visaStatus}`,
               isChecked: false,
             },
             {
-              title: 'Visa Status',
-              value: `${visaStatusText}`,
+              title: 'Family member of EEA national',
+              value: `${eeaNational}`,
+              isChecked: false,
+            },
+            {
+              title: 'Receiving sponsorship to stay in UK',
+              value: `${sponsership}`,
+              isChecked: false,
+            },
+            {
+              title: 'Legal status',
+              value: `${legalStatusText(legalStatus)}`,
               isChecked: false,
             },
           ],
@@ -708,12 +724,12 @@ export const situationCheckboxList = (
       },
       {
         title: 'Previous warning for breach of tenancy',
-        value: `${breachOfTenancy}`,
+        value: `${breachOfTenancy || 'N/A'}`,
         isChecked: false,
       },
       {
         title: 'Legal housing restrictions',
-        value: `${legalRestrictions}`,
+        value: `${legalRestrictions || 'N/A'}`,
         isChecked: false,
       },
       {

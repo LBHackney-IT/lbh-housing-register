@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Paragraph from '../components/content/paragraph';
 import Dialog from './dialog';
 
 interface DeleteLinkProps {
@@ -28,10 +29,11 @@ export default function DeleteLink({
       <Dialog
         isOpen={open}
         title="Are you sure?"
-        copy={details}
         onConfirmation={onDelete}
         onCancel={() => setOpen(false)}
-      />
+      >
+        <Paragraph>{details}</Paragraph>
+      </Dialog>
     </>
   );
 }

@@ -1,5 +1,7 @@
+import React from 'react';
+
 interface SummaryListProps {
-  children: JSX.Element | JSX.Element[] | string;
+  children: React.ReactNode;
 }
 export default function SummaryList({
   children,
@@ -18,7 +20,7 @@ export function SummaryListNoBorder({
 }
 
 interface SummaryListKeyProps {
-  children?: JSX.Element | undefined;
+  children: React.ReactNode;
 }
 export function SummaryListKey({ children }: SummaryListKeyProps): JSX.Element {
   return <dt className="govuk-summary-list__key">{children}</dt>;
@@ -41,7 +43,7 @@ export function SummaryListRow({
 }
 
 interface SummaryListValueProps {
-  children: string | JSX.Element;
+  children: React.ReactNode;
 }
 export function SummaryListValue({
   children,
@@ -51,7 +53,7 @@ export function SummaryListValue({
 
 interface SummaryListActionsProps {
   wideActions?: boolean;
-  children: JSX.Element | JSX.Element[] | string;
+  children: React.ReactNode;
 }
 export function SummaryListActions({
   wideActions,

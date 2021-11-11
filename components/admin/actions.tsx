@@ -226,7 +226,6 @@ export default function Actions({ data }: PageProps): JSX.Element {
       id: data.id,
       status: values.status,
       assessment: {
-        ...data.assessment,
         reason: values.reason,
       },
     };

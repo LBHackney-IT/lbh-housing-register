@@ -18,7 +18,7 @@ export function SummaryListNoBorder({
 }
 
 interface SummaryListKeyProps {
-  children?: string | undefined;
+  children?: JSX.Element | undefined;
 }
 export function SummaryListKey({ children }: SummaryListKeyProps): JSX.Element {
   return <dt className="govuk-summary-list__key">{children}</dt>;

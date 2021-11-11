@@ -222,8 +222,6 @@ export default function Actions({ data }: PageProps): JSX.Element {
   }
 
   function onSubmit(values: FormikValues) {
-    console.log('onSubmit', values);
-
     const request: Application = {
       id: data.id,
       status: values.status,

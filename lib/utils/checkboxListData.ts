@@ -621,14 +621,10 @@ export const situationCheckboxList = (
     QuestionKey.YOUR_SITUATION_BREACH_OF_TENANCY,
     applicant
   );
-  console.log(breachOfTenancy);
-
   const legalRestrictions = getQuestionValue(
     QuestionKey.YOUR_SITUATION_LEGAL_RESTRICTIONS,
     applicant
   );
-  console.log(legalRestrictions);
-
   const unspentConvictions = getQuestionValue(
     QuestionKey.YOUR_SITUATION_UNSPENT_CONVICTIONS,
     applicant

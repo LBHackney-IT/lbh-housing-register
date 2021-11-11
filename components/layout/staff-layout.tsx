@@ -43,7 +43,9 @@ export default function StaffLayout({
           <nav>
             <strong className="lbh-heading-h5">
               <Link href={`/applications/`}>
-                <a className="lbh-link">Back to dashboard</a>
+                <a className="lbh-link lbh-link--no-visited-state">
+                  Back to dashboard
+                </a>
               </Link>
             </strong>
           </nav>

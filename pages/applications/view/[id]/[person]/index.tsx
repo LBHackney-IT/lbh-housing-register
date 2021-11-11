@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import React, { useState } from 'react';
+import React, { useState, SyntheticEvent } from 'react';
 import Layout from '../../../../../components/layout/staff-layout';
 import { Application } from '../../../../../domain/HousingApi';
 import { UserContext } from '../../../../../lib/contexts/user-context';
@@ -23,14 +23,15 @@ import {
   situationCheckboxList,
   employmentCheckboxList,
   incomeAndSavingsCheckboxList,
-  medicalDetailsPageData,
 } from '../../../../../lib/utils/checkboxListData';
-import MedicalDetail, {
-  MedicalDetailPageProps,
-} from '../../../../../components/admin/medical-details';
+import MedicalDetail from '../../../../../components/admin/medical-details';
 import { HeadingOne } from '../../../../../components/content/headings';
 import Button from '../../../../../components/button';
 import Paragraph from '../../../../../components/content/paragraph';
+import {
+  HorizontalNav,
+  HorizontalNavItem,
+} from '../../../../../components/admin/HorizontalNav';
 
 interface PageProps {
   user: HackneyGoogleUserWithPermissions;
@@ -48,10 +49,15 @@ export default function ApplicationPersonPage({
   console.log(user, data, person);
 
   if (!data.id) return <Custom404 />;
+
   let isMainApplicant = data.mainApplicant?.person?.id === person;
   let applicant = isMainApplicant
     ? data.mainApplicant
     : data.otherMembers?.find((x) => x.person?.id === person);
+
+  const index = data.otherMembers?.findIndex((x) => {
+    return x.person?.id === person;
+  });
 
   type State =
     | 'identity'
@@ -65,6 +71,14 @@ export default function ApplicationPersonPage({
     return state == selected ? 'active' : '';
   }
 
+  const [activeNavItem, setActiveNavItem] = useState('identity');
+
+  const handleClick = async (event: SyntheticEvent) => {
+    event.preventDefault();
+    const { name } = event.target as HTMLButtonElement;
+    setActiveNavItem(name);
+  };
+
   const personalDetails = personalDetailsCheckboxList(applicant);
   const immigrationStatus = immigrationStatusCheckboxList(applicant);
   const residentialStatus = residentialStatusCheckboxList(applicant);
@@ -73,7 +87,6 @@ export default function ApplicationPersonPage({
   const situation = situationCheckboxList(applicant);
   const employment = employmentCheckboxList(applicant);
   const incomeAndSavings = incomeAndSavingsCheckboxList(applicant);
-  const medicalDetails = medicalDetailsPageData(data);
 
   return (
     <UserContext.Provider value={{ user }}>
@@ -95,10 +108,7 @@ export default function ApplicationPersonPage({
                       : 'Review household member'
                   }
                 />
-                <h2
-                  className="lbh-heading-h2"
-                  style={{ marginTop: '0.5em', color: '#525a5b' }}
-                >
+                <h2 className="lbh-caption-xl lbh-caption govuk-!-margin-top-1">
                   {applicant?.person?.firstName} {applicant?.person?.surname}
                 </h2>
               </div>
@@ -112,58 +122,45 @@ export default function ApplicationPersonPage({
               </div>
             </div>
 
-            <div className="lbh-link-group">
-              <button
-                onClick={() => {
-                  setState('identity');
-                }}
-                className={`lbh-link lbh-link--no-visited-state ${isActive(
-                  'identity'
-                )}`}
+            <HorizontalNav spaced={true}>
+              <HorizontalNavItem
+                handleClick={handleClick}
+                itemName="identity"
+                isActive={activeNavItem === 'identity'}
               >
                 Identity
-              </button>{' '}
-              <button
-                onClick={() => {
-                  setState('livingsituation');
-                }}
-                className={`lbh-link lbh-link--no-visited-state ${isActive(
-                  'livingsituation'
-                )}`}
+              </HorizontalNavItem>
+              <HorizontalNavItem
+                handleClick={handleClick}
+                itemName="livingsituation"
+                isActive={activeNavItem === 'livingsituation'}
               >
                 Living Situation
-              </button>{' '}
-              <button
-                onClick={() => {
-                  setState('money');
-                }}
-                className={`lbh-link lbh-link--no-visited-state ${isActive(
-                  'money'
-                )}`}
+              </HorizontalNavItem>
+              <HorizontalNavItem
+                handleClick={handleClick}
+                itemName="money"
+                isActive={activeNavItem === 'money'}
               >
                 Money
-              </button>{' '}
-              <button
-                onClick={() => {
-                  setState('health');
-                }}
-                className={`lbh-link lbh-link--no-visited-state ${isActive(
-                  'health'
-                )}`}
+              </HorizontalNavItem>
+              <HorizontalNavItem
+                handleClick={handleClick}
+                itemName="health"
+                isActive={activeNavItem === 'health'}
               >
                 Health
-              </button>{' '}
-              {/* <button
-            onClick={() => {
-              setState('checklist');
-            }}
-            className={`lbh-link lbh-link--no-visited-state ${isActive('checklist')}`}
-          >
-            Checklist
-          </button> */}
-            </div>
+              </HorizontalNavItem>
+              {/* <HorizontalNavItem
+                handleClick={handleClick}
+                itemName="checklist"
+                isActive={activeNavItem === 'checklist'}
+              >
+                Checklist
+              </HorizontalNavItem> */}
+            </HorizontalNav>
 
-            {state == 'identity' && (
+            {activeNavItem === 'identity' && (
               <>
                 <CheckBoxList {...(personalDetails as CheckBoxListPageProps)} />
                 <CheckBoxList
@@ -171,7 +168,7 @@ export default function ApplicationPersonPage({
                 />
               </>
             )}
-            {state == 'livingsituation' && (
+            {activeNavItem === 'livingsituation' && (
               <>
                 <CheckBoxList
                   {...(residentialStatus as CheckBoxListPageProps)}
@@ -183,7 +180,7 @@ export default function ApplicationPersonPage({
                 <CheckBoxList {...(situation as CheckBoxListPageProps)} />
               </>
             )}
-            {state == 'money' && (
+            {activeNavItem === 'money' && (
               <>
                 <CheckBoxList {...(employment as CheckBoxListPageProps)} />
                 <CheckBoxList
@@ -191,10 +188,10 @@ export default function ApplicationPersonPage({
                 />
               </>
             )}
-            {state == 'health' && (
-              <MedicalDetail {...(medicalDetails as MedicalDetailPageProps)} />
+            {activeNavItem === 'health' && (
+              <MedicalDetail data={data} memberIndex={index ?? -1} />
             )}
-            {state == 'checklist' && <h3>checklist</h3>}
+            {activeNavItem === 'checklist' && <h3>checklist</h3>}
           </>
         )}
       </Layout>
@@ -226,6 +223,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const evidenceLink = process.env.NEXT_PUBLIC_EVIDENCE_STORE;
+  const evidenceLink = process.env.NEXT_PUBLIC_EVIDENCE_STORE || null;
   return { props: { user, data, person, evidenceLink } };
 };

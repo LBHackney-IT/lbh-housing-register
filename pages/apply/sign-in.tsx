@@ -7,12 +7,15 @@ import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { FormData } from '../../lib/types/form';
 import { FormID, getFormData } from '../../lib/utils/form-data';
 import ErrorSummary from '../../components/errors/error-summary';
+import { Errors } from '../../lib/types/errors';
+import { scrollToError } from '../../lib/utils/scroll';
+import Paragraph from '../../components/content/paragraph';
+import { createVerifyCode } from '../../lib/store/auth';
 
 const ApplicationSignInPage = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const isLoggedIn = useAppSelector((store) => store.application.id);
   const router = useRouter();
-
   const [userError, setUserError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -22,16 +25,27 @@ const ApplicationSignInPage = (): JSX.Element => {
   }, [isLoggedIn]);
 
   const onSubmit = async (values: FormData) => {
-    // TODO create a verify code based on email provided and send to verify page
-    //dispatch(createVerifyCode(values.emailAddress));
-    //router.push('/apply/verify');
+    try {
+      dispatch(createVerifyCode(values.emailAddress));
+
+      router.push({
+        pathname: '/apply/verify',
+        query: { email: values.emailAddress },
+      });
+    } catch (e) {
+      console.error(e);
+      setUserError(Errors.SIGNIN_ERROR);
+      scrollToError();
+    }
   };
 
   return (
     <Layout pageName="Sign in">
       {userError && <ErrorSummary>{userError}</ErrorSummary>}
-      <HeadingOne content="Sign in to your application" />
-      {/* TODO not everything should use Formik. */}
+      <HeadingOne content="Start now" />
+      <Paragraph>
+        We’ll email you a verification code to continue your application
+      </Paragraph>
       <Form
         formData={getFormData(FormID.SIGN_IN)}
         buttonText="Continue"

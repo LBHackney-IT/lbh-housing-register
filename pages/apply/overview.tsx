@@ -1,4 +1,4 @@
-import { Fragment, useMemo } from 'react';
+import { Fragment } from 'react';
 import { ButtonLink } from '../../components/button';
 import { HeadingOne } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
@@ -12,10 +12,8 @@ import Tag from '../../components/tag';
 import ApplicantName from '../../components/application/ApplicantName';
 import { Applicant } from '../../domain/HousingApi';
 import { useAppSelector } from '../../lib/store/hooks';
-import { ApplicationStatus } from '../../lib/types/application-status';
 import { applicationStepsRemaining } from '../../lib/utils/resident';
 import withApplication from '../../lib/hoc/withApplication';
-import router from 'next/router';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
   const breadcrumbs = [
@@ -36,15 +34,6 @@ const ApplicationPersonsOverview = (): JSX.Element => {
       .filter((v): v is Applicant | Applicant[] => v !== undefined)
       .flat()
   );
-
-  const isDisqualified = useMemo(
-    () => application.status === ApplicationStatus.DISQUALIFIED,
-    [application]
-  );
-
-  if (isDisqualified) {
-    router.push('/apply/not-eligible');
-  }
 
   return (
     <Layout pageName="Application overview" breadcrumbs={breadcrumbs}>

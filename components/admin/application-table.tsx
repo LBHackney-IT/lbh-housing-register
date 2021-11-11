@@ -68,7 +68,7 @@ export default function ApplicationTable({
                   </th>
                   <td className="govuk-table__cell">
                     <Link href={`/applications/view/${application.id}`}>
-                      <a className="govuk-link govuk-custom-text-color">
+                      <a className="lbh-link lbh-link--no-visited-state">
                         {getPersonName(application)}
                       </a>
                     </Link>

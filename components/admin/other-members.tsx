@@ -21,36 +21,33 @@ export default function OtherMembers({
     <>
       <HeadingThree content={heading} />
       <table className="govuk-table lbh-table" style={{ marginTop: '1em' }}>
-        <thead className="govuk-table__head">
-          <tr className="govuk-table__row">
-            <th scope="col" colSpan={2} className="govuk-table__header">
-              <Hint content="Person details" />
-            </th>
-          </tr>
-        </thead>
         <tbody className="govuk-table__body">
           {others.map((applicant, index) => (
             <tr className="govuk-table__row">
               <td className="govuk-table__cell">
-                <strong>
-                  {applicant.person?.title} {applicant.person?.firstName}{' '}
-                  {applicant.person?.surname}
-                </strong>
-                {applicant.person?.relationshipType && (
-                  <>
-                    <br />
-                    {applicant.person?.relationshipType}
-                  </>
-                )}
-                <br />
-                {getGenderName(applicant)},{' '}
-                {applicant.person?.dateOfBirth &&
-                  formatDob(new Date(applicant.person?.dateOfBirth))}{' '}
-                {applicant.person?.dateOfBirth &&
-                  `(age ${getAgeInYears(applicant)})`}
+                <ul className="lbh-list lbh-list--compressed">
+                  <li>
+                    <strong>
+                      {applicant.person?.title} {applicant.person?.firstName}{' '}
+                      {applicant.person?.surname}
+                    </strong>
+                  </li>
+                  <li>
+                    {applicant.person?.relationshipType &&
+                      applicant.person?.relationshipType}
+                  </li>
+                  <li>
+                    {getGenderName(applicant)},{' '}
+                    {applicant.person?.dateOfBirth &&
+                      formatDob(new Date(applicant.person?.dateOfBirth))}{' '}
+                    {applicant.person?.dateOfBirth &&
+                      `(age ${getAgeInYears(applicant)})`}
+                  </li>
+                </ul>
               </td>
               <td className="govuk-table__cell govuk-table__cell--numeric">
                 <ButtonLink
+                  additionalCssClasses="lbh-!-margin-top-0"
                   href={`/applications/view/${applicationId}/${applicant.person?.id}`}
                 >
                   Open

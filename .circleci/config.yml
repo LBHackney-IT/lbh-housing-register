@@ -123,13 +123,13 @@ workflows:
             - tests
           filters:
             branches:
-              only: main
+              only: development
       - build-deploy-development:
           requires:
             - assume-role-development
           filters:
             branches:
-              only: main
+              only: development
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:

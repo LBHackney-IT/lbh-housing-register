@@ -6,15 +6,9 @@
           "label": "Email",
           "name": "emailAddress",
           "type": "email",
-          "hint": "We’ll email you a verification code to continue your application",
           "validation": {
             "required": true
           }
-        },
-        {
-          "name": "password",
-          "type": "hidden",
-          "initialValue": "Testing123!"
         }
       ]
     }

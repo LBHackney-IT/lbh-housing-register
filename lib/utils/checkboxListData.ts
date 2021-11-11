@@ -621,10 +621,14 @@ export const situationCheckboxList = (
     QuestionKey.YOUR_SITUATION_BREACH_OF_TENANCY,
     applicant
   );
+  console.log(breachOfTenancy);
+
   const legalRestrictions = getQuestionValue(
     QuestionKey.YOUR_SITUATION_LEGAL_RESTRICTIONS,
     applicant
   );
+  console.log(legalRestrictions);
+
   const unspentConvictions = getQuestionValue(
     QuestionKey.YOUR_SITUATION_UNSPENT_CONVICTIONS,
     applicant
@@ -809,30 +813,4 @@ export const incomeAndSavingsCheckboxList = (
   };
 
   return incomeAndSavingsSection;
-};
-
-export const medicalDetailsPageData = (
-  application: Application
-): MedicalDetailPageProps => {
-  var initialValues: FormikValues = {
-    linkToMedicalForm: application.mainApplicant?.medicalNeed?.formLink ?? '',
-    dateFormRecieved:
-      application.mainApplicant?.medicalNeed?.formRecieved ?? '',
-    assessmentDate:
-      application.mainApplicant?.medicalOutcome?.assessmentDate ?? '',
-    outcome: application.mainApplicant?.medicalOutcome?.outcome ?? '',
-    accessibleHousingRegister:
-      application.mainApplicant?.medicalOutcome?.accessibileHousingRegister ??
-      '',
-    disability: application.mainApplicant?.medicalOutcome?.disability ?? '',
-    additionalInformation:
-      application.mainApplicant?.medicalOutcome?.additionalInformaton ?? '',
-  };
-
-  var medicalDetailsSection: MedicalDetailPageProps = {
-    data: application,
-    initialValues: initialValues,
-  };
-
-  return medicalDetailsSection;
 };

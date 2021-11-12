@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react';
 import { useUser } from '../../lib/contexts/user-context';
-import { signOut } from '../../lib/utils/googleAuth';
 import { hasPhaseBanner } from '../../lib/utils/phase-banner';
 import Header from '../header';
 import PhaseBanner from '../phase-banner';
@@ -23,6 +22,11 @@ export default function StaffLayout({
   const { id, person } = router.query as {
     id: string;
     person: string;
+  };
+
+  const signOut = async () => {
+    await fetch(`/api/auth/exit`);
+    router.reload();
   };
 
   return (

@@ -242,7 +242,7 @@ export default function MedicalDetail({
             </div>
           </div>
 
-          {values.dateFormRecieved && (
+          {hasMedicalNeed && values.dateFormRecieved && (
             <div className="govuk-grid-row">
               <div className="govuk-grid-column-one-third">
                 <HeadingThree content="Medical outcome" />

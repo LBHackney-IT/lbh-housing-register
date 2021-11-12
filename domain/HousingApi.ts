@@ -103,31 +103,31 @@ export interface MedicalNeed {
   /**
    *
    * @type {string}
-   * @memberof MedicalOutCome
+   * @memberof MedicalNeed
    */
   assessmentDate?: string;
   /**
    *
    * @type {string}
-   * @memberof MedicalOutCome
+   * @memberof MedicalNeed
    */
   outcome?: string;
   /**
    *
    * @type {string}
-   * @memberof MedicalOutCome
+   * @memberof MedicalNeed
    */
   accessibileHousingRegister?: string;
   /**
    *
    * @type {string}
-   * @memberof MedicalOutCome
+   * @memberof MedicalNeed
    */
   disability?: string;
   /**
    *
    * @type {string}
-   * @memberof MedicalOutCome
+   * @memberof MedicalNeed
    */
   additionalInformaton?: string;
 }

@@ -132,6 +132,8 @@ workflows:
               only: development
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
+          requires:
+            - tests
           filters:
             branches:
               only: main

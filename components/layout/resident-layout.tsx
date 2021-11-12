@@ -37,6 +37,8 @@ export default function ResidentLayout({
         username={application.mainApplicant?.person?.firstName}
         logoLink="/"
         serviceName="Housing Register application"
+        signOutText="Sign out"
+        onSignOut={onSignOut}
       />
       {hasPhaseBanner() && <PhaseBanner />}
 

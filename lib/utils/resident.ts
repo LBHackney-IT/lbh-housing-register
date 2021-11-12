@@ -77,6 +77,15 @@ export const getMainApplicantQuestions = (): ApplicationSectionGroup[] => {
       ],
     },
     {
+      heading: 'Health',
+      sections: [
+        {
+          heading: 'Medical needs',
+          id: FormID.MEDICAL_NEEDS,
+        },
+      ],
+    },
+    {
       heading: 'Living situation',
       sections: [
         {
@@ -110,15 +119,6 @@ export const getMainApplicantQuestions = (): ApplicationSectionGroup[] => {
         },
       ],
     },
-    {
-      heading: 'Health',
-      sections: [
-        {
-          heading: 'Medical needs',
-          id: FormID.MEDICAL_NEEDS,
-        },
-      ],
-    },
   ];
 };
 
@@ -137,6 +137,15 @@ const partnerQuestions = [
     ],
   },
   {
+    heading: 'Health',
+    sections: [
+      {
+        heading: 'Medical needs',
+        id: FormID.MEDICAL_NEEDS,
+      },
+    ],
+  },
+  {
     heading: 'Living situation',
     sections: [
       {
@@ -151,15 +160,6 @@ const partnerQuestions = [
       {
         heading: 'Employment',
         id: FormID.EMPLOYMENT,
-      },
-    ],
-  },
-  {
-    heading: 'Health',
-    sections: [
-      {
-        heading: 'Medical needs',
-        id: FormID.MEDICAL_NEEDS,
       },
     ],
   },
@@ -176,6 +176,15 @@ const nonPartnerQuestions = [
     ],
   },
   {
+    heading: 'Health',
+    sections: [
+      {
+        heading: 'Medical needs',
+        id: FormID.MEDICAL_NEEDS,
+      },
+    ],
+  },
+  {
     heading: 'Living situation',
     sections: [
       {
@@ -190,15 +199,6 @@ const nonPartnerQuestions = [
       {
         heading: 'Employment',
         id: FormID.EMPLOYMENT,
-      },
-    ],
-  },
-  {
-    heading: 'Health',
-    sections: [
-      {
-        heading: 'Medical needs',
-        id: FormID.MEDICAL_NEEDS,
       },
     ],
   },

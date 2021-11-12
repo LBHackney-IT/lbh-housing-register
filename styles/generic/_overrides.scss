@@ -49,6 +49,15 @@ body {
   padding: 15px;
 }
 
+.lbh-header {
+  z-index: 0;
+}
+
+.lbh-footer {
+  background-color: #f8f8f8;
+  padding-top: 2rem;
+  padding-bottom: 5rem;
+}
 .lbh-footer {
   background-color: #f8f8f8;
   padding-top: 2rem;
@@ -58,4 +67,9 @@ body {
 .lbh-input--large {
   height: 50px;
   padding: 5px 10px;
+}
+
+.lbh-link--announcement:link,
+.lbh-link--announcement:visited {
+  color: #0b0c0c;
 }

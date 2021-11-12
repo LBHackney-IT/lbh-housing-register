@@ -28,17 +28,6 @@ export const loadApplication = createAsyncThunk(
   }
 );
 
-export const createApplication = createAsyncThunk(
-  'application/create',
-  async (application: Application) => {
-    const res = await fetch('/api/applications', {
-      method: 'POST',
-      body: JSON.stringify(application),
-    });
-    return (await res.json()) as Application;
-  }
-);
-
 export const updateApplication = createAsyncThunk(
   'application/update',
   async (application: Application) => {
@@ -182,7 +171,6 @@ const slice = createSlice({
         loadApplication.fulfilled,
         (state, action) => action.payload ?? {}
       )
-      .addCase(createApplication.fulfilled, (state, action) => action.payload)
       .addCase(updateApplication.fulfilled, (state, action) => action.payload)
       .addCase(
         disqualifyApplication.fulfilled,
@@ -226,7 +214,6 @@ export const autoSaveMiddleware: Middleware<
     function blacklist(type: string) {
       return (
         type.startsWith(loadApplication.typePrefix) ||
-        type.startsWith(createApplication.typePrefix) ||
         type.startsWith(updateApplication.typePrefix)
       );
     }

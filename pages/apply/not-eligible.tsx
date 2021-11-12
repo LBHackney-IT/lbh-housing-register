@@ -1,17 +1,18 @@
 import React, { useMemo } from 'react';
-import { useAppSelector } from '../../lib/store/hooks';
-import { checkEligible } from '../../lib/utils/form';
-import Button from '../../components/button';
+import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
+import Layout from '../../components/layout/resident-layout';
 import { HeadingTwo, HeadingThree } from '../../components/content/headings';
+import Button from '../../components/button';
 import InsetText from '../../components/content/inset-text';
 import List, { ListItem } from '../../components/content/list';
 import Paragraph from '../../components/content/paragraph';
-import Layout from '../../components/layout/resident-layout';
 import Panel from '../../components/panel';
-import withApplication from '../../lib/hoc/withApplication';
-import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
+import { useAppSelector } from '../../lib/store/hooks';
+import { checkEligible } from '../../lib/utils/form';
 import { exit } from '../../lib/store/auth';
+import withApplication from '../../lib/hoc/withApplication';
+import { ApplicationStatus } from '../../lib/types/application-status';
 
 const NotEligible = (): JSX.Element => {
   const router = useRouter();
@@ -26,7 +27,7 @@ const NotEligible = (): JSX.Element => {
     [mainApplicant]
   );
 
-  if (isEligible) {
+  if (isEligible && application.status !== ApplicationStatus.DISQUALIFIED) {
     router.push('/apply/overview');
   }
 
@@ -57,6 +58,15 @@ const NotEligible = (): JSX.Element => {
         support you to find somewhere to live. Please contact the relevant
         support services team for advice on next steps.
       </Paragraph>
+
+      <Paragraph>
+        <strong>
+          If you are at risk of domestic abuse, gang violence or threatened with
+          homelessness,
+        </strong>{' '}
+        please call 020 8356 2929 for immediate support.
+      </Paragraph>
+
       <Paragraph>
         <strong>If you are a Council tenant</strong>{' '}
         <a className="lbh-link" href="https://hackney.gov.uk/housing-options">

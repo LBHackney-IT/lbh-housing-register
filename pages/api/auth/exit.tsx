@@ -1,5 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import { removeHackneyToken } from '../../../lib/utils/googleAuth';
 import { removeAuthCookie } from '../../../lib/utils/users';
 
 const endpoint: NextApiHandler = async (
@@ -10,6 +11,7 @@ const endpoint: NextApiHandler = async (
     case 'GET':
       try {
         removeAuthCookie(res);
+        removeHackneyToken(res);
         res.status(StatusCodes.OK).json({ message: 'Sign out' });
       } catch (error) {
         console.error(error);

@@ -32,8 +32,8 @@ export default function CheckBoxList({
         </tr>
       </thead>
       <tbody className="govuk-table__body">
-        {data.map((info) => (
-          <tr className="govuk-table__row">
+        {data.map((info, index) => (
+          <tr key={index} className="govuk-table__row">
             <th scope="row" className="govuk-table__header">
               {info.title}
             </th>

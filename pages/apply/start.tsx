@@ -4,24 +4,17 @@ import { useRouter } from 'next/router';
 import { HeadingOne } from '../../components/content/headings';
 import Form from '../../components/form/form';
 import Layout from '../../components/layout/resident-layout';
-import { createApplication } from '../../lib/store/application';
-import {
-  useAppDispatch,
-  useAppSelector,
-  useAppStore,
-} from '../../lib/store/hooks';
+import { useAppDispatch } from '../../lib/store/hooks';
 import { updateBeforeFirstSave } from '../../lib/store/mainApplicant';
 import { FormID, getFormData } from '../../lib/utils/form-data';
 import processPhonenumber from '../../lib/utils/processPhonenumber';
 import ErrorSummary from '../../components/errors/error-summary';
 import { Errors } from '../../lib/types/errors';
 import { scrollToError } from '../../lib/utils/scroll';
-import { createVerifyCode } from '../../lib/store/auth';
 
 const ApplicationStartPage = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const store = useAppStore();
 
   const [userError, setUserError] = useState<string | null>(null);
 
@@ -41,19 +34,12 @@ const ApplicationStartPage = (): JSX.Element => {
             nationalInsuranceNumber: values.nationalInsuranceNumber,
           },
           contactInformation: {
-            emailAddress: values.emailAddress,
             phoneNumber: phone,
           },
         })
       );
 
-      dispatch(createApplication(store.getState().application)).then(
-        (action: any) => {
-          dispatch(createVerifyCode(action.payload));
-        }
-      );
-
-      router.push('/apply/verify');
+      router.push('/apply/agree-terms');
     } catch (error) {
       setUserError(Errors.GENERIC_ERROR);
       scrollToError();
@@ -66,7 +52,7 @@ const ApplicationStartPage = (): JSX.Element => {
       {userError && <ErrorSummary>{userError}</ErrorSummary>}
       <Form
         formData={getFormData(FormID.SIGN_UP_DETAILS)}
-        buttonText="Save and continue"
+        buttonText="Continue"
         onSubmit={signUp}
       />
     </Layout>

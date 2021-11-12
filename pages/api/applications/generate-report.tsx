@@ -4,7 +4,6 @@ import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { PaginatedApplicationListResponse } from '../../../domain/HousingApi';
 import { getApplications } from '../../../lib/gateways/applications-api';
 import { getAuth, getSession } from '../../../lib/utils/googleAuth';
-import { calculateBedroomsFromApplication } from '../../../lib/utils/bedroomCalculator';
 import { ApplicationStatus } from '../../../lib/types/application-status';
 
 const CSVColumns = [
@@ -143,8 +142,7 @@ function batchToCSV(page: PaginatedApplicationListResponse): CSVRow[] {
     )
     .map((result): CSVRow => {
       const bedroomNeed =
-        result.assessment?.bedroomNeed ??
-        calculateBedroomsFromApplication(result);
+        result.assessment?.bedroomNeed ?? result.calculatedBedroomNeed!;
       return {
         HousingRegisterRef: result.assessment?.biddingNumber ?? null,
         Title: result.mainApplicant?.person?.title ?? null,

@@ -100,7 +100,6 @@ export type ConditionalFormFieldOptionInput = {
   fieldName?: string;
   label?: string;
   display: boolean;
-  value: string;
 };
 
 export type FormFieldOption = {

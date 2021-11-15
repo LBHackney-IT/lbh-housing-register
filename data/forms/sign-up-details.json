@@ -81,7 +81,8 @@
                 "containerId": "self-describe-text-values",
                 "fieldId": "self-describe",
                 "fieldName": "genderDescription",
-                "label": "Please enter your self-description"
+                "label": "Please enter your self-description",
+                "initialValue": ""
               }
             }
           ]

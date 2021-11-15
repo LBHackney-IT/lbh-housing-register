@@ -14,6 +14,7 @@ interface FormValues {
   title: string | Person.TitleEnum;
   firstName: string;
   surname: string;
+  relationshipType: string;
   gender: string;
   genderDescription: string;
   dateOfBirth: string;
@@ -149,7 +150,6 @@ const genderProps: RadioConditionalProps = {
         fieldName: 'genderDescription',
         label: 'Please enter your self-description',
         display: true,
-        value: '',
       },
     },
   ],
@@ -216,7 +216,7 @@ const AddPersonForm = ({
           }
         ),
       gender: Yup.string().label('Gender').required(),
-      relationshipType: Yup.string(),
+      relationshipType: Yup.string().label('Relationship to you').required(),
       nationalInsuranceNumber: Yup.string()
         .label('National Insurance number')
         .required(),
@@ -261,9 +261,9 @@ const AddPersonForm = ({
             <Select
               label={'Relationship to you'}
               name={'relationshipType'}
-              options={relationshipOptions.map((relationship) => ({
-                label: relationship.label,
-                value: relationship.value,
+              options={relationshipOptions.map((relationshipType) => ({
+                label: relationshipType.label,
+                value: relationshipType.value,
               }))}
             />
           ) : null}

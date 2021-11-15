@@ -236,20 +236,16 @@ export default function MedicalDetail({
               {hasMedicalNeed && (
                 <DateInput
                   name={'dateFormRecieved'}
-                  label={'Date form recieved'}
+                  label={'Date form received'}
                 />
               )}
             </div>
           </div>
 
-          {values.dateFormRecieved && (
+          {hasMedicalNeed && values.dateFormRecieved && (
             <div className="govuk-grid-row">
               <div className="govuk-grid-column-one-third">
                 <HeadingThree content="Medical outcome" />
-                <Paragraph>
-                  To be completed by a medical officer after the health
-                  assessment has been conducted.
-                </Paragraph>
               </div>
               <div className="govuk-grid-column-two-thirds">
                 <DateInput name={'assessmentDate'} label={'Assessment Date'} />

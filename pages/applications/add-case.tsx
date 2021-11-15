@@ -10,6 +10,7 @@ import { Application } from '../../domain/HousingApi';
 import { createApplication } from '../../lib/gateways/internal-api';
 import {
   allFormSections,
+  getSectionData,
   generateInitialValues,
   generateQuestionArray,
 } from '../../lib/utils/adminHelpers';
@@ -17,7 +18,7 @@ import { INVALID_DATE } from '../../components/form/dateinput';
 import { scrollToTop } from '../../lib/utils/scroll';
 import * as Yup from 'yup';
 import ErrorSummary from '../../components/errors/error-summary';
-import { Errors } from '../../lib/types/errors';
+import { getFormData, FormID } from '../../lib/utils/form-data';
 
 const keysToIgnore = [
   'AGREEMENT',
@@ -26,6 +27,8 @@ const keysToIgnore = [
   'SIGN_UP_DETAILS',
   'DECLARATION',
 ];
+
+console.log(FormID);
 
 const sections = allFormSections(keysToIgnore);
 const initialValues = generateInitialValues(sections);
@@ -81,6 +84,15 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
     scrollToTop();
   };
 
+  console.log(FormID.PERSONAL_DETAILS);
+
+  const personalDetailsSection = getSectionData(FormID.PERSONAL_DETAILS);
+  const immigrationStatusSection = getSectionData(FormID.IMMIGRATION_STATUS);
+  const residentialStatusSection = getSectionData(FormID.RESIDENTIAL_STATUS);
+  const currentAccommodationSection = getSectionData(
+    FormID.CURRENT_ACCOMMODATION
+  );
+
   const currentDateTimestamp = Math.min(+new Date());
   const schema = Yup.object({
     personalDetails_title: Yup.string().label('Title').required(),
@@ -113,6 +125,8 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
       .required(),
   });
 
+  console.log(sections);
+
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="Group worktray">
@@ -136,14 +150,35 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
                   </ErrorSummary>
                 ) : null}
                 <Form>
-                  {sections.map((section, index) => (
+                  <AddCaseSection
+                    sectionHeading={personalDetailsSection.sectionHeading}
+                    sectionId={personalDetailsSection.sectionId}
+                    sectionData={personalDetailsSection.fields}
+                  />
+                  <AddCaseSection
+                    sectionHeading={immigrationStatusSection.sectionHeading}
+                    sectionId={immigrationStatusSection.sectionId}
+                    sectionData={immigrationStatusSection.fields}
+                  />
+                  <AddCaseSection
+                    sectionHeading={residentialStatusSection.sectionHeading}
+                    sectionId={residentialStatusSection.sectionId}
+                    sectionData={residentialStatusSection.fields}
+                  />
+                  <AddCaseSection
+                    sectionHeading={currentAccommodationSection.sectionHeading}
+                    sectionId={currentAccommodationSection.sectionId}
+                    sectionData={currentAccommodationSection.fields}
+                  />
+
+                  {/* {sections.map((section, index) => (
                     <AddCaseSection
                       key={index}
                       sectionHeading={section.sectionHeading}
                       sectionId={section.sectionId}
                       sectionData={section.fields}
                     />
-                  ))}
+                  ))} */}
 
                   <div className="c-flex__1 text-right">
                     <Button

@@ -30,6 +30,18 @@ export const allFormSections = (keysToIgnore: string[]) => {
   return sectionData;
 };
 
+export const getSectionData = (sectionId: FormID) => {
+  const section = getFormData(sectionId);
+  const stepsInSection = section.steps.flat();
+  const fieldsInSection = stepsInSection.map((step) => step.fields).flat();
+
+  return {
+    sectionHeading: section.heading || '',
+    sectionId: section.id || '',
+    fields: fieldsInSection,
+  };
+};
+
 export const generateInitialValues = (sections: SectionData[]) => {
   const allFieldNames = sections
     .map((section) =>

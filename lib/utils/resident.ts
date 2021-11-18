@@ -36,12 +36,13 @@ export const generateSlug = (input: string): string => {
  */
 export const getApplicationSectionsForResident = (
   isMainApplicant: boolean,
-  isOver18?: boolean
+  isOver18?: boolean,
+  isPartner?: boolean
 ): ApplicationSectionGroup[] => {
   if (isMainApplicant) {
     return getMainApplicantQuestions();
   } else {
-    return getOtherMemberQuestions(isOver18);
+    return getOtherMemberQuestions(isOver18, isPartner);
   }
 };
 
@@ -121,77 +122,101 @@ export const getMainApplicantQuestions = (): ApplicationSectionGroup[] => {
   ];
 };
 
+const partnerQuestions = [
+  {
+    heading: 'Identity',
+    sections: [
+      {
+        heading: 'Personal details',
+        id: FormID.PERSONAL_DETAILS,
+      },
+      {
+        heading: 'Immigration status',
+        id: FormID.IMMIGRATION_STATUS,
+      },
+    ],
+  },
+  {
+    heading: 'Health',
+    sections: [
+      {
+        heading: 'Medical needs',
+        id: FormID.MEDICAL_NEEDS,
+      },
+    ],
+  },
+  {
+    heading: 'Living situation',
+    sections: [
+      {
+        heading: 'Address history',
+        id: FormID.ADDRESS_HISTORY,
+      },
+    ],
+  },
+  {
+    heading: 'Money',
+    sections: [
+      {
+        heading: 'Employment',
+        id: FormID.EMPLOYMENT,
+      },
+    ],
+  },
+];
+
+const nonPartnerQuestions = [
+  {
+    heading: 'Identity',
+    sections: [
+      {
+        heading: 'Personal details',
+        id: FormID.PERSONAL_DETAILS,
+      },
+    ],
+  },
+  {
+    heading: 'Health',
+    sections: [
+      {
+        heading: 'Medical needs',
+        id: FormID.MEDICAL_NEEDS,
+      },
+    ],
+  },
+  {
+    heading: 'Living situation',
+    sections: [
+      {
+        heading: 'Address history',
+        id: FormID.ADDRESS_HISTORY,
+      },
+    ],
+  },
+  {
+    heading: 'Money',
+    sections: [
+      {
+        heading: 'Employment',
+        id: FormID.EMPLOYMENT,
+      },
+    ],
+  },
+];
+
+const under18Questions = nonPartnerQuestions.filter(
+  (category) => category.heading !== 'Money'
+);
+
 export const getOtherMemberQuestions = (
+  isPartner?: boolean,
   isOver18?: boolean
 ): ApplicationSectionGroup[] => {
-  if (isOver18) {
-    return [
-      {
-        heading: 'Identity',
-        sections: [
-          {
-            heading: 'Personal details',
-            id: FormID.PERSONAL_DETAILS,
-          },
-        ],
-      },
-      {
-        heading: 'Health',
-        sections: [
-          {
-            heading: 'Medical needs',
-            id: FormID.MEDICAL_NEEDS,
-          },
-        ],
-      },
-      {
-        heading: 'Living situation',
-        sections: [
-          {
-            heading: 'Address history',
-            id: FormID.ADDRESS_HISTORY,
-          },
-        ],
-      },
-      {
-        heading: 'Money',
-        sections: [
-          {
-            heading: 'Employment',
-            id: FormID.EMPLOYMENT,
-          },
-        ],
-      },
-    ];
+  if (isPartner) {
+    return partnerQuestions;
+  } else if (isOver18) {
+    return nonPartnerQuestions;
   } else {
-    return [
-      {
-        heading: 'Identity',
-        sections: [
-          {
-            heading: 'Personal details',
-            id: FormID.PERSONAL_DETAILS,
-          },
-        ],
-      },
-      {
-        heading: 'Health',
-        sections: [
-          {
-            heading: 'Medical needs',
-            id: FormID.MEDICAL_NEEDS,
-          },
-        ],
-      },
-      {
-        heading: 'Living situation',
-        sections: [
-          {
-            heading: 'Address history',
-            id: FormID.ADDRESS_HISTORY,
-          },
-        ],
-      },
-    ];
+    return under18Questions;
   }
 };

@@ -110,11 +110,12 @@ const UserSummary = (): JSX.Element => {
         <PersonalDetailsSummary currentResident={currentResident} />
       )}
 
+      {immigrationStatusCompleted && (
+        <ImmigrationStatusSummary currentResident={currentResident} />
+      )}
+
       {isMainApplicant && (
         <>
-          {immigrationStatusCompleted && (
-            <ImmigrationStatusSummary currentResident={currentResident} />
-          )}
           {residentialStatusCompleted && (
             <ResidentialStatusSummary currentResident={currentResident} />
           )}

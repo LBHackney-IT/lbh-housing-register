@@ -187,9 +187,7 @@ export default function MedicalDetail({
         };
         const request: Application = {
           id: data.id,
-          otherMembers: {
-            ...data.otherMembers,
-          },
+          otherMembers: data.otherMembers,
         };
         updateApplication(request);
       } else {

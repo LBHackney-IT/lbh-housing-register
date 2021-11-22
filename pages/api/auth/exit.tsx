@@ -13,9 +13,9 @@ const endpoint: NextApiHandler = async (
     case 'GET':
       try {
         if (isAdminUser) {
-          await removeHackneyToken(res);
+          removeHackneyToken(res);
         } else {
-          await removeAuthCookie(res);
+          removeAuthCookie(res);
         }
         res.status(StatusCodes.OK).json({ message: 'Sign out' });
       } catch (error) {

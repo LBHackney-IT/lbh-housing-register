@@ -1,17 +1,22 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { removeHackneyToken } from '../../../lib/utils/googleAuth';
+import { removeHackneyToken, getSession } from '../../../lib/utils/googleAuth';
 import { removeAuthCookie } from '../../../lib/utils/users';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
+  const isAdminUser = !!getSession(req);
+
   switch (req.method) {
     case 'GET':
       try {
-        removeAuthCookie(res);
-        removeHackneyToken(res);
+        if (isAdminUser) {
+          removeHackneyToken(res);
+        } else {
+          removeAuthCookie(res);
+        }
         res.status(StatusCodes.OK).json({ message: 'Sign out' });
       } catch (error) {
         console.error(error);

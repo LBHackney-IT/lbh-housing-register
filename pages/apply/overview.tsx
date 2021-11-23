@@ -1,4 +1,5 @@
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
+import Link from 'next/link';
 import { ButtonLink } from '../../components/button';
 import { HeadingOne } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
@@ -8,14 +9,16 @@ import SummaryList, {
   SummaryListKey as Key,
   SummaryListRow as Row,
 } from '../../components/summary-list';
-import Tag from '../../components/tag';
-import ApplicantName from '../../components/application/ApplicantName';
+// import Tag from '../../components/tag';
+
+import ApplicantSummary from '../../components/application/ApplicantSummary';
 import { Applicant } from '../../domain/HousingApi';
 import { useAppSelector } from '../../lib/store/hooks';
-import { applicationStepsRemaining } from '../../lib/utils/resident';
+import { applicationSteps } from '../../lib/utils/resident';
 import withApplication from '../../lib/hoc/withApplication';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
+  const [applicantsCompleted, setApplicantsCompleted] = useState(0);
   const breadcrumbs = [
     {
       href: '/apply/overview',
@@ -37,23 +40,32 @@ const ApplicationPersonsOverview = (): JSX.Element => {
 
   return (
     <Layout pageName="Application overview" breadcrumbs={breadcrumbs}>
-      <HeadingOne content="Tasks to complete" />
+      <HeadingOne content="Provide information about your household" />
+      <Paragraph>
+        You’ve completed information for {applicantsCompleted} of{' '}
+        {applicants.length} people.
+      </Paragraph>
 
       <SummaryList>
         {applicants.map((applicant, index) => {
-          const tasksRemaining = applicationStepsRemaining(
+          const tasks = applicationSteps(
             applicant,
             applicant === application.mainApplicant
           );
           return (
             <Row key={index} verticalAlign="middle">
               <Key>
-                <ApplicantName
+                <ApplicantSummary
                   applicant={applicant}
                   isMainApplicant={applicant === application.mainApplicant}
+                  mainApplicantCompleted={
+                    applicationSteps(mainResident, true).remaining === 0
+                  }
+                  applicantNumber={index + 1}
+                  tasks={tasks}
                 />
               </Key>
-              <Actions>
+              {/* <Actions>
                 {tasksRemaining == 0 ? (
                   <Tag content="Completed" variant="green" />
                 ) : (
@@ -63,22 +75,24 @@ const ApplicationPersonsOverview = (): JSX.Element => {
                     } to do`}
                   />
                 )}
-              </Actions>
+              </Actions> */}
             </Row>
           );
         })}
       </SummaryList>
 
-      <ButtonLink href="/apply/household" secondary={true}>
-        Edit my household
-      </ButtonLink>
+      <Paragraph>
+        <Link href="/apply/household">
+          <a className="lbh-body-s lbh-link lbh-link--no-visited-state ">
+            Edit my household
+          </a>
+        </Link>
+      </Paragraph>
 
       {applicants.every(
         (applicant) =>
-          applicationStepsRemaining(
-            applicant,
-            applicant === application.mainApplicant
-          ) == 0
+          applicationSteps(applicant, applicant === application.mainApplicant)
+            .remaining == 0
       ) && (
         <>
           <Paragraph>

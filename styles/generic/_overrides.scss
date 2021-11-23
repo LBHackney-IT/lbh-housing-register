@@ -73,3 +73,30 @@ body {
 .lbh-link--announcement:visited {
   color: #0b0c0c;
 }
+
+.applicant-summary {
+  display: flex;
+
+  .applicant-summary__number {
+    margin-right: 1em;
+    color: #025ea6;
+  }
+
+  .applicant-summary__action {
+    margin-top: 0;
+    font-size: 1rem;
+    line-height: 1.75em;
+    font-weight: normal;
+  }
+
+  .applicant-summary__action--done {
+    color: #00664f;
+  }
+  .applicant-summary__action--inactive {
+    color: #525a5b;
+  }
+
+  .applicant-summary__icon {
+    margin-right: 0.5em;
+  }
+}

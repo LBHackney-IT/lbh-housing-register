@@ -43,8 +43,14 @@ export function getSession(
   }
 }
 
-export const signOut = (): void => {
-  // TODO: clear cookie
+export const removeHackneyToken = (res: any): void => {
+  const jwtCookie = cookie.serialize('hackneyToken', '', {
+    maxAge: -1,
+    domain: '.hackney.gov.uk',
+    path: '/',
+  });
+
+  res.setHeader('Set-Cookie', jwtCookie);
 };
 
 export const getPermissions = (user: HackneyGoogleUser): Permissions => {

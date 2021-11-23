@@ -26,6 +26,7 @@ const AddPersonToApplication = (): JSX.Element => {
     title: '',
     firstName: '',
     surname: '',
+    relationshipType: '',
     gender: '',
     genderDescription: '',
     dateOfBirth: '',

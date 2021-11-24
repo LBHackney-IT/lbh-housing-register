@@ -1,16 +1,14 @@
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 import Link from 'next/link';
 import { ButtonLink } from '../../components/button';
 import { HeadingOne } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
 import Layout from '../../components/layout/resident-layout';
-import SummaryList, {
-  SummaryListActions as Actions,
+import {
+  SummaryListSpaced,
   SummaryListKey as Key,
   SummaryListRow as Row,
 } from '../../components/summary-list';
-// import Tag from '../../components/tag';
-
 import ApplicantSummary from '../../components/application/ApplicantSummary';
 import { Applicant } from '../../domain/HousingApi';
 import { useAppSelector } from '../../lib/store/hooks';
@@ -18,7 +16,6 @@ import { applicationSteps } from '../../lib/utils/resident';
 import withApplication from '../../lib/hoc/withApplication';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
-  const [applicantsCompleted, setApplicantsCompleted] = useState(0);
   const breadcrumbs = [
     {
       href: '/apply/overview',
@@ -38,20 +35,29 @@ const ApplicationPersonsOverview = (): JSX.Element => {
       .flat()
   );
 
+  const applicantsCompletedCount = applicants.filter((applicant) => {
+    const tasks = applicationSteps(
+      applicant,
+      applicant === application.mainApplicant
+    );
+    return tasks.remaining === 0;
+  }).length;
+
   return (
     <Layout pageName="Application overview" breadcrumbs={breadcrumbs}>
       <HeadingOne content="Provide information about your household" />
-      <Paragraph>
-        You’ve completed information for {applicantsCompleted} of{' '}
+      <p className="lbh-body lbh-body-l lbh-body--grey">
+        You've completed information for {applicantsCompletedCount} of{' '}
         {applicants.length} people.
-      </Paragraph>
+      </p>
 
-      <SummaryList>
+      <SummaryListSpaced>
         {applicants.map((applicant, index) => {
           const tasks = applicationSteps(
             applicant,
             applicant === application.mainApplicant
           );
+
           return (
             <Row key={index} verticalAlign="middle">
               <Key>
@@ -79,7 +85,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
             </Row>
           );
         })}
-      </SummaryList>
+      </SummaryListSpaced>
 
       <Paragraph>
         <Link href="/apply/household">

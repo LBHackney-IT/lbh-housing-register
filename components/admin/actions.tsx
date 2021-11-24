@@ -185,7 +185,27 @@ export default function Actions({ data }: PageProps): JSX.Element {
       .oneOf(reasonOptions.map(({ value }) => value)),
     applicationDate: Yup.string().notOneOf([INVALID_DATE], 'Invalid date'),
     informationReceived: Yup.string().notOneOf([INVALID_DATE], 'Invalid date'),
-    bedroomNeed: Yup.number().label('Bedroom need').min(1),
+    bedroomNeed: Yup.number()
+      .label('Bedroom need')
+      .test(
+        'aboveZero',
+        'Bedroom need should be a number greater than 0',
+        (value, testContext) => {
+          if (typeof value !== 'number') {
+            return false;
+          }
+          if (
+            (testContext.parent.status === ApplicationStatus.ACTIVE &&
+              value < 1) ||
+            (testContext.parent.status ===
+              ApplicationStatus.ACTIVE_UNDER_APPEAL &&
+              value < 1)
+          ) {
+            return false;
+          }
+          return true;
+        }
+      ),
     band: Yup.string(),
     biddingNumberType: Yup.string().oneOf(['generate', 'manual']),
     biddingNumber: Yup.string().matches(

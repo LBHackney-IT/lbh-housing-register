@@ -34,48 +34,48 @@ export default function AddCaseSection({
 
     let inputField: JSX.Element = <></>;
 
-    if (inputType === 'text') {
-      if (field.name === 'address-finder') {
-        inputField = (
-          <>
-            <Input
-              name={`${generatedInputName}_line1`}
-              label={
-                <>
-                  Building and street{' '}
-                  <span className="govuk-visually-hidden">line 1 of 2</span>
-                </>
-              }
-            />
-            <Input
-              name={`${generatedInputName}_line2`}
-              label={
-                <span className="govuk-visually-hidden">
-                  Building and street line 2 of 2
-                </span>
-              }
-            />
-            <Input
-              name={`${generatedInputName}_town`}
-              label={'Town or city'}
-              className={'govuk-!-width-two-thirds'}
-            />
-            <Input
-              name={`${generatedInputName}_county`}
-              label={'County'}
-              className={'govuk-!-width-two-thirds'}
-            />
-            <Input
-              name={`${generatedInputName}_postcode`}
-              label={'Postcode'}
-              className={'govuk-input--width-10'}
-            />
-          </>
-        );
-      } else {
-        inputField = <Input name={generatedInputName} />;
-      }
-    }
+    // if (inputType === 'text') {
+    //   if (field.name === 'address-finder') {
+    //     inputField = (
+    //       <>
+    //         <Input
+    //           name={`${generatedInputName}_line1`}
+    //           label={
+    //             <>
+    //               Building and street{' '}
+    //               <span className="govuk-visually-hidden">line 1 of 2</span>
+    //             </>
+    //           }
+    //         />
+    //         <Input
+    //           name={`${generatedInputName}_line2`}
+    //           label={
+    //             <span className="govuk-visually-hidden">
+    //               Building and street line 2 of 2
+    //             </span>
+    //           }
+    //         />
+    //         <Input
+    //           name={`${generatedInputName}_town`}
+    //           label={'Town or city'}
+    //           className={'govuk-!-width-two-thirds'}
+    //         />
+    //         <Input
+    //           name={`${generatedInputName}_county`}
+    //           label={'County'}
+    //           className={'govuk-!-width-two-thirds'}
+    //         />
+    //         <Input
+    //           name={`${generatedInputName}_postcode`}
+    //           label={'Postcode'}
+    //           className={'govuk-input--width-10'}
+    //         />
+    //       </>
+    //     );
+    //   } else {
+    //     inputField = <Input name={generatedInputName} />;
+    //   }
+    // }
 
     if (inputType === 'textarea') {
       inputField = (

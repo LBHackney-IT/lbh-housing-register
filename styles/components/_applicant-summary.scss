@@ -1,0 +1,36 @@
+.lbh-applicant-summary {
+  display: flex;
+
+  .lbh-applicant-summary__number {
+    margin-right: 0.8em;
+    color: #025ea6;
+  }
+
+  .lbh-applicant-summary__action {
+    margin-top: 0;
+    font-size: 1rem;
+    line-height: 1.75em;
+    font-weight: 600;
+  }
+
+  .lbh-applicant-summary__icon {
+    margin-right: 0.3em;
+  }
+}
+
+.lbh-applicant-summary--done {
+  .lbh-applicant-summary__action {
+    color: #00664f;
+  }
+  .lbh-applicant-summary__number,
+  .lbh-applicant-summary__name {
+    color: #0b0c0c;
+  }
+}
+.lbh-applicant-summary--inactive {
+  .lbh-applicant-summary__number,
+  .lbh-applicant-summary__action,
+  .lbh-applicant-summary__name {
+    color: #525a5b;
+  }
+}

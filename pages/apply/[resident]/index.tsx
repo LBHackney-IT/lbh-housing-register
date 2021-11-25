@@ -17,7 +17,7 @@ import {
 import { useAppSelector } from '../../../lib/store/hooks';
 import { removeApplicant } from '../../../lib/store/otherMembers';
 import {
-  applicationStepsRemaining,
+  applicationSteps,
   getApplicationSectionsForResident,
 } from '../../../lib/utils/resident';
 import Custom404 from '../../404';
@@ -55,7 +55,7 @@ const ResidentIndex = (): JSX.Element => {
     currentResident.person.relationshipType === 'partner'
   );
 
-  const tasksRemaining = applicationStepsRemaining(
+  const tasks = applicationSteps(
     currentResident,
     currentResident === mainResident
   );
@@ -153,7 +153,7 @@ const ResidentIndex = (): JSX.Element => {
           </SummaryList>
         </div>
       ))}
-      {tasksRemaining == 0 && (
+      {tasks.remaining == 0 && (
         <ButtonLink href={`/apply/${currentResident.person?.id}/summary/`}>
           Check answers
         </ButtonLink>

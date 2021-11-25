@@ -19,19 +19,19 @@ export default function ApplicantSummary({
     <>
       {isMainApplicant || mainApplicantCompleted ? (
         <div
-          className={`applicant-summary ${
-            tasks.remaining === 0 ? 'applicant-summary--done' : ''
+          className={`lbh-applicant-summary ${
+            tasks.remaining === 0 ? 'lbh-applicant-summary--done' : ''
           }`}
         >
-          <div className="applicant-summary__number lbh-body-l lbh-!-font-weight-bold">
+          <div className="lbh-applicant-summary__number lbh-body-l lbh-!-font-weight-bold">
             {applicantNumber}.
           </div>
           <span className="lbh-!-margin-top-0">
             <Link href={`/apply/${applicant.person?.id}`}>
-              <a className="applicant-summary__name lbh-link lbh-link--no-visited-state lbh-body-l lbh-!-font-weight-bold lbh-!-margin-top-0">
+              <a className="lbh-applicant-summary__name lbh-link lbh-link--no-visited-state lbh-body-l lbh-!-font-weight-bold lbh-!-margin-top-0">
                 {`${applicant.person?.firstName} ${applicant.person?.surname}`}
                 {tasks.remaining !== 0 ? (
-                  <div className="applicant-summary__action">
+                  <div className="lbh-applicant-summary__action">
                     {tasks.total === tasks.remaining
                       ? 'Start section'
                       : 'Resume section'}
@@ -40,9 +40,9 @@ export default function ApplicantSummary({
               </a>
             </Link>
             {tasks.remaining === 0 ? (
-              <div className="applicant-summary__action applicant-summary__action--done">
+              <div className="lbh-applicant-summary__action lbh-applicant-summary__action--done">
                 <svg
-                  className="applicant-summary__icon"
+                  className="lbh-applicant-summary__icon"
                   width="16"
                   height="12"
                   viewBox="0 0 16 12"
@@ -62,13 +62,13 @@ export default function ApplicantSummary({
           </span>
         </div>
       ) : (
-        <div className="applicant-summary applicant-summary--inactive">
-          <div className="applicant-summary__number lbh-body-l lbh-!-font-weight-bold">
+        <div className="lbh-applicant-summary lbh-applicant-summary--inactive">
+          <div className="lbh-applicant-summary__number lbh-body-l lbh-!-font-weight-bold">
             {applicantNumber}.
           </div>
           <span className="lbh-!-margin-top-0">
-            <div className="applicant-summary__name lbh-body-l lbh-!-font-weight-bold lbh-!-margin-top-0">{`${applicant.person?.firstName} ${applicant.person?.surname}`}</div>
-            <div className="applicant-summary__action applicant-summary__action--inactive">
+            <div className="lbh-applicant-summary__name lbh-body-l lbh-!-font-weight-bold lbh-!-margin-top-0">{`${applicant.person?.firstName} ${applicant.person?.surname}`}</div>
+            <div className="lbh-applicant-summary__action lbh-applicant-summary__action--inactive">
               Can't start yet
             </div>
           </span>

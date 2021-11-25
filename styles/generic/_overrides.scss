@@ -62,11 +62,6 @@ body {
   padding-top: 2rem;
   padding-bottom: 5rem;
 }
-.lbh-footer {
-  background-color: #f8f8f8;
-  padding-top: 2rem;
-  padding-bottom: 5rem;
-}
 
 .lbh-input--large {
   height: 50px;
@@ -76,41 +71,4 @@ body {
 .lbh-link--announcement:link,
 .lbh-link--announcement:visited {
   color: #0b0c0c;
-}
-
-.applicant-summary {
-  display: flex;
-
-  .applicant-summary__number {
-    margin-right: 0.8em;
-    color: #025ea6;
-  }
-
-  .applicant-summary__action {
-    margin-top: 0;
-    font-size: 1rem;
-    line-height: 1.75em;
-    font-weight: 600;
-  }
-
-  .applicant-summary__icon {
-    margin-right: 0.3em;
-  }
-}
-
-.applicant-summary--done {
-  .applicant-summary__action {
-    color: #00664f;
-  }
-  .applicant-summary__number,
-  .applicant-summary__name {
-    color: #0b0c0c;
-  }
-}
-.applicant-summary--inactive {
-  .applicant-summary__number,
-  .applicant-summary__action,
-  .applicant-summary__name {
-    color: #525a5b;
-  }
 }

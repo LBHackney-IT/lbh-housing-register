@@ -9,7 +9,10 @@ import {
 import Layout from '../../../../components/layout/staff-layout';
 import { Application } from '../../../../domain/HousingApi';
 import { UserContext } from '../../../../lib/contexts/user-context';
-import { getApplication, getApplicationHistory } from '../../../../lib/gateways/applications-api';
+import {
+  getApplication,
+  getApplicationHistory,
+} from '../../../../lib/gateways/applications-api';
 import {
   canViewSensitiveApplication,
   getRedirect,
@@ -40,13 +43,13 @@ import { ActivityHistoryPagedResult } from '../../../../domain/ActivityHistoryAp
 export interface PageProps {
   user: HackneyGoogleUserWithPermissions;
   data: Application;
-  history : ActivityHistoryPagedResult;
+  history: ActivityHistoryPagedResult;
 }
 
 export default function ApplicationPage({
   user,
   data,
-  history
+  history,
 }: PageProps): JSX.Element | null {
   if (!data.id) return <Custom404 />;
 
@@ -183,8 +186,7 @@ export default function ApplicationPage({
             )}
 
             {activeNavItem === 'history' && (
-              <ApplicationHistory 
-                history={history} />
+              <ApplicationHistory history={history} />
             )}
 
             {activeNavItem === 'assessment' && <Actions data={data} />}
@@ -217,7 +219,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       notFound: true,
     };
   }
-  
+
   const history = await getApplicationHistory(id, context.req);
 
   return { props: { user, data, history } };

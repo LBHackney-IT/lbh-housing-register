@@ -188,8 +188,7 @@ export const getApplicationHistory = async (
 ): Promise<ActivityHistoryPagedResult | null> => {
   try {
     const url = `${process.env.ACTIVITY_HISTORY_API}/activityhistory?targetId=${id}&pageSize=100`;
-    
-    console.log(url)
+
     const cookies = cookie.parse(req.headers.cookie ?? '');
     const parsedToken = cookies['hackneyToken'];
 

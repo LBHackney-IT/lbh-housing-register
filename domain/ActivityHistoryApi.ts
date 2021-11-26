@@ -85,13 +85,13 @@ export class ActivityEntity implements IActivityEntity {
   stringToObj(path: string, value: any, obj: any) {
     const parts = path.split('.');
     const last = parts.pop();
-    
+
     let part;
     while ((part = parts.shift())) {
       if (typeof obj[part] != 'object') obj[part] = {};
       obj = obj[part]; // update "pointer"
     }
-    
+
     obj[last!] = value;
   }
 }

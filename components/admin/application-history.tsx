@@ -19,17 +19,17 @@ export default function ApplicationHistory({
 }: ActivityHistoryPageProps): JSX.Element | null {
   const listItems = history
     ? history.results.map((historyItem) => {
-      const heading = renderHeading(historyItem);
-      const createdAt = getFormattedDate(historyItem.createdAt);
+        const heading = renderHeading(historyItem);
+        const createdAt = getFormattedDate(historyItem.createdAt);
 
-      return (
-        <li key={historyItem.id} className="lbh-body-xs">
-          <strong>{heading}</strong>
-          <br></br>
-          {createdAt}
-        </li>
-      );
-    })
+        return (
+          <li key={historyItem.id} className="lbh-body-xs">
+            <strong>{heading}</strong>
+            <br></br>
+            {createdAt}
+          </li>
+        );
+      })
     : null;
 
   return (

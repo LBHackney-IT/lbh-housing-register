@@ -14,6 +14,7 @@ import {
   getSectionData,
   generateInitialValues,
   generateQuestionArray,
+  Address,
 } from '../../lib/utils/adminHelpers';
 import {
   SummaryListNoBorder,
@@ -31,6 +32,7 @@ import ErrorSummary from '../../components/errors/error-summary';
 import { getFormData, FormID } from '../../lib/utils/form-data';
 import { HeadingOne, HeadingThree } from '../../components/content/headings';
 import { ApplicationStatus } from '../../lib/types/application-status';
+import yourSituation from '../apply/[resident]/your-situation';
 
 const keysToIgnore = [
   'AGREEMENT',
@@ -48,14 +50,6 @@ const initialValues = generateInitialValues(sections);
 interface PageProps {
   user: HackneyGoogleUser;
   data: Application;
-}
-
-interface Address {
-  addressLine1: string;
-  addressLine2: string;
-  addressTownCity: string;
-  addressCounty: string;
-  addressPostcode: string;
 }
 
 const emptyAddress = {
@@ -81,7 +75,8 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
   const onSubmit = (values: FormikValues) => {
     // console.log('Formik values: ', values);
 
-    const questionValues = generateQuestionArray(values);
+    const questionValues = generateQuestionArray(values, addresses);
+    console.log('Question values: ', questionValues);
 
     // status: ApplicationStatus.MANUAL_DRAFT,
     const request: Application = {
@@ -128,6 +123,18 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
   const currentAccommodationSection = getSectionData(
     FormID.CURRENT_ACCOMMODATION
   );
+
+  const armedForcesSection = getSectionData(FormID.SITUATION_ARMED_FORCES);
+  const homelessnessSection = getSectionData(FormID.HOMELESSNESS);
+  const propertyOwnwershipSection = getSectionData(FormID.PROPERTY_OWNERSHIP);
+  const soldPropertySection = getSectionData(FormID.SOLD_PROPERTY);
+  const arrearsSection = getSectionData(FormID.ARREARS);
+  const breachOfTenancySection = getSectionData(FormID.BREACH_OF_TENANCY);
+  const legalRestrictionsSection = getSectionData(FormID.LEGAL_RESTRICTIONS);
+  const unspentConvictionsSection = getSectionData(FormID.UNSPENT_CONVICTIONS);
+
+  const employmentSection = getSectionData(FormID.EMPLOYMENT);
+  const incomeSavingsSection = getSectionData(FormID.INCOME_SAVINGS);
 
   const currentDateTimestamp = Math.min(+new Date());
   const schema = Yup.object({
@@ -255,11 +262,6 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
                     sectionId={residentialStatusSection.sectionId}
                     sectionData={residentialStatusSection.fields}
                   />
-                  <AddCaseSection
-                    sectionHeading={currentAccommodationSection.sectionHeading}
-                    sectionId={currentAccommodationSection.sectionId}
-                    sectionData={currentAccommodationSection.fields}
-                  />
 
                   {/* Address history */}
                   {/* addressHistory_addressFinder */}
@@ -274,7 +276,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
                       </SummaryListValue>
                       <SummaryListActions wideActions={true}>
                         {addresses.map((address, index) => (
-                          <FormGroup>
+                          <FormGroup key={index}>
                             {index === 0 ? (
                               <HeadingThree content="Current address" />
                             ) : null}
@@ -414,6 +416,65 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
                       <Button onClick={saveAddress}>Save address</Button>
                     </>
                   </Dialog>
+
+                  <AddCaseSection
+                    sectionHeading={currentAccommodationSection.sectionHeading}
+                    sectionId={currentAccommodationSection.sectionId}
+                    sectionData={currentAccommodationSection.fields}
+                  />
+
+                  {/* Your situation */}
+                  <AddCaseSection
+                    sectionHeading={armedForcesSection.sectionHeading}
+                    sectionId={armedForcesSection.sectionId}
+                    sectionData={armedForcesSection.fields}
+                  />
+                  <AddCaseSection
+                    sectionHeading={homelessnessSection.sectionHeading}
+                    sectionId={homelessnessSection.sectionId}
+                    sectionData={homelessnessSection.fields}
+                  />
+                  <AddCaseSection
+                    sectionHeading={propertyOwnwershipSection.sectionHeading}
+                    sectionId={propertyOwnwershipSection.sectionId}
+                    sectionData={propertyOwnwershipSection.fields}
+                  />
+                  <AddCaseSection
+                    sectionHeading={soldPropertySection.sectionHeading}
+                    sectionId={soldPropertySection.sectionId}
+                    sectionData={soldPropertySection.fields}
+                  />
+                  <AddCaseSection
+                    sectionHeading={arrearsSection.sectionHeading}
+                    sectionId={arrearsSection.sectionId}
+                    sectionData={arrearsSection.fields}
+                  />
+                  <AddCaseSection
+                    sectionHeading={breachOfTenancySection.sectionHeading}
+                    sectionId={breachOfTenancySection.sectionId}
+                    sectionData={breachOfTenancySection.fields}
+                  />
+                  <AddCaseSection
+                    sectionHeading={legalRestrictionsSection.sectionHeading}
+                    sectionId={legalRestrictionsSection.sectionId}
+                    sectionData={legalRestrictionsSection.fields}
+                  />
+                  <AddCaseSection
+                    sectionHeading={unspentConvictionsSection.sectionHeading}
+                    sectionId={unspentConvictionsSection.sectionId}
+                    sectionData={unspentConvictionsSection.fields}
+                  />
+
+                  <AddCaseSection
+                    sectionHeading={employmentSection.sectionHeading}
+                    sectionId={employmentSection.sectionId}
+                    sectionData={employmentSection.fields}
+                  />
+                  <AddCaseSection
+                    sectionHeading={incomeSavingsSection.sectionHeading}
+                    sectionId={incomeSavingsSection.sectionId}
+                    sectionData={incomeSavingsSection.fields}
+                  />
 
                   {/* {sections.map((section, index) => (
                     <AddCaseSection

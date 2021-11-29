@@ -75,6 +75,12 @@ export default function ApplicationHomePage(): JSX.Element {
           <p className="lbh-body-m lbh-!-margin-top-0">
             An emergency line operates outside these hours.
           </p>
+          <p className="lbh-body-m">
+            If you are at risk of domestic abuse, gang violence or homelessness,
+            please{' '}
+            <a href="https://forms.gle/riaWcWbAY1j6uszR7">complete this form</a>{' '}
+            and we will contact you within 24 hours.
+          </p>
         </Dialog>
 
         <HeadingTwo content="What happens next" />

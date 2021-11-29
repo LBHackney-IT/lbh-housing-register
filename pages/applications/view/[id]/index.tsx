@@ -6,6 +6,7 @@ import {
   HeadingOne,
   HeadingThree,
 } from '../../../../components/content/headings';
+import Button from '../../../../components/button';
 import Layout from '../../../../components/layout/staff-layout';
 import { Application } from '../../../../domain/HousingApi';
 import { UserContext } from '../../../../lib/contexts/user-context';
@@ -102,13 +103,18 @@ export default function ApplicationPage({
                       applicationId={data.id}
                     />
                   )}
-                  {data.otherMembers && data.otherMembers.length > 0 && (
+                  {data.otherMembers && data.otherMembers.length > 0 ? (
                     <OtherMembers
                       heading="Other household members"
                       others={data.otherMembers}
                       applicationId={data.id}
                     />
+                  ) : (
+                    <HeadingThree content="Other household members" />
                   )}
+                  <Button onClick={() => {}} secondary={true}>
+                    + Add household member
+                  </Button>
                 </div>
                 <div className="govuk-grid-column-one-third">
                   <HeadingThree content="Case details" />

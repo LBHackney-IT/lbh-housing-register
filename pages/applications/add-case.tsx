@@ -5,7 +5,6 @@ import { UserContext } from '../../lib/contexts/user-context';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { Form, Formik, FormikValues, FormikErrors } from 'formik';
 import Button from '../../components/button';
-import Paragraph from '../../components/content/paragraph';
 import AddCaseSection from '../../components/admin/AddCaseSection';
 import { Application } from '../../domain/HousingApi';
 import { createApplication } from '../../lib/gateways/internal-api';
@@ -16,25 +15,16 @@ import {
   generateQuestionArray,
   Address,
 } from '../../lib/utils/adminHelpers';
-import {
-  SummaryListNoBorder,
-  SummaryListActions,
-  SummaryListRow,
-  SummaryListKey,
-  SummaryListValue,
-} from '../../components/summary-list';
 import { INVALID_DATE } from '../../components/form/dateinput';
-import FormGroup from '../../components/form/form-group';
-import Dialog from '../../components/dialog';
 import { scrollToTop } from '../../lib/utils/scroll';
 import * as Yup from 'yup';
 import ErrorSummary from '../../components/errors/error-summary';
-import { getFormData, FormID } from '../../lib/utils/form-data';
-import { HeadingOne, HeadingThree } from '../../components/content/headings';
+import { FormID } from '../../lib/utils/form-data';
+import { HeadingOne } from '../../components/content/headings';
 import { ApplicationStatus } from '../../lib/types/application-status';
-import yourSituation from '../apply/[resident]/your-situation';
+import AddCaseAddAddress from '../../components/admin/AddCaseAddress';
 
-const keysToIgnore = [
+const keysToOmit = [
   'AGREEMENT',
   'SIGN_IN',
   'SIGN_IN_VERIFY',
@@ -42,7 +32,7 @@ const keysToIgnore = [
   'DECLARATION',
 ];
 
-const sections = allFormSections(keysToIgnore);
+const sections = allFormSections(keysToOmit);
 const initialValues = generateInitialValues(sections);
 
 interface PageProps {
@@ -53,9 +43,9 @@ interface PageProps {
 const emptyAddress = {
   addressLine1: '',
   addressLine2: '',
-  addressTownCity: '',
-  addressCounty: '',
-  addressPostcode: '',
+  addressLine3: '',
+  addressLine4: '',
+  postcode: '',
 };
 
 export default function AddCasePage({ user }: PageProps): JSX.Element {
@@ -63,7 +53,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const [addressDialogOpen, setAddressDialogOpen] = useState(false);
-  const [addressToSave, setAddressToSave] = useState({
+  const [addressInDialog, setAddressInDialog] = useState({
     address: emptyAddress as Address,
     isEditing: false,
   });
@@ -170,7 +160,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
 
   const addAddress = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    setAddressToSave({
+    setAddressInDialog({
       address: emptyAddress,
       isEditing: false,
     });
@@ -178,7 +168,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
   };
 
   const editAddress = (addressIndex: number) => {
-    setAddressToSave({
+    setAddressInDialog({
       address: addresses[addressIndex],
       isEditing: true,
     });
@@ -187,12 +177,12 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
   };
 
   const saveAddress = () => {
-    if (addressToSave.isEditing) {
+    if (addressInDialog.isEditing) {
       const newAddresses = [...addresses];
-      newAddresses[editAddressIndex] = addressToSave.address;
+      newAddresses[editAddressIndex] = addressInDialog.address;
       setAddresses(newAddresses);
     } else {
-      setAddresses([...addresses, addressToSave.address]);
+      setAddresses([...addresses, addressInDialog.address]);
     }
 
     setAddressDialogOpen(false);
@@ -200,10 +190,10 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setAddressToSave({
-      ...addressToSave,
+    setAddressInDialog({
+      ...addressInDialog,
       address: {
-        ...addressToSave.address,
+        ...addressInDialog.address,
         [name]: value,
       },
     });
@@ -263,159 +253,17 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
                     sectionData={residentialStatusSection.fields}
                   />
 
-                  {/* Address history */}
-                  {/* addressHistory_addressFinder */}
-
-                  <SummaryListNoBorder>
-                    <SummaryListRow>
-                      <SummaryListKey>Address history</SummaryListKey>
-                      <SummaryListValue>
-                        <label htmlFor="addressHistory_addressFinder">
-                          Address history
-                        </label>
-                      </SummaryListValue>
-                      <SummaryListActions wideActions={true}>
-                        {addresses.map((address, index) => (
-                          <FormGroup key={index}>
-                            {index === 0 ? (
-                              <HeadingThree content="Current address" />
-                            ) : null}
-                            {index === 1 ? (
-                              <HeadingThree content="Previous addresses" />
-                            ) : null}
-                            <Paragraph>
-                              {address.addressLine1}
-                              <br />
-                              {address.addressLine2 ? (
-                                <>
-                                  address.addressLine2
-                                  <br />
-                                </>
-                              ) : null}
-
-                              {address.addressTownCity}
-                              <br />
-                              {address.addressCounty}
-                              <br />
-                              {address.addressPostcode}
-                            </Paragraph>
-                            <a
-                              className="lbh-link"
-                              href="#edit"
-                              onClick={() => editAddress(index)}
-                            >
-                              Edit
-                            </a>{' '}
-                            <a
-                              className="lbh-link"
-                              href="#delete"
-                              onClick={() => deleteAddress(index)}
-                            >
-                              Delete
-                            </a>
-                          </FormGroup>
-                        ))}
-                        <button
-                          className={`govuk-button lbh-button govuk-secondary lbh-button--secondary ${
-                            addresses.length === 0
-                              ? 'lbh-!-margin-top-0 '
-                              : 'govuk-secondary lbh-button--secondary'
-                          }`}
-                          onClick={addAddress}
-                        >
-                          Add address
-                        </button>
-                      </SummaryListActions>
-                    </SummaryListRow>
-                  </SummaryListNoBorder>
-
-                  <Dialog
-                    isOpen={addressDialogOpen}
-                    title={`${
-                      addressToSave.isEditing ? 'Edit' : 'Add'
-                    } address`}
-                    onCancel={() => setAddressDialogOpen(false)}
-                    onCancelText="Close"
-                  >
-                    <>
-                      <FormGroup>
-                        <label
-                          className="govuk-label lbh-label"
-                          htmlFor="addressLine1"
-                        >
-                          Building and street
-                        </label>
-                        <input
-                          className="govuk-input lbh-input govuk-!-width-two-thirds"
-                          name="addressLine1"
-                          value={addressToSave.address.addressLine1}
-                          onChange={handleAddressChange}
-                        />
-                      </FormGroup>
-
-                      <FormGroup>
-                        <label
-                          className="govuk-label lbh-label"
-                          htmlFor="addressLine2"
-                        >
-                          Building and street line 2
-                        </label>
-                        <input
-                          className="govuk-input lbh-input govuk-!-width-two-thirds"
-                          name="addressLine2"
-                          value={addressToSave.address.addressLine2}
-                          onChange={handleAddressChange}
-                        />
-                      </FormGroup>
-
-                      <FormGroup>
-                        <label
-                          className="govuk-label lbh-label"
-                          htmlFor="addressTownCity"
-                        >
-                          Town or city
-                        </label>
-                        <input
-                          className="govuk-input lbh-input govuk-!-width-two-thirds"
-                          name="addressTownCity"
-                          value={addressToSave.address.addressTownCity}
-                          onChange={handleAddressChange}
-                        />
-                      </FormGroup>
-
-                      <FormGroup>
-                        <label
-                          className="govuk-label lbh-label"
-                          htmlFor="addressCounty"
-                        >
-                          County
-                        </label>
-                        <input
-                          className="govuk-input lbh-input govuk-!-width-two-thirds"
-                          name="addressCounty"
-                          value={addressToSave.address.addressCounty}
-                          onChange={handleAddressChange}
-                        />
-                      </FormGroup>
-
-                      <FormGroup>
-                        <label
-                          className="govuk-label lbh-label"
-                          htmlFor="addressPostcode"
-                        >
-                          Postcode
-                        </label>
-                        <input
-                          className="govuk-input lbh-input govuk-input--width-10"
-                          name="addressPostcode"
-                          value={addressToSave.address.addressPostcode}
-                          onChange={handleAddressChange}
-                        />
-                      </FormGroup>
-
-                      <Button onClick={saveAddress}>Save address</Button>
-                    </>
-                  </Dialog>
+                  <AddCaseAddAddress
+                    addresses={addresses}
+                    addAddress={addAddress}
+                    editAddress={editAddress}
+                    deleteAddress={deleteAddress}
+                    addressDialogOpen={addressDialogOpen}
+                    setAddressDialogOpen={setAddressDialogOpen}
+                    handleAddressChange={handleAddressChange}
+                    addressInDialog={addressInDialog}
+                    saveAddress={saveAddress}
+                  />
 
                   <AddCaseSection
                     sectionHeading={currentAccommodationSection.sectionHeading}
@@ -475,15 +323,6 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
                     sectionId={incomeSavingsSection.sectionId}
                     sectionData={incomeSavingsSection.fields}
                   />
-
-                  {/* {sections.map((section, index) => (
-                    <AddCaseSection
-                      key={index}
-                      sectionHeading={section.sectionHeading}
-                      sectionId={section.sectionId}
-                      sectionData={section.fields}
-                    />
-                  ))} */}
 
                   <div className="c-flex__1 text-right">
                     <Button

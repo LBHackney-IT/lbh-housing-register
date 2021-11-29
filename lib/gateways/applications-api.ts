@@ -27,6 +27,8 @@ export const getApplications = async (
         headers: headersWithKey,
       }
     );
+    console.log(data);
+
     return data;
   } catch (err) {
     return null;

@@ -6,9 +6,9 @@ import { FormikValues } from 'formik';
 export interface Address {
   addressLine1: string;
   addressLine2: string;
-  addressTownCity: string;
-  addressCounty: string;
-  addressPostcode: string;
+  addressLine3: string;
+  addressLine4: string;
+  postcode: string;
 }
 
 interface SectionData {

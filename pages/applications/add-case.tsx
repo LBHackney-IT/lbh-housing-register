@@ -103,7 +103,14 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
     console.log(request);
 
     createApplication(request);
-    setTimeout(() => router.reload(), 500);
+    setTimeout(
+      () =>
+        router.push({
+          pathname: '/applications/view-register',
+          query: { status: ApplicationStatus.MANUAL_DRAFT },
+        }),
+      500
+    );
   };
 
   const handleSaveApplication = () => {

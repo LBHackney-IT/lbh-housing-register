@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import React from 'react';
+import React, { SyntheticEvent, useState } from 'react';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 import { UserContext } from '../../lib/contexts/user-context';
@@ -13,6 +13,12 @@ import SearchBox from '../../components/admin/search-box';
 import Sidebar from '../../components/admin/sidebar';
 import ApplicationTable from '../../components/admin/application-table';
 import { HeadingOne } from '../../components/content/headings';
+import {
+  HorizontalNav,
+  HorizontalNavItem,
+} from '../../components/admin/HorizontalNav';
+import { useRouter } from 'next/router';
+import { ApplicationStatus } from '../../lib/types/application-status';
 
 interface PageProps {
   user: HackneyGoogleUser;
@@ -29,6 +35,7 @@ export default function ViewAllApplicationsPage({
   page = '1',
   reference = '',
 }: PageProps): JSX.Element {
+  const router = useRouter();
   const parameters = new URLSearchParams();
 
   if (reference !== '') {
@@ -36,6 +43,21 @@ export default function ViewAllApplicationsPage({
   }
 
   const parsedPage = parseInt(page);
+
+  const [activeNavItem, setActiveNavItem] = useState('');
+
+  const handleClick = async (event: SyntheticEvent) => {
+    event.preventDefault();
+
+    const { name } = event.target as HTMLButtonElement;
+
+    router.push({
+      pathname: '/applications/view-register',
+      query: { status: name },
+    });
+
+    setActiveNavItem(name);
+  };
 
   return (
     <UserContext.Provider value={{ user }}>
@@ -51,7 +73,23 @@ export default function ViewAllApplicationsPage({
             <Sidebar />
           </div>
           <div className="govuk-grid-column-three-quarters">
-            <HeadingOne content="All applications" />
+            <HeadingOne content="Housing Register" />
+            <HorizontalNav>
+              <HorizontalNavItem
+                handleClick={handleClick}
+                itemName=""
+                isActive={activeNavItem === ''}
+              >
+                All applications
+              </HorizontalNavItem>
+              <HorizontalNavItem
+                handleClick={handleClick}
+                itemName={ApplicationStatus.MANUAL_DRAFT}
+                isActive={activeNavItem === ApplicationStatus.MANUAL_DRAFT}
+              >
+                Manually added
+              </HorizontalNavItem>
+            </HorizontalNav>
             <ApplicationTable
               caption="Applications"
               applications={applications}

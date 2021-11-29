@@ -42,8 +42,6 @@ const keysToIgnore = [
   'DECLARATION',
 ];
 
-// console.log(FormID);
-
 const sections = allFormSections(keysToIgnore);
 const initialValues = generateInitialValues(sections);
 
@@ -76,6 +74,8 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
     // console.log('Formik values: ', values);
 
     const questionValues = generateQuestionArray(values, addresses);
+    console.log(questionValues);
+
     const request: Application = {
       status: ApplicationStatus.MANUAL_DRAFT,
       mainApplicant: {
@@ -99,8 +99,6 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
       otherMembers: [],
       //assignedTo: user.email
     };
-
-    console.log(request);
 
     createApplication(request);
     setTimeout(

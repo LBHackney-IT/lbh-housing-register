@@ -78,7 +78,6 @@ export const generateQuestionArray = (
   addresses: Address[]
 ) => {
   const questionArray = [];
-
   const addressesWithoutCurrent = addresses.filter((_, index) => index !== 0);
 
   for (const [key, value] of Object.entries(values)) {
@@ -92,12 +91,12 @@ export const generateQuestionArray = (
     if (questionId === 'address-history/address-finder') {
       questionArray.push({
         id: questionId,
-        answer: addressesWithoutCurrent,
+        answer: JSON.stringify(addressesWithoutCurrent),
       });
     } else {
       questionArray.push({
         id: questionId,
-        answer: value,
+        answer: JSON.stringify(value),
       });
     }
   }

@@ -81,7 +81,9 @@ export default function ViewAllApplicationsPage({
           </div>
           <div className="govuk-grid-column-three-quarters">
             <HeadingOne content="Housing Register" />
-            <Button secondary={true} onClick={() => addCase()}>+ Add new case</Button>
+            <Button secondary={true} onClick={() => addCase()}>
+              + Add new case
+            </Button>
             <HorizontalNav>
               <HorizontalNavItem
                 handleClick={handleClick}

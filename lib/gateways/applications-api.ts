@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import {
   Application,
   CreateAuthRequest,
@@ -175,6 +175,62 @@ export const getStats = async (): Promise<Array<Stat> | null> => {
       }
     );
     return data;
+  } catch (err) {
+    return null;
+  }
+};
+
+export const listNovaletExports = async (): Promise<string[]> => {
+  try {
+    const headers = {
+      'x-api-key': process.env.HOUSING_REGISTER_KEY,
+      'Content-Type': 'application/json',
+    };
+    const url = `${process.env.HOUSING_REGISTER_API}/reporting/listnovaletfiles`;
+    const { data } = await axios.get(url, { headers: headers });
+
+    return data;
+  } catch (err) {
+    return [];
+  }
+};
+
+export const downloadNovaletExport = async (
+  filename: string
+): Promise<AxiosResponse | null> => {
+  try {
+    const headers = {
+      'x-api-key': process.env.HOUSING_REGISTER_KEY,
+      'Content-Type': 'application/json',
+    };
+    const url = `${process.env.HOUSING_REGISTER_API}/reporting/novaletexport/${filename}`;
+    return await axios.get(url, { headers: headers, responseType: 'blob' });
+  } catch (err) {
+    return null;
+  }
+};
+
+export const generateNovaletExport = async (): Promise<AxiosResponse> => {
+  const headers = {
+    'x-api-key': process.env.HOUSING_REGISTER_KEY,
+    'Content-Type': 'application/json',
+  };
+  const url = `${process.env.HOUSING_REGISTER_API}/reporting/generatenovaletexport`;
+  return await axios.post(url, null, { headers: headers });
+};
+
+export const downloadInternalReport = async (
+  query: any
+): Promise<AxiosResponse | null> => {
+  try {
+    const { reportType, startDate, endDate } = query;
+
+    const headers = {
+      'x-api-key': process.env.HOUSING_REGISTER_KEY,
+      'Content-Type': 'application/json',
+    };
+    const url = `${process.env.HOUSING_REGISTER_API}/reporting/export?reportType=${reportType}&startDate=${startDate}&endDate=${endDate}`;
+    return await axios.get(url, { headers: headers, responseType: 'blob' });
   } catch (err) {
     return null;
   }

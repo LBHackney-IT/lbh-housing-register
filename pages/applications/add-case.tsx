@@ -62,7 +62,7 @@ const emptyAddress = {
 
 export default function AddCasePage({ user }: PageProps): JSX.Element {
   // const [isMainApplicant, setIsMainApplicant] = useState(true);
-  const [isSumbitted, setIsSumbitted] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const [addressDialogOpen, setAddressDialogOpen] = useState(false);
   const [addressToSave, setAddressToSave] = useState({
@@ -76,9 +76,8 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
     // console.log('Formik values: ', values);
 
     const questionValues = generateQuestionArray(values, addresses);
-
-    // status: ApplicationStatus.MANUAL_DRAFT,
     const request: Application = {
+      status: ApplicationStatus.MANUAL_DRAFT,
       mainApplicant: {
         person: {
           title: values.personalDetails_title,
@@ -89,18 +88,16 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
           genderDescription: '',
           nationalInsuranceNumber:
             values.personalDetails_nationalInsuranceNumber,
-          relationshipType: '',
         },
-        address: addresses[0] || '',
+        address: addresses[0] || null,
         contactInformation: {
           emailAddress: values.personalDetails_emailAddress,
           phoneNumber: values.personalDetails_phoneNumber,
-          preferredMethodOfContact: '',
         },
         questions: questionValues,
       },
       otherMembers: [],
-      sensitiveData: true,
+      //assignedTo: user.email
     };
 
     console.log(request);
@@ -110,7 +107,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
   };
 
   const handleSaveApplication = () => {
-    setIsSumbitted(true);
+    setIsSubmitted(true);
     scrollToTop();
   };
 
@@ -228,7 +225,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
           {({ isSubmitting, errors, isValid }) => {
             return (
               <>
-                {!isValid && isSumbitted ? (
+                {!isValid && isSubmitted ? (
                   <ErrorSummary title="There is a problem">
                     <ul className="govuk-list govuk-error-summary__list">
                       {Object.entries(errors).map(([inputName, errorTitle]) => (

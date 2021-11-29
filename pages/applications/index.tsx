@@ -14,7 +14,6 @@ import SearchBox from '../../components/admin/search-box';
 import Sidebar from '../../components/admin/sidebar';
 import ApplicationTable from '../../components/admin/application-table';
 import { HeadingOne } from '../../components/content/headings';
-import Button from '../../components/button';
 import {
   HorizontalNav,
   HorizontalNavItem,
@@ -59,12 +58,6 @@ export default function ApplicationListPage({
     setActiveNavItem(name);
   };
 
-  const addCase = async () => {
-    router.push({
-      pathname: '/applications/add-case',
-    });
-  };
-
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="My worktray">
@@ -80,7 +73,6 @@ export default function ApplicationListPage({
           </div>
           <div className="govuk-grid-column-three-quarters">
             <HeadingOne content="My worktray" />
-            <Button onClick={() => addCase()}>Add case</Button>
             <HorizontalNav>
               <HorizontalNavItem
                 handleClick={handleClick}

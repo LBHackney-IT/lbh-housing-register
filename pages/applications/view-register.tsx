@@ -19,6 +19,7 @@ import {
 } from '../../components/admin/HorizontalNav';
 import { useRouter } from 'next/router';
 import { ApplicationStatus } from '../../lib/types/application-status';
+import Button from '../../components/button';
 
 interface PageProps {
   user: HackneyGoogleUser;
@@ -53,10 +54,16 @@ export default function ViewAllApplicationsPage({
 
     router.push({
       pathname: '/applications/view-register',
-      query: { status: name },
+      query: { status: ApplicationStatus.MANUAL_DRAFT },
     });
 
     setActiveNavItem(name);
+  };
+
+  const addCase = async () => {
+    router.push({
+      pathname: '/applications/add-case',
+    });
   };
 
   return (
@@ -74,6 +81,7 @@ export default function ViewAllApplicationsPage({
           </div>
           <div className="govuk-grid-column-three-quarters">
             <HeadingOne content="Housing Register" />
+            <Button secondary={true} onClick={() => addCase()}>+ Add new case</Button>
             <HorizontalNav>
               <HorizontalNavItem
                 handleClick={handleClick}

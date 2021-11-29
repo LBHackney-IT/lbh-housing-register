@@ -29,7 +29,8 @@ import { scrollToTop } from '../../lib/utils/scroll';
 import * as Yup from 'yup';
 import ErrorSummary from '../../components/errors/error-summary';
 import { getFormData, FormID } from '../../lib/utils/form-data';
-import { HeadingThree } from '../../components/content/headings';
+import { HeadingOne, HeadingThree } from '../../components/content/headings';
+import { ApplicationStatus } from '../../lib/types/application-status';
 
 const keysToIgnore = [
   'AGREEMENT',
@@ -70,15 +71,22 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
   const [isSumbitted, setIsSumbitted] = useState(false);
 
   const [addressDialogOpen, setAddressDialogOpen] = useState(false);
-  const [addressToAdd, setAddressToAdd] = useState(emptyAddress as Address);
+  const [addressToSave, setAddressToSave] = useState({
+    address: emptyAddress as Address,
+    isEditing: false,
+  });
+  const [editAddressIndex, setEditAddressIndex] = useState(0);
   const [addresses, setAddresses] = useState([] as Address[]);
 
   const onSubmit = (values: FormikValues) => {
+    // console.log('Formik values: ', values);
+
     const questionValues = generateQuestionArray(values);
+
+    // status: ApplicationStatus.MANUAL_DRAFT,
     const request: Application = {
       mainApplicant: {
         person: {
-          id: '',
           title: values.personalDetails_title,
           firstName: values.personalDetails_firstName,
           surname: values.personalDetails_surname,
@@ -89,13 +97,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
             values.personalDetails_nationalInsuranceNumber,
           relationshipType: '',
         },
-        address: {
-          addressLine1: '1 Hillman Street',
-          addressLine2: 'Hackney',
-          addressLine3: 'London',
-          // postCode: values.addressHistory_addressFinder,
-          addressType: 'string',
-        },
+        address: addresses[0] || '',
         contactInformation: {
           emailAddress: values.personalDetails_emailAddress,
           phoneNumber: values.personalDetails_phoneNumber,
@@ -104,13 +106,17 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
         questions: questionValues,
       },
       otherMembers: [],
+      sensitiveData: true,
     };
+
+    // console.log(JSON.stringify(request));
+
     createApplication(request);
 
-    router.reload();
+    // router.reload();
   };
 
-  const handleClick = () => {
+  const handleSaveApplication = () => {
     setIsSumbitted(true);
     scrollToTop();
   };
@@ -155,38 +161,60 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
       .required(),
   });
 
-  const addEditAddress = (event: any) => {
+  const addAddress = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    console.log(addressToAdd);
-
-    setAddresses([...addresses, addressToAdd]);
-    setAddressDialogOpen(false);
-    setAddressToAdd(emptyAddress);
-  };
-
-  const handleAddressChange = (event: any) => {
-    const { name, value } = event.target;
-    setAddressToAdd({ ...addressToAdd, [name]: value });
-  };
-
-  const editAddress = (addressIndex: number) => {
-    console.log('editAddress', addressIndex);
-    setAddressToAdd(addresses[addressIndex]);
+    setAddressToSave({
+      address: emptyAddress,
+      isEditing: false,
+    });
     setAddressDialogOpen(true);
   };
 
+  const editAddress = (addressIndex: number) => {
+    setAddressToSave({
+      address: addresses[addressIndex],
+      isEditing: true,
+    });
+    setEditAddressIndex(addressIndex);
+    setAddressDialogOpen(true);
+  };
+
+  const saveAddress = () => {
+    if (addressToSave.isEditing) {
+      const newAddresses = [...addresses];
+      newAddresses[editAddressIndex] = addressToSave.address;
+      setAddresses(newAddresses);
+    } else {
+      setAddresses([...addresses, addressToSave.address]);
+    }
+
+    setAddressDialogOpen(false);
+  };
+
+  const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setAddressToSave({
+      ...addressToSave,
+      address: {
+        ...addressToSave.address,
+        [name]: value,
+      },
+    });
+  };
+
   const deleteAddress = (addressIndex: number) => {
-    console.log('deleteAddress', addressIndex);
     const newAddresses = [...addresses];
     newAddresses.splice(addressIndex, 1);
     setAddresses(newAddresses);
   };
 
-  // console.log(sections);
-
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="Group worktray">
+        <HeadingOne content="Add new case" />
+        <h2 className="lbh-caption-xl lbh-caption govuk-!-margin-top-1">
+          Main applicant details
+        </h2>
         <Formik
           initialValues={initialValues}
           onSubmit={onSubmit}
@@ -285,16 +313,25 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
                             </a>
                           </FormGroup>
                         ))}
-                        <Button onClick={() => setAddressDialogOpen(true)}>
+                        <button
+                          className={`govuk-button lbh-button govuk-secondary lbh-button--secondary ${
+                            addresses.length === 0
+                              ? 'lbh-!-margin-top-0 '
+                              : 'govuk-secondary lbh-button--secondary'
+                          }`}
+                          onClick={addAddress}
+                        >
                           Add address
-                        </Button>
+                        </button>
                       </SummaryListActions>
                     </SummaryListRow>
                   </SummaryListNoBorder>
 
                   <Dialog
                     isOpen={addressDialogOpen}
-                    title="Add address"
+                    title={`${
+                      addressToSave.isEditing ? 'Edit' : 'Add'
+                    } address`}
                     onCancel={() => setAddressDialogOpen(false)}
                     onCancelText="Close"
                   >
@@ -309,7 +346,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
                         <input
                           className="govuk-input lbh-input govuk-!-width-two-thirds"
                           name="addressLine1"
-                          value={addressToAdd.addressLine1}
+                          value={addressToSave.address.addressLine1}
                           onChange={handleAddressChange}
                         />
                       </FormGroup>
@@ -324,7 +361,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
                         <input
                           className="govuk-input lbh-input govuk-!-width-two-thirds"
                           name="addressLine2"
-                          value={addressToAdd.addressLine2}
+                          value={addressToSave.address.addressLine2}
                           onChange={handleAddressChange}
                         />
                       </FormGroup>
@@ -339,7 +376,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
                         <input
                           className="govuk-input lbh-input govuk-!-width-two-thirds"
                           name="addressTownCity"
-                          value={addressToAdd.addressTownCity}
+                          value={addressToSave.address.addressTownCity}
                           onChange={handleAddressChange}
                         />
                       </FormGroup>
@@ -354,7 +391,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
                         <input
                           className="govuk-input lbh-input govuk-!-width-two-thirds"
                           name="addressCounty"
-                          value={addressToAdd.addressCounty}
+                          value={addressToSave.address.addressCounty}
                           onChange={handleAddressChange}
                         />
                       </FormGroup>
@@ -369,12 +406,12 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
                         <input
                           className="govuk-input lbh-input govuk-input--width-10"
                           name="addressPostcode"
-                          value={addressToAdd.addressPostcode}
+                          value={addressToSave.address.addressPostcode}
                           onChange={handleAddressChange}
                         />
                       </FormGroup>
 
-                      <Button onClick={addEditAddress}>Add address</Button>
+                      <Button onClick={saveAddress}>Save address</Button>
                     </>
                   </Dialog>
 
@@ -389,11 +426,11 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
 
                   <div className="c-flex__1 text-right">
                     <Button
-                      onClick={handleClick}
+                      onClick={handleSaveApplication}
                       disabled={isSubmitting}
                       type="submit"
                     >
-                      Save new Application
+                      Save new application
                     </Button>
                   </div>
                 </Form>

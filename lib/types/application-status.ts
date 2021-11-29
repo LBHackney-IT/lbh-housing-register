@@ -1,5 +1,6 @@
 export enum ApplicationStatus {
   DRAFT = 'New',
+  MANUAL_DRAFT = 'ManualDraft',
   SUBMITTED = 'Submitted',
   ACTIVE = 'Active',
   PENDING = 'Pending',
@@ -17,6 +18,8 @@ export const lookupStatus = (status: string): string => {
   switch (status) {
     case ApplicationStatus.DRAFT:
       return 'Incomplete';
+    case ApplicationStatus.MANUAL_DRAFT:
+      return 'Added by officer';
     case ApplicationStatus.SUBMITTED:
       return 'Awaiting assessment';
     case ApplicationStatus.REFERRED:

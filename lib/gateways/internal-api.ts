@@ -22,7 +22,5 @@ export const createApplication = async (application: Application) => {
     method: 'POST',
     body: JSON.stringify(application),
   });
-  // console.log(res);
-
   return (await res.json()) as Application;
 };

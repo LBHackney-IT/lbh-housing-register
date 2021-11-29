@@ -76,7 +76,6 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
     // console.log('Formik values: ', values);
 
     const questionValues = generateQuestionArray(values, addresses);
-    console.log('Question values: ', questionValues);
 
     // status: ApplicationStatus.MANUAL_DRAFT,
     const request: Application = {
@@ -104,11 +103,10 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
       sensitiveData: true,
     };
 
-    // console.log(JSON.stringify(request));
+    console.log(request);
 
     createApplication(request);
-
-    // router.reload();
+    setTimeout(() => router.reload(), 500);
   };
 
   const handleSaveApplication = () => {

@@ -2,6 +2,8 @@ import { getFormData, FormID } from '../utils/form-data';
 import { FormField } from '../../lib/types/form';
 import { kebabToCamelCase, camelCaseToKebab } from '../../lib/utils/capitalize';
 import { FormikValues } from 'formik';
+import * as Yup from 'yup';
+import { INVALID_DATE } from '../../components/form/dateinput';
 
 export interface Address {
   addressLine1: string;
@@ -24,6 +26,44 @@ interface SectionData {
   sectionId: string;
   sectionHeading: string | undefined;
 }
+
+export const addCaseSchema = Yup.object({
+  personalDetails_title: Yup.string().label('Title').required(),
+  personalDetails_firstName: Yup.string().label('First name').required(),
+  personalDetails_surname: Yup.string().label('Surname').required(),
+  personalDetails_dateOfBirth: Yup.string()
+    .notOneOf([INVALID_DATE], 'Invalid date')
+    .label('Date of birth')
+    .required()
+    .test('futureDate', 'Date of birth must be in the past', (value) => {
+      if (typeof value !== 'string' || value === INVALID_DATE) {
+        return false;
+      }
+
+      const dateOfBirth = +new Date(value);
+
+      if (Math.min(+new Date()) < dateOfBirth) {
+        return false;
+      }
+
+      return true;
+    }),
+  personalDetails_gender: Yup.string().label('Gender').required(),
+  personalDetails_nationalInsuranceNumber: Yup.string()
+    .label('NI number')
+    .required(),
+  immigrationStatus_citizenship: Yup.string().label('Citizenship').required(),
+});
+
+const currentAccommodationSchema = Yup.object({
+  currentAccommodation_livingSituation: Yup.string()
+    .label('Living situation')
+    .required(),
+});
+
+export const mainApplicantSchema = addCaseSchema.concat(
+  currentAccommodationSchema
+);
 
 export const allFormSections = (keysToIgnore: string[]) => {
   const keys = Object.keys(FormID);

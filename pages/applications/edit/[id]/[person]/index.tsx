@@ -25,9 +25,6 @@ export default function EditApplicant({
 }: PageProps): JSX.Element {
   if (!data.id) return <Custom404 />;
 
-  console.log(user);
-  console.log(data);
-
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="Edit person">

@@ -1,17 +1,12 @@
 import React, { useState, SyntheticEvent } from 'react';
 import router from 'next/router';
 import { GetServerSideProps } from 'next';
-import { HeadingOne } from '../../../../components/content/headings';
-import Button from '../../../../components/button';
-import Layout from '../../../../components/layout/staff-layout';
-import { Application } from '../../../../domain/HousingApi';
-import { UserContext } from '../../../../lib/contexts/user-context';
-import { getApplication } from '../../../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../../../lib/utils/googleAuth';
-import Custom404 from '../../../404';
 import { HackneyGoogleUser } from '../../../../domain/HackneyGoogleUser';
+import { Application } from '../../../../domain/HousingApi';
+import { getApplication } from '../../../../lib/gateways/applications-api';
+import { UserContext } from '../../../../lib/contexts/user-context';
 import { Form, Formik, FormikValues, FormikErrors } from 'formik';
-import AddCaseSection from '../../../../components/admin/AddCaseSection';
 import { updateApplication } from '../../../../lib/gateways/internal-api';
 import {
   getSectionData,
@@ -19,14 +14,17 @@ import {
   generateQuestionArray,
   emptyAddress,
   Address,
+  addCaseSchema,
 } from '../../../../lib/utils/adminHelpers';
-import { INVALID_DATE } from '../../../../components/form/dateinput';
-import { scrollToTop } from '../../../../lib/utils/scroll';
-import * as Yup from 'yup';
-import ErrorSummary from '../../../../components/errors/error-summary';
 import { FormID } from '../../../../lib/utils/form-data';
-import { ApplicationStatus } from '../../../../lib/types/application-status';
-import AddCaseAddAddress from '../../../../components/admin/AddCaseAddress';
+import { scrollToTop } from '../../../../lib/utils/scroll';
+import Layout from '../../../../components/layout/staff-layout';
+import AddCaseSection from '../../../../components/admin/AddCaseSection';
+import AddCaseAddress from '../../../../components/admin/AddCaseAddress';
+import { HeadingOne } from '../../../../components/content/headings';
+import Button from '../../../../components/button';
+import ErrorSummary from '../../../../components/errors/error-summary';
+import Custom404 from '../../../404';
 
 const personalDetailsSection = getSectionData(FormID.PERSONAL_DETAILS);
 const immigrationStatusSection = getSectionData(FormID.IMMIGRATION_STATUS);
@@ -108,35 +106,6 @@ export default function AddHouseholdMember({
     scrollToTop();
   };
 
-  const currentDateTimestamp = Math.min(+new Date());
-  const schema = Yup.object({
-    personalDetails_title: Yup.string().label('Title').required(),
-    personalDetails_firstName: Yup.string().label('First name').required(),
-    personalDetails_surname: Yup.string().label('Surname').required(),
-    personalDetails_dateOfBirth: Yup.string()
-      .notOneOf([INVALID_DATE], 'Invalid date')
-      .label('Date of birth')
-      .required()
-      .test('futureDate', 'Date of birth must be in the past', (value) => {
-        if (typeof value !== 'string' || value === INVALID_DATE) {
-          return false;
-        }
-
-        const dateOfBirth = +new Date(value);
-
-        if (currentDateTimestamp < dateOfBirth) {
-          return false;
-        }
-
-        return true;
-      }),
-    personalDetails_gender: Yup.string().label('Gender').required(),
-    personalDetails_nationalInsuranceNumber: Yup.string()
-      .label('NI number')
-      .required(),
-    immigrationStatus_citizenship: Yup.string().label('Citizenship').required(),
-  });
-
   const addAddress = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     setAddressInDialog({
@@ -194,7 +163,7 @@ export default function AddHouseholdMember({
         <Formik
           initialValues={initialValues}
           onSubmit={onSubmit}
-          validationSchema={schema}
+          validationSchema={addCaseSchema}
         >
           {({ isSubmitting, errors, isValid }) => {
             return (
@@ -214,7 +183,7 @@ export default function AddHouseholdMember({
                   <AddCaseSection section={personalDetailsSection} />
                   <AddCaseSection section={immigrationStatusSection} />
                   <AddCaseSection section={medicalNeedsSection} />
-                  <AddCaseAddAddress
+                  <AddCaseAddress
                     addresses={addresses}
                     addressInDialog={addressInDialog}
                     addressDialogOpen={addressDialogOpen}
@@ -233,7 +202,7 @@ export default function AddHouseholdMember({
                       disabled={isSubmitting}
                       type="submit"
                     >
-                      Save new application
+                      Save household member
                     </Button>
                   </div>
                 </Form>
@@ -241,128 +210,6 @@ export default function AddHouseholdMember({
             );
           }}
         </Formik>
-
-        {/* {data.sensitiveData &&
-        !canViewSensitiveApplication(data.assignedTo!, user) ? (
-          <>
-            <h2>Access denied</h2>
-            <Paragraph>You are unable to view this application.</Paragraph>
-          </>
-        ) : (
-          <>
-            <HeadingOne content="View application" />
-            <h2 className="lbh-caption-xl lbh-caption govuk-!-margin-top-1">
-              {getPersonName(data)}
-            </h2>
-
-            <HorizontalNav spaced={true}>
-              <HorizontalNavItem
-                handleClick={handleClick}
-                itemName="overview"
-                isActive={activeNavItem === 'overview'}
-              >
-                Overview
-              </HorizontalNavItem>
-              {data.status !== ApplicationStatus.DRAFT ? (
-                <HorizontalNavItem
-                  handleClick={handleClick}
-                  itemName="assessment"
-                  isActive={activeNavItem === 'assessment'}
-                >
-                  Assessment
-                </HorizontalNavItem>
-              ) : (
-                <></>
-              )}
-            </HorizontalNav>
-
-            {activeNavItem === 'overview' && (
-              <div className="govuk-grid-row">
-                <div className="govuk-grid-column-two-thirds">
-                  <HeadingThree content="Snapshot" />
-                  <Snapshot data={data} />
-                  {data.mainApplicant && (
-                    <PersonalDetails
-                      heading="Main applicant"
-                      applicant={data.mainApplicant}
-                      applicationId={data.id}
-                    />
-                  )}
-                  {data.otherMembers && data.otherMembers.length > 0 ? (
-                    <OtherMembers
-                      heading="Other household members"
-                      others={data.otherMembers}
-                      applicationId={data.id}
-                    />
-                  ) : (
-                    <HeadingThree content="Other household members" />
-                  )}
-                  <Button onClick={() => {}} secondary={true}>
-                    + Add household member
-                  </Button>
-                </div>
-                <div className="govuk-grid-column-one-third">
-                  <HeadingThree content="Case details" />
-
-                  <CaseDetailsItem
-                    itemHeading="Application reference"
-                    itemValue={data.reference}
-                  />
-
-                  {data.assessment?.biddingNumber && (
-                    <CaseDetailsItem
-                      itemHeading="Bidding number"
-                      itemValue={data.assessment?.biddingNumber}
-                    />
-                  )}
-
-                  <CaseDetailsItem
-                    itemHeading="Status"
-                    itemValue={lookupStatus(data.status!)}
-                    buttonText="Change"
-                    onClick={() => setActiveNavItem('assessment')}
-                  />
-
-                  <CaseDetailsItem
-                    itemHeading="Date submitted"
-                    itemValue={formatDate(data.submittedAt)}
-                  />
-
-                  {data.assessment?.effectiveDate && (
-                    <CaseDetailsItem
-                      itemHeading="Application date"
-                      itemValue={formatDate(data.assessment?.effectiveDate)}
-                      buttonText="Change"
-                      onClick={() => setActiveNavItem('assessment')}
-                    />
-                  )}
-
-                  {data.assessment?.band && (
-                    <CaseDetailsItem
-                      itemHeading="Band"
-                      itemValue={`Band ${data.assessment?.band}`}
-                      buttonText="Change"
-                      onClick={() => setActiveNavItem('assessment')}
-                    />
-                  )}
-
-                  <AssignUser
-                    id={data.id}
-                    user={user}
-                    assignee={data.assignedTo}
-                  />
-
-                  <SensitiveData
-                    id={data.id}
-                    isSensitive={data.sensitiveData || false}
-                    user={user}
-                  />
-                </div>
-              </div>
-            )}
-            {activeNavItem === 'assessment' && <Actions data={data} />}
-          </>
-        )} */}
       </Layout>
     </UserContext.Provider>
   );

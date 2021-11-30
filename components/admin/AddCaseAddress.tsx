@@ -27,7 +27,7 @@ interface PageProps {
   saveAddress: () => void;
 }
 
-export default function AddCaseAddAddress({
+export default function AddCaseAddress({
   addresses,
   addressDialogOpen,
   addressInDialog,

@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import router from 'next/router';
-import Layout from '../../components/layout/staff-layout';
-import { UserContext } from '../../lib/contexts/user-context';
+import { GetServerSideProps } from 'next';
+import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { Form, Formik, FormikValues, FormikErrors } from 'formik';
-import Button from '../../components/button';
-import AddCaseSection from '../../components/admin/AddCaseSection';
 import { Application } from '../../domain/HousingApi';
 import { createApplication } from '../../lib/gateways/internal-api';
 import {
@@ -15,15 +13,18 @@ import {
   generateQuestionArray,
   emptyAddress,
   Address,
+  mainApplicantSchema,
 } from '../../lib/utils/adminHelpers';
-import { INVALID_DATE } from '../../components/form/dateinput';
-import { scrollToTop } from '../../lib/utils/scroll';
-import * as Yup from 'yup';
-import ErrorSummary from '../../components/errors/error-summary';
-import { FormID } from '../../lib/utils/form-data';
-import { HeadingOne } from '../../components/content/headings';
 import { ApplicationStatus } from '../../lib/types/application-status';
-import AddCaseAddAddress from '../../components/admin/AddCaseAddress';
+import { FormID } from '../../lib/utils/form-data';
+import AddCaseSection from '../../components/admin/AddCaseSection';
+import AddCaseAddress from '../../components/admin/AddCaseAddress';
+import Layout from '../../components/layout/staff-layout';
+import { UserContext } from '../../lib/contexts/user-context';
+import Button from '../../components/button';
+import ErrorSummary from '../../components/errors/error-summary';
+import { HeadingOne } from '../../components/content/headings';
+import { scrollToTop } from '../../lib/utils/scroll';
 
 const keysToOmit = [
   'AGREEMENT',
@@ -42,9 +43,7 @@ interface PageProps {
 }
 
 export default function AddCasePage({ user }: PageProps): JSX.Element {
-  // const [isMainApplicant, setIsMainApplicant] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
-
   const [addressDialogOpen, setAddressDialogOpen] = useState(false);
   const [addressInDialog, setAddressInDialog] = useState({
     address: emptyAddress as Address,
@@ -54,10 +53,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
   const [addresses, setAddresses] = useState([] as Address[]);
 
   const onSubmit = (values: FormikValues) => {
-    // console.log('Formik values: ', values);
-
     const questionValues = generateQuestionArray(values, addresses);
-    console.log(questionValues);
 
     const request: Application = {
       status: ApplicationStatus.MANUAL_DRAFT,
@@ -80,7 +76,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
         questions: questionValues,
       },
       otherMembers: [],
-      //assignedTo: user.email
+      assignedTo: user.email,
     };
 
     createApplication(request);
@@ -116,38 +112,6 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
   const unspentConvictionsSection = getSectionData(FormID.UNSPENT_CONVICTIONS);
   const employmentSection = getSectionData(FormID.EMPLOYMENT);
   const incomeSavingsSection = getSectionData(FormID.INCOME_SAVINGS);
-
-  const currentDateTimestamp = Math.min(+new Date());
-  const schema = Yup.object({
-    personalDetails_title: Yup.string().label('Title').required(),
-    personalDetails_firstName: Yup.string().label('First name').required(),
-    personalDetails_surname: Yup.string().label('Surname').required(),
-    personalDetails_dateOfBirth: Yup.string()
-      .notOneOf([INVALID_DATE], 'Invalid date')
-      .label('Date of birth')
-      .required()
-      .test('futureDate', 'Date of birth must be in the past', (value) => {
-        if (typeof value !== 'string' || value === INVALID_DATE) {
-          return false;
-        }
-
-        const dateOfBirth = +new Date(value);
-
-        if (currentDateTimestamp < dateOfBirth) {
-          return false;
-        }
-
-        return true;
-      }),
-    personalDetails_gender: Yup.string().label('Gender').required(),
-    personalDetails_nationalInsuranceNumber: Yup.string()
-      .label('NI number')
-      .required(),
-    immigrationStatus_citizenship: Yup.string().label('Citizenship').required(),
-    currentAccommodation_livingSituation: Yup.string()
-      .label('Living situation')
-      .required(),
-  });
 
   const addAddress = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -206,7 +170,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
         <Formik
           initialValues={initialValues}
           onSubmit={onSubmit}
-          validationSchema={schema}
+          validationSchema={mainApplicantSchema}
         >
           {({ isSubmitting, errors, isValid }) => {
             return (
@@ -228,7 +192,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
                   <AddCaseSection section={medicalNeedsSection} />
                   <AddCaseSection section={residentialStatusSection} />
 
-                  <AddCaseAddAddress
+                  <AddCaseAddress
                     addresses={addresses}
                     addressInDialog={addressInDialog}
                     addressDialogOpen={addressDialogOpen}
@@ -273,3 +237,18 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
     </UserContext.Provider>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const user = getSession(context.req);
+  const redirect = getRedirect(user);
+  if (redirect) {
+    return {
+      props: {},
+      redirect: {
+        destination: redirect,
+      },
+    };
+  }
+
+  return { props: { user } };
+};

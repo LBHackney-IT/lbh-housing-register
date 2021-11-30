@@ -85,7 +85,14 @@ export default function AddCaseSection({ section }: PageProps): JSX.Element {
       );
     }
 
-    const title = index === 0 ? section.sectionHeading : '';
+    let title = '';
+    if (section.sectionId === 'situation-armed-forces') {
+      title = 'Your situation';
+    } else if (index === 0) {
+      title = section.sectionHeading;
+    } else {
+      title = '';
+    }
 
     return (
       <SummaryListRow key={index}>

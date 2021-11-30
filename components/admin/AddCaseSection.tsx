@@ -10,27 +10,23 @@ import {
   SummaryListValue,
 } from '../summary-list';
 import { Checkbox } from '../form/checkboxes';
-import Button from '../button';
 import { FormField, FormFieldOption } from '../../lib/types/form';
 import { generateUniqueFieldName } from '../../lib/utils/adminHelpers';
 
 interface PageProps {
-  sectionData: FormField[];
-  sectionId: string;
-  sectionHeading: string | undefined;
+  section: any;
 }
 
-export default function AddCaseSection({
-  sectionData,
-  sectionId,
-  sectionHeading,
-}: PageProps): JSX.Element {
+export default function AddCaseSection({ section }: PageProps): JSX.Element {
   // Currently using "any" as multiple form types are used.
-  const markup = sectionData.map((field: any, index: number) => {
+  const markup = section.fields.map((field: any, index: number) => {
     const inputType = field.as ? field.as : 'text';
 
     // This ensures all inputs have unique names
-    const generatedInputName = generateUniqueFieldName(sectionId, field.name);
+    const generatedInputName = generateUniqueFieldName(
+      section.sectionId,
+      field.name
+    );
 
     let inputField: JSX.Element = <></>;
 
@@ -81,7 +77,7 @@ export default function AddCaseSection({
       );
     }
 
-    const title = index === 0 ? sectionHeading : '';
+    const title = index === 0 ? section.sectionHeading : '';
 
     return (
       <SummaryListRow key={index}>

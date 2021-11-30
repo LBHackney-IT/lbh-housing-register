@@ -13,6 +13,7 @@ import {
   getSectionData,
   generateInitialValues,
   generateQuestionArray,
+  emptyAddress,
   Address,
 } from '../../lib/utils/adminHelpers';
 import { INVALID_DATE } from '../../components/form/dateinput';
@@ -39,14 +40,6 @@ interface PageProps {
   user: HackneyGoogleUser;
   data: Application;
 }
-
-const emptyAddress = {
-  addressLine1: '',
-  addressLine2: '',
-  addressLine3: '',
-  addressLine4: '',
-  postcode: '',
-};
 
 export default function AddCasePage({ user }: PageProps): JSX.Element {
   // const [isMainApplicant, setIsMainApplicant] = useState(true);
@@ -113,7 +106,6 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
   const currentAccommodationSection = getSectionData(
     FormID.CURRENT_ACCOMMODATION
   );
-
   const armedForcesSection = getSectionData(FormID.SITUATION_ARMED_FORCES);
   const homelessnessSection = getSectionData(FormID.HOMELESSNESS);
   const propertyOwnwershipSection = getSectionData(FormID.PROPERTY_OWNERSHIP);
@@ -122,7 +114,6 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
   const breachOfTenancySection = getSectionData(FormID.BREACH_OF_TENANCY);
   const legalRestrictionsSection = getSectionData(FormID.LEGAL_RESTRICTIONS);
   const unspentConvictionsSection = getSectionData(FormID.UNSPENT_CONVICTIONS);
-
   const employmentSection = getSectionData(FormID.EMPLOYMENT);
   const incomeSavingsSection = getSectionData(FormID.INCOME_SAVINGS);
 
@@ -232,97 +223,37 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
                   </ErrorSummary>
                 ) : null}
                 <Form>
-                  <AddCaseSection
-                    sectionHeading={personalDetailsSection.sectionHeading}
-                    sectionId={personalDetailsSection.sectionId}
-                    sectionData={personalDetailsSection.fields}
-                  />
-                  <AddCaseSection
-                    sectionHeading={immigrationStatusSection.sectionHeading}
-                    sectionId={immigrationStatusSection.sectionId}
-                    sectionData={immigrationStatusSection.fields}
-                  />
-                  <AddCaseSection
-                    sectionHeading={medicalNeedsSection.sectionHeading}
-                    sectionId={medicalNeedsSection.sectionId}
-                    sectionData={medicalNeedsSection.fields}
-                  />
-                  <AddCaseSection
-                    sectionHeading={residentialStatusSection.sectionHeading}
-                    sectionId={residentialStatusSection.sectionId}
-                    sectionData={residentialStatusSection.fields}
-                  />
+                  <AddCaseSection section={personalDetailsSection} />
+                  <AddCaseSection section={immigrationStatusSection} />
+                  <AddCaseSection section={medicalNeedsSection} />
+                  <AddCaseSection section={residentialStatusSection} />
 
                   <AddCaseAddAddress
                     addresses={addresses}
+                    addressInDialog={addressInDialog}
+                    addressDialogOpen={addressDialogOpen}
                     addAddress={addAddress}
                     editAddress={editAddress}
                     deleteAddress={deleteAddress}
-                    addressDialogOpen={addressDialogOpen}
                     setAddressDialogOpen={setAddressDialogOpen}
                     handleAddressChange={handleAddressChange}
-                    addressInDialog={addressInDialog}
                     saveAddress={saveAddress}
                   />
 
-                  <AddCaseSection
-                    sectionHeading={currentAccommodationSection.sectionHeading}
-                    sectionId={currentAccommodationSection.sectionId}
-                    sectionData={currentAccommodationSection.fields}
-                  />
+                  <AddCaseSection section={currentAccommodationSection} />
 
                   {/* Your situation */}
-                  <AddCaseSection
-                    sectionHeading={armedForcesSection.sectionHeading}
-                    sectionId={armedForcesSection.sectionId}
-                    sectionData={armedForcesSection.fields}
-                  />
-                  <AddCaseSection
-                    sectionHeading={homelessnessSection.sectionHeading}
-                    sectionId={homelessnessSection.sectionId}
-                    sectionData={homelessnessSection.fields}
-                  />
-                  <AddCaseSection
-                    sectionHeading={propertyOwnwershipSection.sectionHeading}
-                    sectionId={propertyOwnwershipSection.sectionId}
-                    sectionData={propertyOwnwershipSection.fields}
-                  />
-                  <AddCaseSection
-                    sectionHeading={soldPropertySection.sectionHeading}
-                    sectionId={soldPropertySection.sectionId}
-                    sectionData={soldPropertySection.fields}
-                  />
-                  <AddCaseSection
-                    sectionHeading={arrearsSection.sectionHeading}
-                    sectionId={arrearsSection.sectionId}
-                    sectionData={arrearsSection.fields}
-                  />
-                  <AddCaseSection
-                    sectionHeading={breachOfTenancySection.sectionHeading}
-                    sectionId={breachOfTenancySection.sectionId}
-                    sectionData={breachOfTenancySection.fields}
-                  />
-                  <AddCaseSection
-                    sectionHeading={legalRestrictionsSection.sectionHeading}
-                    sectionId={legalRestrictionsSection.sectionId}
-                    sectionData={legalRestrictionsSection.fields}
-                  />
-                  <AddCaseSection
-                    sectionHeading={unspentConvictionsSection.sectionHeading}
-                    sectionId={unspentConvictionsSection.sectionId}
-                    sectionData={unspentConvictionsSection.fields}
-                  />
+                  <AddCaseSection section={armedForcesSection} />
+                  <AddCaseSection section={homelessnessSection} />
+                  <AddCaseSection section={propertyOwnwershipSection} />
+                  <AddCaseSection section={soldPropertySection} />
+                  <AddCaseSection section={arrearsSection} />
+                  <AddCaseSection section={breachOfTenancySection} />
+                  <AddCaseSection section={legalRestrictionsSection} />
+                  <AddCaseSection section={unspentConvictionsSection} />
 
-                  <AddCaseSection
-                    sectionHeading={employmentSection.sectionHeading}
-                    sectionId={employmentSection.sectionId}
-                    sectionData={employmentSection.fields}
-                  />
-                  <AddCaseSection
-                    sectionHeading={incomeSavingsSection.sectionHeading}
-                    sectionId={incomeSavingsSection.sectionId}
-                    sectionData={incomeSavingsSection.fields}
-                  />
+                  <AddCaseSection section={employmentSection} />
+                  <AddCaseSection section={incomeSavingsSection} />
 
                   <div className="c-flex__1 text-right">
                     <Button

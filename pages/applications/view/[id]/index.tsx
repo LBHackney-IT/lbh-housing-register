@@ -6,7 +6,7 @@ import {
   HeadingOne,
   HeadingThree,
 } from '../../../../components/content/headings';
-import Button from '../../../../components/button';
+import { ButtonLink } from '../../../../components/button';
 import Layout from '../../../../components/layout/staff-layout';
 import { Application } from '../../../../domain/HousingApi';
 import { UserContext } from '../../../../lib/contexts/user-context';
@@ -112,9 +112,12 @@ export default function ApplicationPage({
                   ) : (
                     <HeadingThree content="Other household members" />
                   )}
-                  <Button onClick={() => {}} secondary={true}>
+                  <ButtonLink
+                    additionalCssClasses="govuk-secondary lbh-button--secondary"
+                    href={`/applications/edit/${data.id}/add-household-member`}
+                  >
                     + Add household member
-                  </Button>
+                  </ButtonLink>
                 </div>
                 <div className="govuk-grid-column-one-third">
                   <HeadingThree content="Case details" />

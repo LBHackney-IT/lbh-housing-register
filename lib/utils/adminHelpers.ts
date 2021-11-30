@@ -11,6 +11,14 @@ export interface Address {
   postcode: string;
 }
 
+export const emptyAddress = {
+  addressLine1: '',
+  addressLine2: '',
+  addressLine3: '',
+  addressLine4: '',
+  postcode: '',
+};
+
 interface SectionData {
   fields: FormField[];
   sectionId: string;

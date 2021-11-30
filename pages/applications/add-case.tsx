@@ -11,7 +11,6 @@ import {
   getSectionData,
   generateInitialValues,
   generateQuestionArray,
-  emptyAddress,
   Address,
   mainApplicantSchema,
 } from '../../lib/utils/adminHelpers';
@@ -39,21 +38,14 @@ const initialValues = generateInitialValues(sections);
 
 interface PageProps {
   user: HackneyGoogleUser;
-  data: Application;
 }
 
 export default function AddCasePage({ user }: PageProps): JSX.Element {
+  const [addresshistory, setAddresshistory] = useState([] as Address[]);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [addressDialogOpen, setAddressDialogOpen] = useState(false);
-  const [addressInDialog, setAddressInDialog] = useState({
-    address: emptyAddress as Address,
-    isEditing: false,
-  });
-  const [editAddressIndex, setEditAddressIndex] = useState(0);
-  const [addresses, setAddresses] = useState([] as Address[]);
 
   const onSubmit = (values: FormikValues) => {
-    const questionValues = generateQuestionArray(values, addresses);
+    const questionValues = generateQuestionArray(values, addresshistory);
 
     const request: Application = {
       status: ApplicationStatus.MANUAL_DRAFT,
@@ -68,7 +60,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
           nationalInsuranceNumber:
             values.personalDetails_nationalInsuranceNumber,
         },
-        address: addresses[0] || null,
+        address: addresshistory[0] || null,
         contactInformation: {
           emailAddress: values.personalDetails_emailAddress,
           phoneNumber: values.personalDetails_phoneNumber,
@@ -113,53 +105,6 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
   const employmentSection = getSectionData(FormID.EMPLOYMENT);
   const incomeSavingsSection = getSectionData(FormID.INCOME_SAVINGS);
 
-  const addAddress = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    setAddressInDialog({
-      address: emptyAddress,
-      isEditing: false,
-    });
-    setAddressDialogOpen(true);
-  };
-
-  const editAddress = (addressIndex: number) => {
-    setAddressInDialog({
-      address: addresses[addressIndex],
-      isEditing: true,
-    });
-    setEditAddressIndex(addressIndex);
-    setAddressDialogOpen(true);
-  };
-
-  const saveAddress = () => {
-    if (addressInDialog.isEditing) {
-      const newAddresses = [...addresses];
-      newAddresses[editAddressIndex] = addressInDialog.address;
-      setAddresses(newAddresses);
-    } else {
-      setAddresses([...addresses, addressInDialog.address]);
-    }
-
-    setAddressDialogOpen(false);
-  };
-
-  const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setAddressInDialog({
-      ...addressInDialog,
-      address: {
-        ...addressInDialog.address,
-        [name]: value,
-      },
-    });
-  };
-
-  const deleteAddress = (addressIndex: number) => {
-    const newAddresses = [...addresses];
-    newAddresses.splice(addressIndex, 1);
-    setAddresses(newAddresses);
-  };
-
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="Group worktray">
@@ -191,19 +136,10 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
                   <AddCaseSection section={immigrationStatusSection} />
                   <AddCaseSection section={medicalNeedsSection} />
                   <AddCaseSection section={residentialStatusSection} />
-
                   <AddCaseAddress
-                    addresses={addresses}
-                    addressInDialog={addressInDialog}
-                    addressDialogOpen={addressDialogOpen}
-                    addAddress={addAddress}
-                    editAddress={editAddress}
-                    deleteAddress={deleteAddress}
-                    setAddressDialogOpen={setAddressDialogOpen}
-                    handleAddressChange={handleAddressChange}
-                    saveAddress={saveAddress}
+                    addresses={addresshistory}
+                    setAddresses={setAddresshistory}
                   />
-
                   <AddCaseSection section={currentAccommodationSection} />
 
                   {/* Your situation */}

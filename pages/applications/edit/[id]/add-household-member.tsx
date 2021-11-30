@@ -12,7 +12,6 @@ import {
   getSectionData,
   generateInitialValues,
   generateQuestionArray,
-  emptyAddress,
   Address,
   addCaseSchema,
 } from '../../../../lib/utils/adminHelpers';
@@ -51,20 +50,13 @@ export default function AddHouseholdMember({
 }: PageProps): JSX.Element | null {
   if (!data.id) return <Custom404 />;
 
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const [addressDialogOpen, setAddressDialogOpen] = useState(false);
-  const [addressInDialog, setAddressInDialog] = useState({
-    address: emptyAddress as Address,
-    isEditing: false,
-  });
-  const [editAddressIndex, setEditAddressIndex] = useState(0);
   const [addresses, setAddresses] = useState([] as Address[]);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const onSubmit = (values: FormikValues) => {
     const questionValues = generateQuestionArray(values, addresses);
 
-    const newMember = {
+    const householdMemberFormData = {
       person: {
         title: values.personalDetails_title,
         firstName: values.personalDetails_firstName,
@@ -83,7 +75,7 @@ export default function AddHouseholdMember({
     };
 
     if (data.otherMembers) {
-      data.otherMembers = [...data.otherMembers, newMember];
+      data.otherMembers = [...data.otherMembers, householdMemberFormData];
     }
 
     const request: Application = {
@@ -104,53 +96,6 @@ export default function AddHouseholdMember({
   const handleSaveApplication = () => {
     setIsSubmitted(true);
     scrollToTop();
-  };
-
-  const addAddress = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    setAddressInDialog({
-      address: emptyAddress,
-      isEditing: false,
-    });
-    setAddressDialogOpen(true);
-  };
-
-  const editAddress = (addressIndex: number) => {
-    setAddressInDialog({
-      address: addresses[addressIndex],
-      isEditing: true,
-    });
-    setEditAddressIndex(addressIndex);
-    setAddressDialogOpen(true);
-  };
-
-  const saveAddress = () => {
-    if (addressInDialog.isEditing) {
-      const newAddresses = [...addresses];
-      newAddresses[editAddressIndex] = addressInDialog.address;
-      setAddresses(newAddresses);
-    } else {
-      setAddresses([...addresses, addressInDialog.address]);
-    }
-
-    setAddressDialogOpen(false);
-  };
-
-  const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setAddressInDialog({
-      ...addressInDialog,
-      address: {
-        ...addressInDialog.address,
-        [name]: value,
-      },
-    });
-  };
-
-  const deleteAddress = (addressIndex: number) => {
-    const newAddresses = [...addresses];
-    newAddresses.splice(addressIndex, 1);
-    setAddresses(newAddresses);
   };
 
   return (
@@ -185,14 +130,8 @@ export default function AddHouseholdMember({
                   <AddCaseSection section={medicalNeedsSection} />
                   <AddCaseAddress
                     addresses={addresses}
-                    addressInDialog={addressInDialog}
-                    addressDialogOpen={addressDialogOpen}
-                    addAddress={addAddress}
-                    editAddress={editAddress}
-                    deleteAddress={deleteAddress}
-                    setAddressDialogOpen={setAddressDialogOpen}
-                    handleAddressChange={handleAddressChange}
-                    saveAddress={saveAddress}
+                    setAddresses={setAddresses}
+                    maximumAddresses={1}
                   />
                   <AddCaseSection section={employmentSection} />
 

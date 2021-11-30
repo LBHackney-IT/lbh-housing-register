@@ -65,15 +65,23 @@ export default function AddCaseSection({ section }: PageProps): JSX.Element {
       }
 
       inputField = (
-        <Select
-          modifierClasses="lbh-select--full-width"
-          label=""
-          name={generatedInputName}
-          options={field.options.map((option: FormFieldOption) => ({
-            label: option.label,
-            value: option.value,
-          }))}
-        />
+        <>
+          <Select
+            modifierClasses="lbh-select--full-width"
+            label=""
+            name={generatedInputName}
+            options={field.options.map((option: FormFieldOption) => ({
+              label: option.label,
+              value: option.value,
+            }))}
+          />
+          {/* {field.options[3] && field.options[3].value === 'self' ? (
+            <Input
+              name="personalDetails_genderDescription"
+              label="Gender description"
+            />
+          ) : null} */}
+        </>
       );
     }
 

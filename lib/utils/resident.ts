@@ -4,10 +4,10 @@ import { getFormIdsFromApplicationSections } from './application-forms';
 import { isOver18 } from './dateOfBirth';
 import { FormID } from './form-data';
 
-export const applicationStepsRemaining = (
+export const applicationSteps = (
   applicant: Applicant,
   isMainApplicant: boolean
-): number => {
+): { total: number; remaining: number } => {
   const steps = getFormIdsFromApplicationSections(
     getApplicationSectionsForResident(isMainApplicant, isOver18(applicant))
   );
@@ -17,7 +17,10 @@ export const applicationStepsRemaining = (
     hasResidentAnsweredForm(applicant, step) ? completeSteps++ : null
   );
 
-  return steps.length - completeSteps;
+  return {
+    total: steps.length,
+    remaining: steps.length - completeSteps,
+  };
 };
 
 /**

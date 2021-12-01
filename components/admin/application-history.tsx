@@ -8,7 +8,14 @@ import {
   IActivityEntity,
 } from '../../domain/ActivityHistoryApi';
 import { ApplicationStatus } from '../../lib/types/application-status';
-import { date } from 'yup';
+import {
+  SummaryListNoBorder,
+  SummaryListActions,
+  SummaryListRow,
+  SummaryListKey,
+  SummaryListValue,
+} from '../summary-list';
+import { HeadingThree, HeadingFour } from '../content/headings';
 
 interface ActivityHistoryPageProps {
   history: ActivityHistoryPagedResult;
@@ -18,15 +25,23 @@ export default function ApplicationHistory({
   history,
 }: ActivityHistoryPageProps): JSX.Element | null {
   const listItems = history
-    ? history.results.map((historyItem) => {
+    ? history.results.map((historyItem, index) => {
         const heading = renderHeading(historyItem);
         const createdAt = getFormattedDate(historyItem.createdAt);
 
         return (
-          <li key={historyItem.id} className="lbh-body-xs">
-            <strong>{heading}</strong>
-            <br></br>
-            {createdAt}
+          <li
+            key={historyItem.id}
+            className={`lbh-timeline__event ${
+              history.results.length - 1 !== index
+                ? 'lbh-timeline__event--major'
+                : ''
+            }`}
+          >
+            <HeadingFour content={heading as string} />
+            <p className="lbh-body lbh-body--grey lbh-!-margin-top-0">
+              {createdAt}
+            </p>
           </li>
         );
       })
@@ -36,10 +51,19 @@ export default function ApplicationHistory({
     <>
       {listItems ? (
         <>
-          <ul>{listItems}</ul>
+          <SummaryListNoBorder>
+            <SummaryListRow>
+              <SummaryListKey>
+                <HeadingThree content="History" />
+              </SummaryListKey>
+              <SummaryListValue>
+                <ol className="lbh-timeline">{listItems}</ol>
+              </SummaryListValue>
+            </SummaryListRow>
+          </SummaryListNoBorder>
         </>
       ) : (
-        <Paragraph>No history to show</Paragraph>
+        <HeadingThree content="No history to show" />
       )}
     </>
   );

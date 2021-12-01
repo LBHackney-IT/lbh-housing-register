@@ -12,6 +12,7 @@ import Paragraph from '../content/paragraph';
 import { HeadingThree } from '../content/headings';
 import Button from '../button';
 import { Address } from '../../lib/utils/adminHelpers';
+import DateInput from '../form/dateinput';
 
 interface PageProps {
   addresses: Address[];
@@ -20,11 +21,13 @@ interface PageProps {
 }
 
 const emptyAddress = {
-  addressLine1: '',
-  addressLine2: '',
-  addressLine3: '',
-  addressLine4: '',
-  postcode: '',
+  address: {
+    line1: '',
+    line2: '',
+    town: '',
+    county: '',
+    postcode: '',
+  },
 };
 
 export default function AddCaseAddress({
@@ -34,7 +37,7 @@ export default function AddCaseAddress({
 }: PageProps): JSX.Element {
   const [addressDialogOpen, setAddressDialogOpen] = useState(false);
   const [addressInDialog, setAddressInDialog] = useState({
-    address: emptyAddress as Address,
+    address: emptyAddress.address,
     isEditing: false,
   });
   const [editAddressIndex, setEditAddressIndex] = useState(0);
@@ -42,7 +45,7 @@ export default function AddCaseAddress({
   const addAddress = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     setAddressInDialog({
-      address: emptyAddress,
+      address: emptyAddress.address,
       isEditing: false,
     });
     setAddressDialogOpen(true);
@@ -50,7 +53,7 @@ export default function AddCaseAddress({
 
   const editAddress = (addressIndex: number) => {
     setAddressInDialog({
-      address: addresses[addressIndex],
+      address: addresses[addressIndex].address,
       isEditing: true,
     });
     setEditAddressIndex(addressIndex);
@@ -60,10 +63,10 @@ export default function AddCaseAddress({
   const saveAddress = () => {
     if (addressInDialog.isEditing) {
       const newAddresses = [...addresses];
-      newAddresses[editAddressIndex] = addressInDialog.address;
+      newAddresses[editAddressIndex] = { address: addressInDialog.address };
       setAddresses(newAddresses);
     } else {
-      setAddresses([...addresses, addressInDialog.address]);
+      setAddresses([...addresses, { address: addressInDialog.address }]);
     }
 
     setAddressDialogOpen(false);
@@ -97,7 +100,7 @@ export default function AddCaseAddress({
             </label>
           </SummaryListValue>
           <SummaryListActions wideActions={true}>
-            {addresses.map((address, index) => (
+            {addresses.map((addressItem, index) => (
               <FormGroup key={index}>
                 {index === 0 ? (
                   <HeadingThree content="Current address" />
@@ -106,33 +109,33 @@ export default function AddCaseAddress({
                   <HeadingThree content="Previous addresses" />
                 ) : null}
                 <Paragraph>
-                  {address.addressLine1 && (
+                  {addressItem.address.line1 && (
                     <>
-                      {address.addressLine1}
+                      {addressItem.address.line1}
                       <br />
                     </>
                   )}
-                  {address.addressLine2 && (
+                  {addressItem.address.line2 && (
                     <>
-                      {address.addressLine2}
+                      {addressItem.address.line2}
                       <br />
                     </>
                   )}
-                  {address.addressLine3 && (
+                  {addressItem.address.town && (
                     <>
-                      {address.addressLine3}
+                      {addressItem.address.town}
                       <br />
                     </>
                   )}
-                  {address.addressLine4 && (
+                  {addressItem.address.county && (
                     <>
-                      {address.addressLine4}
+                      {addressItem.address.county}
                       <br />
                     </>
                   )}
-                  {address.postcode && (
+                  {addressItem.address.postcode && (
                     <>
-                      {address.postcode}
+                      {addressItem.address.postcode}
                       <br />
                     </>
                   )}
@@ -178,52 +181,52 @@ export default function AddCaseAddress({
       >
         <>
           <FormGroup>
-            <label className="govuk-label lbh-label" htmlFor="addressLine1">
+            <label className="govuk-label lbh-label" htmlFor="line1">
               Building and street
             </label>
             <input
               className="govuk-input lbh-input govuk-!-width-two-thirds"
               autoComplete="address-line1"
-              name="addressLine1"
-              value={addressInDialog.address.addressLine1}
+              name="line1"
+              value={addressInDialog.address.line1}
               onChange={handleAddressChange}
             />
           </FormGroup>
 
           <FormGroup>
-            <label className="govuk-label lbh-label" htmlFor="addressLine2">
+            <label className="govuk-label lbh-label" htmlFor="line2">
               Building and street line 2
             </label>
             <input
               className="govuk-input lbh-input govuk-!-width-two-thirds"
               autoComplete="address-line2"
-              name="addressLine2"
-              value={addressInDialog.address.addressLine2}
+              name="line2"
+              value={addressInDialog.address.line2}
               onChange={handleAddressChange}
             />
           </FormGroup>
 
           <FormGroup>
-            <label className="govuk-label lbh-label" htmlFor="addressLine3">
+            <label className="govuk-label lbh-label" htmlFor="town">
               Town or city
             </label>
             <input
               className="govuk-input lbh-input govuk-!-width-two-thirds"
               autoComplete="address-level2"
-              name="addressLine3"
-              value={addressInDialog.address.addressLine3}
+              name="town"
+              value={addressInDialog.address.town}
               onChange={handleAddressChange}
             />
           </FormGroup>
 
           <FormGroup>
-            <label className="govuk-label lbh-label" htmlFor="addressLine4">
+            <label className="govuk-label lbh-label" htmlFor="county">
               County
             </label>
             <input
               className="govuk-input lbh-input govuk-!-width-two-thirds"
-              name="addressLine4"
-              value={addressInDialog.address.addressLine4}
+              name="county"
+              value={addressInDialog.address.county}
               onChange={handleAddressChange}
             />
           </FormGroup>
@@ -240,6 +243,9 @@ export default function AddCaseAddress({
               onChange={handleAddressChange}
             />
           </FormGroup>
+
+          {/* <DateInput label="Date from" name="date" showDay={false} />
+          <DateInput label="Date to" name="dateTo" showDay={false} /> */}
 
           <Button onClick={saveAddress}>Save address</Button>
         </>

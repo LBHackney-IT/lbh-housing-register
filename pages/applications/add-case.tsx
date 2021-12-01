@@ -41,11 +41,11 @@ interface PageProps {
 }
 
 export default function AddCasePage({ user }: PageProps): JSX.Element {
-  const [addresshistory, setAddresshistory] = useState([] as Address[]);
+  const [addressHistory, setAddressHistory] = useState([] as Address[]);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const onSubmit = (values: FormikValues) => {
-    const questionValues = generateQuestionArray(values, addresshistory);
+    const questionValues = generateQuestionArray(values, addressHistory);
 
     const request: Application = {
       status: ApplicationStatus.MANUAL_DRAFT,
@@ -60,7 +60,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
           nationalInsuranceNumber:
             values.personalDetails_nationalInsuranceNumber,
         },
-        address: addresshistory[0] || null,
+        address: addressHistory[0].address || null,
         contactInformation: {
           emailAddress: values.personalDetails_emailAddress,
           phoneNumber: values.personalDetails_phoneNumber,
@@ -137,8 +137,8 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
                   <AddCaseSection section={medicalNeedsSection} />
                   <AddCaseSection section={residentialStatusSection} />
                   <AddCaseAddress
-                    addresses={addresshistory}
-                    setAddresses={setAddresshistory}
+                    addresses={addressHistory}
+                    setAddresses={setAddressHistory}
                   />
                   <AddCaseSection section={currentAccommodationSection} />
 

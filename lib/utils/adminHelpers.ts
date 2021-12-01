@@ -6,11 +6,13 @@ import * as Yup from 'yup';
 import { INVALID_DATE } from '../../components/form/dateinput';
 
 export interface Address {
-  addressLine1: string;
-  addressLine2: string;
-  addressLine3: string;
-  addressLine4: string;
-  postcode: string;
+  address: {
+    line1: string;
+    line2: string;
+    town: string;
+    county: string;
+    postcode: string;
+  };
 }
 
 interface SectionData {
@@ -118,7 +120,7 @@ export const generateQuestionArray = (
   addresses: Address[]
 ) => {
   const questionArray = [];
-  const addressesWithoutCurrent = addresses.filter((_, index) => index !== 0);
+  // const addressesWithoutCurrent = addresses.filter((_, index) => index !== 0);
 
   for (const [key, value] of Object.entries(values)) {
     // Return question Ids to correct syntax for API
@@ -130,8 +132,8 @@ export const generateQuestionArray = (
     // Use custom address fields
     if (questionId === 'address-history/address-finder') {
       questionArray.push({
-        id: questionId,
-        answer: JSON.stringify(addressesWithoutCurrent),
+        id: 'address-history/addressHistory',
+        answer: JSON.stringify(addresses),
       });
     } else {
       questionArray.push({

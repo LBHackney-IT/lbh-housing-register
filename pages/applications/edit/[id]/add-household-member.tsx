@@ -66,7 +66,7 @@ export default function AddHouseholdMember({
         genderDescription: '',
         nationalInsuranceNumber: values.personalDetails_nationalInsuranceNumber,
       },
-      address: addresses[0] || null,
+      address: addresses[0].address || null,
       contactInformation: {
         emailAddress: values.personalDetails_emailAddress,
         phoneNumber: values.personalDetails_phoneNumber,

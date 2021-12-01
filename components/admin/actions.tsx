@@ -65,6 +65,10 @@ export default function Actions({ data }: PageProps): JSX.Element {
       label: 'Suspended',
       value: ApplicationStatus.SUSPENDED,
     },
+    {
+      label: 'Awaiting reassessment',
+      value: ApplicationStatus.AWAITING_REASSESSMENT,
+    },
   ];
 
   const reasonOptions = [

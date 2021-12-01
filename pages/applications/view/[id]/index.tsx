@@ -105,24 +105,23 @@ export default function ApplicationPage({
                       canEdit={data.status === ApplicationStatus.MANUAL_DRAFT}
                     />
                   )}
-                  {data.otherMembers && data.otherMembers.length > 0 && (
+                  {data.otherMembers && data.otherMembers.length > 0 ? (
                     <OtherMembers
                       heading="Other household members"
                       others={data.otherMembers}
                       applicationId={data.id}
                       canEdit={data.status === ApplicationStatus.MANUAL_DRAFT}
                     />
+                  ) : (
+                    <HeadingThree content="Other household members" />
                   )}
                   {data.status === ApplicationStatus.MANUAL_DRAFT && (
-                    <>
-                      <HeadingThree content="Other household members" />
-                      <ButtonLink
-                        additionalCssClasses="govuk-secondary lbh-button--secondary"
-                        href={`/applications/edit/${data.id}/add-household-member`}
-                      >
-                        + Add household member
-                      </ButtonLink>
-                    </>
+                    <ButtonLink
+                      additionalCssClasses="govuk-secondary lbh-button--secondary"
+                      href={`/applications/edit/${data.id}/add-household-member`}
+                    >
+                      + Add household member
+                    </ButtonLink>
                   )}
                 </div>
                 <div className="govuk-grid-column-one-third">

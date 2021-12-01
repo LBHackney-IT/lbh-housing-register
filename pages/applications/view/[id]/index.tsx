@@ -36,7 +36,6 @@ import {
   HorizontalNav,
   HorizontalNavItem,
 } from '../../../../components/admin/HorizontalNav';
-import ApplicantName from '../../../../components/application/ApplicantName';
 import ApplicationHistory from '../../../../components/admin/application-history';
 import { ActivityHistoryPagedResult } from '../../../../domain/ActivityHistoryApi';
 

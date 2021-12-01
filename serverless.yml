@@ -48,6 +48,7 @@ functions:
       NOTIFY_TEMPLATE_NEW_APPLICATION: ${ssm:/housing-register/${self:provider.stage}/notify-template-new-application}
       NOTIFY_TEMPLATE_DISQUALIFY: ${ssm:/housing-register/${self:provider.stage}/notify-template-disqualify}
       NOTIFY_TEMPLATE_MEDICAL_NEED: ${ssm:/housing-register/${self:provider.stage}/notify-template-medical-need}
+      ACTIVITY_HISTORY_API: ${ssm:/housing-register/${self:provider.stage}/activityhistory-api/base-url}
       SKIP_VERIFY_TOKEN: false
 
 resources:

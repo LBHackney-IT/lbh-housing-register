@@ -54,7 +54,7 @@ export default function ViewAllApplicationsPage({
 
     router.push({
       pathname: '/applications/view-register',
-      query: { status: ApplicationStatus.MANUAL_DRAFT },
+      query: { status: name },
     });
 
     setActiveNavItem(name);

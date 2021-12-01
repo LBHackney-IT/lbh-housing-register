@@ -29,7 +29,7 @@ export function getUser(req: any) {
 
 export const setAuthCookie = (res: any, data: VerifyAuthResponse): void => {
   const jwtCookie = cookie.serialize('housing_user', data.accessToken, {
-    maxAge: 7 * 24 * 60 * 60,
+    maxAge: 60 * 60,
     domain: '.hackney.gov.uk',
     path: '/',
   });

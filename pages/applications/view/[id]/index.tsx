@@ -78,7 +78,8 @@ export default function ApplicationPage({
               >
                 Overview
               </HorizontalNavItem>
-              {data.status !== ApplicationStatus.DRAFT ? (
+              {data.status !== ApplicationStatus.DRAFT &&
+              data.status !== ApplicationStatus.MANUAL_DRAFT ? (
                 <HorizontalNavItem
                   handleClick={handleClick}
                   itemName="assessment"
@@ -141,10 +142,12 @@ export default function ApplicationPage({
                     onClick={() => setActiveNavItem('assessment')}
                   />
 
-                  <CaseDetailsItem
-                    itemHeading="Date submitted"
-                    itemValue={formatDate(data.submittedAt)}
-                  />
+                  {data.submittedAt && (
+                    <CaseDetailsItem
+                      itemHeading="Date submitted"
+                      itemValue={formatDate(data.submittedAt)}
+                    />
+                  )}
 
                   {data.assessment?.effectiveDate && (
                     <CaseDetailsItem

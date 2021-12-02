@@ -8,14 +8,31 @@ This application has two sides: the _officer dashboard_ side, for council office
 
 ### Resident Flow
 
-This app will form part of the user journey, allowing for an application to the housing register. This breaks down into the following steps:
+This app will form part of the user journey, allowing for an application to the housing register. This breaks down into the following steps.
 
 - **`/`** - Entry point, provide starting information and signposts the user to the housing registration application
-- **`/apply/start`** - Start a new application
-- **`/apply/sign-in`** - Return to an active application
+- **`/apply/sign-in`** - Sign in using an email address
+- **`/apply/verify`** - Verify the email address with a code
+
+If the resident is signing up for the first time, then they will be shown the following steps before they get to the application overview.
+
+- **`/apply/start`** - Provide initial details for the application
+- **`/apply/household`** - Provide the household members included in the application
+- **`/apply/expect`** - Provide the expected bedroom need based on the household members
+
+Once signed in, the resident will then be able to update their application.
+
 - **`/apply/overview`** - Overall view of the application, display a list of people and current progress
 - **`/apply/[person]`** - Overall view of each person involved with the application
   - **`/apply/[person]/[step]`** - Step of the application form
+
+If at any point during the application process, details are provided that would disqualify the application, the resident is taken to the `/apply/not-eligible` page.
+
+After all the questions have been answered and the application details are complete, the resident will be shown the outcome.
+
+- **`/apply/submit/additional-questions`** - Further questions relating to their application
+- **`/apply/submit/declaration`** - Final declaration to agree to the terms of the application
+- **`/apply/confirmation`** - Confirmation that the application has been submitted
 
 ### Staff Dashboard
 
@@ -140,3 +157,4 @@ This has been extended to be used in a more generic way, which means forms can b
 
 - NOTIFY_TEMPLATE_NEW_APPLICATION: sent on completion of an application
 - NOTIFY_TEMPLATE_DISQUALIFY: sent on disqualification on an application
+- NOTIFY_TEMPLATE_MEDICAL_NEED: sent if anyone in the application states a medical need

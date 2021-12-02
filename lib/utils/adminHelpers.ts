@@ -13,6 +13,8 @@ export interface Address {
     county: string;
     postcode: string;
   };
+  date: string;
+  dateTo: string;
 }
 
 interface SectionData {

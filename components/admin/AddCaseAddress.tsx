@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   SummaryListNoBorder,
   SummaryListActions,
@@ -9,10 +9,9 @@ import {
 import FormGroup from '../form/form-group';
 import Dialog from '../dialog';
 import Paragraph from '../content/paragraph';
-import { HeadingThree } from '../content/headings';
+import { HeadingThree, HeadingFour } from '../content/headings';
 import Button from '../button';
 import { Address } from '../../lib/utils/adminHelpers';
-import DateInput from '../form/dateinput';
 
 interface PageProps {
   addresses: Address[];
@@ -28,6 +27,15 @@ const emptyAddress = {
     county: '',
     postcode: '',
   },
+  date: '',
+  dateTo: '',
+};
+
+const emptyDate = {
+  dateMonth: '',
+  dateYear: '',
+  dateToMonth: '',
+  dateToYear: '',
 };
 
 export default function AddCaseAddress({
@@ -36,37 +44,52 @@ export default function AddCaseAddress({
   maximumAddresses = 0,
 }: PageProps): JSX.Element {
   const [addressDialogOpen, setAddressDialogOpen] = useState(false);
-  const [addressInDialog, setAddressInDialog] = useState({
-    address: emptyAddress.address,
-    isEditing: false,
-  });
+  const [addressInDialog, setAddressInDialog] = useState(emptyAddress);
+  const [isEditing, setIsEditing] = useState(false);
   const [editAddressIndex, setEditAddressIndex] = useState(0);
+  const [date, setDate] = useState(emptyDate);
 
-  const addAddress = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
+  const fromDate = new Date(
+    Number(date.dateYear),
+    Number(date.dateMonth) - 1,
+    1
+  );
+  const toDate = new Date(
+    Number(date.dateToYear),
+    Number(date.dateToMonth) - 1,
+    1
+  );
+
+  useEffect(() => {
     setAddressInDialog({
-      address: emptyAddress.address,
-      isEditing: false,
+      ...addressInDialog,
+      date: fromDate.toISOString(),
+      dateTo: toDate.toISOString(),
     });
+  }, [date]);
+
+  const addNewAddress = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    setIsEditing(false);
+    setAddressInDialog(emptyAddress);
+    setDate(emptyDate);
     setAddressDialogOpen(true);
   };
 
   const editAddress = (addressIndex: number) => {
-    setAddressInDialog({
-      address: addresses[addressIndex].address,
-      isEditing: true,
-    });
+    setIsEditing(true);
+    setAddressInDialog(addresses[addressIndex]);
     setEditAddressIndex(addressIndex);
     setAddressDialogOpen(true);
   };
 
   const saveAddress = () => {
-    if (addressInDialog.isEditing) {
+    if (isEditing) {
       const newAddresses = [...addresses];
-      newAddresses[editAddressIndex] = { address: addressInDialog.address };
+      newAddresses[editAddressIndex] = addressInDialog;
       setAddresses(newAddresses);
     } else {
-      setAddresses([...addresses, { address: addressInDialog.address }]);
+      setAddresses([...addresses, addressInDialog]);
     }
 
     setAddressDialogOpen(false);
@@ -74,6 +97,11 @@ export default function AddCaseAddress({
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
+    setDate({
+      ...date,
+      [name]: value,
+    });
+
     setAddressInDialog({
       ...addressInDialog,
       address: {
@@ -87,6 +115,13 @@ export default function AddCaseAddress({
     const newAddresses = [...addresses];
     newAddresses.splice(addressIndex, 1);
     setAddresses(newAddresses);
+  };
+
+  const formatIsoDate = (date: string) => {
+    const dateObj = new Date(date);
+    return `${dateObj.toLocaleString('default', {
+      month: 'long',
+    })} ${dateObj.getFullYear()}`;
   };
 
   return (
@@ -139,6 +174,13 @@ export default function AddCaseAddress({
                       <br />
                     </>
                   )}
+                  {addressItem.date && addressItem.dateTo && (
+                    <>
+                      {`${formatIsoDate(addressItem.date)} to ${formatIsoDate(
+                        addressItem.dateTo
+                      )}`}
+                    </>
+                  )}
                 </Paragraph>
                 <a
                   className="lbh-link"
@@ -164,7 +206,7 @@ export default function AddCaseAddress({
                     ? 'lbh-!-margin-top-0 '
                     : 'govuk-secondary lbh-button--secondary'
                 }`}
-                onClick={addAddress}
+                onClick={addNewAddress}
               >
                 Add address
               </button>
@@ -175,7 +217,7 @@ export default function AddCaseAddress({
 
       <Dialog
         isOpen={addressDialogOpen}
-        title={`${addressInDialog.isEditing ? 'Edit' : 'Add'} address`}
+        title={`${isEditing ? 'Edit' : 'Add'} address`}
         onCancel={() => setAddressDialogOpen(false)}
         onCancelText="Close"
       >
@@ -244,8 +286,81 @@ export default function AddCaseAddress({
             />
           </FormGroup>
 
-          {/* <DateInput label="Date from" name="date" showDay={false} />
-          <DateInput label="Date to" name="dateTo" showDay={false} /> */}
+          <HeadingFour content="Dates at address" />
+
+          <div style={{ display: 'inline-block', padding: '0 20px 0 0' }}>
+            <label
+              className="govuk-label govuk-date-input__label"
+              htmlFor="dateMonth"
+            >
+              Month
+            </label>
+            <input
+              className="govuk-input govuk-date-input__input govuk-input--width-2"
+              type="text"
+              pattern="[0-9]{1,2}"
+              inputMode="numeric"
+              name="dateMonth"
+              onChange={handleAddressChange}
+              value={date.dateMonth}
+            />
+          </div>
+          <div style={{ display: 'inline-block', padding: '0 20px 0 0' }}>
+            <label
+              className="govuk-label govuk-date-input__label"
+              htmlFor="dateYear"
+            >
+              Year
+            </label>
+            <input
+              className="govuk-input govuk-date-input__input govuk-input--width-4"
+              type="text"
+              pattern="[0-9]{4}"
+              inputMode="numeric"
+              name="dateYear"
+              onChange={handleAddressChange}
+              value={date.dateYear}
+            />
+          </div>
+
+          <div style={{ display: 'inline-block', padding: '0 20px 0 0' }}>
+            <Paragraph>to</Paragraph>
+          </div>
+
+          <div style={{ display: 'inline-block', padding: '0 20px 0 0' }}>
+            <label
+              className="govuk-label govuk-date-input__label"
+              htmlFor="dateToMonth"
+            >
+              Month
+            </label>
+            <input
+              className="govuk-input govuk-date-input__input govuk-input--width-2"
+              type="text"
+              pattern="[0-9]{1,2}"
+              inputMode="numeric"
+              name="dateToMonth"
+              onChange={handleAddressChange}
+              value={date.dateToMonth}
+            />
+          </div>
+          <div style={{ display: 'inline-block', padding: '0 20px 0 0' }}>
+            <label
+              className="govuk-label govuk-date-input__label"
+              htmlFor="dateToYear"
+            >
+              Year
+            </label>
+            <input
+              className="govuk-input govuk-date-input__input govuk-input--width-4"
+              type="text"
+              pattern="[0-9]{4}"
+              inputMode="numeric"
+              name="dateToYear"
+              onChange={handleAddressChange}
+              value={date.dateToYear}
+            />
+          </div>
 
           <Button onClick={saveAddress}>Save address</Button>
         </>

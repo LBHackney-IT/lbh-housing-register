@@ -1,5 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
+import cookie from 'cookie';
 import { NextApiRequest } from 'next';
+import { ActivityHistoryPagedResult } from '../../domain/ActivityHistoryApi';
 import {
   Application,
   CreateAuthRequest,
@@ -12,7 +14,6 @@ import {
 } from '../../domain/HousingApi';
 import { Stat } from '../../domain/stat';
 import { housingClient } from '../utils/axiosClients';
-import cookie from 'cookie';
 
 const headersWithKey = {
   'x-api-key': process.env.HOUSING_REGISTER_KEY,
@@ -238,6 +239,27 @@ export const downloadInternalReport = async (
     };
     const url = `${process.env.HOUSING_REGISTER_API}/reporting/export?reportType=${reportType}&startDate=${startDate}&endDate=${endDate}`;
     return await axios.get(url, { headers: headers, responseType: 'blob' });
+  } catch (err) {
+    return null;
+  }
+};
+
+export const getApplicationHistory = async (
+  id: string,
+  req: any
+): Promise<ActivityHistoryPagedResult | null> => {
+  try {
+    const url = `${process.env.ACTIVITY_HISTORY_API}/activityhistory?targetId=${id}&pageSize=100`;
+
+    const cookies = cookie.parse(req.headers.cookie ?? '');
+    const parsedToken = cookies['hackneyToken'];
+
+    const { data } = await axios.get(url, {
+      headers: {
+        Authorization: 'Bearer ' + parsedToken,
+      },
+    });
+    return data;
   } catch (err) {
     return null;
   }

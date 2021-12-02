@@ -24,3 +24,11 @@ export const createApplication = async (application: Application) => {
   });
   return (await res.json()) as Application;
 };
+
+export const generateNovaletExport = async () => {
+  const res = await fetch(`/api/reports/novalet/generate`, {
+    method: 'POST',
+    body: null,
+  });
+  return res;
+};

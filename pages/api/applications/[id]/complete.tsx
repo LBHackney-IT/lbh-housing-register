@@ -13,7 +13,7 @@ const endpoint: NextApiHandler = async (
         const id = req.query.id as string;
 
         if (canUpdateApplication(req, id)) {
-          const data = await completeApplication(id);
+          const data = await completeApplication(id, req);
           res.status(StatusCodes.OK).json(data);
         } else {
           res

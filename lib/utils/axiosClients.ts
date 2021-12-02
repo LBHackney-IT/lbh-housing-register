@@ -16,22 +16,43 @@ const activityHistoryAxios = axios.create({
   },
 });
 
-export function housingClient(httpRequest: any): AxiosInstance {
-  const cookies = cookie.parse(httpRequest.headers.cookie ?? '');
-  const parsedToken = cookies['hackneyToken'];
+housingRegisterAxios.interceptors.response.use(
+  function (response) {
+    return response;
+  },
+  function (error) {
+    console.log(error);
+  }
+);
 
-  housingRegisterAxios.defaults.headers.common['Authorization'] =
-    'Bearer ' + parsedToken;
+activityHistoryAxios.interceptors.response.use(
+  function (response) {
+    return response;
+  },
+  function (error) {
+    console.log(error);
+  }
+);
 
+export function housingAxios(httpRequest: any): AxiosInstance {
+  if (httpRequest) {
+    const cookies = cookie.parse(httpRequest.headers.cookie ?? '');
+    const parsedToken = cookies['hackneyToken'];
+
+    housingRegisterAxios.defaults.headers.common['Authorization'] =
+      'Bearer ' + parsedToken;
+  }
   return housingRegisterAxios;
 }
 
-export function activityClient(httpRequest: any): AxiosInstance {
-  const cookies = cookie.parse(httpRequest.headers.cookie ?? '');
-  const parsedToken = cookies['hackneyToken'];
+export function activityAxios(httpRequest: any): AxiosInstance {
+  if (httpRequest) {
+    const cookies = cookie.parse(httpRequest.headers.cookie ?? '');
+    const parsedToken = cookies['hackneyToken'];
 
-  activityHistoryAxios.defaults.headers.common['Authorization'] =
-    'Bearer ' + parsedToken;
+    activityHistoryAxios.defaults.headers.common['Authorization'] =
+      'Bearer ' + parsedToken;
+  }
 
   return activityHistoryAxios;
 }

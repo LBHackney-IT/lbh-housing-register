@@ -21,7 +21,7 @@ const endpoint: NextApiHandler = async (
           canUpdateApplication(req, id) ||
           (isStaffAction(application) && hasStaffPermissions(req))
         ) {
-          const data = await updateApplication(application, id);
+          const data = await updateApplication(application, id, req);
           res.status(StatusCodes.OK).json(data);
         } else {
           res

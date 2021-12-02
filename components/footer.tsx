@@ -1,15 +1,14 @@
-import react from 'react';
-import Paragraph from '../components/content/paragraph';
-import { HeadingThree, HeadingTwo } from './content/headings';
 import React, { useState } from 'react';
-import Dialog from './dialog';
+import Paragraph from '../components/content/paragraph';
+import { HeadingThree } from './content/headings';
+import ContactUsDialog from '../components/content/ContactUsDialog';
 
 interface FooterProps {
   referenceNumber: string;
 }
 
 const Footer = ({ referenceNumber }: FooterProps) => {
-  const [open, setOpen] = useState(false);
+  const [contactUsDialogOpen, setContactUsDialogOpen] = useState(false);
   return (
     <>
       <footer className="lbh-footer">
@@ -26,26 +25,16 @@ const Footer = ({ referenceNumber }: FooterProps) => {
             <br />
             <button
               className="govuk-button govuk-secondary lbh-button lbh-button--secondary"
-              onClick={() => setOpen(true)}
+              onClick={() => setContactUsDialogOpen(true)}
             >
               Contact us
             </button>
           </Paragraph>
 
-          <Dialog
-            isOpen={open}
-            title="Contact us"
-            onCancel={() => setOpen(false)}
-            onCancelText="Close"
-          >
-            <HeadingTwo content="Call 020 8356 2929" />
-            <p className="lbh-body-m">
-              Open Monday to Friday, from 9am to 5pm.
-            </p>
-            <p className="lbh-body-m lbh-!-margin-top-0">
-              An emergency line operates outside these hours.
-            </p>
-          </Dialog>
+          <ContactUsDialog
+            contactUsDialogOpen={contactUsDialogOpen}
+            setContactUsDialogOpen={setContactUsDialogOpen}
+          />
 
           <hr />
 

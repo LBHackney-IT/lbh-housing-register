@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import Layout from '../../components/layout/resident-layout';
@@ -7,6 +7,7 @@ import Button from '../../components/button';
 import InsetText from '../../components/content/inset-text';
 import List, { ListItem } from '../../components/content/list';
 import Paragraph from '../../components/content/paragraph';
+import ContactUsDialog from '../../components/content/ContactUsDialog';
 import Panel from '../../components/panel';
 import { useAppSelector } from '../../lib/store/hooks';
 import { checkEligible } from '../../lib/utils/form';
@@ -17,6 +18,7 @@ import { ApplicationStatus } from '../../lib/types/application-status';
 const NotEligible = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const [contactUsDialogOpen, setContactUsDialogOpen] = useState(false);
   const application = useAppSelector((store) => store.application);
   const mainApplicant = useAppSelector(
     (store) => store.application.mainApplicant
@@ -115,31 +117,31 @@ const NotEligible = (): JSX.Element => {
           the landlord
         </ListItem>
       </List>
-      <HeadingThree content="You can challenge this decision" />
+
+      <HeadingThree content="Other enquiries" />
+
       <Paragraph>
-        If you disagree with the decision that has been made, you can request a
-        review by the Council.{' '}
-      </Paragraph>
-      <Paragraph>
-        The way the Council determines who qualifies for the Housing Register is
-        detailed in our Lettings policy. Before contacting us, please{' '}
+        Please{' '}
         <a className="lbh-link" href="https://hackney.gov.uk/lettings-policy">
           read our Lettings policy
+        </a>{' '}
+        to understand how the Council determines who qualifies to join the
+        housing register. If you still think you meet the criteria in our
+        Lettings policy, please{' '}
+        <a
+          href="#"
+          className="lbh-link lbh-link--no-visited-state"
+          onClick={() => setContactUsDialogOpen(true)}
+        >
+          contact the Housing Options and Advice team
         </a>
         .
       </Paragraph>
-      <Paragraph>
-        If you still think you meet the criteria in our Lettings policy, you can
-        request a review in writing within 21 days of the decision, by emailing{' '}
-        <a className="lbh-link" href="mailto:ReviewsandAppeals@hackney.gov.uk">
-          ReviewsandAppeals@hackney.gov.uk
-        </a>{' '}
-        telling us why you think you qualify.{' '}
-      </Paragraph>
-      <Paragraph>
-        Please note that on average, only 6% of cases are accepted after being
-        re-assessed.
-      </Paragraph>
+
+      <ContactUsDialog
+        contactUsDialogOpen={contactUsDialogOpen}
+        setContactUsDialogOpen={setContactUsDialogOpen}
+      />
 
       <Button onClick={signOut}>Sign out</Button>
     </Layout>

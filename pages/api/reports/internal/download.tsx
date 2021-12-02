@@ -22,7 +22,7 @@ const endpoint: NextApiHandler = async (
       }
 
       try {
-        const file = await downloadInternalReport(req.query);
+        const file = await downloadInternalReport(req);
 
         if (file) {
           res.status(file.status);
@@ -41,7 +41,7 @@ const endpoint: NextApiHandler = async (
       } catch (error) {
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Unable to download report' });
+          .json({ message: 'Request error: Unable to download report' });
       }
       break;
 

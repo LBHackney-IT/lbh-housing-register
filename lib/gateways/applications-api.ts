@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { NextApiRequest } from 'next';
 import {
   Application,
   CreateAuthRequest,
@@ -10,6 +11,8 @@ import {
   VerifyAuthResponse,
 } from '../../domain/HousingApi';
 import { Stat } from '../../domain/stat';
+import { housingClient } from '../utils/axiosClients';
+import cookie from 'cookie';
 
 const headersWithKey = {
   'x-api-key': process.env.HOUSING_REGISTER_KEY,
@@ -220,14 +223,18 @@ export const generateNovaletExport = async (): Promise<AxiosResponse> => {
 };
 
 export const downloadInternalReport = async (
-  query: any
+  req : NextApiRequest
 ): Promise<AxiosResponse | null> => {
   try {
-    const { reportType, startDate, endDate } = query;
+    const { reportType, startDate, endDate } = req.query;
+
+    const cookies = cookie.parse(req.headers.cookie ?? '');
+    const parsedToken = cookies['hackneyToken'];
 
     const headers = {
       'x-api-key': process.env.HOUSING_REGISTER_KEY,
       'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + parsedToken
     };
     const url = `${process.env.HOUSING_REGISTER_API}/reporting/export?reportType=${reportType}&startDate=${startDate}&endDate=${endDate}`;
     return await axios.get(url, { headers: headers, responseType: 'blob' });

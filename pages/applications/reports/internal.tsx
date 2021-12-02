@@ -5,11 +5,17 @@ import Button from '../../../components/button';
 import DateInput from '../../../components/form/dateinput';
 import Radios from '../../../components/form/radios';
 
+interface FormValues {
+  reportType: number;
+  startDate: string;
+  endDate: string;
+}
+
 export default function InternalReports(): JSX.Element {
   const runDate = new Date();
 
-  const initialValues = {
-    reportType: '0',
+  const initialValues : FormValues= {
+    reportType: 0,
     startDate: new Date(
       runDate.getFullYear(),
       runDate.getMonth(),
@@ -22,8 +28,12 @@ export default function InternalReports(): JSX.Element {
     ).toDateString(),
   };
 
-  function handleSubmit(form: any) {
-    const query = new URLSearchParams(form);
+  function handleSubmit(form : FormValues) {
+    const query = new URLSearchParams();
+    query.set("reportType", form.reportType.toString());
+    query.set("startDate", new Date(form.startDate).toISOString().split('T')[0]);
+    query.set("endDate", new Date(form.endDate).toISOString().split('T')[0]);
+
     router.push({
       pathname: '/api/reports/internal/download',
       query: query.toString(),

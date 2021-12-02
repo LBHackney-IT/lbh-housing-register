@@ -1,6 +1,6 @@
 import { Form, Formik } from 'formik';
 import router from 'next/router';
-import React, { useState } from 'react';
+import React from 'react';
 import Button from '../../../components/button';
 import DateInput from '../../../components/form/dateinput';
 import Radios from '../../../components/form/radios';
@@ -14,7 +14,7 @@ interface FormValues {
 export default function InternalReports(): JSX.Element {
   const runDate = new Date();
 
-  const initialValues : FormValues= {
+  const initialValues: FormValues = {
     reportType: 0,
     startDate: new Date(
       runDate.getFullYear(),
@@ -28,11 +28,14 @@ export default function InternalReports(): JSX.Element {
     ).toDateString(),
   };
 
-  function handleSubmit(form : FormValues) {
+  function handleSubmit(form: FormValues) {
     const query = new URLSearchParams();
-    query.set("reportType", form.reportType.toString());
-    query.set("startDate", new Date(form.startDate).toISOString().split('T')[0]);
-    query.set("endDate", new Date(form.endDate).toISOString().split('T')[0]);
+    query.set('reportType', form.reportType.toString());
+    query.set(
+      'startDate',
+      new Date(form.startDate).toISOString().split('T')[0]
+    );
+    query.set('endDate', new Date(form.endDate).toISOString().split('T')[0]);
 
     router.push({
       pathname: '/api/reports/internal/download',

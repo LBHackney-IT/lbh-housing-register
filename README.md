@@ -41,6 +41,7 @@ After all the questions have been answered and the application details are compl
 - **`/applications`** - The homepage for officers, which displays applications assigned to them
   - **`/applications/unassigned`** - View any unassigned applications, which can be assigned to an officer
   - **`/applications/view/:id`** - View all information relating to a particular application
+  - **`/applications/reports`** - Download reports to export application data
 
 ## 🧱 How it's made
 
@@ -95,6 +96,18 @@ Next, you need to tell your computer to run the app from a hackney.gov.uk domain
 Update the `APP_URL` variable in the `.env` file to match. When you next launch the app, it should be on `http://localdev.hackney.gov.uk:3000`.
 
 If you have the right configuration setup within the `.env` file, you should be able to access the staff dashboard.
+
+#### Permissions
+
+We have defined Google Groups in relation to access permissions and roles for what is possible within the staff dashboard.
+
+These are as follows:
+
+- AUTHORISED_ADMIN_GROUP: can do any required action
+- AUTHORISED_MANAGER_GROUP: same as officers, plus can assign applications to officers for assessment and see sensitive data
+- AUTHORISED_OFFICER_GROUP: can view applications and perform assessments on assigned applications
+
+The scope and expectations around permissions have been kept fairly limited at this stage, but is an area for future enhancements.
 
 ### Mock Server
 

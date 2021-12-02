@@ -1,4 +1,6 @@
 import axios from 'axios';
+import cookie from 'cookie';
+import { ActivityHistoryPagedResult } from '../../domain/ActivityHistoryApi';
 import {
   Application,
   CreateAuthRequest,
@@ -174,6 +176,27 @@ export const getStats = async (): Promise<Array<Stat> | null> => {
         headers: headersWithKey,
       }
     );
+    return data;
+  } catch (err) {
+    return null;
+  }
+};
+
+export const getApplicationHistory = async (
+  id: string,
+  req: any
+): Promise<ActivityHistoryPagedResult | null> => {
+  try {
+    const url = `${process.env.ACTIVITY_HISTORY_API}/activityhistory?targetId=${id}&pageSize=100`;
+
+    const cookies = cookie.parse(req.headers.cookie ?? '');
+    const parsedToken = cookies['hackneyToken'];
+
+    const { data } = await axios.get(url, {
+      headers: {
+        Authorization: 'Bearer ' + parsedToken,
+      },
+    });
     return data;
   } catch (err) {
     return null;

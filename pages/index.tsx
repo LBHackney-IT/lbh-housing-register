@@ -174,13 +174,6 @@ export default function ApplicationHomePage(): JSX.Element {
         >
           Start now
         </ButtonLink>
-
-        {/* TODO: Disabled until we get this working!
-      <HeadingTwo content="Already started an application?" />
-      <ButtonLink href="/apply/sign-in" secondary={true}>
-        Sign in
-      </ButtonLink>
-      */}
       </Layout>
     </>
   );

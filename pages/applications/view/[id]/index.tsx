@@ -10,7 +10,10 @@ import { ButtonLink } from '../../../../components/button';
 import Layout from '../../../../components/layout/staff-layout';
 import { Application } from '../../../../domain/HousingApi';
 import { UserContext } from '../../../../lib/contexts/user-context';
-import { getApplication } from '../../../../lib/gateways/applications-api';
+import {
+  getApplication,
+  getApplicationHistory,
+} from '../../../../lib/gateways/applications-api';
 import {
   canViewSensitiveApplication,
   getRedirect,
@@ -34,15 +37,19 @@ import {
   HorizontalNav,
   HorizontalNavItem,
 } from '../../../../components/admin/HorizontalNav';
+import ApplicationHistory from '../../../../components/admin/application-history';
+import { ActivityHistoryPagedResult } from '../../../../domain/ActivityHistoryApi';
 
 export interface PageProps {
   user: HackneyGoogleUserWithPermissions;
   data: Application;
+  history: ActivityHistoryPagedResult;
 }
 
 export default function ApplicationPage({
   user,
   data,
+  history,
 }: PageProps): JSX.Element | null {
   if (!data.id) return <Custom404 />;
 
@@ -77,6 +84,13 @@ export default function ApplicationPage({
                 isActive={activeNavItem === 'overview'}
               >
                 Overview
+              </HorizontalNavItem>
+              <HorizontalNavItem
+                handleClick={handleClick}
+                itemName="history"
+                isActive={activeNavItem === 'history'}
+              >
+                Notes and History
               </HorizontalNavItem>
               {data.status !== ApplicationStatus.DRAFT &&
               data.status !== ApplicationStatus.MANUAL_DRAFT ? (
@@ -185,6 +199,11 @@ export default function ApplicationPage({
                 </div>
               </div>
             )}
+
+            {activeNavItem === 'history' && (
+              <ApplicationHistory history={history} />
+            )}
+
             {activeNavItem === 'assessment' && <Actions data={data} />}
           </>
         )}
@@ -216,5 +235,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  return { props: { user, data } };
+  const history = await getApplicationHistory(id, context.req);
+
+  return { props: { user, data, history } };
 };

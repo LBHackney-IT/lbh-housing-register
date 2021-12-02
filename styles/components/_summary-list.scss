@@ -4,6 +4,22 @@
   margin-top: 1.5em;
 }
 
+.lbh-summary-list--spaced {
+  margin-top: 2em;
+
+  .govuk-summary-list__key {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  @media (min-width: 40.0625em) {
+    .govuk-summary-list__key {
+      padding-top: 15px;
+      padding-bottom: 15px;
+    }
+  }
+}
+
 .govuk-summary-list__row {
   margin-top: 15px;
 }

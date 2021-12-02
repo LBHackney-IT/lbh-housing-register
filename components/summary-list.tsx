@@ -9,6 +9,14 @@ export default function SummaryList({
   return <dl className="govuk-summary-list lbh-summary-list">{children}</dl>;
 }
 
+export function SummaryListSpaced({ children }: SummaryListProps): JSX.Element {
+  return (
+    <dl className="govuk-summary-list lbh-summary-list lbh-summary-list--spaced">
+      {children}
+    </dl>
+  );
+}
+
 export function SummaryListNoBorder({
   children,
 }: SummaryListProps): JSX.Element {

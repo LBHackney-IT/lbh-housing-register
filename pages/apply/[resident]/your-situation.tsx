@@ -17,7 +17,9 @@ import Custom404 from '../../404';
 const YourSituation = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const [activeStepID, setActiveStepId] = useState(FormID.ARMED_FORCES);
+  const [activeStepID, setActiveStepId] = useState(
+    FormID.SITUATION_ARMED_FORCES
+  );
 
   const { resident } = router.query as { resident: string };
 

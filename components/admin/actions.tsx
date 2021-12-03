@@ -22,6 +22,10 @@ export default function Actions({ data }: PageProps): JSX.Element {
       value: '',
     },
     {
+      label: 'Added by officer',
+      value: ApplicationStatus.MANUAL_DRAFT,
+    },
+    {
       label: 'Awaiting assessment',
       value: ApplicationStatus.SUBMITTED,
     },
@@ -221,7 +225,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
   const initialValues = {
     status: data.status ?? '',
     reason: data.assessment?.reason ?? '',
-    applicationDate: data.assessment?.effectiveDate ?? data.submittedAt,
+    applicationDate: data.assessment?.effectiveDate ?? data.submittedAt ?? '',
     informationReceived: data.assessment?.informationReceivedDate ?? '',
     bedroomNeed: data.assessment?.bedroomNeed ?? data.calculatedBedroomNeed!,
     band: data.assessment?.band ?? '',

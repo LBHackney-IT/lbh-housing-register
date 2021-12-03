@@ -6,6 +6,7 @@ import {
   HeadingOne,
   HeadingThree,
 } from '../../../../components/content/headings';
+import { ButtonLink } from '../../../../components/button';
 import Layout from '../../../../components/layout/staff-layout';
 import { Application } from '../../../../domain/HousingApi';
 import { UserContext } from '../../../../lib/contexts/user-context';
@@ -91,7 +92,8 @@ export default function ApplicationPage({
               >
                 Notes and History
               </HorizontalNavItem>
-              {data.status !== ApplicationStatus.DRAFT ? (
+              {data.status !== ApplicationStatus.DRAFT &&
+              data.status !== ApplicationStatus.MANUAL_DRAFT ? (
                 <HorizontalNavItem
                   handleClick={handleClick}
                   itemName="assessment"
@@ -114,14 +116,26 @@ export default function ApplicationPage({
                       heading="Main applicant"
                       applicant={data.mainApplicant}
                       applicationId={data.id}
+                      canEdit={data.status === ApplicationStatus.MANUAL_DRAFT}
                     />
                   )}
-                  {data.otherMembers && data.otherMembers.length > 0 && (
+                  {data.otherMembers && data.otherMembers.length > 0 ? (
                     <OtherMembers
                       heading="Other household members"
                       others={data.otherMembers}
                       applicationId={data.id}
+                      canEdit={data.status === ApplicationStatus.MANUAL_DRAFT}
                     />
+                  ) : (
+                    <HeadingThree content="Other household members" />
+                  )}
+                  {data.status === ApplicationStatus.MANUAL_DRAFT && (
+                    <ButtonLink
+                      additionalCssClasses="govuk-secondary lbh-button--secondary"
+                      href={`/applications/edit/${data.id}/add-household-member`}
+                    >
+                      + Add household member
+                    </ButtonLink>
                   )}
                 </div>
                 <div className="govuk-grid-column-one-third">
@@ -146,10 +160,12 @@ export default function ApplicationPage({
                     onClick={() => setActiveNavItem('assessment')}
                   />
 
-                  <CaseDetailsItem
-                    itemHeading="Date submitted"
-                    itemValue={formatDate(data.submittedAt)}
-                  />
+                  {data.submittedAt && (
+                    <CaseDetailsItem
+                      itemHeading="Date submitted"
+                      itemValue={formatDate(data.submittedAt)}
+                    />
+                  )}
 
                   {data.assessment?.effectiveDate && (
                     <CaseDetailsItem

@@ -9,12 +9,14 @@ interface SummaryProps {
   heading: string;
   others: Applicant[];
   applicationId: string;
+  canEdit: boolean;
 }
 
 export default function OtherMembers({
   heading,
   others,
   applicationId,
+  canEdit,
 }: SummaryProps): JSX.Element {
   return (
     <>
@@ -45,11 +47,19 @@ export default function OtherMembers({
                 </ul>
               </td>
               <td className="govuk-table__cell govuk-table__cell--numeric">
+                {canEdit && (
+                  <ButtonLink
+                    additionalCssClasses="lbh-!-margin-top-0 govuk-secondary lbh-button--secondary"
+                    href={`/applications/edit/${applicationId}/${applicant.person?.id}`}
+                  >
+                    Edit
+                  </ButtonLink>
+                )}
                 <ButtonLink
-                  additionalCssClasses="lbh-!-margin-top-0"
+                  additionalCssClasses="lbh-!-margin-top-0 lbh-!-margin-left-1"
                   href={`/applications/view/${applicationId}/${applicant.person?.id}`}
                 >
-                  Open
+                  View
                 </ButtonLink>
               </td>
             </tr>

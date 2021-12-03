@@ -12,6 +12,10 @@ body {
   }
 }
 
+.lbh-select--full-width {
+  width: 100%;
+}
+
 .lbh-cookie-banner {
   .js-enabled & {
     top: auto;
@@ -21,6 +25,10 @@ body {
 
 .lbh-\!-margin-top-0 {
   margin-top: 0 !important;
+}
+
+.lbh-\!-margin-left-1 {
+  margin-left: 10px !important;
 }
 
 .lbh-\!-font-weight-bold {

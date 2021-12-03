@@ -49,6 +49,8 @@ const endpoint: NextApiHandler = async (
           res.status(StatusCodes.OK).json(data);
         }
       } catch (error) {
+        console.log(error);
+
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
           .json({ message: 'Unable to add application' });

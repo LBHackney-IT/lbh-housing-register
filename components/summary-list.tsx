@@ -1,7 +1,8 @@
-interface SummaryListProps {
-  children: JSX.Element | JSX.Element[];
-}
+import React from 'react';
 
+interface SummaryListProps {
+  children: React.ReactNode;
+}
 export default function SummaryList({
   children,
 }: SummaryListProps): JSX.Element {
@@ -26,14 +27,8 @@ export function SummaryListNoBorder({
   );
 }
 
-export function SummaryListActions({
-  children,
-}: SummaryListProps): JSX.Element {
-  return <dd className="govuk-summary-list__actions">{children}</dd>;
-}
-
 interface SummaryListKeyProps {
-  children: string | JSX.Element;
+  children: React.ReactNode;
 }
 export function SummaryListKey({ children }: SummaryListKeyProps): JSX.Element {
   return <dt className="govuk-summary-list__key">{children}</dt>;
@@ -56,10 +51,29 @@ export function SummaryListRow({
 }
 
 interface SummaryListValueProps {
-  children: string | JSX.Element;
+  children: React.ReactNode;
 }
 export function SummaryListValue({
   children,
 }: SummaryListValueProps): JSX.Element {
   return <dd className="govuk-summary-list__value">{children}</dd>;
+}
+
+interface SummaryListActionsProps {
+  wideActions?: boolean;
+  children: React.ReactNode;
+}
+export function SummaryListActions({
+  wideActions,
+  children,
+}: SummaryListActionsProps): JSX.Element {
+  return (
+    <dd
+      className={`govuk-summary-list__actions ${
+        wideActions ? 'govuk-summary-list__actions--wide' : ''
+      }`}
+    >
+      {children}
+    </dd>
+  );
 }

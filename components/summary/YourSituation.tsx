@@ -17,7 +17,7 @@ export function YourSituationSummary({
   // TODO: this could be nicer, but we've got a mixture of questions and forms to get answers for
   const armedForces = getQuestionValue(
     currentResident.questions,
-    FormID.ARMED_FORCES,
+    FormID.SITUATION_ARMED_FORCES,
     'situation-armed-forces'
   );
   const courtOrder = getQuestionValue(

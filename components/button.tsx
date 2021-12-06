@@ -7,6 +7,7 @@ interface ButtonProps {
   onClick?: () => void;
   secondary?: boolean;
   type?: 'button' | 'reset' | 'submit';
+  small?: boolean;
 }
 
 export default function Button({
@@ -16,6 +17,7 @@ export default function Button({
   onClick,
   secondary,
   type,
+  small,  
 }: ButtonProps): JSX.Element {
   className += ' govuk-button lbh-button';
 
@@ -27,6 +29,10 @@ export default function Button({
     className += ' govuk-secondary lbh-button--secondary';
   }
 
+  if (small) {
+    className += ' lbh-button--sm';
+  }
+  
   return (
     <button
       className={className}
@@ -43,7 +49,7 @@ export default function Button({
 interface ButtonLinkProps extends ButtonProps {
   href: string;
   svg?: any;
-  additionalCssClasses?: string;
+  additionalCssClasses?: string;  
 }
 
 export function ButtonLink({
@@ -53,6 +59,7 @@ export function ButtonLink({
   secondary,
   svg,
   additionalCssClasses,
+  small
 }: ButtonLinkProps) {
   let className = 'govuk-button lbh-button';
 
@@ -62,6 +69,10 @@ export function ButtonLink({
 
   if (secondary) {
     className += ' govuk-secondary lbh-button--secondary';
+  }
+
+  if (small) {
+    className += ' lbh-button--sm';
   }
 
   return (

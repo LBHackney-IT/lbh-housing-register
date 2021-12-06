@@ -8,7 +8,7 @@ const endpoint: NextApiHandler = async (
   res: NextApiResponse
 ) => {
   switch (req.method) {
-    case 'GET':
+    case 'POST':
       const user = getSession(req);
 
       const auth = getAuth(
@@ -22,15 +22,14 @@ const endpoint: NextApiHandler = async (
       }
 
       try {
-        const file = await downloadInternalReport(req);
+        const data = JSON.parse(req.body);
+        const file = await downloadInternalReport(data, req);
 
-        if (file) {
+        if (file) {  
+                
           res.status(file.status);
           res.setHeader('Content-Type', file.headers['content-type']);
-          res.setHeader(
-            'Content-Disposition',
-            file.headers['content-disposition']
-          );
+          res.setHeader('Content-Disposition', file.headers['content-disposition']);
           res.send(file.data);
         } else {
           res.status(404);

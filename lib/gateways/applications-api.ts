@@ -7,6 +7,7 @@ import {
   CreateAuthResponse,
   CreateEvidenceRequest,
   EvidenceRequestResponse,
+  InternalReportRequest,
   PaginatedApplicationListResponse,
   VerifyAuthRequest,
   VerifyAuthResponse,
@@ -117,10 +118,10 @@ export const getStats = async (): Promise<Array<Stat> | null> => {
   }
 };
 
-export const listNovaletExports = async (): Promise<string[]> => {
+export const listNovaletExports = async (req: any): Promise<any[]> => {
   try {
     const url = 'reporting/listnovaletfiles';
-    const { data } = await housingAxios(null).get(url);
+    const { data } = await housingAxios(req).get(url);
     return data;
   } catch (err) {
     return [];
@@ -128,28 +129,49 @@ export const listNovaletExports = async (): Promise<string[]> => {
 };
 
 export const downloadNovaletExport = async (
-  filename: string
+  filename: string,
+  req: any
 ): Promise<AxiosResponse | null> => {
   try {
     const url = `reporting/novaletexport/${filename}`;
-    return await housingAxios(null).get(url, { responseType: 'blob' });
+    return await housingAxios(req).get(url, { responseType: 'blob' });
   } catch (err) {
     return null;
   }
 };
 
-export const generateNovaletExport = async (): Promise<AxiosResponse> => {
+export const generateNovaletExport = async (
+  req: any
+): Promise<AxiosResponse> => {
   const url = `reporting/generatenovaletexport`;
-  return await housingAxios(null).post(url, null);
+  return await housingAxios(req).post(url, null);
+};
+
+export const approveNovaletExport = async (
+  filename: string,
+  req: any
+): Promise<AxiosResponse> => {
+  const url = `reporting/approvenovaletexport/${filename}`;
+  return await housingAxios(req).post(url, null);
+};
+
+export const deleteNovaletExport = async (
+  filename: string,
+  req: any
+): Promise<AxiosResponse> => {
+  const url = `reporting/deletenovaletexport/${filename}`;
+  return await housingAxios(req).post(url, null);
 };
 
 export const downloadInternalReport = async (
+  data : InternalReportRequest,
   req: any
 ): Promise<AxiosResponse | null> => {
   try {
-    const { reportType, startDate, endDate } = req.query;
-    const url = `reporting/export?reportType=${reportType}&startDate=${startDate}&endDate=${endDate}`;
-    return await housingAxios(req).get(url, { responseType: 'blob' });
+    const url = `reporting/export`;
+    const response = await housingAxios(req).post(url, data, { responseType: 'blob' });
+    return response;
+    
   } catch (err) {
     return null;
   }

@@ -489,6 +489,11 @@ export interface EvidenceRequestResponse {
   id: string;
   createdAt: string;
 }
+export interface InternalReportRequest {
+  reportType : number;
+  startDate: string;
+  endDate : string
+}
 export interface SimpleTypeResponse<T> {
   value: T;
 }

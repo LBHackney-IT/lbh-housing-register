@@ -23,7 +23,7 @@ const endpoint: NextApiHandler = async (
 
       try {
         const fileName = req.query.fileName as string;
-        const file = await downloadNovaletExport(fileName);
+        const file = await downloadNovaletExport(fileName, req);
 
         if (file) {
           res.status(file.status);

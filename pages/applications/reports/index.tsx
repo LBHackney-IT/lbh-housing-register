@@ -17,7 +17,7 @@ import InternalReports from './internal';
 
 interface ReportsProps {
   user: HackneyGoogleUser;
-  reports: string[];
+  reports: any;
 }
 
 export default function Reports({ user, reports }: ReportsProps) {
@@ -62,7 +62,7 @@ export default function Reports({ user, reports }: ReportsProps) {
               </HorizontalNavItem>
             </HorizontalNav>
 
-            {activeNavItem == 'Novalet' && <NovaletReports {...reports} />}
+            {activeNavItem == 'Novalet' && <NovaletReports reports={reports}/>}
             {activeNavItem == 'Internal' && <InternalReports />}
           </div>
         </div>
@@ -82,9 +82,9 @@ export const getServerSideProps: GetServerSideProps = async (
     return { redirect: auth.redirect };
   }
 
-  const reportNames = await listNovaletExports();
+  const reports = await listNovaletExports(context.req);
 
   return {
-    props: { user: auth.user, reports: reportNames },
+    props: { user: auth.user, reports },
   };
 };

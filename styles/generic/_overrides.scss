@@ -23,6 +23,10 @@ body {
   margin-top: 0 !important;
 }
 
+.govuk-\!-margin-bottom-0{
+  margin-bottom: 0 !important;
+}
+
 .lbh-\!-font-weight-bold {
   font-weight: bold !important;
 }
@@ -71,4 +75,18 @@ body {
 .lbh-link--announcement:link,
 .lbh-link--announcement:visited {
   color: #0b0c0c;
+}
+
+.lbh-button--sm{
+  padding: 10px !important;
+  font-size: 0.85em;
+}
+
+.lbh-button--as-link{
+  padding: 0px;
+  margin: 0px;
+}
+
+.govuk-\!-display-inline-block{
+  display: inline-block !important;
 }

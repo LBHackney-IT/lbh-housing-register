@@ -25,3 +25,30 @@ export const generateNovaletExport = async () => {
 
   return res;
 };
+
+export const deleteNovaletExport = async (fileName : string) => {
+  const res = await fetch(`/api/reports/novalet/delete/${fileName}`, {
+    method: 'POST',
+    body: null,
+  });
+
+  return res;
+};
+
+export const approveNovaletExport = async (fileName : string) => {
+  const res = await fetch(`/api/reports/novalet/approve/${fileName}`, {
+    method: 'POST',
+    body: null,
+  });
+
+  return res;
+};
+
+export const downloadInternalExport = async (data : any) => {
+  const res = await fetch(`/api/reports/internal/download`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+
+  return res;
+};

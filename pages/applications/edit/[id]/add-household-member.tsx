@@ -1,44 +1,20 @@
-import React, { useState, SyntheticEvent } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
+import { FormikValues } from 'formik';
 import { getRedirect, getSession } from '../../../../lib/utils/googleAuth';
 import { HackneyGoogleUser } from '../../../../domain/HackneyGoogleUser';
 import { Application } from '../../../../domain/HousingApi';
 import { getApplication } from '../../../../lib/gateways/applications-api';
-import { UserContext } from '../../../../lib/contexts/user-context';
-import { Form, Formik, FormikValues, FormikErrors } from 'formik';
 import { updateApplication } from '../../../../lib/gateways/internal-api';
 import {
-  getSectionData,
-  generateInitialValues,
   generateQuestionArray,
   Address,
-  addCaseSchema,
 } from '../../../../lib/utils/adminHelpers';
-import { FormID } from '../../../../lib/utils/form-data';
+
 import { scrollToTop } from '../../../../lib/utils/scroll';
-import Layout from '../../../../components/layout/staff-layout';
-import AddCaseSection from '../../../../components/admin/AddCaseSection';
-import AddCaseAddress from '../../../../components/admin/AddCaseAddress';
-import { HeadingOne } from '../../../../components/content/headings';
-import Button from '../../../../components/button';
-import ErrorSummary from '../../../../components/errors/error-summary';
 import Custom404 from '../../../404';
-
-const personalDetailsSection = getSectionData(FormID.PERSONAL_DETAILS);
-const immigrationStatusSection = getSectionData(FormID.IMMIGRATION_STATUS);
-const medicalNeedsSection = getSectionData(FormID.MEDICAL_NEEDS);
-const addressHistorySection = getSectionData(FormID.ADDRESS_HISTORY);
-const employmentSection = getSectionData(FormID.EMPLOYMENT);
-
-const initialValues = generateInitialValues([
-  personalDetailsSection,
-  immigrationStatusSection,
-  medicalNeedsSection,
-  addressHistorySection,
-  employmentSection,
-]);
-
+import HouseholdMemberForm from '../../../../components/admin/HouseholdMemberForm';
 interface PageProps {
   user: HackneyGoogleUser;
   data: Application;
@@ -49,8 +25,8 @@ export default function AddHouseholdMember({
   data,
 }: PageProps): JSX.Element | null {
   if (!data.id) return <Custom404 />;
-
   const router = useRouter();
+
   const [addresses, setAddresses] = useState([] as Address[]);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -100,58 +76,15 @@ export default function AddHouseholdMember({
   };
 
   return (
-    <UserContext.Provider value={{ user }}>
-      <Layout pageName="Add household member">
-        <HeadingOne content="Add household member" />
-        <h2 className="lbh-caption-xl lbh-caption govuk-!-margin-top-1">
-          Household member details
-        </h2>
-        <Formik
-          initialValues={initialValues}
-          onSubmit={onSubmit}
-          validationSchema={addCaseSchema}
-        >
-          {({ isSubmitting, errors, isValid }) => {
-            return (
-              <>
-                {!isValid && isSubmitted ? (
-                  <ErrorSummary title="There is a problem">
-                    <ul className="govuk-list govuk-error-summary__list">
-                      {Object.entries(errors).map(([inputName, errorTitle]) => (
-                        <li key={inputName}>
-                          <a href={`#${inputName}`}>{errorTitle}</a>
-                        </li>
-                      ))}
-                    </ul>
-                  </ErrorSummary>
-                ) : null}
-                <Form>
-                  <AddCaseSection section={personalDetailsSection} />
-                  <AddCaseSection section={immigrationStatusSection} />
-                  <AddCaseSection section={medicalNeedsSection} />
-                  <AddCaseAddress
-                    addresses={addresses}
-                    setAddresses={setAddresses}
-                    maximumAddresses={1}
-                  />
-                  <AddCaseSection section={employmentSection} />
-
-                  <div className="c-flex__1 text-right">
-                    <Button
-                      onClick={handleSaveApplication}
-                      disabled={isSubmitting}
-                      type="submit"
-                    >
-                      Save household member
-                    </Button>
-                  </div>
-                </Form>
-              </>
-            );
-          }}
-        </Formik>
-      </Layout>
-    </UserContext.Provider>
+    <HouseholdMemberForm
+      isEditing={false}
+      user={user}
+      onSubmit={onSubmit}
+      isSubmitted={isSubmitted}
+      addresses={addresses}
+      setAddresses={setAddresses}
+      handleSaveApplication={handleSaveApplication}
+    />
   );
 }
 

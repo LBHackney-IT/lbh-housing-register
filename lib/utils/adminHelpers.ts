@@ -4,7 +4,6 @@ import { kebabToCamelCase, camelCaseToKebab } from '../../lib/utils/capitalize';
 import { FormikValues } from 'formik';
 import * as Yup from 'yup';
 import { INVALID_DATE } from '../../components/form/dateinput';
-import { Application } from 'serverless-http';
 
 export interface Address {
   address: {
@@ -103,7 +102,9 @@ export const generateEditInitialValues = (
     ? data.mainApplicant.questions
     : data.questions;
 
-  const initialValuesObject = questionData.reduce(
+  const personData = isMainApplicant ? data.mainApplicant : data;
+
+  const questionsInitialValuesObject = questionData.reduce(
     (acc: { [key: string]: string }, current: { [key: string]: string }) => {
       const questionFieldName = kebabToCamelCase(current.id).replace('/', '_');
       const answer = current.answer.replace(/"/g, '');
@@ -115,6 +116,19 @@ export const generateEditInitialValues = (
     },
     {}
   );
+
+  const initialValuesObject = {
+    ...questionsInitialValuesObject,
+    personalDetails_title: personData?.person?.title,
+    personalDetails_firstName: personData?.person?.firstName,
+    personalDetails_surname: personData?.person?.surname,
+    personalDetails_dateOfBirth: personData?.person?.dateOfBirth,
+    personalDetails_gender: personData?.person?.gender,
+    personalDetails_nationalInsuranceNumber:
+      personData?.person?.nationalInsuranceNumber,
+    personalDetails_emailAddress: personData?.contactInformation?.emailAddress,
+    personalDetails_phoneNumber: personData?.contactInformation?.phoneNumber,
+  };
 
   return initialValuesObject;
 };

@@ -41,25 +41,7 @@ export default function EditApplicant({
   const router = useRouter();
   const isMainApplicant = data.mainApplicant?.person?.id === person;
 
-  const questionInitialValues = generateEditInitialValues(
-    data,
-    isMainApplicant
-  );
-
-  const initialValues = {
-    ...questionInitialValues,
-    personalDetails_title: data.mainApplicant?.person?.title,
-    personalDetails_firstName: data.mainApplicant?.person?.firstName,
-    personalDetails_surname: data.mainApplicant?.person?.surname,
-    personalDetails_dateOfBirth: data.mainApplicant?.person?.dateOfBirth,
-    personalDetails_gender: data.mainApplicant?.person?.gender,
-    personalDetails_nationalInsuranceNumber:
-      data.mainApplicant?.person?.nationalInsuranceNumber,
-    personalDetails_emailAddress:
-      data.mainApplicant?.contactInformation?.emailAddress,
-    personalDetails_phoneNumber:
-      data.mainApplicant?.contactInformation?.phoneNumber,
-  };
+  const initialValues = generateEditInitialValues(data, isMainApplicant);
 
   const savedAddresses =
     data.mainApplicant?.questions?.filter(

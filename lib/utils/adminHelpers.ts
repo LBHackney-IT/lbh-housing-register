@@ -4,6 +4,7 @@ import { kebabToCamelCase, camelCaseToKebab } from '../../lib/utils/capitalize';
 import { FormikValues } from 'formik';
 import * as Yup from 'yup';
 import { INVALID_DATE } from '../../components/form/dateinput';
+import { Application } from 'serverless-http';
 
 export interface Address {
   address: {
@@ -94,6 +95,30 @@ export const getSectionData = (sectionId: FormID) => {
   };
 };
 
+export const generateEditInitialValues = (
+  data: any,
+  isMainApplicant: boolean
+) => {
+  const questionData = isMainApplicant
+    ? data.mainApplicant.questions
+    : data.questions;
+
+  const initialValuesObject = questionData.reduce(
+    (acc: { [key: string]: string }, current: { [key: string]: string }) => {
+      const questionFieldName = kebabToCamelCase(current.id).replace('/', '_');
+      const answer = current.answer.replace(/"/g, '');
+
+      return {
+        ...acc,
+        [questionFieldName]: answer,
+      };
+    },
+    {}
+  );
+
+  return initialValuesObject;
+};
+
 export const generateInitialValues = (sections: SectionData[]) => {
   const allFieldNames = sections
     .map((section) =>
@@ -111,6 +136,7 @@ export const generateInitialValues = (sections: SectionData[]) => {
     (acc: { [key: string]: string }, current) => ((acc[current] = ''), acc),
     {}
   );
+
   return initialValuesObject;
 };
 
@@ -131,8 +157,10 @@ export const generateQuestionArray = (
     // Don't include personal details
     if (questionId.startsWith('personal-details/')) continue;
 
-    // Use custom address fields
-    if (questionId === 'address-history/address-finder') {
+    if (
+      questionId === 'address-history/address-finder' ||
+      questionId === 'address-history/address-history'
+    ) {
       questionArray.push({
         id: 'address-history/addressHistory',
         answer: JSON.stringify(addresses),

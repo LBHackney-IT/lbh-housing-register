@@ -50,7 +50,7 @@ export default function OtherMembers({
                 {canEdit && (
                   <ButtonLink
                     additionalCssClasses="lbh-!-margin-top-0 govuk-secondary lbh-button--secondary"
-                    href={`/applications/edit/${applicationId}/${applicant.person?.id}`}
+                    href={`/applications/edit/${applicationId}/${applicant.person?.id}/edit-household-member`}
                   >
                     Edit
                   </ButtonLink>

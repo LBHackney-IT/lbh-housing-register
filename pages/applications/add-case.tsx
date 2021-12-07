@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import router from 'next/router';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
 import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
@@ -41,6 +41,7 @@ interface PageProps {
 }
 
 export default function AddCasePage({ user }: PageProps): JSX.Element {
+  const router = useRouter();
   const [addressHistory, setAddressHistory] = useState([] as Address[]);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -49,6 +50,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
 
     const request: Application = {
       status: ApplicationStatus.MANUAL_DRAFT,
+      submittedAt: new Date().toISOString(),
       mainApplicant: {
         person: {
           title: values.personalDetails_title,

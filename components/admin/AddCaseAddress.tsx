@@ -79,6 +79,12 @@ export default function AddCaseAddress({
   const editAddress = (addressIndex: number) => {
     setIsEditing(true);
     setAddressInDialog(addresses[addressIndex]);
+    setDate({
+      dateMonth: addresses[addressIndex].date.split('-')[1],
+      dateYear: addresses[addressIndex].date.split('-')[0],
+      dateToMonth: addresses[addressIndex].dateTo.split('-')[1],
+      dateToYear: addresses[addressIndex].dateTo.split('-')[0],
+    });
     setEditAddressIndex(addressIndex);
     setAddressDialogOpen(true);
   };
@@ -143,7 +149,7 @@ export default function AddCaseAddress({
                 {index === 1 ? (
                   <HeadingThree content="Previous addresses" />
                 ) : null}
-                <Paragraph>
+                <p className="lbh-body-s">
                   {addressItem.address.line1 && (
                     <>
                       {addressItem.address.line1}
@@ -174,28 +180,33 @@ export default function AddCaseAddress({
                       <br />
                     </>
                   )}
-                  {addressItem.date && addressItem.dateTo && (
-                    <>
-                      {`${formatIsoDate(addressItem.date)} to ${formatIsoDate(
-                        addressItem.dateTo
-                      )}`}
-                    </>
-                  )}
-                </Paragraph>
-                <a
-                  className="lbh-link"
-                  href="#edit"
-                  onClick={() => editAddress(index)}
-                >
-                  Edit
-                </a>{' '}
-                <a
-                  className="lbh-link"
-                  href="#delete"
-                  onClick={() => deleteAddress(index)}
-                >
-                  Delete
-                </a>
+                </p>
+
+                {addressItem.date && addressItem.dateTo && (
+                  <p className="lbh-body-s lbh-!-margin-top-1">
+                    {`${formatIsoDate(addressItem.date)} to ${formatIsoDate(
+                      addressItem.dateTo
+                    )}`}
+                  </p>
+                )}
+
+                <p className="lbh-!-margin-top-1">
+                  <a
+                    className="lbh-link lbh-link--no-visited-state"
+                    href="#edit"
+                    onClick={() => editAddress(index)}
+                  >
+                    Edit
+                  </a>
+                  {' | '}
+                  <a
+                    className="lbh-link lbh-link--no-visited-state"
+                    href="#delete"
+                    onClick={() => deleteAddress(index)}
+                  >
+                    Delete
+                  </a>
+                </p>
               </FormGroup>
             ))}
 

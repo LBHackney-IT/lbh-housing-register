@@ -4,66 +4,84 @@ import Button from '../../components/button';
 import ErrorSummary from '../../components/errors/error-summary';
 import { FormID } from '../../lib/utils/form-data';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
+import { Application } from '../../domain/HousingApi';
 import {
+  allFormSections,
   getSectionData,
   generateInitialValues,
   generateEditInitialValues,
-  addCaseSchema,
+  mainApplicantSchema,
 } from '../../lib/utils/adminHelpers';
 import AddCaseSection from '../../components/admin/AddCaseSection';
 import AddCaseAddress from '../../components/admin/AddCaseAddress';
 import Layout from '../../components/layout/staff-layout';
 import { HeadingOne } from '../../components/content/headings';
 
+const keysToOmit = [
+  'AGREEMENT',
+  'SIGN_IN',
+  'SIGN_IN_VERIFY',
+  'SIGN_UP_DETAILS',
+  'DECLARATION',
+];
+
+const sections = allFormSections(keysToOmit);
+
 const personalDetailsSection = getSectionData(FormID.PERSONAL_DETAILS);
 const immigrationStatusSection = getSectionData(FormID.IMMIGRATION_STATUS);
 const medicalNeedsSection = getSectionData(FormID.MEDICAL_NEEDS);
-const addressHistorySection = getSectionData(FormID.ADDRESS_HISTORY);
+const residentialStatusSection = getSectionData(FormID.RESIDENTIAL_STATUS);
+const currentAccommodationSection = getSectionData(
+  FormID.CURRENT_ACCOMMODATION
+);
+const armedForcesSection = getSectionData(FormID.SITUATION_ARMED_FORCES);
+const homelessnessSection = getSectionData(FormID.HOMELESSNESS);
+const propertyOwnwershipSection = getSectionData(FormID.PROPERTY_OWNERSHIP);
+const soldPropertySection = getSectionData(FormID.SOLD_PROPERTY);
+const arrearsSection = getSectionData(FormID.ARREARS);
+const breachOfTenancySection = getSectionData(FormID.BREACH_OF_TENANCY);
+const legalRestrictionsSection = getSectionData(FormID.LEGAL_RESTRICTIONS);
+const unspentConvictionsSection = getSectionData(FormID.UNSPENT_CONVICTIONS);
 const employmentSection = getSectionData(FormID.EMPLOYMENT);
+const incomeSavingsSection = getSectionData(FormID.INCOME_SAVINGS);
 
 interface PageProps {
   isEditing: boolean;
   user: HackneyGoogleUser;
   onSubmit: (values: FormikValues) => void;
   isSubmitted: boolean;
-  addresses: any;
-  setAddresses: (addresses: any) => void;
+  addressHistory: any;
+  setAddressHistory: (addresses: any) => void;
   handleSaveApplication: () => void;
-  personData?: any;
+  data?: Application;
 }
 
-export default function HouseholdMemberForm({
+export default function MainApplicantForm({
   isEditing,
   user,
   onSubmit,
   isSubmitted,
-  addresses,
-  setAddresses,
+  addressHistory,
+  setAddressHistory,
   handleSaveApplication,
-  personData,
+  data,
 }: PageProps) {
   const initialValues = isEditing
-    ? generateEditInitialValues(personData, false)
-    : generateInitialValues([
-        personalDetailsSection,
-        immigrationStatusSection,
-        medicalNeedsSection,
-        addressHistorySection,
-        employmentSection,
-      ]);
+    ? generateEditInitialValues(data, true)
+    : generateInitialValues(sections);
 
-  const isEditingCopy = isEditing ? 'Edit' : 'Add';
+  const isEditingCopy = isEditing ? 'Edit' : 'Add new';
   return (
     <UserContext.Provider value={{ user }}>
-      <Layout pageName={`${isEditingCopy} household member`}>
-        <HeadingOne content={`${isEditingCopy} household member`} />
+      <Layout pageName={`${isEditingCopy} case`}>
+        <HeadingOne content={`${isEditingCopy} case`} />
         <h2 className="lbh-caption-xl lbh-caption govuk-!-margin-top-1">
-          Household member details
+          Main applicant details
         </h2>
         <Formik
           initialValues={initialValues}
           onSubmit={onSubmit}
-          validationSchema={addCaseSchema}
+          validationSchema={mainApplicantSchema}
         >
           {({ isSubmitting, errors, isValid }) => {
             return (
@@ -83,12 +101,25 @@ export default function HouseholdMemberForm({
                   <AddCaseSection section={personalDetailsSection} />
                   <AddCaseSection section={immigrationStatusSection} />
                   <AddCaseSection section={medicalNeedsSection} />
+                  <AddCaseSection section={residentialStatusSection} />
                   <AddCaseAddress
-                    addresses={addresses}
-                    setAddresses={setAddresses}
-                    maximumAddresses={1}
+                    addresses={addressHistory}
+                    setAddresses={setAddressHistory}
                   />
+                  <AddCaseSection section={currentAccommodationSection} />
+
+                  {/* Your situation */}
+                  <AddCaseSection section={armedForcesSection} />
+                  <AddCaseSection section={homelessnessSection} />
+                  <AddCaseSection section={propertyOwnwershipSection} />
+                  <AddCaseSection section={soldPropertySection} />
+                  <AddCaseSection section={arrearsSection} />
+                  <AddCaseSection section={breachOfTenancySection} />
+                  <AddCaseSection section={legalRestrictionsSection} />
+                  <AddCaseSection section={unspentConvictionsSection} />
+
                   <AddCaseSection section={employmentSection} />
+                  <AddCaseSection section={incomeSavingsSection} />
 
                   <div className="c-flex__1 text-right">
                     <Button
@@ -97,8 +128,8 @@ export default function HouseholdMemberForm({
                       type="submit"
                     >
                       {isEditing
-                        ? 'Update household member'
-                        : 'Save new household member'}
+                        ? 'Update application'
+                        : 'Save new application'}
                     </Button>
                   </div>
                 </Form>

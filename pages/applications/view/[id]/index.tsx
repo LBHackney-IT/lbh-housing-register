@@ -39,6 +39,7 @@ import {
 } from '../../../../components/admin/HorizontalNav';
 import ApplicationHistory from '../../../../components/admin/application-history';
 import { ActivityHistoryPagedResult } from '../../../../domain/ActivityHistoryApi';
+import Announcement from '../../../../components/announcement';
 
 export interface PageProps {
   user: HackneyGoogleUserWithPermissions;
@@ -52,6 +53,8 @@ export default function ApplicationPage({
   history,
 }: PageProps): JSX.Element | null {
   if (!data.id) return <Custom404 />;
+
+  console.log(data);
 
   const [activeNavItem, setActiveNavItem] = useState('overview');
 
@@ -107,97 +110,125 @@ export default function ApplicationPage({
             </HorizontalNav>
 
             {activeNavItem === 'overview' && (
-              <div className="govuk-grid-row">
-                <div className="govuk-grid-column-two-thirds">
-                  <HeadingThree content="Snapshot" />
-                  <Snapshot data={data} />
-                  {data.mainApplicant && (
-                    <PersonalDetails
-                      heading="Main applicant"
-                      applicant={data.mainApplicant}
-                      applicationId={data.id}
-                      canEdit={data.status === ApplicationStatus.MANUAL_DRAFT}
-                    />
-                  )}
-                  {data.otherMembers && data.otherMembers.length > 0 ? (
-                    <OtherMembers
-                      heading="Other household members"
-                      others={data.otherMembers}
-                      applicationId={data.id}
-                      canEdit={data.status === ApplicationStatus.MANUAL_DRAFT}
-                    />
-                  ) : (
-                    <HeadingThree content="Other household members" />
-                  )}
-                  {data.status === ApplicationStatus.MANUAL_DRAFT && (
-                    <ButtonLink
-                      additionalCssClasses="govuk-secondary lbh-button--secondary"
-                      href={`/applications/edit/${data.id}/add-household-member`}
-                    >
-                      + Add household member
-                    </ButtonLink>
-                  )}
-                </div>
-                <div className="govuk-grid-column-one-third">
-                  <HeadingThree content="Case details" />
+              <>
+                {/* {data.review.required ? (
+                  <div className="govuk-grid-row">
+                    <div className="govuk-grid-column-full">
+                      <Announcement variant="info">
+                        <h3 className="lbh-page-announcement__title">
+                          Review required
+                        </h3>
+                        <div className="lbh-page-announcement__content">
+                          {data.review.reason ? (
+                            <Paragraph>
+                              {data.review.reason
+                              // This household’s bedroom need has been flagged for
+                              // review due to a significant birthday.
+                            </Paragraph>
+                          ): null}
+                          <h4>Changes to review:</h4>
+                          <ul>
+                            {data.review.changes.map((change) => (
+                              <li key={change}>{change}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </Announcement>
+                    </div>
+                  </div>
+                ) : null} */}
+                <div className="govuk-grid-row">
+                  <div className="govuk-grid-column-two-thirds">
+                    <HeadingThree content="Snapshot" />
+                    <Snapshot data={data} />
+                    {data.mainApplicant && (
+                      <PersonalDetails
+                        heading="Main applicant"
+                        applicant={data.mainApplicant}
+                        applicationId={data.id}
+                        canEdit={data.status === ApplicationStatus.MANUAL_DRAFT}
+                      />
+                    )}
+                    {data.otherMembers && data.otherMembers.length > 0 ? (
+                      <OtherMembers
+                        heading="Other household members"
+                        others={data.otherMembers}
+                        applicationId={data.id}
+                        canEdit={data.status === ApplicationStatus.MANUAL_DRAFT}
+                      />
+                    ) : (
+                      <HeadingThree content="Other household members" />
+                    )}
+                    {data.status === ApplicationStatus.MANUAL_DRAFT && (
+                      <ButtonLink
+                        additionalCssClasses="govuk-secondary lbh-button--secondary"
+                        href={`/applications/edit/${data.id}/add-household-member`}
+                      >
+                        + Add household member
+                      </ButtonLink>
+                    )}
+                  </div>
+                  <div className="govuk-grid-column-one-third">
+                    <HeadingThree content="Case details" />
 
-                  <CaseDetailsItem
-                    itemHeading="Application reference"
-                    itemValue={data.reference}
-                  />
-
-                  {data.assessment?.biddingNumber && (
                     <CaseDetailsItem
-                      itemHeading="Bidding number"
-                      itemValue={data.assessment?.biddingNumber}
+                      itemHeading="Application reference"
+                      itemValue={data.reference}
                     />
-                  )}
 
-                  <CaseDetailsItem
-                    itemHeading="Status"
-                    itemValue={lookupStatus(data.status!)}
-                    buttonText="Change"
-                    onClick={() => setActiveNavItem('assessment')}
-                  />
+                    {data.assessment?.biddingNumber && (
+                      <CaseDetailsItem
+                        itemHeading="Bidding number"
+                        itemValue={data.assessment?.biddingNumber}
+                      />
+                    )}
 
-                  {data.submittedAt && (
                     <CaseDetailsItem
-                      itemHeading="Date submitted"
-                      itemValue={formatDate(data.submittedAt)}
-                    />
-                  )}
-
-                  {data.assessment?.effectiveDate && (
-                    <CaseDetailsItem
-                      itemHeading="Application date"
-                      itemValue={formatDate(data.assessment?.effectiveDate)}
+                      itemHeading="Status"
+                      itemValue={lookupStatus(data.status!)}
                       buttonText="Change"
                       onClick={() => setActiveNavItem('assessment')}
                     />
-                  )}
 
-                  {data.assessment?.band && (
-                    <CaseDetailsItem
-                      itemHeading="Band"
-                      itemValue={`Band ${data.assessment?.band}`}
-                      buttonText="Change"
-                      onClick={() => setActiveNavItem('assessment')}
+                    {data.submittedAt && (
+                      <CaseDetailsItem
+                        itemHeading="Date submitted"
+                        itemValue={formatDate(data.submittedAt)}
+                      />
+                    )}
+
+                    {data.assessment?.effectiveDate && (
+                      <CaseDetailsItem
+                        itemHeading="Application date"
+                        itemValue={formatDate(data.assessment?.effectiveDate)}
+                        buttonText="Change"
+                        onClick={() => setActiveNavItem('assessment')}
+                      />
+                    )}
+
+                    {data.assessment?.band && (
+                      <CaseDetailsItem
+                        itemHeading="Band"
+                        itemValue={`Band ${data.assessment?.band}`}
+                        buttonText="Change"
+                        onClick={() => setActiveNavItem('assessment')}
+                      />
+                    )}
+
+                    <AssignUser
+                      id={data.id}
+                      user={user}
+                      assignee={data.assignedTo}
                     />
-                  )}
 
-                  <AssignUser
-                    id={data.id}
-                    user={user}
-                    assignee={data.assignedTo}
-                  />
-
-                  <SensitiveData
-                    id={data.id}
-                    isSensitive={data.sensitiveData || false}
-                    user={user}
-                  />
+                    <SensitiveData
+                      id={data.id}
+                      isSensitive={data.sensitiveData || false}
+                      user={user}
+                    />
+                  </div>
                 </div>
-              </div>
+              </>
             )}
 
             {activeNavItem === 'history' && (

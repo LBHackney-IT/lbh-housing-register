@@ -69,6 +69,11 @@ export interface RadioConditionalFormField extends BaseFormField {
   options: ConditionalFormFieldOption[];
 }
 
+export interface CheckboxConditionalFormField extends BaseFormField {
+  as: 'checkboxconditional';
+  options: ConditionalFormFieldOption[];
+}
+
 export type FormField =
   | TextFormField
   | TextareaFormField
@@ -79,7 +84,8 @@ export type FormField =
   | DateFormField
   | ParagraphFormField
   | AnnouncementTextFormField
-  | RadioConditionalFormField;
+  | RadioConditionalFormField
+  | CheckboxConditionalFormField;
 
 export type FormFieldDisplayCriteria = {
   field: string;

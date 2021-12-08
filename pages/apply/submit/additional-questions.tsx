@@ -1,6 +1,6 @@
 import { FormikValues } from 'formik';
 import { useRouter } from 'next/router';
-import { HeadingOne } from '../../../components/content/headings';
+import { HeadingOne, HeadingFour } from '../../../components/content/headings';
 import Form from '../../../components/form/form';
 import Layout from '../../../components/layout/resident-layout';
 import { FormID, getFormData } from '../../../lib/utils/form-data';
@@ -41,6 +41,8 @@ const AdditonalQuestions = (): JSX.Element => {
   return (
     <Layout pageName="Before you submit">
       <HeadingOne content="Before you submit" />
+      <HeadingFour content="Do any of the following apply to your household?" />
+      <p className="lbh-body lbh-body--grey">Select all options that apply.</p>
       <Form
         initialValues={initialValues}
         buttonText="Save and continue"

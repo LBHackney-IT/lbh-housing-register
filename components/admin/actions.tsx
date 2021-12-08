@@ -181,6 +181,11 @@ export default function Actions({ data }: PageProps): JSX.Element {
       value: 'unauthorised-subletting',
     },
     { label: 'Under 18yrs', value: 'under-18yrs' },
+    { label: 'Adequately housed', value: 'adequately-housed' },
+    { label: 'On another LA register', value: 'another-la-register' },
+    { label: 'Intentionally homeless', value: 'intentionally-homeless' },
+    { label: 'Arrears', value: 'arrears' },
+    { label: 'Other', value: 'other' },
   ];
 
   const schema = Yup.object({

@@ -89,8 +89,10 @@ export default function Actions({ data }: PageProps): JSX.Element {
       label: 'Accepted Homeless Application',
       value: 'accepted-homeless-application',
     },
+    { label: 'Adequately housed', value: 'adequately-housed' },
     { label: 'Appeal overturned', value: 'appeal-overturned' },
     { label: 'Appeal upheld', value: 'appeal-upheld' },
+    { label: 'Arrears', value: 'arrears' },
     {
       label: 'Awaiting further information',
       value: 'awaiting-further-information',
@@ -146,6 +148,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
       label: 'Household member moved out',
       value: 'household-member-moved-out',
     },
+    { label: 'Intentionally homeless', value: 'intentionally-homeless' },
     { label: 'Misrepresentation', value: 'misrepresentation' },
     { label: 'Multiple needs', value: 'multiple-needs' },
     { label: 'New born baby', value: 'new-born-baby' },
@@ -160,6 +163,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
       label: 'Reduced Priority - worsened housing situation',
       value: 'reduced-priority-worsened-housing-situation',
     },
+    { label: 'On another LA register', value: 'another-la-register' },
     {
       label: "Over 55ys - Older Person's Housing",
       value: 'over-55ys-older-person-s-housing',
@@ -181,10 +185,6 @@ export default function Actions({ data }: PageProps): JSX.Element {
       value: 'unauthorised-subletting',
     },
     { label: 'Under 18yrs', value: 'under-18yrs' },
-    { label: 'Adequately housed', value: 'adequately-housed' },
-    { label: 'On another LA register', value: 'another-la-register' },
-    { label: 'Intentionally homeless', value: 'intentionally-homeless' },
-    { label: 'Arrears', value: 'arrears' },
     { label: 'Other', value: 'other' },
   ];
 

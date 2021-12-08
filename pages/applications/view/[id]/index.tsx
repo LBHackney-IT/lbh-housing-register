@@ -90,7 +90,7 @@ export default function ApplicationPage({
                 itemName="history"
                 isActive={activeNavItem === 'history'}
               >
-                Notes and History
+                Notes and history
               </HorizontalNavItem>
               {data.status !== ApplicationStatus.DRAFT &&
               data.status !== ApplicationStatus.MANUAL_DRAFT ? (

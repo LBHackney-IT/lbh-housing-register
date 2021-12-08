@@ -1,5 +1,6 @@
-import React from 'react';
-import Paragraph from '../content/paragraph';
+import React, { useState } from 'react';
+import { Form, Formik, FormikValues, FormikErrors } from 'formik';
+import * as Yup from 'yup';
 import {
   ActivityEntity,
   ActivityHistoryPagedResult,
@@ -16,6 +17,8 @@ import {
   SummaryListValue,
 } from '../summary-list';
 import { HeadingThree, HeadingFour } from '../content/headings';
+import Textarea from '../form/textarea';
+import Button from '../button';
 
 interface ActivityHistoryPageProps {
   history: ActivityHistoryPagedResult;
@@ -24,6 +27,16 @@ interface ActivityHistoryPageProps {
 export default function ApplicationHistory({
   history,
 }: ActivityHistoryPageProps): JSX.Element | null {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const initialValues: FormikValues = {
+    note: '',
+  };
+
+  const addNoteSchema = Yup.object({
+    note: Yup.string().label('Note').required(),
+  });
+
   const listItems = history
     ? history.results.map((historyItem, index) => {
         const heading = renderHeading(historyItem);
@@ -47,8 +60,39 @@ export default function ApplicationHistory({
       })
     : null;
 
+  const onSubmit = (values: FormikValues) => {
+    console.log(values);
+  };
+
   return (
     <>
+      <SummaryListNoBorder>
+        <SummaryListRow>
+          <SummaryListKey>
+            <HeadingThree content="Add a note" />
+          </SummaryListKey>
+          <SummaryListValue>
+            <Formik
+              initialValues={initialValues}
+              onSubmit={onSubmit}
+              validationSchema={addNoteSchema}
+            >
+              {({ isSubmitting, errors, isValid }) => {
+                return (
+                  <>
+                    <Form>
+                      <Textarea name="note" label="" as="textarea" />
+                      <Button disabled={isSubmitting} type="submit">
+                        Save note
+                      </Button>
+                    </Form>
+                  </>
+                );
+              }}
+            </Formik>
+          </SummaryListValue>
+        </SummaryListRow>
+      </SummaryListNoBorder>
       {listItems ? (
         <>
           <SummaryListNoBorder>

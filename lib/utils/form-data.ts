@@ -42,6 +42,11 @@ import EthnicityCategoryBlackBlackBritish from '../../data/forms/ethnicity/ethni
 import EthnicityCategoryMixedMultipleBackground from '../../data/forms/ethnicity/ethnicity-category-mixed-multiple-background.json';
 import EthnicityCategoryWhite from '../../data/forms/ethnicity/ethnicity-category-white.json';
 import EthnicityCategoryOtherEthnicGroup from '../../data/forms/ethnicity/ethnicity-category-other-ethnic-group.json';
+import {
+  makeEthnicityForm,
+  ethnicityCategoryOptions,
+  ethnicityCategoryQuestions,
+} from './extendedEthnicityData';
 
 import { EligibilityCriteria, MultiStepForm } from '../types/form';
 import assertNever from './assertNever';
@@ -90,6 +95,32 @@ export enum FormID {
   ETHNICITY_CATEGORY_OTHER_ETHNIC_GROUP = 'ethnicity-extended-category-other-ethnic-group',
   DECLARATION = 'declaration',
 }
+
+const ethnicCategoryAsianAsianBritishForm = makeEthnicityForm(
+  ethnicityCategoryOptions,
+  ethnicityCategoryQuestions,
+  'asian-asian-british'
+);
+const ethnicCategoryBlackBlackBritishForm = makeEthnicityForm(
+  ethnicityCategoryOptions,
+  ethnicityCategoryQuestions,
+  'black-black-british'
+);
+const ethnicCategoryMixedMultipleBackgroundForm = makeEthnicityForm(
+  ethnicityCategoryOptions,
+  ethnicityCategoryQuestions,
+  'mixed-multiple-background'
+);
+const ethnicCategoryWhiteForm = makeEthnicityForm(
+  ethnicityCategoryOptions,
+  ethnicityCategoryQuestions,
+  'white'
+);
+const ethnicCategoryOtherEthnicGroupForm = makeEthnicityForm(
+  ethnicityCategoryOptions,
+  ethnicityCategoryQuestions,
+  'other-ethnic-group'
+);
 
 /**
  * Get the eligibility criteria from the requested form
@@ -212,19 +243,24 @@ export function getFormData(form: FormID): MultiStepForm {
       return EthnicityQuestions as MultiStepForm;
 
     case FormID.ETHNICITY_CATEGORY_ASIAN_ASIAN_BRITISH:
-      return EthnicityCategoryAsianAsianBritish as MultiStepForm;
+      return ethnicCategoryAsianAsianBritishForm as MultiStepForm;
+    // return EthnicityCategoryAsianAsianBritish as MultiStepForm;
 
     case FormID.ETHNICITY_CATEGORY_BLACK_BLACK_BRITISH:
-      return EthnicityCategoryBlackBlackBritish as MultiStepForm;
+      return ethnicCategoryBlackBlackBritishForm as MultiStepForm;
+    // return EthnicityCategoryBlackBlackBritish as MultiStepForm;
 
     case FormID.ETHNICITY_CATEGORY_MIXED_MULTIPLE_BACKGROUND:
-      return EthnicityCategoryMixedMultipleBackground as MultiStepForm;
+      return ethnicCategoryMixedMultipleBackgroundForm as MultiStepForm;
+    // return EthnicityCategoryMixedMultipleBackground as MultiStepForm;
 
     case FormID.ETHNICITY_CATEGORY_WHITE:
-      return EthnicityCategoryWhite as MultiStepForm;
+      return ethnicCategoryWhiteForm as MultiStepForm;
+    // return EthnicityCategoryWhite as MultiStepForm;
 
     case FormID.ETHNICITY_CATEGORY_OTHER_ETHNIC_GROUP:
-      return EthnicityCategoryOtherEthnicGroup as MultiStepForm;
+      return ethnicCategoryOtherEthnicGroupForm as MultiStepForm;
+    // return EthnicityCategoryOtherEthnicGroup as MultiStepForm;
 
     case FormID.CURRENT_ACCOMMODATION_HOST_DETAILS:
       return currentAccommodationHostDetails as MultiStepForm;

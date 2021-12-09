@@ -302,7 +302,7 @@ export const ethnicityCategoryOptions = [
   },
 ];
 
-export const ethnicityCategoryQuestions = [
+const ethnicityCategoryQuestions = [
   {
     label:
       'Which of the following best describes your Asian or Asian British background?',
@@ -328,7 +328,7 @@ export const ethnicityCategoryQuestions = [
   },
 ];
 
-export function makeEthnicityForm(
+function makeEthnicityForm(
   ethnicityCategoryOptions: EthnicityObject[],
   ethnicityCategoryQuestions: EthnicityObject[],
   category: string

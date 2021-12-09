@@ -4,43 +4,6 @@ type EthnicityObject = {
   category: string;
 };
 
-export function makeEthnicityForm(
-  ethnicityCategoryOptions: EthnicityObject[],
-  ethnicityCategoryQuestions: EthnicityObject[],
-  category: string
-) {
-  const ethnicityFilter = (ethnicity: EthnicityObject) =>
-    ethnicity.category === category;
-
-  const ethnicityQuestion =
-    ethnicityCategoryQuestions.filter(ethnicityFilter)[0].label;
-  const matchingOptions = ethnicityCategoryOptions
-    .filter(ethnicityFilter)
-    .map((option) => ({
-      label: option.label,
-      value: option.value,
-    }));
-
-  return {
-    id: `ethnicity-extended-category-${category}`,
-    steps: [
-      {
-        fields: [
-          {
-            as: 'radios',
-            label: ethnicityQuestion,
-            name: 'ethnicity-extended-category',
-            options: matchingOptions,
-            validation: {
-              required: true,
-            },
-          },
-        ],
-      },
-    ],
-  };
-}
-
 export const ethnicityCategoryOptions = [
   {
     label: 'Indian',
@@ -364,3 +327,66 @@ export const ethnicityCategoryQuestions = [
     category: 'mixed-multiple-background',
   },
 ];
+
+export function makeEthnicityForm(
+  ethnicityCategoryOptions: EthnicityObject[],
+  ethnicityCategoryQuestions: EthnicityObject[],
+  category: string
+) {
+  const ethnicityFilter = (ethnicity: EthnicityObject) =>
+    ethnicity.category === category;
+
+  const ethnicityQuestion =
+    ethnicityCategoryQuestions.filter(ethnicityFilter)[0].label;
+  const matchingOptions = ethnicityCategoryOptions
+    .filter(ethnicityFilter)
+    .map((option) => ({
+      label: option.label,
+      value: option.value,
+    }));
+
+  return {
+    id: `ethnicity-extended-category-${category}`,
+    steps: [
+      {
+        fields: [
+          {
+            as: 'radios',
+            label: ethnicityQuestion,
+            name: 'ethnicity-extended-category',
+            options: matchingOptions,
+            validation: {
+              required: true,
+            },
+          },
+        ],
+      },
+    ],
+  };
+}
+
+export const ethnicCategoryAsianAsianBritishForm = makeEthnicityForm(
+  ethnicityCategoryOptions,
+  ethnicityCategoryQuestions,
+  'asian-asian-british'
+);
+export const ethnicCategoryBlackBlackBritishForm = makeEthnicityForm(
+  ethnicityCategoryOptions,
+  ethnicityCategoryQuestions,
+  'black-black-british'
+);
+export const ethnicCategoryMixedMultipleBackgroundForm = makeEthnicityForm(
+  ethnicityCategoryOptions,
+  ethnicityCategoryQuestions,
+  'mixed-multiple-background'
+);
+export const ethnicCategoryWhiteForm = makeEthnicityForm(
+  ethnicityCategoryOptions,
+  ethnicityCategoryQuestions,
+  'white'
+);
+export const ethnicCategoryOtherEthnicGroupForm = makeEthnicityForm(
+  ethnicityCategoryOptions,
+  ethnicityCategoryQuestions,
+  'other-ethnic-group'
+);

@@ -2,7 +2,7 @@ import React from 'react';
 import { Field, FieldInputProps, FieldMetaProps } from 'formik';
 import {
   BaseFormField,
-  CheckboxConditionalFormField,
+  CheckboxesConditionalFormField,
   ConditionalFormFieldOptionInput,
 } from '../../lib/types/form';
 import Paragraph from '../content/paragraph';
@@ -29,8 +29,8 @@ export function ConditionalInput({
         }
         id={containerId}
       >
-        {as === 'textarea' && fieldName && label && fieldId ? (
-          <Textarea as="textarea" name={fieldName} label={label} />
+        {as === 'textarea' ? (
+          <Textarea as="textarea" name={fieldName!} label={label!} />
         ) : (
           <>
             <Label content={label} htmlFor={fieldId} />
@@ -89,12 +89,13 @@ export function Checkbox({
   );
 }
 
-export interface CheckboxConditionalProps extends CheckboxConditionalFormField {
+export interface CheckboxesConditionalProps
+  extends CheckboxesConditionalFormField {
   value: string;
   subheading?: string;
 }
 
-export default function CheckboxConditional({
+export default function CheckboxesConditional({
   hint,
   label,
   details,
@@ -102,7 +103,7 @@ export default function CheckboxConditional({
   options,
   subheading,
   hideLabel,
-}: CheckboxConditionalProps): JSX.Element {
+}: CheckboxesConditionalProps): JSX.Element {
   return (
     <Field name={name}>
       {({

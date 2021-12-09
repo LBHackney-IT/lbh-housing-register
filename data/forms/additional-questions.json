@@ -4,7 +4,7 @@
     {
       "fields": [
         {
-          "as": "checkboxconditional",
+          "as": "checkboxesconditional",
           "label": "",
           "name": "employee-hackney-council",
           "options": [
@@ -22,7 +22,7 @@
           ]
         },
         {
-          "as": "checkboxconditional",
+          "as": "checkboxesconditional",
           "label": "",
           "name": "elected-member-hackney-council",
           "options": [
@@ -40,7 +40,7 @@
           ]
         },
         {
-          "as": "checkboxconditional",
+          "as": "checkboxesconditional",
           "label": "",
           "name": "risk-of-domestic-violence",
           "options": [
@@ -58,7 +58,7 @@
           ]
         },
         {
-          "as": "checkboxconditional",
+          "as": "checkboxesconditional",
           "label": "",
           "name": "witness-mobility-scheme",
           "options": [

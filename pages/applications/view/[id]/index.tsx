@@ -13,6 +13,7 @@ import { UserContext } from '../../../../lib/contexts/user-context';
 import {
   getApplication,
   getApplicationHistory,
+  addNoteToHistory,
 } from '../../../../lib/gateways/applications-api';
 import {
   canViewSensitiveApplication,
@@ -37,7 +38,7 @@ import {
   HorizontalNav,
   HorizontalNavItem,
 } from '../../../../components/admin/HorizontalNav';
-import ApplicationHistory from '../../../../components/admin/application-history';
+import ApplicationHistory from '../../../../components/admin/ApplicationHistory';
 import { ActivityHistoryPagedResult } from '../../../../domain/ActivityHistoryApi';
 
 export interface PageProps {
@@ -201,7 +202,11 @@ export default function ApplicationPage({
             )}
 
             {activeNavItem === 'history' && (
-              <ApplicationHistory history={history} />
+              <ApplicationHistory
+                setActiveNavItem={setActiveNavItem}
+                history={history}
+                id={data.id}
+              />
             )}
 
             {activeNavItem === 'assessment' && <Actions data={data} />}

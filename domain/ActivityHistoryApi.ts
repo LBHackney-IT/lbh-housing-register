@@ -47,13 +47,18 @@ export enum ApplicationActivityType {
   SensitivityChangedByUser = 'SensitivityChangedByUser',
   BedroomNeedChangedByUser = 'BedroomNeedChangedByUser',
   EffectiveDateChangedByUser = 'EffectiveDateChangedByUser',
+  NoteAddedByUser = 'NoteAddedByUser',
+}
+
+export enum ApplicationActivityData {
+  NoteAddedByUser = 'NoteAddedByUser',
 }
 
 export class ActivityEntity implements IActivityEntity {
   id: string;
   createdAt: string;
   oldData: Partial<Application>;
-  newData: Partial<Application>;
+  newData: any;
   authorDetails: ActivityHistoryAuthor;
   activityType: ApplicationActivityType;
 

@@ -492,3 +492,7 @@ export interface EvidenceRequestResponse {
 export interface SimpleTypeResponse<T> {
   value: T;
 }
+
+export interface AddNoteToHistory {
+  Note: string;
+}

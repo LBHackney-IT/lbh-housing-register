@@ -39,6 +39,7 @@ import {
 } from '../../../../components/admin/HorizontalNav';
 import ApplicationHistory from '../../../../components/admin/application-history';
 import { ActivityHistoryPagedResult } from '../../../../domain/ActivityHistoryApi';
+import OverviewAnnouncements from '../../../../components/admin/OverviewAnnouncements';
 
 export interface PageProps {
   user: HackneyGoogleUserWithPermissions;
@@ -111,6 +112,11 @@ export default function ApplicationPage({
                 <div className="govuk-grid-column-two-thirds">
                   <HeadingThree content="Snapshot" />
                   <Snapshot data={data} />
+
+                  {data.mainApplicant && (
+                    <OverviewAnnouncements applicant={data.mainApplicant} />
+                  )}
+
                   {data.mainApplicant && (
                     <PersonalDetails
                       heading="Main applicant"

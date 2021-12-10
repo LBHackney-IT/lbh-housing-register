@@ -328,11 +328,7 @@ const ethnicityCategoryQuestions = [
   },
 ];
 
-function makeEthnicityForm(
-  ethnicityCategoryOptions: EthnicityObject[],
-  ethnicityCategoryQuestions: EthnicityObject[],
-  category: string
-) {
+function makeEthnicityForm(category: string) {
   const ethnicityFilter = (ethnicity: EthnicityObject) =>
     ethnicity.category === category;
 
@@ -366,27 +362,14 @@ function makeEthnicityForm(
 }
 
 export const ethnicCategoryAsianAsianBritishForm = makeEthnicityForm(
-  ethnicityCategoryOptions,
-  ethnicityCategoryQuestions,
   'asian-asian-british'
 );
 export const ethnicCategoryBlackBlackBritishForm = makeEthnicityForm(
-  ethnicityCategoryOptions,
-  ethnicityCategoryQuestions,
   'black-black-british'
 );
 export const ethnicCategoryMixedMultipleBackgroundForm = makeEthnicityForm(
-  ethnicityCategoryOptions,
-  ethnicityCategoryQuestions,
   'mixed-multiple-background'
 );
-export const ethnicCategoryWhiteForm = makeEthnicityForm(
-  ethnicityCategoryOptions,
-  ethnicityCategoryQuestions,
-  'white'
-);
-export const ethnicCategoryOtherEthnicGroupForm = makeEthnicityForm(
-  ethnicityCategoryOptions,
-  ethnicityCategoryQuestions,
-  'other-ethnic-group'
-);
+export const ethnicCategoryWhiteForm = makeEthnicityForm('white');
+export const ethnicCategoryOtherEthnicGroupForm =
+  makeEthnicityForm('other-ethnic-group');

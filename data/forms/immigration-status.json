@@ -5,27 +5,27 @@
     {
       "field": "uk-studying",
       "isNot": "yes",
-      "reasoning": "You are in the UK to study"
+      "reasoning": "inUkToStudy"
     },
     {
       "field": "work-or-study-visa",
       "isNot": "yes",
-      "reasoning": "You are in the UK on a work or study visa"
+      "reasoning": "inUkOnVisa"
     },
     {
       "field": "settled-status",
       "isNot": "no",
-      "reasoning": "You have not been granted settled status or pre-settled status"
+      "reasoning": "notGrantedSettledStatus"
     },
     {
       "field": "receiving-sponsorship",
       "isNot": "yes",
-      "reasoning": "You are receiving sponsorship to stay in the UK"
+      "reasoning": "sponseredToStayInUk"
     },
     {
       "field": "legal-status",
       "isNot": "limited-leave-to-remain-no-public-funds",
-      "reasoning": "You have Limited Leave to Remain with no recourse to public funds"
+      "reasoning": "limitedLeaveToRemainInUk"
     }
   ],
   "steps": [

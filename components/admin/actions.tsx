@@ -10,12 +10,16 @@ import Input from '../form/input';
 import InsetText from '../content/inset-text';
 import { updateApplication } from '../../lib/gateways/internal-api';
 import { ApplicationStatus } from '../../lib/types/application-status';
+import { checkEligible } from '../../lib/utils/form';
 
 interface PageProps {
   data: Application;
 }
 
 export default function Actions({ data }: PageProps): JSX.Element {
+  const isEligible = checkEligible(data);
+  console.log(isEligible);
+
   const statusOptions = [
     {
       label: 'Select an option',

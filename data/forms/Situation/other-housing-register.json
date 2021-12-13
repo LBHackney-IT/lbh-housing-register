@@ -4,7 +4,7 @@
     {
       "field": "other-housing-register",
       "is": "yes",
-      "reasoning": "You have been accepted onto another local authority’s housing register"
+      "reasoning": "onAnotherHousingRegister"
     }
   ],
   "steps": [

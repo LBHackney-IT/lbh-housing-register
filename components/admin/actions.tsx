@@ -11,15 +11,15 @@ import InsetText from '../content/inset-text';
 import { updateApplication } from '../../lib/gateways/internal-api';
 import { ApplicationStatus } from '../../lib/types/application-status';
 import { checkEligible } from '../../lib/utils/form';
+import { disqualificationReasonOptions } from '../../lib/utils/disqualificationReasonOptions';
+import Paragraph from '../content/paragraph';
+import List, { ListItem } from '../content/list';
 
 interface PageProps {
   data: Application;
 }
 
 export default function Actions({ data }: PageProps): JSX.Element {
-  const isEligible = checkEligible(data);
-  console.log(isEligible);
-
   const statusOptions = [
     {
       label: 'Select an option',
@@ -78,6 +78,62 @@ export default function Actions({ data }: PageProps): JSX.Element {
       value: ApplicationStatus.AWAITING_REASSESSMENT,
     },
   ];
+
+  const isEligible = checkEligible(data);
+  const wasDisqualified = isEligible[0] === false;
+  const disqualificationReasons = wasDisqualified ? isEligible[1] : [];
+  const firstReason = disqualificationReasons[0];
+
+  // Reasons not included in select dropdown or spreadsheet
+  // inUkToStudy
+  // hasCourtOrder
+  // ableToBuyProperty
+  const reasonInitialValue = (disqualificationReason: string): string => {
+    switch (disqualificationReason) {
+      case 'inUkOnVisa':
+      case 'notGrantedSettledStatus':
+      case 'sponseredToStayInUk':
+      case 'limitedLeaveToRemainInUk':
+        return 'not-eligible';
+
+      case 'notResidingInHackneyLast3Years':
+        return 'failed-residential-criteria';
+
+      case 'ownOrSoldProperty':
+        return 'owner-occupier';
+
+      case 'under18YearsOld':
+        return 'under-18yrs';
+
+      case 'squatting':
+        return 'squatter-unauthorised-occupant';
+
+      case 'haveSubletAccomodation':
+        return 'unauthorised-subletting';
+
+      case 'incomeOver80000':
+      case 'incomeOver100000':
+        return 'household-income-exceeds-80-000-100-000-pa';
+
+      case 'assetsOver80000':
+        return 'capital-assets-exceeds-80-000';
+
+      case 'notLackingRooms':
+        return 'adequately-housed';
+
+      case 'onAnotherHousingRegister':
+        return 'another-la-register';
+
+      case 'intentionallyHomeless':
+        return 'intentionally-homeless';
+
+      case 'rentArrears':
+        return 'arrears';
+
+      default:
+        return '';
+    }
+  };
 
   const reasonOptions = [
     { label: 'Select an option', value: '' },
@@ -233,7 +289,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
 
   const initialValues = {
     status: data.status ?? '',
-    reason: data.assessment?.reason ?? '',
+    reason: data.assessment?.reason ?? reasonInitialValue(firstReason),
     applicationDate: data.assessment?.effectiveDate ?? data.submittedAt ?? '',
     informationReceived: data.assessment?.informationReceivedDate ?? '',
     bedroomNeed: data.assessment?.bedroomNeed ?? data.calculatedBedroomNeed!,
@@ -287,68 +343,93 @@ export default function Actions({ data }: PageProps): JSX.Element {
   }
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={schema}
-      onSubmit={onSubmit}
-    >
-      {({ isSubmitting, values }) => (
-        <Form>
-          <Select label="Status" name="status" options={statusOptions} />
-          <Select label="Reason" name="reason" options={reasonOptions} />
-          <DateInput name={'applicationDate'} label={'Application date'} />
-          {showInformationReceived(values) && (
-            <DateInput
-              name={'informationReceived'}
-              label={'All information received'}
-            />
-          )}
-          {showDecisionOptions(values) && (
-            <>
-              <Input
-                name="bedroomNeed"
-                label="Bedroom need"
-                className="govuk-input--width-2"
-              />
-              <Radios
-                label="Band"
-                name="band"
-                options={[
-                  { label: 'Band A', value: 'A' },
-                  { label: 'Band B', value: 'B' },
-                  { label: 'Band C', value: 'C' },
-                  { label: 'Band C (transitional)', value: 'C-transitional' },
-                ]}
-              />
-              <Radios
-                label="Bidding number"
-                name="biddingNumberType"
-                options={[
-                  { label: 'Generate bidding number', value: 'generate' },
-                  { label: 'Use existing bidding number', value: 'manual' },
-                ]}
-              />
-              {values.biddingNumberType === 'manual' && (
-                <InsetText>
-                  <Input
-                    name="biddingNumber"
-                    label="Bidding number"
-                    className="govuk-input--width-10"
-                  />
-                </InsetText>
-              )}
-            </>
-          )}
-
-          <div className="c-flex lbh-simple-pagination">
-            <div className="c-flex__1 text-right">
-              <Button disabled={isSubmitting} type="submit">
-                Save changes
-              </Button>
-            </div>
-          </div>
-        </Form>
+    <>
+      {wasDisqualified ? (
+        <>
+          <Paragraph>
+            The applicant was rejected by the system and shown the following
+            reason/s:
+          </Paragraph>
+          <List>
+            {disqualificationReasons.map((reason, index) => (
+              <ListItem key={index}>
+                {
+                  disqualificationReasonOptions[
+                    reason as keyof typeof disqualificationReasonOptions
+                  ]
+                }
+              </ListItem>
+            ))}
+          </List>
+        </>
+      ) : (
+        <Paragraph>
+          The applicant was deemed to be eligible by the system.
+        </Paragraph>
       )}
-    </Formik>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={schema}
+        onSubmit={onSubmit}
+      >
+        {({ isSubmitting, values }) => (
+          <Form>
+            <Select label="Status" name="status" options={statusOptions} />
+            <Select label="Reason" name="reason" options={reasonOptions} />
+            <DateInput name={'applicationDate'} label={'Application date'} />
+            {showInformationReceived(values) && (
+              <DateInput
+                name={'informationReceived'}
+                label={'All information received'}
+              />
+            )}
+            {showDecisionOptions(values) && (
+              <>
+                <Input
+                  name="bedroomNeed"
+                  label="Bedroom need"
+                  className="govuk-input--width-2"
+                />
+                <Radios
+                  label="Band"
+                  name="band"
+                  options={[
+                    { label: 'Band A', value: 'A' },
+                    { label: 'Band B', value: 'B' },
+                    { label: 'Band C', value: 'C' },
+                    { label: 'Band C (transitional)', value: 'C-transitional' },
+                  ]}
+                />
+                <Radios
+                  label="Bidding number"
+                  name="biddingNumberType"
+                  options={[
+                    { label: 'Generate bidding number', value: 'generate' },
+                    { label: 'Use existing bidding number', value: 'manual' },
+                  ]}
+                />
+                {values.biddingNumberType === 'manual' && (
+                  <InsetText>
+                    <Input
+                      name="biddingNumber"
+                      label="Bidding number"
+                      className="govuk-input--width-10"
+                    />
+                  </InsetText>
+                )}
+              </>
+            )}
+
+            <div className="c-flex lbh-simple-pagination">
+              <div className="c-flex__1 text-right">
+                <Button disabled={isSubmitting} type="submit">
+                  Save changes
+                </Button>
+              </div>
+            </div>
+          </Form>
+        )}
+      </Formik>
+    </>
   );
 }

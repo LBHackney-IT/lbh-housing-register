@@ -4,7 +4,7 @@ import { FormData, FormField } from '../types/form';
 import { FormID, getEligibilityCriteria } from './form-data';
 import { isOver18 } from '../../lib/utils/dateOfBirth';
 import { applicantsWithMedicalNeed } from '../../lib/utils/medicalNeed';
-import { disqualificationReasons } from './disqualificationReasons';
+import { disqualificationReasonOptions } from './disqualificationReasonOptions';
 
 /**
  * Determines if the field should be displayed based on the values passed in
@@ -65,18 +65,16 @@ export function checkEligible(application: Application): [boolean, string[]] {
     'home-how-many-bedrooms'
   );
 
-  console.log(disqualificationReasons['notLackingRooms']);
-
   if (
     bedroomNeed <= requestedNumberOfBedrooms &&
     numberOfApplicantsWithMedicalNeeds === 0
   ) {
-    setInvalid(disqualificationReasons.notLackingRooms);
+    setInvalid(disqualificationReasonOptions.notLackingRooms);
   }
   //******** *//
 
   if (!isOver18(mainApplicant)) {
-    setInvalid(disqualificationReasons.under18YearsOld);
+    setInvalid(disqualificationReasonOptions.under18YearsOld);
   }
 
   for (const [form, values] of Object.entries(FormID)) {

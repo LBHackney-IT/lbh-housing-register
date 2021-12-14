@@ -1,4 +1,4 @@
-export const disqualificationReasons = {
+export const disqualificationReasonOptions = {
   inUkToStudy: 'You are in the UK to study',
   inUkOnVisa: 'You are in the UK on a work or study visa',
   notGrantedSettledStatus:

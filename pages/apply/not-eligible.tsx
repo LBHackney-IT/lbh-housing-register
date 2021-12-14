@@ -14,6 +14,7 @@ import { checkEligible } from '../../lib/utils/form';
 import { exit } from '../../lib/store/auth';
 import withApplication from '../../lib/hoc/withApplication';
 import { ApplicationStatus } from '../../lib/types/application-status';
+import { disqualificationReasonOptions } from '../../lib/utils/disqualificationReasonOptions';
 
 const NotEligible = (): JSX.Element => {
   const router = useRouter();
@@ -48,7 +49,13 @@ const NotEligible = (): JSX.Element => {
           <HeadingTwo content="Why is this?" />
           {reasons?.map((reason, index) => (
             <InsetText key={index}>
-              <Paragraph>{reason}</Paragraph>
+              <Paragraph>
+                {
+                  disqualificationReasonOptions[
+                    reason as keyof typeof disqualificationReasonOptions
+                  ]
+                }
+              </Paragraph>
             </InsetText>
           ))}
         </>

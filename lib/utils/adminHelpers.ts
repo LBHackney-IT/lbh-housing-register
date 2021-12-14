@@ -45,9 +45,6 @@ export const addCaseSchema = Yup.object({
       return true;
     }),
   personalDetails_gender: Yup.string().label('Gender').required(),
-  personalDetails_nationalInsuranceNumber: Yup.string()
-    .label('NI number')
-    .required(),
   immigrationStatus_citizenship: Yup.string().label('Citizenship').required(),
 });
 

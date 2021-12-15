@@ -160,8 +160,6 @@ export const generateQuestionArray = (
   addresses: Address[]
 ) => {
   const questionArray = [];
-  // const addressesWithoutCurrent = addresses.filter((_, index) => index !== 0);
-
   for (const [key, value] of Object.entries(values)) {
     // Return question Ids to correct syntax for API
     const questionId = camelCaseToKebab(key).replace('_', '/');

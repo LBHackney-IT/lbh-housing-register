@@ -63,7 +63,7 @@ const titleOptions = [
   },
 ];
 
-const relationshipOptions = [
+export const relationshipOptions = [
   {
     label: 'Select an option',
     value: '',

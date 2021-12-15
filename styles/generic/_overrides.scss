@@ -27,6 +27,10 @@ body {
   margin-top: 0 !important;
 }
 
+.lbh-\!-margin-top-1 {
+  margin-top: 10px !important;
+}
+
 .lbh-\!-margin-left-1 {
   margin-left: 10px !important;
 }
@@ -79,4 +83,15 @@ body {
 .lbh-link--announcement:link,
 .lbh-link--announcement:visited {
   color: #0b0c0c;
+}
+
+.lbh-button--inline {
+  margin-left: 0;
+  margin-top: 0.5em;
+  min-width: 5em;
+
+  @media (min-width: 40.0625em) {
+    margin-top: 0;
+    margin-left: 0.5em;
+  }
 }

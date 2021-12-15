@@ -68,14 +68,14 @@ export default function PersonalDetails({
             <td className="govuk-table__cell govuk-table__cell--numeric">
               {canEdit && (
                 <ButtonLink
-                  additionalCssClasses="lbh-!-margin-top-0 govuk-secondary lbh-button--secondary"
+                  additionalCssClasses="govuk-secondary lbh-button--secondary lbh-button--inline"
                   href={`/applications/edit/${applicationId}/${applicant.person?.id}`}
                 >
                   Edit
                 </ButtonLink>
               )}
               <ButtonLink
-                additionalCssClasses="lbh-!-margin-top-0 lbh-!-margin-left-1"
+                additionalCssClasses="lbh-button--inline"
                 href={`/applications/view/${applicationId}/${applicant.person?.id}`}
               >
                 View

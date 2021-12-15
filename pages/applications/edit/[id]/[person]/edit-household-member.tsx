@@ -13,7 +13,7 @@ import {
   generateQuestionArray,
 } from '../../../../../lib/utils/adminHelpers';
 import { scrollToTop } from '../../../../../lib/utils/scroll';
-import MainApplicantForm from '../../../../../components/admin/MainApplicantForm';
+import HouseholdMemberForm from '../../../../../components/admin/HouseholdMemberForm';
 interface PageProps {
   user: HackneyGoogleUser;
   data: Application;
@@ -25,45 +25,56 @@ export default function EditApplicant({
   user,
   data,
   person,
-  evidenceLink,
 }: PageProps): JSX.Element {
   if (!data.id) return <Custom404 />;
   const router = useRouter();
 
+  const personData = data.otherMembers?.find((p) => p.person?.id === person);
+
   const savedAddresses =
-    data.mainApplicant?.questions?.filter(
+    personData?.questions?.filter(
       (question) => question.id === 'address-history/addressHistory'
     )[0]?.answer || '';
 
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [addressHistory, setAddressHistory] = useState(
+  const [addresses, setAddresses] = useState(
     JSON.parse(savedAddresses) as Address[]
   );
 
   const onSubmit = (values: FormikValues) => {
-    const questionValues = generateQuestionArray(values, addressHistory);
-    const addressToSubmit = addressHistory.length > 0 ? addressHistory[0] : {};
+    const questionValues = generateQuestionArray(values, addresses);
+    const addressToSubmit = addresses.length > 0 ? addresses[0] : {};
+
+    const householdMemberFormData = {
+      person: {
+        id: person,
+        title: values.personalDetails_title,
+        firstName: values.personalDetails_firstName,
+        surname: values.personalDetails_surname,
+        dateOfBirth: values.personalDetails_dateOfBirth,
+        gender: values.personalDetails_gender,
+        genderDescription: '',
+        nationalInsuranceNumber: values.personalDetails_nationalInsuranceNumber,
+        relationshipType: values.personalDetails_relationshipType,
+      },
+      address: addressToSubmit as any,
+      contactInformation: {
+        emailAddress: values.personalDetails_emailAddress,
+        phoneNumber: values.personalDetails_phoneNumber,
+      },
+      questions: questionValues,
+    };
+
+    if (data.otherMembers) {
+      data.otherMembers = [
+        ...data.otherMembers.filter((member) => member.person?.id !== person),
+        householdMemberFormData,
+      ];
+    }
 
     const request: Application = {
       id: data.id,
-      mainApplicant: {
-        person: {
-          title: values.personalDetails_title,
-          firstName: values.personalDetails_firstName,
-          surname: values.personalDetails_surname,
-          dateOfBirth: values.personalDetails_dateOfBirth,
-          gender: values.personalDetails_gender,
-          genderDescription: '',
-          nationalInsuranceNumber:
-            values.personalDetails_nationalInsuranceNumber,
-        },
-        address: addressToSubmit as any,
-        contactInformation: {
-          emailAddress: values.personalDetails_emailAddress,
-          phoneNumber: values.personalDetails_phoneNumber,
-        },
-        questions: questionValues,
-      },
+      otherMembers: data.otherMembers,
     };
 
     updateApplication(request).then(() => {
@@ -83,15 +94,15 @@ export default function EditApplicant({
   };
 
   return (
-    <MainApplicantForm
+    <HouseholdMemberForm
       isEditing={true}
       user={user}
       onSubmit={onSubmit}
       isSubmitted={isSubmitted}
-      addressHistory={addressHistory}
-      setAddressHistory={setAddressHistory}
+      addresses={addresses}
+      setAddresses={setAddresses}
       handleSaveApplication={handleSaveApplication}
-      data={data}
+      personData={personData}
     />
   );
 }

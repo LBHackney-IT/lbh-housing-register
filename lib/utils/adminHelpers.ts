@@ -45,9 +45,6 @@ export const addCaseSchema = Yup.object({
       return true;
     }),
   personalDetails_gender: Yup.string().label('Gender').required(),
-  personalDetails_nationalInsuranceNumber: Yup.string()
-    .label('NI number')
-    .required(),
   immigrationStatus_citizenship: Yup.string().label('Citizenship').required(),
 });
 
@@ -94,6 +91,46 @@ export const getSectionData = (sectionId: FormID) => {
   };
 };
 
+export const generateEditInitialValues = (
+  data: any,
+  isMainApplicant: boolean
+) => {
+  const questionData = isMainApplicant
+    ? data.mainApplicant.questions
+    : data.questions;
+
+  const personData = isMainApplicant ? data.mainApplicant : data;
+
+  const questionsInitialValuesObject = questionData.reduce(
+    (acc: { [key: string]: string }, current: { [key: string]: string }) => {
+      const questionFieldName = kebabToCamelCase(current.id).replace('/', '_');
+      const answer = current.answer.replace(/"/g, '');
+
+      return {
+        ...acc,
+        [questionFieldName]: answer,
+      };
+    },
+    {}
+  );
+
+  const initialValuesObject = {
+    ...questionsInitialValuesObject,
+    personalDetails_title: personData?.person?.title,
+    personalDetails_firstName: personData?.person?.firstName,
+    personalDetails_surname: personData?.person?.surname,
+    personalDetails_dateOfBirth: personData?.person?.dateOfBirth,
+    personalDetails_gender: personData?.person?.gender,
+    personalDetails_nationalInsuranceNumber:
+      personData?.person?.nationalInsuranceNumber,
+    personalDetails_relationshipType: personData?.person?.relationshipType,
+    personalDetails_emailAddress: personData?.contactInformation?.emailAddress,
+    personalDetails_phoneNumber: personData?.contactInformation?.phoneNumber,
+  };
+
+  return initialValuesObject;
+};
+
 export const generateInitialValues = (sections: SectionData[]) => {
   const allFieldNames = sections
     .map((section) =>
@@ -111,6 +148,7 @@ export const generateInitialValues = (sections: SectionData[]) => {
     (acc: { [key: string]: string }, current) => ((acc[current] = ''), acc),
     {}
   );
+
   return initialValuesObject;
 };
 
@@ -122,8 +160,6 @@ export const generateQuestionArray = (
   addresses: Address[]
 ) => {
   const questionArray = [];
-  // const addressesWithoutCurrent = addresses.filter((_, index) => index !== 0);
-
   for (const [key, value] of Object.entries(values)) {
     // Return question Ids to correct syntax for API
     const questionId = camelCaseToKebab(key).replace('_', '/');
@@ -131,8 +167,10 @@ export const generateQuestionArray = (
     // Don't include personal details
     if (questionId.startsWith('personal-details/')) continue;
 
-    // Use custom address fields
-    if (questionId === 'address-history/address-finder') {
+    if (
+      questionId === 'address-history/address-finder' ||
+      questionId === 'address-history/address-history'
+    ) {
       questionArray.push({
         id: 'address-history/addressHistory',
         answer: JSON.stringify(addresses),

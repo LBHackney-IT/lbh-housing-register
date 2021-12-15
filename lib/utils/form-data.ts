@@ -37,11 +37,13 @@ import UnspentConvictions from '../../data/forms/Situation/unspent-convictions.j
 
 import AdditionalQuestions from '../../data/forms/additional-questions.json';
 import EthnicityQuestions from '../../data/forms/ethnicity/ethnicity-questions.json';
-import EthnicityCategoryAsianAsianBritish from '../../data/forms/ethnicity/ethnicity-category-asian-asian-british.json';
-import EthnicityCategoryBlackBlackBritish from '../../data/forms/ethnicity/ethnicity-category-black-black-british.json';
-import EthnicityCategoryMixedMultipleBackground from '../../data/forms/ethnicity/ethnicity-category-mixed-multiple-background.json';
-import EthnicityCategoryWhite from '../../data/forms/ethnicity/ethnicity-category-white.json';
-import EthnicityCategoryOtherEthnicGroup from '../../data/forms/ethnicity/ethnicity-category-other-ethnic-group.json';
+import {
+  ethnicCategoryAsianAsianBritishForm,
+  ethnicCategoryBlackBlackBritishForm,
+  ethnicCategoryMixedMultipleBackgroundForm,
+  ethnicCategoryWhiteForm,
+  ethnicCategoryOtherEthnicGroupForm,
+} from './extendedEthnicityData';
 
 import { EligibilityCriteria, MultiStepForm } from '../types/form';
 import assertNever from './assertNever';
@@ -212,19 +214,19 @@ export function getFormData(form: FormID): MultiStepForm {
       return EthnicityQuestions as MultiStepForm;
 
     case FormID.ETHNICITY_CATEGORY_ASIAN_ASIAN_BRITISH:
-      return EthnicityCategoryAsianAsianBritish as MultiStepForm;
+      return ethnicCategoryAsianAsianBritishForm as MultiStepForm;
 
     case FormID.ETHNICITY_CATEGORY_BLACK_BLACK_BRITISH:
-      return EthnicityCategoryBlackBlackBritish as MultiStepForm;
+      return ethnicCategoryBlackBlackBritishForm as MultiStepForm;
 
     case FormID.ETHNICITY_CATEGORY_MIXED_MULTIPLE_BACKGROUND:
-      return EthnicityCategoryMixedMultipleBackground as MultiStepForm;
+      return ethnicCategoryMixedMultipleBackgroundForm as MultiStepForm;
 
     case FormID.ETHNICITY_CATEGORY_WHITE:
-      return EthnicityCategoryWhite as MultiStepForm;
+      return ethnicCategoryWhiteForm as MultiStepForm;
 
     case FormID.ETHNICITY_CATEGORY_OTHER_ETHNIC_GROUP:
-      return EthnicityCategoryOtherEthnicGroup as MultiStepForm;
+      return ethnicCategoryOtherEthnicGroupForm as MultiStepForm;
 
     case FormID.CURRENT_ACCOMMODATION_HOST_DETAILS:
       return currentAccommodationHostDetails as MultiStepForm;

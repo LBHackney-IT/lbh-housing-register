@@ -4,33 +4,76 @@
     {
       "fields": [
         {
-          "as": "checkboxes",
-          "label": "Do any of the following apply to your household?",
-          "hint": "Select all options that apply",
-          "name": "household-info",
+          "as": "checkboxesconditional",
+          "label": "",
+          "name": "employee-hackney-council",
           "options": [
             {
               "label": "Someone in this application is an employee, or is related to an employee of Hackney Council",
-              "value": "employee-hackney-council"
-            },
-            {
-              "label": "Someone in this application is an elected member, or is related to an elected member of Hackney Council",
-              "value": "elected-member-hackney-council"
-            },
-            {
-              "label": "Someone in this application is at risk of domestic violence",
-              "value": "at-risk-of-domestic-violence"
-            },
-            {
-              "label": "Someone in this application is a nominee under the National Witness Mobility Scheme",
-              "value": "nominee-national-witness-mobility-scheme"
+              "value": "yes",
+              "conditionalFieldInput": {
+                "as": "textarea",
+                "containerId": "employee-hackney-council-details-container",
+                "fieldId": "employeeHackneyCouncilDetails",
+                "fieldName": "employee-hackney-council-details",
+                "label": "Please provide details"
+              }
             }
           ]
         },
         {
-          "as": "textarea",
-          "label": "Please provide details if applicable",
-          "name": "household-details"
+          "as": "checkboxesconditional",
+          "label": "",
+          "name": "elected-member-hackney-council",
+          "options": [
+            {
+              "label": "Someone in this application is an elected member, or is related to an elected member of Hackney Council",
+              "value": "yes",
+              "conditionalFieldInput": {
+                "as": "textarea",
+                "containerId": "elected-member-hackney-council-details-container",
+                "fieldId": "electedMemberHackneyCouncilDetails",
+                "fieldName": "elected-member-hackney-council-details",
+                "label": "Please provide details"
+              }
+            }
+          ]
+        },
+        {
+          "as": "checkboxesconditional",
+          "label": "",
+          "name": "risk-of-domestic-violence",
+          "options": [
+            {
+              "label": "Someone in this application is at risk of domestic violence",
+              "value": "yes",
+              "conditionalFieldInput": {
+                "as": "textarea",
+                "containerId": "risk-of-domestic-violence-details-container",
+                "fieldId": "riskOfDomesticViolenceDetails",
+                "fieldName": "risk-of-domestic-violence-details",
+                "label": "Please provide details"
+              }
+            }
+          ]
+        },
+        {
+          "as": "checkboxesconditional",
+          "label": "",
+          "name": "witness-mobility-scheme",
+          "options": [
+            {
+              "label": "Someone in this application is a nominee under the National Witness Mobility Scheme",
+              "value": "yes",
+              "conditionalFieldInput": {
+                "as": "textarea",
+                "containerId": "witness-mobility-scheme-details-container",
+                "fieldId": "witnessMobilitySchemeDetails",
+                "fieldName": "witness-mobility-scheme-details",
+                "label": "Please provide details"
+              }
+            }
+          ]
         }
       ]
     }

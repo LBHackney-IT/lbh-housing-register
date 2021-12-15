@@ -9,6 +9,7 @@ import {
   AddressHistoryEntry,
   calculateDurations,
 } from '../../lib/utils/addressHistory';
+import { ethnicityCategoryOptions } from '../../lib/utils/extendedEthnicityData';
 import { formatDate } from '../../lib/utils/dateOfBirth';
 import { getGenderName } from './gender';
 
@@ -115,6 +116,15 @@ const savingDetails = (option: string): string => {
 export const personalDetailsCheckboxList = (
   applicant?: Applicant
 ): CheckBoxListPageProps => {
+  const ethnicityExtendedCategory = applicant?.questions
+    ?.filter((question) =>
+      question.id?.includes('ethnicity-extended-category')
+    )[0]
+    .answer?.replace(/['"]+/g, '');
+  const ethnicity = ethnicityCategoryOptions.filter(
+    (option) => option.value === ethnicityExtendedCategory
+  )[0].label;
+
   const nationalInsurance = applicant?.person?.nationalInsuranceNumber || '';
   const phonNumber = applicant?.contactInformation?.phoneNumber || '';
   const email = applicant?.contactInformation?.emailAddress || '';
@@ -130,6 +140,11 @@ export const personalDetailsCheckboxList = (
       {
         title: 'Date of birth',
         value: `${formatDate(applicant?.person?.dateOfBirth)}`,
+        isChecked: false,
+      },
+      {
+        title: 'Ethnicity',
+        value: `${ethnicity}`,
         isChecked: false,
       },
       {

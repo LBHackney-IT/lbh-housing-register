@@ -1,5 +1,5 @@
 import { AddressLookupResult } from '../../domain/addressLookup';
-import { Application } from '../../domain/HousingApi';
+import { AddNoteToHistory, Application } from '../../domain/HousingApi';
 
 export const lookUpAddress = async (postCode: string) => {
   const res = await fetch(`/api/address/${postCode}`, {
@@ -31,4 +31,12 @@ export const generateNovaletExport = async () => {
     body: null,
   });
   return res;
+};
+
+export const addNoteToHistory = async (applicationId: string, request: any) => {
+  const res = await fetch(`/api/applications/${applicationId}/note`, {
+    method: 'POST',
+    body: request,
+  });
+  return await res.json();
 };

@@ -10,6 +10,7 @@ import {
   PaginatedApplicationListResponse,
   VerifyAuthRequest,
   VerifyAuthResponse,
+  AddNoteToHistory,
 } from '../../domain/HousingApi';
 import { Stat } from '../../domain/stat';
 
@@ -164,6 +165,20 @@ export const getApplicationHistory = async (
     const { data } = await activityAxios(req).get(url);
     return data;
   } catch (err) {
+    return null;
+  }
+};
+
+export const addNoteToHistory = async (
+  id: string,
+  request: AddNoteToHistory
+): Promise<Array<AddNoteToHistory> | null> => {
+  try {
+    const url = `applications/${id}/note`;
+    const { data } = await housingAxios(null).post(url, request);
+    return data;
+  } catch (err) {
+    console.log(err);
     return null;
   }
 };

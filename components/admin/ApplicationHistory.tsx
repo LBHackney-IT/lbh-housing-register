@@ -1,10 +1,12 @@
-import React from 'react';
-import Paragraph from '../content/paragraph';
+import React, { useState } from 'react';
+import { Form, Formik, FormikValues, FormikErrors } from 'formik';
+import * as Yup from 'yup';
 import {
   ActivityEntity,
   ActivityHistoryPagedResult,
   ActivityHistoryResponse,
   ApplicationActivityType,
+  ApplicationActivityData,
   IActivityEntity,
 } from '../../domain/ActivityHistoryApi';
 import { ApplicationStatus } from '../../lib/types/application-status';
@@ -16,17 +18,39 @@ import {
   SummaryListValue,
 } from '../summary-list';
 import { HeadingThree, HeadingFour } from '../content/headings';
+// import { addNoteToHistory } from '../../lib/gateways/applications-api';
+import { addNoteToHistory } from '../../lib/gateways/internal-api';
+import Textarea from '../form/textarea';
+import Button from '../button';
+import router from 'next/router';
+import Details from '../details';
+import loadConfig from 'next/dist/next-server/server/config';
 
 interface ActivityHistoryPageProps {
   history: ActivityHistoryPagedResult;
+  id: string;
+  setActiveNavItem: (navItem: string) => void;
 }
 
 export default function ApplicationHistory({
   history,
+  id,
+  setActiveNavItem,
 }: ActivityHistoryPageProps): JSX.Element | null {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const initialValues: FormikValues = {
+    note: '',
+  };
+
+  const addNoteSchema = Yup.object({
+    note: Yup.string().label('Note').required(),
+  });
+
   const listItems = history
     ? history.results.map((historyItem, index) => {
         const heading = renderHeading(historyItem);
+        const body = renderBody(historyItem);
         const createdAt = getFormattedDate(historyItem.createdAt);
 
         return (
@@ -42,13 +66,52 @@ export default function ApplicationHistory({
             <p className="lbh-body lbh-body--grey lbh-!-margin-top-0">
               {createdAt}
             </p>
+            {body}
           </li>
         );
       })
     : null;
 
+  const onSubmit = (values: FormikValues) => {
+    const request = {
+      Note: values.note,
+    };
+
+    addNoteToHistory(id, JSON.stringify(request)).then(() => {
+      setIsSubmitted(true);
+      router.reload();
+    });
+  };
+
   return (
     <>
+      <SummaryListNoBorder>
+        <SummaryListRow>
+          <SummaryListKey>
+            <HeadingThree content="Add a note" />
+          </SummaryListKey>
+          <SummaryListValue>
+            <Formik
+              initialValues={initialValues}
+              onSubmit={onSubmit}
+              validationSchema={addNoteSchema}
+            >
+              {({ isSubmitting, errors, isValid }) => {
+                return (
+                  <>
+                    <Form>
+                      <Textarea name="note" label="" as="textarea" />
+                      <Button disabled={isSubmitting} type="submit">
+                        Save note
+                      </Button>
+                    </Form>
+                  </>
+                );
+              }}
+            </Formik>
+          </SummaryListValue>
+        </SummaryListRow>
+      </SummaryListNoBorder>
       {listItems ? (
         <>
           <SummaryListNoBorder>
@@ -85,6 +148,7 @@ function renderHeading(item: ActivityHistoryResponse) {
       sensitivityChangedByUser,
     [ApplicationActivityType.StatusChangedByUser]: statusChangedByUser,
     [ApplicationActivityType.SubmittedByResident]: submittedByResident,
+    [ApplicationActivityType.NoteAddedByUser]: noteAddedByUser,
   };
 
   const functionDelegate = activityText[historyItem.activityType];
@@ -92,6 +156,16 @@ function renderHeading(item: ActivityHistoryResponse) {
   if (functionDelegate) {
     return functionDelegate(historyItem);
   }
+}
+
+function renderBody(item: ActivityHistoryResponse) {
+  const historyItem = new ActivityEntity(item);
+
+  if (!historyItem.newData.activityData) return false;
+
+  return (
+    <Details summary="Show details">{historyItem.newData.activityData}</Details>
+  );
 }
 
 const getFormattedDate = (
@@ -195,4 +269,8 @@ const statusChangedByUser = (activity: IActivityEntity) => {
   }
 
   return message;
+};
+
+const noteAddedByUser = (activity: IActivityEntity) => {
+  return <>Note added by {activity.authorDetails.fullName}</>;
 };

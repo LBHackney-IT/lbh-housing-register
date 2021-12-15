@@ -12,6 +12,7 @@ import {
 } from '../../lib/utils/adminHelpers';
 import AddCaseSection from '../../components/admin/AddCaseSection';
 import AddCaseAddress from '../../components/admin/AddCaseAddress';
+import AddRelationshipType from '../../components/admin/AddRelationshipType';
 import Layout from '../../components/layout/staff-layout';
 import { HeadingOne } from '../../components/content/headings';
 
@@ -81,6 +82,7 @@ export default function HouseholdMemberForm({
                 ) : null}
                 <Form>
                   <AddCaseSection section={personalDetailsSection} />
+                  <AddRelationshipType />
                   <AddCaseSection section={immigrationStatusSection} />
                   <AddCaseSection section={medicalNeedsSection} />
                   <AddCaseAddress

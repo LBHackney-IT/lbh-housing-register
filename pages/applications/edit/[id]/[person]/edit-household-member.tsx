@@ -54,6 +54,7 @@ export default function EditApplicant({
         gender: values.personalDetails_gender,
         genderDescription: '',
         nationalInsuranceNumber: values.personalDetails_nationalInsuranceNumber,
+        relationshipType: values.personalDetails_relationshipType,
       },
       address: addresses[0].address || null,
       contactInformation: {

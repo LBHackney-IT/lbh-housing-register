@@ -123,6 +123,7 @@ export const generateEditInitialValues = (
     personalDetails_gender: personData?.person?.gender,
     personalDetails_nationalInsuranceNumber:
       personData?.person?.nationalInsuranceNumber,
+    personalDetails_relationshipType: personData?.person?.relationshipType,
     personalDetails_emailAddress: personData?.contactInformation?.emailAddress,
     personalDetails_phoneNumber: personData?.contactInformation?.phoneNumber,
   };

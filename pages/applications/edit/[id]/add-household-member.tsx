@@ -31,6 +31,8 @@ export default function AddHouseholdMember({
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const onSubmit = (values: FormikValues) => {
+    console.log(values);
+
     const questionValues = generateQuestionArray(values, addresses);
 
     const householdMemberFormData = {
@@ -42,6 +44,7 @@ export default function AddHouseholdMember({
         gender: values.personalDetails_gender,
         genderDescription: '',
         nationalInsuranceNumber: values.personalDetails_nationalInsuranceNumber,
+        relationshipType: values.personalDetails_relationshipType,
       },
       address: addresses[0].address || null,
       contactInformation: {

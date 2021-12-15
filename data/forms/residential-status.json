@@ -5,12 +5,12 @@
     {
       "field": "asbo-behaviour",
       "is": "yes",
-      "reasoning": "You are unable to reside in the borough due to a court order or an injunction"
+      "reasoning": "hasCourtOrder"
     },
     {
       "field": "institutions",
       "is": "none",
-      "reasoning": "You have not been continuously residing in Hackney for the last 3 years and you do not fall within any of the listed exceptions"
+      "reasoning": "notResidingInHackneyLast3Years"
     }
   ],
   "steps": [

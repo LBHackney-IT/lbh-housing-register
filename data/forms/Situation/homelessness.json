@@ -4,7 +4,7 @@
     {
       "field": "homelessness",
       "is": "yes",
-      "reasoning": "You have previously been found to be Intentionally Homeless within the last two years"
+      "reasoning": "intentionallyHomeless"
     }
   ],
   "steps": [

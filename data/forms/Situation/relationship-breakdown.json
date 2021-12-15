@@ -4,7 +4,7 @@
     {
       "field": "relationship-breakdown",
       "is": "no",
-      "reasoning": "You own a property, or have sold a property in the last 5 years, and do not fall within any of the listed exceptions"
+      "reasoning": "ownOrSoldProperty"
     }
   ],
   "steps": [

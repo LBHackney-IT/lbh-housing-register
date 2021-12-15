@@ -4,7 +4,7 @@
     {
       "field": "purchasing-property",
       "is": "yes",
-      "reasoning": "You are able to buy a property to meet your needs"
+      "reasoning": "ownOrSoldProperty"
     }
   ],
   "steps": [

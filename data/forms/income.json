@@ -5,17 +5,17 @@
     {
       "field": "income",
       "is": "80to100000",
-      "reasoning": "Your household income is over £80,000 a year"
+      "reasoning": "incomeOver80000"
     },
     {
       "field": "income",
       "is": "100000",
-      "reasoning": "Your household income is over £100,000 a year"
+      "reasoning": "incomeOver100000"
     },
     {
       "field": "savings",
       "is": "80000",
-      "reasoning": "Your household has over £80,000 in savings and capital assets"
+      "reasoning": "assetsOver80000"
     }
   ],
   "steps": [

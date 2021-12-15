@@ -42,6 +42,7 @@ export default function EditApplicant({
 
   const onSubmit = (values: FormikValues) => {
     const questionValues = generateQuestionArray(values, addressHistory);
+    const addressToSubmit = addressHistory.length > 0 ? addressHistory[0] : {};
 
     const request: Application = {
       id: data.id,
@@ -56,7 +57,7 @@ export default function EditApplicant({
           nationalInsuranceNumber:
             values.personalDetails_nationalInsuranceNumber,
         },
-        address: addressHistory[0].address || null,
+        address: addressToSubmit as any,
         contactInformation: {
           emailAddress: values.personalDetails_emailAddress,
           phoneNumber: values.personalDetails_phoneNumber,
@@ -65,19 +66,20 @@ export default function EditApplicant({
       },
     };
 
-    updateApplication(request);
-    setTimeout(
-      () =>
-        router.push({
-          pathname: `/applications/view/${data.id}`,
-        }),
-      500
-    );
+    updateApplication(request).then(() => {
+      router.push({
+        pathname: `/applications/view/${data.id}`,
+      });
+    });
   };
 
-  const handleSaveApplication = () => {
+  const handleSaveApplication = (isValid: any, touched: any) => {
+    const isTouched = Object.keys(touched).length !== 0;
+    if (!isValid || !isTouched) {
+      scrollToTop();
+    }
+
     setIsSubmitted(true);
-    scrollToTop();
   };
 
   return (

@@ -29,7 +29,7 @@ interface PageProps {
   isSubmitted: boolean;
   addresses: any;
   setAddresses: (addresses: any) => void;
-  handleSaveApplication: () => void;
+  handleSaveApplication: (isValid: boolean, touched: {}) => void;
   personData?: any;
 }
 
@@ -66,10 +66,11 @@ export default function HouseholdMemberForm({
           onSubmit={onSubmit}
           validationSchema={addCaseSchema}
         >
-          {({ isSubmitting, errors, isValid }) => {
+          {({ touched, isSubmitting, errors, isValid }) => {
+            const isTouched = Object.keys(touched).length !== 0;
             return (
               <>
-                {!isValid && isSubmitted ? (
+                {!isValid && isTouched && isSubmitted ? (
                   <ErrorSummary title="There is a problem">
                     <ul className="govuk-list govuk-error-summary__list">
                       {Object.entries(errors).map(([inputName, errorTitle]) => (
@@ -94,7 +95,7 @@ export default function HouseholdMemberForm({
 
                   <div className="c-flex__1 text-right">
                     <Button
-                      onClick={handleSaveApplication}
+                      onClick={() => handleSaveApplication(isValid, touched)}
                       disabled={isSubmitting}
                       type="submit"
                     >

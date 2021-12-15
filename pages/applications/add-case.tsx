@@ -22,6 +22,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
 
   const onSubmit = (values: FormikValues) => {
     const questionValues = generateQuestionArray(values, addressHistory);
+    const addressToSubmit = addressHistory.length > 0 ? addressHistory[0] : {};
 
     const request: Application = {
       status: ApplicationStatus.MANUAL_DRAFT,
@@ -37,7 +38,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
           nationalInsuranceNumber:
             values.personalDetails_nationalInsuranceNumber,
         },
-        address: addressHistory[0].address || null,
+        address: addressToSubmit as any,
         contactInformation: {
           emailAddress: values.personalDetails_emailAddress,
           phoneNumber: values.personalDetails_phoneNumber,
@@ -48,20 +49,21 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
       assignedTo: user.email,
     };
 
-    createApplication(request);
-    setTimeout(
-      () =>
-        router.push({
-          pathname: '/applications/view-register',
-          query: { status: ApplicationStatus.MANUAL_DRAFT },
-        }),
-      500
-    );
+    createApplication(request).then(() => {
+      router.push({
+        pathname: '/applications/view-register',
+        query: { status: ApplicationStatus.MANUAL_DRAFT },
+      });
+    });
   };
 
-  const handleSaveApplication = () => {
+  const handleSaveApplication = (isValid: any, touched: any) => {
+    const isTouched = Object.keys(touched).length !== 0;
+    if (!isValid || !isTouched) {
+      scrollToTop();
+    }
+
     setIsSubmitted(true);
-    scrollToTop();
   };
 
   return (

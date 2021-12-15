@@ -31,9 +31,8 @@ export default function AddHouseholdMember({
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const onSubmit = (values: FormikValues) => {
-    console.log(values);
-
     const questionValues = generateQuestionArray(values, addresses);
+    const addressToSubmit = addresses.length > 0 ? addresses[0] : {};
 
     const householdMemberFormData = {
       person: {
@@ -46,7 +45,7 @@ export default function AddHouseholdMember({
         nationalInsuranceNumber: values.personalDetails_nationalInsuranceNumber,
         relationshipType: values.personalDetails_relationshipType,
       },
-      address: addresses[0].address || null,
+      address: addressToSubmit as any,
       contactInformation: {
         emailAddress: values.personalDetails_emailAddress,
         phoneNumber: values.personalDetails_phoneNumber,
@@ -63,19 +62,20 @@ export default function AddHouseholdMember({
       otherMembers: data.otherMembers,
     };
 
-    updateApplication(request);
-    setTimeout(
-      () =>
-        router.push({
-          pathname: `/applications/view/${data.id}`,
-        }),
-      500
-    );
+    updateApplication(request).then(() => {
+      router.push({
+        pathname: `/applications/view/${data.id}`,
+      });
+    });
   };
 
-  const handleSaveApplication = () => {
+  const handleSaveApplication = (isValid: any, touched: any) => {
+    const isTouched = Object.keys(touched).length !== 0;
+    if (!isValid || !isTouched) {
+      scrollToTop();
+    }
+
     setIsSubmitted(true);
-    scrollToTop();
   };
 
   return (

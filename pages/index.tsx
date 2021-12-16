@@ -158,7 +158,7 @@ export default function ApplicationHomePage(): JSX.Element {
             </svg>
           }
         >
-          Start now
+          Start or resume application
         </ButtonLink>
       </Layout>
     </>

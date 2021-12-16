@@ -4,6 +4,7 @@ interface HeaderProps {
   serviceName: string;
   signOutText?: string;
   onSignOut?: () => void;
+  signOutRef?: React.RefObject<HTMLAnchorElement>;
 }
 
 export default function Header({
@@ -12,6 +13,7 @@ export default function Header({
   serviceName,
   signOutText,
   onSignOut,
+  signOutRef,
 }: HeaderProps): JSX.Element {
   return (
     <header className="lbh-header ">
@@ -52,7 +54,7 @@ export default function Header({
               <>
                 <p>{username}</p>
                 {signOutText && (
-                  <a href="" onClick={onSignOut}>
+                  <a ref={signOutRef} href="" onClick={onSignOut}>
                     {signOutText}
                   </a>
                 )}

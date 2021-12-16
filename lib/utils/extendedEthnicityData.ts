@@ -47,7 +47,7 @@ export const ethnicityCategoryOptions = [
   },
   {
     label: 'Vietnamese',
-    value: 'Vietnamese',
+    value: 'vietnamese',
     category: 'asian-asian-british',
   },
   {

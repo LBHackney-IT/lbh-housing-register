@@ -84,12 +84,9 @@ export default function Actions({ data }: PageProps): JSX.Element {
   const disqualificationReasons = wasDisqualified ? isEligible[1] : [];
   const firstReason = disqualificationReasons[0];
 
-  // Reasons not included in select dropdown or spreadsheet
-  // inUkToStudy
-  // hasCourtOrder
-  // ableToBuyProperty
   const reasonInitialValue = (disqualificationReason: string): string => {
     switch (disqualificationReason) {
+      case 'inUkToStudy':
       case 'inUkOnVisa':
       case 'notGrantedSettledStatus':
       case 'sponseredToStayInUk':
@@ -97,6 +94,8 @@ export default function Actions({ data }: PageProps): JSX.Element {
         return 'not-eligible';
 
       case 'notResidingInHackneyLast3Years':
+      case 'hasCourtOrder':
+      case 'ableToBuyProperty':
         return 'failed-residential-criteria';
 
       case 'ownOrSoldProperty':

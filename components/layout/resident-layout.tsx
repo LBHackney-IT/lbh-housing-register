@@ -40,8 +40,8 @@ export default function ResidentLayout({
   const autoSignOut = () => {
     if (!application.id) return;
 
-    signOutRef.current.click();
     setShowSignOutDialog(false);
+    signOutRef.current.click();
   };
 
   const handleShowSignOutDialog = () => {

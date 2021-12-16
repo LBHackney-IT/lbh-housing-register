@@ -39,11 +39,11 @@ const UserSummary = (): JSX.Element => {
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
   const isMainApplicant = currentResident == mainResident;
 
+  const application = useAppSelector((store) => store.application);
+
   if (!currentResident || !mainResident) {
     return <Custom404 />;
   }
-
-  const application = useAppSelector((store) => store.application);
 
   const baseHref = `/apply/${currentResident.person?.id}`;
   const returnHref = '/apply/overview';

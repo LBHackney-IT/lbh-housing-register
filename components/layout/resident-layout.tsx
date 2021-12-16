@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { ReactNode, useState, useEffect } from 'react';
+import React, { ReactNode, useState, useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { hasPhaseBanner } from '../../lib/utils/phase-banner';
 import Breadcrumbs from '../breadcrumbs';
@@ -24,75 +24,50 @@ export default function ResidentLayout({
   children,
 }: ResidentLayoutProps): JSX.Element {
   const router = useRouter();
-  const signOutRef = React.useRef(null);
+  const signOutRef = useRef() as React.MutableRefObject<HTMLAnchorElement>;
   const dispatch = useAppDispatch();
   const application = useAppSelector((store) => store.application);
   const [showSignOutDialog, setShowSignOutDialog] = useState(false);
-  const [signoutTimerEnded, setSignoutTimerEnded] = useState(false);
+  const inactivityTimeBeforeWarningDialog = 30 * 1000 * 60; // 30 minutes
+  const showWarningDialogBeforeSignOut = 30 * 1000; // 30 seconds
 
   const onSignOut = async () => {
     dispatch(exit());
-  };
-
-  const handleSignoutTimerEnded = () => {
-    if (!application.id) return;
-    setSignoutTimerEnded(true);
-    setShowSignOutDialog(true);
-    autoSignOut();
   };
 
   const autoSignOut = () => {
     if (!application.id) return;
 
     setShowSignOutDialog(false);
-
     console.log('autoSignOut');
     if (application.id) {
       signOutRef.current.click();
     }
   };
 
-  const delay = 0.5; // minutes
+  const handleTimeBeforeShowSignOutDialogEnded = () => {
+    if (!application.id) return;
 
-  useEffect(
-    () => {
-      console.log('useEffect');
+    // console.log('Dialog timer started');
+    setTimeout(() => autoSignOut(), showWarningDialogBeforeSignOut);
+    setShowSignOutDialog(true);
+  };
 
-      let signOutTimer = setTimeout(() => handleSignoutTimerEnded(), 5 * 1000);
-      // setTimeout(() => autoSignOut, delay * 1000 * 60);
-      // this will clear Timeout
-      // when component unmount like in willComponentUnmount
-      // and show will not change to true
-      return () => {
-        clearTimeout(signOutTimer);
-      };
-    },
-    // useEffect will run only one time with empty []
-    // if you pass a value to array,
-    // like this - [data]
-    // than clearTimeout will run every time
-    // this value changes (useEffect re-run)
-    // [router.asPath]
-    []
-  );
+  const handleStayLoggedIn = () => {
+    router.reload();
+  };
 
-  useEffect(
-    () => {
-      console.log('useEffect');
+  useEffect(() => {
+    // console.log('Time before showing warning dialog');
 
-      let signOutDialogTimer = setTimeout(() => autoSignOut(), 10 * 1000); // 30 seconds
-      return () => {
-        clearTimeout(signOutDialogTimer);
-      };
-    },
-    // useEffect will run only one time with empty []
-    // if you pass a value to array,
-    // like this - [data]
-    // than clearTimeout will run every time
-    // this value changes (useEffect re-run)
-    // [router.asPath]
-    [signoutTimerEnded]
-  );
+    let timeBeforeShowSignOutDialog = setTimeout(
+      () => handleTimeBeforeShowSignOutDialogEnded(),
+      inactivityTimeBeforeWarningDialog
+    );
+    return () => {
+      clearTimeout(timeBeforeShowSignOutDialog);
+    };
+  }, []);
 
   return (
     <>
@@ -122,16 +97,13 @@ export default function ResidentLayout({
       <Dialog
         isOpen={showSignOutDialog}
         title="Sign out"
-        onCancel={() => setShowSignOutDialog(false)}
-        onConfirmation={() => {
-          onSignOut();
-        }}
-        onConfirmationText="Sign out"
-        onCancelText="Stay logged in"
+        onConfirmation={handleStayLoggedIn}
+        onConfirmationText="Stay logged in"
       >
         <Paragraph>
-          Because there has been no input from you in the last 20 minutes you
-          will be signed out of this application. You can sign back in later.
+          Because there has been no input from you in the last 30 minutes you
+          will be signed out of this application in 30 seconds. You can sign
+          back in later.
         </Paragraph>
       </Dialog>
     </>

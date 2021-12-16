@@ -41,9 +41,7 @@ export default function ResidentLayout({
     if (!application.id) return;
 
     setShowSignOutDialog(false);
-    if (application.id) {
-      signOutRef.current.click();
-    }
+    signOutRef.current.click();
   };
 
   const handleShowSignOutDialog = () => {

@@ -18,18 +18,20 @@ interface ResidentLayoutProps {
   children: ReactNode;
 }
 
+const INACTIVITY_TIME_BEFORE_WARNING_DIALOG = 30 * 1000 * 60; // 30 minutes
+const TIME_TO_SHOW_DIALOG_BEFORE_SIGN_OUT = 30 * 1000; // 30 seconds
+
 export default function ResidentLayout({
   pageName,
   breadcrumbs,
   children,
 }: ResidentLayoutProps): JSX.Element {
   const router = useRouter();
-  const signOutRef = useRef() as React.MutableRefObject<HTMLAnchorElement>;
   const dispatch = useAppDispatch();
-  const application = useAppSelector((store) => store.application);
+
   const [showSignOutDialog, setShowSignOutDialog] = useState(false);
-  const inactivityTimeBeforeWarningDialog = 30 * 1000 * 60; // 30 minutes
-  const showWarningDialogBeforeSignOut = 30 * 1000; // 30 seconds
+  const signOutRef = useRef() as React.MutableRefObject<HTMLAnchorElement>;
+  const application = useAppSelector((store) => store.application);
 
   const onSignOut = async () => {
     dispatch(exit());
@@ -39,30 +41,29 @@ export default function ResidentLayout({
     if (!application.id) return;
 
     setShowSignOutDialog(false);
-    console.log('autoSignOut');
     if (application.id) {
       signOutRef.current.click();
     }
   };
 
-  const handleTimeBeforeShowSignOutDialogEnded = () => {
+  const handleShowSignOutDialog = () => {
     if (!application.id) return;
-
     // console.log('Dialog timer started');
-    setTimeout(() => autoSignOut(), showWarningDialogBeforeSignOut);
+
+    setTimeout(() => autoSignOut(), TIME_TO_SHOW_DIALOG_BEFORE_SIGN_OUT);
     setShowSignOutDialog(true);
   };
 
   const handleStayLoggedIn = () => {
-    router.reload();
+    router.reload(); // reset timer
   };
 
   useEffect(() => {
-    // console.log('Time before showing warning dialog');
+    // console.log('Time before showing the sign out dialog started');
 
     let timeBeforeShowSignOutDialog = setTimeout(
-      () => handleTimeBeforeShowSignOutDialogEnded(),
-      inactivityTimeBeforeWarningDialog
+      () => handleShowSignOutDialog(),
+      INACTIVITY_TIME_BEFORE_WARNING_DIALOG
     );
     return () => {
       clearTimeout(timeBeforeShowSignOutDialog);

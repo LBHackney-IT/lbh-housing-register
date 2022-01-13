@@ -55,6 +55,13 @@ export default function ApplicationPage({
 }: PageProps): JSX.Element | null {
   if (!data.id) return <Custom404 />;
 
+  // Can edit application if:
+  // - it has a status of manual draft
+  // - it has a status of incomplete and current user is assigned to it
+  const canEditApplication =
+    data.status === ApplicationStatus.MANUAL_DRAFT ||
+    (data.status === 'New' && data.assignedTo === user.email);
+
   const [activeNavItem, setActiveNavItem] = useState('overview');
 
   const handleClick = async (event: SyntheticEvent) => {
@@ -123,7 +130,7 @@ export default function ApplicationPage({
                       heading="Main applicant"
                       applicant={data.mainApplicant}
                       applicationId={data.id}
-                      canEdit={data.status === ApplicationStatus.MANUAL_DRAFT}
+                      canEdit={canEditApplication}
                     />
                   )}
                   {data.otherMembers && data.otherMembers.length > 0 ? (
@@ -131,12 +138,12 @@ export default function ApplicationPage({
                       heading="Other household members"
                       others={data.otherMembers}
                       applicationId={data.id}
-                      canEdit={data.status === ApplicationStatus.MANUAL_DRAFT}
+                      canEdit={canEditApplication}
                     />
                   ) : (
                     <HeadingThree content="Other household members" />
                   )}
-                  {data.status === ApplicationStatus.MANUAL_DRAFT && (
+                  {canEditApplication && (
                     <ButtonLink
                       additionalCssClasses="govuk-secondary lbh-button--secondary"
                       href={`/applications/edit/${data.id}/add-household-member`}

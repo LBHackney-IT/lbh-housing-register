@@ -119,16 +119,14 @@ export const personalDetailsCheckboxList = (
   const ethnicityExtendedCategoryQuestion = applicant?.questions?.filter(
     (question) => question.id?.includes('ethnicity-extended-category')
   )[0];
-
   const ethnicityExtendedCategory = ethnicityExtendedCategoryQuestion
     ? ethnicityExtendedCategoryQuestion.answer?.replace(/['"]+/g, '')
     : null;
-
   const ethnicity = ethnicityExtendedCategory
     ? ethnicityCategoryOptions.filter(
         (option) => option.value === ethnicityExtendedCategory
       )[0].label
-    : 'N/A';
+    : '';
 
   const nationalInsurance = applicant?.person?.nationalInsuranceNumber || '';
   const phonNumber = applicant?.contactInformation?.phoneNumber || '';

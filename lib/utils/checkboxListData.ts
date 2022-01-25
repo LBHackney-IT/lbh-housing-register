@@ -148,7 +148,6 @@ export const personalDetailsCheckboxList = (
       {
         title: 'Ethnicity',
         value: `${ethnicity}`,
-        // value: '',
         isChecked: false,
       },
       {

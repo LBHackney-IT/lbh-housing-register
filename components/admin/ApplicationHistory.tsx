@@ -195,8 +195,8 @@ const getFormattedDate = (
 const assignedToChangedByUser = (activity: IActivityEntity) => {
   return (
     <>
-      Assigned to '${activity.newData.assignedTo}' by $
-      {activity.oldData.assignedTo}
+      Assigned to '{activity.newData.assignedTo}' by '
+      {activity.oldData.assignedTo}'
     </>
   );
 };

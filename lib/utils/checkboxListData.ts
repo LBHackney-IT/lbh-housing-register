@@ -116,14 +116,19 @@ const savingDetails = (option: string): string => {
 export const personalDetailsCheckboxList = (
   applicant?: Applicant
 ): CheckBoxListPageProps => {
-  const ethnicityExtendedCategory = applicant?.questions
-    ?.filter((question) =>
-      question.id?.includes('ethnicity-extended-category')
-    )[0]
-    .answer?.replace(/['"]+/g, '');
-  const ethnicity = ethnicityCategoryOptions.filter(
-    (option) => option.value === ethnicityExtendedCategory
-  )[0].label;
+  const ethnicityExtendedCategoryQuestion = applicant?.questions?.filter(
+    (question) => question.id?.includes('ethnicity-extended-category')
+  )[0];
+
+  const ethnicityExtendedCategory = ethnicityExtendedCategoryQuestion
+    ? ethnicityExtendedCategoryQuestion.answer?.replace(/['"]+/g, '')
+    : null;
+
+  const ethnicity = ethnicityExtendedCategory
+    ? ethnicityCategoryOptions.filter(
+        (option) => option.value === ethnicityExtendedCategory
+      )[0].label
+    : 'N/A';
 
   const nationalInsurance = applicant?.person?.nationalInsuranceNumber || '';
   const phonNumber = applicant?.contactInformation?.phoneNumber || '';
@@ -145,6 +150,7 @@ export const personalDetailsCheckboxList = (
       {
         title: 'Ethnicity',
         value: `${ethnicity}`,
+        // value: '',
         isChecked: false,
       },
       {

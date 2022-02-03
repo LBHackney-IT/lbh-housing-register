@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Button, { ButtonLink } from '../button';
-// import { generateNovaletExport } from '../../../lib/gateways/internal-api';
+// import { generateNovaletExport } from '../../lib/gateways/internal-api';
 import {
   generateNovaletExport,
   approveNovaletExport,
@@ -10,6 +10,16 @@ import { Report } from './../../pages/applications/reports';
 interface NovaletReportsProps {
   reports: Report[];
 }
+
+const handleApproveExport = (fileName: string) => {
+  try {
+    approveNovaletExport(fileName);
+  } catch (err) {
+    console.log(err);
+
+    return null;
+  }
+};
 
 export default function NovaletReports({
   reports,
@@ -32,7 +42,7 @@ export default function NovaletReports({
         </thead>
 
         <tbody className="govuk-table__body">
-          {reports.map((report: any) => (
+          {reports.map((report: Report) => (
             <tr key={report.fileName} className="govuk-table__row">
               <th scope="row" className="govuk-table__header">
                 {report.fileName}
@@ -49,7 +59,7 @@ export default function NovaletReports({
               <td className="govuk-table__cell">
                 <Button
                   className="lbh-!-margin-top-0 lbh-!-no-wrap"
-                  onClick={() => approveNovaletExport(report)}
+                  onClick={() => handleApproveExport(report.fileName)}
                 >
                   Sync to Novalet
                 </Button>

@@ -21,9 +21,25 @@ const handleApproveExport = (fileName: string) => {
   }
 };
 
+const generatedDateTimeString = (ISODate: string) => {
+  const date = new Date(ISODate);
+  const formattedDate = date.toLocaleDateString('en-GB', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+  const formattedTime = date.toLocaleTimeString('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+  return `Generated on ${formattedDate} at ${formattedTime}`;
+};
+
 export default function NovaletReports({
   reports,
 }: NovaletReportsProps): JSX.Element {
+  console.log(reports);
+
   return reports.length > 0 ? (
     <>
       <table className="govuk-table lbh-table">
@@ -44,9 +60,14 @@ export default function NovaletReports({
         <tbody className="govuk-table__body">
           {reports.map((report: Report) => (
             <tr key={report.fileName} className="govuk-table__row">
-              <th scope="row" className="govuk-table__header">
-                {report.fileName}
-              </th>
+              <td className="govuk-table__cell">
+                <p className="lbh-body lbh-!-font-weight-bold">
+                  {report.fileName}
+                </p>
+                <p className="lbh-!-margin-top-0">
+                  {generatedDateTimeString(report.lastModified)}
+                </p>
+              </td>
               <td className="govuk-table__cell">
                 <ButtonLink
                   additionalCssClasses="lbh-!-margin-top-0 lbh-!-no-wrap"

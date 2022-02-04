@@ -8,7 +8,7 @@ const endpoint: NextApiHandler = async (
   res: NextApiResponse
 ) => {
   switch (req.method) {
-    case 'GET':
+    case 'POST':
       const user = getSession(req);
 
       const auth = getAuth(

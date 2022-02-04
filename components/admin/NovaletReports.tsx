@@ -27,8 +27,6 @@ const generatedDateTimeString = (ISODate: string) => {
 export default function NovaletReports({
   reports,
 }: NovaletReportsProps): JSX.Element {
-  console.log(reports);
-
   return reports.length > 0 ? (
     <>
       <table className="govuk-table lbh-table">

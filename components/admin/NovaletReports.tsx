@@ -77,12 +77,6 @@ export default function NovaletReports({
                 >
                   Sync to Novalet
                 </ButtonLink>
-                {/* <Button
-                  className="lbh-!-margin-top-0 lbh-!-no-wrap"
-                  onClick={() => approveNovaletExport(report.fileName)}
-                >
-                  Sync to Novalet
-                </Button> */}
               </td>
             </tr>
           ))}

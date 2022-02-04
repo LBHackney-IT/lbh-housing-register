@@ -6,6 +6,7 @@ import Pagination from '../pagination';
 import { formatDate } from '../../lib/utils/dateOfBirth';
 import { getPersonName } from '../../lib/utils/person';
 import { lookupStatus } from '../../lib/types/application-status';
+import SimplePagination from '../SimplePagination';
 
 interface TableProps {
   caption?: string;
@@ -85,7 +86,8 @@ export default function ApplicationTable({
               ))}
             </tbody>
           </table>
-          <Pagination
+
+          <SimplePagination
             totalItems={applications.totalItems}
             page={currentPage}
             numberOfItemsPerPage={applications.numberOfItemsPerPage}
@@ -93,7 +95,6 @@ export default function ApplicationTable({
             pageStartOffSet={applications.pageStartOffSet}
             pageEndOffSet={applications.pageEndOffSet}
             pageUrl={pageUrl}
-            parameters={parameters}
           />
         </>
       ) : (

@@ -41,6 +41,7 @@ import {
 import ApplicationHistory from '../../../../components/admin/ApplicationHistory';
 import { ActivityHistoryPagedResult } from '../../../../domain/ActivityHistoryApi';
 import OverviewAnnouncements from '../../../../components/admin/OverviewAnnouncements';
+import Announcement from '../../../../components/announcement';
 
 export interface PageProps {
   user: HackneyGoogleUserWithPermissions;
@@ -81,6 +82,18 @@ export default function ApplicationPage({
           </>
         ) : (
           <>
+            {data.importedFromLegacyDatabase ? (
+              <Announcement variant="info">
+                <h3 className="lbh-page-announcement__title">
+                  Legacy application
+                </h3>
+                <div className="lbh-page-announcement__content">
+                  This application is legacy data imported from the Housing
+                  Register.
+                </div>
+              </Announcement>
+            ) : null}
+
             <HeadingOne content="View application" />
             <h2 className="lbh-caption-xl lbh-caption govuk-!-margin-top-1">
               {getPersonName(data)}

@@ -65,7 +65,9 @@ export default function ApplicationTable({
               {applications?.results.map((application, index) => (
                 <tr key={index} className="govuk-table__row">
                   <th scope="row" className="govuk-table__header">
-                    #{application.reference}
+                    {application.importedFromLegacyDatabase
+                      ? 'Legacy application'
+                      : application.reference}
                   </th>
                   <td className="govuk-table__cell">
                     <Link href={`/applications/view/${application.id}`}>

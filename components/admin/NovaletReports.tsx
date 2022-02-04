@@ -1,25 +1,14 @@
 import Link from 'next/link';
 import Button, { ButtonLink } from '../button';
-// import { generateNovaletExport } from '../../lib/gateways/internal-api';
 import {
   generateNovaletExport,
   approveNovaletExport,
-} from '../../lib/gateways/applications-api';
+} from '../../lib/gateways/internal-api';
 import { Report } from './../../pages/applications/reports';
 
 interface NovaletReportsProps {
   reports: Report[];
 }
-
-const handleApproveExport = (fileName: string) => {
-  try {
-    approveNovaletExport(fileName);
-  } catch (err) {
-    console.log(err);
-
-    return null;
-  }
-};
 
 const generatedDateTimeString = (ISODate: string) => {
   const date = new Date(ISODate);
@@ -72,18 +61,28 @@ export default function NovaletReports({
                 <ButtonLink
                   additionalCssClasses="lbh-!-margin-top-0 lbh-!-no-wrap"
                   secondary={true}
-                  href={`/api/reports/novalet/download/${report.fileName}`}
+                  href={`/api/reports/novalet/download/${encodeURIComponent(
+                    report.fileName
+                  )}`}
                 >
                   Download CSV
                 </ButtonLink>
               </td>
               <td className="govuk-table__cell">
-                <Button
-                  className="lbh-!-margin-top-0 lbh-!-no-wrap"
-                  onClick={() => handleApproveExport(report.fileName)}
+                <ButtonLink
+                  additionalCssClasses="lbh-!-margin-top-0 lbh-!-no-wrap"
+                  href={`/api/reports/novalet/approve/${encodeURIComponent(
+                    report.fileName
+                  )}`}
                 >
                   Sync to Novalet
-                </Button>
+                </ButtonLink>
+                {/* <Button
+                  className="lbh-!-margin-top-0 lbh-!-no-wrap"
+                  onClick={() => approveNovaletExport(report.fileName)}
+                >
+                  Sync to Novalet
+                </Button> */}
               </td>
             </tr>
           ))}

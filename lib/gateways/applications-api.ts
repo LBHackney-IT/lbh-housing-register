@@ -118,7 +118,7 @@ export const getStats = async (): Promise<Array<Stat> | null> => {
   }
 };
 
-export const listNovaletExports = async (): Promise<string[]> => {
+export const listNovaletExports = async (): Promise<any> => {
   try {
     const url = 'reporting/listnovaletfiles';
     const { data } = await housingAxios(null).get(url);
@@ -155,6 +155,19 @@ export const downloadInternalReport = async (
     return null;
   }
 };
+
+export const approveNovaletExport = async (
+  filename: string
+): Promise<AxiosResponse | null> => {
+  try {
+    const url = `reporting/approvenovaletexport/${filename}`;
+    return await housingAxios(null).post(url, { filename });
+  } catch (err) {
+    return null;
+  }
+};
+
+// Application history
 
 export const getApplicationHistory = async (
   id: string,

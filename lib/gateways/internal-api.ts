@@ -33,6 +33,15 @@ export const generateNovaletExport = async () => {
   return res;
 };
 
+export const approveNovaletExport = async (fileName: string) => {
+  const res = await fetch(`/api/reports/novalet/${fileName}`, {
+    method: 'POST',
+    body: null,
+  });
+
+  return res;
+};
+
 export const addNoteToHistory = async (applicationId: string, request: any) => {
   const res = await fetch(`/api/applications/${applicationId}/note`, {
     method: 'POST',

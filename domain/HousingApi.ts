@@ -204,6 +204,12 @@ export interface Application {
    * @memberof Application
    */
   calculatedBedroomNeed?: number;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Application
+   */
+  importedFromLegacyDatabase?: boolean;
 }
 
 /**

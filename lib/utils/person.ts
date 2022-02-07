@@ -8,7 +8,9 @@ import { Application } from '../../domain/HousingApi';
 export function getPersonName(application: Application | undefined): string {
   if (!application?.mainApplicant?.person) return '';
   let person = application?.mainApplicant?.person;
-  let name = `${person.title} ${person.firstName} ${person.surname}`;
+  let name = `${person.title ? person.title : ''} ${person.firstName} ${
+    person.surname
+  }`;
   if (application.otherMembers && application.otherMembers.length > 0) {
     name += ` (+${application.otherMembers?.length})`;
   }

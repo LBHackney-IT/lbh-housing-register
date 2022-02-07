@@ -398,6 +398,9 @@ export namespace Person {
     Mr = 'Mr',
     Miss = 'Miss',
     Mx = 'Mx',
+    // Allowable only in legacy imported records.
+    Dr = 'Dr',
+    Ms = 'Ms',
   }
 }
 

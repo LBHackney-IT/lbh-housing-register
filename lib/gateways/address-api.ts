@@ -1,4 +1,7 @@
 import axios from 'axios';
+import asssertServerOnly from '../utils/assertServerOnly';
+
+asssertServerOnly();
 
 export const lookUpAddress = async (postcode: string | string[]) => {
   const { data } = await axios.get(

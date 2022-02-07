@@ -13,6 +13,9 @@ import {
   AddNoteToHistory,
 } from '../../domain/HousingApi';
 import { Stat } from '../../domain/stat';
+import asssertServerOnly from '../utils/assertServerOnly';
+
+asssertServerOnly();
 
 export const getApplications = async (
   page: string | number,

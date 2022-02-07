@@ -1,5 +1,8 @@
 import axios, { AxiosInstance } from 'axios';
 import cookie from 'cookie';
+import asssertServerOnly from './assertServerOnly';
+
+asssertServerOnly();
 
 const housingRegisterAxios = axios.create({
   baseURL: process.env.HOUSING_REGISTER_API,

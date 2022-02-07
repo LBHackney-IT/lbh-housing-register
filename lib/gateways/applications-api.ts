@@ -1,4 +1,5 @@
-import { AxiosResponse } from 'axios';
+import axios, { AxiosResponse, AxiosStatic } from 'axios';
+
 import { activityAxios, housingAxios } from '../utils/axiosClients';
 import { ActivityHistoryPagedResult } from '../../domain/ActivityHistoryApi';
 import {
@@ -14,14 +15,32 @@ import {
 } from '../../domain/HousingApi';
 import { Stat } from '../../domain/stat';
 
+const emptyPaginatedApplicationListResponse: PaginatedApplicationListResponse =
+  Object.freeze({
+    totalItems: 0,
+    numberOfItemsPerPage: 0,
+    page: 0,
+    pageEndOffSet: 0,
+    pageStartOffSet: 0,
+    results: [],
+    totalNumberOfPages: 0,
+  });
+
 export const getApplications = async (
   page: string | number,
   user?: string | 'unassigned'
 ): Promise<PaginatedApplicationListResponse | null> => {
   const assignedTo = user ?? '';
   const url = `applications?page=${page}&assignedTo=${assignedTo}`;
-  const { data } = await housingAxios(null).get(url);
-  return data;
+  try {
+    return (await housingAxios(null).get(url)).data;
+  } catch (ex) {
+    // TODO API shoudln't make us do this
+    if (axios.isAxiosError(ex) && ex.response?.status === 404) {
+      return emptyPaginatedApplicationListResponse;
+    }
+    throw ex;
+  }
 };
 
 export const searchApplications = async (
@@ -32,8 +51,15 @@ export const searchApplications = async (
 ): Promise<PaginatedApplicationListResponse | null> => {
   const assignedTo = user ?? '';
   const url = `applications?page=${page}&reference=${reference}&status=${status}&assignedTo=${assignedTo}`;
-  const { data } = await housingAxios(null).get(url);
-  return data;
+  try {
+    return (await housingAxios(null).get(url)).data;
+  } catch (ex) {
+    // TODO API shoudln't make us do this
+    if (axios.isAxiosError(ex) && ex.response?.status === 404) {
+      return emptyPaginatedApplicationListResponse;
+    }
+    throw ex;
+  }
 };
 
 export const getApplication = async (

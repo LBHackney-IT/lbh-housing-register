@@ -16,24 +16,6 @@ const activityHistoryAxios = axios.create({
   },
 });
 
-housingRegisterAxios.interceptors.response.use(
-  function (response) {
-    return response;
-  },
-  function (error) {
-    console.log(error);
-  }
-);
-
-activityHistoryAxios.interceptors.response.use(
-  function (response) {
-    return response;
-  },
-  function (error) {
-    console.log(error);
-  }
-);
-
 export function housingAxios(httpRequest: any): AxiosInstance {
   if (httpRequest) {
     const cookies = cookie.parse(httpRequest.headers.cookie ?? '');

@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { generateNovaletExport } from '../../../../lib/gateways/applications-api';
-import { getAuth, getSession } from '../../../../lib/utils/googleAuth';
+import { approveNovaletExport } from '../../../../../lib/gateways/applications-api';
+import { getAuth, getSession } from '../../../../../lib/utils/googleAuth';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -21,18 +21,21 @@ const endpoint: NextApiHandler = async (
         return;
       }
 
-      const response = await generateNovaletExport();
+      const fileName = req.query.fileName as string;
+      const response = await approveNovaletExport(fileName);
 
-      res.status(response.status);
+      if (response) {
+        res.status(response.status);
 
-      if (response.status == StatusCodes.OK) {
-        res.send({
-          message: 'Export file generated successfully',
-        });
-      } else {
-        res.send({
-          message: 'Unable to generate export file',
-        });
+        if (response.status == StatusCodes.OK) {
+          res.send({
+            message: 'Export file approved successfully',
+          });
+        } else {
+          res.send({
+            message: 'Unable to approve export file',
+          });
+        }
       }
 
       break;

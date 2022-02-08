@@ -12,15 +12,29 @@ import {
   HorizontalNavItem,
 } from '../../../components/admin/HorizontalNav';
 import router from 'next/router';
-import NovaletReports from './novalet';
-import InternalReports from './internal';
+import NovaletReports from '../../../components/admin/NovaletReports';
+import InternalReports from '../../../components/admin/InternalReports';
+
+export interface Report {
+  fileName: string;
+  lastModified: string;
+  size: number;
+  attributes: {
+    approvedOn: string;
+    lastDownloadedOn: string;
+    approvedBy: string;
+  };
+}
 
 interface ReportsProps {
   user: HackneyGoogleUser;
-  reports: string[];
+  reportsData: Report[];
 }
 
-export default function Reports({ user, reports }: ReportsProps) {
+export default function Reports({
+  user,
+  reportsData,
+}: ReportsProps): JSX.Element {
   const [activeNavItem, setActiveNavItem] = useState('Novalet');
 
   const handleClick = async (event: SyntheticEvent) => {
@@ -51,7 +65,7 @@ export default function Reports({ user, reports }: ReportsProps) {
                 itemName="Novalet"
                 isActive={activeNavItem === 'Novalet'}
               >
-                Novalet feed
+                Novalet applicant feed
               </HorizontalNavItem>
               <HorizontalNavItem
                 handleClick={handleClick}
@@ -62,7 +76,9 @@ export default function Reports({ user, reports }: ReportsProps) {
               </HorizontalNavItem>
             </HorizontalNav>
 
-            {activeNavItem == 'Novalet' && <NovaletReports {...reports} />}
+            {activeNavItem == 'Novalet' && (
+              <NovaletReports reports={reportsData} />
+            )}
             {activeNavItem == 'Internal' && <InternalReports />}
           </div>
         </div>
@@ -85,6 +101,6 @@ export const getServerSideProps: GetServerSideProps = async (
   const reportNames = await listNovaletExports();
 
   return {
-    props: { user: auth.user, reports: reportNames },
+    props: { user: auth.user, reportsData: reportNames },
   };
 };

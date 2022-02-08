@@ -1,9 +1,9 @@
 import { Form, Formik } from 'formik';
 import router from 'next/router';
 import React from 'react';
-import Button from '../../../components/button';
-import DateInput from '../../../components/form/dateinput';
-import Radios from '../../../components/form/radios';
+import Button from '../button';
+import DateInput from '../form/dateinput';
+import Radios from '../form/radios';
 
 interface FormValues {
   reportType: number;

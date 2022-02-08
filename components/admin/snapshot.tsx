@@ -13,6 +13,7 @@ export default function Snapshot({ data }: PageProps): JSX.Element {
   }
 
   function totalPeopleInApplication() {
+    if (data.importedFromLegacyDatabase) return ''; // We don't want this sentence if it's legacy data
     const totalInApplication = (data.otherMembers?.length || 0) + 1;
     return totalInApplication === 1
       ? `There is 1 person in this application.`

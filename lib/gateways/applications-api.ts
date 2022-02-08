@@ -1,4 +1,5 @@
-import { AxiosResponse } from 'axios';
+import axios, { AxiosResponse, AxiosStatic } from 'axios';
+
 import { activityAxios, housingAxios } from '../utils/axiosClients';
 import { ActivityHistoryPagedResult } from '../../domain/ActivityHistoryApi';
 import {
@@ -14,17 +15,31 @@ import {
 } from '../../domain/HousingApi';
 import { Stat } from '../../domain/stat';
 
+const emptyPaginatedApplicationListResponse: PaginatedApplicationListResponse =
+  Object.freeze({
+    totalItems: 0,
+    numberOfItemsPerPage: 0,
+    page: 0,
+    pageEndOffSet: 0,
+    pageStartOffSet: 0,
+    results: [],
+    totalNumberOfPages: 0,
+  });
+
 export const getApplications = async (
   page: string | number,
   user?: string | 'unassigned'
 ): Promise<PaginatedApplicationListResponse | null> => {
+  const assignedTo = user ?? '';
+  const url = `applications?page=${page}&assignedTo=${assignedTo}`;
   try {
-    const assignedTo = user ?? '';
-    const url = `applications?page=${page}&assignedTo=${assignedTo}`;
-    const { data } = await housingAxios(null).get(url);
-    return data;
-  } catch (err) {
-    return null;
+    return (await housingAxios(null).get(url)).data;
+  } catch (ex) {
+    // TODO API shoudln't make us do this
+    if (axios.isAxiosError(ex) && ex.response?.status === 404) {
+      return emptyPaginatedApplicationListResponse;
+    }
+    throw ex;
   }
 };
 
@@ -34,26 +49,25 @@ export const searchApplications = async (
   status: string,
   user?: string | 'unassigned'
 ): Promise<PaginatedApplicationListResponse | null> => {
+  const assignedTo = user ?? '';
+  const url = `applications?page=${page}&reference=${reference}&status=${status}&assignedTo=${assignedTo}`;
   try {
-    const assignedTo = user ?? '';
-    const url = `applications?page=${page}&reference=${reference}&status=${status}&assignedTo=${assignedTo}`;
-    const { data } = await housingAxios(null).get(url);
-    return data;
-  } catch (err) {
-    return null;
+    return (await housingAxios(null).get(url)).data;
+  } catch (ex) {
+    // TODO API shoudln't make us do this
+    if (axios.isAxiosError(ex) && ex.response?.status === 404) {
+      return emptyPaginatedApplicationListResponse;
+    }
+    throw ex;
   }
 };
 
 export const getApplication = async (
   id: string
 ): Promise<Application | null> => {
-  try {
-    const url = `applications/${id}`;
-    const { data } = await housingAxios(null).get(url);
-    return data;
-  } catch (err) {
-    return null;
-  }
+  const url = `applications/${id}`;
+  const { data } = await housingAxios(null).get(url);
+  return data;
 };
 
 export const addApplication = async (
@@ -109,34 +123,22 @@ export const confirmVerifyCode = async (
 };
 
 export const getStats = async (): Promise<Array<Stat> | null> => {
-  try {
-    const url = 'stats';
-    const { data } = await housingAxios(null).get(url);
-    return data;
-  } catch (err) {
-    return null;
-  }
+  const url = 'stats';
+  const { data } = await housingAxios(null).get(url);
+  return data;
 };
 
-export const listNovaletExports = async (): Promise<string[]> => {
-  try {
-    const url = 'reporting/listnovaletfiles';
-    const { data } = await housingAxios(null).get(url);
-    return data;
-  } catch (err) {
-    return [];
-  }
+export const listNovaletExports = async (): Promise<any> => {
+  const url = 'reporting/listnovaletfiles';
+  const { data } = await housingAxios(null).get(url);
+  return data;
 };
 
 export const downloadNovaletExport = async (
   filename: string
 ): Promise<AxiosResponse | null> => {
-  try {
-    const url = `reporting/novaletexport/${filename}`;
-    return await housingAxios(null).get(url, { responseType: 'blob' });
-  } catch (err) {
-    return null;
-  }
+  const url = `reporting/novaletexport/${filename}`;
+  return await housingAxios(null).get(url, { responseType: 'blob' });
 };
 
 export const generateNovaletExport = async (): Promise<AxiosResponse> => {
@@ -147,38 +149,34 @@ export const generateNovaletExport = async (): Promise<AxiosResponse> => {
 export const downloadInternalReport = async (
   req: any
 ): Promise<AxiosResponse | null> => {
-  try {
-    const { reportType, startDate, endDate } = req.query;
-    const url = `reporting/export?reportType=${reportType}&startDate=${startDate}&endDate=${endDate}`;
-    return await housingAxios(req).get(url, { responseType: 'blob' });
-  } catch (err) {
-    return null;
-  }
+  const { reportType, startDate, endDate } = req.query;
+  const url = `reporting/export?reportType=${reportType}&startDate=${startDate}&endDate=${endDate}`;
+  return await housingAxios(req).get(url, { responseType: 'blob' });
 };
+
+export const approveNovaletExport = async (
+  filename: string
+): Promise<AxiosResponse | null> => {
+  const url = `reporting/approvenovaletexport/${filename}`;
+  return await housingAxios(null).post(url, { filename });
+};
+
+// Application history
 
 export const getApplicationHistory = async (
   id: string,
   req: any
 ): Promise<ActivityHistoryPagedResult | null> => {
-  try {
-    const url = `activityhistory?targetId=${id}&pageSize=100`;
-    const { data } = await activityAxios(req).get(url);
-    return data;
-  } catch (err) {
-    return null;
-  }
+  const url = `activityhistory?targetId=${id}&pageSize=100`;
+  const { data } = await activityAxios(req).get(url);
+  return data;
 };
 
 export const addNoteToHistory = async (
   id: string,
   request: AddNoteToHistory
 ): Promise<Array<AddNoteToHistory> | null> => {
-  try {
-    const url = `applications/${id}/note`;
-    const { data } = await housingAxios(null).post(url, request);
-    return data;
-  } catch (err) {
-    console.log(err);
-    return null;
-  }
+  const url = `applications/${id}/note`;
+  const { data } = await housingAxios(null).post(url, request);
+  return data;
 };

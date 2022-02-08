@@ -21,25 +21,20 @@ const endpoint: NextApiHandler = async (
         return;
       }
 
-      try {
-        const response = await generateNovaletExport();
+      const response = await generateNovaletExport();
 
-        res.status(response.status);
+      res.status(response.status);
 
-        if (response.status == StatusCodes.OK) {
-          res.send({
-            message: 'Export file generated successfully',
-          });
-        } else {
-          res.send({
-            message: 'Unable to generate export file',
-          });
-        }
-      } catch (error) {
-        res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Error making request', inner: error });
+      if (response.status == StatusCodes.OK) {
+        res.send({
+          message: 'Export file generated successfully',
+        });
+      } else {
+        res.send({
+          message: 'Unable to generate export file',
+        });
       }
+
       break;
 
     default:

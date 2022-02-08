@@ -21,28 +21,23 @@ const endpoint: NextApiHandler = async (
         return;
       }
 
-      try {
-        const fileName = req.query.fileName as string;
-        const response = await approveNovaletExport(fileName);
+      const fileName = req.query.fileName as string;
+      const response = await approveNovaletExport(fileName);
 
-        if (response) {
-          res.status(response.status);
+      if (response) {
+        res.status(response.status);
 
-          if (response.status == StatusCodes.OK) {
-            res.send({
-              message: 'Export file approved successfully',
-            });
-          } else {
-            res.send({
-              message: 'Unable to approve export file',
-            });
-          }
+        if (response.status == StatusCodes.OK) {
+          res.send({
+            message: 'Export file approved successfully',
+          });
+        } else {
+          res.send({
+            message: 'Unable to approve export file',
+          });
         }
-      } catch (error) {
-        res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Error making request', inner: error });
       }
+
       break;
 
     default:

@@ -18,6 +18,7 @@ import Table, {
 import Layout from '../components/layout/resident-layout';
 import { useAppSelector } from '../lib/store/hooks';
 import ContactUsDialog from '../components/content/ContactUsDialog';
+import List, { ListItem } from '../components/content/list';
 
 export default function ApplicationHomePage(): JSX.Element {
   const router = useRouter();
@@ -51,7 +52,7 @@ export default function ApplicationHomePage(): JSX.Element {
           within 30 days before you submit it.
         </Paragraph>
 
-        <WarningText>
+        {/* <WarningText>
           Do not use this form if you are at risk of domestic abuse, gang
           violence or threatened with homelessness. Instead,{' '}
           <a
@@ -62,6 +63,24 @@ export default function ApplicationHomePage(): JSX.Element {
             contact us
           </a>{' '}
           for immediate support
+        </WarningText> */}
+        <WarningText>
+          Do not use this form if any of the following apply to you:
+          <List>
+            <ListItem bold={true}>You are currently homeless</ListItem>
+            <ListItem bold={true}>
+              You have been threatened with homelessness
+            </ListItem>
+            <ListItem bold={true}>You are a victim of domestic abuse</ListItem>
+            <ListItem bold={true}>You are a victim of gang violence </ListItem>
+          </List>
+          <Paragraph bold={true}>
+            In these circumstances you should contact us on 020 8356 2929 or{' '}
+            <a className="lbh-link" href="https://forms.gle/riaWcWbAY1j6uszR7">
+              complete this form
+            </a>{' '}
+            and we will contact you within 24 hours.
+          </Paragraph>
         </WarningText>
 
         <ContactUsDialog

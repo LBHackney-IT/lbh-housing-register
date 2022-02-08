@@ -47,11 +47,15 @@ export default function ApplicationHistory({
     note: Yup.string().label('Note').required(),
   });
 
+  console.log('history', history);
+
   const listItems = history
     ? history.results.map((historyItem, index) => {
         const heading = renderHeading(historyItem);
         const body = renderBody(historyItem);
         const createdAt = getFormattedDate(historyItem.createdAt);
+
+        console.log(historyItem.newData);
 
         return (
           <li
@@ -149,6 +153,8 @@ function renderHeading(item: ActivityHistoryResponse) {
     [ApplicationActivityType.StatusChangedByUser]: statusChangedByUser,
     [ApplicationActivityType.SubmittedByResident]: submittedByResident,
     [ApplicationActivityType.NoteAddedByUser]: noteAddedByUser,
+    [ApplicationActivityType.ImportedFromLegacyDatabase]:
+      importedFromLegacyDatabase,
   };
 
   const functionDelegate = activityText[historyItem.activityType];
@@ -160,6 +166,8 @@ function renderHeading(item: ActivityHistoryResponse) {
 
 function renderBody(item: ActivityHistoryResponse) {
   const historyItem = new ActivityEntity(item);
+
+  console.log('historyItem', historyItem);
 
   if (!historyItem.newData.activityData) return false;
 
@@ -273,4 +281,8 @@ const statusChangedByUser = (activity: IActivityEntity) => {
 
 const noteAddedByUser = (activity: IActivityEntity) => {
   return <>Note added by {activity.authorDetails.fullName}</>;
+};
+
+const importedFromLegacyDatabase = (activity: IActivityEntity) => {
+  return <>Imported from legacy database</>;
 };

@@ -47,15 +47,11 @@ export default function ApplicationHistory({
     note: Yup.string().label('Note').required(),
   });
 
-  console.log('history', history);
-
   const listItems = history
     ? history.results.map((historyItem, index) => {
         const heading = renderHeading(historyItem);
         const body = renderBody(historyItem);
         const createdAt = getFormattedDate(historyItem.createdAt);
-
-        console.log(historyItem.newData);
 
         return (
           <li
@@ -166,8 +162,6 @@ function renderHeading(item: ActivityHistoryResponse) {
 
 function renderBody(item: ActivityHistoryResponse) {
   const historyItem = new ActivityEntity(item);
-
-  console.log('historyItem', historyItem);
 
   if (!historyItem.newData.activityData) return false;
 

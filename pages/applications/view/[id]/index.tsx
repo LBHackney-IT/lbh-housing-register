@@ -88,8 +88,8 @@ export default function ApplicationPage({
                   Legacy application
                 </h3>
                 <div className="lbh-page-announcement__content">
-                  This application is legacy data imported from the Housing
-                  Register.
+                  This application was imported from a legacy system. Only
+                  limited information is available for legacy applications.
                 </div>
               </Announcement>
             ) : null}

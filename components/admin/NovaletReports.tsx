@@ -1,10 +1,10 @@
-import Link from 'next/link';
+import { useState, MouseEvent } from 'react';
 import Button, { ButtonLink } from '../button';
-import {
-  generateNovaletExport,
-  approveNovaletExport,
-} from '../../lib/gateways/internal-api';
+import { generateNovaletExport } from '../../lib/gateways/internal-api';
 import { Report } from './../../pages/applications/reports';
+import Paragraph from '../content/paragraph';
+import Announcement from '../announcement';
+import AnnouncementText from '../form/announcement-text';
 
 interface NovaletReportsProps {
   reports: Report[];
@@ -27,6 +27,16 @@ const generatedDateTimeString = (ISODate: string) => {
 export default function NovaletReports({
   reports,
 }: NovaletReportsProps): JSX.Element {
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleGenerateNovaletExport = async (
+    event: MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+    setIsGenerating(true);
+    generateNovaletExport();
+  };
+
   return reports.length > 0 ? (
     <>
       <table className="govuk-table lbh-table">
@@ -81,7 +91,20 @@ export default function NovaletReports({
         </tbody>
       </table>
 
-      <Button onClick={generateNovaletExport}>Generate file</Button>
+      <Button
+        disabled={isGenerating}
+        onClick={() => handleGenerateNovaletExport}
+      >
+        Generate file
+      </Button>
+      {isGenerating ? (
+        <Announcement variant="success">
+          <Paragraph>
+            A new applicant feed is being generated and is usually available
+            within in 2-3 minutes.
+          </Paragraph>
+        </Announcement>
+      ) : null}
     </>
   ) : (
     <div></div>

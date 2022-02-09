@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { GetServerSideProps } from 'next';
 import React, { SyntheticEvent, useState } from 'react';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
@@ -20,6 +21,8 @@ import {
 import { useRouter } from 'next/router';
 import { ApplicationStatus } from '../../lib/types/application-status';
 import Button from '../../components/button';
+import Details from '../../components/details';
+import { Checkbox } from '../../components/form/checkboxes';
 
 interface PageProps {
   user: HackneyGoogleUser;
@@ -81,10 +84,52 @@ export default function ViewAllApplicationsPage({
           </div>
           <div className="govuk-grid-column-three-quarters">
             <HeadingOne content="Housing Register" />
+
             <Button secondary={true} onClick={() => addCase()}>
               + Add new case
             </Button>
-            <HorizontalNav>
+
+            <hr />
+
+            <Details summary="Filter by status">
+              <div
+                className="govuk-checkboxes lbh-checkboxes"
+                role="group"
+                aria-labelledby="checkbox-group"
+              >
+                <div className="govuk-checkboxes__item">
+                  <input
+                    className="govuk-checkboxes__input"
+                    name="manualDraft"
+                    type="checkbox"
+                  />
+                  <label
+                    className="govuk-checkboxes__label"
+                    htmlFor="manualDraft"
+                  >
+                    Manual draft
+                  </label>
+                </div>
+                <div className="govuk-checkboxes__item">
+                  <input
+                    className="govuk-checkboxes__input"
+                    name="incomplete"
+                    type="checkbox"
+                  />
+                  <label
+                    className="govuk-checkboxes__label"
+                    htmlFor="incomplete"
+                  >
+                    Incomplete
+                  </label>
+                </div>
+              </div>
+              {/* <Checkbox name="Manual draft" label="" value="" /> */}
+              {/* <Checkbox name="Manual draft" label="" value="" />
+              <Checkbox name="Manual draft" label="" value="" /> */}
+            </Details>
+
+            {/* <HorizontalNav>
               <HorizontalNavItem
                 handleClick={handleClick}
                 itemName=""
@@ -99,7 +144,7 @@ export default function ViewAllApplicationsPage({
               >
                 Manually added
               </HorizontalNavItem>
-            </HorizontalNav>
+            </HorizontalNav> */}
             <ApplicationTable
               caption="Applications"
               applications={applications}

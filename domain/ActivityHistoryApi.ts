@@ -48,6 +48,7 @@ export enum ApplicationActivityType {
   BedroomNeedChangedByUser = 'BedroomNeedChangedByUser',
   EffectiveDateChangedByUser = 'EffectiveDateChangedByUser',
   NoteAddedByUser = 'NoteAddedByUser',
+  ImportedFromLegacyDatabase = 'ImportedFromLegacyDatabase',
 }
 
 export enum ApplicationActivityData {

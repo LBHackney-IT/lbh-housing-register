@@ -34,8 +34,20 @@ const residentialStatusSection = getSectionData(FormID.RESIDENTIAL_STATUS);
 const currentAccommodationSection = getSectionData(
   FormID.CURRENT_ACCOMMODATION
 );
+const currentAccommodationHostSection = getSectionData(
+  FormID.CURRENT_ACCOMMODATION_HOST_DETAILS
+);
+const currentAccommodationLandlordSection = getSectionData(
+  FormID.CURRENT_ACCOMMODATION_LANDLORD_DETAILS
+);
 const armedForcesSection = getSectionData(FormID.SITUATION_ARMED_FORCES);
+const courtOrderSection = getSectionData(FormID.COURT_ORDER);
+const accomodationTypeSection = getSectionData(FormID.ACCOMODATION_TYPE);
+const domesticViolenceSection = getSectionData(FormID.DOMESTIC_VIOLENCE);
 const homelessnessSection = getSectionData(FormID.HOMELESSNESS);
+const sublettingSection = getSectionData(FormID.SUBLETTING);
+const medicalNeedSection = getSectionData(FormID.MEDICAL_NEED);
+const purchasingPropertySection = getSectionData(FormID.PURCHASING_PROPERTY);
 const propertyOwnwershipSection = getSectionData(FormID.PROPERTY_OWNERSHIP);
 const soldPropertySection = getSectionData(FormID.SOLD_PROPERTY);
 const arrearsSection = getSectionData(FormID.ARREARS);
@@ -44,6 +56,7 @@ const legalRestrictionsSection = getSectionData(FormID.LEGAL_RESTRICTIONS);
 const unspentConvictionsSection = getSectionData(FormID.UNSPENT_CONVICTIONS);
 const employmentSection = getSectionData(FormID.EMPLOYMENT);
 const incomeSavingsSection = getSectionData(FormID.INCOME_SAVINGS);
+const ethnicitySection = getSectionData(FormID.ETHNICITY_QUESTIONS);
 
 interface PageProps {
   isEditing: boolean;
@@ -108,10 +121,21 @@ export default function MainApplicantForm({
                     setAddresses={setAddressHistory}
                   />
                   <AddCaseSection section={currentAccommodationSection} />
+                  <AddCaseSection section={currentAccommodationHostSection} />
+                  <AddCaseSection
+                    section={currentAccommodationLandlordSection}
+                  />
 
                   {/* Your situation */}
                   <AddCaseSection section={armedForcesSection} />
+                  <AddCaseSection section={courtOrderSection} />
+                  <AddCaseSection section={accomodationTypeSection} />
+                  <AddCaseSection section={domesticViolenceSection} />
+
                   <AddCaseSection section={homelessnessSection} />
+                  <AddCaseSection section={sublettingSection} />
+                  <AddCaseSection section={medicalNeedSection} />
+                  <AddCaseSection section={purchasingPropertySection} />
                   <AddCaseSection section={propertyOwnwershipSection} />
                   <AddCaseSection section={soldPropertySection} />
                   <AddCaseSection section={arrearsSection} />
@@ -121,6 +145,9 @@ export default function MainApplicantForm({
 
                   <AddCaseSection section={employmentSection} />
                   <AddCaseSection section={incomeSavingsSection} />
+                  <AddCaseSection section={ethnicitySection} />
+
+                  {/* <AddCaseEthnicitySection  /> */}
 
                   <div className="c-flex__1 text-right">
                     <Button

@@ -20,6 +20,14 @@ interface PageProps {
 export default function AddCaseSection({ section }: PageProps): JSX.Element {
   // Currently using "any" as multiple form types are used.
   const markup = section.fields.map((field: any, index: number) => {
+    // Do not show student accomodation fields
+    if (
+      (section.sectionId === 'employment' && field.name === 'address-finder') ||
+      field.name === 'course-completion-date'
+    ) {
+      return false;
+    }
+
     const inputType = field.as ? field.as : 'text';
 
     // This ensures all inputs have unique names

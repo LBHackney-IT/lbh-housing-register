@@ -95,14 +95,8 @@ export const updateApplication = async (
   req: any
 ): Promise<Application | null> => {
   const url = `applications/${id}`;
-  try {
-    const { data } = await housingAxios(req).patch(url, application);
-    return data;
-  } catch (ex) {
-    console.log(ex);
-
-    return null;
-  }
+  const { data } = await housingAxios(req).patch(url, application);
+  return data;
 };
 
 export const completeApplication = async (

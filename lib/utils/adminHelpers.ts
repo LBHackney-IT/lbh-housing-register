@@ -101,18 +101,26 @@ export const generateEditInitialValues = (
 
   const personData = isMainApplicant ? data.mainApplicant : data;
 
-  const questionsInitialValuesObject = questionData.reduce(
-    (acc: { [key: string]: string }, current: { [key: string]: string }) => {
-      const questionFieldName = kebabToCamelCase(current.id).replace('/', '_');
-      const answer = current.answer.replace(/"/g, '');
+  const questionsInitialValuesObject = questionData
+    ? questionData.reduce(
+        (
+          acc: { [key: string]: string },
+          current: { [key: string]: string }
+        ) => {
+          const questionFieldName = kebabToCamelCase(current.id).replace(
+            '/',
+            '_'
+          );
+          const answer = current.answer.replace(/"/g, '');
 
-      return {
-        ...acc,
-        [questionFieldName]: answer,
-      };
-    },
-    {}
-  );
+          return {
+            ...acc,
+            [questionFieldName]: answer,
+          };
+        },
+        {}
+      )
+    : {};
 
   const initialValuesObject = {
     ...questionsInitialValuesObject,

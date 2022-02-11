@@ -141,74 +141,76 @@ export default function AddCaseAddress({
             </label>
           </SummaryListValue>
           <SummaryListActions wideActions={true}>
-            {addresses.map((addressItem, index) => (
-              <FormGroup key={index}>
-                {index === 0 ? (
-                  <HeadingThree content="Current address" />
-                ) : null}
-                {index === 1 ? (
-                  <HeadingThree content="Previous addresses" />
-                ) : null}
-                <p className="lbh-body-s">
-                  {addressItem.address.line1 && (
-                    <>
-                      {addressItem.address.line1}
-                      <br />
-                    </>
-                  )}
-                  {addressItem.address.line2 && (
-                    <>
-                      {addressItem.address.line2}
-                      <br />
-                    </>
-                  )}
-                  {addressItem.address.town && (
-                    <>
-                      {addressItem.address.town}
-                      <br />
-                    </>
-                  )}
-                  {addressItem.address.county && (
-                    <>
-                      {addressItem.address.county}
-                      <br />
-                    </>
-                  )}
-                  {addressItem.address.postcode && (
-                    <>
-                      {addressItem.address.postcode}
-                      <br />
-                    </>
-                  )}
-                </p>
+            {addresses
+              ? addresses.map((addressItem, index) => (
+                  <FormGroup key={index}>
+                    {index === 0 ? (
+                      <HeadingThree content="Current address" />
+                    ) : null}
+                    {index === 1 ? (
+                      <HeadingThree content="Previous addresses" />
+                    ) : null}
+                    <p className="lbh-body-s">
+                      {addressItem.address.line1 && (
+                        <>
+                          {addressItem.address.line1}
+                          <br />
+                        </>
+                      )}
+                      {addressItem.address.line2 && (
+                        <>
+                          {addressItem.address.line2}
+                          <br />
+                        </>
+                      )}
+                      {addressItem.address.town && (
+                        <>
+                          {addressItem.address.town}
+                          <br />
+                        </>
+                      )}
+                      {addressItem.address.county && (
+                        <>
+                          {addressItem.address.county}
+                          <br />
+                        </>
+                      )}
+                      {addressItem.address.postcode && (
+                        <>
+                          {addressItem.address.postcode}
+                          <br />
+                        </>
+                      )}
+                    </p>
 
-                {addressItem.date && addressItem.dateTo && (
-                  <p className="lbh-body-s lbh-!-margin-top-1">
-                    {`${formatIsoDate(addressItem.date)} to ${formatIsoDate(
-                      addressItem.dateTo
-                    )}`}
-                  </p>
-                )}
+                    {addressItem.date && addressItem.dateTo && (
+                      <p className="lbh-body-s lbh-!-margin-top-1">
+                        {`${formatIsoDate(addressItem.date)} to ${formatIsoDate(
+                          addressItem.dateTo
+                        )}`}
+                      </p>
+                    )}
 
-                <p className="lbh-!-margin-top-1">
-                  <a
-                    className="lbh-link lbh-link--no-visited-state"
-                    href="#edit"
-                    onClick={() => editAddress(index)}
-                  >
-                    Edit
-                  </a>
-                  {' | '}
-                  <a
-                    className="lbh-link lbh-link--no-visited-state"
-                    href="#delete"
-                    onClick={() => deleteAddress(index)}
-                  >
-                    Delete
-                  </a>
-                </p>
-              </FormGroup>
-            ))}
+                    <p className="lbh-!-margin-top-1">
+                      <a
+                        className="lbh-link lbh-link--no-visited-state"
+                        href="#edit"
+                        onClick={() => editAddress(index)}
+                      >
+                        Edit
+                      </a>
+                      {' | '}
+                      <a
+                        className="lbh-link lbh-link--no-visited-state"
+                        href="#delete"
+                        onClick={() => deleteAddress(index)}
+                      >
+                        Delete
+                      </a>
+                    </p>
+                  </FormGroup>
+                ))
+              : null}
 
             {maximumAddresses === 0 || addresses.length < maximumAddresses ? (
               <button

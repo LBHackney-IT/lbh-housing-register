@@ -149,6 +149,8 @@ function renderHeading(item: ActivityHistoryResponse) {
     [ApplicationActivityType.StatusChangedByUser]: statusChangedByUser,
     [ApplicationActivityType.SubmittedByResident]: submittedByResident,
     [ApplicationActivityType.NoteAddedByUser]: noteAddedByUser,
+    [ApplicationActivityType.ImportedFromLegacyDatabase]:
+      importedFromLegacyDatabase,
   };
 
   const functionDelegate = activityText[historyItem.activityType];
@@ -273,4 +275,8 @@ const statusChangedByUser = (activity: IActivityEntity) => {
 
 const noteAddedByUser = (activity: IActivityEntity) => {
   return <>Note added by {activity.authorDetails.fullName}</>;
+};
+
+const importedFromLegacyDatabase = (activity: IActivityEntity) => {
+  return <>Imported from legacy database</>;
 };

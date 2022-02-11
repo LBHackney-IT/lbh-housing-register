@@ -63,7 +63,7 @@ const Footer = ({ referenceNumber }: FooterProps) => {
           <Paragraph>
             We have a duty to protect public funds. In order to detect and
             prevent fraud we may disclose your data to any person or
-            organisation adminestering public funds such as central government
+            organisation administering public funds such as central government
             departments or other council teams such as housing benifits.
           </Paragraph>
 

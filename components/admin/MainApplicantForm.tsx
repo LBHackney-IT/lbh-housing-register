@@ -43,20 +43,39 @@ const currentAccommodationLandlordSection = getSectionData(
 const armedForcesSection = getSectionData(FormID.SITUATION_ARMED_FORCES);
 const courtOrderSection = getSectionData(FormID.COURT_ORDER);
 const accomodationTypeSection = getSectionData(FormID.ACCOMODATION_TYPE);
+const sublettingSection = getSectionData(FormID.SUBLETTING);
 const domesticViolenceSection = getSectionData(FormID.DOMESTIC_VIOLENCE);
 const homelessnessSection = getSectionData(FormID.HOMELESSNESS);
-const sublettingSection = getSectionData(FormID.SUBLETTING);
-const medicalNeedSection = getSectionData(FormID.MEDICAL_NEED);
-const purchasingPropertySection = getSectionData(FormID.PURCHASING_PROPERTY);
 const propertyOwnwershipSection = getSectionData(FormID.PROPERTY_OWNERSHIP);
 const soldPropertySection = getSectionData(FormID.SOLD_PROPERTY);
+const medicalNeedSection = getSectionData(FormID.MEDICAL_NEED);
+const purchasingPropertySection = getSectionData(FormID.PURCHASING_PROPERTY);
 const arrearsSection = getSectionData(FormID.ARREARS);
+const underOccupyingSection = getSectionData(FormID.UNDER_OCCUPYING);
+const otherHousingRegisterSection = getSectionData(
+  FormID.OTHER_HOUSING_REGISTER
+);
 const breachOfTenancySection = getSectionData(FormID.BREACH_OF_TENANCY);
 const legalRestrictionsSection = getSectionData(FormID.LEGAL_RESTRICTIONS);
 const unspentConvictionsSection = getSectionData(FormID.UNSPENT_CONVICTIONS);
+
 const employmentSection = getSectionData(FormID.EMPLOYMENT);
 const incomeSavingsSection = getSectionData(FormID.INCOME_SAVINGS);
+
 const ethnicitySection = getSectionData(FormID.ETHNICITY_QUESTIONS);
+const ethnicityAsianSection = getSectionData(
+  FormID.ETHNICITY_CATEGORY_ASIAN_ASIAN_BRITISH
+);
+const ethnicityBlackSection = getSectionData(
+  FormID.ETHNICITY_CATEGORY_BLACK_BLACK_BRITISH
+);
+const ethnicityMixedSection = getSectionData(
+  FormID.ETHNICITY_CATEGORY_MIXED_MULTIPLE_BACKGROUND
+);
+const ethnicityWhiteSection = getSectionData(FormID.ETHNICITY_CATEGORY_WHITE);
+const ethnicityOtherSection = getSectionData(
+  FormID.ETHNICITY_CATEGORY_OTHER_ETHNIC_GROUP
+);
 
 interface PageProps {
   isEditing: boolean;
@@ -112,14 +131,21 @@ export default function MainApplicantForm({
                   </ErrorSummary>
                 ) : null}
                 <Form>
+                  {/* Identity */}
                   <AddCaseSection section={personalDetailsSection} />
                   <AddCaseSection section={immigrationStatusSection} />
+
+                  {/* Health */}
                   <AddCaseSection section={medicalNeedsSection} />
+
+                  {/* Living situation */}
                   <AddCaseSection section={residentialStatusSection} />
                   <AddCaseAddress
                     addresses={addressHistory}
                     setAddresses={setAddressHistory}
                   />
+
+                  {/* Current accommodation */}
                   <AddCaseSection section={currentAccommodationSection} />
                   <AddCaseSection section={currentAccommodationHostSection} />
                   <AddCaseSection
@@ -130,22 +156,29 @@ export default function MainApplicantForm({
                   <AddCaseSection section={armedForcesSection} />
                   <AddCaseSection section={courtOrderSection} />
                   <AddCaseSection section={accomodationTypeSection} />
-                  <AddCaseSection section={domesticViolenceSection} />
-
-                  <AddCaseSection section={homelessnessSection} />
                   <AddCaseSection section={sublettingSection} />
-                  <AddCaseSection section={medicalNeedSection} />
-                  <AddCaseSection section={purchasingPropertySection} />
+                  <AddCaseSection section={domesticViolenceSection} />
+                  <AddCaseSection section={homelessnessSection} />
                   <AddCaseSection section={propertyOwnwershipSection} />
                   <AddCaseSection section={soldPropertySection} />
+                  <AddCaseSection section={medicalNeedSection} />
+                  <AddCaseSection section={purchasingPropertySection} />
                   <AddCaseSection section={arrearsSection} />
+                  <AddCaseSection section={underOccupyingSection} />
+                  <AddCaseSection section={otherHousingRegisterSection} />
                   <AddCaseSection section={breachOfTenancySection} />
                   <AddCaseSection section={legalRestrictionsSection} />
                   <AddCaseSection section={unspentConvictionsSection} />
-
                   <AddCaseSection section={employmentSection} />
                   <AddCaseSection section={incomeSavingsSection} />
+
+                  {/* Ethnicity */}
                   <AddCaseSection section={ethnicitySection} />
+                  <AddCaseSection section={ethnicityAsianSection} />
+                  <AddCaseSection section={ethnicityBlackSection} />
+                  <AddCaseSection section={ethnicityMixedSection} />
+                  <AddCaseSection section={ethnicityWhiteSection} />
+                  <AddCaseSection section={ethnicityOtherSection} />
 
                   {/* <AddCaseEthnicitySection  /> */}
 

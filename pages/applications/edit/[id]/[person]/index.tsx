@@ -33,7 +33,7 @@ export default function EditApplicant({
   const savedAddresses =
     data.mainApplicant?.questions?.filter(
       (question) => question.id === 'address-history/addressHistory'
-    )[0]?.answer || '';
+    )[0]?.answer || '[]';
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [addressHistory, setAddressHistory] = useState(

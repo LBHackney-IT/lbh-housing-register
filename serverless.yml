@@ -105,9 +105,9 @@ custom:
     staging: housing-register-staging.hackney.gov.uk
     production: housing-register.hackney.gov.uk
   certificate-arn:
-    development: arn:aws:acm:us-east-1:364864573329:certificate/d903d9e2-c3da-482b-8768-916ec09e461f
-    staging: arn:aws:acm:us-east-1:087586271961:certificate/baffa134-abb5-4b71-b84f-013e9dd2d044
-    production: arn:aws:acm:us-east-1:282997303675:certificate/a43b1303-83ff-496e-b7a2-a75fa3ebfe87
+    development: arn:aws:acm:us-east-1:364864573329:certificate/955e7d76-1147-4102-9179-8880641875eb
+    staging: arn:aws:acm:us-east-1:087586271961:certificate/5a0d62b9-688d-4a24-8cfe-fbb45b893fb5
+    production: arn:aws:acm:us-east-1:282997303675:certificate/e0a3cc0b-024c-4009-bc2e-69c36d918d61
   securityGroups:
     development:
       - sg-0de8a8ee9797b9e47

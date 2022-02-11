@@ -26,6 +26,15 @@ const emptyPaginatedApplicationListResponse: PaginatedApplicationListResponse =
     totalNumberOfPages: 0,
   });
 
+const emptyActivityHistoryPagedResult: ActivityHistoryPagedResult =
+  Object.freeze({
+    results: [],
+    paginationDetails: {
+      hasNext: false,
+      nextToken: '',
+    },
+  });
+
 export const getApplications = async (
   page: string | number,
   user?: string | 'unassigned'
@@ -62,6 +71,8 @@ export const searchApplications = async (
   }
 };
 
+// View and modify applications
+
 export const getApplication = async (
   id: string
 ): Promise<Application | null> => {
@@ -97,6 +108,8 @@ export const completeApplication = async (
   return data;
 };
 
+// Evidence requests
+
 export const createEvidenceRequest = async (
   id: string,
   request: CreateEvidenceRequest
@@ -127,6 +140,8 @@ export const getStats = async (): Promise<Array<Stat> | null> => {
   const { data } = await housingAxios(null).get(url);
   return data;
 };
+
+// Novalet export
 
 export const listNovaletExports = async (): Promise<any> => {
   const url = 'reporting/listnovaletfiles';
@@ -168,8 +183,16 @@ export const getApplicationHistory = async (
   req: any
 ): Promise<ActivityHistoryPagedResult | null> => {
   const url = `activityhistory?targetId=${id}&pageSize=100`;
-  const { data } = await activityAxios(req).get(url);
-  return data;
+  try {
+    const { data } = await activityAxios(req).get(url);
+    return data;
+  } catch (ex) {
+    // TODO API shoudln't make us do this
+    if (axios.isAxiosError(ex) && ex.response?.status === 404) {
+      return emptyActivityHistoryPagedResult;
+    }
+    throw ex;
+  }
 };
 
 export const addNoteToHistory = async (

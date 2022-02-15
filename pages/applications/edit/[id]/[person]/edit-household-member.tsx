@@ -26,8 +26,6 @@ export default function EditApplicant({
   data,
   person,
 }: PageProps): JSX.Element {
-  console.log(data);
-
   if (!data.id) return <Custom404 />;
   const router = useRouter();
 

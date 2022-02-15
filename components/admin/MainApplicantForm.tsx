@@ -14,6 +14,7 @@ import {
 } from '../../lib/utils/adminHelpers';
 import AddCaseSection from '../../components/admin/AddCaseSection';
 import AddCaseAddress from '../../components/admin/AddCaseAddress';
+import AddCaseEthnicity from '../../components/admin/AddCaseEthnicity';
 import Layout from '../../components/layout/staff-layout';
 import { HeadingOne } from '../../components/content/headings';
 
@@ -85,6 +86,8 @@ interface PageProps {
   addressHistory: any;
   setAddressHistory: (addresses: any) => void;
   handleSaveApplication: (isValid: boolean, touched: {}) => void;
+  ethnicity: string;
+  setEthnicity: (ethnicity: string) => void;
   data?: Application;
 }
 
@@ -96,6 +99,8 @@ export default function MainApplicantForm({
   addressHistory,
   setAddressHistory,
   handleSaveApplication,
+  ethnicity,
+  setEthnicity,
   data,
 }: PageProps) {
   const initialValues = isEditing
@@ -173,14 +178,31 @@ export default function MainApplicantForm({
                   <AddCaseSection section={incomeSavingsSection} />
 
                   {/* Ethnicity */}
-                  <AddCaseSection section={ethnicitySection} />
-                  <AddCaseSection section={ethnicityAsianSection} />
-                  <AddCaseSection section={ethnicityBlackSection} />
-                  <AddCaseSection section={ethnicityMixedSection} />
-                  <AddCaseSection section={ethnicityWhiteSection} />
-                  <AddCaseSection section={ethnicityOtherSection} />
+                  {/* <AddCaseSection section={ethnicitySection} /> */}
+                  <AddCaseEthnicity
+                    section={ethnicitySection}
+                    ethnicity={ethnicity}
+                    setEthnicity={setEthnicity}
+                  />
 
-                  {/* <AddCaseEthnicitySection  /> */}
+                  {ethnicity === 'asian-asian-british' ? (
+                    <AddCaseSection section={ethnicityAsianSection} />
+                  ) : null}
+
+                  {ethnicity === 'black-black-british' ? (
+                    <AddCaseSection section={ethnicityBlackSection} />
+                  ) : null}
+                  {ethnicity === 'mixed-or-multiple-background' ? (
+                    <AddCaseSection section={ethnicityMixedSection} />
+                  ) : null}
+
+                  {ethnicity === 'white' ? (
+                    <AddCaseSection section={ethnicityWhiteSection} />
+                  ) : null}
+
+                  {ethnicity === 'other-ethnic-group' ? (
+                    <AddCaseSection section={ethnicityOtherSection} />
+                  ) : null}
 
                   <div className="c-flex__1 text-right">
                     <Button

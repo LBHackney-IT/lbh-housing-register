@@ -513,6 +513,10 @@ export const currentAccomodationCheckboxList = (
     QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_OTHER_ROOMS,
     applicant
   );
+  const whyUnsuitable = getQuestionValue(
+    QuestionKey.CURRENT_ACCOMMODATION_WHY_HOME_UNSUITABLE,
+    applicant
+  );
   const hostName = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOST_PERSON_NAME,
     applicant
@@ -577,6 +581,11 @@ export const currentAccomodationCheckboxList = (
       {
         title: 'Other rooms',
         value: `${otherRooms}`,
+        isChecked: false,
+      },
+      {
+        title: 'Why home is unsuitable',
+        value: `${whyUnsuitable}`,
         isChecked: false,
       },
       {

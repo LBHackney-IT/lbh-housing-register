@@ -29,6 +29,7 @@ export enum QuestionKey {
   CURRENT_ACCOMMODATION_HOME_HOW_MANY_BATHROOMS = 'current-accommodation/home-how-many-bathrooms',
   CURRENT_ACCOMMODATION_HOME_HOW_MANY_KITCHENS = 'current-accommodation/home-how-many-kitchens',
   CURRENT_ACCOMMODATION_HOME_HOW_MANY_OTHER_ROOMS = 'current-accommodation/home-how-many-other-rooms',
+  CURRENT_ACCOMMODATION_WHY_HOME_UNSUITABLE = 'current-accommodation/why-home-unsuitable',
   CURRENT_ACCOMMODATION_HOST_PERSON_NAME = 'current-accommodation-host-details/host-person-name',
   CURRENT_ACCOMMODATION_HOST_PERSON_NUMBER = 'current-accommodation-host-details/host-person-number',
   CURRENT_ACCOMMODATION_LANDLORD_PERSON_NAME = 'current-accommodation-landlord-details/landlord-name',

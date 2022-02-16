@@ -6,6 +6,96 @@
         {
           "as": "checkboxesconditional",
           "label": "",
+          "name": "currently-homeless",
+          "options": [
+            {
+              "label": "Someone in this application is currently homeless",
+              "value": "yes",
+              "conditionalFieldInput": {
+                "as": "textarea",
+                "containerId": "currently-homeless-details-container",
+                "fieldId": "currentlyHomelessDetails",
+                "fieldName": "currently-homeless-details",
+                "label": "Please provide details"
+              }
+            }
+          ]
+        },
+        {
+          "as": "checkboxesconditional",
+          "label": "",
+          "name": "risk-of-homelessness",
+          "options": [
+            {
+              "label": "Someone in this application is at risk of homelessness",
+              "value": "yes",
+              "conditionalFieldInput": {
+                "as": "textarea",
+                "containerId": "risk-of-homelessness-details-container",
+                "fieldId": "riskOfHomelessnessDetails",
+                "fieldName": "risk-of-homelessness-details",
+                "label": "Please provide details"
+              }
+            }
+          ]
+        },
+        {
+          "as": "checkboxesconditional",
+          "label": "",
+          "name": "risk-of-domestic-violence",
+          "options": [
+            {
+              "label": "Someone in this application is at risk of domestic violence",
+              "value": "yes",
+              "conditionalFieldInput": {
+                "as": "textarea",
+                "containerId": "risk-of-domestic-violence-details-container",
+                "fieldId": "riskOfDomesticViolenceDetails",
+                "fieldName": "risk-of-domestic-violence-details",
+                "label": "Please provide details"
+              }
+            }
+          ]
+        },
+        {
+          "as": "checkboxesconditional",
+          "label": "",
+          "name": "risk-of-gang-violence",
+          "options": [
+            {
+              "label": "Someone in this application is at risk of gang violence",
+              "value": "yes",
+              "conditionalFieldInput": {
+                "as": "textarea",
+                "containerId": "risk-of-gang-violence-details-container",
+                "fieldId": "riskOfGangViolenceDetails",
+                "fieldName": "risk-of-gang-violence-details",
+                "label": "Please provide details"
+              }
+            }
+          ]
+        },
+        {
+          "as": "checkboxesconditional",
+          "label": "",
+          "name": "witness-mobility-scheme",
+          "options": [
+            {
+              "label": "Someone in this application is a nominee under the National Witness Mobility Scheme",
+              "value": "yes",
+              "conditionalFieldInput": {
+                "as": "textarea",
+                "containerId": "witness-mobility-scheme-details-container",
+                "fieldId": "witnessMobilitySchemeDetails",
+                "fieldName": "witness-mobility-scheme-details",
+                "label": "Please provide details"
+              }
+            }
+          ]
+        },
+        {
+          "as": "checkboxesconditional",
+          "label": "",
           "name": "employee-hackney-council",
           "options": [
             {
@@ -34,42 +124,6 @@
                 "containerId": "elected-member-hackney-council-details-container",
                 "fieldId": "electedMemberHackneyCouncilDetails",
                 "fieldName": "elected-member-hackney-council-details",
-                "label": "Please provide details"
-              }
-            }
-          ]
-        },
-        {
-          "as": "checkboxesconditional",
-          "label": "",
-          "name": "risk-of-domestic-violence",
-          "options": [
-            {
-              "label": "Someone in this application is at risk of domestic violence",
-              "value": "yes",
-              "conditionalFieldInput": {
-                "as": "textarea",
-                "containerId": "risk-of-domestic-violence-details-container",
-                "fieldId": "riskOfDomesticViolenceDetails",
-                "fieldName": "risk-of-domestic-violence-details",
-                "label": "Please provide details"
-              }
-            }
-          ]
-        },
-        {
-          "as": "checkboxesconditional",
-          "label": "",
-          "name": "witness-mobility-scheme",
-          "options": [
-            {
-              "label": "Someone in this application is a nominee under the National Witness Mobility Scheme",
-              "value": "yes",
-              "conditionalFieldInput": {
-                "as": "textarea",
-                "containerId": "witness-mobility-scheme-details-container",
-                "fieldId": "witnessMobilitySchemeDetails",
-                "fieldName": "witness-mobility-scheme-details",
                 "label": "Please provide details"
               }
             }

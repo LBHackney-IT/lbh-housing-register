@@ -30,55 +30,84 @@ interface OverviewAnnouncementsProps {
 export default function OverviewAnnouncements({
   applicant,
 }: OverviewAnnouncementsProps) {
+  const isCurrentlyHomeless = applicant.questions?.filter((question) =>
+    question.id?.includes('additional-questions/currently-homeless-details')
+  );
+  const isAtRiskOfHomelessness = applicant.questions?.filter((question) =>
+    question.id?.includes('additional-questions/risk-of-homelessness-details')
+  );
+  const isAtRiskOfDomesticViolence = applicant.questions?.filter((question) =>
+    question.id?.includes(
+      'additional-questions/risk-of-domestic-violence-details'
+    )
+  );
+  const isAtRiskOfGangViolence = applicant.questions?.filter((question) =>
+    question.id?.includes('additional-questions/risk-of-gang-violence-details')
+  );
+  const isUnderWitnessProtection = applicant.questions?.filter((question) =>
+    question.id?.includes(
+      'additional-questions/witness-mobility-scheme-details'
+    )
+  );
   const isEmployeeOrRelated = applicant.questions?.filter((question) =>
     question.id?.includes(
       'additional-questions/employee-hackney-council-details'
     )
   );
-
   const isElectedOrRelated = applicant.questions?.filter((question) =>
     question.id?.includes(
       'additional-questions/elected-member-hackney-council-details'
     )
   );
 
-  const isAtRiskOfDomesticViolence = applicant.questions?.filter((question) =>
-    question.id?.includes(
-      'additional-questions/risk-of-domestic-violence-details'
-    )
-  );
-
-  const isUnderWitnessProtection = applicant.questions?.filter((question) =>
-    question.id?.includes(
-      'additional-questions/witness-mobility-scheme-details'
-    )
-  );
-
-  const isEmployeeOrRelatedString = isEmployeeOrRelated?.[0]?.answer || '';
-  const isElectedOrRelatedString = isElectedOrRelated?.[0]?.answer || '';
+  const isCurrentlyHomelessString = isCurrentlyHomeless?.[0]?.answer || '';
+  const isAtRiskOfHomelessnessString =
+    isAtRiskOfHomelessness?.[0]?.answer || '';
   const isAtRiskOfDomesticViolenceString =
     isAtRiskOfDomesticViolence?.[0]?.answer || '';
+  const isAtRiskOfGangViolenceString =
+    isAtRiskOfGangViolence?.[0]?.answer || '';
   const isUnderWitnessProtectionString =
     isUnderWitnessProtection?.[0]?.answer || '';
+  const isEmployeeOrRelatedString = isEmployeeOrRelated?.[0]?.answer || '';
+  const isElectedOrRelatedString = isElectedOrRelated?.[0]?.answer || '';
 
   return (
     <>
+      {isCurrentlyHomeless?.length ? (
+        <OverviewAnnouncement
+          title="Household member(s) currently homeless"
+          details={[isCurrentlyHomelessString]}
+        />
+      ) : null}
+      {isAtRiskOfHomelessness?.length ? (
+        <OverviewAnnouncement
+          title="Household member(s) at risk of homelessness"
+          details={[isAtRiskOfHomelessnessString]}
+        />
+      ) : null}
       {isAtRiskOfDomesticViolence?.length ? (
         <OverviewAnnouncement
           title="Household member(s) at risk of domestic violence"
           details={[isAtRiskOfDomesticViolenceString]}
         />
       ) : null}
-      {isEmployeeOrRelated?.length || isElectedOrRelated?.length ? (
+      {isAtRiskOfGangViolence?.length ? (
         <OverviewAnnouncement
-          title="Household member(s) have links to the council"
-          details={[isEmployeeOrRelatedString, isElectedOrRelatedString]}
+          title="Household member(s) at risk of gang violence"
+          details={[isAtRiskOfGangViolenceString]}
         />
       ) : null}
       {isUnderWitnessProtection?.length ? (
         <OverviewAnnouncement
           title="Household member(s) under witness protection"
           details={[isUnderWitnessProtectionString]}
+        />
+      ) : null}
+      {isEmployeeOrRelated?.length || isElectedOrRelated?.length ? (
+        <OverviewAnnouncement
+          title="Household member(s) have links to the council"
+          details={[isEmployeeOrRelatedString, isElectedOrRelatedString]}
         />
       ) : null}
     </>

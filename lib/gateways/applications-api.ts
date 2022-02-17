@@ -24,6 +24,7 @@ const emptyPaginatedApplicationListResponse: PaginatedApplicationListResponse =
     pageStartOffSet: 0,
     results: [],
     totalNumberOfPages: 0,
+    paginationToken: '',
   });
 
 const emptyActivityHistoryPagedResult: ActivityHistoryPagedResult =
@@ -36,11 +37,12 @@ const emptyActivityHistoryPagedResult: ActivityHistoryPagedResult =
   });
 
 export const getApplications = async (
-  page: string | number,
+  paginationToken: string,
+  // page: string | number,
   user?: string | 'unassigned'
 ): Promise<PaginatedApplicationListResponse | null> => {
   const assignedTo = user ?? '';
-  const url = `applications?page=${page}&assignedTo=${assignedTo}`;
+  const url = `applications?paginationToken=${paginationToken}`;
   try {
     return (await housingAxios(null).get(url)).data;
   } catch (ex) {

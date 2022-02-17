@@ -128,11 +128,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   const {
+    paginationToken = '',
     page = '1',
     reference = '',
     orderby = '',
     status = '',
   } = context.query as {
+    paginationToken: string;
     page: string;
     reference: string;
     orderby: string;
@@ -143,7 +145,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const applications =
     reference === '' && status === ''
-      ? await getApplications(page)
+      ? await getApplications(paginationToken)
       : await searchApplications(page, reference, status);
 
   return {

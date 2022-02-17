@@ -473,6 +473,12 @@ export interface PaginatedApplicationListResponse {
    * @memberof PaginatedApplicationListResponse
    */
   results: Array<Application>;
+  /**
+   *
+   * @type {Array<Application>}
+   * @memberof PaginatedApplicationListResponse
+   */
+  paginationToken: string;
 }
 
 export interface CreateAuthRequest {

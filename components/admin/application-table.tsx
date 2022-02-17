@@ -97,6 +97,7 @@ export default function ApplicationTable({
             pageStartOffSet={applications.pageStartOffSet}
             pageEndOffSet={applications.pageEndOffSet}
             pageUrl={pageUrl}
+            paginationToken={applications.paginationToken}
           />
         </>
       ) : (

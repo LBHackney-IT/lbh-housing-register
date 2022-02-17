@@ -25,7 +25,7 @@ interface PageProps {
   user: HackneyGoogleUser;
   applications: PaginatedApplicationListResponse | null;
   pageUrl: string;
-  page: string;
+  paginationToken: string;
   reference: string;
 }
 
@@ -33,7 +33,7 @@ export default function ViewAllApplicationsPage({
   user,
   applications,
   pageUrl,
-  page = '1',
+  paginationToken,
   reference = '',
 }: PageProps): JSX.Element {
   const router = useRouter();
@@ -43,13 +43,10 @@ export default function ViewAllApplicationsPage({
     parameters.append('reference', reference);
   }
 
-  const parsedPage = parseInt(page);
-
   const [activeNavItem, setActiveNavItem] = useState('');
 
   const handleClick = async (event: SyntheticEvent) => {
     event.preventDefault();
-
     const { name } = event.target as HTMLButtonElement;
 
     router.push({
@@ -103,7 +100,7 @@ export default function ViewAllApplicationsPage({
             <ApplicationTable
               caption="Applications"
               applications={applications}
-              currentPage={parsedPage}
+              currentPagePaginationToken={paginationToken}
               parameters={parameters}
               pageUrl={pageUrl}
               showStatus={true}
@@ -129,13 +126,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const {
     paginationToken = '',
-    page = '1',
+    // page = '1',
     reference = '',
     orderby = '',
     status = '',
   } = context.query as {
     paginationToken: string;
-    page: string;
+    // page: string;
     reference: string;
     orderby: string;
     status: string;
@@ -146,9 +143,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const applications =
     reference === '' && status === ''
       ? await getApplications(paginationToken)
-      : await searchApplications(page, reference, status);
+      : await searchApplications(paginationToken, reference, status);
 
   return {
-    props: { user, applications, pageUrl, page, reference },
+    props: { user, applications, pageUrl, paginationToken, reference },
   };
 };

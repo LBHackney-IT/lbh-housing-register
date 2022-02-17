@@ -11,7 +11,7 @@ import SimplePagination from '../SimplePagination';
 interface TableProps {
   caption?: string;
   applications: PaginatedApplicationListResponse | null;
-  currentPage: number;
+  currentPagePaginationToken: string;
   pageUrl: string;
   parameters: URLSearchParams;
   showStatus: boolean;
@@ -20,7 +20,7 @@ interface TableProps {
 export default function ApplicationTable({
   caption,
   applications,
-  currentPage,
+  currentPagePaginationToken,
   pageUrl,
   parameters,
   showStatus,
@@ -91,13 +91,9 @@ export default function ApplicationTable({
 
           <SimplePagination
             totalItems={applications.totalItems}
-            page={currentPage}
-            numberOfItemsPerPage={applications.numberOfItemsPerPage}
-            totalNumberOfPages={applications.totalNumberOfPages}
-            pageStartOffSet={applications.pageStartOffSet}
-            pageEndOffSet={applications.pageEndOffSet}
             pageUrl={pageUrl}
-            paginationToken={applications.paginationToken}
+            currentPagePaginationToken={currentPagePaginationToken}
+            nextPagePaginationToken={applications.paginationToken}
           />
         </>
       ) : (

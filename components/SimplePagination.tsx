@@ -3,43 +3,47 @@ import Link from 'next/link';
 
 interface SimplePaginationProps {
   totalItems: number;
-  page: number;
-  totalNumberOfPages: number;
-  numberOfItemsPerPage: number;
-  pageStartOffSet: number;
-  pageEndOffSet: number;
   pageUrl: string;
-  paginationToken: string;
+  currentPagePaginationToken: string;
+  nextPagePaginationToken: string;
 }
 
 const SimplePagination = ({
   totalItems,
-  page,
-  totalNumberOfPages,
-  pageStartOffSet,
-  pageEndOffSet,
   pageUrl,
-  paginationToken,
+  currentPagePaginationToken,
+  nextPagePaginationToken,
 }: SimplePaginationProps) => {
-  // console.log(paginationToken);
+  const [paginationTokenArray, setPaginationTokenArray] = useState([
+    currentPagePaginationToken,
+  ]);
 
-  const [paginationTokenArray, setPaginationTokenArray] = useState([]);
+  const handleNextClick = () => {
+    setPaginationTokenArray([
+      ...paginationTokenArray,
+      currentPagePaginationToken,
+    ]);
+  };
+
+  // TODO handlePreviousClick
 
   const previousPageUrl = new URL(pageUrl);
-  previousPageUrl.searchParams.append('page', (page - 1).toString());
+  previousPageUrl.searchParams.append(
+    'paginationToken',
+    paginationTokenArray[paginationTokenArray.length - 1]
+  );
 
   const nextPageUrl = new URL(pageUrl);
   nextPageUrl.searchParams.append(
     'paginationToken',
-    paginationToken.toString()
+    nextPagePaginationToken.toString()
   );
 
   return (
     <>
       <div className="lbh-body">Showing {totalItems} results</div>
       <nav className="lbh-simple-pagination">
-        {paginationToken !==
-        'eyJpZCI6eyJTIjoiZmVjYTk0MzItM2FkMC00MjAwLThhNjQtZWM0ZmM4NWFiMjA1In19' ? (
+        {currentPagePaginationToken !== '' ? (
           <Link href={previousPageUrl.toString()}>
             <a className="lbh-simple-pagination__link">
               <svg width="11" height="19" viewBox="0 0 11 19" fill="none">
@@ -52,7 +56,10 @@ const SimplePagination = ({
         ) : null}
 
         <Link href={nextPageUrl.toString()}>
-          <a className="lbh-simple-pagination__link lbh-simple-pagination__link--next">
+          <a
+            className="lbh-simple-pagination__link lbh-simple-pagination__link--next"
+            onClick={handleNextClick}
+          >
             Next page
             {/* <span className="lbh-simple-pagination__title"> {page + 1}</span> */}
             <svg width="11" height="19" viewBox="0 0 11 19" fill="none">

@@ -55,13 +55,14 @@ export const getApplications = async (
 };
 
 export const searchApplications = async (
-  page: string,
+  paginationToken: string,
+  // page: string,
   reference: string,
   status: string,
   user?: string | 'unassigned'
 ): Promise<PaginatedApplicationListResponse | null> => {
   const assignedTo = user ?? '';
-  const url = `applications?page=${page}&reference=${reference}&status=${status}&assignedTo=${assignedTo}`;
+  const url = `applications?paginationToken=${paginationToken}&reference=${reference}&status=${status}&assignedTo=${assignedTo}`;
   try {
     return (await housingAxios(null).get(url)).data;
   } catch (ex) {

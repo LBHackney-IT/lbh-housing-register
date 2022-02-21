@@ -5,7 +5,7 @@ import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 import { UserContext } from '../../lib/contexts/user-context';
 import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
 import {
-  searchApplications,
+  getApplicationsByStatus,
   getApplications,
 } from '../../lib/gateways/applications-api';
 import Layout from '../../components/layout/staff-layout';
@@ -143,7 +143,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const applications =
     reference === '' && status === ''
       ? await getApplications(paginationToken)
-      : await searchApplications(paginationToken, reference, status);
+      : await getApplicationsByStatus(paginationToken, status);
 
   return {
     props: { user, applications, pageUrl, paginationToken, reference },

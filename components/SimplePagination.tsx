@@ -34,10 +34,12 @@ const SimplePagination = ({
   );
 
   const nextPageUrl = new URL(pageUrl);
-  nextPageUrl.searchParams.append(
-    'paginationToken',
-    nextPagePaginationToken.toString()
-  );
+  if (nextPagePaginationToken != null) {
+    nextPageUrl.searchParams.append(
+      'paginationToken',
+      nextPagePaginationToken.toString()
+    );
+  }
 
   return (
     <>
@@ -55,6 +57,7 @@ const SimplePagination = ({
           </Link>
         ) : null}
 
+        {nextPagePaginationToken !== null ? (
         <Link href={nextPageUrl.toString()}>
           <a
             className="lbh-simple-pagination__link lbh-simple-pagination__link--next"
@@ -66,7 +69,8 @@ const SimplePagination = ({
               <path d="M1 18L9 9.5L1 1" strokeWidth="2" />
             </svg>
           </a>
-        </Link>
+          </Link>
+        ) : null}
       </nav>
     </>
   );

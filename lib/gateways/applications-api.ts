@@ -37,13 +37,32 @@ const emptyActivityHistoryPagedResult: ActivityHistoryPagedResult =
   });
 
 export const getApplications = async (
-  paginationToken: string,
+  paginationToken?: string,
   // page: string | number,
   user?: string | 'unassigned'
 ): Promise<PaginatedApplicationListResponse | null> => {
   const assignedTo = user ?? '';
   const url = `applications?paginationToken=${paginationToken}`;
   try {
+    console.log('paginationToken: ' + paginationToken);
+    return (await housingAxios(null).get(url)).data;
+  } catch (ex) {
+    // TODO API shoudln't make us do this
+    if (axios.isAxiosError(ex) && ex.response?.status === 404) {
+      return emptyPaginatedApplicationListResponse;
+    }
+    throw ex;
+  }
+};
+
+export const getApplicationsByStatus = async (
+  paginationToken?: string,
+  status?: string,
+): Promise<PaginatedApplicationListResponse | null> => {
+  var url = `applications/ListApplicationsByStatus?paginationToken=${paginationToken}&status=${status}`;
+
+  try {
+    console.log('paginationToken search: ' + paginationToken + ' status: ' + status);
     return (await housingAxios(null).get(url)).data;
   } catch (ex) {
     // TODO API shoudln't make us do this
@@ -55,15 +74,17 @@ export const getApplications = async (
 };
 
 export const searchApplications = async (
-  paginationToken: string,
+  paginationToken?: string,
   // page: string,
-  reference: string,
-  status: string,
+  //reference: string,
+  status?: string,
   user?: string | 'unassigned'
 ): Promise<PaginatedApplicationListResponse | null> => {
   const assignedTo = user ?? '';
-  const url = `applications?paginationToken=${paginationToken}&reference=${reference}&status=${status}&assignedTo=${assignedTo}`;
+  var url = `applications/ListApplicationsByAssignedTo?paginationToken=${paginationToken}&assignedTo=${assignedTo}&status=${status}`;
+  
   try {
+    console.log('paginationToken search: ' + paginationToken + ' assignedToPlusStatus: ' + status + ':' + assignedTo);
     return (await housingAxios(null).get(url)).data;
   } catch (ex) {
     // TODO API shoudln't make us do this

@@ -25,6 +25,7 @@ interface PageProps {
   pageUrl: string;
   page: string;
   reference: string;
+  paginationToken: string;
 }
 
 export default function ApplicationListPage({
@@ -33,6 +34,7 @@ export default function ApplicationListPage({
   pageUrl,
   page = '1',
   reference = '',
+  paginationToken = '',
 }: PageProps): JSX.Element {
   const router = useRouter();
   const parameters = new URLSearchParams();
@@ -79,7 +81,7 @@ export default function ApplicationListPage({
 
             <ApplicationTable
               applications={applications}
-              currentPage={parsedPage}
+              currentPagePaginationToken={paginationToken}
               parameters={parameters}
               pageUrl={pageUrl}
               showStatus={false}
@@ -104,25 +106,25 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   const {
-    page = '1',
     reference = '',
     orderby = '',
     status = 'Submitted',
+    paginationToken = '',
   } = context.query as {
-    page: string;
     reference: string;
     orderby: string;
     status: string;
+    paginationToken: string;
   };
 
   const pageUrl = `${process.env.APP_URL}/applications/unassigned`;
 
   const applications =
-    reference === '' && status === ''
-      ? await getApplications(page, 'unassigned')
-      : await searchApplications(page, reference, status, 'unassigned');
+    reference === '' && status === '' && user === undefined
+      ? await getApplications(paginationToken)
+      : await searchApplications(paginationToken, status, 'unassigned');
 
   return {
-    props: { user, applications, pageUrl, page, reference },
+    props: { user, applications, pageUrl, reference, paginationToken },
   };
 };

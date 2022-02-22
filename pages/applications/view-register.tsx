@@ -32,8 +32,6 @@ export default function ViewAllApplicationsPage({
 }: PageProps): JSX.Element {
   const router = useRouter();
 
-  const [activeNavItem, setActiveNavItem] = useState('');
-
   const handleClick = async (event: SyntheticEvent) => {
     event.preventDefault();
     const { name } = event.target as HTMLButtonElement;
@@ -42,8 +40,6 @@ export default function ViewAllApplicationsPage({
       pathname: '/applications/view-register',
       query: { status: name },
     });
-
-    setActiveNavItem(name);
   };
 
   const addCase = async () => {
@@ -81,14 +77,16 @@ export default function ViewAllApplicationsPage({
               <HorizontalNavItem
                 handleClick={handleClick}
                 itemName=""
-                isActive={activeNavItem === ''}
+                isActive={router.query.status === ''}
               >
                 All applications
               </HorizontalNavItem>
               <HorizontalNavItem
                 handleClick={handleClick}
                 itemName={ApplicationStatus.MANUAL_DRAFT}
-                isActive={activeNavItem === ApplicationStatus.MANUAL_DRAFT}
+                isActive={
+                  router.query.status === ApplicationStatus.MANUAL_DRAFT
+                }
               >
                 Manually added
               </HorizontalNavItem>

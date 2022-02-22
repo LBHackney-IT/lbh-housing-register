@@ -10,8 +10,8 @@ import SimplePagination from '../SimplePagination';
 interface TableProps {
   caption?: string;
   applications: PaginatedApplicationListResponse | null;
-  initialPaginationToken?: string;
-  setPaginationToken: (token: string) => void;
+  initialPaginationToken?: string | null;
+  setPaginationToken: (token: string | null) => void;
   showStatus: boolean;
 }
 

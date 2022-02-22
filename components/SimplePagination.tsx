@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
 interface SimplePaginationProps {
-  setPaginationToken: (token: string) => void;
-  initialPaginationToken?: string;
-  nextPagePaginationToken: string;
+  setPaginationToken: (token: string | null) => void;
+  initialPaginationToken?: string | null; // undefined = first page. null = last page, string = somewhere in the middle.
+  nextPagePaginationToken: string | null;
 }
 
 const SimplePagination = ({
@@ -12,9 +12,11 @@ const SimplePagination = ({
   nextPagePaginationToken,
 }: SimplePaginationProps) => {
   // cache pagination token from first render.
-  const [initialPaginationTokenSet] = useState(() => !!initialPaginationToken);
+  const [initialPaginationIsFirstPage] = useState(
+    () => initialPaginationToken !== undefined
+  );
   const [paginationTokens, setPaginationTokens] = useState(
-    initialPaginationToken ? [initialPaginationToken] : []
+    initialPaginationToken !== undefined ? [initialPaginationToken] : []
   );
 
   const handleNextClick = () => {
@@ -40,7 +42,7 @@ const SimplePagination = ({
             <svg width="11" height="19" viewBox="0 0 11 19" fill="none">
               <path d="M10 1L2 9.5L10 18" strokeWidth="2" />
             </svg>
-            {paginationTokens.length === 1 && initialPaginationTokenSet
+            {paginationTokens.length === 1 && initialPaginationIsFirstPage
               ? 'First page'
               : 'Previous page'}
           </a>

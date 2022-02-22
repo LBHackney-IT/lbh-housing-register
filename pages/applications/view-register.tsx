@@ -1,44 +1,36 @@
-import { GetServerSideProps, GetServerSidePropsResult } from 'next';
+import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
 import React, { SyntheticEvent, useState } from 'react';
-import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
-import { getRedirect, getSession } from '../../lib/utils/googleAuth';
-import { UserContext } from '../../lib/contexts/user-context';
-import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
-import {
-  getApplicationsByStatus,
-  getApplications,
-} from '../../lib/gateways/applications-api';
-import Layout from '../../components/layout/staff-layout';
-import SearchBox from '../../components/admin/search-box';
-import Sidebar from '../../components/admin/sidebar';
 import ApplicationTable from '../../components/admin/application-table';
-import { HeadingOne } from '../../components/content/headings';
 import {
   HorizontalNav,
   HorizontalNavItem,
 } from '../../components/admin/HorizontalNav';
-import { useRouter } from 'next/router';
-import { ApplicationStatus } from '../../lib/types/application-status';
+import SearchBox from '../../components/admin/search-box';
+import Sidebar from '../../components/admin/sidebar';
 import Button from '../../components/button';
+import { HeadingOne } from '../../components/content/headings';
+import Layout from '../../components/layout/staff-layout';
+import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
+import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
+import { UserContext } from '../../lib/contexts/user-context';
+import {
+  getApplications,
+  getApplicationsByStatus,
+} from '../../lib/gateways/applications-api';
+import { ApplicationStatus } from '../../lib/types/application-status';
+import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 
 interface PageProps {
   user?: HackneyGoogleUser;
   applications: PaginatedApplicationListResponse | null;
-  pageUrl: string;
-  reference: string;
 }
 
 export default function ViewAllApplicationsPage({
   user,
   applications,
-  reference = '',
 }: PageProps): JSX.Element {
   const router = useRouter();
-  const parameters = new URLSearchParams();
-
-  if (reference !== '') {
-    parameters.append('reference', reference);
-  }
 
   const [activeNavItem, setActiveNavItem] = useState('');
 
@@ -60,7 +52,7 @@ export default function ViewAllApplicationsPage({
     });
   };
 
-  const setPaginationToken = (paginationToken: string) => {
+  const setPaginationToken = (paginationToken: string | null) => {
     router.push({
       pathname: router.pathname,
       query: { ...router.query, paginationToken },
@@ -131,24 +123,17 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
     };
   }
 
-  const {
-    paginationToken = '',
-    reference = '',
-    status = '',
-  } = context.query as {
-    paginationToken: string;
-    reference: string;
+  const { status = '', paginationToken } = context.query as {
     status: string;
+    paginationToken: string;
   };
 
-  const pageUrl = `${process.env.APP_URL}/applications/view-register`;
-
   const applications =
-    reference === '' && status === ''
+    status === ''
       ? await getApplications(paginationToken)
       : await getApplicationsByStatus(status, paginationToken);
 
   return {
-    props: { user, applications, pageUrl, reference },
+    props: { user, applications },
   };
 };

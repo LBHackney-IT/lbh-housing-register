@@ -61,6 +61,20 @@ export const getApplicationsByStatusAndAssignedTo = async (
   ).data;
 };
 
+export const getApplicationsByReference = async (
+  reference: string,
+  paginationToken?: string
+): Promise<PaginatedApplicationListResponse | null> => {
+  return (
+    await housingAxios(null).get('applications/ListApplicationsByReference', {
+      params: {
+        reference,
+        paginationToken,
+      },
+    })
+  ).data;
+};
+
 // View and modify applications
 
 export const getApplication = async (

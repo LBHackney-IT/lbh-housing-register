@@ -444,7 +444,7 @@ export interface PaginatedApplicationListResponse {
    * @type {Array<Application>}
    * @memberof PaginatedApplicationListResponse
    */
-  paginationToken: string;
+  paginationToken: string | null;
 }
 
 export interface CreateAuthRequest {

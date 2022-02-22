@@ -55,6 +55,8 @@ export default function ViewAllApplicationsPage({
     });
   };
 
+  const activeItem = (router.query.status ?? '') as ApplicationStatus | '';
+
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="All applications">
@@ -77,16 +79,14 @@ export default function ViewAllApplicationsPage({
               <HorizontalNavItem
                 handleClick={handleClick}
                 itemName=""
-                isActive={router.query.status === ''}
+                isActive={activeItem === ''}
               >
                 All applications
               </HorizontalNavItem>
               <HorizontalNavItem
                 handleClick={handleClick}
                 itemName={ApplicationStatus.MANUAL_DRAFT}
-                isActive={
-                  router.query.status === ApplicationStatus.MANUAL_DRAFT
-                }
+                isActive={activeItem === ApplicationStatus.MANUAL_DRAFT}
               >
                 Manually added
               </HorizontalNavItem>
@@ -99,6 +99,7 @@ export default function ViewAllApplicationsPage({
               }
               setPaginationToken={setPaginationToken}
               showStatus={true}
+              key={activeItem} // force remounting for a new initialPaginationToken
             />
           </div>
         </div>

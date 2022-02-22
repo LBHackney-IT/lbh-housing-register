@@ -47,7 +47,6 @@ export default function ApplicationListPage({
       query: { ...router.query, paginationToken },
     });
   };
-
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="My worktray">
@@ -86,6 +85,7 @@ export default function ApplicationListPage({
               }
               setPaginationToken={setPaginationToken}
               showStatus={false}
+              key={activeNavItem} // force remounting for a new initialPaginationToken
             />
           </div>
         </div>

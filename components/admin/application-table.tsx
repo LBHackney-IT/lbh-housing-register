@@ -2,7 +2,6 @@ import Link from 'next/link';
 import React from 'react';
 import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
 import Paragraph from '../content/paragraph';
-import Pagination from '../pagination';
 import { formatDate } from '../../lib/utils/dateOfBirth';
 import { getPersonName } from '../../lib/utils/person';
 import { lookupStatus } from '../../lib/types/application-status';
@@ -11,19 +10,17 @@ import SimplePagination from '../SimplePagination';
 interface TableProps {
   caption?: string;
   applications: PaginatedApplicationListResponse | null;
-  currentPagePaginationToken: string;
-  pageUrl: string;
-  parameters: URLSearchParams;
+  initialPaginationToken?: string;
+  setPaginationToken: (token: string) => void;
   showStatus: boolean;
 }
 
 export default function ApplicationTable({
   caption,
   applications,
-  currentPagePaginationToken,
-  pageUrl,
-  parameters,
   showStatus,
+  setPaginationToken,
+  initialPaginationToken,
 }: TableProps): JSX.Element {
   return (
     <>
@@ -90,9 +87,8 @@ export default function ApplicationTable({
           </table>
 
           <SimplePagination
-            totalItems={applications.totalItems}
-            pageUrl={pageUrl}
-            currentPagePaginationToken={currentPagePaginationToken}
+            setPaginationToken={setPaginationToken}
+            initialPaginationToken={initialPaginationToken}
             nextPagePaginationToken={applications.paginationToken}
           />
         </>

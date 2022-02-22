@@ -1,76 +1,60 @@
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { useState } from 'react';
 
 interface SimplePaginationProps {
-  totalItems: number;
-  pageUrl: string;
-  currentPagePaginationToken: string;
+  setPaginationToken: (token: string) => void;
+  initialPaginationToken?: string;
   nextPagePaginationToken: string;
 }
 
 const SimplePagination = ({
-  totalItems,
-  pageUrl,
-  currentPagePaginationToken,
+  setPaginationToken,
+  initialPaginationToken,
   nextPagePaginationToken,
 }: SimplePaginationProps) => {
-  const [paginationTokenArray, setPaginationTokenArray] = useState([
-    currentPagePaginationToken,
-  ]);
-
-  const handleNextClick = () => {
-    setPaginationTokenArray([
-      ...paginationTokenArray,
-      currentPagePaginationToken,
-    ]);
-  };
-
-  // TODO handlePreviousClick
-
-  const previousPageUrl = new URL(pageUrl);
-  previousPageUrl.searchParams.append(
-    'paginationToken',
-    paginationTokenArray[paginationTokenArray.length - 1]
+  const [paginationTokens, setPaginationTokens] = useState(
+    initialPaginationToken ? [initialPaginationToken] : []
   );
 
-  const nextPageUrl = new URL(pageUrl);
-  if (nextPagePaginationToken != null) {
-    nextPageUrl.searchParams.append(
-      'paginationToken',
-      nextPagePaginationToken.toString()
-    );
-  }
+  const handleNextClick = () => {
+    setPaginationToken(nextPagePaginationToken);
+    setPaginationTokens([...paginationTokens, nextPagePaginationToken]);
+  };
+
+  const handlePreviousClick = () => {
+    setPaginationToken(paginationTokens[paginationTokens.length - 2]);
+    setPaginationTokens(paginationTokens.slice(0, -1));
+  };
 
   return (
     <>
-      <div className="lbh-body">Showing {totalItems} results</div>
       <nav className="lbh-simple-pagination">
-        {currentPagePaginationToken !== '' ? (
-          <Link href={previousPageUrl.toString()}>
-            <a className="lbh-simple-pagination__link">
-              <svg width="11" height="19" viewBox="0 0 11 19" fill="none">
-                <path d="M10 1L2 9.5L10 18" strokeWidth="2" />
-              </svg>
-              Previous page
-              {/* <span className="lbh-simple-pagination__title"> {page - 1}</span> */}
-            </a>
-          </Link>
-        ) : null}
+        {paginationTokens.length > 0 && (
+          // TODO use <button>
+          <a
+            className="lbh-simple-pagination__link"
+            onClick={handlePreviousClick}
+            href="#"
+          >
+            <svg width="11" height="19" viewBox="0 0 11 19" fill="none">
+              <path d="M10 1L2 9.5L10 18" strokeWidth="2" />
+            </svg>
+            Previous page
+          </a>
+        )}
 
-        {nextPagePaginationToken !== null ? (
-        <Link href={nextPageUrl.toString()}>
+        {nextPagePaginationToken && (
+          // TODO use <button>
           <a
             className="lbh-simple-pagination__link lbh-simple-pagination__link--next"
             onClick={handleNextClick}
+            href="#"
           >
             Next page
-            {/* <span className="lbh-simple-pagination__title"> {page + 1}</span> */}
             <svg width="11" height="19" viewBox="0 0 11 19" fill="none">
               <path d="M1 18L9 9.5L1 1" strokeWidth="2" />
             </svg>
           </a>
-          </Link>
-        ) : null}
+        )}
       </nav>
     </>
   );

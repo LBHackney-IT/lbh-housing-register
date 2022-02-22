@@ -1,4 +1,4 @@
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, GetServerSidePropsResult } from 'next';
 import React, { SyntheticEvent, useState } from 'react';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { getRedirect, getSession } from '../../lib/utils/googleAuth';
@@ -22,18 +22,15 @@ import { ApplicationStatus } from '../../lib/types/application-status';
 import Button from '../../components/button';
 
 interface PageProps {
-  user: HackneyGoogleUser;
+  user?: HackneyGoogleUser;
   applications: PaginatedApplicationListResponse | null;
   pageUrl: string;
-  paginationToken: string;
   reference: string;
 }
 
 export default function ViewAllApplicationsPage({
   user,
   applications,
-  pageUrl,
-  paginationToken,
   reference = '',
 }: PageProps): JSX.Element {
   const router = useRouter();
@@ -60,6 +57,13 @@ export default function ViewAllApplicationsPage({
   const addCase = async () => {
     router.push({
       pathname: '/applications/add-case',
+    });
+  };
+
+  const setPaginationToken = (paginationToken: string) => {
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, paginationToken },
     });
   };
 
@@ -100,9 +104,10 @@ export default function ViewAllApplicationsPage({
             <ApplicationTable
               caption="Applications"
               applications={applications}
-              currentPagePaginationToken={paginationToken}
-              parameters={parameters}
-              pageUrl={pageUrl}
+              initialPaginationToken={
+                router.query.paginationToken as string | undefined
+              }
+              setPaginationToken={setPaginationToken}
               showStatus={true}
             />
           </div>
@@ -112,13 +117,15 @@ export default function ViewAllApplicationsPage({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps<PageProps> = async (
+  context
+) => {
   const user = getSession(context.req);
   const redirect = getRedirect(user);
   if (redirect) {
     return {
-      props: {},
       redirect: {
+        permanent: false,
         destination: redirect,
       },
     };
@@ -126,15 +133,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const {
     paginationToken = '',
-    // page = '1',
     reference = '',
-    orderby = '',
     status = '',
   } = context.query as {
     paginationToken: string;
-    // page: string;
     reference: string;
-    orderby: string;
     status: string;
   };
 
@@ -146,6 +149,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       : await getApplicationsByStatus(paginationToken, status);
 
   return {
-    props: { user, applications, pageUrl, paginationToken, reference },
+    props: { user, applications, pageUrl, reference },
   };
 };

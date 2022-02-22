@@ -7,7 +7,7 @@ import { UserContext } from '../../lib/contexts/user-context';
 import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
 import {
   getApplications,
-  searchApplications,
+  getApplicationsByStatusAndAssignedTo,
 } from '../../lib/gateways/applications-api';
 import Layout from '../../components/layout/staff-layout';
 import SearchBox from '../../components/admin/search-box';
@@ -134,7 +134,11 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
   const applications =
     reference === '' && status === '' && user === undefined
       ? await getApplications(paginationToken)
-      : await searchApplications(paginationToken, status, user?.email);
+      : await getApplicationsByStatusAndAssignedTo(
+          status,
+          user?.email ?? '',
+          paginationToken
+        );
 
   return {
     props: { user, applications, pageUrl, reference },

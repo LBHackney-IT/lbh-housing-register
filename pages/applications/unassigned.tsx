@@ -4,9 +4,12 @@ import { useRouter } from 'next/router';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 import { UserContext } from '../../lib/contexts/user-context';
-import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
 import {
-  searchApplications,
+  APPLICATION_UNNASIGNED,
+  PaginatedApplicationListResponse,
+} from '../../domain/HousingApi';
+import {
+  getApplicationsByStatusAndAssignedTo,
   getApplications,
 } from '../../lib/gateways/applications-api';
 import Layout from '../../components/layout/staff-layout';
@@ -122,7 +125,11 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
   const applications =
     reference === '' && status === '' && user === undefined
       ? await getApplications(paginationToken)
-      : await searchApplications(paginationToken, status, 'unassigned');
+      : await getApplicationsByStatusAndAssignedTo(
+          status,
+          APPLICATION_UNNASIGNED,
+          paginationToken
+        );
 
   return {
     props: { user, applications, pageUrl, reference },

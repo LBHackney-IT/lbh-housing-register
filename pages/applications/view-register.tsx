@@ -146,7 +146,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
   const applications =
     reference === '' && status === ''
       ? await getApplications(paginationToken)
-      : await getApplicationsByStatus(paginationToken, status);
+      : await getApplicationsByStatus(status, paginationToken);
 
   return {
     props: { user, applications, pageUrl, reference },

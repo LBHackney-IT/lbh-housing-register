@@ -1,6 +1,8 @@
 // I generated this using a rather clunky process of going here: https://app.swaggerhub.com/apis/tcmorris/housingRegisterAPI/1.0.0 and using the Typescript-fetch generator (export menu)
 // then grabbing the bits that felt relevant.
 
+export const APPLICATION_UNNASIGNED = 'unassigned';
+
 /**
  *
  * @export

@@ -44,7 +44,6 @@ export const getApplications = async (
   const assignedTo = user ?? '';
   const url = `applications?paginationToken=${paginationToken}`;
   try {
-    console.log('paginationToken: ' + paginationToken);
     return (await housingAxios(null).get(url)).data;
   } catch (ex) {
     // TODO API shoudln't make us do this
@@ -57,12 +56,11 @@ export const getApplications = async (
 
 export const getApplicationsByStatus = async (
   paginationToken?: string,
-  status?: string,
+  status?: string
 ): Promise<PaginatedApplicationListResponse | null> => {
   var url = `applications/ListApplicationsByStatus?paginationToken=${paginationToken}&status=${status}`;
 
   try {
-    console.log('paginationToken search: ' + paginationToken + ' status: ' + status);
     return (await housingAxios(null).get(url)).data;
   } catch (ex) {
     // TODO API shoudln't make us do this
@@ -82,9 +80,8 @@ export const searchApplications = async (
 ): Promise<PaginatedApplicationListResponse | null> => {
   const assignedTo = user ?? '';
   var url = `applications/ListApplicationsByAssignedTo?paginationToken=${paginationToken}&assignedTo=${assignedTo}&status=${status}`;
-  
+
   try {
-    console.log('paginationToken search: ' + paginationToken + ' assignedToPlusStatus: ' + status + ':' + assignedTo);
     return (await housingAxios(null).get(url)).data;
   } catch (ex) {
     // TODO API shoudln't make us do this

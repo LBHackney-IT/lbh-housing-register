@@ -6,8 +6,8 @@ import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 import { UserContext } from '../../lib/contexts/user-context';
 import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
 import {
-  searchApplications,
   getApplications,
+  getApplicationsByStatusAndAssignedTo,
 } from '../../lib/gateways/applications-api';
 import Layout from '../../components/layout/staff-layout';
 import SearchBox from '../../components/admin/search-box';
@@ -20,18 +20,15 @@ import {
 } from '../../components/admin/HorizontalNav';
 
 interface PageProps {
-  user: HackneyGoogleUser;
+  user?: HackneyGoogleUser;
   applications: PaginatedApplicationListResponse | null;
   pageUrl: string;
-  page: string;
   reference: string;
 }
 
 export default function ApplicationListPage({
   user,
   applications,
-  pageUrl,
-  page = '1',
   reference = '',
 }: PageProps): JSX.Element {
   const router = useRouter();
@@ -41,13 +38,10 @@ export default function ApplicationListPage({
     parameters.append('reference', reference);
   }
 
-  const parsedPage = parseInt(page);
-
   const [activeNavItem, setActiveNavItem] = useState('Submitted');
 
   const handleClick = async (event: SyntheticEvent) => {
     event.preventDefault();
-
     const { name } = event.target as HTMLButtonElement;
 
     router.push({
@@ -56,6 +50,13 @@ export default function ApplicationListPage({
     });
 
     setActiveNavItem(name);
+  };
+
+  const setPaginationToken = (paginationToken: string) => {
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, paginationToken },
+    });
   };
 
   return (
@@ -91,9 +92,10 @@ export default function ApplicationListPage({
             </HorizontalNav>
             <ApplicationTable
               applications={applications}
-              currentPage={parsedPage}
-              parameters={parameters}
-              pageUrl={pageUrl}
+              initialPaginationToken={
+                router.query.paginationToken as string | undefined
+              }
+              setPaginationToken={setPaginationToken}
               showStatus={false}
             />
           </div>
@@ -103,38 +105,42 @@ export default function ApplicationListPage({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps<PageProps> = async (
+  context
+) => {
   const user = getSession(context.req);
   const redirect = getRedirect(user);
   if (redirect) {
     return {
-      props: {},
       redirect: {
+        permanent: false,
         destination: redirect,
       },
     };
   }
 
   const {
-    page = '1',
+    paginationToken = '',
     reference = '',
-    orderby = '',
     status = 'Submitted',
   } = context.query as {
-    page: string;
+    paginationToken: string;
     reference: string;
-    orderby: string;
     status: string;
   };
 
   const pageUrl = `${process.env.APP_URL}/applications`;
 
   const applications =
-    reference === '' && status === ''
-      ? await getApplications(page, user?.email)
-      : await searchApplications(page, reference, status, user?.email);
+    reference === '' && status === '' && user === undefined
+      ? await getApplications(paginationToken)
+      : await getApplicationsByStatusAndAssignedTo(
+          status,
+          user?.email ?? '',
+          paginationToken
+        );
 
   return {
-    props: { user, applications, pageUrl, page, reference },
+    props: { user, applications, pageUrl, reference },
   };
 };

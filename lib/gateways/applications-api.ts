@@ -15,17 +15,6 @@ import {
 } from '../../domain/HousingApi';
 import { Stat } from '../../domain/stat';
 
-const emptyPaginatedApplicationListResponse: PaginatedApplicationListResponse =
-  Object.freeze({
-    totalItems: 0,
-    numberOfItemsPerPage: 0,
-    page: 0,
-    pageEndOffSet: 0,
-    pageStartOffSet: 0,
-    results: [],
-    totalNumberOfPages: 0,
-  });
-
 const emptyActivityHistoryPagedResult: ActivityHistoryPagedResult =
   Object.freeze({
     results: [],
@@ -36,39 +25,40 @@ const emptyActivityHistoryPagedResult: ActivityHistoryPagedResult =
   });
 
 export const getApplications = async (
-  page: string | number,
-  user?: string | 'unassigned'
+  paginationToken?: string
 ): Promise<PaginatedApplicationListResponse | null> => {
-  const assignedTo = user ?? '';
-  const url = `applications?page=${page}&assignedTo=${assignedTo}`;
-  try {
-    return (await housingAxios(null).get(url)).data;
-  } catch (ex) {
-    // TODO API shoudln't make us do this
-    if (axios.isAxiosError(ex) && ex.response?.status === 404) {
-      return emptyPaginatedApplicationListResponse;
-    }
-    throw ex;
-  }
+  return (
+    await housingAxios(null).get('applications', {
+      params: { paginationToken },
+    })
+  ).data;
 };
 
-export const searchApplications = async (
-  page: string,
-  reference: string,
+export const getApplicationsByStatus = async (
   status: string,
-  user?: string | 'unassigned'
+  paginationToken?: string
 ): Promise<PaginatedApplicationListResponse | null> => {
-  const assignedTo = user ?? '';
-  const url = `applications?page=${page}&reference=${reference}&status=${status}&assignedTo=${assignedTo}`;
-  try {
-    return (await housingAxios(null).get(url)).data;
-  } catch (ex) {
-    // TODO API shoudln't make us do this
-    if (axios.isAxiosError(ex) && ex.response?.status === 404) {
-      return emptyPaginatedApplicationListResponse;
-    }
-    throw ex;
-  }
+  return (
+    await housingAxios(null).get('applications/ListApplicationsByStatus', {
+      params: { status, paginationToken },
+    })
+  ).data;
+};
+
+export const getApplicationsByStatusAndAssignedTo = async (
+  status: string,
+  assignedTo: string,
+  paginationToken?: string
+): Promise<PaginatedApplicationListResponse | null> => {
+  return (
+    await housingAxios(null).get('applications/ListApplicationsByAssignedTo', {
+      params: {
+        status,
+        assignedTo,
+        paginationToken,
+      },
+    })
+  ).data;
 };
 
 // View and modify applications

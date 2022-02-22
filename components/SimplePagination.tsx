@@ -12,9 +12,8 @@ const SimplePagination = ({
   nextPagePaginationToken,
 }: SimplePaginationProps) => {
   // cache pagination token from first render.
-  const [initialPaginationIsFirstPage] = useState(
-    () => initialPaginationToken !== undefined
-  );
+  const [initialPaginationIsFirstPage, setInitialPaginationIsFirstPage] =
+    useState(() => initialPaginationToken === undefined);
   const [paginationTokens, setPaginationTokens] = useState(
     initialPaginationToken !== undefined ? [initialPaginationToken] : []
   );
@@ -26,6 +25,9 @@ const SimplePagination = ({
 
   const handlePreviousClick = () => {
     setPaginationToken(paginationTokens[paginationTokens.length - 2]);
+    if (paginationTokens.length === 1) {
+      setInitialPaginationIsFirstPage(true);
+    }
     setPaginationTokens(paginationTokens.slice(0, -1));
   };
 
@@ -42,7 +44,7 @@ const SimplePagination = ({
             <svg width="11" height="19" viewBox="0 0 11 19" fill="none">
               <path d="M10 1L2 9.5L10 18" strokeWidth="2" />
             </svg>
-            {paginationTokens.length === 1 && initialPaginationIsFirstPage
+            {paginationTokens.length === 1 && !initialPaginationIsFirstPage
               ? 'First page'
               : 'Previous page'}
           </a>

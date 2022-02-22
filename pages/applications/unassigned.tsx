@@ -1,45 +1,37 @@
 import { GetServerSideProps } from 'next';
-import React, { SyntheticEvent } from 'react';
 import { useRouter } from 'next/router';
-import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
-import { getRedirect, getSession } from '../../lib/utils/googleAuth';
-import { UserContext } from '../../lib/contexts/user-context';
-import {
-  APPLICATION_UNNASIGNED,
-  PaginatedApplicationListResponse,
-} from '../../domain/HousingApi';
-import {
-  getApplicationsByStatusAndAssignedTo,
-  getApplications,
-} from '../../lib/gateways/applications-api';
-import Layout from '../../components/layout/staff-layout';
-import SearchBox from '../../components/admin/search-box';
-import Sidebar from '../../components/admin/sidebar';
+import React, { SyntheticEvent } from 'react';
 import ApplicationTable from '../../components/admin/application-table';
-import { HeadingOne } from '../../components/content/headings';
 import {
   HorizontalNav,
   HorizontalNavItem,
 } from '../../components/admin/HorizontalNav';
+import SearchBox from '../../components/admin/search-box';
+import Sidebar from '../../components/admin/sidebar';
+import { HeadingOne } from '../../components/content/headings';
+import Layout from '../../components/layout/staff-layout';
+import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
+import {
+  APPLICATION_UNNASIGNED,
+  PaginatedApplicationListResponse,
+} from '../../domain/HousingApi';
+import { UserContext } from '../../lib/contexts/user-context';
+import {
+  getApplications,
+  getApplicationsByStatusAndAssignedTo,
+} from '../../lib/gateways/applications-api';
+import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 
 interface PageProps {
   user?: HackneyGoogleUser;
   applications: PaginatedApplicationListResponse | null;
-  pageUrl: string;
-  reference: string;
 }
 
 export default function ApplicationListPage({
   user,
   applications,
-  reference = '',
 }: PageProps): JSX.Element {
   const router = useRouter();
-  const parameters = new URLSearchParams();
-
-  if (reference !== '') {
-    parameters.append('reference', reference);
-  }
 
   const handleClick = async (event: SyntheticEvent) => {
     event.preventDefault();
@@ -50,7 +42,7 @@ export default function ApplicationListPage({
     });
   };
 
-  const setPaginationToken = (paginationToken: string) => {
+  const setPaginationToken = (paginationToken: string | null) => {
     router.push({
       pathname: router.pathname,
       query: { ...router.query, paginationToken },
@@ -110,28 +102,18 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
     };
   }
 
-  const {
-    paginationToken = '',
-    reference = '',
-    status = 'Submitted',
-  } = context.query as {
-    paginationToken: string;
-    reference: string;
+  const { status = 'Submitted', paginationToken } = context.query as {
     status: string;
+    paginationToken: string;
   };
 
-  const pageUrl = `${process.env.APP_URL}/applications/unassigned`;
-
-  const applications =
-    reference === '' && status === '' && user === undefined
-      ? await getApplications(paginationToken)
-      : await getApplicationsByStatusAndAssignedTo(
-          status,
-          APPLICATION_UNNASIGNED,
-          paginationToken
-        );
+  const applications = await getApplicationsByStatusAndAssignedTo(
+    status,
+    APPLICATION_UNNASIGNED,
+    paginationToken
+  );
 
   return {
-    props: { user, applications, pageUrl, reference },
+    props: { user, applications },
   };
 };

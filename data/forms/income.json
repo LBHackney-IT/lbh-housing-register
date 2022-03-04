@@ -58,7 +58,7 @@
           }
         },
         {
-          "as": "radioconditional",
+          "as": "radios",
           "label": "How much money does your household have in total savings and capital?",
           "hint": "This includes the total amount in all your current accounts, saving accounts, and any other types of savings.",
           "subheading": "You will need to provide the last two months' bank statements for each account you hold.",

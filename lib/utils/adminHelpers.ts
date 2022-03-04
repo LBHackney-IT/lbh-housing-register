@@ -165,7 +165,8 @@ export const generateUniqueFieldName = (sectionId: string, fieldName: string) =>
 
 export const generateQuestionArray = (
   values: FormikValues,
-  addresses: Address[]
+  addresses: Address[],
+  ethnicity?: string
 ) => {
   const questionArray = [];
   for (const [key, value] of Object.entries(values)) {
@@ -182,6 +183,11 @@ export const generateQuestionArray = (
       questionArray.push({
         id: 'address-history/addressHistory',
         answer: JSON.stringify(addresses),
+      });
+    } else if (questionId === 'ethnicity-questions/ethnicity-main-category') {
+      questionArray.push({
+        id: 'ethnicity-questions/ethnicity-main-category',
+        answer: ethnicity,
       });
     } else {
       questionArray.push({

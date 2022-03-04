@@ -1,53 +1,36 @@
 import { GetServerSideProps } from 'next';
-import React, { useState, SyntheticEvent } from 'react';
 import { useRouter } from 'next/router';
-import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
-import { getRedirect, getSession } from '../../lib/utils/googleAuth';
-import { UserContext } from '../../lib/contexts/user-context';
-import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
-import {
-  searchApplications,
-  getApplications,
-} from '../../lib/gateways/applications-api';
-import Layout from '../../components/layout/staff-layout';
-import SearchBox from '../../components/admin/search-box';
-import Sidebar from '../../components/admin/sidebar';
+import React, { SyntheticEvent, useState } from 'react';
 import ApplicationTable from '../../components/admin/application-table';
-import { HeadingOne } from '../../components/content/headings';
 import {
   HorizontalNav,
   HorizontalNavItem,
 } from '../../components/admin/HorizontalNav';
+import SearchBox from '../../components/admin/search-box';
+import Sidebar from '../../components/admin/sidebar';
+import { HeadingOne } from '../../components/content/headings';
+import Layout from '../../components/layout/staff-layout';
+import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
+import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
+import { UserContext } from '../../lib/contexts/user-context';
+import { getApplicationsByStatusAndAssignedTo } from '../../lib/gateways/applications-api';
+import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 
 interface PageProps {
-  user: HackneyGoogleUser;
+  user?: HackneyGoogleUser;
   applications: PaginatedApplicationListResponse | null;
-  pageUrl: string;
-  page: string;
-  reference: string;
 }
 
 export default function ApplicationListPage({
   user,
   applications,
-  pageUrl,
-  page = '1',
-  reference = '',
 }: PageProps): JSX.Element {
   const router = useRouter();
-  const parameters = new URLSearchParams();
-
-  if (reference !== '') {
-    parameters.append('reference', reference);
-  }
-
-  const parsedPage = parseInt(page);
 
   const [activeNavItem, setActiveNavItem] = useState('Submitted');
 
   const handleClick = async (event: SyntheticEvent) => {
     event.preventDefault();
-
     const { name } = event.target as HTMLButtonElement;
 
     router.push({
@@ -58,6 +41,12 @@ export default function ApplicationListPage({
     setActiveNavItem(name);
   };
 
+  const setPaginationToken = (paginationToken: string | null) => {
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, paginationToken },
+    });
+  };
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="My worktray">
@@ -91,10 +80,12 @@ export default function ApplicationListPage({
             </HorizontalNav>
             <ApplicationTable
               applications={applications}
-              currentPage={parsedPage}
-              parameters={parameters}
-              pageUrl={pageUrl}
+              initialPaginationToken={
+                router.query.paginationToken as string | undefined
+              }
+              setPaginationToken={setPaginationToken}
               showStatus={false}
+              key={activeNavItem} // force remounting for a new initialPaginationToken
             />
           </div>
         </div>
@@ -103,38 +94,32 @@ export default function ApplicationListPage({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps<PageProps> = async (
+  context
+) => {
   const user = getSession(context.req);
   const redirect = getRedirect(user);
   if (redirect) {
     return {
-      props: {},
       redirect: {
+        permanent: false,
         destination: redirect,
       },
     };
   }
 
-  const {
-    page = '1',
-    reference = '',
-    orderby = '',
-    status = 'Submitted',
-  } = context.query as {
-    page: string;
-    reference: string;
-    orderby: string;
+  const { status = 'Submitted', paginationToken } = context.query as {
     status: string;
+    paginationToken: string;
   };
 
-  const pageUrl = `${process.env.APP_URL}/applications`;
-
-  const applications =
-    reference === '' && status === ''
-      ? await getApplications(page, user?.email)
-      : await searchApplications(page, reference, status, user?.email);
+  const applications = await getApplicationsByStatusAndAssignedTo(
+    status,
+    user?.email ?? '',
+    paginationToken
+  );
 
   return {
-    props: { user, applications, pageUrl, page, reference },
+    props: { user, applications },
   };
 };

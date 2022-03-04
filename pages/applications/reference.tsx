@@ -1,24 +1,15 @@
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import React, { SyntheticEvent, useState } from 'react';
+import React from 'react';
 import ApplicationTable from '../../components/admin/application-table';
-import {
-  HorizontalNav,
-  HorizontalNavItem,
-} from '../../components/admin/HorizontalNav';
 import SearchBox from '../../components/admin/search-box';
 import Sidebar from '../../components/admin/sidebar';
-import Button from '../../components/button';
 import { HeadingOne } from '../../components/content/headings';
 import Layout from '../../components/layout/staff-layout';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
 import { UserContext } from '../../lib/contexts/user-context';
-import {
-  getApplications,
-  getApplicationsByStatus,
-} from '../../lib/gateways/applications-api';
-import { ApplicationStatus } from '../../lib/types/application-status';
+import { getApplicationsByReference } from '../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 
 interface PageProps {
@@ -26,27 +17,11 @@ interface PageProps {
   applications: PaginatedApplicationListResponse | null;
 }
 
-export default function ViewAllApplicationsPage({
+export default function ApplicationListPage({
   user,
   applications,
 }: PageProps): JSX.Element {
   const router = useRouter();
-
-  const handleClick = async (event: SyntheticEvent) => {
-    event.preventDefault();
-    const { name } = event.target as HTMLButtonElement;
-
-    router.push({
-      pathname: '/applications/view-register',
-      query: { status: name },
-    });
-  };
-
-  const addCase = async () => {
-    router.push({
-      pathname: '/applications/add-case',
-    });
-  };
 
   const setPaginationToken = (paginationToken: string | null) => {
     router.push({
@@ -55,11 +30,9 @@ export default function ViewAllApplicationsPage({
     });
   };
 
-  const activeItem = (router.query.status ?? '') as ApplicationStatus | '';
-
   return (
     <UserContext.Provider value={{ user }}>
-      <Layout pageName="All applications">
+      <Layout pageName="My worktray">
         <SearchBox
           title="Housing Register"
           buttonTitle="Search"
@@ -71,35 +44,14 @@ export default function ViewAllApplicationsPage({
             <Sidebar />
           </div>
           <div className="govuk-grid-column-three-quarters">
-            <HeadingOne content="Housing Register" />
-            <Button secondary={true} onClick={() => addCase()}>
-              + Add new case
-            </Button>
-            <HorizontalNav>
-              <HorizontalNavItem
-                handleClick={handleClick}
-                itemName=""
-                isActive={activeItem === ''}
-              >
-                All applications
-              </HorizontalNavItem>
-              <HorizontalNavItem
-                handleClick={handleClick}
-                itemName={ApplicationStatus.MANUAL_DRAFT}
-                isActive={activeItem === ApplicationStatus.MANUAL_DRAFT}
-              >
-                Manually added
-              </HorizontalNavItem>
-            </HorizontalNav>
+            <HeadingOne content="Results" />
             <ApplicationTable
-              caption="Applications"
               applications={applications}
               initialPaginationToken={
                 router.query.paginationToken as string | undefined
               }
               setPaginationToken={setPaginationToken}
-              showStatus={true}
-              key={activeItem} // force remounting for a new initialPaginationToken
+              showStatus
             />
           </div>
         </div>
@@ -122,15 +74,15 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
     };
   }
 
-  const { status = '', paginationToken } = context.query as {
-    status: string;
+  const { reference = '', paginationToken } = context.query as {
+    reference: string;
     paginationToken: string;
   };
 
-  const applications =
-    status === ''
-      ? await getApplications(paginationToken)
-      : await getApplicationsByStatus(status, paginationToken);
+  const applications = await getApplicationsByReference(
+    reference,
+    paginationToken
+  );
 
   return {
     props: { user, applications },

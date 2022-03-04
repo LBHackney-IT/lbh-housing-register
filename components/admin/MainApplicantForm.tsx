@@ -77,6 +77,7 @@ const ethnicityWhiteSection = getSectionData(FormID.ETHNICITY_CATEGORY_WHITE);
 const ethnicityOtherSection = getSectionData(
   FormID.ETHNICITY_CATEGORY_OTHER_ETHNIC_GROUP
 );
+const additionalQuestionsSection = getSectionData(FormID.ADDITIONAL_QUESTIONS);
 
 interface PageProps {
   isEditing: boolean;
@@ -176,6 +177,7 @@ export default function MainApplicantForm({
                   <AddCaseSection section={unspentConvictionsSection} />
                   <AddCaseSection section={employmentSection} />
                   <AddCaseSection section={incomeSavingsSection} />
+                  <AddCaseSection section={additionalQuestionsSection} />
 
                   {/* Ethnicity */}
                   {/* <AddCaseSection section={ethnicitySection} /> */}

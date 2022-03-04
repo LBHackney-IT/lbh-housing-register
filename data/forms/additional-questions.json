@@ -1,11 +1,13 @@
 {
+  "heading": "Before you submit",
   "id": "additional-questions",
   "steps": [
     {
       "fields": [
         {
           "as": "checkboxesconditional",
-          "label": "",
+          "label": "Someone in this application is an employee, or is related to an employee of Hackney Council",
+          "hideLabel": true,
           "name": "employee-hackney-council",
           "options": [
             {
@@ -23,7 +25,8 @@
         },
         {
           "as": "checkboxesconditional",
-          "label": "",
+          "label": "Someone in this application is an elected member, or is related to an elected member of Hackney Council",
+          "hideLabel": true,
           "name": "elected-member-hackney-council",
           "options": [
             {
@@ -41,7 +44,8 @@
         },
         {
           "as": "checkboxesconditional",
-          "label": "",
+          "label": "Someone in this application is at risk of domestic violence",
+          "hideLabel": true,
           "name": "risk-of-domestic-violence",
           "options": [
             {
@@ -59,7 +63,8 @@
         },
         {
           "as": "checkboxesconditional",
-          "label": "",
+          "label": "Someone in this application is a nominee under the National Witness Mobility Scheme",
+          "hideLabel": true,
           "name": "witness-mobility-scheme",
           "options": [
             {

@@ -16,3 +16,5 @@
 .env.local
 .vscode
 .serverless
+/.idea/.idea.lbh-housing-register.dir/.idea
+/.vs

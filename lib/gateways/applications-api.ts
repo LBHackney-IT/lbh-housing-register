@@ -15,52 +15,67 @@ import {
 } from '../../domain/HousingApi';
 import { Stat } from '../../domain/stat';
 
-const emptyPaginatedApplicationListResponse: PaginatedApplicationListResponse =
+const emptyActivityHistoryPagedResult: ActivityHistoryPagedResult =
   Object.freeze({
-    totalItems: 0,
-    numberOfItemsPerPage: 0,
-    page: 0,
-    pageEndOffSet: 0,
-    pageStartOffSet: 0,
     results: [],
-    totalNumberOfPages: 0,
+    paginationDetails: {
+      hasNext: false,
+      nextToken: '',
+    },
   });
 
 export const getApplications = async (
-  page: string | number,
-  user?: string | 'unassigned'
+  paginationToken?: string
 ): Promise<PaginatedApplicationListResponse | null> => {
-  const assignedTo = user ?? '';
-  const url = `applications?page=${page}&assignedTo=${assignedTo}`;
-  try {
-    return (await housingAxios(null).get(url)).data;
-  } catch (ex) {
-    // TODO API shoudln't make us do this
-    if (axios.isAxiosError(ex) && ex.response?.status === 404) {
-      return emptyPaginatedApplicationListResponse;
-    }
-    throw ex;
-  }
+  return (
+    await housingAxios(null).get('applications', {
+      params: { paginationToken },
+    })
+  ).data;
 };
 
-export const searchApplications = async (
-  page: string,
-  reference: string,
+export const getApplicationsByStatus = async (
   status: string,
-  user?: string | 'unassigned'
+  paginationToken?: string
 ): Promise<PaginatedApplicationListResponse | null> => {
-  const assignedTo = user ?? '';
-  const url = `applications?page=${page}&reference=${reference}&status=${status}&assignedTo=${assignedTo}`;
-  try {
-    return (await housingAxios(null).get(url)).data;
-  } catch (ex) {
-    // TODO API shoudln't make us do this
-    if (axios.isAxiosError(ex) && ex.response?.status === 404) {
-      return emptyPaginatedApplicationListResponse;
-    }
-    throw ex;
-  }
+  return (
+    await housingAxios(null).get('applications/ListApplicationsByStatus', {
+      params: { status, paginationToken },
+    })
+  ).data;
 };
+
+export const getApplicationsByStatusAndAssignedTo = async (
+  status: string,
+  assignedTo: string,
+  paginationToken?: string
+): Promise<PaginatedApplicationListResponse | null> => {
+  return (
+    await housingAxios(null).get('applications/ListApplicationsByAssignedTo', {
+      params: {
+        status,
+        assignedTo,
+        paginationToken,
+      },
+    })
+  ).data;
+};
+
+export const getApplicationsByReference = async (
+  reference: string,
+  paginationToken?: string
+): Promise<PaginatedApplicationListResponse | null> => {
+  return (
+    await housingAxios(null).get('applications/ListApplicationsByReference', {
+      params: {
+        reference,
+        paginationToken,
+      },
+    })
+  ).data;
+};
+
+// View and modify applications
 
 export const getApplication = async (
   id: string
@@ -97,6 +112,8 @@ export const completeApplication = async (
   return data;
 };
 
+// Evidence requests
+
 export const createEvidenceRequest = async (
   id: string,
   request: CreateEvidenceRequest
@@ -127,6 +144,8 @@ export const getStats = async (): Promise<Array<Stat> | null> => {
   const { data } = await housingAxios(null).get(url);
   return data;
 };
+
+// Novalet export
 
 export const listNovaletExports = async (): Promise<any> => {
   const url = 'reporting/listnovaletfiles';
@@ -168,8 +187,16 @@ export const getApplicationHistory = async (
   req: any
 ): Promise<ActivityHistoryPagedResult | null> => {
   const url = `activityhistory?targetId=${id}&pageSize=100`;
-  const { data } = await activityAxios(req).get(url);
-  return data;
+  try {
+    const { data } = await activityAxios(req).get(url);
+    return data;
+  } catch (ex) {
+    // TODO API shoudln't make us do this
+    if (axios.isAxiosError(ex) && ex.response?.status === 404) {
+      return emptyActivityHistoryPagedResult;
+    }
+    throw ex;
+  }
 };
 
 export const addNoteToHistory = async (

@@ -1,25 +1,15 @@
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import React, { SyntheticEvent } from 'react';
+import React from 'react';
 import ApplicationTable from '../../components/admin/application-table';
-import {
-  HorizontalNav,
-  HorizontalNavItem,
-} from '../../components/admin/HorizontalNav';
 import SearchBox from '../../components/admin/search-box';
 import Sidebar from '../../components/admin/sidebar';
 import { HeadingOne } from '../../components/content/headings';
 import Layout from '../../components/layout/staff-layout';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
-import {
-  APPLICATION_UNNASIGNED,
-  PaginatedApplicationListResponse,
-} from '../../domain/HousingApi';
+import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
 import { UserContext } from '../../lib/contexts/user-context';
-import {
-  getApplications,
-  getApplicationsByStatusAndAssignedTo,
-} from '../../lib/gateways/applications-api';
+import { getApplicationsByReference } from '../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 
 interface PageProps {
@@ -33,15 +23,6 @@ export default function ApplicationListPage({
 }: PageProps): JSX.Element {
   const router = useRouter();
 
-  const handleClick = async (event: SyntheticEvent) => {
-    event.preventDefault();
-    const { name } = event.target as HTMLButtonElement;
-    router.push({
-      pathname: '/applications/unassigned',
-      query: { status: name },
-    });
-  };
-
   const setPaginationToken = (paginationToken: string | null) => {
     router.push({
       pathname: router.pathname,
@@ -51,7 +32,7 @@ export default function ApplicationListPage({
 
   return (
     <UserContext.Provider value={{ user }}>
-      <Layout pageName="Group worktray">
+      <Layout pageName="My worktray">
         <SearchBox
           title="Housing Register"
           buttonTitle="Search"
@@ -63,23 +44,14 @@ export default function ApplicationListPage({
             <Sidebar />
           </div>
           <div className="govuk-grid-column-three-quarters">
-            <HeadingOne content="Group worktray" />
-            <HorizontalNav>
-              <HorizontalNavItem
-                handleClick={handleClick}
-                itemName="Submitted"
-                isActive={true}
-              >
-                Unassigned applications
-              </HorizontalNavItem>
-            </HorizontalNav>
+            <HeadingOne content="Results" />
             <ApplicationTable
               applications={applications}
               initialPaginationToken={
                 router.query.paginationToken as string | undefined
               }
               setPaginationToken={setPaginationToken}
-              showStatus={false}
+              showStatus
             />
           </div>
         </div>
@@ -102,14 +74,13 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
     };
   }
 
-  const { status = 'Submitted', paginationToken } = context.query as {
-    status: string;
+  const { reference = '', paginationToken } = context.query as {
+    reference: string;
     paginationToken: string;
   };
 
-  const applications = await getApplicationsByStatusAndAssignedTo(
-    status,
-    APPLICATION_UNNASIGNED,
+  const applications = await getApplicationsByReference(
+    reference,
     paginationToken
   );
 

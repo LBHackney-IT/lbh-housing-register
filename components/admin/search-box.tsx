@@ -24,7 +24,7 @@ export default function SearchBox({
 
   const onSearchSubmit = async () => {
     router.push({
-      pathname: '/applications/view-register',
+      pathname: '/applications/reference',
       query: { reference: searchInputValue },
     });
   };

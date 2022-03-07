@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { Application } from '../../domain/HousingApi';
+import { Application, APPLICATION_UNNASIGNED } from '../../domain/HousingApi';
 import { updateApplication } from '../../lib/gateways/internal-api';
 import { HackneyGoogleUserWithPermissions } from '../../lib/utils/googleAuth';
 
@@ -55,7 +55,7 @@ export default function AssignUser({
             id="input-assignee"
             name="assignedTo"
             type="text"
-            value={assignedTo ? assignedTo : ''}
+            value={assignedTo !== APPLICATION_UNNASIGNED ? assignedTo : ''}
             onChange={textChangeHandler}
           />
           <button

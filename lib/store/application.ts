@@ -46,11 +46,10 @@ export const disqualifyApplication = createAsyncThunk(
       id: id,
       status: ApplicationStatus.DISQUALIFIED,
     };
-    const res = await fetch(`/api/applications/${id}`, {
+    await fetch(`/api/applications/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(request),
     });
-    return (await res.json()) as Application;
   }
 );
 
@@ -214,7 +213,8 @@ export const autoSaveMiddleware: Middleware<
     function blacklist(type: string) {
       return (
         type.startsWith(loadApplication.typePrefix) ||
-        type.startsWith(updateApplication.typePrefix)
+        type.startsWith(updateApplication.typePrefix) ||
+        type.startsWith(disqualifyApplication.typePrefix)
       );
     }
 

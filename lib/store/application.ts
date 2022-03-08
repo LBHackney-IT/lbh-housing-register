@@ -50,7 +50,6 @@ export const disqualifyApplication = createAsyncThunk(
       method: 'PATCH',
       body: JSON.stringify(request),
     });
-    // return (await res.json()) as Application;
   }
 );
 

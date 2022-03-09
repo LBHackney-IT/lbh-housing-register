@@ -226,10 +226,12 @@ export default function MedicalDetail({
             <div className="govuk-grid-column-one-third">
               <HeadingThree content="Medical need" />
             </div>
+          </div>
+          <div className="govuk-grid-row">
             <div className="govuk-grid-column-two-thirds">
               <Paragraph>
                 <strong>Assessment requested:</strong>{' '}
-                {hasMedicalNeed ? 'yes' : 'no'}
+                {hasMedicalNeed ? 'Yes' : 'No'}
               </Paragraph>
               {hasMedicalNeed && (
                 <DateInput
@@ -241,34 +243,41 @@ export default function MedicalDetail({
           </div>
 
           {hasMedicalNeed && values.dateFormRecieved && (
-            <div className="govuk-grid-row">
-              <div className="govuk-grid-column-one-third">
-                <HeadingThree content="Medical outcome" />
+            <>
+              <div className="govuk-grid-row">
+                <div className="govuk-grid-column-one-third">
+                  <HeadingThree content="Medical outcome" />
+                </div>
               </div>
-              <div className="govuk-grid-column-two-thirds">
-                <DateInput name={'assessmentDate'} label={'Assessment Date'} />
-                <Select
-                  label="Outcome"
-                  name="outcome"
-                  options={outcomeOptions}
-                />
-                <Select
-                  label="Accessible Housing Register"
-                  name="accessibleHousingRegister"
-                  options={accessibleHousingRegisterOptions}
-                />
-                <Select
-                  label="Disability"
-                  name="disability"
-                  options={disabilityOptions}
-                />
-                <Textarea
-                  label="Additional information"
-                  name="additionalInformation"
-                  as={'textarea'}
-                />
+              <div className="govuk-grid-row">
+                <div className="govuk-grid-column-two-thirds">
+                  <DateInput
+                    name={'assessmentDate'}
+                    label={'Assessment Date'}
+                  />
+                  <Select
+                    label="Outcome"
+                    name="outcome"
+                    options={outcomeOptions}
+                  />
+                  <Select
+                    label="Accessible Housing Register"
+                    name="accessibleHousingRegister"
+                    options={accessibleHousingRegisterOptions}
+                  />
+                  <Select
+                    label="Disability"
+                    name="disability"
+                    options={disabilityOptions}
+                  />
+                  <Textarea
+                    label="Additional information"
+                    name="additionalInformation"
+                    as={'textarea'}
+                  />
+                </div>
               </div>
-            </div>
+            </>
           )}
 
           {hasMedicalNeed && (

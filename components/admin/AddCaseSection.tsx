@@ -20,6 +20,14 @@ interface PageProps {
 export default function AddCaseSection({ section }: PageProps): JSX.Element {
   // Currently using "any" as multiple form types are used.
   const markup = section.fields.map((field: any, index: number) => {
+    // Do not show student accomodation fields
+    if (
+      (section.sectionId === 'employment' && field.name === 'address-finder') ||
+      field.name === 'course-completion-date'
+    ) {
+      return false;
+    }
+
     const inputType = field.as ? field.as : 'text';
 
     // This ensures all inputs have unique names
@@ -56,7 +64,6 @@ export default function AddCaseSection({ section }: PageProps): JSX.Element {
 
     if (
       inputType === 'select' ||
-      inputType === 'radioconditional' ||
       inputType === 'radios' ||
       inputType === 'checkboxes'
     ) {
@@ -75,12 +82,53 @@ export default function AddCaseSection({ section }: PageProps): JSX.Element {
               value: option.value,
             }))}
           />
-          {/* {field.options[3] && field.options[3].value === 'self' ? (
-            <Input
-              name="personalDetails_genderDescription"
-              label="Gender description"
+        </>
+      );
+    }
+
+    if (
+      inputType === 'radioconditional' ||
+      inputType === 'checkboxesconditional'
+    ) {
+      if (field.options[0].value !== '') {
+        field.options.unshift({ label: 'Select an option', value: '' });
+      }
+
+      const withConditional = field.options.filter((option: any) =>
+        option.hasOwnProperty('conditionalFieldInput')
+      );
+      const {
+        as: conditionalInputType,
+        fieldName: conditionalFieldName,
+        label: conditionalLabel,
+      } = withConditional[0].conditionalFieldInput;
+
+      const uniqueConditionalFieldName = generateUniqueFieldName(
+        section.sectionId,
+        conditionalFieldName
+      );
+
+      inputField = (
+        <>
+          <Select
+            modifierClasses="lbh-select--full-width"
+            label=""
+            name={generatedInputName}
+            options={field.options.map((option: FormFieldOption) => ({
+              label: option.label,
+              value: option.value,
+            }))}
+          />
+          {conditionalInputType === 'textarea' && (
+            <Textarea
+              name={uniqueConditionalFieldName}
+              label={conditionalLabel}
+              as="textarea"
             />
-          ) : null} */}
+          )}
+          {conditionalInputType === 'input' && (
+            <Input name={uniqueConditionalFieldName} label={conditionalLabel} />
+          )}
         </>
       );
     }
@@ -88,7 +136,11 @@ export default function AddCaseSection({ section }: PageProps): JSX.Element {
     let title = '';
     if (section.sectionId === 'situation-armed-forces') {
       title = 'Your situation';
-    } else if (index === 0) {
+    } else if (
+      index === 0 &&
+      section.sectionId !== 'current-accommodation-host-details' &&
+      section.sectionId !== 'current-accommodation-landlord-details'
+    ) {
       title = section.sectionHeading;
     } else {
       title = '';

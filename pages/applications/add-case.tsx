@@ -18,10 +18,16 @@ interface PageProps {
 export default function AddCasePage({ user }: PageProps): JSX.Element {
   const router = useRouter();
   const [addressHistory, setAddressHistory] = useState([] as Address[]);
+  const [ethnicity, setEthnicity] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const onSubmit = (values: FormikValues) => {
-    const questionValues = generateQuestionArray(values, addressHistory);
+    const questionValues = generateQuestionArray(
+      values,
+      addressHistory,
+      ethnicity
+    );
+
     const addressToSubmit = addressHistory.length > 0 ? addressHistory[0] : {};
 
     const request: Application = {
@@ -75,6 +81,8 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
       addressHistory={addressHistory}
       setAddressHistory={setAddressHistory}
       handleSaveApplication={handleSaveApplication}
+      ethnicity={ethnicity}
+      setEthnicity={setEthnicity}
     />
   );
 }

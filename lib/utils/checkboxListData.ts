@@ -412,7 +412,7 @@ export const residentialStatusCheckboxList = (
       },
       {
         title:
-          'Applicant has been staying any institution for the last 3 years',
+          'Applicant has been staying at the following institutions for the last 3 years',
         value: `${institutionsText}`,
         isChecked: false,
       },
@@ -513,6 +513,10 @@ export const currentAccomodationCheckboxList = (
     QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_OTHER_ROOMS,
     applicant
   );
+  const whyUnsuitable = getQuestionValue(
+    QuestionKey.CURRENT_ACCOMMODATION_WHY_HOME_UNSUITABLE,
+    applicant
+  );
   const hostName = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOST_PERSON_NAME,
     applicant
@@ -577,6 +581,11 @@ export const currentAccomodationCheckboxList = (
       {
         title: 'Other rooms',
         value: `${otherRooms}`,
+        isChecked: false,
+      },
+      {
+        title: 'Why home is unsuitable',
+        value: `${whyUnsuitable}`,
         isChecked: false,
       },
       {
@@ -655,10 +664,19 @@ export const situationCheckboxList = (
     QuestionKey.YOUR_SITUATION_BREACH_OF_TENANCY,
     applicant
   );
+  const breachOfTenancyDetails = getQuestionValue(
+    QuestionKey.YOUR_SITUATION_BREACH_OF_TENANCY_DETAILS,
+    applicant
+  );
   const legalRestrictions = getQuestionValue(
     QuestionKey.YOUR_SITUATION_LEGAL_RESTRICTIONS,
     applicant
   );
+  const legalRestrictionsDetails = getQuestionValue(
+    QuestionKey.YOUR_SITUATION_LEGAL_RESTRICTIONS_DETAILS,
+    applicant
+  );
+
   const unspentConvictions = getQuestionValue(
     QuestionKey.YOUR_SITUATION_UNSPENT_CONVICTIONS,
     applicant
@@ -738,12 +756,28 @@ export const situationCheckboxList = (
       },
       {
         title: 'Previous warning for breach of tenancy',
-        value: `${breachOfTenancy || 'N/A'}`,
+        value: `${breachOfTenancy} ${
+          breachOfTenancy === 'Yes'
+            ? `${
+                breachOfTenancyDetails
+                  ? ` - ${breachOfTenancyDetails}`
+                  : ' - Details not provided'
+              }`
+            : ''
+        }`,
         isChecked: false,
       },
       {
         title: 'Legal housing restrictions',
-        value: `${legalRestrictions || 'N/A'}`,
+        value: `${legalRestrictions} ${
+          legalRestrictions === 'Yes'
+            ? `${
+                legalRestrictionsDetails
+                  ? ` - ${legalRestrictionsDetails}`
+                  : ' - Details not provided'
+              }`
+            : ''
+        }`,
         isChecked: false,
       },
       {

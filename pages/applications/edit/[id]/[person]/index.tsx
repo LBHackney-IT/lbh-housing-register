@@ -35,13 +35,24 @@ export default function EditApplicant({
       (question) => question.id === 'address-history/addressHistory'
     )[0]?.answer || '[]';
 
+  const savedEthnicity =
+    data.mainApplicant?.questions?.filter(
+      (question) =>
+        question.id === 'ethnicity-questions/ethnicity-main-category'
+    )[0].answer || '';
+
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [addressHistory, setAddressHistory] = useState(
     JSON.parse(savedAddresses) as Address[]
   );
+  const [ethnicity, setEthnicity] = useState(savedEthnicity);
 
   const onSubmit = (values: FormikValues) => {
-    const questionValues = generateQuestionArray(values, addressHistory);
+    const questionValues = generateQuestionArray(
+      values,
+      addressHistory,
+      ethnicity
+    );
     const addressToSubmit = addressHistory.length > 0 ? addressHistory[0] : {};
 
     const request: Application = {
@@ -91,6 +102,8 @@ export default function EditApplicant({
       addressHistory={addressHistory}
       setAddressHistory={setAddressHistory}
       handleSaveApplication={handleSaveApplication}
+      ethnicity={ethnicity}
+      setEthnicity={setEthnicity}
       data={data}
     />
   );

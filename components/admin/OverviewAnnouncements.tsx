@@ -3,20 +3,58 @@ import Details from '../../components/details';
 import Paragraph from '../../components/content/paragraph';
 import { Applicant } from '../../domain/HousingApi';
 
+export const additionalQuestionsArray = [
+  {
+    questionId: 'additional-questions/currently-homeless',
+    title: 'Household member(s) currently homeless',
+  },
+
+  {
+    questionId: 'additional-questions/risk-of-homelessness',
+    title: 'Household member(s) at risk of homelessness',
+  },
+
+  {
+    questionId: 'additional-questions/risk-of-domestic-violence',
+    title: 'Household member(s) at risk of domestic violence',
+  },
+
+  {
+    questionId: 'additional-questions/risk-of-gang-violence',
+    title: 'Household member(s) at risk of gang violence',
+  },
+  {
+    questionId: 'additional-questions/witness-mobility-scheme',
+    title: 'Household member(s) under witness protection',
+  },
+
+  {
+    questionId: 'additional-questions/employee-hackney-council',
+    title:
+      'Household member(s) is an employee, or is related to an employee of Hackney Council',
+  },
+  {
+    questionId: 'additional-questions/elected-member-hackney-council',
+    title:
+      'Household member(s) is an elected member, or is related to an elected member of Hackney Council',
+  },
+];
+
 interface OverviewAnnouncementProps {
   title: string;
-  details: Array<string>;
+  description: (string | undefined)[] | undefined;
 }
 
-function OverviewAnnouncement({ title, details }: OverviewAnnouncementProps) {
+function OverviewAnnouncement({
+  title,
+  description,
+}: OverviewAnnouncementProps) {
   return (
     <Announcement variant="info">
       <h3 className="lbh-page-announcement__title">{title}</h3>
       <div className="lbh-page-announcement__content">
         <Details summary="Show details">
-          {details?.map((detail, index) => (
-            <Paragraph key={index}>{detail.replace(/['"]+/g, '')}</Paragraph>
-          ))}
+          <Paragraph>{description}</Paragraph>
         </Details>
       </div>
     </Announcement>
@@ -30,57 +68,38 @@ interface OverviewAnnouncementsProps {
 export default function OverviewAnnouncements({
   applicant,
 }: OverviewAnnouncementsProps) {
-  const isEmployeeOrRelated = applicant.questions?.filter((question) =>
-    question.id?.includes(
-      'additional-questions/employee-hackney-council-details'
+  const questionsAnsweredYes = additionalQuestionsArray
+    .map(
+      (additionalQuestion) =>
+        applicant.questions?.filter((question) =>
+          question.id?.includes(additionalQuestion.questionId)
+        )[0]
     )
-  );
+    .filter((question) => question?.answer === '["yes"]');
 
-  const isElectedOrRelated = applicant.questions?.filter((question) =>
-    question.id?.includes(
-      'additional-questions/elected-member-hackney-council-details'
-    )
-  );
+  const announcementInfo = questionsAnsweredYes.map((questionAnsweredYes) => {
+    const detailsQuestion = applicant.questions?.filter((question) =>
+      question.id?.includes(`${questionAnsweredYes?.id}-details`)
+    );
 
-  const isAtRiskOfDomesticViolence = applicant.questions?.filter((question) =>
-    question.id?.includes(
-      'additional-questions/risk-of-domestic-violence-details'
-    )
-  );
+    const title = additionalQuestionsArray.filter(
+      (question) => question.questionId === questionAnsweredYes?.id
+    )[0]?.title;
 
-  const isUnderWitnessProtection = applicant.questions?.filter((question) =>
-    question.id?.includes(
-      'additional-questions/witness-mobility-scheme-details'
-    )
-  );
+    const description = detailsQuestion?.map((detail) => detail.answer);
 
-  const isEmployeeOrRelatedString = isEmployeeOrRelated?.[0]?.answer || '';
-  const isElectedOrRelatedString = isElectedOrRelated?.[0]?.answer || '';
-  const isAtRiskOfDomesticViolenceString =
-    isAtRiskOfDomesticViolence?.[0]?.answer || '';
-  const isUnderWitnessProtectionString =
-    isUnderWitnessProtection?.[0]?.answer || '';
+    return { title, description };
+  });
 
   return (
     <>
-      {isAtRiskOfDomesticViolence?.length ? (
+      {announcementInfo.map((announcement, index) => (
         <OverviewAnnouncement
-          title="Household member(s) at risk of domestic violence"
-          details={[isAtRiskOfDomesticViolenceString]}
+          key={index}
+          title={announcement.title}
+          description={announcement.description}
         />
-      ) : null}
-      {isEmployeeOrRelated?.length || isElectedOrRelated?.length ? (
-        <OverviewAnnouncement
-          title="Household member(s) have links to the council"
-          details={[isEmployeeOrRelatedString, isElectedOrRelatedString]}
-        />
-      ) : null}
-      {isUnderWitnessProtection?.length ? (
-        <OverviewAnnouncement
-          title="Household member(s) under witness protection"
-          details={[isUnderWitnessProtectionString]}
-        />
-      ) : null}
+      ))}
     </>
   );
 }

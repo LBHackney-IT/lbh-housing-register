@@ -24,27 +24,42 @@ const ApplicationTermsPage = (): JSX.Element => {
 
   return (
     <Layout pageName="Agreement">
-      <HeadingOne content="Before you continue" />
+      <HeadingOne content="Confidentiality and data protection" />
 
       <Paragraph>
-        Hackney Council will verify the information you provide, so we can
-        assess your housing needs, and eligibility for social housing.
+        We will use the information given on the form to help us decide about
+        your application for housing. This information will be placed on our
+        system so we can assess your priority and housing needs. We will ensure
+        confidentiality is maintained throughout and your data protected.
       </Paragraph>
 
       <Paragraph>
-        To do this, we may share your information with credit agencies, local
-        authorities, medical professionals and HMRC.
+        We have a duty to protect public funds. In order to detect and prevent
+        fraud we are required to share information with other public sector
+        agencies or any person or organisation administering public funds such
+        as central government departments or other Council teams such as housing
+        benefits.
       </Paragraph>
 
       <Paragraph>
-        A Housing Needs and Benefits Officer may need to visit your home without
-        advance notice to assess your living situation.
+        It is a criminal offence to give false or misleading information or to
+        hold back relevant information concerning your application.
       </Paragraph>
 
       <Paragraph>
-        By selecting I understand and accept below, you're agreeing to let them
-        into your home, and understand that Hackney may reject your application
-        if you don't.
+        You have the right to ask the Council for a copy of your data and for a
+        description of how it is being used and to whom it is being disclosed.
+      </Paragraph>
+
+      <Paragraph>
+        Please{' '}
+        <a
+          className="lbh-link lbh-link--no-visited-state"
+          href="https://hackney.gov.uk/privacy"
+        >
+          read our main privacy notice
+        </a>{' '}
+        for more information.
       </Paragraph>
 
       <Form

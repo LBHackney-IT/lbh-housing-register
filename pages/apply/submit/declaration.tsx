@@ -80,13 +80,20 @@ const Declaration = (): JSX.Element => {
       <Paragraph>
         I understand that it is a criminal offence to provide false or
         misleading information, or to withhold relevant information which
-        Hackney Council have reasonably required me to give. I understand that
-        if information is found to be false, I may be prosecuted and you may
-        repossess my home if a tenancy arises from it; or cancel my housing
-        application or an offer of a property and I will not be able to re-apply
-        to go on the Council’s housing register for at least 5 years. If I am
-        prosecuted by you and found guilty, I understand that I could be ordered
-        to pay a fine of up to £5,000.
+        Hackney Council have reasonably required me to give.
+      </Paragraph>
+
+      <Paragraph>
+        I understand that if information is found to be false, I may be
+        prosecuted and you may repossess my home if a tenancy arises from it; or
+        cancel my housing application or an offer of a property and I will not
+        be able to re-apply to go on the Council’s housing register for at least
+        5 years.
+      </Paragraph>
+
+      <Paragraph>
+        If I am prosecuted by you and found guilty, I understand that I could be
+        ordered to pay a fine of up to £5,000.
       </Paragraph>
 
       <Form

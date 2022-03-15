@@ -14,6 +14,9 @@ import {
   AddNoteToHistory,
 } from '../../domain/HousingApi';
 import { Stat } from '../../domain/stat';
+import asssertServerOnly from '../utils/assertServerOnly';
+
+asssertServerOnly();
 
 const emptyActivityHistoryPagedResult: ActivityHistoryPagedResult =
   Object.freeze({

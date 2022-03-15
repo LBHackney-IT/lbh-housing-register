@@ -26,6 +26,10 @@ export default function Actions({ data }: PageProps): JSX.Element {
       value: '',
     },
     {
+      label: 'Incomplete',
+      value: ApplicationStatus.DRAFT,
+    },
+    {
       label: 'Added by officer',
       value: ApplicationStatus.MANUAL_DRAFT,
     },

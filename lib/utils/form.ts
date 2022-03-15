@@ -48,6 +48,10 @@ export function checkEligible(
   const numberOfApplicantsWithMedicalNeeds =
     applicantsWithMedicalNeed(application);
 
+  if (numberOfApplicantsWithMedicalNeeds > 0) {
+    return [true, []];
+  }
+
   const setInvalid = (reasoning: DisqualificationReason) => {
     isValid = false;
     reasons.push(reasoning);
@@ -59,10 +63,7 @@ export function checkEligible(
     'home-how-many-bedrooms'
   );
 
-  if (
-    bedroomNeed <= requestedNumberOfBedrooms &&
-    numberOfApplicantsWithMedicalNeeds === 0
-  ) {
+  if (bedroomNeed <= requestedNumberOfBedrooms) {
     setInvalid('notLackingRooms');
   }
 

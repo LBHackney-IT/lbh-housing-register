@@ -1,0 +1,107 @@
+import { MultiStepForm } from '../../lib/types/form';
+import { FormID } from '../../lib/utils/form-data';
+
+const income: MultiStepForm = {
+  id: FormID.INCOME_SAVINGS,
+  heading: 'Income and savings',
+  eligibility: [
+    {
+      field: 'income',
+      is: '80to100000',
+      reasoning: 'incomeOver80000',
+    },
+    {
+      field: 'income',
+      is: '100000',
+      reasoning: 'incomeOver100000',
+    },
+    {
+      field: 'savings',
+      is: '80000',
+      reasoning: 'assetsOver80000',
+    },
+  ],
+  steps: [
+    {
+      fields: [
+        {
+          as: 'radios',
+          name: 'income',
+          label: 'What is your household’s total yearly income?',
+          hint: 'Please include salary, benefits and any other income for everyone in your household.',
+          subheading:
+            "You will need to provide the last two months' payslips for all the working adults in your household.",
+          options: [
+            {
+              label: 'Under £20,000',
+              value: 'under20000',
+            },
+            {
+              label: '£20,000 to £39,999',
+              value: '20to40000',
+            },
+            {
+              label: '£40,000 to £59,999',
+              value: '40to60000',
+            },
+            {
+              label: '£60,000 to £79,999',
+              value: '60to80000',
+            },
+            {
+              label: '£80,000 to £99,999',
+              value: '80to100000',
+            },
+            {
+              label: '£100,000 or more',
+              value: '100000',
+            },
+          ],
+          validation: {
+            required: true,
+          },
+        },
+        {
+          as: 'radios',
+          label:
+            'How much money does your household have in total savings and capital?',
+          hint: 'This includes the total amount in all your current accounts, saving accounts, and any other types of savings.',
+          subheading:
+            "You will need to provide the last two months' bank statements for each account you hold.",
+          name: 'savings',
+          options: [
+            {
+              label: 'Under £5,000',
+              value: 'under5000',
+            },
+            {
+              label: '£5,000 to £9,999',
+              value: '5to10000',
+            },
+            {
+              label: '£10,000 to £29,999',
+              value: '10to30000',
+            },
+            {
+              label: '£30,000 to £49,999',
+              value: '30to50000',
+            },
+            {
+              label: '£50,000 to £79,999',
+              value: '50to80000',
+            },
+            {
+              label: '£80,000 or more',
+              value: '80000',
+            },
+          ],
+          validation: {
+            required: true,
+          },
+        },
+      ],
+    },
+  ],
+};
+
+export default income;

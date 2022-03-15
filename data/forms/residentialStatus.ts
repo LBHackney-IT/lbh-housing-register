@@ -1,0 +1,622 @@
+import { MultiStepForm } from '../../lib/types/form';
+import { FormID } from '../../lib/utils/form-data';
+
+const residentialStatus: MultiStepForm = {
+  id: FormID.RESIDENTIAL_STATUS,
+  heading: 'Residential status',
+  eligibility: [
+    {
+      field: 'asbo-behaviour',
+      is: 'yes',
+      reasoning: 'hasCourtOrder',
+    },
+    {
+      field: 'institutions',
+      is: 'none',
+      reasoning: 'notResidingInHackneyLast3Years',
+    },
+  ],
+  steps: [
+    {
+      fields: [
+        {
+          as: 'radios',
+          label:
+            'Are you currently and continually resided in the borough for 3 years or more?',
+          name: 'residential-status',
+          options: [
+            {
+              label: 'Yes',
+              value: 'yes',
+            },
+            {
+              label: 'No',
+              value: 'no',
+            },
+          ],
+          validation: {
+            required: true,
+          },
+        },
+        {
+          as: 'radios',
+          label:
+            'In the last 3 years have you moved out and moved back into the borough within 3 months?',
+          name: 'moved-borough',
+          options: [
+            {
+              label: 'Yes',
+              value: 'yes',
+            },
+            {
+              label: 'No',
+              value: 'no',
+            },
+          ],
+          validation: {
+            required: true,
+          },
+          conditionalDisplay: [
+            {
+              field: 'residential-status',
+              is: 'no',
+            },
+          ],
+        },
+        {
+          as: 'radios',
+          label:
+            'Are you currently homeless and placed in temporary accommodation outside of the borough?',
+          name: 'homeless',
+          options: [
+            {
+              label: 'Yes',
+              value: 'yes',
+            },
+            {
+              label: 'No',
+              value: 'no',
+            },
+          ],
+          validation: {
+            required: true,
+          },
+          conditionalDisplay: [
+            {
+              field: 'residential-status',
+              is: 'no',
+            },
+            {
+              field: 'moved-borough',
+              is: 'no',
+            },
+          ],
+        },
+        {
+          as: 'radios',
+          label:
+            'Are you unable to reside in the borough due to a court order or an injunction due to unacceptable behaviour?',
+          name: 'asbo-behaviour',
+          options: [
+            {
+              label: 'Yes',
+              value: 'yes',
+            },
+            {
+              label: 'No',
+              value: 'no',
+            },
+          ],
+          validation: {
+            required: true,
+          },
+          conditionalDisplay: [
+            {
+              field: 'residential-status',
+              is: 'no',
+            },
+            {
+              field: 'moved-borough',
+              is: 'no',
+            },
+            {
+              field: 'homeless',
+              is: 'no',
+            },
+          ],
+        },
+        {
+          as: 'radios',
+          label:
+            'Are you or your partner serving, or ex-serving member of the armed forces?',
+          name: 'armed-forces',
+          options: [
+            {
+              label: 'Yes',
+              value: 'yes',
+            },
+            {
+              label: 'No',
+              value: 'no',
+            },
+          ],
+          validation: {
+            required: true,
+          },
+          conditionalDisplay: [
+            {
+              field: 'residential-status',
+              is: 'no',
+            },
+            {
+              field: 'moved-borough',
+              is: 'no',
+            },
+            {
+              field: 'homeless',
+              is: 'no',
+            },
+            {
+              field: 'asbo-behaviour',
+              is: 'no',
+            },
+          ],
+        },
+        {
+          as: 'radios',
+          label:
+            'Are you or your partner a nominee under National Witness Mobility Scheme?',
+          name: 'mobility-scheme',
+          options: [
+            {
+              label: 'Yes',
+              value: 'yes',
+            },
+            {
+              label: 'No',
+              value: 'no',
+            },
+          ],
+          validation: {
+            required: true,
+          },
+          conditionalDisplay: [
+            {
+              field: 'residential-status',
+              is: 'no',
+            },
+            {
+              field: 'moved-borough',
+              is: 'no',
+            },
+            {
+              field: 'homeless',
+              is: 'no',
+            },
+            {
+              field: 'asbo-behaviour',
+              is: 'no',
+            },
+            {
+              field: 'armed-forces',
+              is: 'no',
+            },
+          ],
+        },
+        {
+          as: 'radios',
+          label:
+            'Have you been accepted as Homeless by the Council with a duty to provide accomodation under the Housing Act 1996?',
+          name: 'homelessness-accepted',
+          options: [
+            {
+              label: 'Yes',
+              value: 'yes',
+            },
+            {
+              label: 'No',
+              value: 'no',
+            },
+          ],
+          validation: {
+            required: true,
+          },
+          conditionalDisplay: [
+            {
+              field: 'residential-status',
+              is: 'no',
+            },
+            {
+              field: 'moved-borough',
+              is: 'no',
+            },
+            {
+              field: 'homeless',
+              is: 'no',
+            },
+            {
+              field: 'asbo-behaviour',
+              is: 'no',
+            },
+            {
+              field: 'armed-forces',
+              is: 'no',
+            },
+            {
+              field: 'mobility-scheme',
+              is: 'no',
+            },
+          ],
+        },
+        {
+          as: 'radios',
+          label:
+            'Are you an existing social housing tenant in Hackney who has a secure, assured or fixed term tenancy?',
+          name: 'social-housing',
+          options: [
+            {
+              label: 'Yes',
+              value: 'yes',
+            },
+            {
+              label: 'No',
+              value: 'no',
+            },
+          ],
+          validation: {
+            required: true,
+          },
+          conditionalDisplay: [
+            {
+              field: 'residential-status',
+              is: 'no',
+            },
+            {
+              field: 'moved-borough',
+              is: 'no',
+            },
+            {
+              field: 'homeless',
+              is: 'no',
+            },
+            {
+              field: 'asbo-behaviour',
+              is: 'no',
+            },
+            {
+              field: 'armed-forces',
+              is: 'no',
+            },
+            {
+              field: 'mobility-scheme',
+              is: 'no',
+            },
+            {
+              field: 'homelessness-accepted',
+              is: 'no',
+            },
+          ],
+        },
+        {
+          as: 'radios',
+          label:
+            'Do you either work in Hackney or have you been offered a permanent job in Hackney?',
+          name: 'work-in-hackney',
+          options: [
+            {
+              label: 'Yes',
+              value: 'yes',
+            },
+            {
+              label: 'No',
+              value: 'no',
+            },
+          ],
+          validation: {
+            required: true,
+          },
+          conditionalDisplay: [
+            {
+              field: 'residential-status',
+              is: 'no',
+            },
+            {
+              field: 'moved-borough',
+              is: 'no',
+            },
+            {
+              field: 'homeless',
+              is: 'no',
+            },
+            {
+              field: 'asbo-behaviour',
+              is: 'no',
+            },
+            {
+              field: 'armed-forces',
+              is: 'no',
+            },
+            {
+              field: 'mobility-scheme',
+              is: 'no',
+            },
+            {
+              field: 'homelessness-accepted',
+              is: 'no',
+            },
+            {
+              field: 'social-housing',
+              is: 'no',
+            },
+          ],
+        },
+        {
+          as: 'radios',
+          label:
+            "Are you moving to Hackney to provide care to a Hackney resident that has been agreed by the Council's medical advisor?",
+          name: 'providing-care',
+          options: [
+            {
+              label: 'Yes',
+              value: 'yes',
+            },
+            {
+              label: 'No',
+              value: 'no',
+            },
+          ],
+          validation: {
+            required: true,
+          },
+          conditionalDisplay: [
+            {
+              field: 'residential-status',
+              is: 'no',
+            },
+            {
+              field: 'moved-borough',
+              is: 'no',
+            },
+            {
+              field: 'homeless',
+              is: 'no',
+            },
+            {
+              field: 'asbo-behaviour',
+              is: 'no',
+            },
+            {
+              field: 'armed-forces',
+              is: 'no',
+            },
+            {
+              field: 'mobility-scheme',
+              is: 'no',
+            },
+            {
+              field: 'homelessness-accepted',
+              is: 'no',
+            },
+            {
+              field: 'social-housing',
+              is: 'no',
+            },
+            {
+              field: 'work-in-hackney',
+              is: 'no',
+            },
+          ],
+        },
+        {
+          as: 'radios',
+          label:
+            'Are you fleeing domestic or familial violence, or need to move to Hackney due to social or welfare reasons?',
+          name: 'domestic-violence',
+          options: [
+            {
+              label: 'Yes',
+              value: 'yes',
+            },
+            {
+              label: 'No',
+              value: 'no',
+            },
+          ],
+          validation: {
+            required: true,
+          },
+          conditionalDisplay: [
+            {
+              field: 'residential-status',
+              is: 'no',
+            },
+            {
+              field: 'moved-borough',
+              is: 'no',
+            },
+            {
+              field: 'homeless',
+              is: 'no',
+            },
+            {
+              field: 'asbo-behaviour',
+              is: 'no',
+            },
+            {
+              field: 'armed-forces',
+              is: 'no',
+            },
+            {
+              field: 'mobility-scheme',
+              is: 'no',
+            },
+            {
+              field: 'homelessness-accepted',
+              is: 'no',
+            },
+            {
+              field: 'social-housing',
+              is: 'no',
+            },
+            {
+              field: 'work-in-hackney',
+              is: 'no',
+            },
+            {
+              field: 'providing-care',
+              is: 'no',
+            },
+          ],
+        },
+        {
+          as: 'radios',
+          label: 'Are you a student living and studying away from the borough?',
+          name: 'studying-outside-borough',
+          options: [
+            {
+              label: 'Yes',
+              value: 'yes',
+            },
+            {
+              label: 'No',
+              value: 'no',
+            },
+          ],
+          validation: {
+            required: true,
+          },
+          conditionalDisplay: [
+            {
+              field: 'residential-status',
+              is: 'no',
+            },
+            {
+              field: 'moved-borough',
+              is: 'no',
+            },
+            {
+              field: 'homeless',
+              is: 'no',
+            },
+            {
+              field: 'asbo-behaviour',
+              is: 'no',
+            },
+            {
+              field: 'armed-forces',
+              is: 'no',
+            },
+            {
+              field: 'mobility-scheme',
+              is: 'no',
+            },
+            {
+              field: 'homelessness-accepted',
+              is: 'no',
+            },
+            {
+              field: 'social-housing',
+              is: 'no',
+            },
+            {
+              field: 'work-in-hackney',
+              is: 'no',
+            },
+            {
+              field: 'providing-care',
+              is: 'no',
+            },
+            {
+              field: 'domestic-violence',
+              is: 'no',
+            },
+          ],
+        },
+        {
+          as: 'checkboxes',
+          label:
+            'Have you been staying in any of the following institutions for the last 3 years or more?',
+          name: 'institutions',
+          options: [
+            {
+              label: 'Hospital',
+              value: 'hospital',
+            },
+            {
+              label: 'Prison',
+              value: 'prison',
+            },
+            {
+              label: 'Care Home',
+              value: 'care-home',
+            },
+            {
+              label: 'Foster Placement',
+              value: 'foster-placement',
+            },
+            {
+              label: 'Accommodation provided by social services',
+              value: 'social-services',
+            },
+            {
+              label: 'None of the above',
+              value: 'none',
+            },
+          ],
+          conditionalDisplay: [
+            {
+              field: 'residential-status',
+              is: 'no',
+            },
+            {
+              field: 'moved-borough',
+              is: 'no',
+            },
+            {
+              field: 'homeless',
+              is: 'no',
+            },
+            {
+              field: 'asbo-behaviour',
+              is: 'no',
+            },
+            {
+              field: 'armed-forces',
+              is: 'no',
+            },
+            {
+              field: 'mobility-scheme',
+              is: 'no',
+            },
+            {
+              field: 'homelessness-accepted',
+              is: 'no',
+            },
+            {
+              field: 'social-housing',
+              is: 'no',
+            },
+            {
+              field: 'work-in-hackney',
+              is: 'no',
+            },
+            {
+              field: 'providing-care',
+              is: 'no',
+            },
+            {
+              field: 'domestic-violence',
+              is: 'no',
+            },
+            {
+              field: 'studying-outside-borough',
+              is: 'no',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+export default residentialStatus;

@@ -1,6 +1,7 @@
 import { SetStateAction } from 'react';
 import { FormikValues } from 'formik';
 import { FormID } from '../utils/form-data';
+import { DisqualificationReason } from '../utils/disqualificationReasonOptions';
 
 // @Deprecated
 export type FormData = FormikValues;
@@ -9,7 +10,7 @@ export type EligibilityCriteria = {
   field: string;
   is?: string;
   isNot?: string;
-  reasoning?: string;
+  reasoning: DisqualificationReason;
 };
 
 export interface BaseFormField {

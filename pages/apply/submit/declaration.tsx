@@ -16,7 +16,7 @@ import Form from '../../../components/form/form';
 import Layout from '../../../components/layout/resident-layout';
 import { HeadingOne } from '../../../components/content/headings';
 import Paragraph from '../../../components/content/paragraph';
-import { disqualificationReasonOptions } from '../../../lib/utils/disqualificationReasonOptions';
+import { getDisqualificationReasonOption } from '../../../lib/utils/disqualificationReasonOptions';
 import Custom404 from '../../404';
 
 const Declaration = (): JSX.Element => {
@@ -33,11 +33,8 @@ const Declaration = (): JSX.Element => {
   const submitApplication = async () => {
     const [isEligible, reasons] = checkEligible(application);
     if (!isEligible) {
-      const reasonStrings = reasons.map(
-        (reason) =>
-          disqualificationReasonOptions[
-            reason as keyof typeof disqualificationReasonOptions
-          ]
+      const reasonStrings = reasons.map((reason) =>
+        getDisqualificationReasonOption(reason)
       );
       const reason = reasonStrings.join(',');
       dispatch(sendDisqualifyEmail({ application, reason }));

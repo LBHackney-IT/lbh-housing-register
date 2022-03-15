@@ -71,7 +71,7 @@ export function checkEligible(
     setInvalid('under18YearsOld');
   }
 
-  for (const [, formID] of Object.entries(FormID)) {
+  for (const formID of Object.values(FormID)) {
     const eligibilityCriteria = getEligibilityCriteria(formID);
     eligibilityCriteria?.forEach((criteria) => {
       const fieldValue = getQuestionValue(

@@ -1,42 +1,40 @@
-import addressHistory from '../../data/forms/address-history.json';
-import agreementFormData from '../../data/forms/agreement.json';
-import currentAccommodationFormData from '../../data/forms/current_accommodation/current-accommodation.json';
-import currentAccommodationHostDetails from '../../data/forms/current_accommodation/current-accommodation-host-details.json';
-import currentAccommodationLandlordDetails from '../../data/forms/current_accommodation/current-accommodation-landlord-details.json';
-import declarationFormData from '../../data/forms/declaration.json';
-import employment from '../../data/forms/employment.json';
-import immigrationStatusFormData from '../../data/forms/immigration-status.json';
-import incomeSavings from '../../data/forms/income.json';
-import medicalNeeds from '../../data/forms/medical-needs.json';
-import personalDetailsFormData from '../../data/forms/person-details.json';
-import residentialStatusFormData from '../../data/forms/residential-status.json';
-import signInVerifyFormData from '../../data/forms/sign-in-verify.json';
-import signInFormData from '../../data/forms/sign-in.json';
-import signUpDetailsFormData from '../../data/forms/sign-up-details.json';
-
-import yourSituationFormData from '../../data/forms/your-situation.json';
-import AccommodationType from '../../data/forms/Situation/accommodation-type.json';
-import Arrears from '../../data/forms/Situation/arrears.json';
-import Benefits from '../../data/forms/Situation/benefits.json';
-import BreachOfTenancy from '../../data/forms/Situation/breach-of-tenancy.json';
-import ArmedForces from '../../data/forms/Situation/situation-armed-forces.json';
-import CourtOrder from '../../data/forms/Situation/court-order.json';
-import DomesticViolence from '../../data/forms/Situation/domestic-violence.json';
-import Homelessness from '../../data/forms/Situation/homelessness.json';
-import Landlord from '../../data/forms/Situation/landlord.json';
-import LegalRestrictions from '../../data/forms/Situation/legal-restrictions.json';
-import MedicalNeed from '../../data/forms/Situation/medical-need.json';
-import OtherHousingRegister from '../../data/forms/Situation/other-housing-register.json';
-import PropertyOwnership from '../../data/forms/Situation/property-ownership.json';
-import PurchasingProperty from '../../data/forms/Situation/purchasing-property.json';
-import RelationshipBreakdown from '../../data/forms/Situation/relationship-breakdown.json';
-import SoldProperty from '../../data/forms/Situation/sold-property.json';
-import Subletting from '../../data/forms/Situation/subletting.json';
-import UnderOccupying from '../../data/forms/Situation/under-occupying.json';
-import UnspentConvictions from '../../data/forms/Situation/unspent-convictions.json';
-
-import AdditionalQuestions from '../../data/forms/additional-questions.json';
-import EthnicityQuestions from '../../data/forms/ethnicity/ethnicity-questions.json';
+import addressHistory from '../../data/forms/addressHistory';
+import agreementFormData from '../../data/forms/agreement';
+import currentAccommodationFormData from '../../data/forms/current_accommodation/currentAccommodation';
+import currentAccommodationHostDetails from '../../data/forms/current_accommodation/currentAccommodationHostDetails';
+import currentAccommodationLandlordDetails from '../../data/forms/current_accommodation/currentAccommodationLandlordDetails';
+import declarationFormData from '../../data/forms/declaration';
+import employment from '../../data/forms/employment';
+import immigrationStatusFormData from '../../data/forms/immigrationStatus';
+import incomeSavings from '../../data/forms/income';
+import medicalNeeds from '../../data/forms/medicalNeeds';
+import personalDetailsFormData from '../../data/forms/personDetails';
+import residentialStatusFormData from '../../data/forms/residentialStatus';
+import signInVerifyFormData from '../../data/forms/signInVerify';
+import signInFormData from '../../data/forms/signIn';
+import signUpDetailsFormData from '../../data/forms/signUpDetails';
+import yourSituationFormData from '../../data/forms/yourSituation';
+import AccommodationType from '../../data/forms/Situation/accommodationType';
+import Arrears from '../../data/forms/Situation/arrears';
+import Benefits from '../../data/forms/Situation/benefits';
+import BreachOfTenancy from '../../data/forms/Situation/breachOfTenancy';
+import ArmedForces from '../../data/forms/Situation/situationArmedForces';
+import CourtOrder from '../../data/forms/Situation/courtOrder';
+import DomesticViolence from '../../data/forms/Situation/domesticViolence';
+import Homelessness from '../../data/forms/Situation/homelessness';
+import Landlord from '../../data/forms/Situation/landlord';
+import LegalRestrictions from '../../data/forms/Situation/legalRestrictions';
+import MedicalNeed from '../../data/forms/Situation/medicalNeed';
+import OtherHousingRegister from '../../data/forms/Situation/otherHousingRegister';
+import PropertyOwnership from '../../data/forms/Situation/propertyOwnership';
+import PurchasingProperty from '../../data/forms/Situation/purchasingProperty';
+import RelationshipBreakdown from '../../data/forms/Situation/relationshipBreakdown';
+import SoldProperty from '../../data/forms/Situation/soldProperty';
+import Subletting from '../../data/forms/Situation/subletting';
+import UnderOccupying from '../../data/forms/Situation/underOccupying';
+import UnspentConvictions from '../../data/forms/Situation/unspentConvictions';
+import AdditionalQuestions from '../../data/forms/additionalQuestions';
+import EthnicityQuestions from '../../data/forms/ethnicity/ethnicityQuestions';
 import {
   ethnicCategoryAsianAsianBritishForm,
   ethnicCategoryBlackBlackBritishForm,
@@ -91,6 +89,7 @@ export enum FormID {
   ETHNICITY_CATEGORY_WHITE = 'ethnicity-extended-category-white',
   ETHNICITY_CATEGORY_OTHER_ETHNIC_GROUP = 'ethnicity-extended-category-other-ethnic-group',
   DECLARATION = 'declaration',
+  _TEST_FORM = '_test-form',
 }
 
 /**
@@ -105,6 +104,23 @@ export function getEligibilityCriteria(
   return formData?.eligibility;
 }
 
+function isForm(form: any): form is MultiStepForm {
+
+  foreach (eleigibilty criteria)
+
+    check that they're a key of the disqualification criteria
+
+    if not return false.
+
+
+  if (form.id)
+
+  if form
+
+
+  return true;
+}
+
 /**
  * Get the form data that makes up the requested form
  * @param {string} form - The requested form data
@@ -113,133 +129,136 @@ export function getEligibilityCriteria(
 export function getFormData(form: FormID): MultiStepForm {
   switch (form) {
     case FormID.AGREEMENT:
-      return agreementFormData as MultiStepForm;
+      return agreementFormData;
 
     case FormID.SIGN_IN:
-      return signInFormData as MultiStepForm;
+      return signInFormData;
 
     case FormID.SIGN_IN_VERIFY:
-      return signInVerifyFormData as MultiStepForm;
+      return signInVerifyFormData;
 
     case FormID.SIGN_UP_DETAILS:
-      return signUpDetailsFormData as MultiStepForm;
+      return signUpDetailsFormData;
 
     case FormID.PERSONAL_DETAILS:
-      return personalDetailsFormData as MultiStepForm;
+      return personalDetailsFormData;
 
     case FormID.IMMIGRATION_STATUS:
-      return immigrationStatusFormData as MultiStepForm;
+      return immigrationStatusFormData;
 
     case FormID.RESIDENTIAL_STATUS:
-      return residentialStatusFormData as MultiStepForm;
+      return residentialStatusFormData;
 
     case FormID.ADDRESS_HISTORY:
-      return addressHistory as MultiStepForm;
+      return addressHistory;
 
     case FormID.CURRENT_ACCOMMODATION:
-      return currentAccommodationFormData as MultiStepForm;
+      return currentAccommodationFormData;
 
     case FormID.EMPLOYMENT:
-      return employment as MultiStepForm;
+      return employment;
 
     case FormID.INCOME_SAVINGS:
-      return incomeSavings as MultiStepForm;
+      return incomeSavings;
 
     case FormID.MEDICAL_NEEDS:
-      return medicalNeeds as MultiStepForm;
+      return medicalNeeds;
 
     // your situation
     case FormID.SITUATION_ARMED_FORCES:
-      return ArmedForces as MultiStepForm;
+      return ArmedForces;
 
     case FormID.COURT_ORDER:
-      return CourtOrder as MultiStepForm;
+      return CourtOrder;
 
     case FormID.ACCOMODATION_TYPE:
-      return AccommodationType as MultiStepForm;
+      return AccommodationType;
 
     case FormID.DOMESTIC_VIOLENCE:
-      return DomesticViolence as MultiStepForm;
+      return DomesticViolence;
 
     case FormID.HOMELESSNESS:
-      return Homelessness as MultiStepForm;
+      return Homelessness;
 
     case FormID.SUBLETTING:
-      return Subletting as MultiStepForm;
+      return Subletting;
 
     case FormID.MEDICAL_NEED:
-      return MedicalNeed as MultiStepForm;
+      return MedicalNeed;
 
     case FormID.PURCHASING_PROPERTY:
-      return PurchasingProperty as MultiStepForm;
+      return PurchasingProperty;
 
     case FormID.PROPERTY_OWNERSHIP:
-      return PropertyOwnership as MultiStepForm;
+      return PropertyOwnership;
 
     case FormID.SOLD_PROPERTY:
-      return SoldProperty as MultiStepForm;
+      return SoldProperty;
 
     case FormID.RELATIONSHIP_BREAKDOWN:
-      return RelationshipBreakdown as MultiStepForm;
+      return RelationshipBreakdown;
 
     case FormID.ARREARS:
-      return Arrears as MultiStepForm;
+      return Arrears;
 
     case FormID.UNDER_OCCUPYING:
-      return UnderOccupying as MultiStepForm;
+      return UnderOccupying;
 
     case FormID.BENEFITS:
-      return Benefits as MultiStepForm;
+      return Benefits;
 
     case FormID.LANDLORD:
-      return Landlord as MultiStepForm;
+      return Landlord;
 
     case FormID.OTHER_HOUSING_REGISTER:
-      return OtherHousingRegister as MultiStepForm;
+      return OtherHousingRegister;
 
     case FormID.BREACH_OF_TENANCY:
-      return BreachOfTenancy as MultiStepForm;
+      return BreachOfTenancy;
 
     case FormID.LEGAL_RESTRICTIONS:
-      return LegalRestrictions as MultiStepForm;
+      return LegalRestrictions;
 
     case FormID.UNSPENT_CONVICTIONS:
-      return UnspentConvictions as MultiStepForm;
+      return UnspentConvictions;
 
     // additional questions
     case FormID.ADDITIONAL_QUESTIONS:
-      return AdditionalQuestions as MultiStepForm;
+      return AdditionalQuestions;
 
     case FormID.ETHNICITY_QUESTIONS:
-      return EthnicityQuestions as MultiStepForm;
+      return EthnicityQuestions;
 
     case FormID.ETHNICITY_CATEGORY_ASIAN_ASIAN_BRITISH:
-      return ethnicCategoryAsianAsianBritishForm as MultiStepForm;
+      return ethnicCategoryAsianAsianBritishForm;
 
     case FormID.ETHNICITY_CATEGORY_BLACK_BLACK_BRITISH:
-      return ethnicCategoryBlackBlackBritishForm as MultiStepForm;
+      return ethnicCategoryBlackBlackBritishForm;
 
     case FormID.ETHNICITY_CATEGORY_MIXED_MULTIPLE_BACKGROUND:
-      return ethnicCategoryMixedMultipleBackgroundForm as MultiStepForm;
+      return ethnicCategoryMixedMultipleBackgroundForm;
 
     case FormID.ETHNICITY_CATEGORY_WHITE:
-      return ethnicCategoryWhiteForm as MultiStepForm;
+      return ethnicCategoryWhiteForm;
 
     case FormID.ETHNICITY_CATEGORY_OTHER_ETHNIC_GROUP:
-      return ethnicCategoryOtherEthnicGroupForm as MultiStepForm;
+      return ethnicCategoryOtherEthnicGroupForm;
 
     case FormID.CURRENT_ACCOMMODATION_HOST_DETAILS:
-      return currentAccommodationHostDetails as MultiStepForm;
+      return currentAccommodationHostDetails;
 
     case FormID.CURRENT_ACCOMMODATION_LANDLORD_DETAILS:
-      return currentAccommodationLandlordDetails as MultiStepForm;
+      return currentAccommodationLandlordDetails;
 
     // this form isn't used anywhere
     case FormID.YOUR_SITUATION:
-      return yourSituationFormData as MultiStepForm;
+      return yourSituationFormData;
 
     case FormID.DECLARATION:
-      return declarationFormData as MultiStepForm;
+      return declarationFormData;
+
+    case FormID._TEST_FORM:
+      throw new Error('The test form is for testing only');
 
     default:
       return assertNever(form, 'Unknown form step: ' + form);

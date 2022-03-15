@@ -1,3 +1,6 @@
+import { MultiStepForm } from '../types/form';
+import { FormID } from './form-data';
+
 type EthnicityObject = {
   label: string;
   value?: string;
@@ -328,7 +331,7 @@ const ethnicityCategoryQuestions = [
   },
 ];
 
-function makeEthnicityForm(category: string) {
+function makeEthnicityForm(category: string): MultiStepForm {
   const ethnicityFilter = (ethnicity: EthnicityObject) =>
     ethnicity.category === category;
 
@@ -342,7 +345,7 @@ function makeEthnicityForm(category: string) {
     }));
 
   return {
-    id: `ethnicity-extended-category-${category}`,
+    id: `ethnicity-extended-category-${category}` as FormID,
     steps: [
       {
         fields: [

@@ -28,6 +28,10 @@ export interface TextFormField extends BaseFormField {
   as?: undefined;
   type?: string;
 }
+export interface NumberTextFormField extends TextFormField {
+  type: 'number';
+  min?: number;
+}
 export interface TextareaFormField extends BaseFormField {
   as: 'textarea';
 }
@@ -41,6 +45,7 @@ export interface CheckboxesFormField extends BaseFormField {
 export interface RadioFormField extends BaseFormField {
   as: 'radios';
   options: FormFieldOption[];
+  subheading?: string;
 }
 
 export interface SelectFormField extends BaseFormField {
@@ -51,6 +56,8 @@ export interface SelectFormField extends BaseFormField {
 
 export interface DateFormField extends BaseFormField {
   as: 'dateinput';
+  showDay?: boolean;
+  options?: { label: string; value: string }[];
 }
 
 export interface ParagraphFormField extends BaseFormField {
@@ -61,7 +68,7 @@ export interface AnnouncementTextFormField extends BaseFormField {
   title?: string;
   content?: string;
   list?: string[];
-  variant: 'info' | 'success' | 'warning';
+  variant?: 'info' | 'success' | 'warning';
 }
 
 export interface RadioConditionalFormField extends BaseFormField {
@@ -76,6 +83,7 @@ export interface CheckboxesConditionalFormField extends BaseFormField {
 
 export type FormField =
   | TextFormField
+  | NumberTextFormField
   | TextareaFormField
   | RadioFormField
   | CheckboxFormField
@@ -106,7 +114,6 @@ export type ConditionalFormFieldOptionInput = {
   fieldId?: string;
   fieldName?: string;
   label?: string;
-  display: boolean;
 };
 
 export type FormFieldOption = {
@@ -136,7 +143,7 @@ export type Conditionals = {
 };
 
 export type MultiStepForm = {
-  id: string;
+  id: FormID;
   copy?: string;
   eligibility?: EligibilityCriteria[];
   heading?: string;
@@ -145,6 +152,6 @@ export type MultiStepForm = {
 };
 
 export type DetailsSection = {
-  title: string;
+  title?: string;
   content: string;
 };

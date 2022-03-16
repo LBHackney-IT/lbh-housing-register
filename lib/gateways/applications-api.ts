@@ -1,12 +1,8 @@
-import axios, { AxiosResponse, AxiosStatic } from 'axios';
-
-import {
-  activityAxios,
-  authenticatedHousingAxios,
-  housingAxios,
-} from '../utils/axiosClients';
+import axios, { AxiosResponse } from 'axios';
+import { IncomingMessage } from 'http';
 import { ActivityHistoryPagedResult } from '../../domain/ActivityHistoryApi';
 import {
+  AddNoteToHistoryRequest,
   Application,
   CreateAuthRequest,
   CreateAuthResponse,
@@ -15,11 +11,14 @@ import {
   PaginatedApplicationListResponse,
   VerifyAuthRequest,
   VerifyAuthResponse,
-  AddNoteToHistoryRequest,
 } from '../../domain/HousingApi';
 import { Stat } from '../../domain/stat';
 import asssertServerOnly from '../utils/assertServerOnly';
-import { NextApiRequest } from 'next';
+import {
+  activityAxios,
+  authenticatedHousingAxios,
+  housingAxios,
+} from '../utils/axiosClients';
 
 asssertServerOnly();
 
@@ -104,7 +103,7 @@ export const addApplication = async (
 export const updateApplication = async (
   application: any,
   id: string,
-  req: NextApiRequest
+  req: IncomingMessage
 ): Promise<Application | null> => {
   const url = `applications/${id}`;
   const { data } = await authenticatedHousingAxios(req).patch(url, application);
@@ -113,7 +112,7 @@ export const updateApplication = async (
 
 export const completeApplication = async (
   id: string,
-  req: NextApiRequest
+  req: IncomingMessage
 ): Promise<Application | null> => {
   const url = `applications/${id}/complete`;
   const { data } = await authenticatedHousingAxios(req).patch(url, null);
@@ -176,7 +175,7 @@ export const generateNovaletExport = async (): Promise<AxiosResponse> => {
 };
 
 export const downloadInternalReport = async (
-  req: NextApiRequest
+  req: IncomingMessage
 ): Promise<AxiosResponse | null> => {
   const { reportType, startDate, endDate } = req.query;
   const url = `reporting/export?reportType=${reportType}&startDate=${startDate}&endDate=${endDate}`;
@@ -196,7 +195,7 @@ export const approveNovaletExport = async (
 
 export const getApplicationHistory = async (
   id: string,
-  req: NextApiRequest
+  req: IncomingMessage
 ): Promise<ActivityHistoryPagedResult | null> => {
   const url = `activityhistory?targetId=${id}&pageSize=100`;
   try {
@@ -215,7 +214,7 @@ export const getApplicationHistory = async (
 export const addNoteToHistory = async (
   id: string,
   note: AddNoteToHistoryRequest,
-  req: NextApiRequest
+  req: IncomingMessage
 ): Promise<Array<AddNoteToHistoryRequest> | null> => {
   const url = `applications/${id}/note`;
   const { data } = await authenticatedHousingAxios(req).post(url, note);

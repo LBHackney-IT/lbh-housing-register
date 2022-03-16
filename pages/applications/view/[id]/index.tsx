@@ -1,13 +1,27 @@
 import { GetServerSideProps } from 'next';
-import React, { useState, SyntheticEvent } from 'react';
+import React, { SyntheticEvent, useState } from 'react';
+import Actions from '../../../../components/admin/actions';
+import ApplicationHistory from '../../../../components/admin/ApplicationHistory';
+import AssignUser from '../../../../components/admin/assign-user';
+import CaseDetailsItem from '../../../../components/admin/CaseDetailsItem';
+import {
+  HorizontalNav,
+  HorizontalNavItem,
+} from '../../../../components/admin/HorizontalNav';
 import OtherMembers from '../../../../components/admin/other-members';
+import OverviewAnnouncements from '../../../../components/admin/OverviewAnnouncements';
 import PersonalDetails from '../../../../components/admin/personal-details';
+import SensitiveData from '../../../../components/admin/sensitive-data';
+import Snapshot from '../../../../components/admin/snapshot';
+import Announcement from '../../../../components/announcement';
+import { ButtonLink } from '../../../../components/button';
 import {
   HeadingOne,
   HeadingThree,
 } from '../../../../components/content/headings';
-import { ButtonLink } from '../../../../components/button';
+import Paragraph from '../../../../components/content/paragraph';
 import Layout from '../../../../components/layout/staff-layout';
+import { ActivityHistoryPagedResult } from '../../../../domain/ActivityHistoryApi';
 import { Application } from '../../../../domain/HousingApi';
 import { UserContext } from '../../../../lib/contexts/user-context';
 import {
@@ -15,32 +29,18 @@ import {
   getApplicationHistory,
 } from '../../../../lib/gateways/applications-api';
 import {
+  ApplicationStatus,
+  lookupStatus,
+} from '../../../../lib/types/application-status';
+import { formatDate } from '../../../../lib/utils/dateOfBirth';
+import {
   canViewSensitiveApplication,
   getRedirect,
   getSession,
   HackneyGoogleUserWithPermissions,
 } from '../../../../lib/utils/googleAuth';
-import Custom404 from '../../../404';
-import Snapshot from '../../../../components/admin/snapshot';
-import Actions from '../../../../components/admin/actions';
-import AssignUser from '../../../../components/admin/assign-user';
-import SensitiveData from '../../../../components/admin/sensitive-data';
-import Paragraph from '../../../../components/content/paragraph';
-import { formatDate } from '../../../../lib/utils/dateOfBirth';
 import { getPersonName } from '../../../../lib/utils/person';
-import {
-  ApplicationStatus,
-  lookupStatus,
-} from '../../../../lib/types/application-status';
-import CaseDetailsItem from '../../../../components/admin/CaseDetailsItem';
-import {
-  HorizontalNav,
-  HorizontalNavItem,
-} from '../../../../components/admin/HorizontalNav';
-import ApplicationHistory from '../../../../components/admin/ApplicationHistory';
-import { ActivityHistoryPagedResult } from '../../../../domain/ActivityHistoryApi';
-import OverviewAnnouncements from '../../../../components/admin/OverviewAnnouncements';
-import Announcement from '../../../../components/announcement';
+import Custom404 from '../../../404';
 
 export interface PageProps {
   user: HackneyGoogleUserWithPermissions;

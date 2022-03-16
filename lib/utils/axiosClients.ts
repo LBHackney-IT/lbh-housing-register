@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import cookie from 'cookie';
-import { NextApiRequest } from 'next';
+import { IncomingMessage } from 'http';
 import asssertServerOnly from './assertServerOnly';
 
 asssertServerOnly();
@@ -16,7 +16,7 @@ export function housingAxios() {
 }
 
 export function authenticatedHousingAxios(
-  httpRequest: NextApiRequest
+  httpRequest: IncomingMessage
 ): AxiosInstance {
   const client = housingAxios();
 
@@ -28,7 +28,7 @@ export function authenticatedHousingAxios(
   return client;
 }
 
-export function activityAxios(httpRequest: NextApiRequest): AxiosInstance {
+export function activityAxios(httpRequest: IncomingMessage): AxiosInstance {
   const client = axios.create({
     baseURL: process.env.ACTIVITY_HISTORY_API,
     headers: {

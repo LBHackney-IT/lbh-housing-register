@@ -1,5 +1,5 @@
 import { AddressLookupResult } from '../../domain/addressLookup';
-import { Application } from '../../domain/HousingApi';
+import { AddNoteToHistoryRequest, Application } from '../../domain/HousingApi';
 
 export const lookUpAddress = async (postCode: string) => {
   const res = await fetch(`/api/address/${postCode}`, {
@@ -42,11 +42,13 @@ export const approveNovaletExport = async (fileName: string) => {
   return res;
 };
 
-// TODO wrong type.
-export const addNoteToHistory = async (applicationId: string, request: any) => {
+export const addNoteToHistory = async (
+  applicationId: string,
+  request: AddNoteToHistoryRequest
+) => {
   const res = await fetch(`/api/applications/${applicationId}/note`, {
     method: 'POST',
-    body: request,
+    body: JSON.stringify(request),
   });
   return await res.json();
 };

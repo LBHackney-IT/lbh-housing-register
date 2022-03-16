@@ -72,11 +72,7 @@ export default function ApplicationHistory({
     : null;
 
   const onSubmit = (values: FormikValues) => {
-    const request = {
-      Note: values.note,
-    };
-
-    addNoteToHistory(id, JSON.stringify(request)).then(() => {
+    addNoteToHistory(id, { Note: values.note }).then(() => {
       setIsSubmitted(true);
       router.reload();
     });

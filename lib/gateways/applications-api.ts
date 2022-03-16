@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { IncomingMessage } from 'http';
+import { NextApiRequest } from 'next';
 import { ActivityHistoryPagedResult } from '../../domain/ActivityHistoryApi';
 import {
   AddNoteToHistoryRequest,
@@ -175,7 +176,7 @@ export const generateNovaletExport = async (): Promise<AxiosResponse> => {
 };
 
 export const downloadInternalReport = async (
-  req: IncomingMessage
+  req: NextApiRequest
 ): Promise<AxiosResponse | null> => {
   const { reportType, startDate, endDate } = req.query;
   const url = `reporting/export?reportType=${reportType}&startDate=${startDate}&endDate=${endDate}`;

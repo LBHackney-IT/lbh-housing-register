@@ -18,7 +18,6 @@ import {
   SummaryListValue,
 } from '../summary-list';
 import { HeadingThree, HeadingFour } from '../content/headings';
-// import { addNoteToHistory } from '../../lib/gateways/applications-api';
 import { addNoteToHistory } from '../../lib/gateways/internal-api';
 import Textarea from '../form/textarea';
 import Button from '../button';

@@ -13,7 +13,6 @@ import { UserContext } from '../../../../lib/contexts/user-context';
 import {
   getApplication,
   getApplicationHistory,
-  addNoteToHistory,
 } from '../../../../lib/gateways/applications-api';
 import {
   canViewSensitiveApplication,

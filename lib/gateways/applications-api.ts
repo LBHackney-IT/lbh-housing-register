@@ -11,7 +11,7 @@ import {
   PaginatedApplicationListResponse,
   VerifyAuthRequest,
   VerifyAuthResponse,
-  AddNoteToHistory,
+  AddNoteToHistoryRequest,
 } from '../../domain/HousingApi';
 import { Stat } from '../../domain/stat';
 import asssertServerOnly from '../utils/assertServerOnly';
@@ -204,8 +204,8 @@ export const getApplicationHistory = async (
 
 export const addNoteToHistory = async (
   id: string,
-  request: AddNoteToHistory
-): Promise<Array<AddNoteToHistory> | null> => {
+  request: AddNoteToHistoryRequest
+): Promise<Array<AddNoteToHistoryRequest> | null> => {
   const url = `applications/${id}/note`;
   const { data } = await housingAxios(null).post(url, request);
   return data;

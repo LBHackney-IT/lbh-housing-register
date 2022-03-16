@@ -15,6 +15,7 @@ import {
 } from '../../domain/HousingApi';
 import { Stat } from '../../domain/stat';
 import asssertServerOnly from '../utils/assertServerOnly';
+import { NextApiRequest } from 'next';
 
 asssertServerOnly();
 
@@ -204,9 +205,10 @@ export const getApplicationHistory = async (
 
 export const addNoteToHistory = async (
   id: string,
-  request: AddNoteToHistoryRequest
+  note: AddNoteToHistoryRequest,
+  req: NextApiRequest
 ): Promise<Array<AddNoteToHistoryRequest> | null> => {
   const url = `applications/${id}/note`;
-  const { data } = await housingAxios(null).post(url, request);
+  const { data } = await housingAxios(req).post(url, note);
   return data;
 };

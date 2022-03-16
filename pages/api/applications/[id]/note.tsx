@@ -14,7 +14,7 @@ const endpoint: NextApiHandler = async (
         const id = req.query.id as string;
 
         if (canUpdateApplication(req, id)) {
-          const data = await addNoteToHistory(id, request);
+          const data = await addNoteToHistory(id, request, req);
           res.status(StatusCodes.OK).json(data);
         } else {
           res

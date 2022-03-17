@@ -4,7 +4,7 @@ import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import ApplicationTable from '../../components/admin/application-table';
 import SearchBox from '../../components/admin/search-box';
 import Sidebar from '../../components/admin/sidebar';
-import Button, { ButtonLink } from '../../components/button';
+import Button from '../../components/button';
 import Details from '../../components/details';
 import { HeadingOne } from '../../components/content/headings';
 import Layout from '../../components/layout/staff-layout';

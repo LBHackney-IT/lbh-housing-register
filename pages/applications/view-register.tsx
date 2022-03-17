@@ -94,7 +94,10 @@ export default function ViewAllApplicationsPage({
                 aria-labelledby="radio-group"
               >
                 {Object.entries(ApplicationStatus).map(([key, value]) => (
-                  <div className="govuk-radios__item" key={key}>
+                  <div
+                    className="govuk-radios__item govuk-radios__item--fixed-width"
+                    key={key}
+                  >
                     <input
                       className="govuk-radios__input"
                       value={value}

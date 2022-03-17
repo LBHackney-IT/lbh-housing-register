@@ -1,4 +1,9 @@
-import { Form as FormikForm, Formik, FormikValues } from 'formik';
+import {
+  Form as FormikForm,
+  Formik,
+  FormikHelpers,
+  FormikValues,
+} from 'formik';
 import { useMemo, useState } from 'react';
 import { FormData, MultiStepForm } from '../../lib/types/form';
 import { getDisplayStateOfField } from '../../lib/utils/form';
@@ -50,14 +55,29 @@ export default function Form({
     setStepNumber(Math.max(stepNumber - 1, 0));
   };
 
-  const handleSubmit = async (values: FormData, bag: any) => {
+  const handleSubmit = async (
+    values: FormData,
+    bag: FormikHelpers<FormData>
+  ) => {
+    const filteredVisibleValues: FormData = Object.fromEntries(
+      formData.steps
+        .flatMap((step) =>
+          step.fields.map((field) =>
+            getDisplayStateOfField(field, values)
+              ? [field.name, values[field.name]]
+              : null
+          )
+        )
+        .filter((val): val is FormData[string] => val !== null)
+    );
+
     // TODO Do we really need two handlers for onSave and onSubmit?
     if (onSave) {
-      onSave(values);
+      onSave(filteredVisibleValues);
     }
 
     if (isLastStep && onSubmit) {
-      onSubmit(values, bag);
+      onSubmit(filteredVisibleValues, bag);
     } else {
       bag.setTouched({});
       next();
@@ -77,12 +97,12 @@ export default function Form({
           <FormikForm>
             {step.heading && <HeadingTwo content={step.heading} />}
             {step.copy && <Paragraph>{step.copy}</Paragraph>}
-            {step.fields.map((field, index) => {
-              const display: boolean = getDisplayStateOfField(field, values);
-              if (display) {
-                return <DynamicField key={index} field={field} />;
-              }
-            })}
+            {step.fields.map(
+              (field, index) =>
+                getDisplayStateOfField(field, values) && (
+                  <DynamicField key={index} field={field} />
+                )
+            )}
 
             <div className="c-flex lbh-simple-pagination">
               {stepNumber > 0 && (

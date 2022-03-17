@@ -49,34 +49,6 @@ const Footer = ({ referenceNumber }: FooterProps) => {
             </a>
             .
           </Paragraph>
-
-          <HeadingThree content="Confidentiality and data protection" />
-
-          <Paragraph>
-            We can only use the information given on the form to help us decide
-            about your application for housing. This information will be place
-            on our systems so we can assess your priority and housing needs. We
-            will ensure confidentiality is maintained throughout and your data
-            protected.
-          </Paragraph>
-
-          <Paragraph>
-            We have a duty to protect public funds. In order to detect and
-            prevent fraud we may disclose your data to any person or
-            organisation administering public funds such as central government
-            departments or other council teams such as housing benifits.
-          </Paragraph>
-
-          <Paragraph>
-            It is a criminal offence to give false or misleading information or
-            to hold back relevant information concerning your application
-          </Paragraph>
-
-          <Paragraph>
-            You have the right to ask the council for a copy of your data and
-            for a description of how it is being used and to whom it is being
-            disclosed.
-          </Paragraph>
         </div>
       </footer>
     </>

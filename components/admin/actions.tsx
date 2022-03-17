@@ -11,7 +11,7 @@ import InsetText from '../content/inset-text';
 import { updateApplication } from '../../lib/gateways/internal-api';
 import { ApplicationStatus } from '../../lib/types/application-status';
 import { checkEligible } from '../../lib/utils/form';
-import { disqualificationReasonOptions } from '../../lib/utils/disqualificationReasonOptions';
+import { getDisqualificationReasonOption } from '../../lib/utils/disqualificationReasonOptions';
 import Paragraph from '../content/paragraph';
 import List, { ListItem } from '../content/list';
 
@@ -356,11 +356,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
           <List>
             {disqualificationReasons.map((reason, index) => (
               <ListItem key={index}>
-                {
-                  disqualificationReasonOptions[
-                    reason as keyof typeof disqualificationReasonOptions
-                  ]
-                }
+                {getDisqualificationReasonOption(reason)}
               </ListItem>
             ))}
           </List>

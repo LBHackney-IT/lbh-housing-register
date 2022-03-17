@@ -23,7 +23,7 @@ import { isOver18 } from '../../../lib/utils/dateOfBirth';
 import { FormID } from '../../../lib/utils/form-data';
 import withApplication from '../../../lib/hoc/withApplication';
 import { removeApplicant } from '../../../lib/store/otherMembers';
-import { disqualificationReasonOptions } from '../../../lib/utils/disqualificationReasonOptions';
+import { getDisqualificationReasonOption } from '../../../lib/utils/disqualificationReasonOptions';
 import { useDispatch } from 'react-redux';
 import {
   disqualifyApplication,
@@ -51,11 +51,8 @@ const UserSummary = (): JSX.Element => {
   const onConfirmData = () => {
     const [isEligible, reasons] = checkEligible(application);
     if (!isEligible) {
-      const reasonStrings = reasons.map(
-        (reason) =>
-          disqualificationReasonOptions[
-            reason as keyof typeof disqualificationReasonOptions
-          ]
+      const reasonStrings = reasons.map((reason) =>
+        getDisqualificationReasonOption(reason)
       );
       const reason = reasonStrings.join(',');
       dispatch(sendDisqualifyEmail({ application, reason }));

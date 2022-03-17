@@ -1,4 +1,4 @@
-export const disqualificationReasonOptions = {
+const disqualificationReasonOptions = {
   inUkToStudy: 'You are in the UK to study',
   inUkOnVisa: 'You are in the UK on a work or study visa',
   notGrantedSettledStatus:
@@ -31,3 +31,14 @@ export const disqualificationReasonOptions = {
     'Based on our calculations, you are not lacking two or more rooms',
   under18YearsOld: 'You are under 18 years old',
 };
+
+export type DisqualificationReason = keyof typeof disqualificationReasonOptions;
+
+export function getDisqualificationReasonOption(
+  reason: DisqualificationReason
+): string {
+  if (!disqualificationReasonOptions[reason]) {
+    console.error('Unkown disqualification reason: ' + reason);
+  }
+  return disqualificationReasonOptions[reason];
+}

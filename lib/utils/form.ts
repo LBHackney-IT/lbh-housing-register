@@ -4,7 +4,7 @@ import { FormData, FormField } from '../types/form';
 import { FormID, getEligibilityCriteria } from './form-data';
 import { isOver18 } from '../../lib/utils/dateOfBirth';
 import { applicantsWithMedicalNeed } from '../../lib/utils/medicalNeed';
-import { disqualificationReasonOptions } from './disqualificationReasonOptions';
+import { DisqualificationReason } from './disqualificationReasonOptions';
 
 /**
  * Determines if the field should be displayed based on the values passed in
@@ -33,14 +33,11 @@ export function getDisplayStateOfField(
   return display;
 }
 
-/**
- * Is the form data for the application eligible?
- * @param application The application
- * @returns {[boolean, string[]]} - A tuple of state (isValid) and error message
- */
-export function checkEligible(application: Application): [boolean, string[]] {
+export function checkEligible(
+  application: Application
+): [boolean, DisqualificationReason[]] {
   let isValid = true;
-  let reasons: string[] = [];
+  const reasons: DisqualificationReason[] = [];
   const applicants = [application.mainApplicant, application.otherMembers]
     .filter((v): v is Applicant | Applicant[] => v !== undefined)
     .flat();
@@ -51,12 +48,13 @@ export function checkEligible(application: Application): [boolean, string[]] {
   const numberOfApplicantsWithMedicalNeeds =
     applicantsWithMedicalNeed(application);
 
-  const setInvalid = (reasoning?: string): void => {
-    isValid = false;
+  if (numberOfApplicantsWithMedicalNeeds > 0) {
+    return [true, []];
+  }
 
-    if (reasoning) {
-      reasons.push(reasoning);
-    }
+  const setInvalid = (reasoning: DisqualificationReason) => {
+    isValid = false;
+    reasons.push(reasoning);
   };
 
   const requestedNumberOfBedrooms = getQuestionValue(
@@ -65,24 +63,20 @@ export function checkEligible(application: Application): [boolean, string[]] {
     'home-how-many-bedrooms'
   );
 
-  if (
-    bedroomNeed <= requestedNumberOfBedrooms &&
-    numberOfApplicantsWithMedicalNeeds === 0
-  ) {
-    setInvalid(disqualificationReasonOptions.notLackingRooms);
+  if (bedroomNeed <= requestedNumberOfBedrooms) {
+    setInvalid('notLackingRooms');
   }
-  //******** *//
 
   if (!isOver18(mainApplicant)) {
-    setInvalid(disqualificationReasonOptions.under18YearsOld);
+    setInvalid('under18YearsOld');
   }
 
-  for (const [form, values] of Object.entries(FormID)) {
-    const eligibilityCriteria = getEligibilityCriteria(values);
+  for (const formID of Object.values(FormID)) {
+    const eligibilityCriteria = getEligibilityCriteria(formID);
     eligibilityCriteria?.forEach((criteria) => {
       const fieldValue = getQuestionValue(
         mainApplicant.questions,
-        values,
+        formID,
         criteria.field
       );
 

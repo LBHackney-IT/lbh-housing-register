@@ -5,7 +5,7 @@
         {
           "as": "checkbox",
           "initialValue": false,
-          "label": "I agree",
+          "label": "I understand and accept",
           "name": "declaration",
           "validation": {
             "required": true

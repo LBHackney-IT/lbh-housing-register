@@ -18,7 +18,6 @@ import {
   SummaryListValue,
 } from '../summary-list';
 import { HeadingThree, HeadingFour } from '../content/headings';
-// import { addNoteToHistory } from '../../lib/gateways/applications-api';
 import { addNoteToHistory } from '../../lib/gateways/internal-api';
 import Textarea from '../form/textarea';
 import Button from '../button';
@@ -73,11 +72,7 @@ export default function ApplicationHistory({
     : null;
 
   const onSubmit = (values: FormikValues) => {
-    const request = {
-      Note: values.note,
-    };
-
-    addNoteToHistory(id, JSON.stringify(request)).then(() => {
+    addNoteToHistory(id, { Note: values.note }).then(() => {
       setIsSubmitted(true);
       router.reload();
     });

@@ -474,6 +474,6 @@ export interface SimpleTypeResponse<T> {
   value: T;
 }
 
-export interface AddNoteToHistory {
+export interface AddNoteToHistoryRequest {
   Note: string;
 }

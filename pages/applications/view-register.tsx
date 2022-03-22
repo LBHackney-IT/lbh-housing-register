@@ -1,14 +1,11 @@
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import React, { SyntheticEvent, useState } from 'react';
+import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import ApplicationTable from '../../components/admin/application-table';
-import {
-  HorizontalNav,
-  HorizontalNavItem,
-} from '../../components/admin/HorizontalNav';
 import SearchBox from '../../components/admin/search-box';
 import Sidebar from '../../components/admin/sidebar';
 import Button from '../../components/button';
+import Details from '../../components/details';
 import { HeadingOne } from '../../components/content/headings';
 import Layout from '../../components/layout/staff-layout';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
@@ -18,7 +15,10 @@ import {
   getApplications,
   getApplicationsByStatus,
 } from '../../lib/gateways/applications-api';
-import { ApplicationStatus } from '../../lib/types/application-status';
+import {
+  ApplicationStatus,
+  lookupStatus,
+} from '../../lib/types/application-status';
 import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 
 interface PageProps {
@@ -31,21 +31,31 @@ export default function ViewAllApplicationsPage({
   applications,
 }: PageProps): JSX.Element {
   const router = useRouter();
+  const activeItem = (router.query.status ?? '') as ApplicationStatus | '';
+  const [selectedFilter, setSelectedFilter] = useState('');
 
-  const handleClick = async (event: SyntheticEvent) => {
-    event.preventDefault();
-    const { name } = event.target as HTMLButtonElement;
-
+  useEffect(() => {
     router.push({
       pathname: '/applications/view-register',
-      query: { status: name },
+      query: { status: selectedFilter },
     });
-  };
+  }, [selectedFilter]);
 
   const addCase = async () => {
     router.push({
       pathname: '/applications/add-case',
     });
+  };
+
+  const handleFilterChange = (event: ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    const { value } = event.target;
+    setSelectedFilter(value);
+  };
+
+  const handleRemoveFilters = async (event: MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    setSelectedFilter('');
   };
 
   const setPaginationToken = (paginationToken: string | null) => {
@@ -54,8 +64,6 @@ export default function ViewAllApplicationsPage({
       query: { ...router.query, paginationToken },
     });
   };
-
-  const activeItem = (router.query.status ?? '') as ApplicationStatus | '';
 
   return (
     <UserContext.Provider value={{ user }}>
@@ -72,25 +80,52 @@ export default function ViewAllApplicationsPage({
           </div>
           <div className="govuk-grid-column-three-quarters">
             <HeadingOne content="Housing Register" />
+
             <Button secondary={true} onClick={() => addCase()}>
               + Add new case
             </Button>
-            <HorizontalNav>
-              <HorizontalNavItem
-                handleClick={handleClick}
-                itemName=""
-                isActive={activeItem === ''}
+
+            <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
+
+            <Details summary="Filter by status">
+              <div
+                className="govuk-radios govuk-radios--inline govuk-radios--small lbh-radios"
+                role="group"
+                aria-labelledby="radio-group"
               >
-                All applications
-              </HorizontalNavItem>
-              <HorizontalNavItem
-                handleClick={handleClick}
-                itemName={ApplicationStatus.MANUAL_DRAFT}
-                isActive={activeItem === ApplicationStatus.MANUAL_DRAFT}
+                {Object.entries(ApplicationStatus).map(([key, value]) => (
+                  <div
+                    className="govuk-radios__item govuk-radios__item--fixed-width"
+                    key={key}
+                  >
+                    <input
+                      className="govuk-radios__input"
+                      value={value}
+                      id={value}
+                      name="filters"
+                      type="radio"
+                      checked={selectedFilter === value}
+                      onChange={handleFilterChange}
+                    />
+                    <label
+                      className="govuk-radios__label lbh-!-margin-top-0"
+                      htmlFor={value}
+                    >
+                      {lookupStatus(value)}
+                    </label>
+                  </div>
+                ))}
+              </div>
+              <button
+                onClick={handleRemoveFilters}
+                className="lbh-link lbh-link--no-visited-state lbh-!-margin-top-1"
               >
-                Manually added
-              </HorizontalNavItem>
-            </HorizontalNav>
+                Clear all filters
+              </button>
+            </Details>
+
+            <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
+
             <ApplicationTable
               caption="Applications"
               applications={applications}

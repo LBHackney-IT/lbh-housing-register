@@ -66,8 +66,7 @@ export default function AssignUser({
           <li>
             <strong>Assigned to</strong>
           </li>
-          {(user.hasAdminPermissions || user.hasManagerPermissions) &&
-          !showControls ? (
+          {!showControls ? (
             <>
               {assignee !== APPLICATION_UNNASIGNED ? (
                 <li>
@@ -120,7 +119,10 @@ export default function AssignUser({
             Cancel
           </button>
         </>
-      ) : (
+      ) : // For now, allow all user groups to reassign cases
+      user.hasAdminPermissions ||
+        user.hasManagerPermissions ||
+        user.hasOfficerPermissions ? (
         <>
           <button
             onClick={() => handleClickAssignToAnother(true)}
@@ -164,7 +166,7 @@ export default function AssignUser({
             </>
           ) : null}
         </>
-      )}
+      ) : null}
     </div>
   );
 }

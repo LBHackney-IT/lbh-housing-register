@@ -62,3 +62,7 @@ export const isOver18 = (applicant: Applicant): boolean => {
 export const isOver16 = (applicant: Applicant): boolean => {
   return applicantEqualToOrOlderThanAge(applicant, 16);
 };
+
+export const isOver55 = (applicant: Applicant): boolean => {
+  return applicantEqualToOrOlderThanAge(applicant, 55);
+};

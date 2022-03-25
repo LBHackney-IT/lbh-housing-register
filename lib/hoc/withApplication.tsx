@@ -14,6 +14,10 @@ export default function withApplication<P>(
       if (status === ApplicationStatus.DISQUALIFIED) {
         router.push('/apply/not-eligible');
       }
+
+      if (status === ApplicationStatus.SUBMITTED) {
+        router.push('/apply/confirmation');
+      }
     }, [status]);
 
     useEffect(() => {

@@ -18,6 +18,7 @@ import { HeadingOne } from '../../../components/content/headings';
 import Paragraph from '../../../components/content/paragraph';
 import { getDisqualificationReasonOption } from '../../../lib/utils/disqualificationReasonOptions';
 import Custom404 from '../../404';
+import Link from 'next/link';
 
 const Declaration = (): JSX.Element => {
   const router = useRouter();
@@ -98,6 +99,14 @@ const Declaration = (): JSX.Element => {
         formData={getFormData(FormID.DECLARATION)}
         onSave={submitApplication}
       />
+
+      <div className="c-flex__1 text-right">
+        <Link href="/apply/overview">
+          <a className="lbh-body lbh-link lbh-link--no-visited-state ">
+            Return to application overview
+          </a>
+        </Link>
+      </div>
     </Layout>
   );
 };

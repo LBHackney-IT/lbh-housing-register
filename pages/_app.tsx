@@ -13,6 +13,7 @@ function App({ Component, pageProps }: AppProps): ReactElement {
 
   const dispatch = useAppDispatch();
   useEffect(() => {
+    // TODO don't run this on the admin side of the app.
     dispatch(loadApplication()).then(() => setLoaded(true));
   }, []);
 

@@ -1,6 +1,7 @@
 import { SetStateAction } from 'react';
 import { FormikValues } from 'formik';
 import { FormID } from '../utils/form-data';
+import { DisqualificationReason } from '../utils/disqualificationReasonOptions';
 
 // @Deprecated
 export type FormData = FormikValues;
@@ -9,7 +10,7 @@ export type EligibilityCriteria = {
   field: string;
   is?: string;
   isNot?: string;
-  reasoning?: string;
+  reasoning: DisqualificationReason;
 };
 
 export interface BaseFormField {
@@ -69,6 +70,11 @@ export interface RadioConditionalFormField extends BaseFormField {
   options: ConditionalFormFieldOption[];
 }
 
+export interface CheckboxesConditionalFormField extends BaseFormField {
+  as: 'checkboxesconditional';
+  options: ConditionalFormFieldOption[];
+}
+
 export type FormField =
   | TextFormField
   | TextareaFormField
@@ -79,7 +85,8 @@ export type FormField =
   | DateFormField
   | ParagraphFormField
   | AnnouncementTextFormField
-  | RadioConditionalFormField;
+  | RadioConditionalFormField
+  | CheckboxesConditionalFormField;
 
 export type FormFieldDisplayCriteria = {
   field: string;

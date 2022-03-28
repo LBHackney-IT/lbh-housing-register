@@ -1,6 +1,8 @@
 // I generated this using a rather clunky process of going here: https://app.swaggerhub.com/apis/tcmorris/housingRegisterAPI/1.0.0 and using the Typescript-fetch generator (export menu)
 // then grabbing the bits that felt relevant.
 
+export const APPLICATION_UNNASIGNED = 'unassigned';
+
 /**
  *
  * @export
@@ -204,6 +206,13 @@ export interface Application {
    * @memberof Application
    */
   calculatedBedroomNeed?: number;
+
+  /**
+   *
+   * @type {boolean}
+   * @memberof Application
+   */
+  importedFromLegacyDatabase?: boolean;
 }
 
 /**
@@ -392,6 +401,9 @@ export namespace Person {
     Mr = 'Mr',
     Miss = 'Miss',
     Mx = 'Mx',
+    // Allowable only in legacy imported records.
+    Dr = 'Dr',
+    Ms = 'Ms',
   }
 }
 
@@ -423,47 +435,16 @@ export interface Question {
 export interface PaginatedApplicationListResponse {
   /**
    *
-   * @type {number}
+   * @type {Array<Application>}
    * @memberof PaginatedApplicationListResponse
    */
-  totalItems: number;
-  /**
-   *
-   * @type {number}
-   * @memberof PaginatedApplicationListResponse
-   */
-  page: number;
-  /**
-   *
-   * @type {number}
-   * @memberof PaginatedApplicationListResponse
-   */
-  numberOfItemsPerPage: number;
-  /**
-   *
-   * @type {number}
-   * @memberof PaginatedApplicationListResponse
-   */
-  totalNumberOfPages: number;
-  /**
-   *
-   * @type {number}
-   * @memberof PaginatedApplicationListResponse
-   */
-  pageStartOffSet: number;
-  /**
-   *
-   * @type {number}
-   * @memberof PaginatedApplicationListResponse
-   */
-  pageEndOffSet: number;
-
+  results: Array<Application>;
   /**
    *
    * @type {Array<Application>}
    * @memberof PaginatedApplicationListResponse
    */
-  results: Array<Application>;
+  paginationToken: string | null;
 }
 
 export interface CreateAuthRequest {
@@ -491,4 +472,8 @@ export interface EvidenceRequestResponse {
 }
 export interface SimpleTypeResponse<T> {
   value: T;
+}
+
+export interface AddNoteToHistoryRequest {
+  Note: string;
 }

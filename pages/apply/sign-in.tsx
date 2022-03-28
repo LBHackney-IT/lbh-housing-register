@@ -42,9 +42,9 @@ const ApplicationSignInPage = (): JSX.Element => {
   return (
     <Layout pageName="Sign in">
       {userError && <ErrorSummary>{userError}</ErrorSummary>}
-      <HeadingOne content="Start now" />
+      <HeadingOne content="Your email" />
       <Paragraph>
-        We’ll email you a verification code to continue your application
+        We’ll send you a verification code to continue your application
       </Paragraph>
       <Form
         formData={getFormData(FormID.SIGN_IN)}

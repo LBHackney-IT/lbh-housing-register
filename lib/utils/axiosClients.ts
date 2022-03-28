@@ -1,58 +1,44 @@
 import axios, { AxiosInstance } from 'axios';
 import cookie from 'cookie';
+import { IncomingMessage } from 'http';
+import asssertServerOnly from './assertServerOnly';
 
-const housingRegisterAxios = axios.create({
-  baseURL: process.env.HOUSING_REGISTER_API,
-  headers: {
-    'x-api-key': process.env.HOUSING_REGISTER_KEY,
-    'Content-Type': 'application/json',
-  },
-});
+asssertServerOnly();
 
-const activityHistoryAxios = axios.create({
-  baseURL: process.env.ACTIVITY_HISTORY_API,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-housingRegisterAxios.interceptors.response.use(
-  function (response) {
-    return response;
-  },
-  function (error) {
-    console.log(error);
-  }
-);
-
-activityHistoryAxios.interceptors.response.use(
-  function (response) {
-    return response;
-  },
-  function (error) {
-    console.log(error);
-  }
-);
-
-export function housingAxios(httpRequest: any): AxiosInstance {
-  if (httpRequest) {
-    const cookies = cookie.parse(httpRequest.headers.cookie ?? '');
-    const parsedToken = cookies['hackneyToken'];
-
-    housingRegisterAxios.defaults.headers.common['Authorization'] =
-      'Bearer ' + parsedToken;
-  }
-  return housingRegisterAxios;
+export function housingAxios() {
+  return axios.create({
+    baseURL: process.env.HOUSING_REGISTER_API,
+    headers: {
+      'x-api-key': process.env.HOUSING_REGISTER_KEY,
+      'Content-Type': 'application/json',
+    },
+  });
 }
 
-export function activityAxios(httpRequest: any): AxiosInstance {
-  if (httpRequest) {
-    const cookies = cookie.parse(httpRequest.headers.cookie ?? '');
-    const parsedToken = cookies['hackneyToken'];
+export function authenticatedHousingAxios(
+  httpRequest: IncomingMessage
+): AxiosInstance {
+  const client = housingAxios();
 
-    activityHistoryAxios.defaults.headers.common['Authorization'] =
-      'Bearer ' + parsedToken;
-  }
+  const cookies = cookie.parse(httpRequest.headers.cookie ?? '');
+  const parsedToken = cookies['hackneyToken'];
 
-  return activityHistoryAxios;
+  client.defaults.headers.common['Authorization'] = 'Bearer ' + parsedToken;
+
+  return client;
+}
+
+export function activityAxios(httpRequest: IncomingMessage): AxiosInstance {
+  const client = axios.create({
+    baseURL: process.env.ACTIVITY_HISTORY_API,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const cookies = cookie.parse(httpRequest.headers.cookie ?? '');
+  const parsedToken = cookies['hackneyToken'];
+  client.defaults.headers.common['Authorization'] = 'Bearer ' + parsedToken;
+
+  return client;
 }

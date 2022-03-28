@@ -1,68 +1,67 @@
 import { GetServerSideProps } from 'next';
-import React, { SyntheticEvent, useState } from 'react';
-import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
-import { getRedirect, getSession } from '../../lib/utils/googleAuth';
-import { UserContext } from '../../lib/contexts/user-context';
-import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
-import {
-  searchApplications,
-  getApplications,
-} from '../../lib/gateways/applications-api';
-import Layout from '../../components/layout/staff-layout';
+import { useRouter } from 'next/router';
+import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
+import ApplicationTable from '../../components/admin/application-table';
 import SearchBox from '../../components/admin/search-box';
 import Sidebar from '../../components/admin/sidebar';
-import ApplicationTable from '../../components/admin/application-table';
-import { HeadingOne } from '../../components/content/headings';
-import {
-  HorizontalNav,
-  HorizontalNavItem,
-} from '../../components/admin/HorizontalNav';
-import { useRouter } from 'next/router';
-import { ApplicationStatus } from '../../lib/types/application-status';
 import Button from '../../components/button';
+import Details from '../../components/details';
+import { HeadingOne } from '../../components/content/headings';
+import Layout from '../../components/layout/staff-layout';
+import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
+import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
+import { UserContext } from '../../lib/contexts/user-context';
+import {
+  getApplications,
+  getApplicationsByStatus,
+} from '../../lib/gateways/applications-api';
+import {
+  ApplicationStatus,
+  lookupStatus,
+} from '../../lib/types/application-status';
+import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 
 interface PageProps {
-  user: HackneyGoogleUser;
+  user?: HackneyGoogleUser;
   applications: PaginatedApplicationListResponse | null;
-  pageUrl: string;
-  page: string;
-  reference: string;
 }
 
 export default function ViewAllApplicationsPage({
   user,
   applications,
-  pageUrl,
-  page = '1',
-  reference = '',
 }: PageProps): JSX.Element {
   const router = useRouter();
-  const parameters = new URLSearchParams();
+  const activeItem = (router.query.status ?? '') as ApplicationStatus | '';
+  const [selectedFilter, setSelectedFilter] = useState('');
 
-  if (reference !== '') {
-    parameters.append('reference', reference);
-  }
-
-  const parsedPage = parseInt(page);
-
-  const [activeNavItem, setActiveNavItem] = useState('');
-
-  const handleClick = async (event: SyntheticEvent) => {
-    event.preventDefault();
-
-    const { name } = event.target as HTMLButtonElement;
-
+  useEffect(() => {
     router.push({
       pathname: '/applications/view-register',
-      query: { status: name },
+      query: { status: selectedFilter },
     });
-
-    setActiveNavItem(name);
-  };
+  }, [selectedFilter]);
 
   const addCase = async () => {
     router.push({
       pathname: '/applications/add-case',
+    });
+  };
+
+  const handleFilterChange = (event: ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    const { value } = event.target;
+    setSelectedFilter(value);
+  };
+
+  const handleRemoveFilters = async (event: MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    setSelectedFilter('');
+  };
+
+  const setPaginationToken = (paginationToken: string | null) => {
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, paginationToken },
     });
   };
 
@@ -81,32 +80,61 @@ export default function ViewAllApplicationsPage({
           </div>
           <div className="govuk-grid-column-three-quarters">
             <HeadingOne content="Housing Register" />
+
             <Button secondary={true} onClick={() => addCase()}>
               + Add new case
             </Button>
-            <HorizontalNav>
-              <HorizontalNavItem
-                handleClick={handleClick}
-                itemName=""
-                isActive={activeNavItem === ''}
+
+            <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
+
+            <Details summary="Filter by status">
+              <div
+                className="govuk-radios govuk-radios--inline govuk-radios--small lbh-radios"
+                role="group"
+                aria-labelledby="radio-group"
               >
-                All applications
-              </HorizontalNavItem>
-              <HorizontalNavItem
-                handleClick={handleClick}
-                itemName={ApplicationStatus.MANUAL_DRAFT}
-                isActive={activeNavItem === ApplicationStatus.MANUAL_DRAFT}
+                {Object.entries(ApplicationStatus).map(([key, value]) => (
+                  <div
+                    className="govuk-radios__item govuk-radios__item--fixed-width"
+                    key={key}
+                  >
+                    <input
+                      className="govuk-radios__input"
+                      value={value}
+                      id={value}
+                      name="filters"
+                      type="radio"
+                      checked={selectedFilter === value}
+                      onChange={handleFilterChange}
+                    />
+                    <label
+                      className="govuk-radios__label lbh-!-margin-top-0"
+                      htmlFor={value}
+                    >
+                      {lookupStatus(value)}
+                    </label>
+                  </div>
+                ))}
+              </div>
+              <button
+                onClick={handleRemoveFilters}
+                className="lbh-link lbh-link--no-visited-state lbh-!-margin-top-1"
               >
-                Manually added
-              </HorizontalNavItem>
-            </HorizontalNav>
+                Clear all filters
+              </button>
+            </Details>
+
+            <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
+
             <ApplicationTable
               caption="Applications"
               applications={applications}
-              currentPage={parsedPage}
-              parameters={parameters}
-              pageUrl={pageUrl}
+              initialPaginationToken={
+                router.query.paginationToken as string | undefined
+              }
+              setPaginationToken={setPaginationToken}
               showStatus={true}
+              key={activeItem} // force remounting for a new initialPaginationToken
             />
           </div>
         </div>
@@ -115,38 +143,31 @@ export default function ViewAllApplicationsPage({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps<PageProps> = async (
+  context
+) => {
   const user = getSession(context.req);
   const redirect = getRedirect(user);
   if (redirect) {
     return {
-      props: {},
       redirect: {
+        permanent: false,
         destination: redirect,
       },
     };
   }
 
-  const {
-    page = '1',
-    reference = '',
-    orderby = '',
-    status = '',
-  } = context.query as {
-    page: string;
-    reference: string;
-    orderby: string;
+  const { status = '', paginationToken } = context.query as {
     status: string;
+    paginationToken: string;
   };
 
-  const pageUrl = `${process.env.APP_URL}/applications/view-register`;
-
   const applications =
-    reference === '' && status === ''
-      ? await getApplications(page)
-      : await searchApplications(page, reference, status);
+    status === ''
+      ? await getApplications(paginationToken)
+      : await getApplicationsByStatus(status, paginationToken);
 
   return {
-    props: { user, applications, pageUrl, page, reference },
+    props: { user, applications },
   };
 };

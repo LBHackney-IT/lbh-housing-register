@@ -8,8 +8,9 @@ export default function List({ children }: ListProps): JSX.Element {
 
 interface ListItemProps {
   children: any;
+  bold?: boolean;
 }
 
-export function ListItem({ children }: ListItemProps): JSX.Element {
-  return <li>{children}</li>;
+export function ListItem({ children, bold }: ListItemProps): JSX.Element {
+  return <li className={bold ? 'lbh-!-font-weight-bold' : ''}>{children}</li>;
 }

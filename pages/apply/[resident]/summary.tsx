@@ -23,6 +23,7 @@ import { isOver18 } from '../../../lib/utils/dateOfBirth';
 import { FormID } from '../../../lib/utils/form-data';
 import withApplication from '../../../lib/hoc/withApplication';
 import { removeApplicant } from '../../../lib/store/otherMembers';
+import { getDisqualificationReasonOption } from '../../../lib/utils/disqualificationReasonOptions';
 import { useDispatch } from 'react-redux';
 import {
   disqualifyApplication,
@@ -38,11 +39,11 @@ const UserSummary = (): JSX.Element => {
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
   const isMainApplicant = currentResident == mainResident;
 
+  const application = useAppSelector((store) => store.application);
+
   if (!currentResident || !mainResident) {
     return <Custom404 />;
   }
-
-  const application = useAppSelector((store) => store.application);
 
   const baseHref = `/apply/${currentResident.person?.id}`;
   const returnHref = '/apply/overview';
@@ -50,7 +51,10 @@ const UserSummary = (): JSX.Element => {
   const onConfirmData = () => {
     const [isEligible, reasons] = checkEligible(application);
     if (!isEligible) {
-      const reason = reasons.join(',');
+      const reasonStrings = reasons.map((reason) =>
+        getDisqualificationReasonOption(reason)
+      );
+      const reason = reasonStrings.join(',');
       dispatch(sendDisqualifyEmail({ application, reason }));
       dispatch(disqualifyApplication(application.id!));
       router.push('/apply/not-eligible');

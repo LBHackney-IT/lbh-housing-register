@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { updateApplication } from '../../lib/gateways/internal-api';
 import Paragraph from '../content/paragraph';
 import { HackneyGoogleUserWithPermissions } from '../../lib/utils/googleAuth';
+import { HeadingFour } from '../content/headings';
 
 interface sensitiveDataPageProps {
   id: string;
@@ -29,25 +30,19 @@ export default function SensitiveData({
 
   return (
     <>
-      {(user.hasAdminPermissions || user.hasManagerPermissions) && sensitive && (
-        <Button
-          onClick={() => updateSensitiveDataStatus(false)}
-          secondary={true}
-        >
-          Mark as not sensitive
-        </Button>
-      )}
-      {(user.hasAdminPermissions || user.hasManagerPermissions) && !sensitive && (
-        <Button
-          onClick={() => updateSensitiveDataStatus(true)}
-          secondary={true}
-        >
-          Mark as sensitive
-        </Button>
-      )}
-
+      <HeadingFour content="Sensitive data" />
       {sensitive && (
-        <Paragraph>This application has been marked as sensitive.</Paragraph>
+        <p className="lbh-body-m lbh-!-margin-top-1">
+          This application has been marked as sensitive.
+        </p>
+      )}
+      {(user.hasAdminPermissions || user.hasManagerPermissions) && (
+        <button
+          onClick={() => updateSensitiveDataStatus(!sensitive)}
+          className="govuk-button lbh-button lbh-button--secondary lbh-!-margin-top-1"
+        >
+          Mark as {sensitive ? 'not' : ''} sensitive
+        </button>
       )}
     </>
   );

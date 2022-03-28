@@ -4,7 +4,7 @@
     {
       "field": "court-order",
       "is": "no",
-      "reasoning": "You are squatting and you have not been granted a court order allowing you to join the housing register"
+      "reasoning": "squatting"
     }
   ],
   "steps": [

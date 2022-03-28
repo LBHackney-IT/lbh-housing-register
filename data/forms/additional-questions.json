@@ -1,36 +1,141 @@
 {
+  "heading": "Before you submit",
   "id": "additional-questions",
   "steps": [
     {
       "fields": [
         {
-          "as": "checkboxes",
-          "label": "Do any of the following apply to your household?",
-          "hint": "Select all options that apply",
-          "name": "household-info",
+          "as": "checkboxesconditional",
+          "label": "Someone in this application is currently homeless",
+          "hideLabel": true,
+          "name": "currently-homeless",
           "options": [
             {
-              "label": "Someone in this application is an employee, or is related to an employee of Hackney Council",
-              "value": "employee-hackney-council"
-            },
-            {
-              "label": "Someone in this application is an elected member, or is related to an elected member of Hackney Council",
-              "value": "elected-member-hackney-council"
-            },
-            {
-              "label": "Someone in this application is at risk of domestic violence",
-              "value": "at-risk-of-domestic-violence"
-            },
-            {
-              "label": "Someone in this application is a nominee under the National Witness Mobility Scheme",
-              "value": "nominee-national-witness-mobility-scheme"
+              "label": "Someone in this application is currently homeless",
+              "value": "yes",
+              "conditionalFieldInput": {
+                "as": "textarea",
+                "containerId": "currently-homeless-details-container",
+                "fieldId": "currentlyHomelessDetails",
+                "fieldName": "currently-homeless-details",
+                "label": "Please provide details"
+              }
             }
           ]
         },
         {
-          "as": "textarea",
-          "label": "Please provide details if applicable",
-          "name": "household-details"
+          "as": "checkboxesconditional",
+          "label": "Someone in this application is at risk of homelessness",
+          "hideLabel": true,
+          "name": "risk-of-homelessness",
+          "options": [
+            {
+              "label": "Someone in this application is at risk of homelessness",
+              "value": "yes",
+              "conditionalFieldInput": {
+                "as": "textarea",
+                "containerId": "risk-of-homelessness-details-container",
+                "fieldId": "riskOfHomelessnessDetails",
+                "fieldName": "risk-of-homelessness-details",
+                "label": "Please provide details"
+              }
+            }
+          ]
+        },
+        {
+          "as": "checkboxesconditional",
+          "label": "Someone in this application is at risk of domestic violence",
+          "hideLabel": true,
+          "name": "risk-of-domestic-violence",
+          "options": [
+            {
+              "label": "Someone in this application is at risk of domestic violence",
+              "value": "yes",
+              "conditionalFieldInput": {
+                "as": "textarea",
+                "containerId": "risk-of-domestic-violence-details-container",
+                "fieldId": "riskOfDomesticViolenceDetails",
+                "fieldName": "risk-of-domestic-violence-details",
+                "label": "Please provide details"
+              }
+            }
+          ]
+        },
+        {
+          "as": "checkboxesconditional",
+          "label": "Someone in this application is at risk of gang violence",
+          "hideLabel": true,
+          "name": "risk-of-gang-violence",
+          "options": [
+            {
+              "label": "Someone in this application is at risk of gang violence",
+              "value": "yes",
+              "conditionalFieldInput": {
+                "as": "textarea",
+                "containerId": "risk-of-gang-violence-details-container",
+                "fieldId": "riskOfGangViolenceDetails",
+                "fieldName": "risk-of-gang-violence-details",
+                "label": "Please provide details"
+              }
+            }
+          ]
+        },
+        {
+          "as": "checkboxesconditional",
+          "label": "Someone in this application is a nominee under the National Witness Mobility Scheme",
+          "hideLabel": true,
+          "name": "witness-mobility-scheme",
+          "options": [
+            {
+              "label": "Someone in this application is a nominee under the National Witness Mobility Scheme",
+              "value": "yes",
+              "conditionalFieldInput": {
+                "as": "textarea",
+                "containerId": "witness-mobility-scheme-details-container",
+                "fieldId": "witnessMobilitySchemeDetails",
+                "fieldName": "witness-mobility-scheme-details",
+                "label": "Please provide details"
+              }
+            }
+          ]
+        },
+        {
+          "as": "checkboxesconditional",
+          "label": "Someone in this application is an employee, or is related to an employee of Hackney Council",
+          "hideLabel": true,
+          "name": "employee-hackney-council",
+          "options": [
+            {
+              "label": "Someone in this application is an employee, or is related to an employee of Hackney Council",
+              "value": "yes",
+              "conditionalFieldInput": {
+                "as": "textarea",
+                "containerId": "employee-hackney-council-details-container",
+                "fieldId": "employeeHackneyCouncilDetails",
+                "fieldName": "employee-hackney-council-details",
+                "label": "Please provide details"
+              }
+            }
+          ]
+        },
+        {
+          "as": "checkboxesconditional",
+          "label": "Someone in this application is an elected member, or is related to an elected member of Hackney Council",
+          "hideLabel": true,
+          "name": "elected-member-hackney-council",
+          "options": [
+            {
+              "label": "Someone in this application is an elected member, or is related to an elected member of Hackney Council",
+              "value": "yes",
+              "conditionalFieldInput": {
+                "as": "textarea",
+                "containerId": "elected-member-hackney-council-details-container",
+                "fieldId": "electedMemberHackneyCouncilDetails",
+                "fieldName": "elected-member-hackney-council-details",
+                "label": "Please provide details"
+              }
+            }
+          ]
         }
       ]
     }

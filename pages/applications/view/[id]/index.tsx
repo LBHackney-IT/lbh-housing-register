@@ -1,13 +1,27 @@
 import { GetServerSideProps } from 'next';
-import React, { useState, SyntheticEvent } from 'react';
+import React, { SyntheticEvent, useState } from 'react';
+import Actions from '../../../../components/admin/actions';
+import ApplicationHistory from '../../../../components/admin/ApplicationHistory';
+import AssignUser from '../../../../components/admin/assign-user';
+import CaseDetailsItem from '../../../../components/admin/CaseDetailsItem';
+import {
+  HorizontalNav,
+  HorizontalNavItem,
+} from '../../../../components/admin/HorizontalNav';
 import OtherMembers from '../../../../components/admin/other-members';
+import OverviewAnnouncements from '../../../../components/admin/OverviewAnnouncements';
 import PersonalDetails from '../../../../components/admin/personal-details';
+import SensitiveData from '../../../../components/admin/sensitive-data';
+import Snapshot from '../../../../components/admin/snapshot';
+import Announcement from '../../../../components/announcement';
+import { ButtonLink } from '../../../../components/button';
 import {
   HeadingOne,
   HeadingThree,
 } from '../../../../components/content/headings';
-import { ButtonLink } from '../../../../components/button';
+import Paragraph from '../../../../components/content/paragraph';
 import Layout from '../../../../components/layout/staff-layout';
+import { ActivityHistoryPagedResult } from '../../../../domain/ActivityHistoryApi';
 import { Application } from '../../../../domain/HousingApi';
 import { UserContext } from '../../../../lib/contexts/user-context';
 import {
@@ -15,31 +29,18 @@ import {
   getApplicationHistory,
 } from '../../../../lib/gateways/applications-api';
 import {
+  ApplicationStatus,
+  lookupStatus,
+} from '../../../../lib/types/application-status';
+import { formatDate } from '../../../../lib/utils/dateOfBirth';
+import {
   canViewSensitiveApplication,
   getRedirect,
   getSession,
   HackneyGoogleUserWithPermissions,
 } from '../../../../lib/utils/googleAuth';
-import Custom404 from '../../../404';
-import Snapshot from '../../../../components/admin/snapshot';
-import Actions from '../../../../components/admin/actions';
-import AssignUser from '../../../../components/admin/assign-user';
-import SensitiveData from '../../../../components/admin/sensitive-data';
-import Paragraph from '../../../../components/content/paragraph';
-import { formatDate } from '../../../../lib/utils/dateOfBirth';
 import { getPersonName } from '../../../../lib/utils/person';
-import {
-  ApplicationStatus,
-  lookupStatus,
-} from '../../../../lib/types/application-status';
-import CaseDetailsItem from '../../../../components/admin/CaseDetailsItem';
-import {
-  HorizontalNav,
-  HorizontalNavItem,
-} from '../../../../components/admin/HorizontalNav';
-import ApplicationHistory from '../../../../components/admin/application-history';
-import { ActivityHistoryPagedResult } from '../../../../domain/ActivityHistoryApi';
-import Announcement from '../../../../components/announcement';
+import Custom404 from '../../../404';
 
 export interface PageProps {
   user: HackneyGoogleUserWithPermissions;
@@ -55,6 +56,13 @@ export default function ApplicationPage({
   if (!data.id) return <Custom404 />;
 
   console.log(data);
+
+  // Can edit application if:
+  // - it has a status of manual draft
+  // - it has a status of incomplete and current user is assigned to it
+  const canEditApplication =
+    data.status === ApplicationStatus.MANUAL_DRAFT ||
+    (data.status === 'New' && data.assignedTo === user.email);
 
   const [activeNavItem, setActiveNavItem] = useState('overview');
 
@@ -75,6 +83,18 @@ export default function ApplicationPage({
           </>
         ) : (
           <>
+            {data.importedFromLegacyDatabase ? (
+              <Announcement variant="info">
+                <h3 className="lbh-page-announcement__title">
+                  Legacy application
+                </h3>
+                <div className="lbh-page-announcement__content">
+                  This application was imported from a legacy system. Only
+                  limited information is available for legacy applications.
+                </div>
+              </Announcement>
+            ) : null}
+
             <HeadingOne content="View application" />
             <h2 className="lbh-caption-xl lbh-caption govuk-!-margin-top-1">
               {getPersonName(data)}
@@ -93,7 +113,7 @@ export default function ApplicationPage({
                 itemName="history"
                 isActive={activeNavItem === 'history'}
               >
-                Notes and History
+                Notes and history
               </HorizontalNavItem>
               {data.status !== ApplicationStatus.DRAFT &&
               data.status !== ApplicationStatus.MANUAL_DRAFT ? (
@@ -121,11 +141,11 @@ export default function ApplicationPage({
                         <div className="lbh-page-announcement__content">
                           {data.review.reason ? (
                             <Paragraph>
-                              {data.review.reason
-                              // This household’s bedroom need has been flagged for
-                              // review due to a significant birthday.
+                              {data.review.reason}
+                              // This household’s bedroom need has been flagged
+                              for // review due to a significant birthday.
                             </Paragraph>
-                          ): null}
+                          ) : null}
                           <h4>Changes to review:</h4>
                           <ul>
                             {data.review.changes.map((change) => (
@@ -141,12 +161,17 @@ export default function ApplicationPage({
                   <div className="govuk-grid-column-two-thirds">
                     <HeadingThree content="Snapshot" />
                     <Snapshot data={data} />
+
+                    {data.mainApplicant && (
+                      <OverviewAnnouncements applicant={data.mainApplicant} />
+                    )}
+
                     {data.mainApplicant && (
                       <PersonalDetails
                         heading="Main applicant"
                         applicant={data.mainApplicant}
                         applicationId={data.id}
-                        canEdit={data.status === ApplicationStatus.MANUAL_DRAFT}
+                        canEdit={canEditApplication}
                       />
                     )}
                     {data.otherMembers && data.otherMembers.length > 0 ? (
@@ -154,12 +179,12 @@ export default function ApplicationPage({
                         heading="Other household members"
                         others={data.otherMembers}
                         applicationId={data.id}
-                        canEdit={data.status === ApplicationStatus.MANUAL_DRAFT}
+                        canEdit={canEditApplication}
                       />
                     ) : (
                       <HeadingThree content="Other household members" />
                     )}
-                    {data.status === ApplicationStatus.MANUAL_DRAFT && (
+                    {canEditApplication && (
                       <ButtonLink
                         additionalCssClasses="govuk-secondary lbh-button--secondary"
                         href={`/applications/edit/${data.id}/add-household-member`}
@@ -232,7 +257,11 @@ export default function ApplicationPage({
             )}
 
             {activeNavItem === 'history' && (
-              <ApplicationHistory history={history} />
+              <ApplicationHistory
+                setActiveNavItem={setActiveNavItem}
+                history={history}
+                id={data.id}
+              />
             )}
 
             {activeNavItem === 'assessment' && <Actions data={data} />}

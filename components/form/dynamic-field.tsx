@@ -9,6 +9,9 @@ import Radios, { RadiosProps } from './radios';
 import Select from './select';
 import Textarea from './textarea';
 import RadioConditional, { RadioConditionalProps } from './radioconditional';
+import CheckboxesConditional, {
+  CheckboxesConditionalProps,
+} from './CheckboxesConditional';
 
 interface DynamicFieldProps {
   field: FormField;
@@ -44,6 +47,11 @@ export default function DynamicField({
 
     case 'radioconditional':
       return <RadioConditional {...(field as RadioConditionalProps)} />;
+
+    case 'checkboxesconditional':
+      return (
+        <CheckboxesConditional {...(field as CheckboxesConditionalProps)} />
+      );
 
     case undefined:
       return <Input {...field} />;

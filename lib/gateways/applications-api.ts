@@ -1,7 +1,9 @@
-import { AxiosResponse } from 'axios';
-import { activityAxios, housingAxios } from '../utils/axiosClients';
+import axios, { AxiosResponse } from 'axios';
+import { IncomingMessage } from 'http';
+import { NextApiRequest } from 'next';
 import { ActivityHistoryPagedResult } from '../../domain/ActivityHistoryApi';
 import {
+  AddNoteToHistoryRequest,
   Application,
   CreateAuthRequest,
   CreateAuthResponse,
@@ -12,82 +14,120 @@ import {
   VerifyAuthResponse,
 } from '../../domain/HousingApi';
 import { Stat } from '../../domain/stat';
+import asssertServerOnly from '../utils/assertServerOnly';
+import {
+  activityAxios,
+  authenticatedHousingAxios,
+  housingAxios,
+} from '../utils/axiosClients';
+
+asssertServerOnly();
+
+const emptyActivityHistoryPagedResult: ActivityHistoryPagedResult =
+  Object.freeze({
+    results: [],
+    paginationDetails: {
+      hasNext: false,
+      nextToken: '',
+    },
+  });
 
 export const getApplications = async (
-  page: string | number,
-  user?: string | 'unassigned'
+  paginationToken?: string
 ): Promise<PaginatedApplicationListResponse | null> => {
-  try {
-    const assignedTo = user ?? '';
-    const url = `applications?page=${page}&assignedTo=${assignedTo}`;
-    const { data } = await housingAxios(null).get(url);
-    return data;
-  } catch (err) {
-    return null;
-  }
+  return (
+    await housingAxios().get('applications', {
+      params: { paginationToken },
+    })
+  ).data;
 };
 
-export const searchApplications = async (
-  page: string,
-  reference: string,
+export const getApplicationsByStatus = async (
   status: string,
-  user?: string | 'unassigned'
+  paginationToken?: string
 ): Promise<PaginatedApplicationListResponse | null> => {
-  try {
-    const assignedTo = user ?? '';
-    const url = `applications?page=${page}&reference=${reference}&status=${status}&assignedTo=${assignedTo}`;
-    const { data } = await housingAxios(null).get(url);
-    return data;
-  } catch (err) {
-    return null;
-  }
+  return (
+    await housingAxios().get('applications/ListApplicationsByStatus', {
+      params: { status, paginationToken },
+    })
+  ).data;
 };
+
+export const getApplicationsByStatusAndAssignedTo = async (
+  status: string,
+  assignedTo: string,
+  paginationToken?: string
+): Promise<PaginatedApplicationListResponse | null> => {
+  return (
+    await housingAxios().get('applications/ListApplicationsByAssignedTo', {
+      params: {
+        status,
+        assignedTo,
+        paginationToken,
+      },
+    })
+  ).data;
+};
+
+export const getApplicationsByReference = async (
+  reference: string,
+  paginationToken?: string
+): Promise<PaginatedApplicationListResponse | null> => {
+  return (
+    await housingAxios().get('applications/ListApplicationsByReference', {
+      params: {
+        reference,
+        paginationToken,
+      },
+    })
+  ).data;
+};
+
+// View and modify applications
 
 export const getApplication = async (
   id: string
 ): Promise<Application | null> => {
-  try {
-    const url = `applications/${id}`;
-    const { data } = await housingAxios(null).get(url);
-    return data;
-  } catch (err) {
-    return null;
-  }
+  const url = `applications/${id}`;
+  const { data } = await housingAxios().get(url);
+  return data;
 };
 
 export const addApplication = async (
   application: any
 ): Promise<Application | null> => {
   const url = `applications`;
-  const { data } = await housingAxios(null).post(url, application);
+  const { data } = await housingAxios().post(url, application);
   return data;
 };
 
 export const updateApplication = async (
   application: any,
   id: string,
-  req: any
+  req: IncomingMessage
 ): Promise<Application | null> => {
   const url = `applications/${id}`;
-  const { data } = await housingAxios(req).patch(url, application);
+  const { data } = await authenticatedHousingAxios(req).patch(url, application);
   return data;
 };
 
 export const completeApplication = async (
   id: string,
-  req: any
+  req: IncomingMessage
 ): Promise<Application | null> => {
   const url = `applications/${id}/complete`;
-  const { data } = await housingAxios(req).patch(url, null);
+  const { data } = await authenticatedHousingAxios(req).patch(url, null);
   return data;
 };
+
+// Evidence requests
 
 export const createEvidenceRequest = async (
   id: string,
   request: CreateEvidenceRequest
 ): Promise<Array<EvidenceRequestResponse> | null> => {
   const url = `applications/${id}/evidence`;
-  const { data } = await housingAxios(null).post(url, request);
+  const { data } = await housingAxios().post(url, request);
   return data;
 };
 
@@ -95,7 +135,7 @@ export const createVerifyCode = async (
   request: CreateAuthRequest
 ): Promise<CreateAuthResponse | null> => {
   const url = 'auth/generate';
-  const { data } = await housingAxios(null).post(url, request);
+  const { data } = await housingAxios().post(url, request);
   return data;
 };
 
@@ -103,67 +143,81 @@ export const confirmVerifyCode = async (
   request: VerifyAuthRequest
 ): Promise<VerifyAuthResponse | null> => {
   const url = 'auth/verify';
-  const { data } = await housingAxios(null).post(url, request);
+  const { data } = await housingAxios().post(url, request);
   return data;
 };
 
 export const getStats = async (): Promise<Array<Stat> | null> => {
-  try {
-    const url = 'stats';
-    const { data } = await housingAxios(null).get(url);
-    return data;
-  } catch (err) {
-    return null;
-  }
+  const url = 'stats';
+  const { data } = await housingAxios().get(url);
+  return data;
 };
 
-export const listNovaletExports = async (): Promise<string[]> => {
-  try {
-    const url = 'reporting/listnovaletfiles';
-    const { data } = await housingAxios(null).get(url);
-    return data;
-  } catch (err) {
-    return [];
-  }
+// Novalet export
+
+export const listNovaletExports = async (): Promise<any> => {
+  const url = 'reporting/listnovaletfiles';
+  const { data } = await housingAxios().get(url);
+  return data;
 };
 
 export const downloadNovaletExport = async (
   filename: string
 ): Promise<AxiosResponse | null> => {
-  try {
-    const url = `reporting/novaletexport/${filename}`;
-    return await housingAxios(null).get(url, { responseType: 'blob' });
-  } catch (err) {
-    return null;
-  }
+  const url = `reporting/novaletexport/${filename}`;
+  return await housingAxios().get(url, {
+    responseType: 'blob',
+  });
 };
 
 export const generateNovaletExport = async (): Promise<AxiosResponse> => {
   const url = `reporting/generatenovaletexport`;
-  return await housingAxios(null).post(url, null);
+  return await housingAxios().post(url, null);
 };
 
 export const downloadInternalReport = async (
-  req: any
+  req: NextApiRequest
 ): Promise<AxiosResponse | null> => {
-  try {
-    const { reportType, startDate, endDate } = req.query;
-    const url = `reporting/export?reportType=${reportType}&startDate=${startDate}&endDate=${endDate}`;
-    return await housingAxios(req).get(url, { responseType: 'blob' });
-  } catch (err) {
-    return null;
-  }
+  const { reportType, startDate, endDate } = req.query;
+  const url = `reporting/export?reportType=${reportType}&startDate=${startDate}&endDate=${endDate}`;
+  return await authenticatedHousingAxios(req).get(url, {
+    responseType: 'blob',
+  });
 };
+
+export const approveNovaletExport = async (
+  filename: string
+): Promise<AxiosResponse | null> => {
+  const url = `reporting/approvenovaletexport/${filename}`;
+  return await housingAxios().post(url, { filename });
+};
+
+// Application history
 
 export const getApplicationHistory = async (
   id: string,
-  req: any
+  req: IncomingMessage
 ): Promise<ActivityHistoryPagedResult | null> => {
+  const url = `activityhistory?targetId=${id}&pageSize=100`;
   try {
-    const url = `activityhistory?targetId=${id}&pageSize=100`;
     const { data } = await activityAxios(req).get(url);
     return data;
-  } catch (err) {
-    return null;
+  } catch (ex) {
+    // TODO API shoudln't make us do this
+    // Note: I think this is now fixed. A re-test would confirm and then we can drop this block.
+    if (axios.isAxiosError(ex) && ex.response?.status === 404) {
+      return emptyActivityHistoryPagedResult;
+    }
+    throw ex;
   }
+};
+
+export const addNoteToHistory = async (
+  id: string,
+  note: AddNoteToHistoryRequest,
+  req: IncomingMessage
+): Promise<Array<AddNoteToHistoryRequest> | null> => {
+  const url = `applications/${id}/note`;
+  const { data } = await authenticatedHousingAxios(req).post(url, note);
+  return data;
 };

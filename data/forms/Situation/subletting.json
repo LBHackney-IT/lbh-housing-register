@@ -4,7 +4,7 @@
     {
       "field": "subletting",
       "is": "yes",
-      "reasoning": "You have sublet your accommodation without permission"
+      "reasoning": "haveSubletAccomodation"
     }
   ],
   "steps": [

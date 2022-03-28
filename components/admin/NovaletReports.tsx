@@ -45,13 +45,10 @@ export default function NovaletReports({
   const [, ...previousReports] = newestToOldestReports;
 
   const syncToNovalet = async () => {
-    console.log('syncToNovalet');
     approveNovaletExport(mostRecentReport.fileName);
   };
 
   const handleGenerateNovaletExport = async () => {
-    console.log('handleGenerateNovaletExport');
-
     setIsGenerating(true);
     generateNovaletExport();
   };

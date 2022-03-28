@@ -37,7 +37,10 @@ export const confirmVerifyCode = createAsyncThunk(
 );
 
 export const exit = createAsyncThunk('auth/exit', async () => {
-  return await fetch(`/api/auth/exit`);
+  const res = await fetch(`/api/auth/exit`, {
+    method: 'POST',
+  });
+  return (await res.json()) as VerifyAuthResponse;
 });
 
 const slice = createSlice({

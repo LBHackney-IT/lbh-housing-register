@@ -112,6 +112,18 @@ export default function NovaletReports({
             onCancel={() => setConfirmDialogOpen(false)}
             onCancelText="Cancel"
           >
+            <p className="lbh-body lbh-!-margin-top-1">
+              Ensure you have reviewed{' '}
+              <a
+                className="lbh-link"
+                href={`/api/reports/novalet/download/${encodeURIComponent(
+                  mostRecentReport.fileName
+                )}`}
+              >
+                {mostRecentReport.fileName}
+              </a>{' '}
+              before sending.
+            </p>
             <Button onClick={() => syncToNovalet()}>Sync to Novalet</Button>
           </Dialog>
         </>

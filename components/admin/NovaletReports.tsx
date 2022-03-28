@@ -1,10 +1,15 @@
 import { useState, MouseEvent } from 'react';
 import Button, { ButtonLink } from '../button';
-import { generateNovaletExport } from '../../lib/gateways/internal-api';
+import {
+  generateNovaletExport,
+  approveNovaletExport,
+} from '../../lib/gateways/internal-api';
 import { Report } from './../../pages/applications/reports';
 import Paragraph from '../content/paragraph';
 import Announcement from '../announcement';
 import AnnouncementText from '../form/announcement-text';
+import { HeadingTwo } from '../content/headings';
+import Dialog from '../dialog';
 
 interface NovaletReportsProps {
   reports: Report[];
@@ -27,75 +32,101 @@ const generatedDateTimeString = (ISODate: string) => {
 export default function NovaletReports({
   reports,
 }: NovaletReportsProps): JSX.Element {
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const handleGenerateNovaletExport = async (
-    event: MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault();
+  const newestToOldestReports = reports.sort((a, b) => {
+    if (a.lastModified < b.lastModified) return 1;
+    if (a.lastModified > b.lastModified) return -1;
+    return 0;
+  });
+
+  const mostRecentReport = newestToOldestReports[0];
+  const [, ...previousReports] = newestToOldestReports;
+
+  const syncToNovalet = async () => {
+    console.log('syncToNovalet');
+    approveNovaletExport(mostRecentReport.fileName);
+  };
+
+  const handleGenerateNovaletExport = async () => {
+    console.log('handleGenerateNovaletExport');
+
     setIsGenerating(true);
     generateNovaletExport();
   };
 
-  return reports.length > 0 ? (
+  return (
     <>
-      <table className="govuk-table lbh-table">
-        <thead className="govuk-table__head">
-          <tr className="govuk-table__row">
-            <th scope="col" className="govuk-table__header">
-              Report
-            </th>
-            <th scope="col" className="govuk-table__header">
-              Download
-            </th>
-            <th scope="col" className="govuk-table__header">
-              Sync
-            </th>
-          </tr>
-        </thead>
+      {reports.length > 0 ? (
+        <>
+          <HeadingTwo content="Most recent report" />
+          <table className="govuk-table lbh-table">
+            <thead className="govuk-table__head">
+              <tr className="govuk-table__row">
+                <th scope="col" className="govuk-table__header">
+                  Report
+                </th>
+                <th scope="col" className="govuk-table__header">
+                  Download
+                </th>
+                <th scope="col" className="govuk-table__header">
+                  Sync
+                </th>
+              </tr>
+            </thead>
 
-        <tbody className="govuk-table__body">
-          {reports.map((report: Report) => (
-            <tr key={report.fileName} className="govuk-table__row">
-              <td className="govuk-table__cell">
-                <p className="lbh-body lbh-!-font-weight-bold">
-                  {report.fileName}
-                </p>
-                <p className="lbh-!-margin-top-0">
-                  {generatedDateTimeString(report.lastModified)}
-                </p>
-              </td>
-              <td className="govuk-table__cell">
-                <ButtonLink
-                  additionalCssClasses="lbh-!-margin-top-0 lbh-!-no-wrap"
-                  secondary={true}
-                  href={`/api/reports/novalet/download/${encodeURIComponent(
-                    report.fileName
-                  )}`}
-                >
-                  Download CSV
-                </ButtonLink>
-              </td>
-              <td className="govuk-table__cell">
-                <ButtonLink
-                  additionalCssClasses="lbh-!-margin-top-0 lbh-!-no-wrap"
-                  href={`/api/reports/novalet/approve/${encodeURIComponent(
-                    report.fileName
-                  )}`}
-                >
-                  Sync to Novalet
-                </ButtonLink>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+            <tbody className="govuk-table__body">
+              <tr key={mostRecentReport.fileName} className="govuk-table__row">
+                <td className="govuk-table__cell">
+                  <p className="lbh-body lbh-!-font-weight-bold">
+                    {mostRecentReport.fileName}
+                  </p>
+                  <p className="lbh-!-margin-top-0">
+                    {generatedDateTimeString(mostRecentReport.lastModified)}
+                  </p>
+                </td>
+                <td className="govuk-table__cell">
+                  <ButtonLink
+                    additionalCssClasses="lbh-!-margin-top-0 lbh-!-no-wrap"
+                    secondary={true}
+                    href={`/api/reports/novalet/download/${encodeURIComponent(
+                      mostRecentReport.fileName
+                    )}`}
+                  >
+                    Download CSV
+                  </ButtonLink>
+                </td>
+                <td className="govuk-table__cell">
+                  <Button
+                    className="lbh-!-margin-top-0"
+                    onClick={() => setConfirmDialogOpen(true)}
+                  >
+                    Approve
+                  </Button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <Dialog
+            isOpen={confirmDialogOpen}
+            title="Clicking the button below will sync the most recent report to novalet"
+            onCancel={() => setConfirmDialogOpen(false)}
+            onCancelText="Cancel"
+          >
+            <Button onClick={() => syncToNovalet()}>Sync to Novalet</Button>
+          </Dialog>
+        </>
+      ) : (
+        <HeadingTwo content="No reports to show" />
+      )}
 
       <Button
         disabled={isGenerating}
-        onClick={() => handleGenerateNovaletExport}
+        onClick={() => handleGenerateNovaletExport()}
       >
-        Generate file
+        Generate a new report
       </Button>
       {isGenerating ? (
         <Announcement variant="success">
@@ -105,8 +136,50 @@ export default function NovaletReports({
           </Paragraph>
         </Announcement>
       ) : null}
+
+      {reports.length > 1 ? (
+        <>
+          <HeadingTwo content="Previous reports" />
+          <table className="govuk-table lbh-table">
+            <thead className="govuk-table__head">
+              <tr className="govuk-table__row">
+                <th scope="col" className="govuk-table__header">
+                  Report
+                </th>
+                <th scope="col" className="govuk-table__header">
+                  Download
+                </th>
+              </tr>
+            </thead>
+
+            <tbody className="govuk-table__body">
+              {previousReports.map((report: Report) => (
+                <tr key={report.fileName} className="govuk-table__row">
+                  <td className="govuk-table__cell">
+                    <p className="lbh-body lbh-!-font-weight-bold">
+                      {report.fileName}
+                    </p>
+                    <p className="lbh-!-margin-top-0">
+                      {generatedDateTimeString(report.lastModified)}
+                    </p>
+                  </td>
+                  <td className="govuk-table__cell">
+                    <ButtonLink
+                      additionalCssClasses="lbh-!-margin-top-0 lbh-!-no-wrap"
+                      secondary={true}
+                      href={`/api/reports/novalet/download/${encodeURIComponent(
+                        report.fileName
+                      )}`}
+                    >
+                      Download CSV
+                    </ButtonLink>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      ) : null}
     </>
-  ) : (
-    <div></div>
   );
 }

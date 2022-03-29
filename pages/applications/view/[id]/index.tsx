@@ -55,7 +55,7 @@ export default function ApplicationPage({
 }: PageProps): JSX.Element | null {
   if (!data.id) return <Custom404 />;
 
-  console.log(data);
+  // console.log(data);
 
   // Can edit application if:
   // - it has a status of manual draft

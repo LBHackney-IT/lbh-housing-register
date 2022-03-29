@@ -68,14 +68,21 @@ export default function ApplicationListPage({
                 itemName="Submitted"
                 isActive={activeNavItem === 'Submitted'}
               >
-                New Applications
+                New applications
+              </HorizontalNavItem>
+              <HorizontalNavItem
+                handleClick={handleClick}
+                itemName="AwaitingReassessment"
+                isActive={activeNavItem === 'AwaitingReassessment'}
+              >
+                Reviews
               </HorizontalNavItem>
               <HorizontalNavItem
                 handleClick={handleClick}
                 itemName="Pending"
                 isActive={activeNavItem === 'Pending'}
               >
-                Pending application
+                Pending
               </HorizontalNavItem>
             </HorizontalNav>
             <ApplicationTable

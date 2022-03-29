@@ -34,7 +34,7 @@ export const generateNovaletExport = async () => {
 };
 
 export const approveNovaletExport = async (fileName: string) => {
-  const res = await fetch(`/api/reports/novalet/${fileName}`, {
+  const res = await fetch(`/api/reports/novalet/approve/${fileName}`, {
     method: 'POST',
     body: null,
   });

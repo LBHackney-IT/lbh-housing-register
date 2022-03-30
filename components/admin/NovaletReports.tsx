@@ -41,8 +41,37 @@ export default function NovaletReports({
     return 0;
   });
 
-  const mostRecentReport = newestToOldestReports[0];
-  const [, ...previousReports] = newestToOldestReports;
+  /*
+   * This is to create a new array of reports where
+   * the CSV's contianing URLS are filtered out and included
+   * as a link with the applicant feed item.
+   *
+   * This is a short term solution as currently officers
+   * are struggling to find applications in the system due
+   * to the lack of search functionality.
+   */
+  const groupedReports = newestToOldestReports
+    .map((report, index, array) => {
+      const date = report.lastModified.split('T')[0];
+      const previousDate =
+        index > 0 ? array[index - 1].lastModified.split('T')[0] : '';
+
+      if (date !== previousDate) {
+        return {
+          ...report,
+          specialFileName: '',
+        };
+      } else {
+        return {
+          ...report,
+          specialFileName: array[index - 1].fileName,
+        };
+      }
+    })
+    .filter((report) => !report.fileName.includes('WITH-URL'));
+
+  const mostRecentReport = groupedReports[0];
+  const [, ...previousReports] = groupedReports;
 
   const syncToNovalet = async () => {
     approveNovaletExport(mostRecentReport.fileName);
@@ -82,6 +111,11 @@ export default function NovaletReports({
                   <p className="lbh-!-margin-top-0">
                     {generatedDateTimeString(mostRecentReport.lastModified)}
                   </p>
+                  {mostRecentReport.specialFileName !== '' ? (
+                    <p className="lbh-!-margin-top-0">
+                      {mostRecentReport.specialFileName}
+                    </p>
+                  ) : null}
                 </td>
                 <td className="govuk-table__cell">
                   <ButtonLink
@@ -162,7 +196,7 @@ export default function NovaletReports({
             </thead>
 
             <tbody className="govuk-table__body">
-              {previousReports.map((report: Report) => (
+              {previousReports.map((report: any) => (
                 <tr key={report.fileName} className="govuk-table__row">
                   <td className="govuk-table__cell">
                     <p className="lbh-body lbh-!-font-weight-bold">
@@ -171,6 +205,18 @@ export default function NovaletReports({
                     <p className="lbh-!-margin-top-0">
                       {generatedDateTimeString(report.lastModified)}
                     </p>
+                    {report.specialFileName !== '' ? (
+                      <p className="lbh-!-margin-top-0 lbh-body-s">
+                        <a
+                          className="lbh-link"
+                          href={`/api/reports/novalet/download/${encodeURIComponent(
+                            report.specialFileName
+                          )}`}
+                        >
+                          Download version with URLs included
+                        </a>
+                      </p>
+                    ) : null}
                   </td>
                   <td className="govuk-table__cell">
                     <ButtonLink

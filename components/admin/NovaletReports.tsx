@@ -74,6 +74,7 @@ export default function NovaletReports({
 
   const mostRecentReport = groupedReports[0];
   const [, ...previousReports] = groupedReports;
+  console.log(groupedReports);
 
   const syncToNovalet = async () => {
     approveNovaletExport(mostRecentReport.fileName);
@@ -114,8 +115,15 @@ export default function NovaletReports({
                     {generatedDateTimeString(mostRecentReport.lastModified)}
                   </p>
                   {mostRecentReport.applicationLinksFileName ? (
-                    <p className="lbh-!-margin-top-0">
-                      {mostRecentReport.applicationLinksFileName}
+                    <p className="lbh-!-margin-top-0 lbh-body-s">
+                      <a
+                        className="lbh-link"
+                        href={`/api/reports/novalet/download/${encodeURIComponent(
+                          mostRecentReport.applicationLinksFileName
+                        )}`}
+                      >
+                        Download CSV including links to applications
+                      </a>
                     </p>
                   ) : null}
                 </td>

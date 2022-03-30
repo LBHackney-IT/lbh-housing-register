@@ -53,16 +53,17 @@ export default function NovaletReports({
   const groupedReports = newestToOldestReports
     .map((report, index, array) => {
       const date = report.lastModified.split('T')[0];
+      const previousReport = array[index - 1];
       const previousDate =
-        index > 0 ? array[index - 1].lastModified.split('T')[0] : '';
+        index > 0 ? previousReport.lastModified.split('T')[0] : '';
       const datesAreEqual = date === previousDate;
-      const previousFileIsSpecial =
-        index > 0 ? array[index - 1].fileName.includes('WITH-URL') : false;
+      const previousFileContainsUrls =
+        index > 0 ? previousReport.fileName.includes('WITH-URL') : false;
 
-      if (datesAreEqual && previousFileIsSpecial) {
+      if (datesAreEqual && previousFileContainsUrls) {
         return {
           ...report,
-          applicationLinksFileName: array[index - 1].fileName,
+          applicationLinksFileName: previousReport.fileName,
         };
       } else {
         return {
@@ -74,7 +75,6 @@ export default function NovaletReports({
 
   const mostRecentReport = groupedReports[0];
   const [, ...previousReports] = groupedReports;
-  console.log(groupedReports);
 
   const syncToNovalet = async () => {
     approveNovaletExport(mostRecentReport.fileName);

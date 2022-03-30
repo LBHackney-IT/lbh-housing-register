@@ -55,16 +55,18 @@ export default function NovaletReports({
       const date = report.lastModified.split('T')[0];
       const previousDate =
         index > 0 ? array[index - 1].lastModified.split('T')[0] : '';
+      const datesAreEqual = date === previousDate;
+      const previousFileIsSpecial =
+        index > 0 ? array[index - 1].fileName.includes('WITH-URL') : false;
 
-      if (date !== previousDate) {
+      if (datesAreEqual && previousFileIsSpecial) {
         return {
           ...report,
-          specialFileName: '',
+          applicationLinksFileName: array[index - 1].fileName,
         };
       } else {
         return {
           ...report,
-          specialFileName: array[index - 1].fileName,
         };
       }
     })
@@ -111,9 +113,9 @@ export default function NovaletReports({
                   <p className="lbh-!-margin-top-0">
                     {generatedDateTimeString(mostRecentReport.lastModified)}
                   </p>
-                  {mostRecentReport.specialFileName !== '' ? (
+                  {mostRecentReport.applicationLinksFileName ? (
                     <p className="lbh-!-margin-top-0">
-                      {mostRecentReport.specialFileName}
+                      {mostRecentReport.applicationLinksFileName}
                     </p>
                   ) : null}
                 </td>
@@ -196,7 +198,7 @@ export default function NovaletReports({
             </thead>
 
             <tbody className="govuk-table__body">
-              {previousReports.map((report: any) => (
+              {previousReports.map((report: Report) => (
                 <tr key={report.fileName} className="govuk-table__row">
                   <td className="govuk-table__cell">
                     <p className="lbh-body lbh-!-font-weight-bold">
@@ -205,15 +207,15 @@ export default function NovaletReports({
                     <p className="lbh-!-margin-top-0">
                       {generatedDateTimeString(report.lastModified)}
                     </p>
-                    {report.specialFileName !== '' ? (
+                    {report.applicationLinksFileName ? (
                       <p className="lbh-!-margin-top-0 lbh-body-s">
                         <a
                           className="lbh-link"
                           href={`/api/reports/novalet/download/${encodeURIComponent(
-                            report.specialFileName
+                            report.applicationLinksFileName
                           )}`}
                         >
-                          Download version with URLs included
+                          Download CSV including links to applications
                         </a>
                       </p>
                     ) : null}

@@ -24,6 +24,7 @@ export interface Report {
     lastDownloadedOn: string;
     approvedBy: string;
   };
+  applicationLinksFileName?: string;
 }
 
 interface ReportsProps {

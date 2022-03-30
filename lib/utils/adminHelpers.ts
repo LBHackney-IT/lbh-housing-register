@@ -130,6 +130,7 @@ export const generateEditInitialValues = (
     personalDetails_surname: personData?.person?.surname,
     personalDetails_dateOfBirth: personData?.person?.dateOfBirth,
     personalDetails_gender: personData?.person?.gender,
+    personalDetails_genderDescription: personData?.person?.genderDescription,
     personalDetails_nationalInsuranceNumber:
       personData?.person?.nationalInsuranceNumber,
     personalDetails_relationshipType: personData?.person?.relationshipType,
@@ -157,6 +158,8 @@ export const generateInitialValues = (sections: SectionData[]) => {
     (acc: { [key: string]: string }, current) => ((acc[current] = ''), acc),
     {}
   );
+
+  console.log(initialValuesObject);
 
   return initialValuesObject;
 };

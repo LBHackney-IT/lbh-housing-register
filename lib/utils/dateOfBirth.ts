@@ -3,6 +3,7 @@ import { Applicant } from '../../domain/HousingApi';
 export function formatDate(date: string | undefined) {
   if (!date) return '';
   return `${new Date(date).toLocaleString('default', {
+    timeZone: 'UTC',
     day: 'numeric',
     month: 'short',
     year: 'numeric',
@@ -11,6 +12,7 @@ export function formatDate(date: string | undefined) {
 
 export function formatDob(date: Date) {
   return `${date.toLocaleString('default', {
+    timeZone: 'UTC',
     day: 'numeric',
     month: 'short',
     year: 'numeric',

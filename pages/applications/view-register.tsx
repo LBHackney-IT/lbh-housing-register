@@ -69,7 +69,7 @@ export default function ViewAllApplicationsPage({
     <UserContext.Provider value={{ user }}>
       <Layout pageName="All applications">
         <SearchBox
-          title="Housing Register"
+          title="All applications"
           buttonTitle="Search"
           watermark="Search application reference"
         />
@@ -79,14 +79,12 @@ export default function ViewAllApplicationsPage({
             <Sidebar />
           </div>
           <div className="govuk-grid-column-three-quarters">
-            <HeadingOne content="Housing Register" />
-
-            <Button secondary={true} onClick={() => addCase()}>
-              + Add new case
-            </Button>
-
-            <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
-
+            <div className="lbh-flex-heading">
+              <HeadingOne content="All applications" />
+              <Button secondary={true} onClick={() => addCase()}>
+                + Add new case
+              </Button>
+            </div>
             <Details summary="Filter by status">
               <div
                 className="govuk-radios govuk-radios--inline govuk-radios--small lbh-radios"
@@ -124,10 +122,7 @@ export default function ViewAllApplicationsPage({
               </button>
             </Details>
 
-            <hr className="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
-
             <ApplicationTable
-              caption="Applications"
               applications={applications}
               initialPaginationToken={
                 router.query.paginationToken as string | undefined

@@ -112,7 +112,7 @@ export const generateEditInitialValues = (
             '/',
             '_'
           );
-          const answer = current.answer.replace(/"/g, '');
+          const answer = current.answer.replace(/[\[\]"]+/g, '');
 
           return {
             ...acc,
@@ -158,8 +158,6 @@ export const generateInitialValues = (sections: SectionData[]) => {
     (acc: { [key: string]: string }, current) => ((acc[current] = ''), acc),
     {}
   );
-
-  console.log(initialValuesObject);
 
   return initialValuesObject;
 };

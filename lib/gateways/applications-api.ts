@@ -155,8 +155,10 @@ export const getStats = async (): Promise<Array<Stat> | null> => {
 
 // Novalet export
 
-export const listNovaletExports = async (): Promise<any> => {
-  const url = 'reporting/listnovaletfiles';
+export const listNovaletExports = async (
+  numberToReturn: number
+): Promise<any> => {
+  const url = `reporting/listnovaletfiles?numberToReturn=${numberToReturn}`;
   const { data } = await housingAxios().get(url);
   return data;
 };

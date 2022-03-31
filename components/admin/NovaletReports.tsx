@@ -1,10 +1,14 @@
-import { useState, MouseEvent } from 'react';
+import { useState } from 'react';
 import Button, { ButtonLink } from '../button';
-import { generateNovaletExport } from '../../lib/gateways/internal-api';
+import {
+  generateNovaletExport,
+  approveNovaletExport,
+} from '../../lib/gateways/internal-api';
 import { Report } from './../../pages/applications/reports';
 import Paragraph from '../content/paragraph';
 import Announcement from '../announcement';
-import AnnouncementText from '../form/announcement-text';
+import { HeadingTwo } from '../content/headings';
+import Dialog from '../dialog';
 
 interface NovaletReportsProps {
   reports: Report[];
@@ -27,75 +31,149 @@ const generatedDateTimeString = (ISODate: string) => {
 export default function NovaletReports({
   reports,
 }: NovaletReportsProps): JSX.Element {
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const handleGenerateNovaletExport = async (
-    event: MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault();
+  const applicationFeeds = reports.filter(
+    (report: Report) => !report.fileName.includes('WITH-URL')
+  );
+  const applicationFeedsWithUrls = reports.filter((report: Report) =>
+    report.fileName.includes('WITH-URL')
+  );
+
+  const newestToOldestReports = applicationFeeds.sort((a, b) => {
+    if (a.lastModified < b.lastModified) return 1;
+    if (a.lastModified > b.lastModified) return -1;
+    return 0;
+  });
+
+  /*
+   * Creates an array of reports where
+   * the CSV's contianing URLS are included
+   * as a link with the applicant feed item.
+   *
+   * This is a short term solution as currently officers
+   * are struggling to find applications in the system due
+   * to the lack of search functionality.
+   */
+  const groupedReports = newestToOldestReports.map((report, index, array) => {
+    const date = report.lastModified.split('T')[0];
+
+    applicationFeedsWithUrls.map((urlReport) => {
+      if (urlReport.lastModified.split('T')[0] === date) {
+        array[index].applicationLinksFileName = urlReport.fileName;
+      }
+    });
+
+    return array[index];
+  });
+
+  const [mostRecentReport, ...previousReports] = groupedReports;
+
+  const syncToNovalet = async () => {
+    approveNovaletExport(mostRecentReport.fileName);
+  };
+
+  const handleGenerateNovaletExport = async () => {
     setIsGenerating(true);
     generateNovaletExport();
   };
 
-  return reports.length > 0 ? (
+  return (
     <>
-      <table className="govuk-table lbh-table">
-        <thead className="govuk-table__head">
-          <tr className="govuk-table__row">
-            <th scope="col" className="govuk-table__header">
-              Report
-            </th>
-            <th scope="col" className="govuk-table__header">
-              Download
-            </th>
-            <th scope="col" className="govuk-table__header">
-              Sync
-            </th>
-          </tr>
-        </thead>
+      {reports.length > 0 ? (
+        <>
+          <HeadingTwo content="Most recent report" />
+          <table className="govuk-table lbh-table">
+            <thead className="govuk-table__head">
+              <tr className="govuk-table__row">
+                <th scope="col" className="govuk-table__header">
+                  Report
+                </th>
+                <th scope="col" className="govuk-table__header">
+                  Download
+                </th>
+                <th scope="col" className="govuk-table__header">
+                  Sync
+                </th>
+              </tr>
+            </thead>
 
-        <tbody className="govuk-table__body">
-          {reports.map((report: Report) => (
-            <tr key={report.fileName} className="govuk-table__row">
-              <td className="govuk-table__cell">
-                <p className="lbh-body lbh-!-font-weight-bold">
-                  {report.fileName}
-                </p>
-                <p className="lbh-!-margin-top-0">
-                  {generatedDateTimeString(report.lastModified)}
-                </p>
-              </td>
-              <td className="govuk-table__cell">
-                <ButtonLink
-                  additionalCssClasses="lbh-!-margin-top-0 lbh-!-no-wrap"
-                  secondary={true}
-                  href={`/api/reports/novalet/download/${encodeURIComponent(
-                    report.fileName
-                  )}`}
-                >
-                  Download CSV
-                </ButtonLink>
-              </td>
-              <td className="govuk-table__cell">
-                <ButtonLink
-                  additionalCssClasses="lbh-!-margin-top-0 lbh-!-no-wrap"
-                  href={`/api/reports/novalet/approve/${encodeURIComponent(
-                    report.fileName
-                  )}`}
-                >
-                  Sync to Novalet
-                </ButtonLink>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+            <tbody className="govuk-table__body">
+              <tr key={mostRecentReport.fileName} className="govuk-table__row">
+                <td className="govuk-table__cell">
+                  <p className="lbh-body lbh-!-font-weight-bold">
+                    {mostRecentReport.fileName}
+                  </p>
+                  <p className="lbh-body-s lbh-!-margin-top-0">
+                    {generatedDateTimeString(mostRecentReport.lastModified)}
+                  </p>
+                  {mostRecentReport.applicationLinksFileName ? (
+                    <p className="lbh-!-margin-top-0 lbh-body-s">
+                      <a
+                        className="lbh-link"
+                        href={`/api/reports/novalet/download/${encodeURIComponent(
+                          mostRecentReport.applicationLinksFileName
+                        )}`}
+                      >
+                        Download CSV with application links
+                      </a>
+                    </p>
+                  ) : null}
+                </td>
+                <td className="govuk-table__cell">
+                  <ButtonLink
+                    additionalCssClasses="lbh-!-margin-top-0 lbh-!-no-wrap"
+                    secondary={true}
+                    href={`/api/reports/novalet/download/${encodeURIComponent(
+                      mostRecentReport.fileName
+                    )}`}
+                  >
+                    Download CSV
+                  </ButtonLink>
+                </td>
+                <td className="govuk-table__cell">
+                  <Button
+                    className="lbh-!-margin-top-0"
+                    onClick={() => setConfirmDialogOpen(true)}
+                  >
+                    Approve
+                  </Button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <Dialog
+            isOpen={confirmDialogOpen}
+            title="Clicking the button below will sync the most recent report to novalet"
+            onCancel={() => setConfirmDialogOpen(false)}
+            onCancelText="Cancel"
+          >
+            <p className="lbh-body lbh-!-margin-top-1">
+              Ensure you have reviewed{' '}
+              <a
+                className="lbh-link"
+                href={`/api/reports/novalet/download/${encodeURIComponent(
+                  mostRecentReport.fileName
+                )}`}
+              >
+                {mostRecentReport.fileName}
+              </a>{' '}
+              before sending.
+            </p>
+            <Button onClick={() => syncToNovalet()}>Sync to Novalet</Button>
+          </Dialog>
+        </>
+      ) : (
+        <HeadingTwo content="No reports to show" />
+      )}
 
       <Button
         disabled={isGenerating}
-        onClick={() => handleGenerateNovaletExport}
+        onClick={() => handleGenerateNovaletExport()}
       >
-        Generate file
+        Generate a new report
       </Button>
       {isGenerating ? (
         <Announcement variant="success">
@@ -105,8 +183,62 @@ export default function NovaletReports({
           </Paragraph>
         </Announcement>
       ) : null}
+
+      {reports.length > 1 ? (
+        <>
+          <HeadingTwo content="Previous reports" />
+          <table className="govuk-table lbh-table">
+            <thead className="govuk-table__head">
+              <tr className="govuk-table__row">
+                <th scope="col" className="govuk-table__header">
+                  Report
+                </th>
+                <th scope="col" className="govuk-table__header">
+                  Download
+                </th>
+              </tr>
+            </thead>
+
+            <tbody className="govuk-table__body">
+              {previousReports.map((report: Report) => (
+                <tr key={report.fileName} className="govuk-table__row">
+                  <td className="govuk-table__cell">
+                    <p className="lbh-body lbh-!-font-weight-bold">
+                      {report.fileName}
+                    </p>
+                    <p className="lbh-body-s lbh-!-margin-top-0">
+                      {generatedDateTimeString(report.lastModified)}
+                    </p>
+                    {report.applicationLinksFileName ? (
+                      <p className="lbh-!-margin-top-0 lbh-body-s">
+                        <a
+                          className="lbh-link"
+                          href={`/api/reports/novalet/download/${encodeURIComponent(
+                            report.applicationLinksFileName
+                          )}`}
+                        >
+                          Download CSV with application links
+                        </a>
+                      </p>
+                    ) : null}
+                  </td>
+                  <td className="govuk-table__cell">
+                    <ButtonLink
+                      additionalCssClasses="lbh-!-margin-top-0 lbh-!-no-wrap"
+                      secondary={true}
+                      href={`/api/reports/novalet/download/${encodeURIComponent(
+                        report.fileName
+                      )}`}
+                    >
+                      Download CSV
+                    </ButtonLink>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      ) : null}
     </>
-  ) : (
-    <div></div>
   );
 }

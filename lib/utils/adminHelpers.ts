@@ -123,8 +123,6 @@ export const generateEditInitialValues = (
       )
     : {};
 
-  console.log('qivo', questionsInitialValuesObject);
-
   const initialValuesObject = {
     ...questionsInitialValuesObject,
     personalDetails_title: personData?.person?.title,
@@ -160,8 +158,6 @@ export const generateInitialValues = (sections: SectionData[]) => {
     (acc: { [key: string]: string }, current) => ((acc[current] = ''), acc),
     {}
   );
-
-  console.log(initialValuesObject);
 
   return initialValuesObject;
 };

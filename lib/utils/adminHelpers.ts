@@ -112,7 +112,7 @@ export const generateEditInitialValues = (
             '/',
             '_'
           );
-          const answer = current.answer.replace(/"/g, '');
+          const answer = current.answer.replace(/[\[\]"]+/g, '');
 
           return {
             ...acc,
@@ -122,6 +122,8 @@ export const generateEditInitialValues = (
         {}
       )
     : {};
+
+  console.log('qivo', questionsInitialValuesObject);
 
   const initialValuesObject = {
     ...questionsInitialValuesObject,

@@ -53,7 +53,7 @@ export default function EditApplicant({
         surname: values.personalDetails_surname,
         dateOfBirth: values.personalDetails_dateOfBirth,
         gender: values.personalDetails_gender,
-        genderDescription: '',
+        genderDescription: values.personalDetails_genderDescription,
         nationalInsuranceNumber: values.personalDetails_nationalInsuranceNumber,
         relationshipType: values.personalDetails_relationshipType,
       },

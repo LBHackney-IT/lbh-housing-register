@@ -3,6 +3,7 @@ import { Applicant } from '../../domain/HousingApi';
 export function formatDate(date: string | undefined) {
   if (!date) return '';
   return `${new Date(date).toLocaleString('default', {
+    timeZone: 'UTC',
     day: 'numeric',
     month: 'short',
     year: 'numeric',
@@ -11,6 +12,7 @@ export function formatDate(date: string | undefined) {
 
 export function formatDob(date: Date) {
   return `${date.toLocaleString('default', {
+    timeZone: 'UTC',
     day: 'numeric',
     month: 'short',
     year: 'numeric',
@@ -61,4 +63,8 @@ export const isOver18 = (applicant: Applicant): boolean => {
 
 export const isOver16 = (applicant: Applicant): boolean => {
   return applicantEqualToOrOlderThanAge(applicant, 16);
+};
+
+export const isOver55 = (applicant: Applicant): boolean => {
+  return applicantEqualToOrOlderThanAge(applicant, 55);
 };

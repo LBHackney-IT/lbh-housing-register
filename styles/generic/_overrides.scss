@@ -103,3 +103,17 @@ body {
 .govuk-radios__item--fixed-width {
   width: 40%;
 }
+
+.lbh-simple-pagination {
+  border-top: 0;
+  margin-top: 0;
+}
+
+.lbh-flex-heading {
+  > button {
+    margin-top: 0;
+  }
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

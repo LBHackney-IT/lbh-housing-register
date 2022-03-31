@@ -4,6 +4,7 @@ import { formatDob, getAgeInYears } from '../../lib/utils/dateOfBirth';
 import React from 'react';
 import { HeadingThree } from '../content/headings';
 import { getGenderName } from '../../lib/utils/gender';
+import capitalize from '../../lib/utils/capitalize';
 
 interface SummaryProps {
   heading: string;
@@ -31,14 +32,16 @@ export default function OtherMembers({
                     <strong>
                       {applicant.person?.title} {applicant.person?.firstName}{' '}
                       {applicant.person?.surname}
-                    </strong>
+                    </strong>{' '}
+                    {getGenderName(applicant) !== ''
+                      ? `(${getGenderName(applicant)})`
+                      : ''}
                   </li>
                   <li>
                     {applicant.person?.relationshipType &&
-                      applicant.person?.relationshipType}
+                      capitalize(applicant.person?.relationshipType)}
                   </li>
                   <li>
-                    {getGenderName(applicant)},{' '}
                     {applicant.person?.dateOfBirth &&
                       formatDob(new Date(applicant.person?.dateOfBirth))}{' '}
                     {applicant.person?.dateOfBirth &&

@@ -1,4 +1,4 @@
-import { useState, MouseEvent } from 'react';
+import { useState } from 'react';
 import Button, { ButtonLink } from '../button';
 import {
   generateNovaletExport,
@@ -7,7 +7,6 @@ import {
 import { Report } from './../../pages/applications/reports';
 import Paragraph from '../content/paragraph';
 import Announcement from '../announcement';
-import AnnouncementText from '../form/announcement-text';
 import { HeadingTwo } from '../content/headings';
 import Dialog from '../dialog';
 
@@ -35,46 +34,41 @@ export default function NovaletReports({
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const newestToOldestReports = reports.sort((a, b) => {
+  const applicationFeeds = reports.filter(
+    (report: Report) => !report.fileName.includes('WITH-URL')
+  );
+  const applicationFeedsWithUrls = reports.filter((report: Report) =>
+    report.fileName.includes('WITH-URL')
+  );
+
+  const newestToOldestReports = applicationFeeds.sort((a, b) => {
     if (a.lastModified < b.lastModified) return 1;
     if (a.lastModified > b.lastModified) return -1;
     return 0;
   });
 
   /*
-   * This is to create a new array of reports where
-   * the CSV's contianing URLS are filtered out and included
+   * Creates an array of reports where
+   * the CSV's contianing URLS are included
    * as a link with the applicant feed item.
    *
    * This is a short term solution as currently officers
    * are struggling to find applications in the system due
    * to the lack of search functionality.
    */
-  const groupedReports = newestToOldestReports
-    .map((report, index, array) => {
-      const date = report.lastModified.split('T')[0];
-      const previousReport = array[index - 1];
-      const previousDate =
-        index > 0 ? previousReport.lastModified.split('T')[0] : '';
-      const datesAreEqual = date === previousDate;
-      const previousFileContainsUrls =
-        index > 0 ? previousReport.fileName.includes('WITH-URL') : false;
+  const groupedReports = newestToOldestReports.map((report, index, array) => {
+    const date = report.lastModified.split('T')[0];
 
-      if (datesAreEqual && previousFileContainsUrls) {
-        return {
-          ...report,
-          applicationLinksFileName: previousReport.fileName,
-        };
-      } else {
-        return {
-          ...report,
-        };
+    applicationFeedsWithUrls.map((urlReport) => {
+      if (urlReport.lastModified.split('T')[0] === date) {
+        array[index].applicationLinksFileName = urlReport.fileName;
       }
-    })
-    .filter((report) => !report.fileName.includes('WITH-URL'));
+    });
 
-  const mostRecentReport = groupedReports[0];
-  const [, ...previousReports] = groupedReports;
+    return array[index];
+  });
+
+  const [mostRecentReport, ...previousReports] = groupedReports;
 
   const syncToNovalet = async () => {
     approveNovaletExport(mostRecentReport.fileName);
@@ -111,7 +105,7 @@ export default function NovaletReports({
                   <p className="lbh-body lbh-!-font-weight-bold">
                     {mostRecentReport.fileName}
                   </p>
-                  <p className="lbh-!-margin-top-0">
+                  <p className="lbh-body-s lbh-!-margin-top-0">
                     {generatedDateTimeString(mostRecentReport.lastModified)}
                   </p>
                   {mostRecentReport.applicationLinksFileName ? (
@@ -122,7 +116,7 @@ export default function NovaletReports({
                           mostRecentReport.applicationLinksFileName
                         )}`}
                       >
-                        Download CSV including links to applications
+                        Download CSV with application links
                       </a>
                     </p>
                   ) : null}
@@ -212,7 +206,7 @@ export default function NovaletReports({
                     <p className="lbh-body lbh-!-font-weight-bold">
                       {report.fileName}
                     </p>
-                    <p className="lbh-!-margin-top-0">
+                    <p className="lbh-body-s lbh-!-margin-top-0">
                       {generatedDateTimeString(report.lastModified)}
                     </p>
                     {report.applicationLinksFileName ? (
@@ -223,7 +217,7 @@ export default function NovaletReports({
                             report.applicationLinksFileName
                           )}`}
                         >
-                          Download CSV including links to applications
+                          Download CSV with application links
                         </a>
                       </p>
                     ) : null}

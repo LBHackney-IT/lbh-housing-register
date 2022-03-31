@@ -99,7 +99,7 @@ export const getServerSideProps: GetServerSideProps = async (
     return { redirect: auth.redirect };
   }
 
-  const reportNames = await listNovaletExports();
+  const reportNames = await listNovaletExports(20);
 
   return {
     props: { user: auth.user, reportsData: reportNames },

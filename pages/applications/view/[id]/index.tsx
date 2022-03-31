@@ -19,6 +19,7 @@ import {
   HeadingOne,
   HeadingThree,
 } from '../../../../components/content/headings';
+import List, { ListItem } from '../../../../components/content/list';
 import Paragraph from '../../../../components/content/paragraph';
 import Layout from '../../../../components/layout/staff-layout';
 import { ActivityHistoryPagedResult } from '../../../../domain/ActivityHistoryApi';
@@ -55,7 +56,7 @@ export default function ApplicationPage({
 }: PageProps): JSX.Element | null {
   if (!data.id) return <Custom404 />;
 
-  // console.log(data);
+  console.log(data);
 
   // Can edit application if:
   // - it has a status of manual draft
@@ -131,7 +132,8 @@ export default function ApplicationPage({
 
             {activeNavItem === 'overview' && (
               <>
-                {/* {data.review.required ? (
+                {data.status === ApplicationStatus.AWAITING_REASSESSMENT &&
+                data.assessment?.reason ? (
                   <div className="govuk-grid-row">
                     <div className="govuk-grid-column-full">
                       <Announcement variant="info">
@@ -139,24 +141,24 @@ export default function ApplicationPage({
                           Review required
                         </h3>
                         <div className="lbh-page-announcement__content">
-                          {data.review.reason ? (
-                            <Paragraph>
-                              {data.review.reason}
-                              // This household’s bedroom need has been flagged
-                              for // review due to a significant birthday.
-                            </Paragraph>
+                          {data.assessment.reason ===
+                          'significant-household-member-birthday' ? (
+                            <>
+                              <Paragraph>
+                                This household's bedroom need has been flagged
+                                for review due to a significant birthday.
+                              </Paragraph>
+                              <h4>Changes to review:</h4>
+                              <List>
+                                <ListItem>Bedroom needs</ListItem>
+                              </List>
+                            </>
                           ) : null}
-                          <h4>Changes to review:</h4>
-                          <ul>
-                            {data.review.changes.map((change) => (
-                              <li key={change}>{change}</li>
-                            ))}
-                          </ul>
                         </div>
                       </Announcement>
                     </div>
                   </div>
-                ) : null} */}
+                ) : null}
                 <div className="govuk-grid-row">
                   <div className="govuk-grid-column-two-thirds">
                     <HeadingThree content="Snapshot" />

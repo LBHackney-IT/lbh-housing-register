@@ -364,7 +364,12 @@ const ApplicationStep = (): JSX.Element => {
         If you have no fixed abode or if you are sofa surfing, use the address
         where you sleep for the majority of the week. If you are living on the
         street, contact a{' '}
-        <a href="https://hackney.gov.uk/housing-options">housing officer</a>
+        <a
+          href="https://hackney.gov.uk/housing-options"
+          className="lbh-link lbh-link--no-visited-state"
+        >
+          housing officer
+        </a>
       </Details>
 
       <Summary addressHistory={addressHistory} />

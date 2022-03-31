@@ -2,7 +2,7 @@ import { Applicant, Application } from '../../domain/HousingApi';
 import { getQuestionValue } from '../store/applicant';
 import { FormData, FormField } from '../types/form';
 import { FormID, getEligibilityCriteria } from './form-data';
-import { isOver18 } from '../../lib/utils/dateOfBirth';
+import { isOver18, isOver55 } from '../../lib/utils/dateOfBirth';
 import { applicantsWithMedicalNeed } from '../../lib/utils/medicalNeed';
 import { DisqualificationReason } from './disqualificationReasonOptions';
 
@@ -45,10 +45,26 @@ export function checkEligible(
 
   const bedroomNeed = application.calculatedBedroomNeed!;
 
-  const numberOfApplicantsWithMedicalNeeds =
-    applicantsWithMedicalNeed(application);
+  // Do not disqualify if...
 
-  if (numberOfApplicantsWithMedicalNeeds > 0) {
+  // ...applying alone and over 55
+  if (applicants.length === 1 && isOver55(mainApplicant)) {
+    return [true, []];
+  }
+
+  // ...applying with partner and both over 55
+  if (applicants.length === 2) {
+    if (
+      isOver55(mainApplicant) &&
+      isOver55(applicants[1]) &&
+      applicants[1].person?.relationshipType === 'partner'
+    ) {
+      return [true, []];
+    }
+  }
+
+  // ...one or more applicants have a medical need
+  if (applicantsWithMedicalNeed(application) > 0) {
     return [true, []];
   }
 

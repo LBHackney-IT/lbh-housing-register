@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Form, Formik } from 'formik';
 import Input from '../form/input';
 import Select from '../form/select';
@@ -8,7 +9,10 @@ import RadioConditional, {
 } from '../form/radioconditional';
 import * as Yup from 'yup';
 import { getAgeInYearsFromDate } from '../../lib/utils/dateOfBirth';
-import { Person } from '../../domain/HousingApi';
+import { isOver16 as isOver16Func } from '../../lib//utils/dateOfBirth';
+import { Person, Applicant } from '../../domain/HousingApi';
+import { getQuestionsForFormAsValues } from '../../lib/store/applicant';
+import { FormID } from '../../lib/utils/form-data';
 
 interface FormValues {
   title: string | Person.TitleEnum;
@@ -24,7 +28,7 @@ interface FormValues {
 }
 
 interface AddPersonFormProps {
-  initialValues: FormValues;
+  applicant: Applicant;
   onSubmit: (values: FormValues) => void | Promise<any>;
   isMainApplicant: boolean;
   buttonText: string;
@@ -156,13 +160,31 @@ const genderProps: RadioConditionalProps = {
 };
 
 const AddPersonForm = ({
-  initialValues,
+  applicant,
   onSubmit,
   isMainApplicant,
   buttonText,
   isOver16,
   setIsOver16State,
 }: AddPersonFormProps): JSX.Element => {
+  const initialValues = {
+    ...getQuestionsForFormAsValues(FormID.PERSONAL_DETAILS, applicant),
+    title: applicant.person?.title ?? '',
+    firstName: applicant.person?.firstName ?? '',
+    surname: applicant.person?.surname ?? '',
+    gender: applicant.person?.gender ?? '',
+    genderDescription: applicant.person?.genderDescription ?? '',
+    relationshipType: applicant.person?.relationshipType ?? '',
+    dateOfBirth: applicant.person?.dateOfBirth ?? '',
+    nationalInsuranceNumber: applicant.person?.nationalInsuranceNumber ?? '',
+    phoneNumber: applicant.contactInformation?.phoneNumber ?? '',
+    emailAddress: applicant.contactInformation?.emailAddress ?? '',
+  };
+
+  useEffect(() => {
+    setIsOver16State(isOver16Func(applicant));
+  }, [applicant]);
+
   function generateValidationSchema(isOver16: boolean) {
     const currentDateTimestamp = Math.min(+new Date());
 

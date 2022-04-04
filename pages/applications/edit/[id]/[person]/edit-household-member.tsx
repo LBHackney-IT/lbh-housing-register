@@ -94,16 +94,22 @@ export default function EditApplicant({
   };
 
   return (
-    <HouseholdMemberForm
-      isEditing={true}
-      user={user}
-      onSubmit={onSubmit}
-      isSubmitted={isSubmitted}
-      addresses={addresses}
-      setAddresses={setAddresses}
-      handleSaveApplication={handleSaveApplication}
-      personData={personData}
-    />
+    <>
+      {data.id ? (
+        <HouseholdMemberForm
+          isEditing={true}
+          user={user}
+          onSubmit={onSubmit}
+          isSubmitted={isSubmitted}
+          addresses={addresses}
+          setAddresses={setAddresses}
+          handleSaveApplication={handleSaveApplication}
+          personData={personData}
+        />
+      ) : (
+        <Custom404 />
+      )}
+    </>
   );
 }
 

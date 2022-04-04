@@ -12,6 +12,7 @@ import {
 } from '../../../lib/store/applicant';
 import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import { FormID, getFormData } from '../../../lib/utils/form-data';
+import { Applicant } from '../../../domain/HousingApi';
 import Custom404 from '../../404';
 
 const YourSituation = (): JSX.Element => {
@@ -23,11 +24,7 @@ const YourSituation = (): JSX.Element => {
 
   const { resident } = router.query as { resident: string };
 
-  const applicant = useAppSelector(selectApplicant(resident));
-
-  if (!applicant) {
-    return <Custom404 />;
-  }
+  const applicant = useAppSelector(selectApplicant(resident)) as Applicant;
 
   // If JSON has routeSelect set to true we can pass multiple possible values to activeStepID.
   // See if statement at end of nextStep() below
@@ -82,7 +79,7 @@ const YourSituation = (): JSX.Element => {
       dispatch(
         updateWithFormValues({
           formID: FormID.YOUR_SITUATION,
-          personID: applicant.person.id,
+          personID: applicant.person!.id!,
           values,
           markAsComplete: true,
         })
@@ -104,7 +101,7 @@ const YourSituation = (): JSX.Element => {
     dispatch(
       updateWithFormValues({
         formID: activeStepID,
-        personID: applicant.person.id,
+        personID: applicant.person!.id!,
         values,
         markAsComplete: true,
       })
@@ -112,17 +109,23 @@ const YourSituation = (): JSX.Element => {
   };
 
   return (
-    <Layout pageName="Your situation" breadcrumbs={breadcrumbs}>
-      <HeadingOne content="Your situation" />
-      <Form
-        // Intentional key outside of an array. Force a fresh form component when we change steps to avoid values persisting between forms.
-        key={activeStepID}
-        buttonText="Save and continue"
-        formData={formData}
-        onSave={onSave}
-        onSubmit={nextStep}
-      />
-    </Layout>
+    <>
+      {applicant ? (
+        <Layout pageName="Your situation" breadcrumbs={breadcrumbs}>
+          <HeadingOne content="Your situation" />
+          <Form
+            // Intentional key outside of an array. Force a fresh form component when we change steps to avoid values persisting between forms.
+            key={activeStepID}
+            buttonText="Save and continue"
+            formData={formData}
+            onSave={onSave}
+            onSubmit={nextStep}
+          />
+        </Layout>
+      ) : (
+        <Custom404 />
+      )}
+    </>
   );
 };
 

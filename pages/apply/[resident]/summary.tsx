@@ -1,5 +1,6 @@
 import Layout from '../../../components/layout/resident-layout';
 import {
+  ApplicantWithPersonID,
   selectApplicant,
   getQuestionValue,
 } from '../../../lib/store/applicant';
@@ -35,15 +36,13 @@ const UserSummary = (): JSX.Element => {
   const dispatch = useDispatch();
   const { resident } = router.query as { resident: string };
 
-  const currentResident = useAppSelector(selectApplicant(resident));
+  const currentResident = useAppSelector(
+    selectApplicant(resident)
+  ) as ApplicantWithPersonID;
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
   const isMainApplicant = currentResident == mainResident;
 
   const application = useAppSelector((store) => store.application);
-
-  if (!currentResident || !mainResident) {
-    return <Custom404 />;
-  }
 
   const baseHref = `/apply/${currentResident.person?.id}`;
   const returnHref = '/apply/overview';
@@ -64,7 +63,7 @@ const UserSummary = (): JSX.Element => {
   };
 
   const onDelete = () => {
-    dispatch(removeApplicant(currentResident.person.id));
+    dispatch(removeApplicant(currentResident.person!.id!));
     router.push(returnHref);
   };
 
@@ -105,64 +104,73 @@ const UserSummary = (): JSX.Element => {
   const medicalNeedsCompleted = isSectionComplete(FormID.MEDICAL_NEEDS);
 
   return (
-    <Layout pageName="Application summary" breadcrumbs={breadcrumbs}>
-      <h1 className="lbh-heading-h1">
-        <span className="govuk-hint lbh-hint">Check answers for:</span>
-        {currentResident.person?.firstName} {currentResident.person?.surname}
-      </h1>
-      {pesonalDetailsCompleted && (
-        <PersonalDetailsSummary currentResident={currentResident} />
-      )}
-
-      {immigrationStatusCompleted && (
-        <ImmigrationStatusSummary currentResident={currentResident} />
-      )}
-
-      {isMainApplicant && (
-        <>
-          {residentialStatusCompleted && (
-            <ResidentialStatusSummary currentResident={currentResident} />
+    <>
+      {currentResident && mainResident ? (
+        <Layout pageName="Application summary" breadcrumbs={breadcrumbs}>
+          <h1 className="lbh-heading-h1">
+            <span className="govuk-hint lbh-hint">Check answers for:</span>
+            {currentResident.person?.firstName}{' '}
+            {currentResident.person?.surname}
+          </h1>
+          {pesonalDetailsCompleted && (
+            <PersonalDetailsSummary currentResident={currentResident} />
           )}
-        </>
-      )}
-      {addressHistoryCompleted && (
-        <AddressHistorySummary currentResident={currentResident} />
-      )}
 
-      {isMainApplicant && (
-        <>
-          {currentAccommodationCompleted && (
-            <CurrentAccommodationSummary currentResident={currentResident} />
+          {immigrationStatusCompleted && (
+            <ImmigrationStatusSummary currentResident={currentResident} />
           )}
-          {yourSituationCompleted && (
-            <YourSituationSummary currentResident={currentResident} />
-          )}
-        </>
-      )}
 
-      {isOver18(currentResident) && (
-        <>
-          {incomeSavingsCompleted && (
-            <IncomeSavingsSummary currentResident={currentResident} />
+          {isMainApplicant && (
+            <>
+              {residentialStatusCompleted && (
+                <ResidentialStatusSummary currentResident={currentResident} />
+              )}
+            </>
           )}
-          {employmentCompleted && (
-            <EmploymentSummary currentResident={currentResident} />
+          {addressHistoryCompleted && (
+            <AddressHistorySummary currentResident={currentResident} />
           )}
-        </>
-      )}
-      {medicalNeedsCompleted && (
-        <MedicalNeedsSummary currentResident={currentResident} />
-      )}
 
-      <Button onClick={onConfirmData}>I confirm this is correct</Button>
-      {currentResident !== mainResident && (
-        <DeleteLink
-          content="Delete this information"
-          details="This information will be permanently deleted."
-          onDelete={onDelete}
-        />
+          {isMainApplicant && (
+            <>
+              {currentAccommodationCompleted && (
+                <CurrentAccommodationSummary
+                  currentResident={currentResident}
+                />
+              )}
+              {yourSituationCompleted && (
+                <YourSituationSummary currentResident={currentResident} />
+              )}
+            </>
+          )}
+
+          {isOver18(currentResident) && (
+            <>
+              {incomeSavingsCompleted && (
+                <IncomeSavingsSummary currentResident={currentResident} />
+              )}
+              {employmentCompleted && (
+                <EmploymentSummary currentResident={currentResident} />
+              )}
+            </>
+          )}
+          {medicalNeedsCompleted && (
+            <MedicalNeedsSummary currentResident={currentResident} />
+          )}
+
+          <Button onClick={onConfirmData}>I confirm this is correct</Button>
+          {currentResident !== mainResident && (
+            <DeleteLink
+              content="Delete this information"
+              details="This information will be permanently deleted."
+              onDelete={onDelete}
+            />
+          )}
+        </Layout>
+      ) : (
+        <Custom404 />
       )}
-    </Layout>
+    </>
   );
 };
 

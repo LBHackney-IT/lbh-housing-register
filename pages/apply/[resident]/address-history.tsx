@@ -329,7 +329,7 @@ const ApplicationStep = (): JSX.Element => {
         dispatch(
           updateWithFormValues({
             formID: FormID.ADDRESS_HISTORY,
-            personID: applicant.person?.id || '',
+            personID: applicant.person!.id!,
             values: { addressHistory },
             markAsComplete: true,
           })

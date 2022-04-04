@@ -6,6 +6,7 @@ import Form from '../../../components/form/form';
 import Layout from '../../../components/layout/resident-layout';
 import withApplication from '../../../lib/hoc/withApplication';
 import {
+  applicantHasId,
   selectApplicant,
   updateWithFormValues,
   getQuestionsForFormAsValues,
@@ -13,17 +14,14 @@ import {
 import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import { FormID, getFormData } from '../../../lib/utils/form-data';
 import Custom404 from '../../404';
+import { Applicant } from '../../../domain/HousingApi';
 
 const CurrentAccommodation = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { resident } = router.query as { resident: string };
 
-  const applicant = useAppSelector(selectApplicant(resident));
-
-  if (!applicant) {
-    return <Custom404 />;
-  }
+  const applicant = useAppSelector(selectApplicant(resident)) as Applicant;
 
   const [activeStepID, setActiveStepId] = useState(
     FormID.CURRENT_ACCOMMODATION
@@ -71,7 +69,7 @@ const CurrentAccommodation = (): JSX.Element => {
     dispatch(
       updateWithFormValues({
         formID: activeStepID,
-        personID: applicant.person.id,
+        personID: applicant.person!.id!,
         values,
         markAsComplete: true,
       })
@@ -79,18 +77,24 @@ const CurrentAccommodation = (): JSX.Element => {
   };
 
   return (
-    <Layout pageName="Current accommodation" breadcrumbs={breadcrumbs}>
-      <HeadingOne content="Current accommodation" />
-      <Form
-        // Intentional key outside of an array. Force a fresh form component when we change steps to avoid values persisting between forms.
-        initialValues={initialValues}
-        key={activeStepID}
-        buttonText="Save and continue"
-        formData={formData}
-        onSave={onSave}
-        onSubmit={nextStep}
-      />
-    </Layout>
+    <>
+      {applicantHasId(applicant) ? (
+        <Layout pageName="Current accommodation" breadcrumbs={breadcrumbs}>
+          <HeadingOne content="Current accommodation" />
+          <Form
+            // Intentional key outside of an array. Force a fresh form component when we change steps to avoid values persisting between forms.
+            initialValues={initialValues}
+            key={activeStepID}
+            buttonText="Save and continue"
+            formData={formData}
+            onSave={onSave}
+            onSubmit={nextStep}
+          />
+        </Layout>
+      ) : (
+        <Custom404 />
+      )}
+    </>
   );
 };
 

@@ -24,9 +24,7 @@ export default function AddHouseholdMember({
   user,
   data,
 }: PageProps): JSX.Element | null {
-  if (!data.id) return <Custom404 />;
   const router = useRouter();
-
   const [addresses, setAddresses] = useState([] as Address[]);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -79,15 +77,21 @@ export default function AddHouseholdMember({
   };
 
   return (
-    <HouseholdMemberForm
-      isEditing={false}
-      user={user}
-      onSubmit={onSubmit}
-      isSubmitted={isSubmitted}
-      addresses={addresses}
-      setAddresses={setAddresses}
-      handleSaveApplication={handleSaveApplication}
-    />
+    <>
+      {data.id ? (
+        <HouseholdMemberForm
+          isEditing={false}
+          user={user}
+          onSubmit={onSubmit}
+          isSubmitted={isSubmitted}
+          addresses={addresses}
+          setAddresses={setAddresses}
+          handleSaveApplication={handleSaveApplication}
+        />
+      ) : (
+        <Custom404 />
+      )}
+    </>
   );
 }
 

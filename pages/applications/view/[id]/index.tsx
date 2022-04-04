@@ -53,8 +53,6 @@ export default function ApplicationPage({
   data,
   history,
 }: PageProps): JSX.Element | null {
-  if (!data.id) return <Custom404 />;
-
   // Can edit application if:
   // - it has a status of manual draft
   // - it has a status of incomplete and current user is assigned to it
@@ -71,174 +69,180 @@ export default function ApplicationPage({
   };
 
   return (
-    <UserContext.Provider value={{ user }}>
-      <Layout pageName="View application">
-        {data.sensitiveData &&
-        !canViewSensitiveApplication(data.assignedTo!, user) ? (
-          <>
-            <h2>Access denied</h2>
-            <Paragraph>You are unable to view this application.</Paragraph>
-          </>
-        ) : (
-          <>
-            {data.importedFromLegacyDatabase ? (
-              <Announcement variant="info">
-                <h3 className="lbh-page-announcement__title">
-                  Legacy application
-                </h3>
-                <div className="lbh-page-announcement__content">
-                  This application was imported from a legacy system. Only
-                  limited information is available for legacy applications.
-                </div>
-              </Announcement>
-            ) : null}
+    <>
+      {data.id ? (
+        <UserContext.Provider value={{ user }}>
+          <Layout pageName="View application">
+            {data.sensitiveData &&
+            !canViewSensitiveApplication(data.assignedTo!, user) ? (
+              <>
+                <h2>Access denied</h2>
+                <Paragraph>You are unable to view this application.</Paragraph>
+              </>
+            ) : (
+              <>
+                {data.importedFromLegacyDatabase ? (
+                  <Announcement variant="info">
+                    <h3 className="lbh-page-announcement__title">
+                      Legacy application
+                    </h3>
+                    <div className="lbh-page-announcement__content">
+                      This application was imported from a legacy system. Only
+                      limited information is available for legacy applications.
+                    </div>
+                  </Announcement>
+                ) : null}
 
-            <HeadingOne content="View application" />
-            <h2 className="lbh-caption-xl lbh-caption govuk-!-margin-top-1">
-              {getPersonName(data)}
-            </h2>
+                <HeadingOne content="View application" />
+                <h2 className="lbh-caption-xl lbh-caption govuk-!-margin-top-1">
+                  {getPersonName(data)}
+                </h2>
 
-            <HorizontalNav spaced={true}>
-              <HorizontalNavItem
-                handleClick={handleClick}
-                itemName="overview"
-                isActive={activeNavItem === 'overview'}
-              >
-                Overview
-              </HorizontalNavItem>
-              <HorizontalNavItem
-                handleClick={handleClick}
-                itemName="history"
-                isActive={activeNavItem === 'history'}
-              >
-                Notes and history
-              </HorizontalNavItem>
-              {data.status !== ApplicationStatus.DRAFT &&
-              data.status !== ApplicationStatus.MANUAL_DRAFT ? (
-                <HorizontalNavItem
-                  handleClick={handleClick}
-                  itemName="assessment"
-                  isActive={activeNavItem === 'assessment'}
-                >
-                  Assessment
-                </HorizontalNavItem>
-              ) : (
-                <></>
-              )}
-            </HorizontalNav>
-
-            {activeNavItem === 'overview' && (
-              <div className="govuk-grid-row">
-                <div className="govuk-grid-column-two-thirds">
-                  <HeadingThree content="Snapshot" />
-                  <Snapshot data={data} />
-
-                  {data.mainApplicant && (
-                    <OverviewAnnouncements applicant={data.mainApplicant} />
-                  )}
-
-                  {data.mainApplicant && (
-                    <PersonalDetails
-                      heading="Main applicant"
-                      applicant={data.mainApplicant}
-                      applicationId={data.id}
-                      canEdit={canEditApplication}
-                    />
-                  )}
-                  {data.otherMembers && data.otherMembers.length > 0 ? (
-                    <OtherMembers
-                      heading="Other household members"
-                      others={data.otherMembers}
-                      applicationId={data.id}
-                      canEdit={canEditApplication}
-                    />
-                  ) : (
-                    <HeadingThree content="Other household members" />
-                  )}
-                  {canEditApplication && (
-                    <ButtonLink
-                      additionalCssClasses="govuk-secondary lbh-button--secondary"
-                      href={`/applications/edit/${data.id}/add-household-member`}
+                <HorizontalNav spaced={true}>
+                  <HorizontalNavItem
+                    handleClick={handleClick}
+                    itemName="overview"
+                    isActive={activeNavItem === 'overview'}
+                  >
+                    Overview
+                  </HorizontalNavItem>
+                  <HorizontalNavItem
+                    handleClick={handleClick}
+                    itemName="history"
+                    isActive={activeNavItem === 'history'}
+                  >
+                    Notes and history
+                  </HorizontalNavItem>
+                  {data.status !== ApplicationStatus.DRAFT &&
+                  data.status !== ApplicationStatus.MANUAL_DRAFT ? (
+                    <HorizontalNavItem
+                      handleClick={handleClick}
+                      itemName="assessment"
+                      isActive={activeNavItem === 'assessment'}
                     >
-                      + Add household member
-                    </ButtonLink>
+                      Assessment
+                    </HorizontalNavItem>
+                  ) : (
+                    <></>
                   )}
-                </div>
-                <div className="govuk-grid-column-one-third">
-                  <HeadingThree content="Case details" />
+                </HorizontalNav>
 
-                  <CaseDetailsItem
-                    itemHeading="Application reference"
-                    itemValue={data.reference}
-                  />
+                {activeNavItem === 'overview' && (
+                  <div className="govuk-grid-row">
+                    <div className="govuk-grid-column-two-thirds">
+                      <HeadingThree content="Snapshot" />
+                      <Snapshot data={data} />
 
-                  {data.assessment?.biddingNumber && (
-                    <CaseDetailsItem
-                      itemHeading="Bidding number"
-                      itemValue={data.assessment?.biddingNumber}
-                    />
-                  )}
+                      {data.mainApplicant && (
+                        <OverviewAnnouncements applicant={data.mainApplicant} />
+                      )}
 
-                  <CaseDetailsItem
-                    itemHeading="Status"
-                    itemValue={lookupStatus(data.status!)}
-                    buttonText="Change"
-                    onClick={() => setActiveNavItem('assessment')}
-                  />
+                      {data.mainApplicant && (
+                        <PersonalDetails
+                          heading="Main applicant"
+                          applicant={data.mainApplicant}
+                          applicationId={data.id}
+                          canEdit={canEditApplication}
+                        />
+                      )}
+                      {data.otherMembers && data.otherMembers.length > 0 ? (
+                        <OtherMembers
+                          heading="Other household members"
+                          others={data.otherMembers}
+                          applicationId={data.id}
+                          canEdit={canEditApplication}
+                        />
+                      ) : (
+                        <HeadingThree content="Other household members" />
+                      )}
+                      {canEditApplication && (
+                        <ButtonLink
+                          additionalCssClasses="govuk-secondary lbh-button--secondary"
+                          href={`/applications/edit/${data.id}/add-household-member`}
+                        >
+                          + Add household member
+                        </ButtonLink>
+                      )}
+                    </div>
+                    <div className="govuk-grid-column-one-third">
+                      <HeadingThree content="Case details" />
 
-                  {data.submittedAt && (
-                    <CaseDetailsItem
-                      itemHeading="Date submitted"
-                      itemValue={formatDate(data.submittedAt)}
-                    />
-                  )}
+                      <CaseDetailsItem
+                        itemHeading="Application reference"
+                        itemValue={data.reference}
+                      />
 
-                  {data.assessment?.effectiveDate && (
-                    <CaseDetailsItem
-                      itemHeading="Application date"
-                      itemValue={formatDate(data.assessment?.effectiveDate)}
-                      buttonText="Change"
-                      onClick={() => setActiveNavItem('assessment')}
-                    />
-                  )}
+                      {data.assessment?.biddingNumber && (
+                        <CaseDetailsItem
+                          itemHeading="Bidding number"
+                          itemValue={data.assessment?.biddingNumber}
+                        />
+                      )}
 
-                  {data.assessment?.band && (
-                    <CaseDetailsItem
-                      itemHeading="Band"
-                      itemValue={`Band ${data.assessment?.band}`}
-                      buttonText="Change"
-                      onClick={() => setActiveNavItem('assessment')}
-                    />
-                  )}
+                      <CaseDetailsItem
+                        itemHeading="Status"
+                        itemValue={lookupStatus(data.status!)}
+                        buttonText="Change"
+                        onClick={() => setActiveNavItem('assessment')}
+                      />
 
-                  <AssignUser
+                      {data.submittedAt && (
+                        <CaseDetailsItem
+                          itemHeading="Date submitted"
+                          itemValue={formatDate(data.submittedAt)}
+                        />
+                      )}
+
+                      {data.assessment?.effectiveDate && (
+                        <CaseDetailsItem
+                          itemHeading="Application date"
+                          itemValue={formatDate(data.assessment?.effectiveDate)}
+                          buttonText="Change"
+                          onClick={() => setActiveNavItem('assessment')}
+                        />
+                      )}
+
+                      {data.assessment?.band && (
+                        <CaseDetailsItem
+                          itemHeading="Band"
+                          itemValue={`Band ${data.assessment?.band}`}
+                          buttonText="Change"
+                          onClick={() => setActiveNavItem('assessment')}
+                        />
+                      )}
+
+                      <AssignUser
+                        id={data.id}
+                        user={user}
+                        assignee={data.assignedTo}
+                      />
+
+                      <SensitiveData
+                        id={data.id}
+                        isSensitive={data.sensitiveData || false}
+                        user={user}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {activeNavItem === 'history' && (
+                  <ApplicationHistory
+                    setActiveNavItem={setActiveNavItem}
+                    history={history}
                     id={data.id}
-                    user={user}
-                    assignee={data.assignedTo}
                   />
+                )}
 
-                  <SensitiveData
-                    id={data.id}
-                    isSensitive={data.sensitiveData || false}
-                    user={user}
-                  />
-                </div>
-              </div>
+                {activeNavItem === 'assessment' && <Actions data={data} />}
+              </>
             )}
-
-            {activeNavItem === 'history' && (
-              <ApplicationHistory
-                setActiveNavItem={setActiveNavItem}
-                history={history}
-                id={data.id}
-              />
-            )}
-
-            {activeNavItem === 'assessment' && <Actions data={data} />}
-          </>
-        )}
-      </Layout>
-    </UserContext.Provider>
+          </Layout>
+        </UserContext.Provider>
+      ) : (
+        <Custom404 />
+      )}
+    </>
   );
 }
 

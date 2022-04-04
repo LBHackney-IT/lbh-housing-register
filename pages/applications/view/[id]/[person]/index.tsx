@@ -46,8 +46,6 @@ export default function ApplicationPersonPage({
   person,
   evidenceLink,
 }: PageProps): JSX.Element {
-  if (!data.id) return <Custom404 />;
-
   let isMainApplicant = data.mainApplicant?.person?.id === person;
   let applicant = isMainApplicant
     ? data.mainApplicant
@@ -87,113 +85,124 @@ export default function ApplicationPersonPage({
   const incomeAndSavings = incomeAndSavingsCheckboxList(applicant);
 
   return (
-    <UserContext.Provider value={{ user }}>
-      <Layout>
-        {data.sensitiveData &&
-        !canViewSensitiveApplication(data.assignedTo!, user) ? (
-          <>
-            <h2>Access denied</h2>
-            <Paragraph>You are unable to view this application.</Paragraph>
-          </>
-        ) : (
-          <>
-            <div className="govuk-grid-row">
-              <div className="govuk-grid-column-two-thirds">
-                <HeadingOne
-                  content={
-                    isMainApplicant
-                      ? 'Review main applicant'
-                      : 'Review household member'
-                  }
-                />
-                <h2 className="lbh-caption-xl lbh-caption govuk-!-margin-top-1">
-                  {applicant?.person?.firstName} {applicant?.person?.surname}
-                </h2>
-              </div>
-              <div
-                className="govuk-grid-column-one-third"
-                style={{ textAlign: 'right' }}
-              >
-                <a href={evidenceLink} target="_blank">
-                  <Button>View Documents</Button>
-                </a>
-              </div>
-            </div>
+    <>
+      {data.id ? (
+        <UserContext.Provider value={{ user }}>
+          <Layout>
+            {data.sensitiveData &&
+            !canViewSensitiveApplication(data.assignedTo!, user) ? (
+              <>
+                <h2>Access denied</h2>
+                <Paragraph>You are unable to view this application.</Paragraph>
+              </>
+            ) : (
+              <>
+                <div className="govuk-grid-row">
+                  <div className="govuk-grid-column-two-thirds">
+                    <HeadingOne
+                      content={
+                        isMainApplicant
+                          ? 'Review main applicant'
+                          : 'Review household member'
+                      }
+                    />
+                    <h2 className="lbh-caption-xl lbh-caption govuk-!-margin-top-1">
+                      {applicant?.person?.firstName}{' '}
+                      {applicant?.person?.surname}
+                    </h2>
+                  </div>
+                  <div
+                    className="govuk-grid-column-one-third"
+                    style={{ textAlign: 'right' }}
+                  >
+                    <a href={evidenceLink} target="_blank">
+                      <Button>View Documents</Button>
+                    </a>
+                  </div>
+                </div>
 
-            <HorizontalNav spaced={true}>
-              <HorizontalNavItem
-                handleClick={handleClick}
-                itemName="identity"
-                isActive={activeNavItem === 'identity'}
-              >
-                Identity
-              </HorizontalNavItem>
-              <HorizontalNavItem
-                handleClick={handleClick}
-                itemName="livingsituation"
-                isActive={activeNavItem === 'livingsituation'}
-              >
-                Living Situation
-              </HorizontalNavItem>
-              <HorizontalNavItem
-                handleClick={handleClick}
-                itemName="money"
-                isActive={activeNavItem === 'money'}
-              >
-                Money
-              </HorizontalNavItem>
-              <HorizontalNavItem
-                handleClick={handleClick}
-                itemName="health"
-                isActive={activeNavItem === 'health'}
-              >
-                Health
-              </HorizontalNavItem>
-              {/* <HorizontalNavItem
+                <HorizontalNav spaced={true}>
+                  <HorizontalNavItem
+                    handleClick={handleClick}
+                    itemName="identity"
+                    isActive={activeNavItem === 'identity'}
+                  >
+                    Identity
+                  </HorizontalNavItem>
+                  <HorizontalNavItem
+                    handleClick={handleClick}
+                    itemName="livingsituation"
+                    isActive={activeNavItem === 'livingsituation'}
+                  >
+                    Living Situation
+                  </HorizontalNavItem>
+                  <HorizontalNavItem
+                    handleClick={handleClick}
+                    itemName="money"
+                    isActive={activeNavItem === 'money'}
+                  >
+                    Money
+                  </HorizontalNavItem>
+                  <HorizontalNavItem
+                    handleClick={handleClick}
+                    itemName="health"
+                    isActive={activeNavItem === 'health'}
+                  >
+                    Health
+                  </HorizontalNavItem>
+                  {/* <HorizontalNavItem
                 handleClick={handleClick}
                 itemName="checklist"
                 isActive={activeNavItem === 'checklist'}
               >
                 Checklist
               </HorizontalNavItem> */}
-            </HorizontalNav>
+                </HorizontalNav>
 
-            {activeNavItem === 'identity' && (
-              <>
-                <CheckBoxList {...(personalDetails as CheckBoxListPageProps)} />
-                <CheckBoxList
-                  {...(immigrationStatus as CheckBoxListPageProps)}
-                />
+                {activeNavItem === 'identity' && (
+                  <>
+                    <CheckBoxList
+                      {...(personalDetails as CheckBoxListPageProps)}
+                    />
+                    <CheckBoxList
+                      {...(immigrationStatus as CheckBoxListPageProps)}
+                    />
+                  </>
+                )}
+                {activeNavItem === 'livingsituation' && (
+                  <>
+                    <CheckBoxList
+                      {...(residentialStatus as CheckBoxListPageProps)}
+                    />
+                    <CheckBoxList
+                      {...(addressHistory as CheckBoxListPageProps)}
+                    />
+                    <CheckBoxList
+                      {...(currentAccomodation as CheckBoxListPageProps)}
+                    />
+                    <CheckBoxList {...(situation as CheckBoxListPageProps)} />
+                  </>
+                )}
+                {activeNavItem === 'money' && (
+                  <>
+                    <CheckBoxList {...(employment as CheckBoxListPageProps)} />
+                    <CheckBoxList
+                      {...(incomeAndSavings as CheckBoxListPageProps)}
+                    />
+                  </>
+                )}
+                {activeNavItem === 'health' && (
+                  <MedicalDetail data={data} memberIndex={index ?? -1} />
+                )}
+                {activeNavItem === 'checklist' && <h3>checklist</h3>}
               </>
             )}
-            {activeNavItem === 'livingsituation' && (
-              <>
-                <CheckBoxList
-                  {...(residentialStatus as CheckBoxListPageProps)}
-                />
-                <CheckBoxList {...(addressHistory as CheckBoxListPageProps)} />
-                <CheckBoxList
-                  {...(currentAccomodation as CheckBoxListPageProps)}
-                />
-                <CheckBoxList {...(situation as CheckBoxListPageProps)} />
-              </>
-            )}
-            {activeNavItem === 'money' && (
-              <>
-                <CheckBoxList {...(employment as CheckBoxListPageProps)} />
-                <CheckBoxList
-                  {...(incomeAndSavings as CheckBoxListPageProps)}
-                />
-              </>
-            )}
-            {activeNavItem === 'health' && (
-              <MedicalDetail data={data} memberIndex={index ?? -1} />
-            )}
-            {activeNavItem === 'checklist' && <h3>checklist</h3>}
-          </>
-        )}
-      </Layout>
-    </UserContext.Provider>
+          </Layout>
+        </UserContext.Provider>
+      ) : (
+        <Custom404 />
+      )}
+    </>
   );
 }
 

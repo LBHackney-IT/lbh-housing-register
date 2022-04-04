@@ -11,15 +11,14 @@ import {
   updateWithFormValues,
 } from '../../../lib/store/applicant';
 import withApplication from '../../../lib/hoc/withApplication';
+import { Applicant } from '../../../domain/HousingApi';
 
 const AdditonalQuestions = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const applicant = useAppSelector((store) => store.application.mainApplicant);
-
-  if (!applicant) {
-    return <Custom404 />;
-  }
+  const applicant = useAppSelector(
+    (store) => store.application.mainApplicant
+  ) as Applicant;
 
   const initialValues = {
     ...getQuestionsForFormAsValues(FormID.ADDITIONAL_QUESTIONS, applicant),
@@ -30,7 +29,7 @@ const AdditonalQuestions = (): JSX.Element => {
     dispatch(
       updateWithFormValues({
         formID: FormID.ADDITIONAL_QUESTIONS,
-        personID: applicant.person?.id || '',
+        personID: applicant.person!.id!,
         values,
         markAsComplete: true,
       })
@@ -39,17 +38,25 @@ const AdditonalQuestions = (): JSX.Element => {
   };
 
   return (
-    <Layout pageName="Before you submit">
-      <HeadingOne content="Before you submit" />
-      <HeadingFour content="Do any of the following apply to your household?" />
-      <p className="lbh-body lbh-body--grey">Select all options that apply.</p>
-      <Form
-        initialValues={initialValues}
-        buttonText="Save and continue"
-        formData={getFormData(FormID.ADDITIONAL_QUESTIONS)}
-        onSubmit={onSubmit}
-      />
-    </Layout>
+    <>
+      {applicant ? (
+        <Layout pageName="Before you submit">
+          <HeadingOne content="Before you submit" />
+          <HeadingFour content="Do any of the following apply to your household?" />
+          <p className="lbh-body lbh-body--grey">
+            Select all options that apply.
+          </p>
+          <Form
+            initialValues={initialValues}
+            buttonText="Save and continue"
+            formData={getFormData(FormID.ADDITIONAL_QUESTIONS)}
+            onSubmit={onSubmit}
+          />
+        </Layout>
+      ) : (
+        <Custom404 />
+      )}
+    </>
   );
 };
 

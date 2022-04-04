@@ -70,7 +70,7 @@ const ApplicationStep = (): JSX.Element => {
     dispatch(
       updateWithFormValues({
         formID: FormID.PERSONAL_DETAILS,
-        personID: applicant.person?.id || '',
+        personID: applicant.person!.id!,
         values,
         markAsComplete: true,
       })

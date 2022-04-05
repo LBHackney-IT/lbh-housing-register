@@ -39,6 +39,10 @@ const ResidentIndex = (): JSX.Element => {
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
   const application = useAppSelector((store) => store.application);
 
+  if (!currentResident || !mainResident) {
+    return <Custom404 />;
+  }
+
   const baseHref = `/apply/${currentResident.person?.id}`;
   const returnHref = '/apply/overview';
   const checkAnswers = `${baseHref}/summary`;

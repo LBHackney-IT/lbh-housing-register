@@ -49,7 +49,6 @@ export default function ResidentLayout({
 
   const handleShowSignOutDialog = () => {
     if (!application.id) return;
-    // console.log('Dialog timer started');
 
     setTimeout(() => autoSignOut(), TIME_TO_SHOW_DIALOG_BEFORE_SIGN_OUT);
     setShowSignOutDialog(true);
@@ -60,8 +59,6 @@ export default function ResidentLayout({
   };
 
   useEffect(() => {
-    // console.log('Time before showing the sign out dialog started');
-
     let timeBeforeShowSignOutDialog = setTimeout(
       () => handleShowSignOutDialog(),
       INACTIVITY_TIME_BEFORE_WARNING_DIALOG

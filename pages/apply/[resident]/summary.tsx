@@ -30,6 +30,7 @@ import {
   disqualifyApplication,
   sendDisqualifyEmail,
 } from '../../../lib/store/application';
+import { Applicant } from '../../../domain/HousingApi';
 
 const UserSummary = (): JSX.Element => {
   const router = useRouter();
@@ -39,10 +40,16 @@ const UserSummary = (): JSX.Element => {
   const currentResident = useAppSelector(
     selectApplicant(resident)
   ) as ApplicantWithPersonID;
-  const mainResident = useAppSelector((s) => s.application.mainApplicant);
+  const mainResident = useAppSelector(
+    (s) => s.application.mainApplicant
+  ) as Applicant;
   const isMainApplicant = currentResident == mainResident;
 
   const application = useAppSelector((store) => store.application);
+
+  if (!currentResident || !mainResident) {
+    return <Custom404 />;
+  }
 
   const baseHref = `/apply/${currentResident.person?.id}`;
   const returnHref = '/apply/overview';
@@ -104,73 +111,64 @@ const UserSummary = (): JSX.Element => {
   const medicalNeedsCompleted = isSectionComplete(FormID.MEDICAL_NEEDS);
 
   return (
-    <>
-      {currentResident && mainResident ? (
-        <Layout pageName="Application summary" breadcrumbs={breadcrumbs}>
-          <h1 className="lbh-heading-h1">
-            <span className="govuk-hint lbh-hint">Check answers for:</span>
-            {currentResident.person?.firstName}{' '}
-            {currentResident.person?.surname}
-          </h1>
-          {pesonalDetailsCompleted && (
-            <PersonalDetailsSummary currentResident={currentResident} />
-          )}
-
-          {immigrationStatusCompleted && (
-            <ImmigrationStatusSummary currentResident={currentResident} />
-          )}
-
-          {isMainApplicant && (
-            <>
-              {residentialStatusCompleted && (
-                <ResidentialStatusSummary currentResident={currentResident} />
-              )}
-            </>
-          )}
-          {addressHistoryCompleted && (
-            <AddressHistorySummary currentResident={currentResident} />
-          )}
-
-          {isMainApplicant && (
-            <>
-              {currentAccommodationCompleted && (
-                <CurrentAccommodationSummary
-                  currentResident={currentResident}
-                />
-              )}
-              {yourSituationCompleted && (
-                <YourSituationSummary currentResident={currentResident} />
-              )}
-            </>
-          )}
-
-          {isOver18(currentResident) && (
-            <>
-              {incomeSavingsCompleted && (
-                <IncomeSavingsSummary currentResident={currentResident} />
-              )}
-              {employmentCompleted && (
-                <EmploymentSummary currentResident={currentResident} />
-              )}
-            </>
-          )}
-          {medicalNeedsCompleted && (
-            <MedicalNeedsSummary currentResident={currentResident} />
-          )}
-
-          <Button onClick={onConfirmData}>I confirm this is correct</Button>
-          {currentResident !== mainResident && (
-            <DeleteLink
-              content="Delete this information"
-              details="This information will be permanently deleted."
-              onDelete={onDelete}
-            />
-          )}
-        </Layout>
-      ) : (
-        <Custom404 />
+    <Layout pageName="Application summary" breadcrumbs={breadcrumbs}>
+      <h1 className="lbh-heading-h1">
+        <span className="govuk-hint lbh-hint">Check answers for:</span>
+        {currentResident.person?.firstName} {currentResident.person?.surname}
+      </h1>
+      {pesonalDetailsCompleted && (
+        <PersonalDetailsSummary currentResident={currentResident} />
       )}
-    </>
+
+      {immigrationStatusCompleted && (
+        <ImmigrationStatusSummary currentResident={currentResident} />
+      )}
+
+      {isMainApplicant && (
+        <>
+          {residentialStatusCompleted && (
+            <ResidentialStatusSummary currentResident={currentResident} />
+          )}
+        </>
+      )}
+      {addressHistoryCompleted && (
+        <AddressHistorySummary currentResident={currentResident} />
+      )}
+
+      {isMainApplicant && (
+        <>
+          {currentAccommodationCompleted && (
+            <CurrentAccommodationSummary currentResident={currentResident} />
+          )}
+          {yourSituationCompleted && (
+            <YourSituationSummary currentResident={currentResident} />
+          )}
+        </>
+      )}
+
+      {isOver18(currentResident) && (
+        <>
+          {incomeSavingsCompleted && (
+            <IncomeSavingsSummary currentResident={currentResident} />
+          )}
+          {employmentCompleted && (
+            <EmploymentSummary currentResident={currentResident} />
+          )}
+        </>
+      )}
+      {medicalNeedsCompleted && (
+        <MedicalNeedsSummary currentResident={currentResident} />
+      )}
+
+      <Button onClick={onConfirmData}>I confirm this is correct</Button>
+      {currentResident !== mainResident && (
+        <DeleteLink
+          content="Delete this information"
+          details="This information will be permanently deleted."
+          onDelete={onDelete}
+        />
+      )}
+    </Layout>
   );
 };
 

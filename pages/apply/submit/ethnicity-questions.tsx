@@ -19,7 +19,6 @@ const EthnicityQuestions = (): JSX.Element => {
   ) as Applicant;
 
   const [formId, setFormId] = useState('ethnicity-questions');
-
   const [activeStepID, setActiveStepId] = useState(() => {
     switch (formId) {
       case 'ethnicity-extended-category-asian-asian-british':
@@ -41,6 +40,10 @@ const EthnicityQuestions = (): JSX.Element => {
         return FormID.ETHNICITY_QUESTIONS;
     }
   });
+
+  if (!applicant) {
+    return <Custom404 />;
+  }
 
   const formData = getFormData(activeStepID);
 
@@ -78,22 +81,16 @@ const EthnicityQuestions = (): JSX.Element => {
   };
 
   return (
-    <>
-      {applicant ? (
-        <Layout pageName="Before you submit">
-          <HeadingOne content="Before you submit" />
-          <Form
-            key={activeStepID}
-            buttonText="Save and continue"
-            formData={formData}
-            onSave={onSave}
-            onSubmit={nextStep}
-          />
-        </Layout>
-      ) : (
-        <Custom404 />
-      )}
-    </>
+    <Layout pageName="Before you submit">
+      <HeadingOne content="Before you submit" />
+      <Form
+        key={activeStepID}
+        buttonText="Save and continue"
+        formData={formData}
+        onSave={onSave}
+        onSubmit={nextStep}
+      />
+    </Layout>
   );
 };
 

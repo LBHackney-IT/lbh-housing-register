@@ -20,6 +20,10 @@ const AdditonalQuestions = (): JSX.Element => {
     (store) => store.application.mainApplicant
   ) as Applicant;
 
+  if (!applicant) {
+    return <Custom404 />;
+  }
+
   const initialValues = {
     ...getQuestionsForFormAsValues(FormID.ADDITIONAL_QUESTIONS, applicant),
   };
@@ -38,25 +42,17 @@ const AdditonalQuestions = (): JSX.Element => {
   };
 
   return (
-    <>
-      {applicant ? (
-        <Layout pageName="Before you submit">
-          <HeadingOne content="Before you submit" />
-          <HeadingFour content="Do any of the following apply to your household?" />
-          <p className="lbh-body lbh-body--grey">
-            Select all options that apply.
-          </p>
-          <Form
-            initialValues={initialValues}
-            buttonText="Save and continue"
-            formData={getFormData(FormID.ADDITIONAL_QUESTIONS)}
-            onSubmit={onSubmit}
-          />
-        </Layout>
-      ) : (
-        <Custom404 />
-      )}
-    </>
+    <Layout pageName="Before you submit">
+      <HeadingOne content="Before you submit" />
+      <HeadingFour content="Do any of the following apply to your household?" />
+      <p className="lbh-body lbh-body--grey">Select all options that apply.</p>
+      <Form
+        initialValues={initialValues}
+        buttonText="Save and continue"
+        formData={getFormData(FormID.ADDITIONAL_QUESTIONS)}
+        onSubmit={onSubmit}
+      />
+    </Layout>
   );
 };
 

@@ -27,6 +27,10 @@ const CurrentAccommodation = (): JSX.Element => {
     FormID.CURRENT_ACCOMMODATION
   );
 
+  if (!applicantHasId(applicant)) {
+    return <Custom404 />;
+  }
+
   const initialValues: FormikValues = getQuestionsForFormAsValues(
     activeStepID,
     applicant
@@ -77,24 +81,18 @@ const CurrentAccommodation = (): JSX.Element => {
   };
 
   return (
-    <>
-      {applicantHasId(applicant) ? (
-        <Layout pageName="Current accommodation" breadcrumbs={breadcrumbs}>
-          <HeadingOne content="Current accommodation" />
-          <Form
-            // Intentional key outside of an array. Force a fresh form component when we change steps to avoid values persisting between forms.
-            initialValues={initialValues}
-            key={activeStepID}
-            buttonText="Save and continue"
-            formData={formData}
-            onSave={onSave}
-            onSubmit={nextStep}
-          />
-        </Layout>
-      ) : (
-        <Custom404 />
-      )}
-    </>
+    <Layout pageName="Current accommodation" breadcrumbs={breadcrumbs}>
+      <HeadingOne content="Current accommodation" />
+      <Form
+        // Intentional key outside of an array. Force a fresh form component when we change steps to avoid values persisting between forms.
+        initialValues={initialValues}
+        key={activeStepID}
+        buttonText="Save and continue"
+        formData={formData}
+        onSave={onSave}
+        onSubmit={nextStep}
+      />
+    </Layout>
   );
 };
 

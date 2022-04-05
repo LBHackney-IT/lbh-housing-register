@@ -26,6 +26,10 @@ const YourSituation = (): JSX.Element => {
 
   const applicant = useAppSelector(selectApplicant(resident)) as Applicant;
 
+  if (!applicant) {
+    return <Custom404 />;
+  }
+
   // If JSON has routeSelect set to true we can pass multiple possible values to activeStepID.
   // See if statement at end of nextStep() below
   const routeSelectFunction = () => {
@@ -109,23 +113,17 @@ const YourSituation = (): JSX.Element => {
   };
 
   return (
-    <>
-      {applicant ? (
-        <Layout pageName="Your situation" breadcrumbs={breadcrumbs}>
-          <HeadingOne content="Your situation" />
-          <Form
-            // Intentional key outside of an array. Force a fresh form component when we change steps to avoid values persisting between forms.
-            key={activeStepID}
-            buttonText="Save and continue"
-            formData={formData}
-            onSave={onSave}
-            onSubmit={nextStep}
-          />
-        </Layout>
-      ) : (
-        <Custom404 />
-      )}
-    </>
+    <Layout pageName="Your situation" breadcrumbs={breadcrumbs}>
+      <HeadingOne content="Your situation" />
+      <Form
+        // Intentional key outside of an array. Force a fresh form component when we change steps to avoid values persisting between forms.
+        key={activeStepID}
+        buttonText="Save and continue"
+        formData={formData}
+        onSave={onSave}
+        onSubmit={nextStep}
+      />
+    </Layout>
   );
 };
 

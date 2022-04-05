@@ -2,11 +2,8 @@ import { useRouter } from 'next/router';
 import ApplicationForms from '../../../components/application/application-forms';
 import Layout from '../../../components/layout/resident-layout';
 import withApplication from '../../../lib/hoc/withApplication';
-import {
-  ApplicantWithPersonID,
-  applicantHasId,
-  selectApplicant,
-} from '../../../lib/store/applicant';
+import { applicantHasId, selectApplicant } from '../../../lib/store/applicant';
+import { Applicant } from '../../../domain/HousingApi';
 import { useAppSelector } from '../../../lib/store/hooks';
 import { getApplicationSectionFromId } from '../../../lib/utils/application-forms';
 import { isOver18 } from '../../../lib/utils/dateOfBirth';
@@ -20,22 +17,27 @@ const ApplicationSection = (): JSX.Element => {
     section: string;
   };
 
-  const applicant = useAppSelector(
-    selectApplicant(resident)
-  ) as ApplicantWithPersonID;
+  const applicant = useAppSelector(selectApplicant(resident)) as Applicant;
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
 
-  const baseHref = `/apply/${applicant.person.id}`;
+  if (!applicantHasId(applicant)) {
+    return <Custom404 />;
+  }
+
+  const baseHref = `/apply/${applicant.person?.id}`;
   const returnHref = '/apply/overview';
 
-  const sectionGroups = getApplicationSectionsForResident(
-    applicant === mainResident,
-    isOver18(applicant),
-    applicant.person.relationshipType === 'partner'
-  );
+  const sectionGroups = applicant
+    ? getApplicationSectionsForResident(
+        applicant === mainResident,
+        isOver18(applicant),
+        applicant.person?.relationshipType === 'partner'
+      )
+    : [];
 
   const sectionName =
     getApplicationSectionFromId(section, sectionGroups)?.heading || '';
+
   const breadcrumbs = [
     {
       href: returnHref,
@@ -43,7 +45,7 @@ const ApplicationSection = (): JSX.Element => {
     },
     {
       href: baseHref,
-      name: applicant.person.firstName || '',
+      name: applicant?.person?.firstName || '',
     },
     {
       href: `${baseHref}/${section}`,

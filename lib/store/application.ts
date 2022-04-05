@@ -56,10 +56,9 @@ export const disqualifyApplication = createAsyncThunk(
 export const completeApplication = createAsyncThunk(
   'application/complete',
   async (application: Application) => {
-    const res = await fetch(`/api/applications/${application.id}/complete`, {
+    await fetch(`/api/applications/${application.id}/complete`, {
       method: 'PATCH',
     });
-    return (await res.json()) as Application;
   }
 );
 

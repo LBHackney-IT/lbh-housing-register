@@ -1,5 +1,4 @@
 import { GetServerSideProps } from 'next';
-import { useRouter } from 'next/router';
 import React, { SyntheticEvent, useState } from 'react';
 import Actions from '../../../../components/admin/actions';
 import ApplicationHistory from '../../../../components/admin/ApplicationHistory';
@@ -15,7 +14,7 @@ import PersonalDetails from '../../../../components/admin/personal-details';
 import SensitiveData from '../../../../components/admin/sensitive-data';
 import Snapshot from '../../../../components/admin/snapshot';
 import Announcement from '../../../../components/announcement';
-import Button, { ButtonLink } from '../../../../components/button';
+import { ButtonLink } from '../../../../components/button';
 import {
   HeadingOne,
   HeadingThree,
@@ -43,7 +42,6 @@ import {
 } from '../../../../lib/utils/googleAuth';
 import { getPersonName } from '../../../../lib/utils/person';
 import Custom404 from '../../../404';
-import { completeApplication } from '../../../../lib/gateways/internal-api';
 
 export interface PageProps {
   user: HackneyGoogleUserWithPermissions;
@@ -57,8 +55,6 @@ export default function ApplicationPage({
   history,
 }: PageProps): JSX.Element | null {
   if (!data.id) return <Custom404 />;
-
-  const router = useRouter();
 
   // Can edit application if:
   // - it has a status of manual draft
@@ -74,14 +70,6 @@ export default function ApplicationPage({
     const { name } = event.target as HTMLButtonElement;
     setActiveNavItem(name);
   };
-
-  // const setApplicationAsComplete = async () => {
-  //   completeApplication(data).then(() => {
-  //     router.push({
-  //       pathname: '/applications/unassigned',
-  //     });
-  //   });
-  // };
 
   return (
     <UserContext.Provider value={{ user }}>
@@ -263,21 +251,6 @@ export default function ApplicationPage({
                       isSensitive={data.sensitiveData || false}
                       user={user}
                     />
-
-                    {/* {data.status === ApplicationStatus.MANUAL_DRAFT && (
-                      <>
-                        <HeadingThree content="Mark as submitted" />
-                        <Paragraph>
-                          Once all household data has been added, this will set
-                          the application submitted date and change the status
-                          to "Awaiting assessment" adding it to the "group
-                          worktray".
-                        </Paragraph>
-                        <Button onClick={() => setApplicationAsComplete()}>
-                          Set as submitted
-                        </Button>
-                      </>
-                    )} */}
                   </div>
                 </div>
               </>

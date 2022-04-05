@@ -34,11 +34,12 @@ export default function PersonalDetails({
                   <strong>
                     {applicant.person?.title} {applicant.person?.firstName}{' '}
                     {applicant.person?.surname}
-                  </strong>
+                  </strong>{' '}
+                  {getGenderName(applicant) !== ''
+                    ? `(${getGenderName(applicant)})`
+                    : ''}
                 </li>
-                <li>Applicant</li>
                 <li>
-                  {getGenderName(applicant)},{' '}
                   {applicant.person?.dateOfBirth &&
                     formatDob(new Date(applicant.person?.dateOfBirth))}{' '}
                   {applicant.person?.dateOfBirth &&

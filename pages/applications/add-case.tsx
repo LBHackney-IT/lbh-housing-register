@@ -5,7 +5,11 @@ import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { FormikValues } from 'formik';
 import { Application } from '../../domain/HousingApi';
-import { createApplication } from '../../lib/gateways/internal-api';
+import {
+  createApplication,
+  completeApplication,
+  updateApplication,
+} from '../../lib/gateways/internal-api';
 import { generateQuestionArray, Address } from '../../lib/utils/adminHelpers';
 import { ApplicationStatus } from '../../lib/types/application-status';
 import { scrollToTop } from '../../lib/utils/scroll';
@@ -31,8 +35,6 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
     const addressToSubmit = addressHistory.length > 0 ? addressHistory[0] : {};
 
     const request: Application = {
-      status: ApplicationStatus.MANUAL_DRAFT,
-      submittedAt: new Date().toISOString(),
       mainApplicant: {
         person: {
           title: values.personalDetails_title,
@@ -55,12 +57,22 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
       assignedTo: user.email,
     };
 
-    createApplication(request).then(() => {
-      router.push({
-        pathname: '/applications/view-register',
-        query: { status: ApplicationStatus.MANUAL_DRAFT },
+    createManualApplication(request);
+  };
+
+  const createManualApplication = async (request: Application) => {
+    try {
+      const newApplication = await createApplication(request);
+      const completedApplication = await completeApplication(newApplication);
+      const setToManualDraft = await updateApplication({
+        ...completedApplication,
+        status: ApplicationStatus.MANUAL_DRAFT,
       });
-    });
+
+      router.push(`/applications/view/${setToManualDraft.id}`);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleSaveApplication = (isValid: any, touched: any) => {

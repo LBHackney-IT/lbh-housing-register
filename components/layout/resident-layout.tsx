@@ -84,45 +84,43 @@ export default function ResidentLayout({
 
   return (
     <>
-      <>
-        {pageName && <Seo title={pageName} />}
-        <SkipLink />
-        <Header
-          username={application.mainApplicant?.person?.firstName}
-          logoLink="/"
-          serviceName="Housing Register application"
-          signOutText="Sign out"
-          onSignOut={onSignOut}
-          signOutRef={signOutRef}
-        />
-        {hasPhaseBanner() && <PhaseBanner />}
+      {pageName && <Seo title={pageName} />}
+      <SkipLink />
+      <Header
+        username={application.mainApplicant?.person?.firstName}
+        logoLink="/"
+        serviceName="Housing Register application"
+        signOutText="Sign out"
+        onSignOut={onSignOut}
+        signOutRef={signOutRef}
+      />
+      {hasPhaseBanner() && <PhaseBanner />}
 
-        {breadcrumbs && breadcrumbs.length > 0 && (
-          <Breadcrumbs items={breadcrumbs} />
-        )}
+      {breadcrumbs && breadcrumbs.length > 0 && (
+        <Breadcrumbs items={breadcrumbs} />
+      )}
 
-        <main id="main-content" className="lbh-main-wrapper">
-          <div className="lbh-container">
-            {loaded ? children : <Loading text="Checking information…" />}
-          </div>
-        </main>
+      <main id="main-content" className="lbh-main-wrapper">
+        <div className="lbh-container">
+          {loaded ? children : <Loading text="Checking information…" />}
+        </div>
+      </main>
 
-        <Footer referenceNumber={application.reference ?? ''} />
-        <CookieBanner />
+      <Footer referenceNumber={application.reference ?? ''} />
+      <CookieBanner />
 
-        <Dialog
-          isOpen={showSignOutDialog}
-          title="Sign out"
-          onConfirmation={handleStayLoggedIn}
-          onConfirmationText="Stay logged in"
-        >
-          <Paragraph>
-            Because there has been no input from you in the last 30 minutes you
-            will be signed out of this application in 30 seconds. You can sign
-            back in later.
-          </Paragraph>
-        </Dialog>
-      </>
+      <Dialog
+        isOpen={showSignOutDialog}
+        title="Sign out"
+        onConfirmation={handleStayLoggedIn}
+        onConfirmationText="Stay logged in"
+      >
+        <Paragraph>
+          Because there has been no input from you in the last 30 minutes you
+          will be signed out of this application in 30 seconds. You can sign
+          back in later.
+        </Paragraph>
+      </Dialog>
     </>
   );
 }

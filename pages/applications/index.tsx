@@ -29,7 +29,7 @@ export default function ApplicationListPage({
 
   const [activeNavItem, setActiveNavItem] = useState('Submitted');
 
-  const handleClick = async (event: SyntheticEvent) => {
+  const handleSelectNavItem = async (event: SyntheticEvent) => {
     event.preventDefault();
     const { name } = event.target as HTMLButtonElement;
 
@@ -64,21 +64,21 @@ export default function ApplicationListPage({
             <HeadingOne content="My worktray" />
             <HorizontalNav>
               <HorizontalNavItem
-                handleClick={handleClick}
+                handleSelectNavItem={handleSelectNavItem}
                 itemName="Submitted"
                 isActive={activeNavItem === 'Submitted'}
               >
                 New applications
               </HorizontalNavItem>
               <HorizontalNavItem
-                handleClick={handleClick}
+                handleSelectNavItem={handleSelectNavItem}
                 itemName="AwaitingReassessment"
                 isActive={activeNavItem === 'AwaitingReassessment'}
               >
                 Reviews
               </HorizontalNavItem>
               <HorizontalNavItem
-                handleClick={handleClick}
+                handleSelectNavItem={handleSelectNavItem}
                 itemName="Pending"
                 isActive={activeNavItem === 'Pending'}
               >

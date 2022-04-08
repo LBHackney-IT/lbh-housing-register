@@ -17,6 +17,7 @@ import Loading from '../../components/loading';
 interface ResidentLayoutProps {
   pageName?: string;
   breadcrumbs?: { href: string; name: string }[];
+  pageLoadsApplication?: boolean;
   children: ReactNode;
 }
 
@@ -26,6 +27,7 @@ const TIME_TO_SHOW_DIALOG_BEFORE_SIGN_OUT = 30 * 1000; // 30 seconds
 export default function ResidentLayout({
   pageName,
   breadcrumbs,
+  pageLoadsApplication = true,
   children,
 }: ResidentLayoutProps): JSX.Element {
   const router = useRouter();
@@ -38,11 +40,7 @@ export default function ResidentLayout({
   const application = useAppSelector((store) => store.application);
 
   useEffect(() => {
-    if (
-      router.pathname === '/' ||
-      router.pathname === '/apply/sign-in' ||
-      router.pathname === '/apply/verify'
-    ) {
+    if (!pageLoadsApplication) {
       setLoaded(true);
       return;
     }

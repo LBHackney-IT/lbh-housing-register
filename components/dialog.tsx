@@ -36,7 +36,7 @@ export default function Dialog({
       <div className="lbh-dialog__actions">
         {onConfirmation && (
           <Button onClick={onConfirmation}>
-            {onConfirmationText === undefined ? 'yes' : onConfirmationText}
+            {onConfirmationText === undefined ? 'Yes' : onConfirmationText}
           </Button>
         )}
 

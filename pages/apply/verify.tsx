@@ -17,22 +17,26 @@ import { loadApplication } from '../../lib/store/application';
 const ApplicationVerifyPage = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+
   const [userError, setUserError] = useState<string | null>(null);
   const [codeSent, setCodeSent] = useState(false);
 
   const email = router.query.email as string;
-  if (!email) {
-    router.push('/apply/sign-in');
-  }
-
   const application = useAppSelector((store) => store.application);
+
   useEffect(() => {
-    if (application.mainApplicant?.person) {
-      router.push('/apply/overview');
-    } else if (application.id) {
+    if (!email) {
+      router.push('/apply/sign-in');
+    }
+
+    if (application.id) {
       router.push('/apply/start');
     }
-  }, [application]);
+
+    if (application.mainApplicant?.person) {
+      router.push('/apply/overview');
+    }
+  }, [application, router]);
 
   const confirmSignUp = async (values: FormData) => {
     try {

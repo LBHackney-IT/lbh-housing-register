@@ -65,7 +65,7 @@ export default function OtherMembers({
                   onClick={() => handleDeleteDialog(applicant)}
                   className="lbh-body-s lbh-link lbh-link--no-visited-state lbh-delete-link"
                 >
-                  Delete household member
+                  Remove household member
                 </button>
 
                 <Dialog
@@ -75,7 +75,7 @@ export default function OtherMembers({
                   onCancel={() => setShowDeleteWarningDialog(false)}
                 >
                   <Paragraph>
-                    Are you sure you want to delete{' '}
+                    Are you sure you want to remove{' '}
                     {applicantToDelete.person?.title}{' '}
                     {applicantToDelete.person?.firstName}{' '}
                     {applicantToDelete.person?.surname}?

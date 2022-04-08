@@ -39,6 +39,7 @@ import {
   getRedirect,
   getSession,
   HackneyGoogleUserWithPermissions,
+  hasAnyPermissions,
 } from '../../../../lib/utils/googleAuth';
 import { getPersonName } from '../../../../lib/utils/person';
 import Custom404 from '../../../404';
@@ -56,14 +57,31 @@ export default function ApplicationPage({
 }: PageProps): JSX.Element | null {
   if (!data.id) return <Custom404 />;
 
-  // Can edit application if:
-  // - it has a status of manual draft
-  // - it has a status of incomplete and current user is assigned to it
-  const canEditApplication =
-    data.status === ApplicationStatus.MANUAL_DRAFT ||
-    (data.status === 'New' && data.assignedTo === user.email);
-
   const [activeNavItem, setActiveNavItem] = useState('overview');
+
+  // Can edit applications if:
+  // - user is a manager (all statuses)
+  // - it has a status of manual draft
+  // - it has a status of awaiting assessment (SUBMITTED) and current user is assigned to it
+  // - it has a status of awaiting reassessment and current user is assigned to it
+  const canEditApplications = () => {
+    if (!hasAnyPermissions(user)) return false;
+    if (user.hasManagerPermissions) return true;
+    if (data.status === ApplicationStatus.MANUAL_DRAFT) {
+      return true;
+    }
+    const assignedToCurrentUser = data.assignedTo === user.email;
+    if (data.status === ApplicationStatus.SUBMITTED && assignedToCurrentUser) {
+      return true;
+    }
+    if (
+      data.status === ApplicationStatus.AWAITING_REASSESSMENT &&
+      assignedToCurrentUser
+    ) {
+      return true;
+    }
+    return false;
+  };
 
   const handleClick = async (event: SyntheticEvent) => {
     event.preventDefault();
@@ -171,7 +189,7 @@ export default function ApplicationPage({
                         heading="Main applicant"
                         applicant={data.mainApplicant}
                         applicationId={data.id}
-                        canEdit={canEditApplication}
+                        canEdit={canEditApplications()}
                       />
                     )}
                     {data.otherMembers && data.otherMembers.length > 0 ? (
@@ -179,12 +197,12 @@ export default function ApplicationPage({
                         heading="Other household members"
                         others={data.otherMembers}
                         applicationId={data.id}
-                        canEdit={canEditApplication}
+                        canEdit={canEditApplications()}
                       />
                     ) : (
                       <HeadingThree content="Other household members" />
                     )}
-                    {canEditApplication && (
+                    {canEditApplications() && (
                       <ButtonLink
                         additionalCssClasses="govuk-secondary lbh-button--secondary"
                         href={`/applications/edit/${data.id}/add-household-member`}

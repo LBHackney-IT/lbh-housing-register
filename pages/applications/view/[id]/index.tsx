@@ -1,4 +1,5 @@
 import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
 import React, { SyntheticEvent, useState } from 'react';
 import Actions from '../../../../components/admin/actions';
 import ApplicationHistory from '../../../../components/admin/ApplicationHistory';
@@ -23,12 +24,13 @@ import List, { ListItem } from '../../../../components/content/list';
 import Paragraph from '../../../../components/content/paragraph';
 import Layout from '../../../../components/layout/staff-layout';
 import { ActivityHistoryPagedResult } from '../../../../domain/ActivityHistoryApi';
-import { Application } from '../../../../domain/HousingApi';
+import { Application, Applicant } from '../../../../domain/HousingApi';
 import { UserContext } from '../../../../lib/contexts/user-context';
 import {
   getApplication,
   getApplicationHistory,
 } from '../../../../lib/gateways/applications-api';
+import { updateApplication } from '../../../../lib/gateways/internal-api';
 import {
   ApplicationStatus,
   lookupStatus,
@@ -56,6 +58,7 @@ export default function ApplicationPage({
   history,
 }: PageProps): JSX.Element | null {
   if (!data.id) return <Custom404 />;
+  const router = useRouter();
 
   const [activeNavItem, setActiveNavItem] = useState('overview');
 
@@ -83,10 +86,25 @@ export default function ApplicationPage({
     return false;
   };
 
-  const handleClick = async (event: SyntheticEvent) => {
+  const handleSelectNavItem = async (event: SyntheticEvent) => {
     event.preventDefault();
     const { name } = event.target as HTMLButtonElement;
     setActiveNavItem(name);
+  };
+
+  const handleDelete = (applicant: Applicant) => {
+    const newHouseholdMembers = data.otherMembers?.filter(
+      (member) => member.person?.id !== applicant.person?.id
+    );
+
+    const request: Application = {
+      id: data.id,
+      otherMembers: newHouseholdMembers,
+    };
+
+    updateApplication(request).then(() => {
+      router.reload();
+    });
   };
 
   return (
@@ -119,14 +137,14 @@ export default function ApplicationPage({
 
             <HorizontalNav spaced={true}>
               <HorizontalNavItem
-                handleClick={handleClick}
+                handleSelectNavItem={handleSelectNavItem}
                 itemName="overview"
                 isActive={activeNavItem === 'overview'}
               >
                 Overview
               </HorizontalNavItem>
               <HorizontalNavItem
-                handleClick={handleClick}
+                handleSelectNavItem={handleSelectNavItem}
                 itemName="history"
                 isActive={activeNavItem === 'history'}
               >
@@ -135,7 +153,7 @@ export default function ApplicationPage({
               {data.status !== ApplicationStatus.DRAFT &&
               data.status !== ApplicationStatus.MANUAL_DRAFT ? (
                 <HorizontalNavItem
-                  handleClick={handleClick}
+                  handleSelectNavItem={handleSelectNavItem}
                   itemName="assessment"
                   isActive={activeNavItem === 'assessment'}
                 >
@@ -198,6 +216,7 @@ export default function ApplicationPage({
                         others={data.otherMembers}
                         applicationId={data.id}
                         canEdit={canEditApplications()}
+                        handleDelete={handleDelete}
                       />
                     ) : (
                       <HeadingThree content="Other household members" />

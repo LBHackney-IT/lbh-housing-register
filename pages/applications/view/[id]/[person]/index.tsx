@@ -71,7 +71,7 @@ export default function ApplicationPersonPage({
 
   const [activeNavItem, setActiveNavItem] = useState('identity');
 
-  const handleClick = async (event: SyntheticEvent) => {
+  const handleSelectNavItem = async (event: SyntheticEvent) => {
     event.preventDefault();
     const { name } = event.target as HTMLButtonElement;
     setActiveNavItem(name);
@@ -122,35 +122,35 @@ export default function ApplicationPersonPage({
 
             <HorizontalNav spaced={true}>
               <HorizontalNavItem
-                handleClick={handleClick}
+                handleSelectNavItem={handleSelectNavItem}
                 itemName="identity"
                 isActive={activeNavItem === 'identity'}
               >
                 Identity
               </HorizontalNavItem>
               <HorizontalNavItem
-                handleClick={handleClick}
+                handleSelectNavItem={handleSelectNavItem}
                 itemName="livingsituation"
                 isActive={activeNavItem === 'livingsituation'}
               >
                 Living Situation
               </HorizontalNavItem>
               <HorizontalNavItem
-                handleClick={handleClick}
+                handleSelectNavItem={handleSelectNavItem}
                 itemName="money"
                 isActive={activeNavItem === 'money'}
               >
                 Money
               </HorizontalNavItem>
               <HorizontalNavItem
-                handleClick={handleClick}
+                handleSelectNavItem={handleSelectNavItem}
                 itemName="health"
                 isActive={activeNavItem === 'health'}
               >
                 Health
               </HorizontalNavItem>
               {/* <HorizontalNavItem
-                handleClick={handleClick}
+                handleSelectNavItem={handleSelectNavItem}
                 itemName="checklist"
                 isActive={activeNavItem === 'checklist'}
               >

@@ -33,6 +33,7 @@ export default function NovaletReports({
 }: NovaletReportsProps): JSX.Element {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   const applicationFeeds = reports.filter(
     (report: Report) => !report.fileName.includes('WITH-URL')
@@ -72,11 +73,13 @@ export default function NovaletReports({
 
   const syncToNovalet = async () => {
     approveNovaletExport(mostRecentReport.fileName);
+    setIsSyncing(true);
+    setConfirmDialogOpen(false);
   };
 
   const handleGenerateNovaletExport = async () => {
-    setIsGenerating(true);
     generateNovaletExport();
+    setIsGenerating(true);
   };
 
   return (
@@ -134,6 +137,7 @@ export default function NovaletReports({
                 </td>
                 <td className="govuk-table__cell">
                   <Button
+                    disabled={isSyncing}
                     className="lbh-!-margin-top-0"
                     onClick={() => setConfirmDialogOpen(true)}
                   >
@@ -162,12 +166,22 @@ export default function NovaletReports({
               </a>{' '}
               before sending.
             </p>
-            <Button onClick={() => syncToNovalet()}>Sync to Novalet</Button>
+            <Button disabled={isSyncing} onClick={() => syncToNovalet()}>
+              Sync to Novalet
+            </Button>
           </Dialog>
         </>
       ) : (
         <HeadingTwo content="No reports to show" />
       )}
+      {isSyncing ? (
+        <Announcement variant="success">
+          <Paragraph>
+            The applicant feed {mostRecentReport.fileName} has been synced to
+            Novalet.
+          </Paragraph>
+        </Announcement>
+      ) : null}
 
       <Button
         disabled={isGenerating}

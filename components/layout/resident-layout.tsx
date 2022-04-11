@@ -10,11 +10,14 @@ import Seo from '../seo';
 import Footer from '../footer';
 import CookieBanner from '../content/CookieBanner';
 import { exit } from '../../lib/store/auth';
+import { loadApplication } from '../../lib/store/application';
 import Dialog from '../dialog';
 import Paragraph from '../content/paragraph';
+import Loading from '../../components/loading';
 interface ResidentLayoutProps {
   pageName?: string;
   breadcrumbs?: { href: string; name: string }[];
+  pageLoadsApplication?: boolean;
   children: ReactNode;
 }
 
@@ -24,14 +27,26 @@ const TIME_TO_SHOW_DIALOG_BEFORE_SIGN_OUT = 30 * 1000; // 30 seconds
 export default function ResidentLayout({
   pageName,
   breadcrumbs,
+  pageLoadsApplication = true,
   children,
 }: ResidentLayoutProps): JSX.Element {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
+  const [loaded, setLoaded] = useState(false);
   const [showSignOutDialog, setShowSignOutDialog] = useState(false);
+
   const signOutRef = useRef() as React.MutableRefObject<HTMLAnchorElement>;
   const application = useAppSelector((store) => store.application);
+
+  useEffect(() => {
+    if (!pageLoadsApplication) {
+      setLoaded(true);
+      return;
+    }
+
+    dispatch(loadApplication()).then(() => setLoaded(true));
+  }, []);
 
   const onSignOut = async () => {
     dispatch(exit());
@@ -46,7 +61,6 @@ export default function ResidentLayout({
 
   const handleShowSignOutDialog = () => {
     if (!application.id) return;
-    // console.log('Dialog timer started');
 
     setTimeout(() => autoSignOut(), TIME_TO_SHOW_DIALOG_BEFORE_SIGN_OUT);
     setShowSignOutDialog(true);
@@ -57,8 +71,6 @@ export default function ResidentLayout({
   };
 
   useEffect(() => {
-    // console.log('Time before showing the sign out dialog started');
-
     let timeBeforeShowSignOutDialog = setTimeout(
       () => handleShowSignOutDialog(),
       INACTIVITY_TIME_BEFORE_WARNING_DIALOG
@@ -87,7 +99,9 @@ export default function ResidentLayout({
       )}
 
       <main id="main-content" className="lbh-main-wrapper">
-        <div className="lbh-container">{children}</div>
+        <div className="lbh-container">
+          {loaded ? children : <Loading text="Checking information…" />}
+        </div>
       </main>
 
       <Footer referenceNumber={application.reference ?? ''} />

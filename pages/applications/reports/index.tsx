@@ -38,7 +38,7 @@ export default function Reports({
 }: ReportsProps): JSX.Element {
   const [activeNavItem, setActiveNavItem] = useState('Novalet');
 
-  const handleClick = async (event: SyntheticEvent) => {
+  const handleSelectNavItem = async (event: SyntheticEvent) => {
     event.preventDefault();
 
     const { name } = event.target as HTMLButtonElement;
@@ -62,14 +62,14 @@ export default function Reports({
             <HeadingOne content="Reports" />
             <HorizontalNav>
               <HorizontalNavItem
-                handleClick={handleClick}
+                handleSelectNavItem={handleSelectNavItem}
                 itemName="Novalet"
                 isActive={activeNavItem === 'Novalet'}
               >
                 Novalet applicant feed
               </HorizontalNavItem>
               <HorizontalNavItem
-                handleClick={handleClick}
+                handleSelectNavItem={handleSelectNavItem}
                 itemName="Internal"
                 isActive={activeNavItem === 'Internal'}
               >

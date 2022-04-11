@@ -1,5 +1,6 @@
 import { GetServerSideProps } from 'next';
-import React, { SyntheticEvent, useState } from 'react';
+import { useRouter } from 'next/router';
+import React, { SyntheticEvent, useState, useEffect } from 'react';
 import Actions from '../../../../components/admin/actions';
 import ApplicationHistory from '../../../../components/admin/ApplicationHistory';
 import AssignUser from '../../../../components/admin/assign-user';
@@ -54,7 +55,28 @@ export default function ApplicationPage({
   data,
   history,
 }: PageProps): JSX.Element | null {
+  const router = useRouter();
   if (!data.id) return <Custom404 />;
+
+  const [tab, setTab] = useState(router.query.tab ?? 'overview');
+
+  useEffect(() => {
+    // Always do navigations after the first render
+    router.push(`/applications/view/${data.id}?tab=${tab}`, undefined, {
+      shallow: true,
+    });
+  }, []);
+
+  useEffect(() => {
+    handleTabChange(tab as string);
+  }, [router.query.tab]);
+
+  const handleTabChange = (newValue: string) => {
+    setTab(newValue);
+    router.push(`/applications/view/${data.id}?tab=${newValue}`, undefined, {
+      shallow: true,
+    });
+  };
 
   // Can edit application if:
   // - it has a status of manual draft
@@ -101,25 +123,25 @@ export default function ApplicationPage({
 
             <HorizontalNav spaced={true}>
               <HorizontalNavItem
-                handleClick={handleClick}
+                handleClick={() => handleTabChange('overview')}
                 itemName="overview"
-                isActive={activeNavItem === 'overview'}
+                isActive={tab === 'overview'}
               >
                 Overview
               </HorizontalNavItem>
               <HorizontalNavItem
-                handleClick={handleClick}
+                handleClick={() => handleTabChange('history')}
                 itemName="history"
-                isActive={activeNavItem === 'history'}
+                isActive={tab === 'history'}
               >
                 Notes and history
               </HorizontalNavItem>
               {data.status !== ApplicationStatus.DRAFT &&
               data.status !== ApplicationStatus.MANUAL_DRAFT ? (
                 <HorizontalNavItem
-                  handleClick={handleClick}
+                  handleClick={() => handleTabChange('assessment')}
                   itemName="assessment"
-                  isActive={activeNavItem === 'assessment'}
+                  isActive={tab === 'assessment'}
                 >
                   Assessment
                 </HorizontalNavItem>
@@ -128,7 +150,7 @@ export default function ApplicationPage({
               )}
             </HorizontalNav>
 
-            {activeNavItem === 'overview' && (
+            {tab === 'overview' && (
               <>
                 {data.status === ApplicationStatus.AWAITING_REASSESSMENT &&
                 data.assessment?.reason ? (
@@ -212,7 +234,7 @@ export default function ApplicationPage({
                       itemHeading="Status"
                       itemValue={lookupStatus(data.status!)}
                       buttonText="Change"
-                      onClick={() => setActiveNavItem('assessment')}
+                      onClick={() => handleTabChange('assessment')}
                     />
 
                     {data.submittedAt && (
@@ -227,7 +249,7 @@ export default function ApplicationPage({
                         itemHeading="Application date"
                         itemValue={formatDate(data.assessment?.effectiveDate)}
                         buttonText="Change"
-                        onClick={() => setActiveNavItem('assessment')}
+                        onClick={() => handleTabChange('assessment')}
                       />
                     )}
 
@@ -236,7 +258,7 @@ export default function ApplicationPage({
                         itemHeading="Band"
                         itemValue={`Band ${data.assessment?.band}`}
                         buttonText="Change"
-                        onClick={() => setActiveNavItem('assessment')}
+                        onClick={() => handleTabChange('assessment')}
                       />
                     )}
 
@@ -256,15 +278,11 @@ export default function ApplicationPage({
               </>
             )}
 
-            {activeNavItem === 'history' && (
-              <ApplicationHistory
-                setActiveNavItem={setActiveNavItem}
-                history={history}
-                id={data.id}
-              />
+            {tab === 'history' && (
+              <ApplicationHistory history={history} id={data.id} />
             )}
 
-            {activeNavItem === 'assessment' && <Actions data={data} />}
+            {tab === 'assessment' && <Actions data={data} />}
           </>
         )}
       </Layout>

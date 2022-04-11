@@ -20,7 +20,7 @@ interface HorizontalNavItemProps {
   itemName: string;
   isActive?: boolean;
   children: string;
-  handleClick: (event: SyntheticEvent) => Promise<void>;
+  handleClick: (event: SyntheticEvent) => void;
 }
 
 export function HorizontalNavItem({

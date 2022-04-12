@@ -50,6 +50,9 @@ export default function DateInput({
     }
 
     const newDate = new Date(Number(newY), Number(newM) - 1, Number(newD));
+    var isoDateTime = new Date(
+      newDate.getTime() - newDate.getTimezoneOffset() * 60000
+    ).toISOString();
 
     if (
       newDate.getFullYear() !== Number(newY) ||
@@ -61,7 +64,7 @@ export default function DateInput({
       helpers.setTouched(true);
       return;
     }
-    helpers.setValue(newDate.toISOString());
+    helpers.setValue(isoDateTime);
   }
 
   function onBlur(e: FocusEvent) {

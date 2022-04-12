@@ -56,13 +56,12 @@ export default function ApplicationPage({
   data,
   history,
 }: PageProps): JSX.Element | null {
-  const router = useRouter();
   if (!data.id) return <Custom404 />;
 
-  const [tab, setTab] = useState(router.query.tab ?? 'overview');
+  const router = useRouter();
+  const tab = router.query.tab ?? 'overview';
 
   useEffect(() => {
-    // Always do navigations after the first render
     router.push(`/applications/view/${data.id}?tab=${tab}`, undefined, {
       shallow: true,
     });
@@ -73,7 +72,6 @@ export default function ApplicationPage({
   }, [router.query.tab]);
 
   const handleTabChange = (newValue: string) => {
-    setTab(newValue);
     router.push(`/applications/view/${data.id}?tab=${newValue}`, undefined, {
       shallow: true,
     });

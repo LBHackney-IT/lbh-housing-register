@@ -51,8 +51,6 @@ export default function Actions({ data }: PageProps): JSX.Element {
         'aboveZero',
         'Bedroom need should be a number greater than 0',
         (value, testContext) => {
-          console.log(value, testContext);
-
           if (
             testContext.parent.status !== ApplicationStatus.ACTIVE &&
             testContext.parent.status !== ApplicationStatus.ACTIVE_UNDER_APPEAL
@@ -134,13 +132,9 @@ export default function Actions({ data }: PageProps): JSX.Element {
         values.biddingNumberType === 'generate';
     }
 
-    try {
-      updateApplication(request).then(() => {
-        router.reload();
-      });
-    } catch (error) {
-      console.log('error', error);
-    }
+    updateApplication(request).then(() => {
+      router.reload();
+    });
   }
 
   return (

@@ -49,7 +49,9 @@ export default function DateInput({
       return;
     }
 
-    const newDate = new Date(Number(newY), Number(newM) - 1, Number(newD));
+    const newDate = new Date(
+      Date.UTC(Number(newY), Number(newM) - 1, Number(newD))
+    );
 
     if (
       newDate.getFullYear() !== Number(newY) ||

@@ -4,7 +4,7 @@ import { kebabToCamelCase, camelCaseToKebab } from '../../lib/utils/capitalize';
 import { FormikValues } from 'formik';
 import * as Yup from 'yup';
 import { INVALID_DATE } from '../../components/form/dateinput';
-import { additionalQuestionsArray } from '../../components/admin/OverviewAnnouncements';
+import loadConfig from 'next/dist/next-server/server/config';
 
 export interface Address {
   address: {
@@ -175,10 +175,6 @@ export const generateQuestionArray = (
     // Return question Ids to correct syntax for API
     const questionId = camelCaseToKebab(key).replace('_', '/');
 
-    const additionalQuestionIds = additionalQuestionsArray.map(
-      (question) => question.questionId
-    );
-
     // Don't include personal details
     if (questionId.startsWith('personal-details/')) continue;
 
@@ -193,13 +189,10 @@ export const generateQuestionArray = (
     } else if (questionId === 'ethnicity-questions/ethnicity-main-category') {
       questionArray.push({
         id: 'ethnicity-questions/ethnicity-main-category',
-        answer: ethnicity,
+        answer: JSON.stringify(ethnicity),
       });
-    } else if (additionalQuestionIds.includes(questionId)) {
-      questionArray.push({
-        id: questionId,
-        answer: JSON.stringify([value]),
-      });
+    } else if (value === '') {
+      continue;
     } else {
       questionArray.push({
         id: questionId,

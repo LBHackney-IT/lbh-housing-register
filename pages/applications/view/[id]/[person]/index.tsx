@@ -55,24 +55,19 @@ export default function ApplicationPersonPage({
     return x.person?.id === person;
   });
 
-  type State =
+  type ActiveNavItem =
     | 'identity'
     | 'livingsituation'
     | 'money'
     | 'health'
     | 'checklist';
-  const [state, setState] = useState<State>('identity');
 
-  function isActive(selected: string) {
-    return state == selected ? 'active' : '';
-  }
-
-  const [activeNavItem, setActiveNavItem] = useState('identity');
+  const [activeNavItem, setActiveNavItem] = useState<ActiveNavItem>('identity');
 
   const handleSelectNavItem = async (event: SyntheticEvent) => {
     event.preventDefault();
     const { name } = event.target as HTMLButtonElement;
-    setActiveNavItem(name);
+    setActiveNavItem(name as ActiveNavItem);
   };
 
   const personalDetails = personalDetailsCheckboxList(applicant);
@@ -150,13 +145,15 @@ export default function ApplicationPersonPage({
                   >
                     Health
                   </HorizontalNavItem>
-                  {/* <HorizontalNavItem
-                handleSelectNavItem={handleSelectNavItem}
-                itemName="checklist"
-                isActive={activeNavItem === 'checklist'}
-              >
-                Checklist
-              </HorizontalNavItem> */}
+                  {/* 
+                  <HorizontalNavItem
+                    handleSelectNavItem={handleSelectNavItem}
+                    itemName="checklist"
+                    isActive={activeNavItem === 'checklist'}
+                  >
+                    Checklist
+                  </HorizontalNavItem>
+                  */}
                 </HorizontalNav>
 
                 {activeNavItem === 'identity' && (

@@ -1,6 +1,7 @@
 import { getFormData, FormID } from '../utils/form-data';
 import { FormField } from '../../lib/types/form';
 import { kebabToCamelCase, camelCaseToKebab } from '../../lib/utils/capitalize';
+import { Address as ApiAddress } from '../../domain/HousingApi';
 import { FormikValues } from 'formik';
 import * as Yup from 'yup';
 import { INVALID_DATE } from '../../components/form/dateinput';
@@ -23,6 +24,17 @@ interface SectionData {
   sectionId: string;
   sectionHeading: string | undefined;
 }
+
+export const convertAddressToPrimary = (addressHistoryItem: Address) => {
+  const { line1, line2, town, county, postcode } = addressHistoryItem.address;
+  return {
+    addressLine1: line1,
+    addressLine2: line2,
+    addressLine3: town ?? county,
+    postcode: postcode,
+    addressType: '1',
+  };
+};
 
 export const addCaseSchema = Yup.object({
   personalDetails_title: Yup.string().label('Title').required(),

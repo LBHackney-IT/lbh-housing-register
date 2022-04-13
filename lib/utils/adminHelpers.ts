@@ -4,8 +4,6 @@ import { kebabToCamelCase, camelCaseToKebab } from '../../lib/utils/capitalize';
 import { FormikValues } from 'formik';
 import * as Yup from 'yup';
 import { INVALID_DATE } from '../../components/form/dateinput';
-import loadConfig from 'next/dist/next-server/server/config';
-
 export interface Address {
   address: {
     line1: string;

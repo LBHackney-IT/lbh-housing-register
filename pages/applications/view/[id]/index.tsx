@@ -1,5 +1,6 @@
 import { GetServerSideProps } from 'next';
-import React, { SyntheticEvent, useState } from 'react';
+import { useRouter } from 'next/router';
+import React, { SyntheticEvent, useState, useEffect } from 'react';
 import Actions from '../../../../components/admin/actions';
 import ApplicationHistory from '../../../../components/admin/ApplicationHistory';
 import AssignUser from '../../../../components/admin/assign-user';
@@ -23,12 +24,13 @@ import List, { ListItem } from '../../../../components/content/list';
 import Paragraph from '../../../../components/content/paragraph';
 import Layout from '../../../../components/layout/staff-layout';
 import { ActivityHistoryPagedResult } from '../../../../domain/ActivityHistoryApi';
-import { Application } from '../../../../domain/HousingApi';
+import { Application, Applicant } from '../../../../domain/HousingApi';
 import { UserContext } from '../../../../lib/contexts/user-context';
 import {
   getApplication,
   getApplicationHistory,
 } from '../../../../lib/gateways/applications-api';
+import { updateApplication } from '../../../../lib/gateways/internal-api';
 import {
   ApplicationStatus,
   lookupStatus,
@@ -39,6 +41,7 @@ import {
   getRedirect,
   getSession,
   HackneyGoogleUserWithPermissions,
+  hasAnyPermissions,
 } from '../../../../lib/utils/googleAuth';
 import { getPersonName } from '../../../../lib/utils/person';
 import Custom404 from '../../../404';
@@ -54,19 +57,62 @@ export default function ApplicationPage({
   data,
   history,
 }: PageProps): JSX.Element | null {
-  // Can edit application if:
+  const router = useRouter();
+  const tab = router.query.tab ?? 'overview';
+
+  useEffect(() => {
+    router.push(`/applications/view/${data.id}?tab=${tab}`, undefined, {
+      shallow: true,
+    });
+  }, []);
+
+  useEffect(() => {
+    handleTabChange(tab as string);
+  }, [router.query.tab]);
+
+  const handleTabChange = (newValue: string) => {
+    router.push(`/applications/view/${data.id}?tab=${newValue}`, undefined, {
+      shallow: true,
+    });
+  };
+
+  // Can edit applications if:
+  // - user is a manager (all statuses)
   // - it has a status of manual draft
-  // - it has a status of incomplete and current user is assigned to it
-  const canEditApplication =
-    data.status === ApplicationStatus.MANUAL_DRAFT ||
-    (data.status === 'New' && data.assignedTo === user.email);
+  // - it has a status of awaiting assessment (SUBMITTED) and current user is assigned to it
+  // - it has a status of awaiting reassessment and current user is assigned to it
+  const canEditApplications = () => {
+    if (!hasAnyPermissions(user)) return false;
+    if (user.hasManagerPermissions) return true;
+    if (data.status === ApplicationStatus.MANUAL_DRAFT) {
+      return true;
+    }
+    const assignedToCurrentUser = data.assignedTo === user.email;
+    if (data.status === ApplicationStatus.SUBMITTED && assignedToCurrentUser) {
+      return true;
+    }
+    if (
+      data.status === ApplicationStatus.AWAITING_REASSESSMENT &&
+      assignedToCurrentUser
+    ) {
+      return true;
+    }
+    return false;
+  };
 
-  const [activeNavItem, setActiveNavItem] = useState('overview');
+  const handleDelete = (applicant: Applicant) => {
+    const newHouseholdMembers = data.otherMembers?.filter(
+      (member) => member.person?.id !== applicant.person?.id
+    );
 
-  const handleClick = async (event: SyntheticEvent) => {
-    event.preventDefault();
-    const { name } = event.target as HTMLButtonElement;
-    setActiveNavItem(name);
+    const request: Application = {
+      id: data.id,
+      otherMembers: newHouseholdMembers,
+    };
+
+    updateApplication(request).then(() => {
+      router.reload();
+    });
   };
 
   return (
@@ -101,25 +147,25 @@ export default function ApplicationPage({
 
                 <HorizontalNav spaced={true}>
                   <HorizontalNavItem
-                    handleClick={handleClick}
+                    handleSelectNavItem={() => handleTabChange('overview')}
                     itemName="overview"
-                    isActive={activeNavItem === 'overview'}
+                    isActive={tab === 'overview'}
                   >
                     Overview
                   </HorizontalNavItem>
                   <HorizontalNavItem
-                    handleClick={handleClick}
+                    handleSelectNavItem={() => handleTabChange('history')}
                     itemName="history"
-                    isActive={activeNavItem === 'history'}
+                    isActive={tab === 'history'}
                   >
                     Notes and history
                   </HorizontalNavItem>
                   {data.status !== ApplicationStatus.DRAFT &&
                   data.status !== ApplicationStatus.MANUAL_DRAFT ? (
                     <HorizontalNavItem
-                      handleClick={handleClick}
+                      handleSelectNavItem={() => handleTabChange('assessment')}
                       itemName="assessment"
-                      isActive={activeNavItem === 'assessment'}
+                      isActive={tab === 'assessment'}
                     >
                       Assessment
                     </HorizontalNavItem>
@@ -128,7 +174,7 @@ export default function ApplicationPage({
                   )}
                 </HorizontalNav>
 
-                {activeNavItem === 'overview' && (
+                {tab === 'overview' && (
                   <>
                     {data.status === ApplicationStatus.AWAITING_REASSESSMENT &&
                     data.assessment?.reason ? (
@@ -174,7 +220,7 @@ export default function ApplicationPage({
                             heading="Main applicant"
                             applicant={data.mainApplicant}
                             applicationId={data.id}
-                            canEdit={canEditApplication}
+                            canEdit={canEditApplications()}
                           />
                         )}
                         {data.otherMembers && data.otherMembers.length > 0 ? (
@@ -182,12 +228,13 @@ export default function ApplicationPage({
                             heading="Other household members"
                             others={data.otherMembers}
                             applicationId={data.id}
-                            canEdit={canEditApplication}
+                            canEdit={canEditApplications()}
+                            handleDelete={handleDelete}
                           />
                         ) : (
                           <HeadingThree content="Other household members" />
                         )}
-                        {canEditApplication && (
+                        {canEditApplications() && (
                           <ButtonLink
                             additionalCssClasses="govuk-secondary lbh-button--secondary"
                             href={`/applications/edit/${data.id}/add-household-member`}
@@ -215,7 +262,7 @@ export default function ApplicationPage({
                           itemHeading="Status"
                           itemValue={lookupStatus(data.status!)}
                           buttonText="Change"
-                          onClick={() => setActiveNavItem('assessment')}
+                          onClick={() => handleTabChange('assessment')}
                         />
 
                         {data.submittedAt && (
@@ -232,7 +279,7 @@ export default function ApplicationPage({
                               data.assessment?.effectiveDate
                             )}
                             buttonText="Change"
-                            onClick={() => setActiveNavItem('assessment')}
+                            onClick={() => handleTabChange('assessment')}
                           />
                         )}
 
@@ -241,7 +288,7 @@ export default function ApplicationPage({
                             itemHeading="Band"
                             itemValue={`Band ${data.assessment?.band}`}
                             buttonText="Change"
-                            onClick={() => setActiveNavItem('assessment')}
+                            onClick={() => handleTabChange('assessment')}
                           />
                         )}
 
@@ -261,7 +308,11 @@ export default function ApplicationPage({
                   </>
                 )}
 
-                {activeNavItem === 'assessment' && <Actions data={data} />}
+                {tab === 'history' && (
+                  <ApplicationHistory history={history} id={data.id} />
+                )}
+
+                {tab === 'assessment' && <Actions data={data} />}
               </>
             )}
           </Layout>

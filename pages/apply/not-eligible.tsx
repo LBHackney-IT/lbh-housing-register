@@ -15,6 +15,7 @@ import { exit } from '../../lib/store/auth';
 import withApplication from '../../lib/hoc/withApplication';
 import { ApplicationStatus } from '../../lib/types/application-status';
 import { getDisqualificationReasonOption } from '../../lib/utils/disqualificationReasonOptions';
+import WarningText from '../../components/content/WarningText';
 
 const NotEligible = (): JSX.Element => {
   const router = useRouter();
@@ -62,13 +63,24 @@ const NotEligible = (): JSX.Element => {
         support services team for advice on next steps.
       </Paragraph>
 
-      <Paragraph>
-        <strong>
-          If you are at risk of domestic abuse, gang violence or threatened with
-          homelessness,
-        </strong>{' '}
-        please call 020 8356 2929 for immediate support.
-      </Paragraph>
+      <WarningText>
+        Please check if any of the following apply to you:
+        <List>
+          <ListItem bold={true}>You are currently homeless</ListItem>
+          <ListItem bold={true}>
+            You have been threatened with homelessness
+          </ListItem>
+          <ListItem bold={true}>You are a victim of domestic abuse</ListItem>
+          <ListItem bold={true}>You are a victim of gang violence </ListItem>
+        </List>
+        <Paragraph bold={true}>
+          In these circumstances you should contact us on 020 8356 2929 or{' '}
+          <a className="lbh-link" href="https://forms.gle/riaWcWbAY1j6uszR7">
+            complete this form
+          </a>{' '}
+          and we will contact you within 24 hours.
+        </Paragraph>
+      </WarningText>
 
       <Paragraph>
         <strong>If you are a Council tenant</strong>{' '}

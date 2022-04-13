@@ -23,7 +23,7 @@ export default function ApplicationHomePage(): JSX.Element {
 
   return (
     <>
-      <Layout pageName="Home">
+      <Layout pageName="Home" pageLoadsApplication={false}>
         <HeadingOne content="Apply to the Housing Register" />
 
         <HeadingTwo content="About this form" />

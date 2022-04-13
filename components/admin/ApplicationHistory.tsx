@@ -28,16 +28,12 @@ import loadConfig from 'next/dist/next-server/server/config';
 interface ActivityHistoryPageProps {
   history: ActivityHistoryPagedResult;
   id: string;
-  setActiveNavItem: (navItem: string) => void;
 }
 
 export default function ApplicationHistory({
   history,
   id,
-  setActiveNavItem,
 }: ActivityHistoryPageProps): JSX.Element | null {
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
   const initialValues: FormikValues = {
     note: '',
   };
@@ -73,7 +69,6 @@ export default function ApplicationHistory({
 
   const onSubmit = (values: FormikValues) => {
     addNoteToHistory(id, { Note: values.note }).then(() => {
-      setIsSubmitted(true);
       router.reload();
     });
   };

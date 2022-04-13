@@ -61,18 +61,14 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
   };
 
   const createManualApplication = async (request: Application) => {
-    try {
-      const newApplication = await createApplication(request);
-      const completedApplication = await completeApplication(newApplication);
-      const setToManualDraft = await updateApplication({
-        ...completedApplication,
-        status: ApplicationStatus.MANUAL_DRAFT,
-      });
+    const newApplication = await createApplication(request);
+    const completedApplication = await completeApplication(newApplication);
+    const setToManualDraft = await updateApplication({
+      ...completedApplication,
+      status: ApplicationStatus.MANUAL_DRAFT,
+    });
 
-      router.push(`/applications/view/${setToManualDraft.id}`);
-    } catch (error) {
-      console.error(error);
-    }
+    router.push(`/applications/view/${setToManualDraft.id}`);
   };
 
   const handleSaveApplication = (isValid: any, touched: any) => {

@@ -54,7 +54,7 @@ export default function Header({
               <>
                 <p>{username}</p>
                 {signOutText && (
-                  <a ref={signOutRef} href="" onClick={onSignOut}>
+                  <a ref={signOutRef} href="#" onClick={onSignOut}>
                     {signOutText}
                   </a>
                 )}

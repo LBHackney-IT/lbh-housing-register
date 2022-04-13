@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import Announcement from '../components/announcement';
 import { ButtonLink } from '../components/button';
 import {
@@ -16,20 +15,11 @@ import Table, {
   TableRow,
 } from '../components/content/table';
 import Layout from '../components/layout/resident-layout';
-import { useAppSelector } from '../lib/store/hooks';
 import ContactUsDialog from '../components/content/ContactUsDialog';
 import List, { ListItem } from '../components/content/list';
 
 export default function ApplicationHomePage(): JSX.Element {
-  const router = useRouter();
   const [contactUsDialogOpen, setContactUsDialogOpen] = useState(false);
-  const isLoggedIn = useAppSelector((store) => store.application.id);
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      router.push('/apply/overview');
-    }
-  }, [isLoggedIn]);
 
   return (
     <>
@@ -51,19 +41,6 @@ export default function ApplicationHomePage(): JSX.Element {
           save your progress and come back to your application at any time
           within 30 days before you submit it.
         </Paragraph>
-
-        {/* <WarningText>
-          Do not use this form if you are at risk of domestic abuse, gang
-          violence or threatened with homelessness. Instead,{' '}
-          <a
-            href="#"
-            className="lbh-link lbh-link--no-visited-state"
-            onClick={() => setContactUsDialogOpen(true)}
-          >
-            contact us
-          </a>{' '}
-          for immediate support
-        </WarningText> */}
         <WarningText>
           Do not use this form if any of the following apply to you:
           <List>

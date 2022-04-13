@@ -24,6 +24,9 @@ interface ResidentLayoutProps {
 const INACTIVITY_TIME_BEFORE_WARNING_DIALOG = 30 * 1000 * 60; // 30 minutes
 const TIME_TO_SHOW_DIALOG_BEFORE_SIGN_OUT = 30 * 1000; // 30 seconds
 
+// const INACTIVITY_TIME_BEFORE_WARNING_DIALOG = 10 * 1000; // 10 seconds
+// const TIME_TO_SHOW_DIALOG_BEFORE_SIGN_OUT = 10 * 1000; // 10 seconds
+
 export default function ResidentLayout({
   pageName,
   breadcrumbs,

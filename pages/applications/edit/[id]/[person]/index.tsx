@@ -27,7 +27,6 @@ export default function EditApplicant({
   person,
   evidenceLink,
 }: PageProps): JSX.Element {
-  if (!data.id) return <Custom404 />;
   const router = useRouter();
 
   const savedAddresses =
@@ -94,18 +93,24 @@ export default function EditApplicant({
   };
 
   return (
-    <MainApplicantForm
-      isEditing={true}
-      user={user}
-      onSubmit={onSubmit}
-      isSubmitted={isSubmitted}
-      addressHistory={addressHistory}
-      setAddressHistory={setAddressHistory}
-      handleSaveApplication={handleSaveApplication}
-      ethnicity={ethnicity}
-      setEthnicity={setEthnicity}
-      data={data}
-    />
+    <>
+      {data.id ? (
+        <MainApplicantForm
+          isEditing={true}
+          user={user}
+          onSubmit={onSubmit}
+          isSubmitted={isSubmitted}
+          addressHistory={addressHistory}
+          setAddressHistory={setAddressHistory}
+          handleSaveApplication={handleSaveApplication}
+          ethnicity={ethnicity}
+          setEthnicity={setEthnicity}
+          data={data}
+        />
+      ) : (
+        <Custom404 />
+      )}
+    </>
   );
 }
 

@@ -25,10 +25,6 @@ const Declaration = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
-  if (!mainResident) {
-    return <Custom404 />;
-  }
-
   const application = useAppSelector((store) => store.application);
 
   const submitApplication = async () => {
@@ -56,58 +52,65 @@ const Declaration = (): JSX.Element => {
   };
 
   return (
-    <Layout pageName="Declaration">
-      <HeadingOne content="Declaration" />
+    <>
+      {mainResident ? (
+        <Layout pageName="Declaration">
+          <HeadingOne content="Declaration" />
 
-      <Paragraph>
-        <strong>Please read and confirm the following statement</strong>
-      </Paragraph>
+          <Paragraph>
+            <strong>Please read and confirm the following statement</strong>
+          </Paragraph>
 
-      <Paragraph>
-        I understand and agree that the information I have provided on this form
-        may be shared with another local authority, another social landlord or a
-        tenant management organisation, if they are considering my application.
-      </Paragraph>
+          <Paragraph>
+            I understand and agree that the information I have provided on this
+            form may be shared with another local authority, another social
+            landlord or a tenant management organisation, if they are
+            considering my application.
+          </Paragraph>
 
-      <Paragraph>
-        I declare that the information in this form is true and complete and I
-        give consent to Hackney Council making such enquiries as may be
-        necessary to confirm the information I have given.
-      </Paragraph>
+          <Paragraph>
+            I declare that the information in this form is true and complete and
+            I give consent to Hackney Council making such enquiries as may be
+            necessary to confirm the information I have given.
+          </Paragraph>
 
-      <Paragraph>
-        I understand that it is a criminal offence to provide false or
-        misleading information, or to withhold relevant information which
-        Hackney Council have reasonably required me to give.
-      </Paragraph>
+          <Paragraph>
+            I understand that it is a criminal offence to provide false or
+            misleading information, or to withhold relevant information which
+            Hackney Council have reasonably required me to give.
+          </Paragraph>
 
-      <Paragraph>
-        I understand that if information is found to be false, I may be
-        prosecuted and you may repossess my home if a tenancy arises from it; or
-        cancel my housing application or an offer of a property and I will not
-        be able to re-apply to go on the Council’s housing register for at least
-        5 years.
-      </Paragraph>
+          <Paragraph>
+            I understand that if information is found to be false, I may be
+            prosecuted and you may repossess my home if a tenancy arises from
+            it; or cancel my housing application or an offer of a property and I
+            will not be able to re-apply to go on the Council’s housing register
+            for at least 5 years.
+          </Paragraph>
 
-      <Paragraph>
-        If I am prosecuted by you and found guilty, I understand that I could be
-        ordered to pay a fine of up to £5,000.
-      </Paragraph>
+          <Paragraph>
+            If I am prosecuted by you and found guilty, I understand that I
+            could be ordered to pay a fine of up to £5,000.
+          </Paragraph>
 
-      <Form
-        buttonText="Submit application"
-        formData={getFormData(FormID.DECLARATION)}
-        onSave={submitApplication}
-      />
+          <Form
+            buttonText="Submit application"
+            formData={getFormData(FormID.DECLARATION)}
+            onSave={submitApplication}
+          />
 
-      <div className="c-flex__1 text-right">
-        <Link href="/apply/overview">
-          <a className="lbh-body lbh-link lbh-link--no-visited-state ">
-            Return to application overview
-          </a>
-        </Link>
-      </div>
-    </Layout>
+          <div className="c-flex__1 text-right">
+            <Link href="/apply/overview">
+              <a className="lbh-body lbh-link lbh-link--no-visited-state ">
+                Return to application overview
+              </a>
+            </Link>
+          </div>
+        </Layout>
+      ) : (
+        <Custom404 />
+      )}
+    </>
   );
 };
 

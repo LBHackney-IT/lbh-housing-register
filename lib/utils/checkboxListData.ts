@@ -113,21 +113,47 @@ const savingDetails = (option: string): string => {
   }
 };
 
+const ethnicityExtendedCategoryString = (applicant?: Applicant) => {
+  if (applicant === undefined) {
+    return undefined;
+  }
+
+  const JsonStringEthnicityCategory =
+    questionLookup(QuestionKey.ETHNICITY_MAIN_CATEGORY, applicant) || '';
+
+  const ethnicityCategory = JSON.parse(JsonStringEthnicityCategory);
+
+  if (!ethnicityCategory) {
+    return 'N/A';
+  }
+
+  if (ethnicityCategory === 'prefer-not-to-say') {
+    return 'Prefer not to say';
+  }
+
+  const ethnicityExtendedCategoryQuestion = applicant?.questions?.filter(
+    (question) =>
+      question.id?.includes(`ethnicity-extended-category-${ethnicityCategory}`)
+  )[0];
+
+  if (!ethnicityExtendedCategoryQuestion) {
+    return 'N/A';
+  }
+
+  const ethnicityExtendedCategory = JSON.parse(
+    ethnicityExtendedCategoryQuestion.answer!
+  );
+
+  if (ethnicityExtendedCategory) {
+    return ethnicityCategoryOptions.filter(
+      (option) => option.value === ethnicityExtendedCategory
+    )[0].label;
+  }
+};
+
 export const personalDetailsCheckboxList = (
   applicant?: Applicant
 ): CheckBoxListPageProps => {
-  const ethnicityExtendedCategoryQuestion = applicant?.questions?.filter(
-    (question) => question.id?.includes('ethnicity-extended-category')
-  )[0];
-  const ethnicityExtendedCategory = ethnicityExtendedCategoryQuestion
-    ? ethnicityExtendedCategoryQuestion.answer?.replace(/['"]+/g, '')
-    : null;
-  const ethnicity = ethnicityExtendedCategory
-    ? ethnicityCategoryOptions.filter(
-        (option) => option.value === ethnicityExtendedCategory
-      )[0].label
-    : '';
-
   const nationalInsurance = applicant?.person?.nationalInsuranceNumber || '';
   const phonNumber = applicant?.contactInformation?.phoneNumber || '';
   const email = applicant?.contactInformation?.emailAddress || '';
@@ -147,7 +173,7 @@ export const personalDetailsCheckboxList = (
       },
       {
         title: 'Ethnicity',
-        value: `${ethnicity}`,
+        value: `${ethnicityExtendedCategoryString(applicant)}`,
         isChecked: false,
       },
       {

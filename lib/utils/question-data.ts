@@ -57,4 +57,5 @@ export enum QuestionKey {
   EMPLOYMENT_ADDRESS_FINDER = 'employment/address-finder',
   EMPLOYMENT_COURSE_COMPLETION_DATE = 'employment/course-completion-date',
   ADDRESS_HISTORY = 'address-history/addressHistory',
+  ETHNICITY_MAIN_CATEGORY = 'ethnicity-questions/ethnicity-main-category',
 }

@@ -43,7 +43,7 @@ export default function EditApplicant({ user, data }: PageProps): JSX.Element {
   const [addressHistory, setAddressHistory] = useState(
     JSON.parse(savedAddresses) as Address[]
   );
-  const [ethnicity, setEthnicity] = useState(savedEthnicity);
+  const [ethnicity, setEthnicity] = useState(JSON.parse(savedEthnicity));
 
   const onSubmit = (values: FormikValues) => {
     const questionValues = generateQuestionArray(

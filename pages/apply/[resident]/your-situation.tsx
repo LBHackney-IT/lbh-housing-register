@@ -12,6 +12,7 @@ import {
 } from '../../../lib/store/applicant';
 import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import { FormID, getFormData } from '../../../lib/utils/form-data';
+import { Applicant } from '../../../domain/HousingApi';
 import Custom404 from '../../404';
 
 const YourSituation = (): JSX.Element => {
@@ -23,7 +24,7 @@ const YourSituation = (): JSX.Element => {
 
   const { resident } = router.query as { resident: string };
 
-  const applicant = useAppSelector(selectApplicant(resident));
+  const applicant = useAppSelector(selectApplicant(resident)) as Applicant;
 
   if (!applicant) {
     return <Custom404 />;
@@ -82,7 +83,7 @@ const YourSituation = (): JSX.Element => {
       dispatch(
         updateWithFormValues({
           formID: FormID.YOUR_SITUATION,
-          personID: applicant.person.id,
+          personID: applicant.person!.id!,
           values,
           markAsComplete: true,
         })
@@ -104,7 +105,7 @@ const YourSituation = (): JSX.Element => {
     dispatch(
       updateWithFormValues({
         formID: activeStepID,
-        personID: applicant.person.id,
+        personID: applicant.person!.id!,
         values,
         markAsComplete: true,
       })

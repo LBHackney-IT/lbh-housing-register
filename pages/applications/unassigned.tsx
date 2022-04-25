@@ -34,7 +34,7 @@ export default function ApplicationListPage({
   const router = useRouter();
   const [activeNavItem, setActiveNavItem] = useState('Submitted');
 
-  const handleClick = async (event: SyntheticEvent) => {
+  const handleSelectNavItem = async (event: SyntheticEvent) => {
     event.preventDefault();
     const { name } = event.target as HTMLButtonElement;
     router.push({
@@ -69,14 +69,14 @@ export default function ApplicationListPage({
             <HeadingOne content="Group worktray" />
             <HorizontalNav>
               <HorizontalNavItem
-                handleClick={handleClick}
+                handleSelectNavItem={handleSelectNavItem}
                 itemName="Submitted"
                 isActive={activeNavItem === 'Submitted'}
               >
                 New applications
               </HorizontalNavItem>
               <HorizontalNavItem
-                handleClick={handleClick}
+                handleSelectNavItem={handleSelectNavItem}
                 itemName="AwaitingReassessment"
                 isActive={activeNavItem === 'AwaitingReassessment'}
               >

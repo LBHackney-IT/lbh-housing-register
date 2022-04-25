@@ -38,7 +38,7 @@ export const setAuthCookie = (res: any, data: VerifyAuthResponse): void => {
 
 export const removeAuthCookie = (res: any): void => {
   const jwtCookie = cookie.serialize('housing_user', '', {
-    maxAge: -1,
+    expires: new Date(0),
     domain: '.hackney.gov.uk',
     path: '/',
   });

@@ -40,7 +40,7 @@ const ApplicationSignInPage = (): JSX.Element => {
   };
 
   return (
-    <Layout pageName="Sign in">
+    <Layout pageName="Sign in" pageLoadsApplication={false}>
       {userError && <ErrorSummary>{userError}</ErrorSummary>}
       <HeadingOne content="Your email" />
       <Paragraph>

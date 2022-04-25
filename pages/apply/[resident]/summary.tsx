@@ -1,5 +1,6 @@
 import Layout from '../../../components/layout/resident-layout';
 import {
+  ApplicantWithPersonID,
   selectApplicant,
   getQuestionValue,
 } from '../../../lib/store/applicant';
@@ -29,14 +30,19 @@ import {
   disqualifyApplication,
   sendDisqualifyEmail,
 } from '../../../lib/store/application';
+import { Applicant } from '../../../domain/HousingApi';
 
 const UserSummary = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { resident } = router.query as { resident: string };
 
-  const currentResident = useAppSelector(selectApplicant(resident));
-  const mainResident = useAppSelector((s) => s.application.mainApplicant);
+  const currentResident = useAppSelector(
+    selectApplicant(resident)
+  ) as ApplicantWithPersonID;
+  const mainResident = useAppSelector(
+    (s) => s.application.mainApplicant
+  ) as Applicant;
   const isMainApplicant = currentResident == mainResident;
 
   const application = useAppSelector((store) => store.application);
@@ -64,7 +70,7 @@ const UserSummary = (): JSX.Element => {
   };
 
   const onDelete = () => {
-    dispatch(removeApplicant(currentResident.person.id));
+    dispatch(removeApplicant(currentResident.person!.id!));
     router.push(returnHref);
   };
 

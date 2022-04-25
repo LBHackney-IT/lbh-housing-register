@@ -9,18 +9,16 @@ import Custom404 from '../../404';
 import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import { updateWithFormValues } from '../../../lib/store/applicant';
 import withApplication from '../../../lib/hoc/withApplication';
+import { Applicant } from '../../../domain/HousingApi';
 
 const EthnicityQuestions = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const applicant = useAppSelector((store) => store.application.mainApplicant);
-
-  if (!applicant) {
-    return <Custom404 />;
-  }
+  const applicant = useAppSelector(
+    (store) => store.application.mainApplicant
+  ) as Applicant;
 
   const [formId, setFormId] = useState('ethnicity-questions');
-
   const [activeStepID, setActiveStepId] = useState(() => {
     switch (formId) {
       case 'ethnicity-extended-category-asian-asian-british':
@@ -43,6 +41,10 @@ const EthnicityQuestions = (): JSX.Element => {
     }
   });
 
+  if (!applicant) {
+    return <Custom404 />;
+  }
+
   const formData = getFormData(activeStepID);
 
   const nextStep = (values: FormikValues) => {
@@ -54,7 +56,7 @@ const EthnicityQuestions = (): JSX.Element => {
       dispatch(
         updateWithFormValues({
           formID: activeStepID,
-          personID: applicant.person?.id || '',
+          personID: applicant.person!.id!,
           values,
           markAsComplete: true,
         })
@@ -71,7 +73,7 @@ const EthnicityQuestions = (): JSX.Element => {
     dispatch(
       updateWithFormValues({
         formID: activeStepID,
-        personID: applicant.person?.id || '',
+        personID: applicant.person!.id!,
         values,
         markAsComplete: true,
       })

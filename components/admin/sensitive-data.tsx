@@ -1,8 +1,6 @@
 import { Application } from '../../domain/HousingApi';
-import Button from '../button';
 import { useState } from 'react';
 import { updateApplication } from '../../lib/gateways/internal-api';
-import Paragraph from '../content/paragraph';
 import { HackneyGoogleUserWithPermissions } from '../../lib/utils/googleAuth';
 import { HeadingFour } from '../content/headings';
 

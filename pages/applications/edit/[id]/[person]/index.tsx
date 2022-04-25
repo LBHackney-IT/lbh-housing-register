@@ -2,7 +2,10 @@ import { useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { FormikValues } from 'formik';
-import { Application } from '../../../../../domain/HousingApi';
+import {
+  Application,
+  Address as ApiAddress,
+} from '../../../../../domain/HousingApi';
 import { getApplication } from '../../../../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../../../../lib/utils/googleAuth';
 import { updateApplication } from '../../../../../lib/gateways/internal-api';
@@ -11,6 +14,7 @@ import { HackneyGoogleUser } from '../../../../../domain/HackneyGoogleUser';
 import {
   Address,
   generateQuestionArray,
+  convertAddressToPrimary,
 } from '../../../../../lib/utils/adminHelpers';
 import { scrollToTop } from '../../../../../lib/utils/scroll';
 import MainApplicantForm from '../../../../../components/admin/MainApplicantForm';
@@ -21,12 +25,7 @@ interface PageProps {
   evidenceLink: string;
 }
 
-export default function EditApplicant({
-  user,
-  data,
-  person,
-  evidenceLink,
-}: PageProps): JSX.Element {
+export default function EditApplicant({ user, data }: PageProps): JSX.Element {
   const router = useRouter();
 
   const savedAddresses =
@@ -52,7 +51,10 @@ export default function EditApplicant({
       addressHistory,
       ethnicity
     );
-    const addressToSubmit = addressHistory.length > 0 ? addressHistory[0] : {};
+
+    const firstAddressHistoryItem =
+      addressHistory.length > 0 ? addressHistory[0] : ({} as Address);
+    const primaryAddress = convertAddressToPrimary(firstAddressHistoryItem);
 
     const request: Application = {
       id: data.id,
@@ -67,7 +69,7 @@ export default function EditApplicant({
           nationalInsuranceNumber:
             values.personalDetails_nationalInsuranceNumber,
         },
-        address: addressToSubmit as any,
+        address: primaryAddress as ApiAddress,
         contactInformation: {
           emailAddress: values.personalDetails_emailAddress,
           phoneNumber: values.personalDetails_phoneNumber,

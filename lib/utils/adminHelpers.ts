@@ -122,7 +122,10 @@ export const generateEditInitialValues = (
             '/',
             '_'
           );
-          const answer = current.answer.replace(/[\[\]"]+/g, '');
+
+          const answer = current.answer
+            ? current.answer.replace(/[\[\]"]+/g, '')
+            : '';
 
           return {
             ...acc,

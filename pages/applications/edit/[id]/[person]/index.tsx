@@ -52,11 +52,10 @@ export default function EditApplicant({ user, data }: PageProps): JSX.Element {
       ethnicity
     );
 
-    const firstAddressHistoryItem =
-      addressHistory.length > 0 ? addressHistory[0] : null;
-    const primaryAddress = firstAddressHistoryItem
-      ? convertAddressToPrimary(firstAddressHistoryItem)
-      : '';
+    const primaryAddress =
+      addressHistory.length > 0
+        ? convertAddressToPrimary(addressHistory[0])
+        : '';
 
     const request: Application = {
       id: data.id,

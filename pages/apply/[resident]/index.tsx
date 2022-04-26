@@ -11,6 +11,7 @@ import SummaryList, {
 } from '../../../components/summary-list';
 import Tag from '../../../components/tag';
 import {
+  ApplicantWithPersonID,
   getQuestionValue,
   selectApplicant,
 } from '../../../lib/store/applicant';
@@ -32,7 +33,9 @@ const ResidentIndex = (): JSX.Element => {
   const dispatch = useDispatch();
   const { resident } = router.query as { resident: string };
 
-  const currentResident = useAppSelector(selectApplicant(resident));
+  const currentResident = useAppSelector(
+    selectApplicant(resident)
+  ) as ApplicantWithPersonID;
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
   const application = useAppSelector((store) => store.application);
 
@@ -115,61 +118,69 @@ const ResidentIndex = (): JSX.Element => {
   };
 
   return (
-    <Layout pageName="Person overview" breadcrumbs={breadcrumbs}>
-      <h1 className="lbh-heading-h1" style={{ marginBottom: '40px' }}>
-        <span className="govuk-hint lbh-hint">Complete information for:</span>
-        {`${currentResident.person?.firstName} ${currentResident.person?.surname}`}
-      </h1>
+    <>
+      {currentResident && mainResident ? (
+        <Layout pageName="Person overview" breadcrumbs={breadcrumbs}>
+          <h1 className="lbh-heading-h1" style={{ marginBottom: '40px' }}>
+            <span className="govuk-hint lbh-hint">
+              Complete information for:
+            </span>
+            {`${currentResident.person?.firstName} ${currentResident.person?.surname}`}
+          </h1>
 
-      {steps.map((step, index) => (
-        <div key={index}>
-          <HeadingTwo content={step.heading} />
-          <SummaryList>
-            {step.sections.map((formStep, index) => (
-              <SummaryListRow key={index}>
-                <SummaryListValue>
-                  {isSectionActive(formStep.id) ? (
-                    <Link href={`${baseHref}/${formStep.id}`}>
-                      <a className="lbh-link">{formStep.heading}</a>
-                    </Link>
-                  ) : (
-                    formStep.heading
-                  )}
-                </SummaryListValue>
-                <SummaryListActions>
-                  {getQuestionValue(
-                    currentResident.questions,
-                    formStep.id,
-                    'sectionCompleted',
-                    false
-                  ) ? (
-                    <Tag content="Completed" variant="green" />
-                  ) : (
-                    cantStartYetTag(formStep.id)
-                  )}
-                </SummaryListActions>
-              </SummaryListRow>
-            ))}
-          </SummaryList>
-        </div>
-      ))}
-      {tasks.remaining == 0 && (
-        <ButtonLink href={`/apply/${currentResident.person?.id}/summary/`}>
-          Check answers
-        </ButtonLink>
+          {steps.map((step, index) => (
+            <div key={index}>
+              <HeadingTwo content={step.heading} />
+              <SummaryList>
+                {step.sections.map((formStep, index) => (
+                  <SummaryListRow key={index}>
+                    <SummaryListValue>
+                      {isSectionActive(formStep.id) ? (
+                        <Link href={`${baseHref}/${formStep.id}`}>
+                          <a className="lbh-link">{formStep.heading}</a>
+                        </Link>
+                      ) : (
+                        formStep.heading
+                      )}
+                    </SummaryListValue>
+                    <SummaryListActions>
+                      {getQuestionValue(
+                        currentResident.questions,
+                        formStep.id,
+                        'sectionCompleted',
+                        false
+                      ) ? (
+                        <Tag content="Completed" variant="green" />
+                      ) : (
+                        cantStartYetTag(formStep.id)
+                      )}
+                    </SummaryListActions>
+                  </SummaryListRow>
+                ))}
+              </SummaryList>
+            </div>
+          ))}
+          {tasks.remaining == 0 && (
+            <ButtonLink href={`/apply/${currentResident.person?.id}/summary/`}>
+              Check answers
+            </ButtonLink>
+          )}
+          <br />
+          <Button onClick={goBack} secondary={true}>
+            Save and go back
+          </Button>
+          {currentResident !== mainResident && (
+            <DeleteLink
+              content="Delete this information"
+              details="This information will be permanently deleted."
+              onDelete={onDelete}
+            />
+          )}
+        </Layout>
+      ) : (
+        <Custom404 />
       )}
-      <br />
-      <Button onClick={goBack} secondary={true}>
-        Save and go back
-      </Button>
-      {currentResident !== mainResident && (
-        <DeleteLink
-          content="Delete this information"
-          details="This information will be permanently deleted."
-          onDelete={onDelete}
-        />
-      )}
-    </Layout>
+    </>
   );
 };
 

@@ -26,7 +26,6 @@ export default function EditApplicant({
   data,
   person,
 }: PageProps): JSX.Element {
-  if (!data.id) return <Custom404 />;
   const router = useRouter();
 
   const personData = data.otherMembers?.find((p) => p.person?.id === person);
@@ -34,7 +33,7 @@ export default function EditApplicant({
   const savedAddresses =
     personData?.questions?.filter(
       (question) => question.id === 'address-history/addressHistory'
-    )[0]?.answer || '';
+    )[0]?.answer || '[]';
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [addresses, setAddresses] = useState(
@@ -94,16 +93,22 @@ export default function EditApplicant({
   };
 
   return (
-    <HouseholdMemberForm
-      isEditing={true}
-      user={user}
-      onSubmit={onSubmit}
-      isSubmitted={isSubmitted}
-      addresses={addresses}
-      setAddresses={setAddresses}
-      handleSaveApplication={handleSaveApplication}
-      personData={personData}
-    />
+    <>
+      {data.id ? (
+        <HouseholdMemberForm
+          isEditing={true}
+          user={user}
+          onSubmit={onSubmit}
+          isSubmitted={isSubmitted}
+          addresses={addresses}
+          setAddresses={setAddresses}
+          handleSaveApplication={handleSaveApplication}
+          personData={personData}
+        />
+      ) : (
+        <Custom404 />
+      )}
+    </>
   );
 }
 

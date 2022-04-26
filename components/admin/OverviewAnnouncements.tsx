@@ -3,7 +3,7 @@ import Details from '../../components/details';
 import Paragraph from '../../components/content/paragraph';
 import { Applicant } from '../../domain/HousingApi';
 
-export const additionalQuestionsArray = [
+const additionalQuestionsArray = [
   {
     questionId: 'additional-questions/currently-homeless',
     title: 'Household member(s) currently homeless',

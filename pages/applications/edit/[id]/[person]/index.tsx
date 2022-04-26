@@ -37,13 +37,13 @@ export default function EditApplicant({ user, data }: PageProps): JSX.Element {
     data.mainApplicant?.questions?.filter(
       (question) =>
         question.id === 'ethnicity-questions/ethnicity-main-category'
-    )[0]?.answer || '';
+    )[0]?.answer || '""';
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [addressHistory, setAddressHistory] = useState(
     JSON.parse(savedAddresses) as Address[]
   );
-  const [ethnicity, setEthnicity] = useState(savedEthnicity);
+  const [ethnicity, setEthnicity] = useState(JSON.parse(savedEthnicity));
 
   const onSubmit = (values: FormikValues) => {
     const questionValues = generateQuestionArray(

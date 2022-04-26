@@ -119,7 +119,7 @@ const ethnicityExtendedCategoryString = (applicant?: Applicant) => {
   }
 
   const JsonStringEthnicityCategory =
-    questionLookup(QuestionKey.ETHNICITY_MAIN_CATEGORY, applicant) || '';
+    questionLookup(QuestionKey.ETHNICITY_MAIN_CATEGORY, applicant) || '""';
 
   const ethnicityCategory = JSON.parse(JsonStringEthnicityCategory);
 

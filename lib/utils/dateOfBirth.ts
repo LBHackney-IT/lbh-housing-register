@@ -31,22 +31,25 @@ export const getAgeInYears = (applicant: Applicant): number => {
     return 0;
   }
 
-  var dateOfBirth = new Date(dateString);
+  const dateOfBirth = new Date(dateString);
   return getAgeInYearsFromDate(dateOfBirth);
 };
 
-export const getAgeInYearsFromDate = (date: Date): number => {
-  var today = new Date();
-  var dateOfBirth = new Date(date);
-  if (isNaN(+dateOfBirth)) {
+export const getAgeInYearsFromDate = (birthDate: Date): number => {
+  const today = new Date();
+
+  if (isNaN(+birthDate)) {
     return NaN;
   }
 
-  var age = today.getFullYear() - dateOfBirth.getFullYear();
-  var monthDiff = today.getMonth() - dateOfBirth.getMonth();
-  if (monthDiff < 0 || (monthDiff === 0 && today < dateOfBirth)) {
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  const isDayDiff = today.getDate() < birthDate.getDate();
+
+  if (monthDiff < 0 || (monthDiff === 0 && isDayDiff)) {
     age--;
   }
+
   return age;
 };
 

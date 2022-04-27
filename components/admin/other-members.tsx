@@ -1,6 +1,6 @@
 import { Applicant } from '../../domain/HousingApi';
 import { ButtonLink } from '../button';
-import { formatDob, getAgeInYears } from '../../lib/utils/dateOfBirth';
+import { formatDob } from '../../lib/utils/dateOfBirth';
 import React, { useState } from 'react';
 import { HeadingThree } from '../content/headings';
 import { getGenderName } from '../../lib/utils/gender';
@@ -56,8 +56,7 @@ export default function OtherMembers({
                   <li>
                     {applicant.person?.dateOfBirth &&
                       formatDob(new Date(applicant.person?.dateOfBirth))}{' '}
-                    {applicant.person?.dateOfBirth &&
-                      `(age ${getAgeInYears(applicant)})`}
+                    {applicant.person?.age && `(age ${applicant.person?.age}`}
                   </li>
                 </ul>
 

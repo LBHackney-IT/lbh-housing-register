@@ -366,6 +366,12 @@ export interface Person {
    * @type {string}
    * @memberof Person
    */
+  age?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Person
+   */
   gender?: string;
   /**
    *

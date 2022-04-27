@@ -1,13 +1,10 @@
 import { Applicant } from '../../domain/HousingApi';
-import { formatDob, getAgeInYears } from '../../lib/utils/dateOfBirth';
+import { formatDob } from '../../lib/utils/dateOfBirth';
 import { getGenderName } from '../../lib/utils/gender';
-import Collapsible from '../collapsible';
-import Button, { ButtonLink } from '../button';
-import app from 'next/app';
+import { ButtonLink } from '../button';
 import Link from 'next/link';
 import React from 'react';
 import { HeadingThree } from '../content/headings';
-import Hint from '../form/hint';
 
 interface SummaryProps {
   heading: string;
@@ -42,8 +39,7 @@ export default function PersonalDetails({
                 <li>
                   {applicant.person?.dateOfBirth &&
                     formatDob(new Date(applicant.person?.dateOfBirth))}{' '}
-                  {applicant.person?.dateOfBirth &&
-                    `(age ${getAgeInYears(applicant)})`}
+                  {applicant.person?.age && `(age ${applicant.person?.age})`}
                 </li>
               </ul>
               <ul className="lbh-list lbh-list--compressed">

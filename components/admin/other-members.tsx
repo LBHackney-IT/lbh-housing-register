@@ -23,8 +23,6 @@ export default function OtherMembers({
   canEdit,
   handleDelete,
 }: SummaryProps): JSX.Element {
-  console.log(others);
-
   const [showDeleteWarningDialog, setShowDeleteWarningDialog] = useState(false);
   const [applicantToDelete, setApplicantToDelete] = useState({} as Applicant);
 

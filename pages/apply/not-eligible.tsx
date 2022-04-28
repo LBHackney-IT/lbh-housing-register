@@ -36,6 +36,7 @@ const NotEligible = (): JSX.Element => {
   }
 
   const signOut = () => {
+    router.push('/');
     dispatch(exit());
   };
 

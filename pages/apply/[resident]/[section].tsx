@@ -8,7 +8,6 @@ import { useAppSelector } from '../../../lib/store/hooks';
 import { getApplicationSectionFromId } from '../../../lib/utils/application-forms';
 import { isOver18 } from '../../../lib/utils/dateOfBirth';
 import { getApplicationSectionsForResident } from '../../../lib/utils/resident';
-import Custom404 from '../../404';
 
 const ApplicationSection = (): JSX.Element => {
   const router = useRouter();
@@ -20,11 +19,7 @@ const ApplicationSection = (): JSX.Element => {
   const applicant = useAppSelector(selectApplicant(resident)) as Applicant;
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
 
-  if (!applicantHasId(applicant)) {
-    return <Custom404 />;
-  }
-
-  const baseHref = `/apply/${applicant.person?.id}`;
+  const baseHref = `/apply/${applicant?.person?.id}`;
   const returnHref = '/apply/overview';
 
   const sectionGroups = applicant
@@ -59,18 +54,14 @@ const ApplicationSection = (): JSX.Element => {
 
   return (
     <>
-      {applicantHasId(applicant) ? (
-        <Layout pageName={sectionName} breadcrumbs={breadcrumbs}>
-          <ApplicationForms
-            applicant={applicant}
-            sectionGroups={sectionGroups}
-            activeStep={section}
-            onSubmit={onSubmit}
-          />
-        </Layout>
-      ) : (
-        <Custom404 />
-      )}
+      <Layout pageName={sectionName} breadcrumbs={breadcrumbs}>
+        <ApplicationForms
+          applicant={applicant}
+          sectionGroups={sectionGroups}
+          activeStep={section}
+          onSubmit={onSubmit}
+        />
+      </Layout>
     </>
   );
 };

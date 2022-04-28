@@ -25,16 +25,19 @@ const ApplicationVerifyPage = (): JSX.Element => {
   const application = useAppSelector((store) => store.application);
 
   useEffect(() => {
-    if (!email) {
-      router.push('/apply/sign-in');
+    if (application.mainApplicant?.person) {
+      router.push('/apply/overview');
+      return;
     }
 
     if (application.id) {
       router.push('/apply/start');
+      return;
     }
 
-    if (application.mainApplicant?.person) {
-      router.push('/apply/overview');
+    if (!email) {
+      router.push('/apply/sign-in');
+      return;
     }
   }, [application, router]);
 

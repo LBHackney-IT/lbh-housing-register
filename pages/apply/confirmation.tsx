@@ -20,6 +20,7 @@ const ApplicationConfirmation = (): JSX.Element => {
   );
 
   const signOut = () => {
+    router.push('/');
     dispatch(exit());
   };
 

@@ -37,6 +37,7 @@ const ApplicationHouseholdOverview = (): JSX.Element => {
 
   const onDelete = () => {
     // TODO: delete application
+    router.push('/');
     dispatch(exit());
   };
 

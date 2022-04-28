@@ -21,11 +21,11 @@ interface ResidentLayoutProps {
   children: ReactNode;
 }
 
-const INACTIVITY_TIME_BEFORE_WARNING_DIALOG = 30 * 1000 * 60; // 30 minutes
-const TIME_TO_SHOW_DIALOG_BEFORE_SIGN_OUT = 30 * 1000; // 30 seconds
+// const INACTIVITY_TIME_BEFORE_WARNING_DIALOG = 30 * 1000 * 60; // 30 minutes
+// const TIME_TO_SHOW_DIALOG_BEFORE_SIGN_OUT = 30 * 1000; // 30 seconds
 
-// const INACTIVITY_TIME_BEFORE_WARNING_DIALOG = 10 * 1000; // 10 seconds
-// const TIME_TO_SHOW_DIALOG_BEFORE_SIGN_OUT = 10 * 1000; // 10 seconds
+const INACTIVITY_TIME_BEFORE_WARNING_DIALOG = 10 * 1000; // 10 seconds
+const TIME_TO_SHOW_DIALOG_BEFORE_SIGN_OUT = 10 * 1000; // 10 seconds
 
 export default function ResidentLayout({
   pageName,
@@ -49,9 +49,14 @@ export default function ResidentLayout({
     }
 
     dispatch(loadApplication()).then(() => setLoaded(true));
+
+    return () => {
+      setLoaded(false);
+    };
   }, []);
 
   const onSignOut = async () => {
+    router.push('/');
     dispatch(exit());
   };
 
@@ -59,14 +64,24 @@ export default function ResidentLayout({
     if (!application.id) return;
 
     setShowSignOutDialog(false);
-    signOutRef.current.click();
+    onSignOut();
   };
 
   const handleShowSignOutDialog = () => {
-    if (!application.id) return;
-
-    setTimeout(() => autoSignOut(), TIME_TO_SHOW_DIALOG_BEFORE_SIGN_OUT);
+    let timeBeforeAutoSignOut = setTimeout(
+      () => autoSignOut(),
+      TIME_TO_SHOW_DIALOG_BEFORE_SIGN_OUT
+    );
     setShowSignOutDialog(true);
+
+    if (!application.id) {
+      clearTimeout(timeBeforeAutoSignOut);
+      return;
+    }
+
+    return () => {
+      clearTimeout(timeBeforeAutoSignOut);
+    };
   };
 
   const handleStayLoggedIn = () => {
@@ -78,10 +93,16 @@ export default function ResidentLayout({
       () => handleShowSignOutDialog(),
       INACTIVITY_TIME_BEFORE_WARNING_DIALOG
     );
+
+    if (!application.id) {
+      clearTimeout(timeBeforeShowSignOutDialog);
+      return;
+    }
+
     return () => {
       clearTimeout(timeBeforeShowSignOutDialog);
     };
-  }, []);
+  }, [application.id]);
 
   return (
     <>

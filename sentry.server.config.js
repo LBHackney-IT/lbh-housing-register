@@ -19,5 +19,5 @@ Sentry.init({
   // that it will also get attached to your source maps
 
   environment: process.env.NEXT_PUBLIC_ENV,
-  integrations: [new CaptureConsoleIntegration()],
+  integrations: [new CaptureConsoleIntegration({ levels: ['error'] })],
 });

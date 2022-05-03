@@ -1,15 +1,19 @@
 import { Applicant } from '../../domain/HousingApi';
 import { ButtonLink } from '../button';
-import { formatDob, getAgeInYears } from '../../lib/utils/dateOfBirth';
-import React from 'react';
+import { formatDob } from '../../lib/utils/dateOfBirth';
+import React, { useState } from 'react';
 import { HeadingThree } from '../content/headings';
 import { getGenderName } from '../../lib/utils/gender';
+import capitalize from '../../lib/utils/capitalize';
+import Dialog from '../dialog';
+import Paragraph from '../content/paragraph';
 
 interface SummaryProps {
   heading: string;
   others: Applicant[];
   applicationId: string;
   canEdit: boolean;
+  handleDelete: (applicant: Applicant) => void;
 }
 
 export default function OtherMembers({
@@ -17,7 +21,16 @@ export default function OtherMembers({
   others,
   applicationId,
   canEdit,
+  handleDelete,
 }: SummaryProps): JSX.Element {
+  const [showDeleteWarningDialog, setShowDeleteWarningDialog] = useState(false);
+  const [applicantToDelete, setApplicantToDelete] = useState({} as Applicant);
+
+  const handleDeleteDialog = (applicant: Applicant): void => {
+    setApplicantToDelete(applicant);
+    setShowDeleteWarningDialog(true);
+  };
+
   return (
     <>
       <HeadingThree content={heading} />
@@ -31,20 +44,42 @@ export default function OtherMembers({
                     <strong>
                       {applicant.person?.title} {applicant.person?.firstName}{' '}
                       {applicant.person?.surname}
-                    </strong>
+                    </strong>{' '}
+                    {getGenderName(applicant) !== ''
+                      ? `(${getGenderName(applicant)})`
+                      : ''}
                   </li>
                   <li>
                     {applicant.person?.relationshipType &&
-                      applicant.person?.relationshipType}
+                      capitalize(applicant.person?.relationshipType)}
                   </li>
                   <li>
-                    {getGenderName(applicant)},{' '}
                     {applicant.person?.dateOfBirth &&
                       formatDob(new Date(applicant.person?.dateOfBirth))}{' '}
-                    {applicant.person?.dateOfBirth &&
-                      `(age ${getAgeInYears(applicant)})`}
+                    {applicant.person?.age && `(age ${applicant.person?.age}`}
                   </li>
                 </ul>
+
+                <button
+                  onClick={() => handleDeleteDialog(applicant)}
+                  className="lbh-body-s lbh-link lbh-link--no-visited-state lbh-delete-link"
+                >
+                  Remove household member
+                </button>
+
+                <Dialog
+                  isOpen={showDeleteWarningDialog}
+                  title="Confirm delete"
+                  onConfirmation={() => handleDelete(applicantToDelete)}
+                  onCancel={() => setShowDeleteWarningDialog(false)}
+                >
+                  <Paragraph>
+                    Are you sure you want to remove{' '}
+                    {applicantToDelete.person?.title}{' '}
+                    {applicantToDelete.person?.firstName}{' '}
+                    {applicantToDelete.person?.surname}?
+                  </Paragraph>
+                </Dialog>
               </td>
               <td className="govuk-table__cell govuk-table__cell--numeric">
                 {canEdit && (

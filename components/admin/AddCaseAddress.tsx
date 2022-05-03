@@ -49,22 +49,20 @@ export default function AddCaseAddress({
   const [editAddressIndex, setEditAddressIndex] = useState(0);
   const [date, setDate] = useState(emptyDate);
 
-  const fromDate = new Date(
-    Number(date.dateYear),
-    Number(date.dateMonth) - 1,
-    1
-  );
-  const toDate = new Date(
-    Number(date.dateToYear),
-    Number(date.dateToMonth) - 1,
-    1
-  );
+  const fromDate =
+    date.dateToYear && date.dateToMonth
+      ? new Date(Number(date.dateYear), Number(date.dateMonth) - 1, 1)
+      : null;
+  const toDate =
+    date.dateToYear && date.dateToMonth
+      ? new Date(Number(date.dateToYear), Number(date.dateToMonth) - 1, 1)
+      : null;
 
   useEffect(() => {
     setAddressInDialog({
       ...addressInDialog,
-      date: fromDate.toISOString(),
-      dateTo: toDate.toISOString(),
+      date: fromDate ? fromDate.toISOString() : '',
+      dateTo: toDate ? toDate.toISOString() : '',
     });
   }, [date]);
 

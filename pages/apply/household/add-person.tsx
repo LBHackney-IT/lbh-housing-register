@@ -23,16 +23,7 @@ const AddPersonToApplication = (): JSX.Element => {
   ];
 
   const formFields = {
-    title: '',
-    firstName: '',
-    surname: '',
-    relationshipType: '',
-    gender: '',
-    genderDescription: '',
-    dateOfBirth: '',
-    nationalInsuranceNumber: '',
-    phoneNumber: '',
-    emailAddress: '',
+    person: {},
   };
 
   const onSubmit = async (values: FormData) => {
@@ -44,7 +35,7 @@ const AddPersonToApplication = (): JSX.Element => {
     <Layout pageName="Add person" breadcrumbs={breadcrumbs}>
       <HeadingOne content="Add a person to this application" />
       <AddPersonForm
-        initialValues={formFields}
+        applicant={formFields}
         onSubmit={onSubmit}
         isMainApplicant={false}
         buttonText="Add person"

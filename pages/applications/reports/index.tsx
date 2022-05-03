@@ -24,6 +24,7 @@ export interface Report {
     lastDownloadedOn: string;
     approvedBy: string;
   };
+  applicationLinksFileName?: string;
 }
 
 interface ReportsProps {
@@ -37,7 +38,7 @@ export default function Reports({
 }: ReportsProps): JSX.Element {
   const [activeNavItem, setActiveNavItem] = useState('Novalet');
 
-  const handleClick = async (event: SyntheticEvent) => {
+  const handleSelectNavItem = async (event: SyntheticEvent) => {
     event.preventDefault();
 
     const { name } = event.target as HTMLButtonElement;
@@ -61,14 +62,14 @@ export default function Reports({
             <HeadingOne content="Reports" />
             <HorizontalNav>
               <HorizontalNavItem
-                handleClick={handleClick}
+                handleSelectNavItem={handleSelectNavItem}
                 itemName="Novalet"
                 isActive={activeNavItem === 'Novalet'}
               >
                 Novalet applicant feed
               </HorizontalNavItem>
               <HorizontalNavItem
-                handleClick={handleClick}
+                handleSelectNavItem={handleSelectNavItem}
                 itemName="Internal"
                 isActive={activeNavItem === 'Internal'}
               >
@@ -98,7 +99,7 @@ export const getServerSideProps: GetServerSideProps = async (
     return { redirect: auth.redirect };
   }
 
-  const reportNames = await listNovaletExports();
+  const reportNames = await listNovaletExports(20);
 
   return {
     props: { user: auth.user, reportsData: reportNames },

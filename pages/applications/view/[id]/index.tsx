@@ -1,5 +1,6 @@
 import { GetServerSideProps } from 'next';
-import React, { SyntheticEvent, useState } from 'react';
+import { useRouter } from 'next/router';
+import React, { SyntheticEvent, useState, useEffect } from 'react';
 import Actions from '../../../../components/admin/actions';
 import ApplicationHistory from '../../../../components/admin/ApplicationHistory';
 import AssignUser from '../../../../components/admin/assign-user';
@@ -19,15 +20,17 @@ import {
   HeadingOne,
   HeadingThree,
 } from '../../../../components/content/headings';
+import List, { ListItem } from '../../../../components/content/list';
 import Paragraph from '../../../../components/content/paragraph';
 import Layout from '../../../../components/layout/staff-layout';
 import { ActivityHistoryPagedResult } from '../../../../domain/ActivityHistoryApi';
-import { Application } from '../../../../domain/HousingApi';
+import { Application, Applicant } from '../../../../domain/HousingApi';
 import { UserContext } from '../../../../lib/contexts/user-context';
 import {
   getApplication,
   getApplicationHistory,
 } from '../../../../lib/gateways/applications-api';
+import { updateApplication } from '../../../../lib/gateways/internal-api';
 import {
   ApplicationStatus,
   lookupStatus,
@@ -38,6 +41,7 @@ import {
   getRedirect,
   getSession,
   HackneyGoogleUserWithPermissions,
+  hasAnyPermissions,
 } from '../../../../lib/utils/googleAuth';
 import { getPersonName } from '../../../../lib/utils/person';
 import Custom404 from '../../../404';
@@ -53,192 +57,270 @@ export default function ApplicationPage({
   data,
   history,
 }: PageProps): JSX.Element | null {
-  if (!data.id) return <Custom404 />;
+  const router = useRouter();
+  const tab = router.query.tab ?? 'overview';
 
-  // Can edit application if:
+  useEffect(() => {
+    router.push(`/applications/view/${data.id}?tab=${tab}`, undefined, {
+      shallow: true,
+    });
+  }, []);
+
+  useEffect(() => {
+    handleTabChange(tab as string);
+  }, [router.query.tab]);
+
+  const handleTabChange = (newValue: string) => {
+    router.push(`/applications/view/${data.id}?tab=${newValue}`, undefined, {
+      shallow: true,
+    });
+  };
+
+  // Can edit applications if:
+  // - user is a manager (all statuses)
   // - it has a status of manual draft
-  // - it has a status of incomplete and current user is assigned to it
-  const canEditApplication =
-    data.status === ApplicationStatus.MANUAL_DRAFT ||
-    (data.status === 'New' && data.assignedTo === user.email);
+  // - it has a status of awaiting assessment (SUBMITTED) and current user is assigned to it
+  // - it has a status of awaiting reassessment and current user is assigned to it
+  const canEditApplications = () => {
+    if (!hasAnyPermissions(user)) return false;
+    if (user.hasManagerPermissions) return true;
+    if (data.status === ApplicationStatus.MANUAL_DRAFT) {
+      return true;
+    }
+    const assignedToCurrentUser = data.assignedTo === user.email;
+    if (data.status === ApplicationStatus.SUBMITTED && assignedToCurrentUser) {
+      return true;
+    }
+    if (
+      data.status === ApplicationStatus.AWAITING_REASSESSMENT &&
+      assignedToCurrentUser
+    ) {
+      return true;
+    }
+    return false;
+  };
 
-  const [activeNavItem, setActiveNavItem] = useState('overview');
+  const handleDelete = (applicant: Applicant) => {
+    const newHouseholdMembers = data.otherMembers?.filter(
+      (member) => member.person?.id !== applicant.person?.id
+    );
 
-  const handleClick = async (event: SyntheticEvent) => {
-    event.preventDefault();
-    const { name } = event.target as HTMLButtonElement;
-    setActiveNavItem(name);
+    const request: Application = {
+      id: data.id,
+      otherMembers: newHouseholdMembers,
+    };
+
+    updateApplication(request).then(() => {
+      router.reload();
+    });
   };
 
   return (
-    <UserContext.Provider value={{ user }}>
-      <Layout pageName="View application">
-        {data.sensitiveData &&
-        !canViewSensitiveApplication(data.assignedTo!, user) ? (
-          <>
-            <h2>Access denied</h2>
-            <Paragraph>You are unable to view this application.</Paragraph>
-          </>
-        ) : (
-          <>
-            {data.importedFromLegacyDatabase ? (
-              <Announcement variant="info">
-                <h3 className="lbh-page-announcement__title">
-                  Legacy application
-                </h3>
-                <div className="lbh-page-announcement__content">
-                  This application was imported from a legacy system. Only
-                  limited information is available for legacy applications.
-                </div>
-              </Announcement>
-            ) : null}
+    <>
+      {data.id ? (
+        <UserContext.Provider value={{ user }}>
+          <Layout pageName="View application">
+            {data.sensitiveData &&
+            !canViewSensitiveApplication(data.assignedTo!, user) ? (
+              <>
+                <h2>Access denied</h2>
+                <Paragraph>You are unable to view this application.</Paragraph>
+              </>
+            ) : (
+              <>
+                {data.importedFromLegacyDatabase ? (
+                  <Announcement variant="info">
+                    <h3 className="lbh-page-announcement__title">
+                      Legacy application
+                    </h3>
+                    <div className="lbh-page-announcement__content">
+                      This application was imported from a legacy system. Only
+                      limited information is available for legacy applications.
+                    </div>
+                  </Announcement>
+                ) : null}
 
-            <HeadingOne content="View application" />
-            <h2 className="lbh-caption-xl lbh-caption govuk-!-margin-top-1">
-              {getPersonName(data)}
-            </h2>
+                <HeadingOne content="View application" />
+                <h2 className="lbh-caption-xl lbh-caption govuk-!-margin-top-1">
+                  {getPersonName(data)}
+                </h2>
 
-            <HorizontalNav spaced={true}>
-              <HorizontalNavItem
-                handleClick={handleClick}
-                itemName="overview"
-                isActive={activeNavItem === 'overview'}
-              >
-                Overview
-              </HorizontalNavItem>
-              <HorizontalNavItem
-                handleClick={handleClick}
-                itemName="history"
-                isActive={activeNavItem === 'history'}
-              >
-                Notes and history
-              </HorizontalNavItem>
-              {data.status !== ApplicationStatus.DRAFT &&
-              data.status !== ApplicationStatus.MANUAL_DRAFT ? (
-                <HorizontalNavItem
-                  handleClick={handleClick}
-                  itemName="assessment"
-                  isActive={activeNavItem === 'assessment'}
-                >
-                  Assessment
-                </HorizontalNavItem>
-              ) : (
-                <></>
-              )}
-            </HorizontalNav>
-
-            {activeNavItem === 'overview' && (
-              <div className="govuk-grid-row">
-                <div className="govuk-grid-column-two-thirds">
-                  <HeadingThree content="Snapshot" />
-                  <Snapshot data={data} />
-
-                  {data.mainApplicant && (
-                    <OverviewAnnouncements applicant={data.mainApplicant} />
-                  )}
-
-                  {data.mainApplicant && (
-                    <PersonalDetails
-                      heading="Main applicant"
-                      applicant={data.mainApplicant}
-                      applicationId={data.id}
-                      canEdit={canEditApplication}
-                    />
-                  )}
-                  {data.otherMembers && data.otherMembers.length > 0 ? (
-                    <OtherMembers
-                      heading="Other household members"
-                      others={data.otherMembers}
-                      applicationId={data.id}
-                      canEdit={canEditApplication}
-                    />
-                  ) : (
-                    <HeadingThree content="Other household members" />
-                  )}
-                  {canEditApplication && (
-                    <ButtonLink
-                      additionalCssClasses="govuk-secondary lbh-button--secondary"
-                      href={`/applications/edit/${data.id}/add-household-member`}
+                <HorizontalNav spaced={true}>
+                  <HorizontalNavItem
+                    handleSelectNavItem={() => handleTabChange('overview')}
+                    itemName="overview"
+                    isActive={tab === 'overview'}
+                  >
+                    Overview
+                  </HorizontalNavItem>
+                  <HorizontalNavItem
+                    handleSelectNavItem={() => handleTabChange('history')}
+                    itemName="history"
+                    isActive={tab === 'history'}
+                  >
+                    Notes and history
+                  </HorizontalNavItem>
+                  {data.status !== ApplicationStatus.DRAFT &&
+                  data.status !== ApplicationStatus.MANUAL_DRAFT ? (
+                    <HorizontalNavItem
+                      handleSelectNavItem={() => handleTabChange('assessment')}
+                      itemName="assessment"
+                      isActive={tab === 'assessment'}
                     >
-                      + Add household member
-                    </ButtonLink>
+                      Assessment
+                    </HorizontalNavItem>
+                  ) : (
+                    <></>
                   )}
-                </div>
-                <div className="govuk-grid-column-one-third">
-                  <HeadingThree content="Case details" />
+                </HorizontalNav>
 
-                  <CaseDetailsItem
-                    itemHeading="Application reference"
-                    itemValue={data.reference}
-                  />
+                {tab === 'overview' && (
+                  <>
+                    {data.status === ApplicationStatus.AWAITING_REASSESSMENT &&
+                    data.assessment?.reason ? (
+                      <div className="govuk-grid-row">
+                        <div className="govuk-grid-column-full">
+                          <Announcement variant="info">
+                            <h3 className="lbh-page-announcement__title">
+                              Review required
+                            </h3>
+                            <div className="lbh-page-announcement__content">
+                              {data.assessment.reason ===
+                              'significant-household-member-birthday' ? (
+                                <>
+                                  <Paragraph>
+                                    This household's bedroom need has been
+                                    flagged for review due to a significant
+                                    birthday.
+                                  </Paragraph>
+                                  <h4>Changes to review:</h4>
+                                  <List>
+                                    <ListItem>Bedroom needs</ListItem>
+                                  </List>
+                                </>
+                              ) : null}
+                            </div>
+                          </Announcement>
+                        </div>
+                      </div>
+                    ) : null}
+                    <div className="govuk-grid-row">
+                      <div className="govuk-grid-column-two-thirds">
+                        <HeadingThree content="Snapshot" />
+                        <Snapshot data={data} />
 
-                  {data.assessment?.biddingNumber && (
-                    <CaseDetailsItem
-                      itemHeading="Bidding number"
-                      itemValue={data.assessment?.biddingNumber}
-                    />
-                  )}
+                        {data.mainApplicant && (
+                          <OverviewAnnouncements
+                            applicant={data.mainApplicant}
+                          />
+                        )}
 
-                  <CaseDetailsItem
-                    itemHeading="Status"
-                    itemValue={lookupStatus(data.status!)}
-                    buttonText="Change"
-                    onClick={() => setActiveNavItem('assessment')}
-                  />
+                        {data.mainApplicant && (
+                          <PersonalDetails
+                            heading="Main applicant"
+                            applicant={data.mainApplicant}
+                            applicationId={data.id}
+                            canEdit={canEditApplications()}
+                          />
+                        )}
+                        {data.otherMembers && data.otherMembers.length > 0 ? (
+                          <OtherMembers
+                            heading="Other household members"
+                            others={data.otherMembers}
+                            applicationId={data.id}
+                            canEdit={canEditApplications()}
+                            handleDelete={handleDelete}
+                          />
+                        ) : (
+                          <HeadingThree content="Other household members" />
+                        )}
+                        {canEditApplications() && (
+                          <ButtonLink
+                            additionalCssClasses="govuk-secondary lbh-button--secondary"
+                            href={`/applications/edit/${data.id}/add-household-member`}
+                          >
+                            + Add household member
+                          </ButtonLink>
+                        )}
+                      </div>
+                      <div className="govuk-grid-column-one-third">
+                        <HeadingThree content="Case details" />
 
-                  {data.submittedAt && (
-                    <CaseDetailsItem
-                      itemHeading="Date submitted"
-                      itemValue={formatDate(data.submittedAt)}
-                    />
-                  )}
+                        <CaseDetailsItem
+                          itemHeading="Application reference"
+                          itemValue={data.reference}
+                        />
 
-                  {data.assessment?.effectiveDate && (
-                    <CaseDetailsItem
-                      itemHeading="Application date"
-                      itemValue={formatDate(data.assessment?.effectiveDate)}
-                      buttonText="Change"
-                      onClick={() => setActiveNavItem('assessment')}
-                    />
-                  )}
+                        {data.assessment?.biddingNumber && (
+                          <CaseDetailsItem
+                            itemHeading="Bidding number"
+                            itemValue={data.assessment?.biddingNumber}
+                          />
+                        )}
 
-                  {data.assessment?.band && (
-                    <CaseDetailsItem
-                      itemHeading="Band"
-                      itemValue={`Band ${data.assessment?.band}`}
-                      buttonText="Change"
-                      onClick={() => setActiveNavItem('assessment')}
-                    />
-                  )}
+                        <CaseDetailsItem
+                          itemHeading="Status"
+                          itemValue={lookupStatus(data.status!)}
+                          buttonText="Change"
+                          onClick={() => handleTabChange('assessment')}
+                        />
 
-                  <AssignUser
-                    id={data.id}
-                    user={user}
-                    assignee={data.assignedTo}
-                  />
+                        {data.submittedAt && (
+                          <CaseDetailsItem
+                            itemHeading="Date submitted"
+                            itemValue={formatDate(data.submittedAt)}
+                          />
+                        )}
 
-                  <SensitiveData
-                    id={data.id}
-                    isSensitive={data.sensitiveData || false}
-                    user={user}
-                  />
-                </div>
-              </div>
+                        {data.assessment?.effectiveDate && (
+                          <CaseDetailsItem
+                            itemHeading="Application date"
+                            itemValue={formatDate(
+                              data.assessment?.effectiveDate
+                            )}
+                            buttonText="Change"
+                            onClick={() => handleTabChange('assessment')}
+                          />
+                        )}
+
+                        {data.assessment?.band && (
+                          <CaseDetailsItem
+                            itemHeading="Band"
+                            itemValue={`Band ${data.assessment?.band}`}
+                            buttonText="Change"
+                            onClick={() => handleTabChange('assessment')}
+                          />
+                        )}
+
+                        <AssignUser
+                          id={data.id}
+                          user={user}
+                          assignee={data.assignedTo}
+                        />
+
+                        <SensitiveData
+                          id={data.id}
+                          isSensitive={data.sensitiveData || false}
+                          user={user}
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {tab === 'history' && (
+                  <ApplicationHistory history={history} id={data.id} />
+                )}
+
+                {tab === 'assessment' && <Actions data={data} />}
+              </>
             )}
-
-            {activeNavItem === 'history' && (
-              <ApplicationHistory
-                setActiveNavItem={setActiveNavItem}
-                history={history}
-                id={data.id}
-              />
-            )}
-
-            {activeNavItem === 'assessment' && <Actions data={data} />}
-          </>
-        )}
-      </Layout>
-    </UserContext.Provider>
+          </Layout>
+        </UserContext.Provider>
+      ) : (
+        <Custom404 />
+      )}
+    </>
   );
 }
 

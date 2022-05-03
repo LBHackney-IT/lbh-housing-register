@@ -20,20 +20,20 @@ interface HorizontalNavItemProps {
   itemName: string;
   isActive?: boolean;
   children: string;
-  handleClick: (event: SyntheticEvent) => Promise<void>;
+  handleSelectNavItem: (event: SyntheticEvent) => void;
 }
 
 export function HorizontalNavItem({
   itemName,
   isActive,
   children,
-  handleClick,
+  handleSelectNavItem,
 }: HorizontalNavItemProps): JSX.Element {
   return (
     <li className="lbh-link-group__item">
       <button
         name={itemName}
-        onClick={handleClick}
+        onClick={handleSelectNavItem}
         className={`lbh-link lbh-link--no-visited-state lbh-!-font-weight-bold ${
           isActive ? 'active' : ''
         }`}

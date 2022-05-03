@@ -11,7 +11,7 @@ const endpoint: NextApiHandler = async (
   const isAdminUser = !!getSession(req);
 
   switch (req.method) {
-    case 'GET':
+    case 'POST':
       try {
         if (isAdminUser) {
           removeHackneyToken(res);

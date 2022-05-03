@@ -25,6 +25,14 @@ export const createApplication = async (application: Application) => {
   return (await res.json()) as Application;
 };
 
+export const completeApplication = async (application: Application) => {
+  const res = await fetch(`/api/applications/${application.id}/complete`, {
+    method: 'PATCH',
+    body: JSON.stringify(application),
+  });
+  return (await res.json()) as Application;
+};
+
 export const generateNovaletExport = async () => {
   const res = await fetch(`/api/reports/novalet/generate`, {
     method: 'POST',
@@ -34,7 +42,7 @@ export const generateNovaletExport = async () => {
 };
 
 export const approveNovaletExport = async (fileName: string) => {
-  const res = await fetch(`/api/reports/novalet/${fileName}`, {
+  const res = await fetch(`/api/reports/novalet/approve/${fileName}`, {
     method: 'POST',
     body: null,
   });

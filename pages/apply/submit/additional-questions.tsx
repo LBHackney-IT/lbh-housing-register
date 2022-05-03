@@ -11,11 +11,14 @@ import {
   updateWithFormValues,
 } from '../../../lib/store/applicant';
 import withApplication from '../../../lib/hoc/withApplication';
+import { Applicant } from '../../../domain/HousingApi';
 
 const AdditonalQuestions = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const applicant = useAppSelector((store) => store.application.mainApplicant);
+  const applicant = useAppSelector(
+    (store) => store.application.mainApplicant
+  ) as Applicant;
 
   if (!applicant) {
     return <Custom404 />;
@@ -30,7 +33,7 @@ const AdditonalQuestions = (): JSX.Element => {
     dispatch(
       updateWithFormValues({
         formID: FormID.ADDITIONAL_QUESTIONS,
-        personID: applicant.person?.id || '',
+        personID: applicant.person!.id!,
         values,
         markAsComplete: true,
       })

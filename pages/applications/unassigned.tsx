@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import React, { SyntheticEvent } from 'react';
+import React, { useState, SyntheticEvent } from 'react';
 import ApplicationTable from '../../components/admin/application-table';
 import {
   HorizontalNav,
@@ -32,14 +32,17 @@ export default function ApplicationListPage({
   applications,
 }: PageProps): JSX.Element {
   const router = useRouter();
+  const [activeNavItem, setActiveNavItem] = useState('Submitted');
 
-  const handleClick = async (event: SyntheticEvent) => {
+  const handleSelectNavItem = async (event: SyntheticEvent) => {
     event.preventDefault();
     const { name } = event.target as HTMLButtonElement;
     router.push({
       pathname: '/applications/unassigned',
       query: { status: name },
     });
+
+    setActiveNavItem(name);
   };
 
   const setPaginationToken = (paginationToken: string | null) => {
@@ -66,11 +69,18 @@ export default function ApplicationListPage({
             <HeadingOne content="Group worktray" />
             <HorizontalNav>
               <HorizontalNavItem
-                handleClick={handleClick}
+                handleSelectNavItem={handleSelectNavItem}
                 itemName="Submitted"
-                isActive={true}
+                isActive={activeNavItem === 'Submitted'}
               >
-                Unassigned applications
+                New applications
+              </HorizontalNavItem>
+              <HorizontalNavItem
+                handleSelectNavItem={handleSelectNavItem}
+                itemName="AwaitingReassessment"
+                isActive={activeNavItem === 'AwaitingReassessment'}
+              >
+                Reviews
               </HorizontalNavItem>
             </HorizontalNav>
             <ApplicationTable

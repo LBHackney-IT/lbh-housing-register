@@ -16,6 +16,7 @@ const WhatToExpect = (): JSX.Element => {
 
   const onCancel = () => {
     // TODO: delete application
+    router.push('/');
     dispatch(exit());
   };
 

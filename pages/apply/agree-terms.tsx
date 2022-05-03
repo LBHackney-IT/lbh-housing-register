@@ -6,6 +6,7 @@ import { agree } from '../../lib/store/mainApplicant';
 import { getFormData, FormID } from '../../lib/utils/form-data';
 import Form from '../../components/form/form';
 import router from 'next/router';
+import withApplication from '../../lib/hoc/withApplication';
 
 const ApplicationTermsPage = (): JSX.Element => {
   // TODO: might not be right place for this,
@@ -71,4 +72,4 @@ const ApplicationTermsPage = (): JSX.Element => {
   );
 };
 
-export default ApplicationTermsPage;
+export default withApplication(ApplicationTermsPage);

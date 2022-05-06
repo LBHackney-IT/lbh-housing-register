@@ -8,7 +8,7 @@ const endpoint: NextApiHandler = async (
   res: NextApiResponse
 ) => {
   switch (req.method) {
-    case 'GET':
+    case 'POST':
       const user = getSession(req);
 
       const auth = getAuth(
@@ -22,9 +22,13 @@ const endpoint: NextApiHandler = async (
       }
 
       try {
-        const file = await downloadInternalReport(req);
+        console.log(req.body);
+
+        const file = await downloadInternalReport(req.body);
 
         if (file) {
+          console.log(file.status);
+
           res.status(file.status);
           res.setHeader('Content-Type', file.headers['content-type']);
           res.setHeader(
@@ -39,6 +43,8 @@ const endpoint: NextApiHandler = async (
           });
         }
       } catch (error) {
+        console.log(error);
+
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
           .json({ message: 'Request error: Unable to download report' });

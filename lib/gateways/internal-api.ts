@@ -33,6 +33,16 @@ export const completeApplication = async (application: Application) => {
   return (await res.json()) as Application;
 };
 
+export const downloadInternalReport = async (report: any) => {
+  console.log('INTERNAL API', report, JSON.stringify(report));
+
+  const res = await fetch(`/api/reports/internal/download`, {
+    method: 'POST',
+    body: JSON.stringify(report),
+  });
+  return await res.json();
+};
+
 export const generateNovaletExport = async () => {
   const res = await fetch(`/api/reports/novalet/generate`, {
     method: 'POST',

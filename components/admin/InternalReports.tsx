@@ -1,6 +1,7 @@
 import { Form, Formik } from 'formik';
 import router from 'next/router';
 import React from 'react';
+import { downloadInternalReport } from '../../lib/gateways/internal-api';
 import Button from '../button';
 import DateInput from '../form/dateinput';
 import Radios from '../form/radios';
@@ -29,18 +30,16 @@ export default function InternalReports(): JSX.Element {
   };
 
   function handleSubmit(form: FormValues) {
-    const query = new URLSearchParams();
-    query.set('reportType', form.reportType.toString());
-    query.set(
-      'startDate',
-      new Date(form.startDate).toISOString().split('T')[0]
-    );
-    query.set('endDate', new Date(form.endDate).toISOString().split('T')[0]);
+    console.log(form);
 
-    router.push({
-      pathname: '/api/reports/internal/download',
-      query: query.toString(),
-    });
+    const payload = {
+      ReportType: form.reportType.toString(),
+      StartDate: new Date(form.startDate).toISOString().split('T')[0],
+      EndDate: new Date(form.endDate).toISOString().split('T')[0],
+    };
+    console.log(payload);
+
+    downloadInternalReport(payload);
   }
 
   return (
@@ -62,7 +61,7 @@ export default function InternalReports(): JSX.Element {
 
           <DateInput name={'endDate'} label={'End date'} />
 
-          <Button type="submit">Download .csv file</Button>
+          <Button type="submit">Download CSV file</Button>
         </Form>
       )}
     </Formik>

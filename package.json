@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.5.1",
+    "@sentry/nextjs": "^6.19.2",
     "axios": "^0.21.1",
     "cookie": "^0.4.1",
     "csv-writer": "^1.6.0",

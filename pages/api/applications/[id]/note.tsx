@@ -1,5 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import { withSentry } from '@sentry/nextjs';
 import { addNoteToHistory } from '../../../../lib/gateways/applications-api';
 import { canUpdateApplication } from '../../../../lib/utils/requestAuth';
 
@@ -36,4 +37,4 @@ const endpoint: NextApiHandler = async (
   }
 };
 
-export default endpoint;
+export default withSentry(endpoint);

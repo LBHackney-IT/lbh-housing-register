@@ -1,4 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
+import { withSentry } from '@sentry/nextjs';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { removeHackneyToken, getSession } from '../../../lib/utils/googleAuth';
 import { removeAuthCookie } from '../../../lib/utils/users';
@@ -33,4 +34,4 @@ const endpoint: NextApiHandler = async (
   }
 };
 
-export default endpoint;
+export default withSentry(endpoint);

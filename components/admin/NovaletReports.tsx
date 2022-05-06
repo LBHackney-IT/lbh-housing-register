@@ -35,18 +35,18 @@ export default function NovaletReports({
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
 
-  const applicationFeeds = reports.filter(
+  // Make sure we're not confusing our "WITH-URL" file with the applicant feed
+  const applicantFeeds = reports.filter(
     (report: Report) => !report.fileName.includes('WITH-URL')
   );
-  const applicationFeedsWithUrls = reports.filter((report: Report) =>
-    report.fileName.includes('WITH-URL')
-  );
 
-  const newestToOldestReports = applicationFeeds.sort((a, b) => {
+  const newestToOldestReports = applicantFeeds.sort((a, b) => {
     if (a.lastModified < b.lastModified) return 1;
     if (a.lastModified > b.lastModified) return -1;
     return 0;
   });
+
+  const tenLatestReports = newestToOldestReports.slice(0, 10);
 
   /*
    * Creates an array of reports where
@@ -57,16 +57,13 @@ export default function NovaletReports({
    * are struggling to find applications in the system due
    * to the lack of search functionality.
    */
-  const groupedReports = newestToOldestReports.map((report, index, array) => {
-    const date = report.lastModified.split('T')[0];
+  const groupedReports = tenLatestReports.map((report) => {
+    const fileNameWithUrl = report.fileName.replace('FEED', 'FEED-WITH-URL');
 
-    applicationFeedsWithUrls.map((urlReport) => {
-      if (urlReport.lastModified.split('T')[0] === date) {
-        array[index].applicationLinksFileName = urlReport.fileName;
-      }
-    });
-
-    return array[index];
+    return {
+      ...report,
+      applicationLinksFileName: fileNameWithUrl,
+    };
   });
 
   const [mostRecentReport, ...previousReports] = groupedReports;

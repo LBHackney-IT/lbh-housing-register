@@ -30,14 +30,12 @@ export default function InternalReports(): JSX.Element {
   };
 
   function handleSubmit(form: FormValues) {
-    console.log(form);
-
     const payload = {
       ReportType: form.reportType.toString(),
       StartDate: new Date(form.startDate).toISOString().split('T')[0],
       EndDate: new Date(form.endDate).toISOString().split('T')[0],
     };
-    console.log(payload);
+    console.log('InternalReports', payload);
 
     downloadInternalReport(payload);
   }

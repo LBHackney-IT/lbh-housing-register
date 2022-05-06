@@ -34,13 +34,13 @@ export const completeApplication = async (application: Application) => {
 };
 
 export const downloadInternalReport = async (report: any) => {
-  console.log('INTERNAL API', report, JSON.stringify(report));
+  console.log('internal-api', JSON.stringify(report));
 
   const res = await fetch(`/api/reports/internal/download`, {
     method: 'POST',
     body: JSON.stringify(report),
   });
-  return await res.json();
+  // return await res.json();
 };
 
 export const generateNovaletExport = async () => {

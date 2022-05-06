@@ -7,7 +7,7 @@ import DateInput from '../form/dateinput';
 import Radios from '../form/radios';
 
 interface FormValues {
-  reportType: number;
+  reportType: string;
   startDate: string;
   endDate: string;
 }
@@ -16,7 +16,7 @@ export default function InternalReports(): JSX.Element {
   const runDate = new Date();
 
   const initialValues: FormValues = {
-    reportType: 0,
+    reportType: '0',
     startDate: new Date(
       runDate.getFullYear(),
       runDate.getMonth(),
@@ -31,11 +31,10 @@ export default function InternalReports(): JSX.Element {
 
   function handleSubmit(form: FormValues) {
     const payload = {
-      ReportType: form.reportType.toString(),
+      ReportType: parseInt(form.reportType),
       StartDate: new Date(form.startDate).toISOString().split('T')[0],
       EndDate: new Date(form.endDate).toISOString().split('T')[0],
     };
-    console.log('InternalReports', payload);
 
     downloadInternalReport(payload);
   }

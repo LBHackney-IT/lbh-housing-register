@@ -22,15 +22,12 @@ const endpoint: NextApiHandler = async (
       }
 
       try {
-        console.log(req.body);
-
         const file = await downloadInternalReport(req.body);
 
         if (file) {
-          console.log(file.status);
-
           res.status(file.status);
           res.setHeader('Content-Type', file.headers['content-type']);
+          res.setHeader('Content-Length', file.headers['content-length']);
           res.setHeader(
             'Content-Disposition',
             file.headers['content-disposition']
@@ -43,8 +40,6 @@ const endpoint: NextApiHandler = async (
           });
         }
       } catch (error) {
-        console.log(error);
-
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
           .json({ message: 'Request error: Unable to download report' });

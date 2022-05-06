@@ -190,10 +190,11 @@ export const generateNovaletExport = async (): Promise<AxiosResponse> => {
 export const downloadInternalReport = async (
   req: NextApiRequest
 ): Promise<AxiosResponse | null> => {
-  console.log('APPLICATIONS API: downloadInternalReport', req);
-
   const url = `reporting/export`;
-  return await housingAxios().post(url, req);
+  return await housingAxios().post(url, {
+    data: req,
+    responseType: 'blob',
+  });
 };
 
 export const approveNovaletExport = async (

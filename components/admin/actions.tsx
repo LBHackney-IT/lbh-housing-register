@@ -46,6 +46,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
     applicationDate: Yup.string().notOneOf([INVALID_DATE], 'Invalid date'),
     informationReceived: Yup.string().notOneOf([INVALID_DATE], 'Invalid date'),
     bedroomNeed: Yup.number()
+      .typeError('Bedroom need should be a number')
       .label('Bedroom need')
       .test(
         'aboveZero',
@@ -61,6 +62,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
           if (typeof value !== 'number') {
             return false;
           }
+
           if (
             (testContext.parent.status === ApplicationStatus.ACTIVE &&
               value < 1) ||
@@ -86,7 +88,8 @@ export default function Actions({ data }: PageProps): JSX.Element {
     reason: data.assessment?.reason ?? reasonInitialValue(firstReason),
     applicationDate: data.assessment?.effectiveDate ?? data.submittedAt ?? '',
     informationReceived: data.assessment?.informationReceivedDate ?? '',
-    bedroomNeed: data.assessment?.bedroomNeed ?? data.calculatedBedroomNeed!,
+    bedroomNeed:
+      data.assessment?.bedroomNeed ?? data.calculatedBedroomNeed! ?? '',
     band: data.assessment?.band ?? '',
     biddingNumberType: data.assessment?.biddingNumber ? 'manual' : 'generate',
     biddingNumber: data.assessment?.biddingNumber ?? '',
@@ -225,7 +228,10 @@ export default function Actions({ data }: PageProps): JSX.Element {
                             },
                           ]}
                         />
-                        <Radios
+
+                        {/* This is currently commented out as generating a
+                        bidding number was not working correctly. */}
+                        {/* <Radios
                           label="Bidding number"
                           name="biddingNumberType"
                           options={[
@@ -238,16 +244,16 @@ export default function Actions({ data }: PageProps): JSX.Element {
                               value: 'manual',
                             },
                           ]}
+                        /> */}
+                        {/* {values.biddingNumberType === 'manual' && ( */}
+                        {/* <InsetText> */}
+                        <Input
+                          name="biddingNumber"
+                          label="Bidding number (existing)"
+                          className="govuk-input--width-10"
                         />
-                        {values.biddingNumberType === 'manual' && (
-                          <InsetText>
-                            <Input
-                              name="biddingNumber"
-                              label="Bidding number"
-                              className="govuk-input--width-10"
-                            />
-                          </InsetText>
-                        )}
+                        {/* </InsetText> */}
+                        {/* )} */}
                       </>
                     )}
                     <Button disabled={isSubmitting} type="submit">

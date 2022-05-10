@@ -18,12 +18,13 @@ functions:
     handler: lambda.handler
     timeout: 30
     package:
-      include:
+      patterns:
         - lambda.js
         - next.config.js
         - pages/**
         - public/**
         - build/_next/**
+        - '!build/_next/cache/**'
         - node_modules/**
     events:
       - http: ANY /

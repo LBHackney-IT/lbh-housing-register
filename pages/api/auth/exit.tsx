@@ -11,14 +11,30 @@ const endpoint: NextApiHandler = async (
   const isAdminUser = !!getSession(req);
 
   switch (req.method) {
-    case 'POST':
+    // Google auth logout expects a GET request
+    case 'GET':
       try {
         if (isAdminUser) {
-          removeHackneyToken(res);
-        } else {
-          removeAuthCookie(res);
+          await removeHackneyToken(res);
         }
-        res.status(StatusCodes.OK).json({ message: 'Sign out' });
+
+        res.status(StatusCodes.OK).json({ message: 'Admin sign out' });
+      } catch (error) {
+        console.error(error);
+        res
+          .status(StatusCodes.INTERNAL_SERVER_ERROR)
+          .json({ message: 'Unable to sign out' });
+      }
+      break;
+
+    // Application form logout expects a POST request
+    case 'POST':
+      try {
+        await removeAuthCookie(res);
+
+        res
+          .status(StatusCodes.OK)
+          .json({ message: 'Application form sign out' });
       } catch (error) {
         console.error(error);
         res

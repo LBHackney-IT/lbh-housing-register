@@ -75,9 +75,9 @@ export function buildValidationSchema(fields: FormField[]) {
               break;
 
             case 'number':
-              baseType = Yup.number().integer(
-                `${field.label} must be a valid number`
-              );
+              baseType = Yup.number()
+                .integer(`${field.label} must be a number`)
+                .typeError(`${field.label} must be a number`);
 
               fieldValidation = baseType;
               fieldValidation = checkRequired(fieldValidation, field, baseType);
@@ -108,7 +108,7 @@ export function buildValidationSchema(fields: FormField[]) {
         typeof baseType === 'undefined' ||
         typeof fieldValidation === 'undefined'
       ) {
-        baseType = Yup.string();
+        baseType = Yup.string().typeError(`${field.label} must not be empty`);
         fieldValidation = baseType;
         fieldValidation = checkRequired(fieldValidation, field, baseType);
         fieldValidation = checkMinimumLength(fieldValidation, field);

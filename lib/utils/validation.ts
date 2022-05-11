@@ -76,8 +76,8 @@ export function buildValidationSchema(fields: FormField[]) {
 
             case 'number':
               baseType = Yup.number()
-                .integer(`${field.label} must be a valid number`)
-                .typeError(`${field.label} must be a valid number`);
+                .integer(`${field.label} must be a number`)
+                .typeError(`${field.label} must be a number`);
 
               fieldValidation = baseType;
               fieldValidation = checkRequired(fieldValidation, field, baseType);

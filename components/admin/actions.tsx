@@ -91,7 +91,8 @@ export default function Actions({ data }: PageProps): JSX.Element {
     bedroomNeed:
       data.assessment?.bedroomNeed ?? data.calculatedBedroomNeed! ?? '',
     band: data.assessment?.band ?? '',
-    biddingNumberType: data.assessment?.biddingNumber ? 'manual' : 'generate',
+    // biddingNumberType: data.assessment?.biddingNumber ? 'manual' : 'generate',
+    biddingNumberType: 'manual',
     biddingNumber: data.assessment?.biddingNumber ?? '',
   };
 

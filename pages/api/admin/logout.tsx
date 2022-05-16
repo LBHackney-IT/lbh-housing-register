@@ -1,20 +1,22 @@
 import { StatusCodes } from 'http-status-codes';
 import { withSentry } from '@sentry/nextjs';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { removeAuthCookie } from '../../../lib/utils/users';
+import { removeHackneyToken, getSession } from '../../../lib/utils/googleAuth';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
-  switch (req.method) {
-    case 'POST':
-      try {
-        await removeAuthCookie(res);
+  const isAdminUser = !!getSession(req);
 
-        res
-          .status(StatusCodes.OK)
-          .json({ message: 'Application form sign out' });
+  switch (req.method) {
+    case 'GET':
+      try {
+        if (isAdminUser) {
+          await removeHackneyToken(res);
+        }
+
+        res.status(StatusCodes.OK).json({ message: 'Admin sign out' });
       } catch (error) {
         console.error(error);
         res
@@ -22,11 +24,6 @@ const endpoint: NextApiHandler = async (
           .json({ message: 'Unable to sign out' });
       }
       break;
-
-    default:
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: 'Invalid request method' });
   }
 };
 

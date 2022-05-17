@@ -25,9 +25,9 @@ const endpoint: NextApiHandler = async (
       try {
         const file = await downloadInternalReport(
           {
-            StartDate: new Date(req.body.StartDate).toISOString().split('T')[0],
-            EndDate: new Date(req.body.EndDate).toISOString().split('T')[0],
             ReportType: parseInt(req.body.ReportType),
+            StartDate: req.body.StartDate,
+            EndDate: req.body.EndDate,
           },
           req
         );

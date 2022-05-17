@@ -39,6 +39,8 @@ export default function InternalReports(): JSX.Element {
 
   const HiddenFormToSubmit = ({ submittedFormData }: any) => {
     const { reportType, startDate, endDate } = submittedFormData;
+    const payloadStartDate = new Date(startDate).toISOString().split('T')[0];
+    const payloadEndDate = new Date(endDate).toISOString().split('T')[0];
 
     return (
       <form
@@ -47,8 +49,8 @@ export default function InternalReports(): JSX.Element {
         ref={internalReportForm}
       >
         <input type="hidden" name="ReportType" value={reportType} />
-        <input type="hidden" name="StartDate" value={startDate} />
-        <input type="hidden" name="EndDate" value={endDate} />
+        <input type="hidden" name="StartDate" value={payloadStartDate} />
+        <input type="hidden" name="EndDate" value={payloadEndDate} />
       </form>
     );
   };

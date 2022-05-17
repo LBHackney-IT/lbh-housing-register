@@ -5,14 +5,14 @@ import DateInput from '../form/dateinput';
 import Radios from '../form/radios';
 
 interface FormValues {
-  reportType: number;
+  reportType: string;
   startDate: string;
   endDate: string;
 }
 
 const runDate = new Date();
 const initialValues: FormValues = {
-  reportType: 0,
+  reportType: '0',
   startDate: new Date(
     runDate.getFullYear(),
     runDate.getMonth(),
@@ -39,8 +39,6 @@ export default function InternalReports(): JSX.Element {
 
   const HiddenFormToSubmit = ({ submittedFormData }: any) => {
     const { reportType, startDate, endDate } = submittedFormData;
-    const payloadStartDate = new Date(startDate).toISOString().split('T')[0];
-    const payloadEndDate = new Date(endDate).toISOString().split('T')[0];
 
     return (
       <form
@@ -49,8 +47,8 @@ export default function InternalReports(): JSX.Element {
         ref={internalReportForm}
       >
         <input type="hidden" name="ReportType" value={reportType} />
-        <input type="hidden" name="StartDate" value={payloadStartDate} />
-        <input type="hidden" name="EndDate" value={payloadEndDate} />
+        <input type="hidden" name="StartDate" value={startDate} />
+        <input type="hidden" name="EndDate" value={endDate} />
       </form>
     );
   };

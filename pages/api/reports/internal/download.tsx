@@ -22,13 +22,14 @@ const endpoint: NextApiHandler = async (
       }
 
       try {
-        const obj = Object.assign({}, req.body);
-        const reportDetails = {
-          ...obj,
-          ReportType: parseInt(obj.ReportType),
-        };
-
-        const file = await downloadInternalReport(reportDetails, req);
+        const file = await downloadInternalReport(
+          {
+            StartDate: new Date(req.body.StartDate).toISOString().split('T')[0],
+            EndDate: new Date(req.body.EndDate).toISOString().split('T')[0],
+            ReportType: parseInt(req.body.ReportType),
+          },
+          req
+        );
 
         if (file) {
           res.status(file.status);

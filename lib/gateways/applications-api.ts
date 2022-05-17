@@ -178,13 +178,15 @@ export const generateNovaletExport = async (): Promise<AxiosResponse> => {
 };
 
 export const downloadInternalReport = async (
+  reportDetails: {
+    StartDate: string;
+    EndDate: string;
+    ReportType: number;
+  },
   req: NextApiRequest
 ): Promise<AxiosResponse | null> => {
-  const { reportType, startDate, endDate } = req.query;
-  const url = `reporting/export?reportType=${reportType}&startDate=${startDate}&endDate=${endDate}`;
-  return await authenticatedHousingAxios(req).get(url, {
-    responseType: 'blob',
-  });
+  const url = `reporting/export`;
+  return await authenticatedHousingAxios(req).post(url, reportDetails);
 };
 
 export const approveNovaletExport = async (

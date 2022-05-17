@@ -9,7 +9,7 @@ const endpoint: NextApiHandler = async (
   res: NextApiResponse
 ) => {
   switch (req.method) {
-    case 'GET':
+    case 'POST':
       const user = getSession(req);
 
       const auth = getAuth(
@@ -23,11 +23,19 @@ const endpoint: NextApiHandler = async (
       }
 
       try {
-        const file = await downloadInternalReport(req);
+        const file = await downloadInternalReport(
+          {
+            StartDate: new Date(req.body.StartDate).toISOString().split('T')[0],
+            EndDate: new Date(req.body.EndDate).toISOString().split('T')[0],
+            ReportType: parseInt(req.body.ReportType),
+          },
+          req
+        );
 
         if (file) {
           res.status(file.status);
           res.setHeader('Content-Type', file.headers['content-type']);
+          res.setHeader('Content-Length', file.headers['content-length']);
           res.setHeader(
             'Content-Disposition',
             file.headers['content-disposition']

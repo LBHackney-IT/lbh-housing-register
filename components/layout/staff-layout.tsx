@@ -25,7 +25,7 @@ export default function StaffLayout({
   };
 
   const signOut = async () => {
-    await fetch(`/api/auth/exit`);
+    await fetch(`/api/admin/logout`);
     router.reload();
   };
 

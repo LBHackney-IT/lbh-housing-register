@@ -186,7 +186,8 @@ export const downloadInternalReport = async (
   req: NextApiRequest
 ): Promise<AxiosResponse | null> => {
   const url = `reporting/export`;
-  return await authenticatedHousingAxios(req).post(url, reportDetails);
+  const data = await authenticatedHousingAxios(req).post(url, reportDetails);
+  return data;
 };
 
 export const approveNovaletExport = async (

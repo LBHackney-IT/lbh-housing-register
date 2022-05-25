@@ -483,3 +483,9 @@ export interface SimpleTypeResponse<T> {
 export interface AddNoteToHistoryRequest {
   Note: string;
 }
+
+export interface InternalReportRequest {
+  StartDate: string;
+  EndDate: string;
+  ReportType: number;
+}

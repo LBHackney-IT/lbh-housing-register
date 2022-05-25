@@ -28,6 +28,9 @@ const endpoint: NextApiHandler = async (
           StartDate: req.body.StartDate,
           EndDate: req.body.EndDate,
         };
+        console.log('***** REPORT DATA: *****', reportData);
+        console.log('***** REQUEST BODY: *****', req.body);
+
         const file = await downloadInternalReport(reportData, req);
 
         if (file) {

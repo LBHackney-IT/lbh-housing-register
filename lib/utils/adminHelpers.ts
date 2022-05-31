@@ -56,17 +56,17 @@ export const addCaseSchema = Yup.object({
       return true;
     }),
   personalDetails_gender: Yup.string().label('Gender').required(),
-  immigrationStatus_citizenship: Yup.string().label('Citizenship').required(),
 });
 
-const currentAccommodationSchema = Yup.object({
+const additionalValidationForMainApplicant = Yup.object({
   currentAccommodation_livingSituation: Yup.string()
     .label('Living situation')
     .required(),
+  immigrationStatus_citizenship: Yup.string().label('Citizenship').required(),
 });
 
 export const mainApplicantSchema = addCaseSchema.concat(
-  currentAccommodationSchema
+  additionalValidationForMainApplicant
 );
 
 export const allFormSections = (keysToIgnore: string[]) => {

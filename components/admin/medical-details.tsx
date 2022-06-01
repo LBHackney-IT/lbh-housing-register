@@ -115,6 +115,10 @@ export default function MedicalDetail({
       label: 'F any floor with level access shower',
       value: 'f-any-floor-with-level-access-shower',
     },
+    {
+      label: 'Stairlift',
+      value: 'stairlift',
+    },
   ];
   const disabilityOptions = [
     {

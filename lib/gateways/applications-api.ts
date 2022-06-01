@@ -12,6 +12,7 @@ import {
   PaginatedApplicationListResponse,
   VerifyAuthRequest,
   VerifyAuthResponse,
+  InternalReportRequest,
 } from '../../domain/HousingApi';
 import { Stat } from '../../domain/stat';
 import asssertServerOnly from '../utils/assertServerOnly';
@@ -178,15 +179,14 @@ export const generateNovaletExport = async (): Promise<AxiosResponse> => {
 };
 
 export const downloadInternalReport = async (
-  reportDetails: {
-    StartDate: string;
-    EndDate: string;
-    ReportType: number;
-  },
+  reportDetails: InternalReportRequest,
   req: NextApiRequest
 ): Promise<AxiosResponse | null> => {
   const url = `reporting/export`;
-  return await authenticatedHousingAxios(req).post(url, reportDetails);
+  const data = await authenticatedHousingAxios(req).post(url, reportDetails, {
+    responseType: 'blob',
+  });
+  return data;
 };
 
 export const approveNovaletExport = async (

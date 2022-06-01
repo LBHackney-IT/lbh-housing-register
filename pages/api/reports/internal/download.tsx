@@ -23,19 +23,19 @@ const endpoint: NextApiHandler = async (
       }
 
       try {
-        const file = await downloadInternalReport(
-          {
-            ReportType: parseInt(req.body.ReportType),
-            StartDate: req.body.StartDate,
-            EndDate: req.body.EndDate,
-          },
-          req
-        );
+        const reportData = {
+          ReportType: parseInt(req.body.ReportType),
+          StartDate: req.body.StartDate,
+          EndDate: req.body.EndDate,
+        };
+        console.log('***** REPORT DATA: *****', reportData);
+        console.log('***** REQUEST BODY: *****', req.body);
+
+        const file = await downloadInternalReport(reportData, req);
 
         if (file) {
           res.status(file.status);
           res.setHeader('Content-Type', file.headers['content-type']);
-          res.setHeader('Content-Length', file.headers['content-length']);
           res.setHeader(
             'Content-Disposition',
             file.headers['content-disposition']
@@ -48,9 +48,10 @@ const endpoint: NextApiHandler = async (
           });
         }
       } catch (error) {
-        res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Request error: Unable to download report' });
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+          message: 'Request error: Unable to download report: ',
+          error,
+        });
       }
       break;
 

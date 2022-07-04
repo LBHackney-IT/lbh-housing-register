@@ -141,6 +141,8 @@ function renderHeading(item: ActivityHistoryResponse) {
     [ApplicationActivityType.NoteAddedByUser]: noteAddedByUser,
     [ApplicationActivityType.ImportedFromLegacyDatabase]:
       importedFromLegacyDatabase,
+    [ApplicationActivityType.MainApplicantChangedByUser]:
+      mainApplicantChangedByUser,
   };
 
   const functionDelegate = activityText[historyItem.activityType];
@@ -269,4 +271,8 @@ const noteAddedByUser = (activity: IActivityEntity) => {
 
 const importedFromLegacyDatabase = (activity: IActivityEntity) => {
   return <>Imported from legacy database</>;
+};
+
+const mainApplicantChangedByUser = (activity: IActivityEntity) => {
+  return <>Main applicant changed: {activity.newData}</>;
 };

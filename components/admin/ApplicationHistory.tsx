@@ -143,6 +143,8 @@ function renderHeading(item: ActivityHistoryResponse) {
       importedFromLegacyDatabase,
     [ApplicationActivityType.MainApplicantChangedByUser]:
       mainApplicantChangedByUser,
+    [ApplicationActivityType.PersonChangedByUser]:
+      personChangedByUser,
   };
 
   const functionDelegate = activityText[historyItem.activityType];
@@ -275,4 +277,8 @@ const importedFromLegacyDatabase = (activity: IActivityEntity) => {
 
 const mainApplicantChangedByUser = (activity: IActivityEntity) => {
   return <>Main applicant changed: {activity.newData}</>;
+};
+
+const personChangedByUser = (activity: IActivityEntity) => {
+  return <>Person details changed: {activity.newData}</>;
 };

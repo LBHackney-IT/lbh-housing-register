@@ -49,6 +49,7 @@ export enum ApplicationActivityType {
   EffectiveDateChangedByUser = 'EffectiveDateChangedByUser',
   NoteAddedByUser = 'NoteAddedByUser',
   ImportedFromLegacyDatabase = 'ImportedFromLegacyDatabase',
+  PersonChangedByUser = 'PersonChangedByUser',
   MainApplicantChangedByUser = 'MainApplicantChangedByUser',
 }
 

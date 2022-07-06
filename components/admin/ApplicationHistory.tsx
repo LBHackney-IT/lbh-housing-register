@@ -274,5 +274,13 @@ const importedFromLegacyDatabase = (activity: IActivityEntity) => {
 };
 
 const mainApplicantChangedByUser = (activity: IActivityEntity) => {
-  return <>Main applicant changed</>;
+  return (
+    <>
+      Main applicant changed
+      <Details summary="Show details">
+        New Data: <br></br>activity.newData
+        <br></br>Old Data: <br></br>activity.oldData
+      </Details>
+    </>
+  );
 };

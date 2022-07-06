@@ -44,26 +44,27 @@ export default function ApplicationHistory({
 
   const listItems = history
     ? history.results.map((historyItem, index) => {
-      const heading = renderHeading(historyItem);
-      const body = renderBody(historyItem);
-      const createdAt = getFormattedDate(historyItem.createdAt);
+        const heading = renderHeading(historyItem);
+        const body = renderBody(historyItem);
+        const createdAt = getFormattedDate(historyItem.createdAt);
 
-      return (
-        <li
-          key={historyItem.id}
-          className={`lbh-timeline__event ${history.results.length - 1 !== index
-              ? 'lbh-timeline__event--major'
-              : ''
+        return (
+          <li
+            key={historyItem.id}
+            className={`lbh-timeline__event ${
+              history.results.length - 1 !== index
+                ? 'lbh-timeline__event--major'
+                : ''
             }`}
-        >
-          <HeadingFour content={heading as string} />
-          <p className="lbh-body lbh-body--grey lbh-!-margin-top-0">
-            {createdAt}
-          </p>
-          {body}
-        </li>
-      );
-    })
+          >
+            <HeadingFour content={heading as string} />
+            <p className="lbh-body lbh-body--grey lbh-!-margin-top-0">
+              {createdAt}
+            </p>
+            {body}
+          </li>
+        );
+      })
     : null;
 
   const onSubmit = (values: FormikValues) => {
@@ -275,4 +276,3 @@ const importedFromLegacyDatabase = (activity: IActivityEntity) => {
 const mainApplicantChangedByUser = (activity: IActivityEntity) => {
   return <>Main applicant changed</>;
 };
-

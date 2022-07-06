@@ -278,8 +278,10 @@ const mainApplicantChangedByUser = (activity: IActivityEntity) => {
     <>
       Main applicant changed
       <Details summary="Show details">
-        New Data: <br></br>JSON.stringify(activity.newData)
-        <br></br>Old Data: <br></br>JSON.stringify(activity.oldData)
+        New Data: <br></br>
+        {activity.newData}
+        <br></br>Old Data: <br></br>
+        {activity.oldData}
       </Details>
     </>
   );

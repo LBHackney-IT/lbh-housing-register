@@ -92,7 +92,7 @@ export default function ApplicationHistory({
                     <Form>
                       <Textarea name="note" label="" as="textarea" />
                       <Button disabled={isSubmitting} type="submit">
-                        TEST Save note
+                        Save note
                       </Button>
                     </Form>
                   </>
@@ -124,7 +124,7 @@ export default function ApplicationHistory({
 
 function renderHeading(item: ActivityHistoryResponse) {
   const historyItem = new ActivityEntity(item);
-
+  console.log('historyItem: ' + historyItem);
   const activityText: {
     [key in ApplicationActivityType]: (activity: IActivityEntity) => {};
   } = {

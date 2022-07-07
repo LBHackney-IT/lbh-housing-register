@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Formik, FormikValues, FormikErrors } from 'formik';
+import { diff } from 'nested-object-diff';
 import * as Yup from 'yup';
 import {
   ActivityEntity,
@@ -124,7 +125,6 @@ export default function ApplicationHistory({
 
 function renderHeading(item: ActivityHistoryResponse) {
   const historyItem = new ActivityEntity(item);
-  console.log('historyItem: ' + JSON.stringify(historyItem));
   const activityText: {
     [key in ApplicationActivityType]: (activity: IActivityEntity) => {};
   } = {
@@ -154,6 +154,58 @@ function renderHeading(item: ActivityHistoryResponse) {
 
 function renderBody(item: ActivityHistoryResponse) {
   const historyItem = new ActivityEntity(item);
+
+  if (historyItem.activityType === 'mainApplicantChangedByUser') {
+    const differences = diff(
+      historyItem.newData.mainApplicant,
+      historyItem.oldData.mainApplicant
+    );
+
+    interface Difference {
+      type: string;
+      path: string;
+      lhs: any;
+      rhs: any;
+    }
+
+    return (
+      <Details summary="Show details">
+        <>
+          <table className="govuk-table lbh-table lbh-table--small">
+            <thead className="govuk-table__head">
+              <tr className="govuk-table__row">
+                <th className="govuk-table__header">Field</th>
+                <th className="govuk-table__header">Old value</th>
+                <th className="govuk-table__header">New value</th>
+              </tr>
+            </thead>
+            <tbody className="govuk-table__body">
+              {differences.map((difference: Difference, index: number) => {
+                let { path, lhs, rhs } = difference;
+
+                if (typeof rhs === 'object' || typeof lhs === 'object') {
+                  lhs = JSON.stringify(lhs);
+                  rhs = JSON.stringify(rhs);
+                }
+
+                return (
+                  <tr key={index} className="govuk-table__row">
+                    <td className="govuk-table__cell">{path}</td>
+                    <td className="govuk-table__cell lbh-!-break-word">
+                      {lhs}
+                    </td>
+                    <td className="govuk-table__cell lbh-!-break-word">
+                      {rhs}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </>
+      </Details>
+    );
+  }
 
   if (!historyItem.newData.activityData) return false;
 
@@ -269,20 +321,10 @@ const noteAddedByUser = (activity: IActivityEntity) => {
   return <>Note added by {activity.authorDetails.fullName}</>;
 };
 
-const importedFromLegacyDatabase = (activity: IActivityEntity) => {
+const importedFromLegacyDatabase = () => {
   return <>Imported from legacy database</>;
 };
 
-const mainApplicantChangedByUser = (activity: IActivityEntity) => {
-  return (
-    <>
-      Main applicant changed
-      <Details summary="Show details">
-        New Data: <br></br>
-        {JSON.stringify(activity.newData, null, 2)}
-        <br></br>Old Data: <br></br>
-        {JSON.stringify(activity.oldData, null, 2)}
-      </Details>
-    </>
-  );
+const mainApplicantChangedByUser = () => {
+  return <>Main applicant changed</>;
 };

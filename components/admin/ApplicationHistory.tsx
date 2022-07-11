@@ -175,15 +175,15 @@ function renderBody(item: ActivityHistoryResponse) {
             <thead className="govuk-table__head">
               <tr className="govuk-table__row">
                 <th className="govuk-table__header">Field</th>
-                <th className="govuk-table__header">Old value</th>
                 <th className="govuk-table__header">New value</th>
+                <th className="govuk-table__header">Old value</th>
               </tr>
             </thead>
             <tbody className="govuk-table__body">
               {differences.map((difference: Difference, index: number) => {
                 let { path, lhs, rhs } = difference;
 
-                if (typeof rhs === 'object' || typeof lhs === 'object') {
+                if (path != 'person.id' && (typeof rhs === 'object' || typeof lhs === 'object')) {
                   lhs = JSON.stringify(lhs);
                   rhs = JSON.stringify(rhs);
                 }

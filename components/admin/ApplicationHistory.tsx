@@ -183,7 +183,10 @@ function renderBody(item: ActivityHistoryResponse) {
               {differences.map((difference: Difference, index: number) => {
                 let { path, lhs, rhs } = difference;
 
-                if (path != 'person.id' && (typeof rhs === 'object' || typeof lhs === 'object')) {
+                if (
+                  path != 'person.id' &&
+                  (typeof rhs === 'object' || typeof lhs === 'object')
+                ) {
                   lhs = JSON.stringify(lhs);
                   rhs = JSON.stringify(rhs);
                 }

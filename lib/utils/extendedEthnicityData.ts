@@ -136,6 +136,11 @@ export const ethnicityCategoryOptions = [
     category: 'other-ethnic-group',
   },
   {
+    label: 'Congolese',
+    value: 'congolese',
+    category: 'other-ethnic-group',
+  },
+  {
     label: 'Egyptian',
     value: 'egyptian',
     category: 'other-ethnic-group',
@@ -226,8 +231,18 @@ export const ethnicityCategoryOptions = [
     category: 'other-ethnic-group',
   },
   {
+    label: 'Other Ethnic Group',
+    value: 'other-ethnic-group',
+    category: 'other-ethnic-group',
+  },
+  {
     label: 'Other European',
     value: 'other-european',
+    category: 'other-ethnic-group',
+  },
+  {
+    label: 'Other',
+    value: 'other',
     category: 'other-ethnic-group',
   },
   {
@@ -251,8 +266,18 @@ export const ethnicityCategoryOptions = [
     category: 'white',
   },
   {
+    label: 'White - Jewish',
+    value: 'white-jewish',
+    category: 'white',
+  },
+  {
     label: 'White - Charedi Jew',
     value: 'white-charedi-jew',
+    category: 'white',
+  },
+  {
+    label: 'White - Orthodox Jew',
+    value: 'white-orthodox-jew',
     category: 'white',
   },
   {

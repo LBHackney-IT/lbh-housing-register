@@ -95,7 +95,6 @@ export default function ApplicationHistory({
                       <Button
                         disabled={isSubmitting}
                         type="submit"
-                        className="saveNote"
                       >
                         Save note
                       </Button>
@@ -330,6 +329,6 @@ const importedFromLegacyDatabase = () => {
   return <>Imported from legacy database</>;
 };
 
-const mainApplicantChangedByUser = () => {
+const mainApplicantChangedByUser = (activity: IActivityEntity) => {
   return <>Main applicant changed</>;
 };

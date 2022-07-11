@@ -92,8 +92,11 @@ export default function ApplicationHistory({
                   <>
                     <Form>
                       <Textarea name="note" label="" as="textarea" />
-                      <Button disabled={isSubmitting} type="submit">
-                        TEST Save note
+                      <Button
+                        disabled={isSubmitting}
+                        type="submit"
+                      >
+                        Save note
                       </Button>
                     </Form>
                   </>

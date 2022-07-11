@@ -183,25 +183,23 @@ function renderBody(item: ActivityHistoryResponse) {
               {differences.map((difference: Difference, index: number) => {
                 let { path, lhs, rhs } = difference;
 
-                if (
-                  path != 'person.id' &&
-                  (typeof rhs === 'object' || typeof lhs === 'object')
-                ) {
+                if (typeof rhs === 'object' || typeof lhs === 'object') {
                   lhs = JSON.stringify(lhs);
                   rhs = JSON.stringify(rhs);
                 }
-
-                return (
-                  <tr key={index} className="govuk-table__row">
-                    <td className="govuk-table__cell">{path}</td>
-                    <td className="govuk-table__cell lbh-!-break-word">
-                      {lhs}
-                    </td>
-                    <td className="govuk-table__cell lbh-!-break-word">
-                      {rhs}
-                    </td>
-                  </tr>
-                );
+                if (path != 'person.id') {
+                  return (
+                    <tr key={index} className="govuk-table__row">
+                      <td className="govuk-table__cell">{path}</td>
+                      <td className="govuk-table__cell lbh-!-break-word">
+                        {lhs}
+                      </td>
+                      <td className="govuk-table__cell lbh-!-break-word">
+                        {rhs}
+                      </td>
+                    </tr>
+                  );
+                }
               })}
             </tbody>
           </table>

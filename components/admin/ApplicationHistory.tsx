@@ -93,7 +93,7 @@ export default function ApplicationHistory({
                     <Form>
                       <Textarea name="note" label="" as="textarea" />
                       <Button disabled={isSubmitting} type="submit">
-                        Save note
+                        TEST Save note
                       </Button>
                     </Form>
                   </>
@@ -323,8 +323,4 @@ const noteAddedByUser = (activity: IActivityEntity) => {
 
 const importedFromLegacyDatabase = () => {
   return <>Imported from legacy database</>;
-};
-
-const mainApplicantChangedByUser = () => {
-  return <>Main applicant changed</>;
 };

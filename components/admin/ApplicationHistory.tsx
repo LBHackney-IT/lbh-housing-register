@@ -324,3 +324,7 @@ const noteAddedByUser = (activity: IActivityEntity) => {
 const importedFromLegacyDatabase = () => {
   return <>Imported from legacy database</>;
 };
+
+const mainApplicantChangedByUser = (activity: IActivityEntity) => {
+  return <>Main applicant changed</>;
+};

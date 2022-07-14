@@ -24,9 +24,9 @@ const endpoint: NextApiHandler = async (
 
       try {
         const reportData = {
-          ReportType: parseInt(req.query['ReportType'][0]),
-          StartDate: req.query['StartDate'][0],
-          EndDate: req.query['EndDate'][0],
+          ReportType: parseInt(req.body.ReportType),
+          StartDate: req.body.StartDate,
+          EndDate: req.body.EndDate,
         };
         console.log('***** REPORT DATA: *****', reportData);
         console.log('***** REQUEST BODY: *****', req.body);

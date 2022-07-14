@@ -183,12 +183,16 @@ export const downloadInternalReport = async (
   req: NextApiRequest
 ): Promise<AxiosResponse | null> => {
   const url = `reporting/export`;
-  const data = await authenticatedHousingAxios(req).post(url, reportDetails, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    responseType: 'blob',
-  });
+  const data = await authenticatedHousingAxios(req).post(
+    url,
+    JSON.stringify(reportDetails),
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      responseType: 'blob',
+    }
+  );
   return data;
 };
 

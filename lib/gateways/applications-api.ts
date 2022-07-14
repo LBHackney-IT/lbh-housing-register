@@ -184,6 +184,9 @@ export const downloadInternalReport = async (
 ): Promise<AxiosResponse | null> => {
   const url = `reporting/export`;
   const data = await authenticatedHousingAxios(req).post(url, reportDetails, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
     responseType: 'blob',
   });
   return data;

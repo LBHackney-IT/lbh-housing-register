@@ -46,26 +46,27 @@ export default function ApplicationHistory({
 
   const listItems = history
     ? history.results.map((historyItem, index) => {
-      const heading = renderHeading(historyItem);
-      const body = renderBody(historyItem);
-      const createdAt = getFormattedDate(historyItem.createdAt);
+        const heading = renderHeading(historyItem);
+        const body = renderBody(historyItem);
+        const createdAt = getFormattedDate(historyItem.createdAt);
 
-      return (
-        <li
-          key={historyItem.id}
-          className={`lbh-timeline__event ${history.results.length - 1 !== index
-              ? 'lbh-timeline__event--major'
-              : ''
+        return (
+          <li
+            key={historyItem.id}
+            className={`lbh-timeline__event ${
+              history.results.length - 1 !== index
+                ? 'lbh-timeline__event--major'
+                : ''
             }`}
-        >
-          <HeadingFour content={heading as string} />
-          <p className="lbh-body lbh-body--grey lbh-!-margin-top-0">
-            {createdAt}
-          </p>
-          {body}
-        </li>
-      );
-    })
+          >
+            <HeadingFour content={heading as string} />
+            <p className="lbh-body lbh-body--grey lbh-!-margin-top-0">
+              {createdAt}
+            </p>
+            {body}
+          </li>
+        );
+      })
     : null;
 
   const onSubmit = (values: FormikValues) => {
@@ -145,7 +146,8 @@ function renderHeading(item: ActivityHistoryResponse) {
       mainApplicantChangedByUser,
   };
 
-  const functionDelegate = activityText[capitalizeFirstLetter(historyItem.activityType)];
+  const functionDelegate =
+    activityText[capitalizeFirstLetter(historyItem.activityType)];
 
   if (functionDelegate) {
     return functionDelegate(historyItem);
@@ -155,11 +157,8 @@ function renderHeading(item: ActivityHistoryResponse) {
 function renderBody(item: ActivityHistoryResponse) {
   const historyItem = new ActivityEntity(item);
 
-
   if (!historyItem.newData.activityData) {
-    const differences = diff(
-      historyItem.newData,
-      historyItem.oldData);
+    const differences = diff(historyItem.newData, historyItem.oldData);
 
     interface Difference {
       type: string;

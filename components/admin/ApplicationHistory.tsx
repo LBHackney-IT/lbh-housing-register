@@ -25,6 +25,7 @@ import Button from '../button';
 import router from 'next/router';
 import Details from '../details';
 import loadConfig from 'next/dist/next-server/server/config';
+import Paragraph from '../content/paragraph';
 
 interface ActivityHistoryPageProps {
   history: ActivityHistoryPagedResult;
@@ -145,7 +146,8 @@ function renderHeading(item: ActivityHistoryResponse) {
       mainApplicantChangedByUser,
   };
 
-  const functionDelegate = activityText[historyItem.activityType];
+  const functionDelegate =
+    activityText[capitalizeFirstLetter(historyItem.activityType)];
 
   if (functionDelegate) {
     return functionDelegate(historyItem);
@@ -155,11 +157,8 @@ function renderHeading(item: ActivityHistoryResponse) {
 function renderBody(item: ActivityHistoryResponse) {
   const historyItem = new ActivityEntity(item);
 
-  if (historyItem.activityType === 'mainApplicantChangedByUser') {
-    const differences = diff(
-      historyItem.newData.mainApplicant,
-      historyItem.oldData.mainApplicant
-    );
+  if (!historyItem.newData.activityData) {
+    const differences = diff(historyItem.newData, historyItem.oldData);
 
     interface Difference {
       type: string;
@@ -329,3 +328,7 @@ const importedFromLegacyDatabase = () => {
 const mainApplicantChangedByUser = (activity: IActivityEntity) => {
   return <>Main applicant changed</>;
 };
+
+function capitalizeFirstLetter(string: any): ApplicationActivityType {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}

@@ -329,6 +329,6 @@ const mainApplicantChangedByUser = (activity: IActivityEntity) => {
   return <>Main applicant changed</>;
 };
 
-function capitalizeFirstLetter(string: any) : ApplicationActivityType {
+function capitalizeFirstLetter(string: any): ApplicationActivityType {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }

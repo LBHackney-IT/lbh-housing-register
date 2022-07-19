@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Form, Formik, FormikValues, FormikErrors } from 'formik';
+import React from 'react';
+import { Form, Formik, FormikValues } from 'formik';
 import { diff } from 'nested-object-diff';
 import * as Yup from 'yup';
 import {
@@ -7,13 +7,11 @@ import {
   ActivityHistoryPagedResult,
   ActivityHistoryResponse,
   ApplicationActivityType,
-  ApplicationActivityData,
   IActivityEntity,
 } from '../../domain/ActivityHistoryApi';
 import { ApplicationStatus } from '../../lib/types/application-status';
 import {
   SummaryListNoBorder,
-  SummaryListActions,
   SummaryListRow,
   SummaryListKey,
   SummaryListValue,
@@ -24,8 +22,6 @@ import Textarea from '../form/textarea';
 import Button from '../button';
 import router from 'next/router';
 import Details from '../details';
-import loadConfig from 'next/dist/next-server/server/config';
-import Paragraph from '../content/paragraph';
 import { reasonOptions } from '../../lib/utils/assessmentActionsData';
 
 interface ActivityHistoryPageProps {
@@ -368,7 +364,7 @@ const statusChangedByUser = (activity: IActivityEntity) => {
       </>
     );
   } else if (activity.newData.status == ApplicationStatus.REJECTED) {
-    // Just a place holder, we need to distinuish between user and system rejection
+    // Just a placeholder, we need to distinuish between user and system rejection
     message = (
       <>
         Case automatically rejected by system with reason: '

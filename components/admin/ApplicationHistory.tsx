@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Form, Formik, FormikValues, FormikErrors } from 'formik';
+import React from 'react';
+import { Form, Formik, FormikValues } from 'formik';
 import { diff } from 'nested-object-diff';
 import * as Yup from 'yup';
 import {
@@ -7,13 +7,11 @@ import {
   ActivityHistoryPagedResult,
   ActivityHistoryResponse,
   ApplicationActivityType,
-  ApplicationActivityData,
   IActivityEntity,
 } from '../../domain/ActivityHistoryApi';
 import { ApplicationStatus } from '../../lib/types/application-status';
 import {
   SummaryListNoBorder,
-  SummaryListActions,
   SummaryListRow,
   SummaryListKey,
   SummaryListValue,
@@ -24,8 +22,7 @@ import Textarea from '../form/textarea';
 import Button from '../button';
 import router from 'next/router';
 import Details from '../details';
-import loadConfig from 'next/dist/next-server/server/config';
-import Paragraph from '../content/paragraph';
+import { reasonOptions } from '../../lib/utils/assessmentActionsData';
 
 interface ActivityHistoryPageProps {
   history: ActivityHistoryPagedResult;
@@ -135,15 +132,19 @@ function renderHeading(item: ActivityHistoryResponse) {
     [ApplicationActivityType.CaseViewedByUser]: caseViewedByUser,
     [ApplicationActivityType.EffectiveDateChangedByUser]:
       effectiveDateChangedByUser,
-    [ApplicationActivityType.SensitivityChangedByUser]:
-      sensitivityChangedByUser,
-    [ApplicationActivityType.StatusChangedByUser]: statusChangedByUser,
-    [ApplicationActivityType.SubmittedByResident]: submittedByResident,
-    [ApplicationActivityType.NoteAddedByUser]: noteAddedByUser,
+    [ApplicationActivityType.HouseholdApplicantChangedByUser]:
+      householdApplicantChangedByUser,
+    [ApplicationActivityType.HouseholdApplicantRemovedByUser]:
+      householdApplicantRemovedByUser,
     [ApplicationActivityType.ImportedFromLegacyDatabase]:
       importedFromLegacyDatabase,
     [ApplicationActivityType.MainApplicantChangedByUser]:
       mainApplicantChangedByUser,
+    [ApplicationActivityType.NoteAddedByUser]: noteAddedByUser,
+    [ApplicationActivityType.SensitivityChangedByUser]:
+      sensitivityChangedByUser,
+    [ApplicationActivityType.StatusChangedByUser]: statusChangedByUser,
+    [ApplicationActivityType.SubmittedByResident]: submittedByResident,
   };
 
   const functionDelegate =
@@ -155,6 +156,13 @@ function renderHeading(item: ActivityHistoryResponse) {
 }
 
 function renderBody(item: ActivityHistoryResponse) {
+  if (
+    item.newData._activityType === 'submittedByResident' ||
+    item.newData._activityType === 'effectiveDateChangedByUser'
+  ) {
+    return null;
+  }
+
   const historyItem = new ActivityEntity(item);
 
   if (!historyItem.newData.activityData) {
@@ -174,27 +182,41 @@ function renderBody(item: ActivityHistoryResponse) {
             <thead className="govuk-table__head">
               <tr className="govuk-table__row">
                 <th className="govuk-table__header">Field</th>
-                <th className="govuk-table__header">New value</th>
                 <th className="govuk-table__header">Old value</th>
+                <th className="govuk-table__header">New value</th>
               </tr>
             </thead>
             <tbody className="govuk-table__body">
               {differences.map((difference: Difference, index: number) => {
                 let { path, lhs, rhs } = difference;
 
+                if (path === '_activityType') return;
+
+                if (path === 'assessment.reason') {
+                  lhs = getReasonFromActivity(lhs);
+                  rhs = getReasonFromActivity(rhs);
+                }
+
+                if (path === 'assessment.effectiveDate') {
+                  lhs = getFormattedDate(lhs);
+                  rhs = getFormattedDate(rhs);
+                }
+
                 if (typeof rhs === 'object' || typeof lhs === 'object') {
-                  lhs = JSON.stringify(lhs);
-                  rhs = JSON.stringify(rhs);
+                  lhs = JSON.stringify(lhs, undefined, 2);
+                  rhs = JSON.stringify(rhs, undefined, 2);
+                  lhs = lhs.replace(/\\"/g, '');
+                  rhs = rhs.replace(/\\"/g, '');
                 }
                 if (path != 'person.id') {
                   return (
                     <tr key={index} className="govuk-table__row">
                       <td className="govuk-table__cell">{path}</td>
                       <td className="govuk-table__cell lbh-!-break-word">
-                        {lhs}
+                        <pre className="lbh-audit-history-json">{rhs}</pre>
                       </td>
                       <td className="govuk-table__cell lbh-!-break-word">
-                        {rhs}
+                        <pre className="lbh-audit-history-json">{lhs}</pre>
                       </td>
                     </tr>
                   );
@@ -238,10 +260,20 @@ const getFormattedDate = (
   return dateFormat;
 };
 
+const getReasonFromActivity = (reason: string | undefined) => {
+  return reasonOptions.find(
+    (option: { value: string; label: string }) => option.value === reason
+  )?.label;
+};
+
+const capitalizeFirstLetter = (string: any): ApplicationActivityType => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
 const assignedToChangedByUser = (activity: IActivityEntity) => {
   return (
     <>
-      Assigned to '${activity.newData.assignedTo}' by $
+      Assigned to '{activity.newData.assignedTo}' by
       {activity.oldData.assignedTo}
     </>
   );
@@ -279,6 +311,32 @@ const effectiveDateChangedByUser = (activity: IActivityEntity) => {
   );
 };
 
+const householdApplicantChangedByUser = (activity: IActivityEntity) => {
+  return <>Household applicant changed by {activity.authorDetails.fullName}</>;
+};
+
+const householdApplicantRemovedByUser = (activity: IActivityEntity) => {
+  const householdMember = Object.values(activity.oldData)[0] as any;
+  return (
+    <>
+      Household applicant: "{householdMember?.person?.fullName}" removed by{' '}
+      {activity.authorDetails.fullName}
+    </>
+  );
+};
+
+const importedFromLegacyDatabase = () => {
+  return <>Imported from legacy database</>;
+};
+
+const mainApplicantChangedByUser = (activity: IActivityEntity) => {
+  return <>Main applicant changed by {activity.authorDetails.fullName}</>;
+};
+
+const noteAddedByUser = (activity: IActivityEntity) => {
+  return <>Note added by {activity.authorDetails.fullName}</>;
+};
+
 const sensitivityChangedByUser = (activity: IActivityEntity) => {
   return <>Marked as sensitive by {activity.authorDetails.fullName}</>;
 };
@@ -292,7 +350,8 @@ const statusChangedByUser = (activity: IActivityEntity) => {
     <>
       Status changed from '{activity.oldData.status}' to '
       {activity.newData.status}' by {activity.authorDetails.fullName}
-      <br></br> Reason: '{activity.newData.assessment?.reason}'
+      <br></br> Reason:{' '}
+      {getReasonFromActivity(activity.newData.assessment?.reason)}
     </>
   );
 
@@ -305,7 +364,7 @@ const statusChangedByUser = (activity: IActivityEntity) => {
       </>
     );
   } else if (activity.newData.status == ApplicationStatus.REJECTED) {
-    // Just a place holder, we need to distinuish between user and system rejection
+    // Just a placeholder, we need to distinuish between user and system rejection
     message = (
       <>
         Case automatically rejected by system with reason: '
@@ -316,19 +375,3 @@ const statusChangedByUser = (activity: IActivityEntity) => {
 
   return message;
 };
-
-const noteAddedByUser = (activity: IActivityEntity) => {
-  return <>Note added by {activity.authorDetails.fullName}</>;
-};
-
-const importedFromLegacyDatabase = () => {
-  return <>Imported from legacy database</>;
-};
-
-const mainApplicantChangedByUser = (activity: IActivityEntity) => {
-  return <>Main applicant changed</>;
-};
-
-function capitalizeFirstLetter(string: any): ApplicationActivityType {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}

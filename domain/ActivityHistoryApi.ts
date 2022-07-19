@@ -41,7 +41,9 @@ export enum ActivityHistoryType {
 
 export enum ApplicationActivityType {
   AssignedToChangedByUser = 'AssignedToChangedByUser',
+  BandChangedByUser = 'BandChangedByUser',
   BedroomNeedChangedByUser = 'BedroomNeedChangedByUser',
+  BiddingNumberChangedByUser = 'BiddingNumberChangedByUser',
   CaseViewedByUser = 'CaseViewedByUser',
   EffectiveDateChangedByUser = 'EffectiveDateChangedByUser',
   HouseholdApplicantChangedByUser = 'HouseholdApplicantChangedByUser',

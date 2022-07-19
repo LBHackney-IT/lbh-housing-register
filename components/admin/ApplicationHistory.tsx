@@ -273,7 +273,7 @@ const capitalizeFirstLetter = (string: any): ApplicationActivityType => {
 const assignedToChangedByUser = (activity: IActivityEntity) => {
   return (
     <>
-      Assigned to '${activity.newData.assignedTo}' by $
+      Assigned to '{activity.newData.assignedTo}' by
       {activity.oldData.assignedTo}
     </>
   );
@@ -330,7 +330,7 @@ const importedFromLegacyDatabase = () => {
 };
 
 const mainApplicantChangedByUser = (activity: IActivityEntity) => {
-  return <>Main applicant changed</>;
+  return <>Main applicant changed by {activity.authorDetails.fullName}</>;
 };
 
 const noteAddedByUser = (activity: IActivityEntity) => {

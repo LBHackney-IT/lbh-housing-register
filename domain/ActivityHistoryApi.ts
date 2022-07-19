@@ -40,16 +40,18 @@ export enum ActivityHistoryType {
 }
 
 export enum ApplicationActivityType {
-  SubmittedByResident = 'SubmittedByResident',
-  CaseViewedByUser = 'CaseViewedByUser',
-  StatusChangedByUser = 'StatusChangedByUser',
   AssignedToChangedByUser = 'AssignedToChangedByUser',
-  SensitivityChangedByUser = 'SensitivityChangedByUser',
   BedroomNeedChangedByUser = 'BedroomNeedChangedByUser',
+  CaseViewedByUser = 'CaseViewedByUser',
   EffectiveDateChangedByUser = 'EffectiveDateChangedByUser',
-  NoteAddedByUser = 'NoteAddedByUser',
+  HouseholdApplicantChangedByUser = 'HouseholdApplicantChangedByUser',
+  HouseholdApplicantRemovedByUser = 'HouseholdApplicantRemovedByUser',
   ImportedFromLegacyDatabase = 'ImportedFromLegacyDatabase',
-  MainApplicantChangedByUser = 'mainApplicantChangedByUser',
+  MainApplicantChangedByUser = 'MainApplicantChangedByUser',
+  NoteAddedByUser = 'NoteAddedByUser',
+  SensitivityChangedByUser = 'SensitivityChangedByUser',
+  StatusChangedByUser = 'StatusChangedByUser',
+  SubmittedByResident = 'SubmittedByResident',
 }
 
 export enum ApplicationActivityData {

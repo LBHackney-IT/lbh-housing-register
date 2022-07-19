@@ -205,8 +205,9 @@ function renderBody(item: ActivityHistoryResponse) {
                 if (typeof rhs === 'object' || typeof lhs === 'object') {
                   lhs = JSON.stringify(lhs, undefined, 2);
                   rhs = JSON.stringify(rhs, undefined, 2);
-                  lhs = lhs.replace(/\\"/g, '');
-                  rhs = rhs.replace(/\\"/g, '');
+
+                  lhs = lhs ? lhs.replace(/\\"/g, '') : '';
+                  rhs = rhs ? rhs.replace(/\\"/g, '') : '';
                 }
                 if (path != 'person.id') {
                   return (

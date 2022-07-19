@@ -127,8 +127,11 @@ function renderHeading(item: ActivityHistoryResponse) {
     [key in ApplicationActivityType]: (activity: IActivityEntity) => {};
   } = {
     [ApplicationActivityType.AssignedToChangedByUser]: assignedToChangedByUser,
+    [ApplicationActivityType.BandChangedByUser]: bandChangedByUser,
     [ApplicationActivityType.BedroomNeedChangedByUser]:
       bedroomNeedChangedByUser,
+    [ApplicationActivityType.BiddingNumberChangedByUser]:
+      biddingNumberChangedByUser,
     [ApplicationActivityType.CaseViewedByUser]: caseViewedByUser,
     [ApplicationActivityType.EffectiveDateChangedByUser]:
       effectiveDateChangedByUser,
@@ -280,6 +283,10 @@ const assignedToChangedByUser = (activity: IActivityEntity) => {
   );
 };
 
+const bandChangedByUser = (activity: IActivityEntity) => {
+  return <>Band changed by {activity.authorDetails.fullName}</>;
+};
+
 const bedroomNeedChangedByUser = (activity: IActivityEntity) => {
   return (
     <>
@@ -288,6 +295,10 @@ const bedroomNeedChangedByUser = (activity: IActivityEntity) => {
       {activity.authorDetails.fullName}
     </>
   );
+};
+
+const biddingNumberChangedByUser = (activity: IActivityEntity) => {
+  return <>Bidding number changed by {activity.authorDetails.fullName}</>;
 };
 
 const caseViewedByUser = (activity: IActivityEntity) => {

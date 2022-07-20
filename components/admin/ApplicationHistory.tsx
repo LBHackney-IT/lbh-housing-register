@@ -123,6 +123,8 @@ export default function ApplicationHistory({
 
 function renderHeading(item: ActivityHistoryResponse) {
   const historyItem = new ActivityEntity(item);
+  console.log(historyItem);
+
   const activityText: {
     [key in ApplicationActivityType]: (activity: IActivityEntity) => {};
   } = {
@@ -141,6 +143,8 @@ function renderHeading(item: ActivityHistoryResponse) {
       householdApplicantRemovedByUser,
     [ApplicationActivityType.ImportedFromLegacyDatabase]:
       importedFromLegacyDatabase,
+    [ApplicationActivityType.InformationReceivedDateChangedByUser]:
+      informationReceivedDateChangedByUser,
     [ApplicationActivityType.MainApplicantChangedByUser]:
       mainApplicantChangedByUser,
     [ApplicationActivityType.NoteAddedByUser]: noteAddedByUser,
@@ -160,8 +164,9 @@ function renderHeading(item: ActivityHistoryResponse) {
 
 function renderBody(item: ActivityHistoryResponse) {
   if (
-    item.newData._activityType === 'submittedByResident' ||
-    item.newData._activityType === 'effectiveDateChangedByUser'
+    item.newData._activityType === 'effectiveDateChangedByUser' ||
+    item.newData._activityType === 'informationReceivedDateChangedByUser' ||
+    item.newData._activityType === 'submittedByResident'
   ) {
     return null;
   }
@@ -339,6 +344,24 @@ const householdApplicantRemovedByUser = (activity: IActivityEntity) => {
 
 const importedFromLegacyDatabase = () => {
   return <>Imported from legacy database</>;
+};
+
+const informationReceivedDateChangedByUser = (activity: IActivityEntity) => {
+  return (
+    <>
+      Information received date changed from '
+      {getFormattedDate(
+        activity.oldData.assessment?.informationReceivedDate ?? null,
+        true
+      )}
+      ' to '
+      {getFormattedDate(
+        activity.newData.assessment?.informationReceivedDate ?? null,
+        true
+      )}
+      ' by {activity.authorDetails.fullName}
+    </>
+  );
 };
 
 const mainApplicantChangedByUser = (activity: IActivityEntity) => {

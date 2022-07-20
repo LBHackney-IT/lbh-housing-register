@@ -49,6 +49,7 @@ export enum ApplicationActivityType {
   HouseholdApplicantChangedByUser = 'HouseholdApplicantChangedByUser',
   HouseholdApplicantRemovedByUser = 'HouseholdApplicantRemovedByUser',
   ImportedFromLegacyDatabase = 'ImportedFromLegacyDatabase',
+  InformationReceivedDateChangedByUser = 'InformationReceivedDateChangedByUser',
   MainApplicantChangedByUser = 'MainApplicantChangedByUser',
   NoteAddedByUser = 'NoteAddedByUser',
   SensitivityChangedByUser = 'SensitivityChangedByUser',

@@ -123,8 +123,6 @@ export default function ApplicationHistory({
 
 function renderHeading(item: ActivityHistoryResponse) {
   const historyItem = new ActivityEntity(item);
-  console.log(historyItem);
-
   const activityText: {
     [key in ApplicationActivityType]: (activity: IActivityEntity) => {};
   } = {

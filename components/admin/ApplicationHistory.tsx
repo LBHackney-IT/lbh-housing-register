@@ -133,6 +133,7 @@ function renderHeading(item: ActivityHistoryResponse) {
     [ApplicationActivityType.BiddingNumberChangedByUser]:
       biddingNumberChangedByUser,
     [ApplicationActivityType.CaseViewedByUser]: caseViewedByUser,
+    [ApplicationActivityType.Created]: created,
     [ApplicationActivityType.EffectiveDateChangedByUser]:
       effectiveDateChangedByUser,
     [ApplicationActivityType.HouseholdApplicantChangedByUser]:
@@ -162,6 +163,7 @@ function renderHeading(item: ActivityHistoryResponse) {
 
 function renderBody(item: ActivityHistoryResponse) {
   if (
+    item.newData._activityType === 'created' ||
     item.newData._activityType === 'effectiveDateChangedByUser' ||
     item.newData._activityType === 'informationReceivedDateChangedByUser' ||
     item.newData._activityType === 'submittedByResident'
@@ -306,6 +308,10 @@ const biddingNumberChangedByUser = (activity: IActivityEntity) => {
 
 const caseViewedByUser = (activity: IActivityEntity) => {
   return <>Case viewed by {activity.authorDetails.fullName}</>;
+};
+
+const created = (activity: IActivityEntity) => {
+  return <>Application created by {activity.authorDetails.fullName}</>;
 };
 
 const effectiveDateChangedByUser = (activity: IActivityEntity) => {

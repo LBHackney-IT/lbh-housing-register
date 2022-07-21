@@ -45,6 +45,7 @@ export enum ApplicationActivityType {
   BedroomNeedChangedByUser = 'BedroomNeedChangedByUser',
   BiddingNumberChangedByUser = 'BiddingNumberChangedByUser',
   CaseViewedByUser = 'CaseViewedByUser',
+  Created = 'Created',
   EffectiveDateChangedByUser = 'EffectiveDateChangedByUser',
   HouseholdApplicantChangedByUser = 'HouseholdApplicantChangedByUser',
   HouseholdApplicantRemovedByUser = 'HouseholdApplicantRemovedByUser',

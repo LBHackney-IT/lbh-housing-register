@@ -232,6 +232,110 @@ export interface ApplicationList {
 /**
  *
  * @export
+ * @interface ApplicationSearchResult
+ */
+export interface ApplicationSearchResult {
+  /**
+   *
+   * @type {string}
+   * @memberof ApplicationSearchResult
+   */
+  applicationId?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ApplicationSearchResult
+   */
+  assignedTo?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ApplicationSearchResult
+   */
+  biddingNumber?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ApplicationSearchResult
+   */
+  createdAt?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ApplicationSearchResult
+   */
+  dateOfBirth?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ApplicationSearchResult
+   */
+  firstName?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof ApplicationSearchResult
+   */
+  hasAssessment?: boolean;
+  /**
+   *
+   * @type {string}
+   * @memberof ApplicationSearchResult
+   */
+  middleName?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ApplicationSearchResult
+   */
+  nationalInsuranceNumber?: string;
+  /**
+   *
+   * @type {Array<Applicant>}
+   * @memberof ApplicationSearchResult
+   */
+  otherMembers: Array<Person>;
+  /**
+   *
+   * @type {string}
+   * @memberof ApplicationSearchResult
+   */
+  reference?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof ApplicationSearchResult
+   */
+  sensitiveData?: boolean;
+  /**
+   *
+   * @type {string}
+   * @memberof ApplicationSearchResult
+   */
+  status?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ApplicationSearchResult
+   */
+  submittedAt?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ApplicationSearchResult
+   */
+  surname?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ApplicationSearchResult
+   */
+  title?: string;
+}
+
+/**
+ *
+ * @export
  * @interface ContactInformation
  */
 export interface ContactInformation {
@@ -431,6 +535,38 @@ export interface Question {
    * @memberof Question
    */
   answer?: string;
+}
+
+/**
+ *
+ * @export
+ * @interface PaginatedSearchResultsResponse
+ */
+export interface PaginatedSearchResultsResponse {
+  /**
+   *
+   * @type {Array<ApplicationSearchResult>}
+   * @memberof PaginatedSearchResultsResponse
+   */
+  results: Array<ApplicationSearchResult>;
+  /**
+   *
+   * @type {number}
+   * @memberof PaginatedSearchResultsResponse
+   */
+  totalResults: number;
+  /**
+   *
+   * @type {number}
+   * @memberof PaginatedSearchResultsResponse
+   */
+  page: number;
+  /**
+   *
+   * @type {number}
+   * @memberof PaginatedSearchResultsResponse
+   */
+  pageSize: number;
 }
 
 /**

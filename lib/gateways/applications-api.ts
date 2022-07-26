@@ -10,6 +10,7 @@ import {
   CreateEvidenceRequest,
   EvidenceRequestResponse,
   PaginatedApplicationListResponse,
+  PaginatedSearchResultsResponse,
   VerifyAuthRequest,
   VerifyAuthResponse,
   InternalReportRequest,
@@ -80,6 +81,20 @@ export const getApplicationsByReference = async (
         reference,
         paginationToken,
       },
+    })
+  ).data;
+};
+
+export const searchAllApplications = async (
+  searchString: string,
+  page: string,
+  pageSize: string
+): Promise<PaginatedSearchResultsResponse | null> => {
+  return (
+    await housingAxios().post('applications/search', {
+      Page: parseInt(page),
+      PageSize: parseInt(pageSize),
+      QueryString: searchString,
     })
   ).data;
 };

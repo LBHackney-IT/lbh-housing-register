@@ -27,7 +27,7 @@ export default function SearchBox({
 
     router.push({
       pathname: '/applications/search-results',
-      query: { searchString: searchInputValue, page: '0', pageSize: '20' },
+      query: { searchString: searchInputValue, page: '1', pageSize: '10' },
     });
   };
 

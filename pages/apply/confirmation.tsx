@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
 import Button from '../../components/button';
 import { HeadingTwo } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
@@ -8,12 +7,12 @@ import Panel from '../../components/panel';
 import Timeline, { TimelineEvent } from '../../components/timeline';
 import withApplication from '../../lib/hoc/withApplication';
 import { exit } from '../../lib/store/auth';
-import { useAppSelector } from '../../lib/store/hooks';
+import { useAppSelector, useAppDispatch } from '../../lib/store/hooks';
 import { formatDate } from '../../lib/utils/dateOfBirth';
 
 const ApplicationConfirmation = (): JSX.Element => {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const application = useAppSelector((store) => store.application);
   const residentEmail = useAppSelector(
     (store) => store.application.mainApplicant?.contactInformation?.emailAddress

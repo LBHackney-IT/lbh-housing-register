@@ -4,7 +4,7 @@ import {
   selectApplicant,
   getQuestionValue,
 } from '../../../lib/store/applicant';
-import { useAppSelector } from '../../../lib/store/hooks';
+import { useAppSelector, useAppDispatch } from '../../../lib/store/hooks';
 import { useRouter } from 'next/router';
 import Custom404 from '../../404';
 import DeleteLink from '../../../components/delete-link';
@@ -25,7 +25,6 @@ import { FormID } from '../../../lib/utils/form-data';
 import withApplication from '../../../lib/hoc/withApplication';
 import { removeApplicant } from '../../../lib/store/otherMembers';
 import { getDisqualificationReasonOption } from '../../../lib/utils/disqualificationReasonOptions';
-import { useDispatch } from 'react-redux';
 import {
   disqualifyApplication,
   sendDisqualifyEmail,
@@ -34,7 +33,7 @@ import { Applicant } from '../../../domain/HousingApi';
 
 const UserSummary = (): JSX.Element => {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { resident } = router.query as { resident: string };
 
   const currentResident = useAppSelector(

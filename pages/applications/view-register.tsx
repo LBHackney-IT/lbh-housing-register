@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import ApplicationTable from '../../components/admin/application-table';
-import SearchBox from '../../components/admin/search-box';
+import SearchBox from '../../components/admin/SearchBox';
 import Sidebar from '../../components/admin/sidebar';
 import Button from '../../components/button';
 import Details from '../../components/details';
@@ -69,9 +69,9 @@ export default function ViewAllApplicationsPage({
     <UserContext.Provider value={{ user }}>
       <Layout pageName="All applications">
         <SearchBox
-          title="All applications"
+          title="Housing Register"
           buttonTitle="Search"
-          watermark="Search application reference"
+          watermark="Search all applications (name, reference, bidding number)"
         />
 
         <div className="govuk-grid-row">

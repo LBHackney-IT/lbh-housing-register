@@ -6,7 +6,7 @@ import {
   HorizontalNav,
   HorizontalNavItem,
 } from '../../components/admin/HorizontalNav';
-import SearchBox from '../../components/admin/search-box';
+import SearchBox from '../../components/admin/SearchBox';
 import Sidebar from '../../components/admin/sidebar';
 import { HeadingOne } from '../../components/content/headings';
 import Layout from '../../components/layout/staff-layout';
@@ -58,7 +58,7 @@ export default function ApplicationListPage({
         <SearchBox
           title="Housing Register"
           buttonTitle="Search"
-          watermark="Search application reference"
+          watermark="Search all applications (name, reference, bidding number)"
         />
 
         <div className="govuk-grid-row">

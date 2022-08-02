@@ -50,13 +50,15 @@ export default function OtherMembers({
                       : ''}
                   </li>
                   <li>
-                    {applicant.person?.relationshipType &&
-                      capitalize(applicant.person?.relationshipType)}
-                  </li>
-                  <li>
                     {applicant.person?.dateOfBirth &&
                       formatDob(new Date(applicant.person?.dateOfBirth))}{' '}
-                    {applicant.person?.age && `(age ${applicant.person?.age}`}
+                    {applicant.person?.age !== null &&
+                      `(age ${applicant.person?.age})`}
+                  </li>
+                  <li>
+                    Relationship:{' '}
+                    {applicant.person?.relationshipType &&
+                      capitalize(applicant.person?.relationshipType)}
                   </li>
                 </ul>
 

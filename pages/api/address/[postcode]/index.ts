@@ -11,6 +11,10 @@ const endpoint: NextApiHandler = async (
     case 'GET':
       try {
         const { postcode } = req.query;
+        if (!postcode) {
+          res.status(StatusCodes.BAD_REQUEST).send('Missing postcode');
+          return;
+        }
         const data = await lookUpAddress(postcode);
         res.status(StatusCodes.OK).json(data);
       } catch (error) {

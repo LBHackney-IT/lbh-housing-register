@@ -15,10 +15,8 @@ const reducer = combineReducers<Store>({
 const makeStore = () =>
   configureStore({
     reducer,
-    middleware: (getDefaultMiddleware) => [
-      ...getDefaultMiddleware(),
-      autoSaveMiddleware,
-    ],
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(autoSaveMiddleware),
   });
 
 export type AppStore = ReturnType<typeof makeStore>;

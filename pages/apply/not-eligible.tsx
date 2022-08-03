@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
 import Layout from '../../components/layout/resident-layout';
 import { HeadingTwo, HeadingThree } from '../../components/content/headings';
 import Button from '../../components/button';
@@ -9,7 +8,7 @@ import List, { ListItem } from '../../components/content/list';
 import Paragraph from '../../components/content/paragraph';
 import ContactUsDialog from '../../components/content/ContactUsDialog';
 import Panel from '../../components/panel';
-import { useAppSelector } from '../../lib/store/hooks';
+import { useAppSelector, useAppDispatch } from '../../lib/store/hooks';
 import { checkEligible } from '../../lib/utils/form';
 import { exit } from '../../lib/store/auth';
 import withApplication from '../../lib/hoc/withApplication';
@@ -19,7 +18,7 @@ import WarningText from '../../components/content/WarningText';
 
 const NotEligible = (): JSX.Element => {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [contactUsDialogOpen, setContactUsDialogOpen] = useState(false);
   const application = useAppSelector((store) => store.application);
   const mainApplicant = useAppSelector(

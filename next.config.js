@@ -7,13 +7,8 @@ const { withSentryConfig } = require('@sentry/nextjs');
 
 const moduleExports = {
   distDir: 'build/_next',
-  target: 'server',
   poweredByHeader: false,
   reactStrictMode: true,
-  future: {
-    webpack5: true,
-  },
-
   async headers() {
     return [
       {

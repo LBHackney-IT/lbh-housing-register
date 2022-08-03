@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
 import { HeadingTwo } from '../../../components/content/headings';
 import DeleteLink from '../../../components/delete-link';
 import Layout from '../../../components/layout/resident-layout';
@@ -15,7 +14,7 @@ import {
   getQuestionValue,
   selectApplicant,
 } from '../../../lib/store/applicant';
-import { useAppSelector } from '../../../lib/store/hooks';
+import { useAppSelector, useAppDispatch } from '../../../lib/store/hooks';
 import { removeApplicant } from '../../../lib/store/otherMembers';
 import {
   applicationSteps,
@@ -30,7 +29,7 @@ import withApplication from '../../../lib/hoc/withApplication';
 
 const ResidentIndex = (): JSX.Element => {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { resident } = router.query as { resident: string };
 
   const currentResident = useAppSelector(

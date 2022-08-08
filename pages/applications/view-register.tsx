@@ -14,6 +14,7 @@ import { UserContext } from '../../lib/contexts/user-context';
 import {
   getApplications,
   getApplicationsByStatus,
+  getApplicationStatusCounts,
 } from '../../lib/gateways/applications-api';
 import {
   ApplicationStatus,
@@ -24,11 +25,13 @@ import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 interface PageProps {
   user?: HackneyGoogleUser;
   applications: PaginatedApplicationListResponse | null;
+  applicationStatusCounts: { [key in ApplicationStatus]: number };
 }
 
 export default function ViewAllApplicationsPage({
   user,
   applications,
+  applicationStatusCounts,
 }: PageProps): JSX.Element {
   const router = useRouter();
   const activeItem = (router.query.status ?? '') as ApplicationStatus | '';
@@ -109,7 +112,8 @@ export default function ViewAllApplicationsPage({
                       className="govuk-radios__label lbh-!-margin-top-0"
                       htmlFor={value}
                     >
-                      {lookupStatus(value)}
+                      {lookupStatus(value)} (
+                      {applicationStatusCounts[value] ?? 0})
                     </label>
                   </div>
                 ))}
@@ -157,12 +161,14 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
     paginationToken: string;
   };
 
+  const applicationStatusCounts = await getApplicationStatusCounts();
+
   const applications =
     status === ''
       ? await getApplications(paginationToken)
       : await getApplicationsByStatus(status, paginationToken);
 
   return {
-    props: { user, applications },
+    props: { user, applications, applicationStatusCounts },
   };
 };

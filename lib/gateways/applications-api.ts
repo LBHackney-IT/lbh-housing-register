@@ -44,6 +44,12 @@ export const getApplications = async (
   ).data;
 };
 
+export const getApplicationStatusCounts = async () => {
+  return await housingAxios()
+    .get('applications/breakdown/status')
+    .then((response) => response.data);
+};
+
 export const getApplicationsByStatus = async (
   status: string,
   paginationToken?: string

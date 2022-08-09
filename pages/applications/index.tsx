@@ -1,7 +1,8 @@
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import React, { SyntheticEvent, useState } from 'react';
-import ApplicationTable from '../../components/admin/application-table';
+import ApplicationsTable from '../../components/admin/ApplicationsTable';
+import SimplePaginationSearch from '../../components/SimplePaginationSearch';
 import {
   HorizontalNav,
   HorizontalNavItem,
@@ -11,14 +12,14 @@ import Sidebar from '../../components/admin/sidebar';
 import { HeadingOne } from '../../components/content/headings';
 import Layout from '../../components/layout/staff-layout';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
-import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
+import { PaginatedSearchResultsResponse } from '../../domain/HousingApi';
 import { UserContext } from '../../lib/contexts/user-context';
 import { getApplicationsByStatusAndAssignedTo } from '../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 
 interface PageProps {
   user?: HackneyGoogleUser;
-  applications: PaginatedApplicationListResponse | null;
+  applications: PaginatedSearchResultsResponse | null;
 }
 
 export default function ApplicationListPage({
@@ -85,15 +86,20 @@ export default function ApplicationListPage({
                 Pending
               </HorizontalNavItem>
             </HorizontalNav>
-            <ApplicationTable
-              applications={applications}
-              initialPaginationToken={
-                router.query.paginationToken as string | undefined
-              }
-              setPaginationToken={setPaginationToken}
-              showStatus={false}
-              key={activeNavItem} // force remounting for a new initialPaginationToken
-            />
+            {applications ? (
+              <>
+                <ApplicationsTable
+                  applications={applications}
+                  showStatus={true}
+                />
+
+                <SimplePaginationSearch
+                  totalItems={applications.totalResults}
+                  page={applications.page}
+                  numberOfItemsPerPage={applications.pageSize}
+                />
+              </>
+            ) : null}
           </div>
         </div>
       </Layout>

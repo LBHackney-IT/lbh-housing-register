@@ -35,11 +35,24 @@ const emptyActivityHistoryPagedResult: ActivityHistoryPagedResult =
   });
 
 export const getApplications = async (
-  paginationToken?: string
-): Promise<PaginatedApplicationListResponse | null> => {
+  page: string,
+  pageSize: string
+): Promise<PaginatedSearchResultsResponse | null> => {
   return (
     await housingAxios().get('applications', {
-      params: { paginationToken },
+      params: { Page: parseInt(page), PageSize: parseInt(pageSize) },
+    })
+  ).data;
+};
+
+export const getApplicationsByStatus = async (
+  status: string,
+  page: string,
+  pageSize: string
+): Promise<PaginatedSearchResultsResponse | null> => {
+  return (
+    await housingAxios().get('applications/ListApplicationsByStatus', {
+      params: { status, Page: parseInt(page), PageSize: parseInt(pageSize) },
     })
   ).data;
 };
@@ -50,22 +63,11 @@ export const getApplicationStatusCounts = async () => {
     .then((response) => response.data);
 };
 
-export const getApplicationsByStatus = async (
-  status: string,
-  paginationToken?: string
-): Promise<PaginatedApplicationListResponse | null> => {
-  return (
-    await housingAxios().get('applications/ListApplicationsByStatus', {
-      params: { status, paginationToken },
-    })
-  ).data;
-};
-
 export const getApplicationsByStatusAndAssignedTo = async (
   status: string,
   assignedTo: string,
   paginationToken?: string
-): Promise<PaginatedApplicationListResponse | null> => {
+): Promise<PaginatedSearchResultsResponse | null> => {
   return (
     await housingAxios().get('applications/ListApplicationsByAssignedTo', {
       params: {

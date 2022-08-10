@@ -20,7 +20,6 @@ const ResultsToShowLink = ({
   parseInt(query.pageSize as string) !== numberOfResults ? (
     <Link
       href={{
-        pathname: '/applications/search-results',
         query: { ...query, pageSize: numberOfResults },
       }}
     >
@@ -31,34 +30,44 @@ const ResultsToShowLink = ({
   );
 
 interface ApplicationsTableProps {
-  caption?: string;
   applications: PaginatedSearchResultsResponse | null;
   showStatus: boolean;
+  page: string;
+  pageSize: string;
 }
 
 export default function ApplicationsTable({
-  caption,
   applications,
   showStatus,
+  page,
+  pageSize,
 }: ApplicationsTableProps): JSX.Element {
   const { query } = useRouter();
+  const firstResult = (parseInt(page) - 1) * parseInt(pageSize) + 1;
+  const lastResult = Math.min(
+    firstResult + parseInt(pageSize) - 1,
+    applications?.totalResults || 0
+  );
+
   return (
     <>
       {applications ? (
         <>
-          <div
-            className="c-flex"
-            style={{ justifyContent: 'space-between', alignItems: 'center' }}
-          >
-            <p className="lbh-body-l">
+          <div className="c-flex" style={{ justifyContent: 'space-between' }}>
+            <p className="lbh-body-m lbh-body-bold">
               {applications.totalResults === 1 ? (
                 <>{applications.totalResults} application found</>
+              ) : applications.totalResults > 10 ? (
+                <>
+                  Showing {firstResult} to {lastResult} of{' '}
+                  {applications.totalResults} applications
+                </>
               ) : (
                 <>{applications.totalResults} applications found</>
               )}
             </p>
             {applications.totalResults > 10 ? (
-              <div className="lbh-!-margin-top-0">
+              <div className="lbh-!-margin-top-0 lbh-!-margin-left-1">
                 <p className="lbh-body-m lbh-!-margin-top-0">Results to show</p>
                 <p className="lbh-body-m lbh-!-margin-top-0">
                   <ResultsToShowLink query={query} numberOfResults={5} />
@@ -82,11 +91,11 @@ export default function ApplicationsTable({
             ) : null}
           </div>
           <table className="govuk-table lbh-table">
-            {caption ? (
+            {/* {caption ? (
               <caption className="govuk-table__caption lbh-heading-h3 lbh-table__caption">
                 {caption}
               </caption>
-            ) : null}
+            ) : null} */}
             <thead className="govuk-table__head">
               <tr className="govuk-table__row">
                 <th scope="col" className="govuk-table__header">

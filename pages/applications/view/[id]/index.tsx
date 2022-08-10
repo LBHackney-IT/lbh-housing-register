@@ -60,19 +60,9 @@ export default function ApplicationPage({
   const router = useRouter();
   const tab = router.query.tab ?? 'overview';
 
-  useEffect(() => {
-    router.push(`/applications/view/${data.id}?tab=${tab}`, undefined, {
-      shallow: true,
-    });
-  }, []);
-
-  useEffect(() => {
-    handleTabChange(tab as string);
-  }, [router.query.tab]);
-
   const handleTabChange = (newValue: string) => {
-    router.push(`/applications/view/${data.id}?tab=${newValue}`, undefined, {
-      shallow: true,
+    router.push({
+      query: { ...router.query, tab: newValue },
     });
   };
 

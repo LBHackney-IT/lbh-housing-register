@@ -43,8 +43,7 @@ export default function ViewAllApplicationsPage({
 
   useEffect(() => {
     router.push({
-      pathname: '/applications/view-register',
-      query: { ...router.query, status: selectedFilter, page, pageSize },
+      query: { ...router.query, status: selectedFilter, page: 1, pageSize },
     });
   }, [selectedFilter]);
 
@@ -63,13 +62,6 @@ export default function ViewAllApplicationsPage({
   const handleRemoveFilters = async (event: MouseEvent<HTMLElement>) => {
     event.preventDefault();
     setSelectedFilter('');
-  };
-
-  const setPaginationToken = (paginationToken: string | null) => {
-    router.push({
-      pathname: router.pathname,
-      query: { ...router.query, paginationToken },
-    });
   };
 
   return (
@@ -135,6 +127,8 @@ export default function ViewAllApplicationsPage({
                 <ApplicationsTable
                   applications={applications}
                   showStatus={true}
+                  page={page}
+                  pageSize={pageSize}
                 />
 
                 <SimplePaginationSearch

@@ -44,7 +44,6 @@ export default function Reports({
     const { name } = event.target as HTMLButtonElement;
 
     router.push({
-      pathname: '/applications/reports',
       query: { status: name },
     });
 

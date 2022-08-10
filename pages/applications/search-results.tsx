@@ -1,6 +1,4 @@
 import { GetServerSideProps } from 'next';
-import React, { useState } from 'react';
-import SearchResults from '../../components/admin/SearchResults';
 import SearchBox from '../../components/admin/SearchBox';
 import Sidebar from '../../components/admin/sidebar';
 import { HeadingOne } from '../../components/content/headings';
@@ -10,15 +8,22 @@ import { PaginatedSearchResultsResponse } from '../../domain/HousingApi';
 import { UserContext } from '../../lib/contexts/user-context';
 import { searchAllApplications } from '../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../lib/utils/googleAuth';
+import ApplicationsTable from '../../components/admin/ApplicationsTable';
+import SimplePaginationSearch from '../../components/SimplePaginationSearch';
+import Paragraph from '../../components/content/paragraph';
 
 interface PageProps {
   user?: HackneyGoogleUser;
   applications: PaginatedSearchResultsResponse | null;
+  page: string;
+  pageSize: string;
 }
 
 export default function ApplicationListPage({
   user,
   applications,
+  page,
+  pageSize,
 }: PageProps): JSX.Element {
   return (
     <UserContext.Provider value={{ user }}>
@@ -34,7 +39,30 @@ export default function ApplicationListPage({
           </div>
           <div className="govuk-grid-column-three-quarters">
             <HeadingOne content="Results" />
-            <SearchResults applications={applications} />
+            <>
+              {applications ? (
+                <>
+                  {applications.totalResults !== 0 ? (
+                    <>
+                      <ApplicationsTable
+                        applications={applications}
+                        showStatus={true}
+                        page={page}
+                        pageSize={pageSize}
+                      />
+
+                      <SimplePaginationSearch
+                        totalItems={applications.totalResults}
+                        page={applications.page}
+                        numberOfItemsPerPage={applications.pageSize}
+                      />
+                    </>
+                  ) : (
+                    <Paragraph>No applications to show</Paragraph>
+                  )}
+                </>
+              ) : null}
+            </>
           </div>
         </div>
       </Layout>
@@ -73,6 +101,6 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
   );
 
   return {
-    props: { user, applications },
+    props: { user, applications, page, pageSize },
   };
 };

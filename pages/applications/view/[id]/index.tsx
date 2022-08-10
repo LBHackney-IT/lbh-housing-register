@@ -61,9 +61,7 @@ export default function ApplicationPage({
   const tab = router.query.tab ?? 'overview';
 
   useEffect(() => {
-    router.push(`/applications/view/${data.id}?tab=${tab}`, undefined, {
-      shallow: true,
-    });
+    router.push(`/applications/view/${data.id}?tab=${tab}`);
   }, []);
 
   useEffect(() => {
@@ -71,9 +69,7 @@ export default function ApplicationPage({
   }, [router.query.tab]);
 
   const handleTabChange = (newValue: string) => {
-    router.push(`/applications/view/${data.id}?tab=${newValue}`, undefined, {
-      shallow: true,
-    });
+    router.push(`/applications/view/${data.id}?tab=${newValue}`);
   };
 
   // Can edit applications if:

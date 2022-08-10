@@ -35,7 +35,6 @@ export default function ApplicationListPage({
 
   useEffect(() => {
     router.push({
-      pathname: '/applications',
       query: { ...router.query, status: activeNavItem, page, pageSize },
     });
   }, [activeNavItem]);
@@ -89,6 +88,8 @@ export default function ApplicationListPage({
                 <ApplicationsTable
                   applications={applications}
                   showStatus={true}
+                  page={page}
+                  pageSize={pageSize}
                 />
 
                 <SimplePaginationSearch

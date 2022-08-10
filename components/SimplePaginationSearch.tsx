@@ -22,7 +22,6 @@ const SimplePaginationSearch = ({
       {page !== 1 && (
         <Link
           href={{
-            pathname: '/applications/search-results',
             query: { ...query, page: previousPage },
           }}
         >
@@ -41,7 +40,6 @@ const SimplePaginationSearch = ({
       {page !== numberOfPages && numberOfPages > 1 && (
         <Link
           href={{
-            pathname: '/applications/search-results',
             query: { ...query, page: nextPage },
           }}
         >

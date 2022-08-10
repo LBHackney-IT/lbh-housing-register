@@ -1,7 +1,8 @@
+import { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
-import ApplicationTable from '../../components/admin/application-table';
+import ApplicationsTable from '../../components/admin/ApplicationsTable';
+import SimplePaginationSearch from '../../components/SimplePaginationSearch';
 import SearchBox from '../../components/admin/SearchBox';
 import Sidebar from '../../components/admin/sidebar';
 import Button from '../../components/button';
@@ -9,7 +10,7 @@ import Details from '../../components/details';
 import { HeadingOne } from '../../components/content/headings';
 import Layout from '../../components/layout/staff-layout';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
-import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
+import { PaginatedSearchResultsResponse } from '../../domain/HousingApi';
 import { UserContext } from '../../lib/contexts/user-context';
 import {
   getApplications,
@@ -24,23 +25,26 @@ import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 
 interface PageProps {
   user?: HackneyGoogleUser;
-  applications: PaginatedApplicationListResponse | null;
+  applications: PaginatedSearchResultsResponse | null;
   applicationStatusCounts: { [key in ApplicationStatus]: number };
+  page: string;
+  pageSize: string;
 }
 
 export default function ViewAllApplicationsPage({
   user,
   applications,
   applicationStatusCounts,
+  page,
+  pageSize,
 }: PageProps): JSX.Element {
   const router = useRouter();
-  const activeItem = (router.query.status ?? '') as ApplicationStatus | '';
   const [selectedFilter, setSelectedFilter] = useState('');
 
   useEffect(() => {
     router.push({
       pathname: '/applications/view-register',
-      query: { status: selectedFilter },
+      query: { ...router.query, status: selectedFilter, page, pageSize },
     });
   }, [selectedFilter]);
 
@@ -126,15 +130,20 @@ export default function ViewAllApplicationsPage({
               </button>
             </Details>
 
-            <ApplicationTable
-              applications={applications}
-              initialPaginationToken={
-                router.query.paginationToken as string | undefined
-              }
-              setPaginationToken={setPaginationToken}
-              showStatus={true}
-              key={activeItem} // force remounting for a new initialPaginationToken
-            />
+            {applications ? (
+              <>
+                <ApplicationsTable
+                  applications={applications}
+                  showStatus={true}
+                />
+
+                <SimplePaginationSearch
+                  totalItems={applications.totalResults}
+                  page={applications.page}
+                  numberOfItemsPerPage={applications.pageSize}
+                />
+              </>
+            ) : null}
           </div>
         </div>
       </Layout>
@@ -156,19 +165,24 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
     };
   }
 
-  const { status = '', paginationToken } = context.query as {
+  const {
+    status = '',
+    page = '1',
+    pageSize = '10',
+  } = context.query as {
     status: string;
-    paginationToken: string;
+    page: string;
+    pageSize: string;
   };
 
   const applicationStatusCounts = await getApplicationStatusCounts();
 
   const applications =
     status === ''
-      ? await getApplications(paginationToken)
-      : await getApplicationsByStatus(status, paginationToken);
+      ? await getApplications(page, pageSize)
+      : await getApplicationsByStatus(status, page, pageSize);
 
   return {
-    props: { user, applications, applicationStatusCounts },
+    props: { user, applications, applicationStatusCounts, page, pageSize },
   };
 };

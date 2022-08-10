@@ -1,5 +1,4 @@
 import { GetServerSideProps } from 'next';
-import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import SearchResults from '../../components/admin/SearchResults';
 import SearchBox from '../../components/admin/SearchBox';
@@ -35,7 +34,7 @@ export default function ApplicationListPage({
           </div>
           <div className="govuk-grid-column-three-quarters">
             <HeadingOne content="Results" />
-            <SearchResults applications={applications} showStatus />
+            <SearchResults applications={applications} />
           </div>
         </div>
       </Layout>

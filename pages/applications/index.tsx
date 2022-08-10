@@ -1,7 +1,8 @@
+import { SyntheticEvent, useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import React, { SyntheticEvent, useState } from 'react';
-import ApplicationTable from '../../components/admin/application-table';
+import ApplicationsTable from '../../components/admin/ApplicationsTable';
+import SimplePaginationSearch from '../../components/SimplePaginationSearch';
 import {
   HorizontalNav,
   HorizontalNavItem,
@@ -11,42 +12,40 @@ import Sidebar from '../../components/admin/sidebar';
 import { HeadingOne } from '../../components/content/headings';
 import Layout from '../../components/layout/staff-layout';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
-import { PaginatedApplicationListResponse } from '../../domain/HousingApi';
+import { PaginatedSearchResultsResponse } from '../../domain/HousingApi';
 import { UserContext } from '../../lib/contexts/user-context';
 import { getApplicationsByStatusAndAssignedTo } from '../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 
 interface PageProps {
   user?: HackneyGoogleUser;
-  applications: PaginatedApplicationListResponse | null;
+  applications: PaginatedSearchResultsResponse | null;
+  page: string;
+  pageSize: string;
 }
 
 export default function ApplicationListPage({
   user,
   applications,
+  page,
+  pageSize,
 }: PageProps): JSX.Element {
   const router = useRouter();
-
   const [activeNavItem, setActiveNavItem] = useState('Submitted');
+
+  useEffect(() => {
+    router.push({
+      pathname: '/applications',
+      query: { ...router.query, status: activeNavItem, page, pageSize },
+    });
+  }, [activeNavItem]);
 
   const handleSelectNavItem = async (event: SyntheticEvent) => {
     event.preventDefault();
     const { name } = event.target as HTMLButtonElement;
-
-    router.push({
-      pathname: '/applications',
-      query: { status: name },
-    });
-
     setActiveNavItem(name);
   };
 
-  const setPaginationToken = (paginationToken: string | null) => {
-    router.push({
-      pathname: router.pathname,
-      query: { ...router.query, paginationToken },
-    });
-  };
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="My worktray">
@@ -85,15 +84,20 @@ export default function ApplicationListPage({
                 Pending
               </HorizontalNavItem>
             </HorizontalNav>
-            <ApplicationTable
-              applications={applications}
-              initialPaginationToken={
-                router.query.paginationToken as string | undefined
-              }
-              setPaginationToken={setPaginationToken}
-              showStatus={false}
-              key={activeNavItem} // force remounting for a new initialPaginationToken
-            />
+            {applications ? (
+              <>
+                <ApplicationsTable
+                  applications={applications}
+                  showStatus={true}
+                />
+
+                <SimplePaginationSearch
+                  totalItems={applications.totalResults}
+                  page={applications.page}
+                  numberOfItemsPerPage={applications.pageSize}
+                />
+              </>
+            ) : null}
           </div>
         </div>
       </Layout>
@@ -115,18 +119,24 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
     };
   }
 
-  const { status = 'Submitted', paginationToken } = context.query as {
+  const {
+    status = 'Submitted',
+    page = '1',
+    pageSize = '10',
+  } = context.query as {
     status: string;
-    paginationToken: string;
+    page: string;
+    pageSize: string;
   };
 
   const applications = await getApplicationsByStatusAndAssignedTo(
     status,
     user?.email ?? '',
-    paginationToken
+    page,
+    pageSize
   );
 
   return {
-    props: { user, applications },
+    props: { user, applications, page, pageSize },
   };
 };

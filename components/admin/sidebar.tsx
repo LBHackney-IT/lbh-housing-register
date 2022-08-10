@@ -5,7 +5,7 @@ export default function Sidebar(): JSX.Element {
   return (
     <ul className="lbh-list">
       <li>
-        <Link href={`/applications/`}>
+        <Link href={`/applications`}>
           <a className="lbh-link lbh-link--no-visited-state">My worktray</a>
         </Link>
       </li>

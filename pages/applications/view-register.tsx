@@ -1,4 +1,4 @@
-import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
+import { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import ApplicationsTable from '../../components/admin/ApplicationsTable';
@@ -27,22 +27,24 @@ interface PageProps {
   user?: HackneyGoogleUser;
   applications: PaginatedSearchResultsResponse | null;
   applicationStatusCounts: { [key in ApplicationStatus]: number };
+  page: string;
+  pageSize: string;
 }
 
 export default function ViewAllApplicationsPage({
   user,
   applications,
   applicationStatusCounts,
+  page,
+  pageSize,
 }: PageProps): JSX.Element {
-  // console.log('applications', applications);
-
   const router = useRouter();
   const [selectedFilter, setSelectedFilter] = useState('');
 
   useEffect(() => {
     router.push({
       pathname: '/applications/view-register',
-      query: { ...router.query, status: selectedFilter },
+      query: { ...router.query, status: selectedFilter, page, pageSize },
     });
   }, [selectedFilter]);
 
@@ -165,8 +167,8 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
 
   const {
     status = '',
-    page = '',
-    pageSize = '',
+    page = '1',
+    pageSize = '10',
   } = context.query as {
     status: string;
     page: string;
@@ -181,6 +183,6 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
       : await getApplicationsByStatus(status, page, pageSize);
 
   return {
-    props: { user, applications, applicationStatusCounts },
+    props: { user, applications, applicationStatusCounts, page, pageSize },
   };
 };

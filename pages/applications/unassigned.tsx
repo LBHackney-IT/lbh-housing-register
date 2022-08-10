@@ -1,4 +1,4 @@
-import React, { useState, SyntheticEvent } from 'react';
+import { useState, useEffect, SyntheticEvent } from 'react';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import ApplicationsTable from '../../components/admin/ApplicationsTable';
@@ -18,32 +18,35 @@ import {
   PaginatedSearchResultsResponse,
 } from '../../domain/HousingApi';
 import { UserContext } from '../../lib/contexts/user-context';
-import {
-  getApplications,
-  getApplicationsByStatusAndAssignedTo,
-} from '../../lib/gateways/applications-api';
+import { getApplicationsByStatusAndAssignedTo } from '../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 
 interface PageProps {
   user?: HackneyGoogleUser;
   applications: PaginatedSearchResultsResponse | null;
+  page: string;
+  pageSize: string;
 }
 
 export default function ApplicationListPage({
   user,
   applications,
+  page,
+  pageSize,
 }: PageProps): JSX.Element {
   const router = useRouter();
   const [activeNavItem, setActiveNavItem] = useState('Submitted');
 
+  useEffect(() => {
+    router.push({
+      pathname: '/applications/unassigned',
+      query: { ...router.query, status: activeNavItem, page, pageSize },
+    });
+  }, [activeNavItem]);
+
   const handleSelectNavItem = async (event: SyntheticEvent) => {
     event.preventDefault();
     const { name } = event.target as HTMLButtonElement;
-    router.push({
-      pathname: '/applications/unassigned',
-      query: { status: name },
-    });
-
     setActiveNavItem(name);
   };
 
@@ -113,18 +116,24 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
     };
   }
 
-  const { status = 'Submitted', paginationToken } = context.query as {
+  const {
+    status = 'Submitted',
+    page = '1',
+    pageSize = '10',
+  } = context.query as {
     status: string;
-    paginationToken: string;
+    page: string;
+    pageSize: string;
   };
 
   const applications = await getApplicationsByStatusAndAssignedTo(
     status,
     APPLICATION_UNNASIGNED,
-    paginationToken
+    page,
+    pageSize
   );
 
   return {
-    props: { user, applications },
+    props: { user, applications, page, pageSize },
   };
 };

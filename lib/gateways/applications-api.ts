@@ -66,14 +66,16 @@ export const getApplicationStatusCounts = async () => {
 export const getApplicationsByStatusAndAssignedTo = async (
   status: string,
   assignedTo: string,
-  paginationToken?: string
+  page: string,
+  pageSize: string
 ): Promise<PaginatedSearchResultsResponse | null> => {
   return (
     await housingAxios().get('applications/ListApplicationsByAssignedTo', {
       params: {
         status,
         assignedTo,
-        paginationToken,
+        Page: parseInt(page),
+        PageSize: parseInt(pageSize),
       },
     })
   ).data;

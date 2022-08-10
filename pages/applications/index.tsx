@@ -1,6 +1,6 @@
+import { SyntheticEvent, useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import React, { SyntheticEvent, useState } from 'react';
 import ApplicationsTable from '../../components/admin/ApplicationsTable';
 import SimplePaginationSearch from '../../components/SimplePaginationSearch';
 import {
@@ -20,34 +20,32 @@ import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 interface PageProps {
   user?: HackneyGoogleUser;
   applications: PaginatedSearchResultsResponse | null;
+  page: string;
+  pageSize: string;
 }
 
 export default function ApplicationListPage({
   user,
   applications,
+  page,
+  pageSize,
 }: PageProps): JSX.Element {
   const router = useRouter();
-
   const [activeNavItem, setActiveNavItem] = useState('Submitted');
+
+  useEffect(() => {
+    router.push({
+      pathname: '/applications',
+      query: { ...router.query, status: activeNavItem, page, pageSize },
+    });
+  }, [activeNavItem]);
 
   const handleSelectNavItem = async (event: SyntheticEvent) => {
     event.preventDefault();
     const { name } = event.target as HTMLButtonElement;
-
-    router.push({
-      pathname: '/applications',
-      query: { status: name },
-    });
-
     setActiveNavItem(name);
   };
 
-  const setPaginationToken = (paginationToken: string | null) => {
-    router.push({
-      pathname: router.pathname,
-      query: { ...router.query, paginationToken },
-    });
-  };
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="My worktray">
@@ -121,18 +119,24 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
     };
   }
 
-  const { status = 'Submitted', paginationToken } = context.query as {
+  const {
+    status = 'Submitted',
+    page = '1',
+    pageSize = '10',
+  } = context.query as {
     status: string;
-    paginationToken: string;
+    page: string;
+    pageSize: string;
   };
 
   const applications = await getApplicationsByStatusAndAssignedTo(
     status,
     user?.email ?? '',
-    paginationToken
+    page,
+    pageSize
   );
 
   return {
-    props: { user, applications },
+    props: { user, applications, page, pageSize },
   };
 };

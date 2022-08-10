@@ -44,35 +44,49 @@ export default function ApplicationsTable({
   const { query } = useRouter();
   return (
     <>
-      {applications && applications.results.length > 0 ? (
+      {applications ? (
         <>
-          <div className="c-flex" style={{ justifyContent: 'space-between' }}>
-            <p className="lbh-body-m">
+          <div
+            className="c-flex"
+            style={{ justifyContent: 'space-between', alignItems: 'center' }}
+          >
+            <p className="lbh-body-l">
               {applications.totalResults === 1 ? (
                 <>{applications.totalResults} application found</>
               ) : (
                 <>{applications.totalResults} applications found</>
               )}
             </p>
-            <div className="lbh-!-margin-top-0">
-              <p className="lbh-body-m lbh-!-margin-top-0">Results to show</p>
-              <p className="lbh-body-m lbh-!-margin-top-0">
-                <ResultsToShowLink query={query} numberOfResults={5} />
-                {' | '}
-                <ResultsToShowLink query={query} numberOfResults={10} />
-                {' | '}
-                <ResultsToShowLink query={query} numberOfResults={50} />
-                {' | '}
-                <ResultsToShowLink query={query} numberOfResults={100} />
-              </p>
-            </div>
+            {applications.totalResults > 10 ? (
+              <div className="lbh-!-margin-top-0">
+                <p className="lbh-body-m lbh-!-margin-top-0">Results to show</p>
+                <p className="lbh-body-m lbh-!-margin-top-0">
+                  <ResultsToShowLink query={query} numberOfResults={5} />
+                  {' | '}
+                  <ResultsToShowLink query={query} numberOfResults={10} />
+
+                  {applications.totalResults > 50 ? (
+                    <>
+                      {' | '}
+                      <ResultsToShowLink query={query} numberOfResults={50} />
+                    </>
+                  ) : null}
+                  {applications.totalResults > 100 ? (
+                    <>
+                      {' | '}
+                      <ResultsToShowLink query={query} numberOfResults={100} />
+                    </>
+                  ) : null}
+                </p>
+              </div>
+            ) : null}
           </div>
           <table className="govuk-table lbh-table">
-            {caption && (
+            {caption ? (
               <caption className="govuk-table__caption lbh-heading-h3 lbh-table__caption">
                 {caption}
               </caption>
-            )}
+            ) : null}
             <thead className="govuk-table__head">
               <tr className="govuk-table__row">
                 <th scope="col" className="govuk-table__header">

@@ -210,7 +210,7 @@ export const downloadInternalReport = async (
   const url = `reporting/export`;
   const data = await authenticatedHousingAxios(req).post(
     url,
-    JSON.stringify(reportDetails),
+    reportDetails,
     {
       headers: {
         'Content-Type': 'application/json',

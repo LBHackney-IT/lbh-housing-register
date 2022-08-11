@@ -84,43 +84,45 @@ export default function ViewAllApplicationsPage({
                 + Add new case
               </Button>
             </div>
-            <Details summary="Filter by status">
-              <div
-                className="govuk-radios govuk-radios--inline govuk-radios--small lbh-radios"
-                role="group"
-                aria-labelledby="radio-group"
-              >
-                {Object.entries(ApplicationStatus).map(([key, value]) => (
-                  <div
-                    className="govuk-radios__item govuk-radios__item--fixed-width"
-                    key={key}
-                  >
-                    <input
-                      className="govuk-radios__input"
-                      value={value}
-                      id={value}
-                      name="filters"
-                      type="radio"
-                      checked={selectedFilter === value}
-                      onChange={handleFilterChange}
-                    />
-                    <label
-                      className="govuk-radios__label lbh-!-margin-top-0"
-                      htmlFor={value}
+            <div style={{ marginTop: '4.9em' }}>
+              <Details summary="Filter by status">
+                <div
+                  className="govuk-radios govuk-radios--inline govuk-radios--small lbh-radios"
+                  role="group"
+                  aria-labelledby="radio-group"
+                >
+                  {Object.entries(ApplicationStatus).map(([key, value]) => (
+                    <div
+                      className="govuk-radios__item govuk-radios__item--fixed-width"
+                      key={key}
                     >
-                      {lookupStatus(value)} (
-                      {applicationStatusCounts[value] ?? 0})
-                    </label>
-                  </div>
-                ))}
-              </div>
-              <button
-                onClick={handleRemoveFilters}
-                className="lbh-link lbh-link--no-visited-state lbh-!-margin-top-1"
-              >
-                Clear all filters
-              </button>
-            </Details>
+                      <input
+                        className="govuk-radios__input"
+                        value={value}
+                        id={value}
+                        name="filters"
+                        type="radio"
+                        checked={selectedFilter === value}
+                        onChange={handleFilterChange}
+                      />
+                      <label
+                        className="govuk-radios__label lbh-!-margin-top-0"
+                        htmlFor={value}
+                      >
+                        {lookupStatus(value)} (
+                        {applicationStatusCounts[value] ?? 0})
+                      </label>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  onClick={handleRemoveFilters}
+                  className="lbh-link lbh-link--no-visited-state lbh-!-margin-top-1"
+                >
+                  Clear all filters
+                </button>
+              </Details>
+            </div>
 
             {applications ? (
               <>

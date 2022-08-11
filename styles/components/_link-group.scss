@@ -31,3 +31,34 @@
     }
   }
 }
+
+.lbh-link-group-vertical {
+  > ul {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+  }
+
+  .lbh-link-group__item {
+    margin: 0;
+
+    .lbh-link {
+      border-left: 5px solid #ffffff;
+      padding: 0;
+      text-decoration: none;
+      line-height: 50px;
+      padding: 10px;
+
+      &.active {
+        color: #0b0c0c;
+        border-left: 5px solid #025ea6;
+      }
+
+      &:focus,
+      &:hover {
+        box-shadow: none;
+        border-left: 5px solid #025ea6;
+      }
+    }
+  }
+}

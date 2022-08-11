@@ -14,6 +14,7 @@ import {
 import router from 'next/router';
 import NovaletReports from '../../../components/admin/NovaletReports';
 import InternalReports from '../../../components/admin/InternalReports';
+import SearchBox from '../../../components/admin/SearchBox';
 
 export interface Report {
   fileName: string;
@@ -53,6 +54,12 @@ export default function Reports({
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="Reports">
+        <SearchBox
+          title="Housing Register"
+          buttonTitle="Search"
+          watermark="Search all applications (name, reference, bidding number)"
+        />
+
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-one-quarter">
             <Sidebar />

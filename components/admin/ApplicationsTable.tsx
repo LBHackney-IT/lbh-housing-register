@@ -51,7 +51,7 @@ export default function ApplicationsTable({
 
   return (
     <>
-      {applications ? (
+      {applications && applications.totalResults > 0 ? (
         <>
           <div className="c-flex" style={{ justifyContent: 'space-between' }}>
             <p className="lbh-body-m lbh-body-bold">

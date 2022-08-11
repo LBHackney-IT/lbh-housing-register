@@ -3,6 +3,7 @@ import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { downloadInternalReport } from '../../../../lib/gateways/applications-api';
 import { getAuth, getSession } from '../../../../lib/utils/googleAuth';
 import { withSentry } from '@sentry/nextjs';
+import { InternalReportRequest } from '../../../../domain/HousingApi';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -23,26 +24,21 @@ const endpoint: NextApiHandler = async (
       }
 
       try {
-        var requestBodyAsString = '';
-
-        if (Buffer.isBuffer(req.body)) {
-          //For some reason, the body has been interpreted by NextJS as a buffer
-          requestBodyAsString = req.body.toString();
-        }
-
-        const reportData = {
+        var reportData: InternalReportRequest = {
           ReportType: parseInt(req.body.ReportType),
           StartDate: req.body.StartDate,
           EndDate: req.body.EndDate,
         };
-        console.log('***** REPORT DATA: *****', reportData);
-        console.log('***** REQUEST BODY: *****', req.body);
-        console.log(
-          '***** REQUEST ContentType: *****',
-          req.headers['content-type']
-        );
-        console.log('***** REQUEST Accept: *****', req.headers.accept);
-        console.log('***** REQUEST Buffer: *****', requestBodyAsString);
+
+        if (Buffer.isBuffer(req.body)) {
+          //For some reason, the body has been interpreted by NextJS as a buffer once its behind API Gateway
+          var requestBodyAsString = req.body.toString();
+          var formKeys = requestBodyAsString.split('&');
+          formKeys.forEach((formKeyValuePair) => {
+            var keyvaluepair = formKeyValuePair.split('=');
+            reportData[keyvaluepair[0]] = keyvaluepair[1];
+          });
+        }
 
         const file = await downloadInternalReport(reportData, req);
 

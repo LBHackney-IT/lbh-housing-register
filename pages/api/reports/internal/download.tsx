@@ -23,6 +23,13 @@ const endpoint: NextApiHandler = async (
       }
 
       try {
+        var requestBodyAsString = '';
+
+        if (Buffer.isBuffer(req.body)) {
+          //For some reason, the body has been interpreted by NextJS as a buffer
+          requestBodyAsString = req.body.toString();
+        }
+
         const reportData = {
           ReportType: parseInt(req.body.ReportType),
           StartDate: req.body.StartDate,
@@ -30,6 +37,12 @@ const endpoint: NextApiHandler = async (
         };
         console.log('***** REPORT DATA: *****', reportData);
         console.log('***** REQUEST BODY: *****', req.body);
+        console.log(
+          '***** REQUEST ContentType: *****',
+          req.headers['content-type']
+        );
+        console.log('***** REQUEST Accept: *****', req.headers.accept);
+        console.log('***** REQUEST Buffer: *****', requestBodyAsString);
 
         const file = await downloadInternalReport(reportData, req);
 

@@ -37,7 +37,11 @@ const endpoint: NextApiHandler = async (
           var formKeys = requestBodyAsString.split('&');
           formKeys.forEach((formKeyValuePair) => {
             var keyvaluepair = formKeyValuePair.split('=');
-            reportData[keyvaluepair[0]] = keyvaluepair[1];
+            if (keyvaluepair[0].toLowerCase() == 'reporttype') {
+              reportData.ReportType = parseInt(keyvaluepair[1]);
+            } else {
+              reportData[keyvaluepair[0]] = keyvaluepair[1];
+            }
           });
         }
 

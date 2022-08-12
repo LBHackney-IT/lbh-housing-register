@@ -4,6 +4,7 @@ import { downloadInternalReport } from '../../../../lib/gateways/applications-ap
 import { getAuth, getSession } from '../../../../lib/utils/googleAuth';
 import { withSentry } from '@sentry/nextjs';
 import { InternalReportRequest } from '../../../../domain/HousingApi';
+import { AxiosResponse } from 'axios';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -22,7 +23,7 @@ const endpoint: NextApiHandler = async (
         res.status(StatusCodes.FORBIDDEN).json({ message: 'access denied' });
         return;
       }
-
+      var fileResponse = {} as AxiosResponse<any>;
       try {
         var reportData: InternalReportRequest = {
           ReportType: parseInt(req.body.ReportType),
@@ -40,16 +41,19 @@ const endpoint: NextApiHandler = async (
           });
         }
 
-        const file = await downloadInternalReport(reportData, req);
+        fileResponse = (await downloadInternalReport(
+          reportData,
+          req
+        )) as AxiosResponse<any>;
 
-        if (file) {
-          res.status(file.status);
-          res.setHeader('Content-Type', file.headers['content-type']);
+        if (fileResponse) {
+          res.status(fileResponse.status);
+          res.setHeader('Content-Type', fileResponse.headers['content-type']);
           res.setHeader(
             'Content-Disposition',
-            file.headers['content-disposition']
+            fileResponse.headers['content-disposition']
           );
-          res.send(file.data);
+          res.send(fileResponse.data);
         } else {
           res.status(404);
           res.send({
@@ -59,7 +63,8 @@ const endpoint: NextApiHandler = async (
       } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
           message: 'Request error: Unable to download report: ',
-          error,
+          response: fileResponse,
+          error: error,
         });
       }
       break;

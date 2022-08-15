@@ -624,4 +624,5 @@ export interface InternalReportRequest {
   StartDate: string;
   EndDate: string;
   ReportType: number;
+  [key: string]: any;
 }

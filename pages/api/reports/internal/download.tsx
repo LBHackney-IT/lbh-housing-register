@@ -3,6 +3,8 @@ import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { downloadInternalReport } from '../../../../lib/gateways/applications-api';
 import { getAuth, getSession } from '../../../../lib/utils/googleAuth';
 import { withSentry } from '@sentry/nextjs';
+import { InternalReportRequest } from '../../../../domain/HousingApi';
+import { AxiosResponse } from 'axios';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -21,26 +23,41 @@ const endpoint: NextApiHandler = async (
         res.status(StatusCodes.FORBIDDEN).json({ message: 'access denied' });
         return;
       }
-
+      var fileResponse = {} as AxiosResponse<any>;
       try {
-        const reportData = {
+        var reportData: InternalReportRequest = {
           ReportType: parseInt(req.body.ReportType),
           StartDate: req.body.StartDate,
           EndDate: req.body.EndDate,
         };
-        console.log('***** REPORT DATA: *****', reportData);
-        console.log('***** REQUEST BODY: *****', req.body);
 
-        const file = await downloadInternalReport(reportData, req);
+        if (Buffer.isBuffer(req.body)) {
+          //For some reason, the body has been interpreted by NextJS as a buffer once its behind API Gateway
+          var requestBodyAsString = req.body.toString();
+          var formKeys = requestBodyAsString.split('&');
+          formKeys.forEach((formKeyValuePair) => {
+            var keyvaluepair = formKeyValuePair.split('=');
+            if (keyvaluepair[0].toLowerCase() == 'reporttype') {
+              reportData.ReportType = parseInt(keyvaluepair[1]);
+            } else {
+              reportData[keyvaluepair[0]] = keyvaluepair[1];
+            }
+          });
+        }
 
-        if (file) {
-          res.status(file.status);
-          res.setHeader('Content-Type', file.headers['content-type']);
+        fileResponse = (await downloadInternalReport(
+          reportData,
+          req
+        )) as AxiosResponse<any>;
+
+        if (fileResponse) {
+          res.status(fileResponse.status);
+          res.setHeader('Content-Type', fileResponse.headers['content-type']);
           res.setHeader(
             'Content-Disposition',
-            file.headers['content-disposition']
+            fileResponse.headers['content-disposition']
           );
-          res.send(file.data);
+          res.send(fileResponse.data);
         } else {
           res.status(404);
           res.send({
@@ -50,7 +67,8 @@ const endpoint: NextApiHandler = async (
       } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
           message: 'Request error: Unable to download report: ',
-          error,
+          response: fileResponse,
+          error: error,
         });
       }
       break;

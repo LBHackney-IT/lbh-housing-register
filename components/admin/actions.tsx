@@ -243,15 +243,15 @@ export default function Actions({ data }: PageProps): JSX.Element {
                             },
                           ]}
                         />
-                        {values.biddingNumberType === 'manual' && ( 
-                       <InsetText>
-                        <Input
-                          name="biddingNumber"
-                          label="Bidding number (existing)"
-                          className="govuk-input--width-10"
-                        />
-                        </InsetText>
-                         )} 
+                        {values.biddingNumberType === 'manual' && (
+                          <InsetText>
+                            <Input
+                              name="biddingNumber"
+                              label="Bidding number (existing)"
+                              className="govuk-input--width-10"
+                            />
+                          </InsetText>
+                        )}
                       </>
                     )}
                     <Button disabled={isSubmitting} type="submit">

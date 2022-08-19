@@ -1,6 +1,6 @@
 import router from 'next/router';
 import * as Yup from 'yup';
-import { Formik, Form, FormikValues } from 'formik';
+import { Formik, Form, FormikValues, FormikProps } from 'formik';
 
 import { Application } from '../../domain/HousingApi';
 import { updateApplication } from '../../lib/gateways/internal-api';
@@ -24,6 +24,7 @@ import List, { ListItem } from '../content/list';
 import ErrorSummary from '../errors/error-summary';
 import Loading from '../loading';
 import Announcement from '../announcement';
+import { useRef } from 'react';
 
 interface PageProps {
   data: Application;
@@ -34,6 +35,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
   const wasDisqualified = isEligible[0] === false;
   const disqualificationReasons = wasDisqualified ? isEligible[1] : [];
   const firstReason = disqualificationReasons[0];
+  const formRef = useRef<FormikProps<FormikValues>>(null);
 
   const schema = Yup.object({
     status: Yup.string()
@@ -91,8 +93,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
     bedroomNeed:
       data.assessment?.bedroomNeed ?? data.calculatedBedroomNeed! ?? '',
     band: data.assessment?.band ?? '',
-    // biddingNumberType: data.assessment?.biddingNumber ? 'manual' : 'generate',
-    biddingNumberType: 'manual',
+    biddingNumberType: data.assessment?.biddingNumber ? 'manual' : 'generate',
     biddingNumber: data.assessment?.biddingNumber ?? '',
   };
 
@@ -136,9 +137,16 @@ export default function Actions({ data }: PageProps): JSX.Element {
         values.biddingNumberType === 'generate';
     }
 
-    updateApplication(request).then(() => {
-      router.reload();
-    });
+    updateApplication(request)
+      .then(() => {
+        router.reload();
+      })
+      .catch((err) => {
+        alert(err);
+        if (formRef.current) {
+          formRef.current.setSubmitting(false);
+        }
+      });
   }
 
   return (
@@ -169,6 +177,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
           initialValues={initialValues}
           validationSchema={schema}
           onSubmit={onSubmit}
+          innerRef={formRef}
         >
           {({ touched, isSubmitting, values, errors, isValid }) => {
             const isTouched = Object.keys(touched).length !== 0;
@@ -230,9 +239,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
                           ]}
                         />
 
-                        {/* This is currently commented out as generating a
-                        bidding number was not working correctly. */}
-                        {/* <Radios
+                        <Radios
                           label="Bidding number"
                           name="biddingNumberType"
                           options={[
@@ -245,16 +252,16 @@ export default function Actions({ data }: PageProps): JSX.Element {
                               value: 'manual',
                             },
                           ]}
-                        /> */}
-                        {/* {values.biddingNumberType === 'manual' && ( */}
-                        {/* <InsetText> */}
-                        <Input
-                          name="biddingNumber"
-                          label="Bidding number (existing)"
-                          className="govuk-input--width-10"
                         />
-                        {/* </InsetText> */}
-                        {/* )} */}
+                        {values.biddingNumberType === 'manual' && (
+                          <InsetText>
+                            <Input
+                              name="biddingNumber"
+                              label="Bidding number (existing)"
+                              className="govuk-input--width-10"
+                            />
+                          </InsetText>
+                        )}
                       </>
                     )}
                     <Button disabled={isSubmitting} type="submit">

@@ -14,8 +14,7 @@ export const updateApplication = async (application: Application) => {
     method: 'PATCH',
     body: JSON.stringify(application),
   });
-  if(res.status == 400)
-  {
+  if (res.status == 400) {
     throw (await res.json()).message;
   }
   return (await res.json()) as Application;

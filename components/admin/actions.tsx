@@ -122,8 +122,6 @@ export default function Actions({ data }: PageProps): JSX.Element {
       },
     };
 
-    
-
     if (values.applicationDate && request.assessment) {
       request.assessment.effectiveDate = values.applicationDate;
     }
@@ -139,16 +137,16 @@ export default function Actions({ data }: PageProps): JSX.Element {
         values.biddingNumberType === 'generate';
     }
 
-    updateApplication(request).then(() => {
-      router.reload();
-    }).catch((err)=>
-    {
-      alert(err);
-      if(formRef.current)
-      {
-        formRef.current.setSubmitting(false);
-      }
-    });
+    updateApplication(request)
+      .then(() => {
+        router.reload();
+      })
+      .catch((err) => {
+        alert(err);
+        if (formRef.current) {
+          formRef.current.setSubmitting(false);
+        }
+      });
   }
 
   return (

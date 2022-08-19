@@ -91,8 +91,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
     bedroomNeed:
       data.assessment?.bedroomNeed ?? data.calculatedBedroomNeed! ?? '',
     band: data.assessment?.band ?? '',
-    // biddingNumberType: data.assessment?.biddingNumber ? 'manual' : 'generate',
-    biddingNumberType: 'manual',
+    biddingNumberType: data.assessment?.biddingNumber ? 'manual' : 'generate',
     biddingNumber: data.assessment?.biddingNumber ?? '',
   };
 
@@ -230,9 +229,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
                           ]}
                         />
 
-                        {/* This is currently commented out as generating a
-                        bidding number was not working correctly. */}
-                        {/* <Radios
+                        <Radios
                           label="Bidding number"
                           name="biddingNumberType"
                           options={[
@@ -245,16 +242,16 @@ export default function Actions({ data }: PageProps): JSX.Element {
                               value: 'manual',
                             },
                           ]}
-                        /> */}
-                        {/* {values.biddingNumberType === 'manual' && ( */}
-                        {/* <InsetText> */}
-                        <Input
-                          name="biddingNumber"
-                          label="Bidding number (existing)"
-                          className="govuk-input--width-10"
                         />
-                        {/* </InsetText> */}
-                        {/* )} */}
+                        {values.biddingNumberType === 'manual' && (
+                          <InsetText>
+                            <Input
+                              name="biddingNumber"
+                              label="Bidding number (existing)"
+                              className="govuk-input--width-10"
+                            />
+                          </InsetText>
+                        )}
                       </>
                     )}
                     <Button disabled={isSubmitting} type="submit">

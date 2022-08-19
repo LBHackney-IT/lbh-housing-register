@@ -1,6 +1,6 @@
 import router from 'next/router';
 import * as Yup from 'yup';
-import { Formik, Form, FormikValues } from 'formik';
+import { Formik, Form, FormikValues, FormikProps } from 'formik';
 
 import { Application } from '../../domain/HousingApi';
 import { updateApplication } from '../../lib/gateways/internal-api';
@@ -24,6 +24,7 @@ import List, { ListItem } from '../content/list';
 import ErrorSummary from '../errors/error-summary';
 import Loading from '../loading';
 import Announcement from '../announcement';
+import { useRef } from 'react';
 
 interface PageProps {
   data: Application;
@@ -34,6 +35,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
   const wasDisqualified = isEligible[0] === false;
   const disqualificationReasons = wasDisqualified ? isEligible[1] : [];
   const firstReason = disqualificationReasons[0];
+  const formRef = useRef<FormikProps<FormikValues>>(null);
 
   const schema = Yup.object({
     status: Yup.string()
@@ -120,6 +122,8 @@ export default function Actions({ data }: PageProps): JSX.Element {
       },
     };
 
+    
+
     if (values.applicationDate && request.assessment) {
       request.assessment.effectiveDate = values.applicationDate;
     }
@@ -137,6 +141,13 @@ export default function Actions({ data }: PageProps): JSX.Element {
 
     updateApplication(request).then(() => {
       router.reload();
+    }).catch((err)=>
+    {
+      alert(err);
+      if(formRef.current)
+      {
+        formRef.current.setSubmitting(false);
+      }
     });
   }
 
@@ -168,6 +179,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
           initialValues={initialValues}
           validationSchema={schema}
           onSubmit={onSubmit}
+          innerRef={formRef}
         >
           {({ touched, isSubmitting, values, errors, isValid }) => {
             const isTouched = Object.keys(touched).length !== 0;

@@ -146,7 +146,6 @@ export default function Actions({ data }: PageProps): JSX.Element {
         router.reload();
       })
       .catch((err) => {
-        // alert(err);
         setReservedBiddingNumberError(err);
         if (formRef.current) {
           formRef.current.setSubmitting(false);

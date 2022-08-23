@@ -1,4 +1,5 @@
 import router from 'next/router';
+import { useState } from 'react';
 import * as Yup from 'yup';
 import { Formik, Form, FormikValues, FormikProps } from 'formik';
 
@@ -36,6 +37,9 @@ export default function Actions({ data }: PageProps): JSX.Element {
   const disqualificationReasons = wasDisqualified ? isEligible[1] : [];
   const firstReason = disqualificationReasons[0];
   const formRef = useRef<FormikProps<FormikValues>>(null);
+
+  const [reservedBiddingNumberError, setReservedBiddingNumberError] =
+    useState(null);
 
   const schema = Yup.object({
     status: Yup.string()
@@ -142,7 +146,8 @@ export default function Actions({ data }: PageProps): JSX.Element {
         router.reload();
       })
       .catch((err) => {
-        alert(err);
+        // alert(err);
+        setReservedBiddingNumberError(err);
         if (formRef.current) {
           formRef.current.setSubmitting(false);
         }
@@ -183,7 +188,8 @@ export default function Actions({ data }: PageProps): JSX.Element {
             const isTouched = Object.keys(touched).length !== 0;
             return (
               <>
-                {!isValid && isTouched && !isSubmitting ? (
+                {(!isValid && isTouched && !isSubmitting) ||
+                reservedBiddingNumberError ? (
                   <ErrorSummary title="There is a problem">
                     <ul className="govuk-list govuk-error-summary__list">
                       {Object.entries(errors).map(([inputName, errorTitle]) => (
@@ -191,6 +197,13 @@ export default function Actions({ data }: PageProps): JSX.Element {
                           <a href={`#${inputName}`}>{errorTitle}</a>
                         </li>
                       ))}
+                      <li>
+                        {reservedBiddingNumberError ? (
+                          <a href="#biddingNumber">
+                            {reservedBiddingNumberError}
+                          </a>
+                        ) : null}
+                      </li>
                     </ul>
                   </ErrorSummary>
                 ) : null}

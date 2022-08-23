@@ -196,13 +196,13 @@ export default function Actions({ data }: PageProps): JSX.Element {
                           <a href={`#${inputName}`}>{errorTitle}</a>
                         </li>
                       ))}
-                      <li>
-                        {reservedBiddingNumberError ? (
+                      {reservedBiddingNumberError ? (
+                        <li>
                           <a href="#biddingNumber">
                             {reservedBiddingNumberError}
                           </a>
-                        ) : null}
-                      </li>
+                        </li>
+                      ) : null}
                     </ul>
                   </ErrorSummary>
                 ) : null}

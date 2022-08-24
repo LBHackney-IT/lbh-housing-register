@@ -181,6 +181,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
           initialValues={initialValues}
           validationSchema={schema}
           onSubmit={onSubmit}
+          innerRef={formRef}
         >
           {({ touched, isSubmitting, values, errors, isValid }) => {
             const isTouched = Object.keys(touched).length !== 0;

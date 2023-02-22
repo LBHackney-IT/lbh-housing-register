@@ -121,8 +121,8 @@ export default function ApplicationPersonPage({
                         ' ' +
                         applicant?.person?.surname +
                         '&groupId=' +
-                        data.id +
-                        '&name' +
+                        applicant?.person?.id +
+                        '&name=' +
                         applicant?.person?.firstName +
                         ' ' +
                         applicant?.person?.surname +

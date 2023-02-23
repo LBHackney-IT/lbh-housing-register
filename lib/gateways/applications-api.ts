@@ -117,8 +117,8 @@ export const getApplication = async (
   const url = `applications/${id}`;
   let tempData = await housingAxios().get(url);
   console.log('This is the fetched object');
-  console.log(tempData);
-  console.log(JSON.stringify(tempData));
+  console.log(tempData.data);
+  console.log(JSON.stringify(tempData.data));
   const { data } = tempData;
   return data;
 };

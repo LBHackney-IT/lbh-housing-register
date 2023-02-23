@@ -331,7 +331,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 
   try {
-    console.log('DEBUG DEBUG ' + id + ' DEBUG HI');
+    console.log('Entering debug');
+    console.log(id);
+    console.log(JSON.stringify(context.params));
+    console.log(JSON.stringify(user));
     const data = await getApplication(id);
     if (!data) {
       return {
@@ -339,11 +342,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       };
     }
 
-    console.log('DEBUG DEBUG ' + id + ' DEBUG BYE');
+    console.log('Debug after fetching application');
 
     const history = await getApplicationHistory(id, context.req);
 
-    console.log('DEBUG DEBUG ' + id + ' DEBUG FINAL');
+    console.log('Debug after getting application history');
 
     return { props: { user, data, history } };
   } catch (e) {

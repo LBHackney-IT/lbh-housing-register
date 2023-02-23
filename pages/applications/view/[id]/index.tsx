@@ -326,33 +326,23 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const { id } = context.params as {
-    id: string;
-  };
-
   try {
-    console.log('Starting to debug');
-    console.log(id);
+    const { id } = context.params as {
+      id: string;
+    };
+
     const data = await getApplication(id);
-    console.log('Data is', data);
     if (!data) {
-      console.log('Data is falsey, give 404');
       return {
         notFound: true,
       };
     }
 
-    console.log('Moving on to application history');
-
     const history = await getApplicationHistory(id, context.req);
-
-    console.log('Passed application history');
 
     return { props: { user, data, history } };
   } catch (e) {
-    console.log('Error happened');
-    console.log(e.message);
-    console.log(JSON.stringify(e));
+    console.error(e.message);
     return { props: {} };
   }
 };

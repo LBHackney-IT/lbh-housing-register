@@ -28,7 +28,7 @@ export default function ApplicationHomePage(): JSX.Element {
 
         <HeadingTwo content="About this form" />
         <Paragraph>
-          This form is to apply to join the Hackney Housing register. If you
+          This form is to apply to join the Hackney housing register. If you
           successfully join the register, you will be on our waiting list for
           social housing.
         </Paragraph>

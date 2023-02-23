@@ -237,7 +237,7 @@ export const getApplicationHistory = async (
   const url = `activityhistory?targetId=${id}&pageSize=100`;
   try {
     let tempData = await activityAxios(req).get(url);
-    console.log(JSON.stringify(tempData));
+    console.log(JSON.stringify(tempData.data));
     const { data } = tempData;
     return data;
   } catch (ex) {

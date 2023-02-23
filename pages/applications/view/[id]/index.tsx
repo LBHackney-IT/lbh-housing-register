@@ -330,14 +330,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     id: string;
   };
 
-  const data = await getApplication(id);
-  if (!data) {
-    return {
-      notFound: true,
-    };
+  try {
+    const data = await getApplication(id);
+    if (!data) {
+      return {
+        notFound: true,
+      };
+    }
+
+    const history = await getApplicationHistory(id, context.req);
+
+    return { props: { user, data, history } };
+  } catch (e) {
+    console.log(JSON.stringify(e));
+    return { props: {} };
   }
-
-  const history = await getApplicationHistory(id, context.req);
-
-  return { props: { user, data, history } };
 };

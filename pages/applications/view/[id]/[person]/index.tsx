@@ -1,7 +1,10 @@
 import { GetServerSideProps } from 'next';
 import React, { useState, SyntheticEvent } from 'react';
 import Layout from '../../../../../components/layout/staff-layout';
-import { Application } from '../../../../../domain/HousingApi';
+import {
+  Application,
+  ContactInformation,
+} from '../../../../../domain/HousingApi';
 import { UserContext } from '../../../../../lib/contexts/user-context';
 import { getApplication } from '../../../../../lib/gateways/applications-api';
 import {
@@ -110,7 +113,26 @@ export default function ApplicationPersonPage({
                     className="govuk-grid-column-one-third"
                     style={{ textAlign: 'right' }}
                   >
-                    <a href={evidenceLink} target="_blank">
+                    <a
+                      href={
+                        evidenceLink +
+                        '/deeplink?searchTerm=' +
+                        applicant?.person?.firstName +
+                        ' ' +
+                        applicant?.person?.surname +
+                        '&groupId=' +
+                        applicant?.person?.id +
+                        '&name=' +
+                        applicant?.person?.firstName +
+                        ' ' +
+                        applicant?.person?.surname +
+                        '&phone=' +
+                        applicant?.contactInformation?.phoneNumber +
+                        '&email=' +
+                        applicant?.contactInformation?.emailAddress
+                      }
+                      target="_blank"
+                    >
                       <Button>View Documents</Button>
                     </a>
                   </div>
@@ -145,7 +167,7 @@ export default function ApplicationPersonPage({
                   >
                     Health
                   </HorizontalNavItem>
-                  {/* 
+                  {/*
                   <HorizontalNavItem
                     handleSelectNavItem={handleSelectNavItem}
                     itemName="checklist"

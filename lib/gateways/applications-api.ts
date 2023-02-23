@@ -115,7 +115,9 @@ export const getApplication = async (
   id: string
 ): Promise<Application | null> => {
   const url = `applications/${id}`;
-  const { data } = await housingAxios().get(url);
+  let tempData = await housingAxios().get(url);
+  console.log(JSON.stringify(tempData));
+  const { data } = tempData;
   return data;
 };
 
@@ -232,7 +234,9 @@ export const getApplicationHistory = async (
 ): Promise<ActivityHistoryPagedResult | null> => {
   const url = `activityhistory?targetId=${id}&pageSize=100`;
   try {
-    const { data } = await activityAxios(req).get(url);
+    let tempData = await activityAxios(req).get(url);
+    console.log(JSON.stringify(tempData));
+    const { data } = tempData;
     return data;
   } catch (ex) {
     // TODO API shoudln't make us do this

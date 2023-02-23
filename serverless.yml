@@ -35,7 +35,7 @@ functions:
     environment:
       ACTIVITY_HISTORY_API: ${ssm:/housing-register/${self:provider.stage}/activity-history-api-url}
       APP_URL: ${ssm:/housing-register/${self:provider.stage}/app-url}
-      AUTHORISED_ADMIN_GROUP: ${ssm:/housing-register/${self:provider.stage}/authorised_admin_group}
+      AUTHORISED_ADMIN_GROUP: 'Housing Register'
       AUTHORISED_MANAGER_GROUP: ${ssm:/housing-register/${self:provider.stage}/authorised_manager_group}
       AUTHORISED_OFFICER_GROUP: ${ssm:/housing-register/${self:provider.stage}/authorised_officer_group}
       HACKNEY_JWT_SECRET: ${ssm:/housing-register/${self:provider.stage}/hackney-jwt-secret}

@@ -351,7 +351,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return { props: { user, data, history } };
   } catch (e) {
     console.log('Error happened');
-    console.log(e.message());
+    console.log(e.message);
     console.log(JSON.stringify(e));
     return { props: {} };
   }

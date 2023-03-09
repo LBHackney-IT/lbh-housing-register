@@ -117,19 +117,19 @@ export default function ApplicationPersonPage({
                       href={
                         evidenceLink +
                         '/deeplink?searchTerm=' +
-                        applicant?.person?.firstName ?? "" +
+                        encodeURIComponent(applicant?.person?.firstName ?? "") +
                         ' ' +
-                        applicant?.person?.surname ?? "" +
+                        encodeURIComponent(applicant?.person?.surname ?? "") +
                         '&groupId=' +
-                        applicant?.person?.id ?? "" +
+                        encodeURIComponent(applicant?.person?.id ?? "") +
                         '&name=' +
-                        applicant?.person?.firstName ?? "" +
+                        encodeURIComponent(applicant?.person?.firstName ?? "") +
                         ' ' +
-                        applicant?.person?.surname ?? "" +
+                        encodeURIComponent(applicant?.person?.surname ?? "") +
                         '&phone=' +
-                        applicant?.contactInformation?.phoneNumber ?? "" +
+                        encodeURIComponent(applicant?.contactInformation?.phoneNumber ?? "") +
                         '&email=' +
-                        applicant?.contactInformation?.emailAddress ?? ""
+                        encodeURIComponent(applicant?.contactInformation?.emailAddress ?? "")
                       }
                       target="_blank"
                     >

@@ -82,6 +82,14 @@ export default function ApplicationPersonPage({
   const employment = employmentCheckboxList(applicant);
   const incomeAndSavings = incomeAndSavingsCheckboxList(applicant);
 
+  let cleanUpParams = function (string: string) {
+    return encodeURIComponent(string.trim());
+  };
+  let fullName =
+    cleanUpParams(applicant?.person?.firstName ?? '') +
+    '%20' +
+    cleanUpParams(applicant?.person?.surname ?? '');
+
   return (
     <>
       {data.id ? (
@@ -117,21 +125,17 @@ export default function ApplicationPersonPage({
                       href={
                         evidenceLink +
                         '/deeplink?searchTerm=' +
-                        encodeURIComponent(applicant?.person?.firstName ?? '') +
-                        ' ' +
-                        encodeURIComponent(applicant?.person?.surname ?? '') +
+                        fullName +
                         '&groupId=' +
-                        encodeURIComponent(applicant?.person?.id ?? '') +
+                        cleanUpParams(applicant?.person?.id ?? '') +
                         '&name=' +
-                        encodeURIComponent(applicant?.person?.firstName ?? '') +
-                        ' ' +
-                        encodeURIComponent(applicant?.person?.surname ?? '') +
+                        fullName +
                         '&phone=' +
-                        encodeURIComponent(
+                        cleanUpParams(
                           applicant?.contactInformation?.phoneNumber ?? ''
                         ) +
                         '&email=' +
-                        encodeURIComponent(
+                        cleanUpParams(
                           applicant?.contactInformation?.emailAddress ?? ''
                         )
                       }

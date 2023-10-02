@@ -28,7 +28,9 @@ export default function ApplicationHomePage(): JSX.Element {
         <Announcement variant="warning">
           <HeadingTwo content="Warning" />
           <Paragraph>
-            Please <strong>do not</strong> complete this application, it is no longer in use. Please call 0208 356 2929 if you would like to apply to join the housing register.  
+            Please <strong>do not</strong> complete this application, it is no
+            longer in use. Please call 0208 356 2929 if you would like to apply
+            to join the housing register.
           </Paragraph>
         </Announcement>
         <HeadingTwo content="About this form" />

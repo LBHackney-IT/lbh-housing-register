@@ -44,10 +44,12 @@ const ApplicationSignInPage = (): JSX.Element => {
     <Layout pageName="Sign in" pageLoadsApplication={false}>
       {userError && <ErrorSummary>{userError}</ErrorSummary>}
       <Announcement variant="warning">
-          <HeadingOne content="Warning" />
-          <Paragraph>
-            Please <strong>do not</strong> complete this application, it is no longer in use. Please call 0208 356 2929 if you would like to apply to join the housing register.  
-          </Paragraph>
+        <HeadingOne content="Warning" />
+        <Paragraph>
+          Please <strong>do not</strong> complete this application, it is no
+          longer in use. Please call 0208 356 2929 if you would like to apply to
+          join the housing register.
+        </Paragraph>
       </Announcement>
       <HeadingTwo content="Your email" />
       <Paragraph>

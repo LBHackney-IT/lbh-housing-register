@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { HeadingOne } from '../../components/content/headings';
+import { HeadingOne, HeadingTwo } from '../../components/content/headings';
 import Form from '../../components/form/form';
 import Layout from '../../components/layout/resident-layout';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
@@ -11,6 +11,7 @@ import { Errors } from '../../lib/types/errors';
 import { scrollToError } from '../../lib/utils/scroll';
 import Paragraph from '../../components/content/paragraph';
 import { createVerifyCode } from '../../lib/store/auth';
+import Announcement from '../../components/announcement';
 
 const ApplicationSignInPage = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -42,7 +43,15 @@ const ApplicationSignInPage = (): JSX.Element => {
   return (
     <Layout pageName="Sign in" pageLoadsApplication={false}>
       {userError && <ErrorSummary>{userError}</ErrorSummary>}
-      <HeadingOne content="Your email" />
+      <Announcement variant="warning">
+        <HeadingOne content="Warning" />
+        <Paragraph>
+          Please <strong>do not</strong> complete this application, it is no
+          longer in use. Please call 0208 356 2929 if you would like to apply to
+          join the housing register.
+        </Paragraph>
+      </Announcement>
+      <HeadingTwo content="Your email" />
       <Paragraph>
         We’ll send you a verification code to continue your application
       </Paragraph>

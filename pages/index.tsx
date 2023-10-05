@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import Announcement from '../components/announcement';
 import { ButtonLink } from '../components/button';
@@ -25,14 +25,6 @@ export default function ApplicationHomePage(): JSX.Element {
     <>
       <Layout pageName="Home" pageLoadsApplication={false}>
         <HeadingOne content="Apply to the Housing Register" />
-        <Announcement variant="warning">
-          <HeadingTwo content="Warning" />
-          <Paragraph>
-            Please <strong>do not</strong> complete this application, it is no
-            longer in use. Please call 0208 356 2929 if you would like to apply
-            to join the housing register.
-          </Paragraph>
-        </Announcement>
         <HeadingTwo content="About this form" />
         <Paragraph>
           This form is to apply to join the Hackney housing register. If you

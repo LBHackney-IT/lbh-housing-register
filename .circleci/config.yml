@@ -46,6 +46,14 @@ jobs:
           name: Run Tests
           command: npm run test:ci
 
+  build-test:
+    executor: node-executor
+      steps:
+       - *attach_workspace
+       - run:
+          name: Build
+          command: npm run build
+
   build-deploy-development:
     executor: aws-cli/default
     steps:
@@ -117,6 +125,9 @@ workflows:
       - tests:
           requires:
             - install-dependencies
+      - build-test:
+          requires:
+            - tests
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:

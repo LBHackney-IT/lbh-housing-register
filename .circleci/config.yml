@@ -48,11 +48,11 @@ jobs:
 
   build-test:
     executor: node-executor
-      steps:
-       - *attach_workspace
-       - run:
-          name: Build
-          command: npm run build
+    steps:
+      - *attach_workspace
+      - run:
+        name: Build
+        command: npm run build
 
   build-deploy-development:
     executor: aws-cli/default

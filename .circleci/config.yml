@@ -126,6 +126,7 @@ workflows:
           requires:
             - install-dependencies
       - build-test:
+          context: housing-register-build-context
           requires:
             - tests
       - assume-role-development:

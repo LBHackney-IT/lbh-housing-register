@@ -51,8 +51,8 @@ jobs:
     steps:
       - *attach_workspace
       - run:
-        name: Build
-        command: npm run build
+          name: Build
+          command: npm run build
 
   build-deploy-development:
     executor: aws-cli/default

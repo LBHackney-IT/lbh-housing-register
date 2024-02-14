@@ -137,7 +137,7 @@ workflows:
             branches:
               only: development
       - build-deploy-development:
-          context: housing-register-build-context
+          context: housing-register-fe-build-context
           requires:
             - assume-role-development
           filters:
@@ -151,7 +151,7 @@ workflows:
             branches:
               only: main
       - build-deploy-staging:
-          context: housing-register-build-context
+          context: housing-register-fe-build-context
           requires:
             - assume-role-staging
           filters:
@@ -172,7 +172,7 @@ workflows:
             branches:
               only: main
       - build-deploy-production:
-          context: housing-register-build-context
+          context: housing-register-fe-build-context
           requires:
             - assume-role-production
           filters:

@@ -7,7 +7,7 @@ orbs:
 executors:
   node-executor:
     docker:
-      - image: circleci/node:14.15.5-browsers
+      - image: cimg/node:16.20.2-browsers
   docker-python:
     docker:
       - image: circleci/python:3.7
@@ -125,7 +125,7 @@ workflows:
             branches:
               only: development
       - build-deploy-development:
-          context: housing-register-build-context
+          context: housing-register-fe-build-context
           requires:
             - assume-role-development
           filters:
@@ -139,7 +139,7 @@ workflows:
             branches:
               only: main
       - build-deploy-staging:
-          context: housing-register-build-context
+          context: housing-register-fe-build-context
           requires:
             - assume-role-staging
           filters:
@@ -160,7 +160,7 @@ workflows:
             branches:
               only: main
       - build-deploy-production:
-          context: housing-register-build-context
+          context: housing-register-fe-build-context
           requires:
             - assume-role-production
           filters:

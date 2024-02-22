@@ -21,3 +21,6 @@
 
 # Sentry
 .sentryclirc
+
+# ggshield cache
+.cache_ggshield

@@ -70,7 +70,7 @@ The React components are built using the [TypeScript](https://www.typescriptlang
 
 ## 💻 Getting started
 
-As a prerequisite to run this app you will need to install [Node.js](https://nodejs.org/en/download) and [npm](https://docs.npmjs.com/cli/v7/commands/npm-install):
+As a prerequisite to run this app you will need to install [Node.js](https://nodejs.org/en/download)(version 16.20.2 is currently used in local development and in the pipeline) and [npm](https://docs.npmjs.com/cli/v7/commands/npm-install):
 
 ### Running locally
 
@@ -116,6 +116,10 @@ The app comes with a [mock server](http://mocks-server.org) for mock requests to
 e.g. `http://localhost:5000/api/applications` will return a list of applications.
 
 To connect directly to the Housing Register API, update the `HOUSING_REGISTER_API` variable in the `.env` file.
+
+### Pre-commit hooks
+
+Repository has pre-commit hooks configuration to prevent direct commits to main branches and for scanning secrets. Please ensure you have [pre-commit framework](https://pre-commit.com/) installed before starting development work.
 
 ## Concepts
 

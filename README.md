@@ -30,7 +30,7 @@ If at any point during the application process, details are provided that would 
 
 After all the questions have been answered and the application details are complete, the resident will be shown the outcome.
 
-- **`/apply/submit/additional-questions`** - Further questions relating to their application
+- **`/apply/submit/additional-questions`** - Further questions relating to their application 
 - **`/apply/submit/declaration`** - Final declaration to agree to the terms of the application
 - **`/apply/confirmation`** - Confirmation that the application has been submitted
 

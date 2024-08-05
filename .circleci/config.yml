@@ -134,7 +134,7 @@ workflows:
               only: development
       - cypress/run:
           requires:
-            - tests
+            - install-dependencies
           package-manager: yarn
           cypress-command: npx cypress run --reporter cypress-circleci-reporter
           post-steps:

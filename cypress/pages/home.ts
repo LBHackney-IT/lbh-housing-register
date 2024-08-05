@@ -4,7 +4,7 @@ class HomePage {
   }
 
   static getStartApplicationButton() {
-    const testId = "test-start-application-button";
+    const testId = 'test-start-application-button';
     return cy.get(`[data-testid="${testId}"]`);
   }
 }

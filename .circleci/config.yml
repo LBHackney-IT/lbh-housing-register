@@ -136,8 +136,7 @@ workflows:
           requires:
             - tests
           package-manager: yarn
-          cypress-command:
-            npx cypress run --reporter cypress-circleci-reporter
+          cypress-command: npx cypress run --reporter cypress-circleci-reporter
           post-steps:
             - store_test_results:
                 path: test_results
@@ -149,7 +148,7 @@ workflows:
                 path: cypress/reports
           filters:
             branches:
-              only: TS-1580-Housing-reg-view-only-Review-implementation-for-e2e-test
+              only: TS-1580-Housing-reg-view-only-Review-implementation-for-e2e-tests
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:

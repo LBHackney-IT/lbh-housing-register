@@ -11,7 +11,9 @@
     "lint": "eslint . --max-warnings 0 --ext .js,.jsx,.ts,.tsx",
     "prettier:test": "npx prettier -c .",
     "prettier:fix": "npx prettier --write .",
-    "test:ci": "prettier --check . && tsc --noEmit && jest --ci"
+    "test:ci": "prettier --check . && tsc --noEmit && jest --ci",
+    "cypress:open": "cypress open --browser chrome",
+    "cypress:run": "cypress run --browser chrome"
   },
   "eslintConfig": {
     "extends": [
@@ -69,6 +71,7 @@
     "@types/yup": "^0.29.11",
     "babel-jest": "^27.0.2",
     "concurrently": "^6.1.0",
+    "cypress": "^13.13.2",
     "jest": "^27.0.4",
     "mockdate": "^3.0.5",
     "prettier": "^2.3.0",

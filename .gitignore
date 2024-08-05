@@ -24,3 +24,11 @@
 
 # ggshield cache
 .cache_ggshield
+
+# Cypress
+cypress.env.json
+cypress/screenshots/*
+cypress/fixtures/*.json
+cypress/downloads/*
+cypress/videos/*
+cypress/reports/*

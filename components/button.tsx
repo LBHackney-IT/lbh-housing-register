@@ -42,6 +42,7 @@ export default function Button({
 
 interface ButtonLinkProps extends ButtonProps {
   href: string;
+  dataTestId?: string;
   svg?: any;
   additionalCssClasses?: string;
 }
@@ -50,6 +51,7 @@ export function ButtonLink({
   children,
   disabled,
   href,
+  dataTestId,
   secondary,
   svg,
   additionalCssClasses,
@@ -68,6 +70,7 @@ export function ButtonLink({
     <Link href={href}>
       <a
         className={`${className} ${additionalCssClasses}`}
+        data-testid={dataTestId}
         draggable="false"
         {...(disabled && `disabled aria-disabled="true"`)}
       >

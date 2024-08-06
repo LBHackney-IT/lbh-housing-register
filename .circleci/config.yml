@@ -134,7 +134,7 @@ workflows:
               only: development
       - cypress/run:
           requires:
-            - install-dependencies
+            - build-deploy-development
           package-manager: npm
           cypress-command: npx cypress run --reporter cypress-circleci-reporter
           post-steps:
@@ -148,11 +148,11 @@ workflows:
                 path: cypress/reports
           filters:
             branches:
-              only: TS-1580-Housing-reg-view-only-Review-implementation-for-e2e-tests
+              only: development
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:
-            - tests
+            - cypress/run
           filters:
             branches:
               only: main

@@ -12,7 +12,8 @@
     "prettier:fix": "npx prettier --write .",
     "test:ci": "prettier --check . && tsc --noEmit && jest --ci",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "prepare": "husky"
   },
   "eslintConfig": {
     "extends": [
@@ -72,6 +73,7 @@
     "@types/yup": "^0.29.11",
     "babel-jest": "^27.0.2",
     "concurrently": "^6.1.0",
+    "husky": "^9.1.4",
     "jest": "^27.5.1",
     "mockdate": "^3.0.5",
     "prettier": "^2.3.0",

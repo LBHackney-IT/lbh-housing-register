@@ -136,7 +136,7 @@ workflows:
       - sonar-scan:
           context: SonarCloud
           requires:
-            - test-and-lint
+            - install-dependencies
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:

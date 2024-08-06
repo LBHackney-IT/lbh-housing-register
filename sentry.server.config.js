@@ -21,5 +21,5 @@ Sentry.init({
 
   environment: process.env.NEXT_PUBLIC_ENV,
   integrations: [new CaptureConsoleIntegration({ levels: ['error'] })],
-  enabled: ENVIRONMENT === 'production' || ENVIRONMENT === 'staging'
+  enabled: ENVIRONMENT === 'production' || ENVIRONMENT === 'staging',
 });

@@ -53,7 +53,7 @@ jobs:
       - *attach_workspace
       - run:
           name: deploy
-          command: npm run build && sudo npm i -g serverless && sls deploy --stage development
+          command: npm run build && sudo npm i -g serverless@^3 && sls deploy --stage development
 
   build-deploy-staging:
     executor: aws-cli/default
@@ -61,7 +61,7 @@ jobs:
       - *attach_workspace
       - run:
           name: deploy
-          command: npm run build && sudo npm i -g serverless && sls deploy --stage staging
+          command: npm run build && sudo npm i -g serverless@^3 && sls deploy --stage staging
 
   build-deploy-production:
     executor: aws-cli/default
@@ -69,7 +69,7 @@ jobs:
       - *attach_workspace
       - run:
           name: deploy
-          command: npm run build && sudo npm i -g serverless && sls deploy --stage production
+          command: npm run build && sudo npm i -g serverless@^3 && sls deploy --stage production
 
   assume-role-development:
     executor: docker-python

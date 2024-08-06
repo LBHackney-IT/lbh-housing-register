@@ -24,3 +24,6 @@
 
 # ggshield cache
 .cache_ggshield
+
+# test coverage
+/coverage

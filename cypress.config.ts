@@ -3,7 +3,7 @@ import { defineConfig } from 'cypress';
 type Environment = 'local' | 'development' | 'staging';
 
 const environment: Environment =
-  (process.env.APP_ENV as Environment) || 'local';
+  (process.env.APP_ENV as Environment) || 'development';
 
 const baseUrlSites: Record<Environment, string> = {
   local: 'http://localhost:3000',

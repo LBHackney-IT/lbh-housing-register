@@ -136,7 +136,7 @@ workflows:
           requires:
             - install-dependencies
           package-manager: yarn
-          cypress-command: npx cypress run --reporter --env APP_ENV=development cypress-circleci-reporter
+          cypress-command: npx cypress run --reporter cypress-circleci-reporter
           post-steps:
             - store_test_results:
                 path: test_results

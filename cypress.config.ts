@@ -1,12 +1,13 @@
 import { defineConfig } from 'cypress';
+require('dotenv').config();
 
-type Environment = 'local' | 'development' | 'staging';
+type Environment = 'localdev' | 'development' | 'staging';
 
 const environment: Environment =
-  (process.env.APP_ENV as Environment) || 'development';
+  (process.env.NEXT_PUBLIC_ENV as Environment) || 'development';
 
 const baseUrlSites: Record<Environment, string> = {
-  local: 'http://localhost:3000',
+  localdev: 'http://localhost:3000',
   development: 'https://housing-register-development.hackney.gov.uk/',
   staging: 'https://housing-register-staging.hackney.gov.uk/',
 };

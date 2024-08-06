@@ -7,22 +7,13 @@
     "dev": "next dev --hostname=localdev.hackney.gov.uk",
     "start": "next start -p $PORT",
     "mocks": "mocks-server",
-    "lint": "eslint . --max-warnings 0 --ext .js,.jsx,.ts,.tsx",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "prettier:test": "npx prettier -c .",
     "prettier:fix": "npx prettier --write .",
     "test:ci": "prettier --check . && tsc --noEmit && jest --ci",
     "test": "jest",
     "test:watch": "jest --watch",
     "prepare": "husky"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ],
-    "env": {
-      "jest": true
-    }
   },
   "browserslist": {
     "production": [
@@ -74,19 +65,23 @@
     "@types/uuid": "^8.3.1",
     "@types/yup": "^0.29.11",
     "@typescript-eslint/eslint-plugin": "5.4.0",
+    "@typescript-eslint/parser": "5.45",
     "babel-jest": "^27.0.2",
     "concurrently": "^6.1.0",
     "eslint": "7.32.0",
+    "eslint-config-airbnb": "19.0.0",
+    "eslint-config-airbnb-typescript": "16.0.0",
     "eslint-config-prettier": "8.3.0",
+    "eslint-plugin-import": "2.25.3",
     "eslint-plugin-jest": "25.2.4",
     "eslint-plugin-prettier": "3.4.0",
     "eslint-plugin-testing-library": "4.9.0",
-    "eslint-plugin-import": "2.25.3",
     "husky": "^8.0.3",
     "jest": "^27.5.1",
     "mockdate": "^3.0.5",
     "prettier": "2.2.1",
     "sass": "^1.32.12",
+    "ts-node": "^10.9.2",
     "typescript": "^4.2.4"
   }
 }

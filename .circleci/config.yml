@@ -5,7 +5,6 @@ orbs:
   aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
   sonarcloud: sonarsource/sonarcloud@2.0.0
 
-
 executors:
   node-executor:
     docker:
@@ -58,7 +57,7 @@ jobs:
     executor: orb-executor
     steps:
       - *attach_workspace
-      - sonarcloud/scan          
+      - sonarcloud/scan
 
   build-deploy-development:
     executor: aws-cli/default
@@ -134,7 +133,7 @@ workflows:
       - sonar-scan:
           context: SonarCloud
           requires:
-            - test-and-lint            
+            - test-and-lint
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:

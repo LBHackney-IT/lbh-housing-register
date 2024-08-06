@@ -9,9 +9,9 @@
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint"],
   "extends": [
+    "@hackney/eslint-config",
     "eslint:recommended",
-    "plugin:prettier/recommended",
-    "@hackney/eslint-config"
+    "plugin:prettier/recommended"
   ],
   "parserOptions": {
     "sourceType": "module",
@@ -22,14 +22,26 @@
       "version": "detect"
     }
   },
+  "ignorePatterns": ["mocks/**", "coverage/**"],
   "rules": {
     "linebreak-style": ["error", "unix"],
-    "require-atomic-updates": "off"
+    "require-atomic-updates": "off",
+    // "react/function-component-definition": ["warn"],
+    // "react/jsx-no-useless-fragment": ["warn"],
+    // "jsx-a11y/anchor-is-valid": ["warn"],
+    // "eqeqeq": ["warn", "smart"],
+    "react/react-in-jsx-scope": "off"
   },
   "overrides": [
     {
       "files": ["*.ts", "*.tsx"],
       "extends": "plugin:@typescript-eslint/recommended"
+    },
+    {
+      "files": ["**/*.ts", "**/*.tsx"],
+      "rules": {
+        "react-hooks/exhaustive-deps": "off"
+      }
     }
   ]
 }

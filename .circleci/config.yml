@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   aws-cli: circleci/aws-cli@1.0.0
   aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
+  cypress: cypress-io/cypress@3.3.1
 
 executors:
   node-executor:
@@ -131,10 +132,27 @@ workflows:
           filters:
             branches:
               only: development
+      - cypress/run:
+          requires:
+            - build-deploy-development
+          package-manager: npm
+          cypress-command: npx cypress run --reporter cypress-circleci-reporter
+          post-steps:
+            - store_test_results:
+                path: test_results
+            - store_artifacts:
+                path: cypress/screenshot
+            - store_artifacts:
+                path: cypress/videos
+            - store_artifacts:
+                path: cypress/reports
+          filters:
+            branches:
+              only: development
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:
-            - tests
+            - cypress/run
           filters:
             branches:
               only: main

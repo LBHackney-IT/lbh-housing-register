@@ -7,7 +7,7 @@
     "dev": "next dev --hostname=localdev.hackney.gov.uk",
     "start": "next start -p $PORT",
     "mocks": "mocks-server",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint": "eslint . --max-warnings 0 --ext .js,.jsx,.ts,.tsx",
     "prettier:test": "npx prettier -c .",
     "prettier:fix": "npx prettier --write .",
     "test:ci": "tsc --noEmit && jest --ci",

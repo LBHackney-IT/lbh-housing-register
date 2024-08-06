@@ -12,7 +12,9 @@
     "prettier:fix": "npx prettier --write .",
     "test:ci": "prettier --check . && tsc --noEmit && jest --ci",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "cypress:open": "cypress open --browser chrome",
+    "cypress:run": "cypress run --browser chrome APP_ENV=development"
   },
   "eslintConfig": {
     "extends": [

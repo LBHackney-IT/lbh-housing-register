@@ -1,5 +1,6 @@
-import { useRouter } from 'next/router';
 import React, { useState } from 'react';
+
+import { useRouter } from 'next/router';
 
 interface SearchBoxProps {
   title: string;

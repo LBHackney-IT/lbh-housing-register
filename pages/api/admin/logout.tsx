@@ -1,7 +1,9 @@
-import { StatusCodes } from 'http-status-codes';
 import { withSentry } from '@sentry/nextjs';
+import { StatusCodes } from 'http-status-codes';
+
+import { getSession, removeHackneyToken } from '../../../lib/utils/googleAuth';
+
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { removeHackneyToken, getSession } from '../../../lib/utils/googleAuth';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,

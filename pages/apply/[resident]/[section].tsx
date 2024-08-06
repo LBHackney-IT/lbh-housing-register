@@ -1,9 +1,10 @@
 import { useRouter } from 'next/router';
+
 import ApplicationForms from '../../../components/application/application-forms';
 import Layout from '../../../components/layout/resident-layout';
+import { Applicant } from '../../../domain/HousingApi';
 import withApplication from '../../../lib/hoc/withApplication';
 import { applicantHasId, selectApplicant } from '../../../lib/store/applicant';
-import { Applicant } from '../../../domain/HousingApi';
 import { useAppSelector } from '../../../lib/store/hooks';
 import { getApplicationSectionFromId } from '../../../lib/utils/application-forms';
 import { isOver18 } from '../../../lib/utils/dateOfBirth';
@@ -53,16 +54,14 @@ const ApplicationSection = (): JSX.Element => {
   };
 
   return (
-    <>
-      <Layout pageName={sectionName} breadcrumbs={breadcrumbs}>
-        <ApplicationForms
-          applicant={applicant}
-          sectionGroups={sectionGroups}
-          activeStep={section}
-          onSubmit={onSubmit}
-        />
-      </Layout>
-    </>
+    <Layout pageName={sectionName} breadcrumbs={breadcrumbs}>
+      <ApplicationForms
+        applicant={applicant}
+        sectionGroups={sectionGroups}
+        activeStep={section}
+        onSubmit={onSubmit}
+      />
+    </Layout>
   );
 };
 

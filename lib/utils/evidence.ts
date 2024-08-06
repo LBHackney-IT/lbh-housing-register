@@ -1,6 +1,6 @@
-import { EvidenceType } from '../types/evidence';
 import { Applicant } from '../../domain/HousingApi';
 import { getQuestionValue } from '../store/applicant';
+import { EvidenceType } from '../types/evidence';
 import { FormID } from './form-data';
 
 export const getRequiredDocumentsForApplication = (

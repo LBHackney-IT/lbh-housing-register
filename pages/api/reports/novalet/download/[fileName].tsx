@@ -1,8 +1,10 @@
-import { StatusCodes } from 'http-status-codes';
-import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { withSentry } from '@sentry/nextjs';
+import { StatusCodes } from 'http-status-codes';
+
 import { downloadNovaletExport } from '../../../../../lib/gateways/applications-api';
 import { getAuth, getSession } from '../../../../../lib/utils/googleAuth';
+
+import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,

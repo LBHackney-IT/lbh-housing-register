@@ -1,17 +1,17 @@
-import Input from '../form/input';
-import Textarea from '../form/textarea';
-import DateInput, { INVALID_DATE } from '../form/dateinput';
-import Select from '../form/select';
-import {
-  SummaryListNoBorder,
-  SummaryListActions,
-  SummaryListRow,
-  SummaryListKey,
-  SummaryListValue,
-} from '../summary-list';
-import { Checkbox } from '../form/checkboxes';
 import { FormField, FormFieldOption } from '../../lib/types/form';
 import { generateUniqueFieldName } from '../../lib/utils/adminHelpers';
+import { Checkbox } from '../form/checkboxes';
+import DateInput, { INVALID_DATE } from '../form/dateinput';
+import Input from '../form/input';
+import Select from '../form/select';
+import Textarea from '../form/textarea';
+import {
+  SummaryListActions,
+  SummaryListKey,
+  SummaryListNoBorder,
+  SummaryListRow,
+  SummaryListValue,
+} from '../summary-list';
 
 interface PageProps {
   section: any;
@@ -50,11 +50,7 @@ export default function AddCaseSection({ section }: PageProps): JSX.Element {
 
     if (inputType === 'dateinput') {
       inputField = (
-        <DateInput
-          name={generatedInputName}
-          label={field.label}
-          showDay={true}
-        />
+        <DateInput name={generatedInputName} label={field.label} showDay />
       );
     }
 
@@ -72,17 +68,15 @@ export default function AddCaseSection({ section }: PageProps): JSX.Element {
       }
 
       inputField = (
-        <>
-          <Select
-            modifierClasses="lbh-select--full-width"
-            label=""
-            name={generatedInputName}
-            options={field.options.map((option: FormFieldOption) => ({
-              label: option.label,
-              value: option.value,
-            }))}
-          />
-        </>
+        <Select
+          modifierClasses="lbh-select--full-width"
+          label=""
+          name={generatedInputName}
+          options={field.options.map((option: FormFieldOption) => ({
+            label: option.label,
+            value: option.value,
+          }))}
+        />
       );
     }
 
@@ -152,7 +146,7 @@ export default function AddCaseSection({ section }: PageProps): JSX.Element {
         <SummaryListValue>
           <label htmlFor={generatedInputName}>{field.label}</label>
         </SummaryListValue>
-        <SummaryListActions wideActions={true}>{inputField}</SummaryListActions>
+        <SummaryListActions wideActions>{inputField}</SummaryListActions>
       </SummaryListRow>
     );
   });

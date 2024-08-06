@@ -1,10 +1,12 @@
+import { withSentry } from '@sentry/nextjs';
+import { AxiosResponse } from 'axios';
 import { StatusCodes } from 'http-status-codes';
-import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+
+import { InternalReportRequest } from '../../../../domain/HousingApi';
 import { downloadInternalReport } from '../../../../lib/gateways/applications-api';
 import { getAuth, getSession } from '../../../../lib/utils/googleAuth';
-import { withSentry } from '@sentry/nextjs';
-import { InternalReportRequest } from '../../../../domain/HousingApi';
-import { AxiosResponse } from 'axios';
+
+import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -25,7 +27,7 @@ const endpoint: NextApiHandler = async (
       }
       var fileResponse = {} as AxiosResponse<any>;
       try {
-        var reportData: InternalReportRequest = {
+        const reportData: InternalReportRequest = {
           ReportType: parseInt(req.body.ReportType),
           StartDate: req.body.StartDate,
           EndDate: req.body.EndDate,
@@ -33,10 +35,10 @@ const endpoint: NextApiHandler = async (
 
         if (Buffer.isBuffer(req.body)) {
           //For some reason, the body has been interpreted by NextJS as a buffer once its behind API Gateway
-          var requestBodyAsString = req.body.toString();
-          var formKeys = requestBodyAsString.split('&');
+          const requestBodyAsString = req.body.toString();
+          const formKeys = requestBodyAsString.split('&');
           formKeys.forEach((formKeyValuePair) => {
-            var keyvaluepair = formKeyValuePair.split('=');
+            const keyvaluepair = formKeyValuePair.split('=');
             if (keyvaluepair[0].toLowerCase() == 'reporttype') {
               reportData.ReportType = parseInt(keyvaluepair[1]);
             } else {
@@ -68,7 +70,7 @@ const endpoint: NextApiHandler = async (
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
           message: 'Request error: Unable to download report: ',
           response: fileResponse,
-          error: error,
+          error,
         });
       }
       break;

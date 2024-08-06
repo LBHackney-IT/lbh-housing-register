@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { Dialog as ReachDialog } from '@reach/dialog';
+
 import '@reach/dialog/styles.css';
 import Button from './button';
 import { HeadingThree } from './content/headings';

@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import Paragraph from '../components/content/paragraph';
+
+import Paragraph from './content/paragraph';
 import Dialog from './dialog';
 
 interface DeleteLinkProps {

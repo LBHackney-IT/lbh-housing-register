@@ -1,23 +1,26 @@
 import { useState } from 'react';
+
+import { FormikValues } from 'formik';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import { FormikValues } from 'formik';
-import {
-  Application,
-  Address as ApiAddress,
-} from '../../../../../domain/HousingApi';
-import { getApplication } from '../../../../../lib/gateways/applications-api';
-import { getRedirect, getSession } from '../../../../../lib/utils/googleAuth';
-import { updateApplication } from '../../../../../lib/gateways/internal-api';
-import Custom404 from '../../../../404';
+
+import MainApplicantForm from '../../../../../components/admin/MainApplicantForm';
 import { HackneyGoogleUser } from '../../../../../domain/HackneyGoogleUser';
 import {
+  Address as ApiAddress,
+  Application,
+} from '../../../../../domain/HousingApi';
+import { getApplication } from '../../../../../lib/gateways/applications-api';
+import { updateApplication } from '../../../../../lib/gateways/internal-api';
+import {
   Address,
-  generateQuestionArray,
   convertAddressToPrimary,
+  generateQuestionArray,
 } from '../../../../../lib/utils/adminHelpers';
+import { getRedirect, getSession } from '../../../../../lib/utils/googleAuth';
 import { scrollToTop } from '../../../../../lib/utils/scroll';
-import MainApplicantForm from '../../../../../components/admin/MainApplicantForm';
+import Custom404 from '../../../../404';
+
 interface PageProps {
   user: HackneyGoogleUser;
   data: Application;
@@ -99,7 +102,7 @@ export default function EditApplicant({ user, data }: PageProps): JSX.Element {
     <>
       {data.id ? (
         <MainApplicantForm
-          isEditing={true}
+          isEditing
           user={user}
           onSubmit={onSubmit}
           isSubmitted={isSubmitted}

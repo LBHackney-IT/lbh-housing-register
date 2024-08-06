@@ -1,9 +1,11 @@
+import React from 'react';
+
+import Link from 'next/link';
+
 import { Applicant } from '../../domain/HousingApi';
 import { formatDob } from '../../lib/utils/dateOfBirth';
 import { getGenderName } from '../../lib/utils/gender';
 import { ButtonLink } from '../button';
-import Link from 'next/link';
-import React from 'react';
 import { HeadingThree } from '../content/headings';
 
 interface SummaryProps {
@@ -49,15 +51,13 @@ export default function PersonalDetails({
                 </li>
                 <li>
                   {applicant.contactInformation?.emailAddress && (
-                    <>
-                      <Link
-                        href={`mailto:${applicant.contactInformation.emailAddress}`}
-                      >
-                        <a className="lbh-link">
-                          {applicant.contactInformation.emailAddress}
-                        </a>
-                      </Link>
-                    </>
+                    <Link
+                      href={`mailto:${applicant.contactInformation.emailAddress}`}
+                    >
+                      <a className="lbh-link">
+                        {applicant.contactInformation.emailAddress}
+                      </a>
+                    </Link>
                   )}
                 </li>
               </ul>

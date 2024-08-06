@@ -1,16 +1,18 @@
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+
+import { useRouter } from 'next/router';
+
 import { HeadingOne } from '../../components/content/headings';
+import Paragraph from '../../components/content/paragraph';
+import ErrorSummary from '../../components/errors/error-summary';
 import Form from '../../components/form/form';
 import Layout from '../../components/layout/resident-layout';
+import { createVerifyCode } from '../../lib/store/auth';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
+import { Errors } from '../../lib/types/errors';
 import { FormData } from '../../lib/types/form';
 import { FormID, getFormData } from '../../lib/utils/form-data';
-import ErrorSummary from '../../components/errors/error-summary';
-import { Errors } from '../../lib/types/errors';
 import { scrollToError } from '../../lib/utils/scroll';
-import Paragraph from '../../components/content/paragraph';
-import { createVerifyCode } from '../../lib/store/auth';
 
 const ApplicationSignInPage = (): JSX.Element => {
   const dispatch = useAppDispatch();

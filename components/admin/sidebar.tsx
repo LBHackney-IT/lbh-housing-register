@@ -1,6 +1,7 @@
+import React from 'react';
+
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React from 'react';
 
 export default function Sidebar(): JSX.Element {
   const router = useRouter();
@@ -24,24 +25,22 @@ export default function Sidebar(): JSX.Element {
   ];
 
   return (
-    <>
-      <nav className="lbh-link-group-vertical">
-        <ul>
-          {sidebarNavRoutes.map(({ name, path }) => (
-            <li key={path} className="lbh-link-group__item">
-              <Link href={path}>
-                <a
-                  className={`lbh-link lbh-link--no-visited-state lbh-!-font-weight-bold lbh-body-m ${
-                    router.pathname === path ? 'active' : ''
-                  }`}
-                >
-                  {name}
-                </a>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </>
+    <nav className="lbh-link-group-vertical">
+      <ul>
+        {sidebarNavRoutes.map(({ name, path }) => (
+          <li key={path} className="lbh-link-group__item">
+            <Link href={path}>
+              <a
+                className={`lbh-link lbh-link--no-visited-state lbh-!-font-weight-bold lbh-body-m ${
+                  router.pathname === path ? 'active' : ''
+                }`}
+              >
+                {name}
+              </a>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 }

@@ -1,6 +1,8 @@
-import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { Application, APPLICATION_UNNASIGNED } from '../../domain/HousingApi';
+
+import { useRouter } from 'next/router';
+
+import { APPLICATION_UNNASIGNED, Application } from '../../domain/HousingApi';
 import { updateApplication } from '../../lib/gateways/internal-api';
 import { HackneyGoogleUserWithPermissions } from '../../lib/utils/googleAuth';
 import ErrorMessage from '../form/error-message';
@@ -42,7 +44,7 @@ export default function AssignUser({
     setDisableControls(true);
 
     const request: Application = {
-      id: id,
+      id,
       assignedTo: updateTo,
     };
     await updateApplication(request).then(() => {
@@ -139,15 +141,13 @@ export default function AssignUser({
           )}
 
           {assignee !== user.email ? (
-            <>
-              <button
-                onClick={() => updateAssignee(user.email)}
-                className="lbh-link lbh-link--no-visited-state lbh-!-margin-top-0"
-                disabled={disableControls}
-              >
-                assign to me
-              </button>
-            </>
+            <button
+              onClick={() => updateAssignee(user.email)}
+              className="lbh-link lbh-link--no-visited-state lbh-!-margin-top-0"
+              disabled={disableControls}
+            >
+              assign to me
+            </button>
           ) : null}
 
           {assignee !== APPLICATION_UNNASIGNED && assignee !== user.email ? (
@@ -155,15 +155,13 @@ export default function AssignUser({
           ) : null}
 
           {assignee !== APPLICATION_UNNASIGNED ? (
-            <>
-              <button
-                onClick={() => updateAssignee(APPLICATION_UNNASIGNED)}
-                className="lbh-link lbh-link--no-visited-state lbh-!-margin-top-0"
-                disabled={disableControls}
-              >
-                unassign
-              </button>
-            </>
+            <button
+              onClick={() => updateAssignee(APPLICATION_UNNASIGNED)}
+              className="lbh-link lbh-link--no-visited-state lbh-!-margin-top-0"
+              disabled={disableControls}
+            >
+              unassign
+            </button>
           ) : null}
         </>
       ) : null}

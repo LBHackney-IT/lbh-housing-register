@@ -1,5 +1,6 @@
-import { Application } from '../../domain/HousingApi';
 import { useState } from 'react';
+
+import { Application } from '../../domain/HousingApi';
 import { updateApplication } from '../../lib/gateways/internal-api';
 import { HackneyGoogleUserWithPermissions } from '../../lib/utils/googleAuth';
 import { HeadingFour } from '../content/headings';
@@ -20,7 +21,7 @@ export default function SensitiveData({
   const updateSensitiveDataStatus = async (markAs: boolean) => {
     setSensitive(markAs);
     const request: Application = {
-      id: id,
+      id,
       sensitiveData: markAs,
     };
     updateApplication(request);

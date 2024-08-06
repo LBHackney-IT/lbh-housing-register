@@ -1,13 +1,15 @@
+import { IncomingMessage } from 'http';
+
 import axios, { AxiosInstance } from 'axios';
 import cookie from 'cookie';
-import { IncomingMessage } from 'http';
+
 import asssertServerOnly from './assertServerOnly';
 
 asssertServerOnly();
 
 export function housingAxios() {
-  var apiUrlString = process.env.HOUSING_REGISTER_API as string;
-  let url = new URL(apiUrlString);
+  const apiUrlString = process.env.HOUSING_REGISTER_API as string;
+  const url = new URL(apiUrlString);
   return axios.create({
     baseURL: process.env.HOUSING_REGISTER_API,
     headers: {
@@ -24,9 +26,9 @@ export function authenticatedHousingAxios(
   const client = housingAxios();
 
   const cookies = cookie.parse(httpRequest.headers.cookie ?? '');
-  const parsedToken = cookies['hackneyToken'];
+  const parsedToken = cookies.hackneyToken;
 
-  client.defaults.headers.common['Authorization'] = 'Bearer ' + parsedToken;
+  client.defaults.headers.common.Authorization = `Bearer ${parsedToken}`;
 
   return client;
 }
@@ -40,8 +42,8 @@ export function activityAxios(httpRequest: IncomingMessage): AxiosInstance {
   });
 
   const cookies = cookie.parse(httpRequest.headers.cookie ?? '');
-  const parsedToken = cookies['hackneyToken'];
-  client.defaults.headers.common['Authorization'] = 'Bearer ' + parsedToken;
+  const parsedToken = cookies.hackneyToken;
+  client.defaults.headers.common.Authorization = `Bearer ${parsedToken}`;
 
   return client;
 }

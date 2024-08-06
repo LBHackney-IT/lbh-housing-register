@@ -1,6 +1,8 @@
+import React, { ReactNode } from 'react';
+
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { ReactNode } from 'react';
+
 import { useUser } from '../../lib/contexts/user-context';
 import { hasPhaseBanner } from '../../lib/utils/phase-banner';
 import Header from '../header';
@@ -46,7 +48,7 @@ export default function StaffLayout({
         <div className="lbh-container">
           <nav>
             <strong className="lbh-heading-h5">
-              <Link href={`/applications/`}>
+              <Link href="/applications/">
                 <a className="lbh-link lbh-link--no-visited-state">
                   Back to dashboard
                 </a>

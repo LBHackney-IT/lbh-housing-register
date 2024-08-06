@@ -11,6 +11,6 @@ interface ListItemProps {
   bold?: boolean;
 }
 
-export function ListItem({ children, bold }: ListItemProps): JSX.Element {
+export const ListItem = ({ children, bold }: ListItemProps): JSX.Element => {
   return <li className={bold ? 'lbh-!-font-weight-bold' : ''}>{children}</li>;
-}
+};

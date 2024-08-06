@@ -1,5 +1,7 @@
-import { Field, FieldInputProps, FieldMetaProps } from 'formik';
 import { ReactElement } from 'react';
+
+import { Field, FieldInputProps, FieldMetaProps } from 'formik';
+
 import { SelectFormField } from '../../lib/types/form';
 import Details from '../details';
 import ErrorMessage from './error-message';
@@ -30,7 +32,7 @@ export default function Select({
             <Label
               content={label}
               htmlFor={field.name}
-              strong={true}
+              strong
               hideLabel={hideLabel}
             />
           )}
@@ -45,9 +47,7 @@ export default function Select({
           <select
             className={`${
               !!meta.touched && !!meta.error ? 'govuk-select--error' : ''
-            } ${
-              modifierClasses ? modifierClasses : ''
-            } govuk-select lbh-select`}
+            } ${modifierClasses || ''} govuk-select lbh-select`}
             id={field.name}
             {...field}
           >

@@ -44,9 +44,8 @@ export const getApplicationSectionsForResident = (
 ): ApplicationSectionGroup[] => {
   if (isMainApplicant) {
     return getMainApplicantQuestions();
-  } else {
-    return getOtherMemberQuestions(isOver18, isPartner);
   }
+  return getOtherMemberQuestions(isOver18, isPartner);
 };
 
 /**
@@ -217,9 +216,9 @@ export const getOtherMemberQuestions = (
 ): ApplicationSectionGroup[] => {
   if (isPartner) {
     return partnerQuestions;
-  } else if (isOver18) {
-    return nonPartnerQuestions;
-  } else {
-    return under18Questions;
   }
+  if (isOver18) {
+    return nonPartnerQuestions;
+  }
+  return under18Questions;
 };

@@ -1,4 +1,5 @@
 import { NextApiRequest } from 'next';
+
 import { Application } from '../../domain/HousingApi';
 import { ApplicationStatus } from '../types/application-status';
 import { getSession, hasAnyPermissions } from './googleAuth';
@@ -8,7 +9,9 @@ export const canUpdateApplication = (
   req: NextApiRequest,
   id: string
 ): boolean => {
-  if (hasStaffPermissions(req)) return true;
+  if (hasStaffPermissions(req)) {
+    return true;
+  }
 
   const user = getUser(req);
   return user?.application_id === id;
@@ -16,7 +19,9 @@ export const canUpdateApplication = (
 
 export const hasStaffPermissions = (req: NextApiRequest): boolean => {
   const staff = getSession(req);
-  if (!staff) return false;
+  if (!staff) {
+    return false;
+  }
 
   return hasAnyPermissions(staff);
 };

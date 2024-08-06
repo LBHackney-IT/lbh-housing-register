@@ -1,10 +1,13 @@
-import type { AppProps } from 'next/app';
-import Head from 'next/head';
 import React, { ReactElement } from 'react';
+
+import Head from 'next/head';
+
 import { wrapper } from '../lib/store';
+
+import type { AppProps } from 'next/app';
 import '../styles/global.scss';
 
-function App({ Component, pageProps }: AppProps): ReactElement {
+const App = ({ Component, pageProps }: AppProps): ReactElement => {
   return (
     <>
       <Head>
@@ -13,6 +16,6 @@ function App({ Component, pageProps }: AppProps): ReactElement {
       <Component {...pageProps} />
     </>
   );
-}
+};
 
 export default wrapper.withRedux(App);

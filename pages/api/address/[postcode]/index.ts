@@ -1,7 +1,9 @@
-import { StatusCodes } from 'http-status-codes';
-import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { lookUpAddress } from '../../../../lib/gateways/address-api';
 import { withSentry } from '@sentry/nextjs';
+import { StatusCodes } from 'http-status-codes';
+
+import { lookUpAddress } from '../../../../lib/gateways/address-api';
+
+import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,

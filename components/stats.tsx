@@ -9,7 +9,7 @@ interface StatItemProps extends Stat {
   index?: number;
 }
 
-export function Stats({ className, stats }: StatsProps): JSX.Element {
+export const Stats = ({ className, stats }: StatsProps): JSX.Element => {
   return (
     <div className="govuk-grid-row">
       {stats.map((stat, index) => (
@@ -19,13 +19,13 @@ export function Stats({ className, stats }: StatsProps): JSX.Element {
       ))}
     </div>
   );
-}
+};
 
-export function StatItem({
+export const StatItem = ({
   index,
   value,
   caption,
-}: StatItemProps): JSX.Element {
+}: StatItemProps): JSX.Element => {
   return (
     <div className="lbh-stat">
       <strong
@@ -39,4 +39,4 @@ export function StatItem({
       </span>
     </div>
   );
-}
+};

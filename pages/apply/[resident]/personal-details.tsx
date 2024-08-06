@@ -1,7 +1,11 @@
+import React, { useState } from 'react';
+
 import { FormikValues } from 'formik';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+
+import AddPersonForm from '../../../components/application/add-person-form';
 import ApplicantStep from '../../../components/application/ApplicantStep';
+import { Applicant } from '../../../domain/HousingApi';
 import withApplication from '../../../lib/hoc/withApplication';
 import {
   applicantHasId,
@@ -12,8 +16,6 @@ import {
 import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import { FormID } from '../../../lib/utils/form-data';
 import Custom404 from '../../404';
-import AddPersonForm from '../../../components/application/add-person-form';
-import { Applicant } from '../../../domain/HousingApi';
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter();

@@ -1,10 +1,10 @@
 import { Applicant, Application } from '../../domain/HousingApi';
 import { getQuestionValue } from '../store/applicant';
 import { FormData, FormField } from '../types/form';
-import { FormID, getEligibilityCriteria } from './form-data';
-import { isOver18, isOver55 } from '../../lib/utils/dateOfBirth';
-import { applicantsWithMedicalNeed } from '../../lib/utils/medicalNeed';
+import { isOver18, isOver55 } from './dateOfBirth';
 import { DisqualificationReason } from './disqualificationReasonOptions';
+import { FormID, getEligibilityCriteria } from './form-data';
+import { applicantsWithMedicalNeed } from './medicalNeed';
 
 /**
  * Determines if the field should be displayed based on the values passed in

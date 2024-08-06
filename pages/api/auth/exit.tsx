@@ -1,7 +1,9 @@
-import { StatusCodes } from 'http-status-codes';
 import { withSentry } from '@sentry/nextjs';
-import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import { StatusCodes } from 'http-status-codes';
+
 import { removeAuthCookie } from '../../../lib/utils/users';
+
+import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,

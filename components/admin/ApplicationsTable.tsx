@@ -1,12 +1,14 @@
 import React from 'react';
+
+import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
+
 import { PaginatedSearchResultsResponse } from '../../domain/HousingApi';
-import Paragraph from '../content/paragraph';
-import { formatDate } from '../../lib/utils/dateOfBirth';
 import { lookupStatus } from '../../lib/types/application-status';
+import { formatDate } from '../../lib/utils/dateOfBirth';
 import { ButtonLink } from '../button';
+import Paragraph from '../content/paragraph';
 
 interface ResultsToShowLinkProps {
   query: NextParsedUrlQuery;
@@ -107,7 +109,7 @@ export default function ApplicationsTable({
                 <th
                   scope="col"
                   className="govuk-table__header govuk-table__header--numeric"
-                ></th>
+                />
               </tr>
             </thead>
             <tbody className="govuk-table__body">

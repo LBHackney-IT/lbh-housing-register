@@ -1,24 +1,28 @@
-import Link from 'next/link';
 import React, { ReactNode } from 'react';
+
+import Link from 'next/link';
+
 import { HeadingThree } from '../content/headings';
 
 interface SummarySectionProps {
   children: ReactNode;
 }
 
-export function SummarySection({ children }: SummarySectionProps): JSX.Element {
+export const SummarySection = ({
+  children,
+}: SummarySectionProps): JSX.Element => {
   return <div className="lbh-summary-section">{children}</div>;
-}
+};
 
 interface SummaryTitleProps {
   href: string;
   content: string;
 }
 
-export function SummaryTitle({
+export const SummaryTitle = ({
   href,
   content,
-}: SummaryTitleProps): JSX.Element {
+}: SummaryTitleProps): JSX.Element => {
   return (
     <div className="lbh-summary-title">
       <HeadingThree content={content} />
@@ -27,12 +31,14 @@ export function SummaryTitle({
       </Link>
     </div>
   );
-}
+};
 
 interface SummaryAnswerProps {
   children: ReactNode;
 }
 
-export function SummaryAnswer({ children }: SummaryAnswerProps): JSX.Element {
+export const SummaryAnswer = ({
+  children,
+}: SummaryAnswerProps): JSX.Element => {
   return <div className="lbh-summary-answer">{children}</div>;
-}
+};

@@ -1,7 +1,9 @@
 import { Applicant } from '../../domain/HousingApi';
 
 export function formatDate(date: string | undefined) {
-  if (!date) return '';
+  if (!date) {
+    return '';
+  }
   return `${new Date(date).toLocaleString('default', {
     timeZone: 'UTC',
     day: 'numeric',

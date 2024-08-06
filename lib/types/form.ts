@@ -1,7 +1,9 @@
 import { SetStateAction } from 'react';
+
 import { FormikValues } from 'formik';
-import { FormID } from '../utils/form-data';
+
 import { DisqualificationReason } from '../utils/disqualificationReasonOptions';
+import { FormID } from '../utils/form-data';
 
 // @Deprecated
 export type FormData = FormikValues;

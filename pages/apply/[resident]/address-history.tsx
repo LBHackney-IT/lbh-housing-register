@@ -1,19 +1,21 @@
+import React, { useState } from 'react';
+
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
 import * as Yup from 'yup';
+
 import ApplicantStep from '../../../components/application/ApplicantStep';
 import Button from '../../../components/button';
 import { HeadingOne } from '../../../components/content/headings';
-import Paragraph from '../../../components/content/paragraph';
 import InsetText from '../../../components/content/inset-text';
+import Paragraph from '../../../components/content/paragraph';
 import Details from '../../../components/details';
 import DateInput, { INVALID_DATE } from '../../../components/form/dateinput';
 import Input from '../../../components/form/input';
 import Label from '../../../components/form/label';
 import Select from '../../../components/form/select';
 import { AddressLookupAddress } from '../../../domain/addressLookup';
-import { Applicant, AddressType } from '../../../domain/HousingApi';
+import { AddressType, Applicant } from '../../../domain/HousingApi';
 import { lookUpAddress } from '../../../lib/gateways/internal-api';
 import withApplication from '../../../lib/hoc/withApplication';
 import {
@@ -51,7 +53,7 @@ function generateValidationSchema(
       .required()
       .test(
         'min',
-        '${path} must be ' + formatDate(new Date(min)) + ' or before',
+        `\${path} must be ${formatDate(new Date(min))} or before`,
         (value) => {
           if (typeof value !== 'string' || value === INVALID_DATE) {
             return false;
@@ -66,7 +68,7 @@ function generateValidationSchema(
       .required()
       .test(
         'min',
-        '${path} must be ' + formatDate(new Date(min)) + ' or before',
+        `\${path} must be ${formatDate(new Date(min))} or before`,
         (value) => {
           if (typeof value !== 'string' || value === INVALID_DATE) {
             return false;
@@ -99,7 +101,7 @@ function generateValidationSchema(
   }
 }
 
-function ManualEntry() {
+const ManualEntry = () => {
   return (
     // These all need the validation markers. And that's why we need the standard inputs.
     <fieldset className="govuk-fieldset">
@@ -129,31 +131,31 @@ function ManualEntry() {
       <Input
         name="address.town"
         autoComplete="address-level2"
-        label={'Town or city'}
-        className={'govuk-!-width-two-thirds'}
+        label="Town or city"
+        className="govuk-!-width-two-thirds"
       />
 
       <Input
         name="address.county"
-        label={'County'}
-        className={'govuk-!-width-two-thirds'}
+        label="County"
+        className="govuk-!-width-two-thirds"
       />
 
       <Input
         name="postcode"
         autoComplete="postal-code"
-        label={'Postcode'}
-        className={'govuk-input--width-10'}
+        label="Postcode"
+        className="govuk-input--width-10"
       />
     </fieldset>
   );
-}
+};
 
-function Summary({
+const Summary = ({
   addressHistory,
 }: {
   addressHistory: AddressHistoryEntry[];
-}) {
+}) => {
   const durations = calculateDurations(addressHistory);
   return (
     <>
@@ -164,7 +166,7 @@ function Summary({
             <h2 className="lbh-heading-h2">Previous address {index}</h2>
           )}
           <InsetText>
-            <Label content={'Postcode'} strong />
+            <Label content="Postcode" strong />
             <div
               style={{
                 display: 'flex',
@@ -175,7 +177,7 @@ function Summary({
               <Paragraph>{entry.postcode}</Paragraph>
             </div>
 
-            <Label content={'Address'} strong />
+            <Label content="Address" strong />
             <Paragraph>
               {[
                 entry.address.line1,
@@ -195,14 +197,14 @@ function Summary({
                 ))}
             </Paragraph>
 
-            <Label content={'Time at address'} strong />
+            <Label content="Time at address" strong />
             <Paragraph>{durations[index].label}</Paragraph>
           </InsetText>
         </React.Fragment>
       ))}
     </>
   );
-}
+};
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter();
@@ -399,14 +401,14 @@ const ApplicationStep = (): JSX.Element => {
                   <InsetText>
                     <ManualEntry />
                     <DateInput
-                      name={'date'}
-                      label={'When did you move to this address?'}
+                      name="date"
+                      label="When did you move to this address?"
                       showDay={false}
                     />
                     {addressHistory.length > 0 && (
                       <DateInput
-                        name={'dateTo'}
-                        label={'When did you leave this address?'}
+                        name="dateTo"
+                        label="When did you leave this address?"
                         showDay={false}
                       />
                     )}
@@ -415,7 +417,7 @@ const ApplicationStep = (): JSX.Element => {
 
                 {state === 'choose-address' && (
                   <InsetText>
-                    <Label content={'Postcode'} strong />
+                    <Label content="Postcode" strong />
 
                     <div>
                       {values.postcode}
@@ -433,10 +435,10 @@ const ApplicationStep = (): JSX.Element => {
                     </div>
 
                     <Select
-                      label={'Select an address'}
-                      name={'uprn'}
+                      label="Select an address"
+                      name="uprn"
                       options={postcodeResults.map((address) => ({
-                        label: address.line1 + ', ' + address.town,
+                        label: `${address.line1}, ${address.town}`,
                         value: address.UPRN.toString(),
                       }))}
                     />
@@ -450,14 +452,14 @@ const ApplicationStep = (): JSX.Element => {
                       I can't find my address in the list
                     </a>
                     <DateInput
-                      name={'date'}
-                      label={'When did you move to this address?'}
+                      name="date"
+                      label="When did you move to this address?"
                       showDay={false}
                     />
                     {addressHistory.length > 0 && (
                       <DateInput
-                        name={'dateTo'}
-                        label={'When did you leave this address?'}
+                        name="dateTo"
+                        label="When did you leave this address?"
                         showDay={false}
                       />
                     )}
@@ -467,7 +469,7 @@ const ApplicationStep = (): JSX.Element => {
                 <div className="c-flex lbh-simple-pagination">
                   {state === 'review' && (
                     <div className="c-flex__1">
-                      <Button onClick={restart} secondary={true}>
+                      <Button onClick={restart} secondary>
                         Update address
                       </Button>
                     </div>

@@ -1,6 +1,8 @@
+import React, { SyntheticEvent, useEffect, useState } from 'react';
+
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import React, { SyntheticEvent, useState, useEffect } from 'react';
+
 import Actions from '../../../../components/admin/actions';
 import ApplicationHistory from '../../../../components/admin/ApplicationHistory';
 import AssignUser from '../../../../components/admin/assign-user';
@@ -24,7 +26,7 @@ import List, { ListItem } from '../../../../components/content/list';
 import Paragraph from '../../../../components/content/paragraph';
 import Layout from '../../../../components/layout/staff-layout';
 import { ActivityHistoryPagedResult } from '../../../../domain/ActivityHistoryApi';
-import { Application, Applicant } from '../../../../domain/HousingApi';
+import { Applicant, Application } from '../../../../domain/HousingApi';
 import { UserContext } from '../../../../lib/contexts/user-context';
 import {
   getApplication,
@@ -37,10 +39,10 @@ import {
 } from '../../../../lib/types/application-status';
 import { formatDate } from '../../../../lib/utils/dateOfBirth';
 import {
+  HackneyGoogleUserWithPermissions,
   canViewSensitiveApplication,
   getRedirect,
   getSession,
-  HackneyGoogleUserWithPermissions,
   hasAnyPermissions,
 } from '../../../../lib/utils/googleAuth';
 import { getPersonName } from '../../../../lib/utils/person';
@@ -72,8 +74,12 @@ export default function ApplicationPage({
   // - it has a status of awaiting assessment (SUBMITTED) and current user is assigned to it
   // - it has a status of awaiting reassessment and current user is assigned to it
   const canEditApplications = () => {
-    if (!hasAnyPermissions(user)) return false;
-    if (user.hasManagerPermissions) return true;
+    if (!hasAnyPermissions(user)) {
+      return false;
+    }
+    if (user.hasManagerPermissions) {
+      return true;
+    }
     if (data.status === ApplicationStatus.MANUAL_DRAFT) {
       return true;
     }
@@ -135,7 +141,7 @@ export default function ApplicationPage({
                   {getPersonName(data)}
                 </h2>
 
-                <HorizontalNav spaced={true}>
+                <HorizontalNav spaced>
                   <HorizontalNavItem
                     handleSelectNavItem={() => handleTabChange('overview')}
                     itemName="overview"

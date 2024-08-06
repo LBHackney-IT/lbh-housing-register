@@ -1,7 +1,11 @@
 import React from 'react';
+
 import { Form, Formik, FormikValues } from 'formik';
-import { diff } from 'nested-object-diff';
+import router from 'next/router';
 import * as Yup from 'yup';
+
+import { diff } from 'nested-object-diff';
+
 import {
   ActivityEntity,
   ActivityHistoryPagedResult,
@@ -9,20 +13,19 @@ import {
   ApplicationActivityType,
   IActivityEntity,
 } from '../../domain/ActivityHistoryApi';
+import { addNoteToHistory } from '../../lib/gateways/internal-api';
 import { ApplicationStatus } from '../../lib/types/application-status';
+import { reasonOptions } from '../../lib/utils/assessmentActionsData';
+import Button from '../button';
+import { HeadingFour, HeadingThree } from '../content/headings';
+import Details from '../details';
+import Textarea from '../form/textarea';
 import {
+  SummaryListKey,
   SummaryListNoBorder,
   SummaryListRow,
-  SummaryListKey,
   SummaryListValue,
 } from '../summary-list';
-import { HeadingThree, HeadingFour } from '../content/headings';
-import { addNoteToHistory } from '../../lib/gateways/internal-api';
-import Textarea from '../form/textarea';
-import Button from '../button';
-import router from 'next/router';
-import Details from '../details';
-import { reasonOptions } from '../../lib/utils/assessmentActionsData';
 
 interface ActivityHistoryPageProps {
   history: ActivityHistoryPagedResult;
@@ -87,14 +90,12 @@ export default function ApplicationHistory({
             >
               {({ isSubmitting, errors, isValid }) => {
                 return (
-                  <>
-                    <Form>
-                      <Textarea name="note" label="" as="textarea" />
-                      <Button disabled={isSubmitting} type="submit">
-                        Save note
-                      </Button>
-                    </Form>
-                  </>
+                  <Form>
+                    <Textarea name="note" label="" as="textarea" />
+                    <Button disabled={isSubmitting} type="submit">
+                      Save note
+                    </Button>
+                  </Form>
                 );
               }}
             </Formik>
@@ -102,18 +103,16 @@ export default function ApplicationHistory({
         </SummaryListRow>
       </SummaryListNoBorder>
       {listItems ? (
-        <>
-          <SummaryListNoBorder>
-            <SummaryListRow>
-              <SummaryListKey>
-                <HeadingThree content="History" />
-              </SummaryListKey>
-              <SummaryListValue>
-                <ol className="lbh-timeline">{listItems}</ol>
-              </SummaryListValue>
-            </SummaryListRow>
-          </SummaryListNoBorder>
-        </>
+        <SummaryListNoBorder>
+          <SummaryListRow>
+            <SummaryListKey>
+              <HeadingThree content="History" />
+            </SummaryListKey>
+            <SummaryListValue>
+              <ol className="lbh-timeline">{listItems}</ol>
+            </SummaryListValue>
+          </SummaryListRow>
+        </SummaryListNoBorder>
       ) : (
         <HeadingThree content="No history to show" />
       )}
@@ -128,27 +127,18 @@ function renderHeading(item: ActivityHistoryResponse) {
   } = {
     [ApplicationActivityType.AssignedToChangedByUser]: assignedToChangedByUser,
     [ApplicationActivityType.BandChangedByUser]: bandChangedByUser,
-    [ApplicationActivityType.BedroomNeedChangedByUser]:
-      bedroomNeedChangedByUser,
-    [ApplicationActivityType.BiddingNumberChangedByUser]:
-      biddingNumberChangedByUser,
+    [ApplicationActivityType.BedroomNeedChangedByUser]: bedroomNeedChangedByUser,
+    [ApplicationActivityType.BiddingNumberChangedByUser]: biddingNumberChangedByUser,
     [ApplicationActivityType.CaseViewedByUser]: caseViewedByUser,
     [ApplicationActivityType.Created]: created,
-    [ApplicationActivityType.EffectiveDateChangedByUser]:
-      effectiveDateChangedByUser,
-    [ApplicationActivityType.HouseholdApplicantChangedByUser]:
-      householdApplicantChangedByUser,
-    [ApplicationActivityType.HouseholdApplicantRemovedByUser]:
-      householdApplicantRemovedByUser,
-    [ApplicationActivityType.ImportedFromLegacyDatabase]:
-      importedFromLegacyDatabase,
-    [ApplicationActivityType.InformationReceivedDateChangedByUser]:
-      informationReceivedDateChangedByUser,
-    [ApplicationActivityType.MainApplicantChangedByUser]:
-      mainApplicantChangedByUser,
+    [ApplicationActivityType.EffectiveDateChangedByUser]: effectiveDateChangedByUser,
+    [ApplicationActivityType.HouseholdApplicantChangedByUser]: householdApplicantChangedByUser,
+    [ApplicationActivityType.HouseholdApplicantRemovedByUser]: householdApplicantRemovedByUser,
+    [ApplicationActivityType.ImportedFromLegacyDatabase]: importedFromLegacyDatabase,
+    [ApplicationActivityType.InformationReceivedDateChangedByUser]: informationReceivedDateChangedByUser,
+    [ApplicationActivityType.MainApplicantChangedByUser]: mainApplicantChangedByUser,
     [ApplicationActivityType.NoteAddedByUser]: noteAddedByUser,
-    [ApplicationActivityType.SensitivityChangedByUser]:
-      sensitivityChangedByUser,
+    [ApplicationActivityType.SensitivityChangedByUser]: sensitivityChangedByUser,
     [ApplicationActivityType.StatusChangedByUser]: statusChangedByUser,
     [ApplicationActivityType.SubmittedByResident]: submittedByResident,
   };
@@ -169,7 +159,9 @@ function renderBody(item: ActivityHistoryResponse) {
     'SubmittedByResident',
   ].includes(capitalizeFirstLetter(item.newData._activityType));
 
-  if (skipActivityType) return;
+  if (skipActivityType) {
+    return;
+  }
 
   const historyItem = new ActivityEntity(item);
 
@@ -198,7 +190,9 @@ function renderBody(item: ActivityHistoryResponse) {
               {differences.map((difference: Difference, index: number) => {
                 let { path, lhs, rhs } = difference;
 
-                if (path === '_activityType') return;
+                if (path === '_activityType') {
+                  return;
+                }
 
                 if (path === 'assessment.reason') {
                   lhs = getReasonFromActivity(lhs);
@@ -241,17 +235,16 @@ function renderBody(item: ActivityHistoryResponse) {
     );
   }
 
-  if (!historyItem.newData.activityData) return false;
+  if (!historyItem.newData.activityData) {
+    return false;
+  }
 
   return (
     <Details summary="Show details">{historyItem.newData.activityData}</Details>
   );
 }
 
-const getFormattedDate = (
-  dateString: string | null,
-  excludeTime: boolean = false
-) => {
+const getFormattedDate = (dateString: string | null, excludeTime = false) => {
   if (dateString == null) {
     return '';
   }
@@ -392,7 +385,7 @@ const statusChangedByUser = (activity: IActivityEntity) => {
     <>
       Status changed from '{activity.oldData.status}' to '
       {activity.newData.status}' by {activity.authorDetails.fullName}
-      <br></br> Reason:{' '}
+      <br /> Reason:{' '}
       {getReasonFromActivity(activity.newData.assessment?.reason)}
     </>
   );

@@ -1,5 +1,7 @@
-import { Field, FieldInputProps, FieldMetaProps } from 'formik';
 import { InputHTMLAttributes, ReactNode } from 'react';
+
+import { Field, FieldInputProps, FieldMetaProps } from 'formik';
+
 import { TextFormField } from '../../lib/types/form';
 import Paragraph from '../content/paragraph';
 import ErrorMessage from './error-message';
@@ -44,7 +46,7 @@ export default function Input({
               <Label
                 content={label}
                 htmlFor={name}
-                strong={true}
+                strong
                 hideLabel={hideLabel}
               />
             )}
@@ -55,12 +57,12 @@ export default function Input({
             <input
               // Lowest priority to prevent accidental override of component defined props
               {...additionalInputProps}
-              className={`govuk-input lbh-input ${className ? className : ''} ${
+              className={`govuk-input lbh-input ${className || ''} ${
                 meta.touched && meta.error ? 'govuk-input--error' : ''
               }`}
               id={name}
               placeholder={placeholder}
-              type={type ? type : 'text'}
+              type={type || 'text'}
               {...field}
               maxLength={500}
             />

@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Store } from '.';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+
 import { Applicant } from '../../domain/HousingApi';
 import { FormID } from '../utils/form-data';
 import {
@@ -9,6 +9,8 @@ import {
   updateApplicantReducer,
   updateWithFormValues,
 } from './applicant';
+
+import { Store } from '.';
 
 const initialState: Applicant = {};
 const slice = createSlice({
@@ -40,7 +42,7 @@ const slice = createSlice({
           state?.person?.id === action.payload.personID
         ) {
           if (action.payload.markAsComplete) {
-            action.payload.values['sectionCompleted'] = true;
+            action.payload.values.sectionCompleted = true;
           }
           return applyQuestions(
             state,

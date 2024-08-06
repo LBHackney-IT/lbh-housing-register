@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
 import { combineReducers } from 'redux';
+
 import { Application } from '../../domain/HousingApi';
 import application, { autoSaveMiddleware } from './application';
 

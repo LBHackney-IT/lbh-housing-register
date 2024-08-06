@@ -1,6 +1,7 @@
 import cookie from 'cookie';
 import jsonwebtoken from 'jsonwebtoken';
 import { Redirect } from 'next';
+
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 
 type Permissions = {
@@ -16,16 +17,16 @@ export function getSession(
 ): HackneyGoogleUserWithPermissions | undefined {
   try {
     const cookies = cookie.parse(req.headers.cookie ?? '');
-    const parsedToken = cookies['hackneyToken'];
+    const parsedToken = cookies.hackneyToken;
 
-    if (!parsedToken) return;
+    if (!parsedToken) {
+      return;
+    }
 
-    var secret = process.env.HACKNEY_JWT_SECRET as string;
-    const user = (
-      process.env.SKIP_VERIFY_TOKEN !== 'true'
-        ? jsonwebtoken.verify(parsedToken, secret)
-        : jsonwebtoken.decode(parsedToken)
-    ) as HackneyGoogleUser | undefined;
+    const secret = process.env.HACKNEY_JWT_SECRET as string;
+    const user = (process.env.SKIP_VERIFY_TOKEN !== 'true'
+      ? jsonwebtoken.verify(parsedToken, secret)
+      : jsonwebtoken.decode(parsedToken)) as HackneyGoogleUser | undefined;
 
     if (user) {
       return {
@@ -91,10 +92,9 @@ export const canViewSensitiveApplication = (
   if (user.hasAdminPermissions || user.hasManagerPermissions) {
     // can see everything
     return true;
-  } else {
-    // check assigned
-    return user.hasOfficerPermissions && assignedTo === user.email;
   }
+  // check assigned
+  return user.hasOfficerPermissions && assignedTo === user.email;
 };
 
 export const getRedirect = (

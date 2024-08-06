@@ -357,8 +357,9 @@ function makeEthnicityForm(category: string) {
   const ethnicityFilter = (ethnicity: EthnicityObject) =>
     ethnicity.category === category;
 
-  const ethnicityQuestion =
-    ethnicityCategoryQuestions.filter(ethnicityFilter)[0].label;
+  const ethnicityQuestion = ethnicityCategoryQuestions.filter(
+    ethnicityFilter
+  )[0].label;
   const matchingOptions = ethnicityCategoryOptions
     .filter(ethnicityFilter)
     .map((option) => ({
@@ -396,5 +397,6 @@ export const ethnicCategoryMixedMultipleBackgroundForm = makeEthnicityForm(
   'mixed-multiple-background'
 );
 export const ethnicCategoryWhiteForm = makeEthnicityForm('white');
-export const ethnicCategoryOtherEthnicGroupForm =
-  makeEthnicityForm('other-ethnic-group');
+export const ethnicCategoryOtherEthnicGroupForm = makeEthnicityForm(
+  'other-ethnic-group'
+);

@@ -1,4 +1,5 @@
 import { Field, FieldArray, FieldInputProps, FieldMetaProps } from 'formik';
+
 import {
   BaseFormField,
   CheckboxesFormField,
@@ -15,13 +16,13 @@ interface CheckboxProps extends BaseFormField {
   value: string;
 }
 
-export function Checkbox({
+export const Checkbox = ({
   hint,
   index,
   label,
   name,
   value,
-}: CheckboxProps): JSX.Element {
+}: CheckboxProps): JSX.Element => {
   let id = name;
 
   if (index) {
@@ -46,7 +47,7 @@ export function Checkbox({
       {hint && <Hint className="govuk-checkboxes__hint" content={hint} />}
     </div>
   );
-}
+};
 
 export interface CheckboxesProps extends CheckboxesFormField {
   value: string;
@@ -75,7 +76,7 @@ export default function Checkboxes({
       }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
           {hasMultipleOptions && label && (
-            <Label content={label} strong={true} hideLabel={hideLabel} />
+            <Label content={label} strong hideLabel={hideLabel} />
           )}
           {hasMultipleOptions && hint && <Hint content={hint} />}
           {hasMultipleOptions && details && (

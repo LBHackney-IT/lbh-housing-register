@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   ApplicantWithPersonID,
   getQuestionValue,
@@ -11,9 +12,9 @@ interface IncomeSavingsSummaryProps {
   currentResident: ApplicantWithPersonID;
 }
 
-export function IncomeSavingsSummary({
+export const IncomeSavingsSummary = ({
   currentResident,
-}: IncomeSavingsSummaryProps) {
+}: IncomeSavingsSummaryProps) => {
   interface Money {
     [key: string]: string;
   }
@@ -85,4 +86,4 @@ export function IncomeSavingsSummary({
       )}
     </SummarySection>
   );
-}
+};

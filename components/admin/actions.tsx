@@ -1,31 +1,30 @@
+import { useRef, useState } from 'react';
+
+import { Form, Formik, FormikProps, FormikValues } from 'formik';
 import router from 'next/router';
-import { useState } from 'react';
 import * as Yup from 'yup';
-import { Formik, Form, FormikValues, FormikProps } from 'formik';
 
 import { Application } from '../../domain/HousingApi';
 import { updateApplication } from '../../lib/gateways/internal-api';
 import { ApplicationStatus } from '../../lib/types/application-status';
-import { checkEligible } from '../../lib/utils/form';
-import { getDisqualificationReasonOption } from '../../lib/utils/disqualificationReasonOptions';
 import {
   reasonInitialValue,
-  statusOptions,
   reasonOptions,
+  statusOptions,
 } from '../../lib/utils/assessmentActionsData';
-
-import Button from '../button';
-import DateInput, { INVALID_DATE } from '../form/dateinput';
-import Select from '../form/select';
-import Radios from '../form/radios';
-import Input from '../form/input';
-import InsetText from '../content/inset-text';
-import Paragraph from '../content/paragraph';
-import List, { ListItem } from '../content/list';
-import ErrorSummary from '../errors/error-summary';
-import Loading from '../loading';
+import { getDisqualificationReasonOption } from '../../lib/utils/disqualificationReasonOptions';
+import { checkEligible } from '../../lib/utils/form';
 import Announcement from '../announcement';
-import { useRef } from 'react';
+import Button from '../button';
+import InsetText from '../content/inset-text';
+import List, { ListItem } from '../content/list';
+import Paragraph from '../content/paragraph';
+import ErrorSummary from '../errors/error-summary';
+import DateInput, { INVALID_DATE } from '../form/dateinput';
+import Input from '../form/input';
+import Radios from '../form/radios';
+import Select from '../form/select';
+import Loading from '../loading';
 
 interface PageProps {
   data: Application;
@@ -38,8 +37,9 @@ export default function Actions({ data }: PageProps): JSX.Element {
   const firstReason = disqualificationReasons[0];
   const formRef = useRef<FormikProps<FormikValues>>(null);
 
-  const [reservedBiddingNumberError, setReservedBiddingNumberError] =
-    useState(null);
+  const [reservedBiddingNumberError, setReservedBiddingNumberError] = useState(
+    null
+  );
 
   const schema = Yup.object({
     status: Yup.string()
@@ -221,13 +221,13 @@ export default function Actions({ data }: PageProps): JSX.Element {
                       options={reasonOptions}
                     />
                     <DateInput
-                      name={'applicationDate'}
-                      label={'Application date'}
+                      name="applicationDate"
+                      label="Application date"
                     />
                     {showInformationReceived(values) && (
                       <DateInput
-                        name={'informationReceived'}
-                        label={'All information received'}
+                        name="informationReceived"
+                        label="All information received"
                       />
                     )}
                     {showDecisionOptions(values) && (

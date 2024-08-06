@@ -1,12 +1,13 @@
+import router from 'next/router';
+
 import { HeadingOne } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
+import Form from '../../components/form/form';
 import Layout from '../../components/layout/resident-layout';
+import withApplication from '../../lib/hoc/withApplication';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { agree } from '../../lib/store/mainApplicant';
-import { getFormData, FormID } from '../../lib/utils/form-data';
-import Form from '../../components/form/form';
-import router from 'next/router';
-import withApplication from '../../lib/hoc/withApplication';
+import { FormID, getFormData } from '../../lib/utils/form-data';
 
 const ApplicationTermsPage = (): JSX.Element => {
   // TODO: might not be right place for this,

@@ -1,17 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+
+import { Address } from '../../lib/utils/adminHelpers';
+import Button from '../button';
+import { HeadingFour, HeadingThree } from '../content/headings';
+import Paragraph from '../content/paragraph';
+import Dialog from '../dialog';
+import FormGroup from '../form/form-group';
 import {
-  SummaryListNoBorder,
   SummaryListActions,
-  SummaryListRow,
   SummaryListKey,
+  SummaryListNoBorder,
+  SummaryListRow,
   SummaryListValue,
 } from '../summary-list';
-import FormGroup from '../form/form-group';
-import Dialog from '../dialog';
-import Paragraph from '../content/paragraph';
-import { HeadingThree, HeadingFour } from '../content/headings';
-import Button from '../button';
-import { Address } from '../../lib/utils/adminHelpers';
 
 interface PageProps {
   addresses: Address[];
@@ -138,7 +139,7 @@ export default function AddCaseAddress({
               Address history
             </label>
           </SummaryListValue>
-          <SummaryListActions wideActions={true}>
+          <SummaryListActions wideActions>
             {addresses
               ? addresses.map((addressItem, index) => (
                   <FormGroup key={index}>

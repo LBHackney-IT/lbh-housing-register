@@ -1,11 +1,13 @@
 import { withSentry } from '@sentry/nextjs';
 import { StatusCodes } from 'http-status-codes';
-import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+
 import {
-  sendNewApplicationEmail,
   sendDisqualifyEmail,
   sendMedicalNeedEmail,
+  sendNewApplicationEmail,
 } from '../../../lib/gateways/notify-api';
+
+import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,

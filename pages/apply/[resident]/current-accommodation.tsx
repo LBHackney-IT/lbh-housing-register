@@ -1,20 +1,22 @@
+import { useState } from 'react';
+
 import { FormikValues, getIn } from 'formik';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+
 import { HeadingOne } from '../../../components/content/headings';
 import Form from '../../../components/form/form';
 import Layout from '../../../components/layout/resident-layout';
+import { Applicant } from '../../../domain/HousingApi';
 import withApplication from '../../../lib/hoc/withApplication';
 import {
   applicantHasId,
+  getQuestionsForFormAsValues,
   selectApplicant,
   updateWithFormValues,
-  getQuestionsForFormAsValues,
 } from '../../../lib/store/applicant';
 import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import { FormID, getFormData } from '../../../lib/utils/form-data';
 import Custom404 from '../../404';
-import { Applicant } from '../../../domain/HousingApi';
 
 const CurrentAccommodation = (): JSX.Element => {
   const router = useRouter();

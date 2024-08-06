@@ -64,10 +64,15 @@ export enum ApplicationActivityData {
 
 export class ActivityEntity implements IActivityEntity {
   id: string;
+
   createdAt: string;
+
   oldData: Partial<Application>;
+
   newData: any;
+
   authorDetails: ActivityHistoryAuthor;
+
   activityType: ApplicationActivityType;
 
   constructor(source: ActivityHistoryResponse) {
@@ -86,7 +91,7 @@ export class ActivityEntity implements IActivityEntity {
       return {};
     }
 
-    let application: any = {};
+    const application: any = {};
 
     for (const [key, value] of Object.entries(source)) {
       this.stringToObj(key, value, application);
@@ -101,7 +106,9 @@ export class ActivityEntity implements IActivityEntity {
 
     let part;
     while ((part = parts.shift())) {
-      if (typeof obj[part] != 'object') obj[part] = {};
+      if (typeof obj[part] !== 'object') {
+        obj[part] = {};
+      }
       obj = obj[part]; // update "pointer"
     }
 

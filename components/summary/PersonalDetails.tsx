@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { ApplicantWithPersonID } from '../../lib/store/applicant';
 import { formatDob } from '../../lib/utils/dateOfBirth';
 import { FormID } from '../../lib/utils/form-data';
@@ -25,7 +26,7 @@ export default function PersonalDetailsSummary({
           <dd className="govuk-summary-list__value">
             {`${currentResident.person.firstName} ${currentResident.person.surname}`}
           </dd>
-          <dd className="govuk-summary-list__actions"></dd>
+          <dd className="govuk-summary-list__actions" />
         </div>
         {currentResident.person.dateOfBirth && (
           <div className="govuk-summary-list__row">
@@ -33,7 +34,7 @@ export default function PersonalDetailsSummary({
             <dd className="govuk-summary-list__value">
               {formatDob(new Date(currentResident.person.dateOfBirth))}
             </dd>
-            <dd className="govuk-summary-list__actions"></dd>
+            <dd className="govuk-summary-list__actions" />
           </div>
         )}
         <div className="govuk-summary-list__row">
@@ -41,14 +42,14 @@ export default function PersonalDetailsSummary({
           <dd className="govuk-summary-list__value">
             {getGenderName(currentResident)}
           </dd>
-          <dd className="govuk-summary-list__actions"></dd>
+          <dd className="govuk-summary-list__actions" />
         </div>
         <div className="govuk-summary-list__row">
           <dt className="govuk-summary-list__key">NI Number</dt>
           <dd className="govuk-summary-list__value">
             {currentResident.person.nationalInsuranceNumber}
           </dd>
-          <dd className="govuk-summary-list__actions"></dd>
+          <dd className="govuk-summary-list__actions" />
         </div>
       </dl>
     </SummarySection>

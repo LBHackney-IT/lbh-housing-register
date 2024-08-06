@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { Field, FieldInputProps, FieldMetaProps } from 'formik';
+
 import {
   BaseFormField,
   CheckboxesConditionalFormField,
@@ -13,40 +15,36 @@ import Hint from './hint';
 import Label from './label';
 import Textarea from './textarea';
 
-export function ConditionalInput({
+export const ConditionalInput = ({
   as,
   containerId,
   fieldId,
   fieldName,
   label,
   display,
-}: ConditionalFormFieldOptionInput) {
+}: ConditionalFormFieldOptionInput) => {
   return (
-    <>
-      <div
-        className={
-          'govuk-checkboxes__conditional' + (display ? '' : '--hidden')
-        }
-        id={containerId}
-      >
-        {as === 'textarea' ? (
-          <Textarea as="textarea" name={fieldName!} label={label!} />
-        ) : (
-          <>
-            <Label content={label} htmlFor={fieldId} />
-            <Field
-              className="govuk-input govuk-!-width-one-third"
-              type={as}
-              id={fieldId}
-              name={fieldName}
-              data-aria-controls={containerId}
-            />
-          </>
-        )}
-      </div>
-    </>
+    <div
+      className={`govuk-checkboxes__conditional${display ? '' : '--hidden'}`}
+      id={containerId}
+    >
+      {as === 'textarea' ? (
+        <Textarea as="textarea" name={fieldName!} label={label!} />
+      ) : (
+        <>
+          <Label content={label} htmlFor={fieldId} />
+          <Field
+            className="govuk-input govuk-!-width-one-third"
+            type={as}
+            id={fieldId}
+            name={fieldName}
+            data-aria-controls={containerId}
+          />
+        </>
+      )}
+    </div>
   );
-}
+};
 
 interface CheckboxProps extends BaseFormField {
   index?: number;
@@ -54,14 +52,14 @@ interface CheckboxProps extends BaseFormField {
   containerId?: string;
 }
 
-export function Checkbox({
+export const Checkbox = ({
   index,
   hint,
   label,
   name,
   value,
   containerId,
-}: CheckboxProps): JSX.Element {
+}: CheckboxProps): JSX.Element => {
   let id = name;
 
   if (index !== undefined) {
@@ -87,7 +85,7 @@ export function Checkbox({
       {hint && <Hint className="govuk-checkboxes__hint" content={hint} />}
     </div>
   );
-}
+};
 
 export interface CheckboxesConditionalProps
   extends CheckboxesConditionalFormField {
@@ -114,9 +112,7 @@ export default function CheckboxesConditional({
         meta: FieldMetaProps<string>;
       }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
-          {label && (
-            <Label content={label} strong={true} hideLabel={hideLabel} />
-          )}
+          {label && <Label content={label} strong hideLabel={hideLabel} />}
           {hint && <Hint content={hint} />}
           {details && (
             <Details summary={details.title ?? 'Help with this question'}>

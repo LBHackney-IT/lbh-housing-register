@@ -1,5 +1,7 @@
-import { Formik, Form } from 'formik';
 import React, { useRef, useState } from 'react';
+
+import { Form, Formik } from 'formik';
+
 import Button from '../button';
 import DateInput from '../form/dateinput';
 import Radios from '../form/radios';
@@ -71,9 +73,9 @@ export default function InternalReports(): JSX.Element {
               ]}
             />
 
-            <DateInput name={'startDate'} label={'Start date'} />
+            <DateInput name="startDate" label="Start date" />
 
-            <DateInput name={'endDate'} label={'End date'} />
+            <DateInput name="endDate" label="End date" />
 
             <Button type="submit">Download .csv file</Button>
           </Form>

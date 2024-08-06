@@ -6,8 +6,10 @@ import { Application } from '../../domain/HousingApi';
  * @returns {string}
  */
 export function getPersonName(application: Application | undefined): string {
-  if (!application?.mainApplicant?.person) return '';
-  let person = application?.mainApplicant?.person;
+  if (!application?.mainApplicant?.person) {
+    return '';
+  }
+  const person = application?.mainApplicant?.person;
   let name = `${person.title ? person.title : ''} ${person.firstName} ${
     person.surname
   }`;

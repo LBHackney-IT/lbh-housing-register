@@ -1,4 +1,4 @@
-import { ApplicationStatus } from '../../lib/types/application-status';
+import { ApplicationStatus } from '../types/application-status';
 
 export const reasonInitialValue = (disqualificationReason: string): string => {
   switch (disqualificationReason) {

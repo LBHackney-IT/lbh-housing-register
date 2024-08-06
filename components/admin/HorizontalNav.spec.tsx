@@ -1,5 +1,8 @@
+import React from 'react';
+
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
+
 import { HorizontalNavItem } from './HorizontalNav';
 
 describe('HorizontalNavItem', () => {
@@ -7,7 +10,7 @@ describe('HorizontalNavItem', () => {
     const expectedLabel = 'New applications';
 
     render(
-      <HorizontalNavItem itemName={'btn-name'} handleSelectNavItem={jest.fn()}>
+      <HorizontalNavItem itemName="btn-name" handleSelectNavItem={jest.fn()}>
         {expectedLabel}
       </HorizontalNavItem>
     );

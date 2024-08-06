@@ -61,5 +61,5 @@ export const addNoteToHistory = async (
     method: 'POST',
     body: JSON.stringify(request),
   });
-  return await res.json();
+  return res.json();
 };

@@ -1,8 +1,9 @@
 import { SyntheticEvent, useEffect, useState } from 'react';
+
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
+
 import ApplicationsTable from '../../components/admin/ApplicationsTable';
-import SimplePaginationSearch from '../../components/SimplePaginationSearch';
 import {
   HorizontalNav,
   HorizontalNavItem,
@@ -11,6 +12,7 @@ import SearchBox from '../../components/admin/SearchBox';
 import Sidebar from '../../components/admin/sidebar';
 import { HeadingOne } from '../../components/content/headings';
 import Layout from '../../components/layout/staff-layout';
+import SimplePaginationSearch from '../../components/SimplePaginationSearch';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { PaginatedSearchResultsResponse } from '../../domain/HousingApi';
 import { UserContext } from '../../lib/contexts/user-context';
@@ -87,7 +89,7 @@ export default function ApplicationListPage({
               <>
                 <ApplicationsTable
                   applications={applications}
-                  showStatus={true}
+                  showStatus
                   page={page}
                   pageSize={pageSize}
                 />

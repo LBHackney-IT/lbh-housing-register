@@ -12,6 +12,9 @@ executors:
   docker-python:
     docker:
       - image: circleci/python:3.7
+  orb-executor:
+    docker:
+      - image: cimg/node:21.6.1-browsers      
 
 references:
   workspace_root: &workspace_root '~'

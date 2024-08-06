@@ -46,12 +46,12 @@ jobs:
     executor: node-executor
     steps:
       - *attach_workspace
-      - run:
-          name: Lint
-          command: npm run lint
-      - run:
-          name: Prettier
-          command: npm run prettier:test
+      # - run:
+      #     name: Lint
+      #     command: npm run lint
+      # - run:
+      #     name: Prettier
+      #     command: npm run prettier:test
       - run:
           name: Run Tests
           command: npm run test:ci

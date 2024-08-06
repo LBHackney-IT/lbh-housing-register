@@ -42,7 +42,7 @@ jobs:
           root: *workspace_root
           paths: .
 
-  test-and-lint:
+  lint-and-test:
     executor: node-executor
     steps:
       - *attach_workspace
@@ -130,7 +130,7 @@ workflows:
   continuous-delivery:
     jobs:
       - install-dependencies
-      - test-and-lint:
+      - lint-and-test:
           requires:
             - install-dependencies
       - sonar-scan:
@@ -154,7 +154,7 @@ workflows:
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:
-            - test-and-lint
+            - lint-and-test
           filters:
             branches:
               only: main

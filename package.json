@@ -10,7 +10,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "prettier:test": "npx prettier -c .",
     "prettier:fix": "npx prettier --write .",
-    "test:ci": "prettier --check . && tsc --noEmit && jest --ci",
+    "test:ci": "tsc --noEmit && jest --ci",
     "test": "jest",
     "test:watch": "jest --watch",
     "prepare": "husky"

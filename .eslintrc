@@ -26,11 +26,11 @@
   "rules": {
     "linebreak-style": ["error", "unix"],
     "require-atomic-updates": "off",
+    "react/react-in-jsx-scope": "off"
     // "react/function-component-definition": ["warn"],
     // "react/jsx-no-useless-fragment": ["warn"],
     // "jsx-a11y/anchor-is-valid": ["warn"],
     // "eqeqeq": ["warn", "smart"],
-    "react/react-in-jsx-scope": "off"
   },
   "overrides": [
     {

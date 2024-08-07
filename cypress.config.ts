@@ -1,7 +1,7 @@
 import { defineConfig } from 'cypress';
 require('dotenv').config();
 
-type Environment = 'localdev' | 'development' | 'staging';
+type Environment = 'localdev' | 'development';
 
 const environment: Environment =
   (process.env.NEXT_PUBLIC_ENV as Environment) || 'development';
@@ -9,7 +9,6 @@ const environment: Environment =
 const baseUrlSites: Record<Environment, string> = {
   localdev: 'http://localhost:3000',
   development: 'https://housing-register-development.hackney.gov.uk/',
-  staging: 'https://housing-register-staging.hackney.gov.uk/',
 };
 
 const baseUrl = baseUrlSites[environment];

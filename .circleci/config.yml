@@ -4,6 +4,7 @@ orbs:
   aws-cli: circleci/aws-cli@1.0.0
   aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
   cypress: cypress-io/cypress@3.3.1
+  sonarcloud: sonarsource/sonarcloud@2.0.0
 
 executors:
   node-executor:
@@ -12,6 +13,9 @@ executors:
   docker-python:
     docker:
       - image: circleci/python:3.7
+  orb-executor:
+    docker:
+      - image: cimg/node:21.6.1-browsers
 
 references:
   workspace_root: &workspace_root '~'
@@ -46,6 +50,12 @@ jobs:
       - run:
           name: Run Tests
           command: npm run test:ci
+
+  sonar-scan:
+    executor: orb-executor
+    steps:
+      - *attach_workspace
+      - sonarcloud/scan
 
   build-deploy-development:
     executor: aws-cli/default
@@ -118,10 +128,15 @@ workflows:
       - tests:
           requires:
             - install-dependencies
+      - sonar-scan:
+          context: SonarCloud
+          requires:
+            - install-dependencies
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:
             - tests
+            - sonar-scan
           filters:
             branches:
               only: development

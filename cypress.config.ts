@@ -16,7 +16,6 @@ const baseUrl = baseUrlSites[environment];
 export default defineConfig({
   e2e: {
     baseUrl,
-    blockHosts: ['*.google-analytics.com', '*.sentry.io'],
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },

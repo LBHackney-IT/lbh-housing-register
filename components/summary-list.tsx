@@ -3,11 +3,9 @@ import React from 'react';
 interface SummaryListProps {
   children: React.ReactNode;
 }
-const SummaryList({
-  children,
-}: SummaryListProps): JSX.Element => {
+const SummaryList: React.FC<SummaryListProps> = ({ children }) => {
   return <dl className="govuk-summary-list lbh-summary-list">{children}</dl>;
-}
+};
 
 export default SummaryList;
 

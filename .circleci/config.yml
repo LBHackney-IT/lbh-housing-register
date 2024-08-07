@@ -57,6 +57,9 @@ jobs:
           path: test_results
       - store_artifacts:
           path: coverage
+      - persist_to_workspace:
+          root: *workspace_root
+          paths: .
 
   sonar-scan:
     executor: orb-executor
@@ -138,7 +141,7 @@ workflows:
       - sonar-scan:
           context: SonarCloud
           requires:
-            - install-dependencies
+            - tests
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:

@@ -13,7 +13,7 @@
     "prettier:test": "npx prettier -c .",
     "prettier:fix": "npx prettier --write .",
     "test:ci": "tsc --noEmit && jest --ci",
-    "test": "jest",
+    "test": "jest && tsc --noEmit",
     "test:watch": "jest --watch",
     "prepare": "husky"
   },

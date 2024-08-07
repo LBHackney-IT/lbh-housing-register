@@ -30,7 +30,7 @@ export const SummaryListNoBorder = ({
 };
 
 interface SummaryListKeyProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 export const SummaryListKey = ({
   children,

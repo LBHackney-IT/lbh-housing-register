@@ -63,6 +63,7 @@
     "@hackney/eslint-config": "^1.4.0",
     "@hackney/prettier-config": "^1.0.1",
     "@mocks-server/main": "^2.3.1",
+    "@next/eslint-plugin-next": "^14.2.5",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^12.1.5",
     "@types/cookie": "^0.4.0",
@@ -88,9 +89,9 @@
     "eslint-plugin-testing-library": "4.9.0",
     "husky": "^8.0.3",
     "jest": "^27.5.1",
+    "jest-junit": "^16.0.0",
     "lint-staged": "^14.0.1",
     "mockdate": "^3.0.5",
-    "@next/eslint-plugin-next": "^14.2.5",
     "prettier": "2.2.1",
     "sass": "^1.32.12",
     "typescript": "^4.2.4"

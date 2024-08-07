@@ -3,11 +3,13 @@ import React from 'react';
 interface SummaryListProps {
   children: React.ReactNode;
 }
-export default function SummaryList({
+const SummaryList({
   children,
-}: SummaryListProps): JSX.Element {
+}: SummaryListProps): JSX.Element => {
   return <dl className="govuk-summary-list lbh-summary-list">{children}</dl>;
 }
+
+export default SummaryList;
 
 export const SummaryListSpaced = ({
   children,

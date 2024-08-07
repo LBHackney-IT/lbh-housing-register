@@ -8,6 +8,8 @@
     "start": "next start -p $PORT",
     "mocks": "mocks-server",
     "lint": "eslint . --max-warnings 0 --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --fix --max-warnings 0 --ext .js,.jsx,.ts,.tsx",
+    "lint:staged": "git diff --name-only --cached --relative | grep -E '\\.(js|jsx|ts|tsx)$' | xargs eslint --fix",
     "prettier:test": "npx prettier -c .",
     "prettier:fix": "npx prettier --write .",
     "test:ci": "tsc --noEmit && jest --ci",

@@ -42,6 +42,13 @@
       "rules": {
         "react-hooks/exhaustive-deps": "off"
       }
+    },
+    {
+      "files": ["*.js"],
+      "rules": {
+        "no-unused-vars": "warn",
+        "no-console": "off"
+      }
     }
   ]
 }

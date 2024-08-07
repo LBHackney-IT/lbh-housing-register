@@ -48,7 +48,7 @@ jobs:
     steps:
       - *attach_workspace
       - run:
-          name: Run Tests
+          name: Run Tests & Prettier
           command: npm run test:ci
 
   sonar-scan:

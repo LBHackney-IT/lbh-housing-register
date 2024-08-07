@@ -11,7 +11,7 @@
     "lint:fix": "eslint . --fix --max-warnings 0 --ext .js,.jsx,.ts,.tsx",
     "prettier:test": "npx prettier -c .",
     "prettier:fix": "npx prettier --write .",
-    "test:ci": "tsc --noEmit && jest --ci",
+    "test:ci": "prettier --check . && tsc --noEmit && jest --ci --coverage",
     "test": "jest && tsc --noEmit",
     "test:watch": "jest --watch",
     "prepare": "husky",

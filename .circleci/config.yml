@@ -43,13 +43,10 @@ jobs:
           root: *workspace_root
           paths: .
 
-  lint-and-test:
+  tests:
     executor: node-executor
     steps:
       - *attach_workspace
-      - run:
-          name: Lint & Prettify staged files
-          command: npx lint-staged
       - run:
           name: Run Tests
           command: npm run test:ci
@@ -128,7 +125,7 @@ workflows:
   continuous-delivery:
     jobs:
       - install-dependencies
-      - lint-and-test:
+      - tests:
           requires:
             - install-dependencies
       - sonar-scan:
@@ -138,7 +135,7 @@ workflows:
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:
-            - lint-and-test
+            - tests
             - sonar-scan
           filters:
             branches:

@@ -18,5 +18,13 @@
     "jsx": "preserve"
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": [".next", "data", "public", "node_modules", "styles"]
+  "exclude": [
+    ".next",
+    "data",
+    "public",
+    "node_modules",
+    "styles",
+    "./cypress.config.ts",
+    "cypress"
+  ]
 }

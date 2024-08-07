@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+
 import Button from '../../components/button';
 import { HeadingTwo } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
@@ -7,7 +8,7 @@ import Panel from '../../components/panel';
 import Timeline, { TimelineEvent } from '../../components/timeline';
 import withApplication from '../../lib/hoc/withApplication';
 import { exit } from '../../lib/store/auth';
-import { useAppSelector, useAppDispatch } from '../../lib/store/hooks';
+import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { formatDate } from '../../lib/utils/dateOfBirth';
 
 const ApplicationConfirmation = (): JSX.Element => {

@@ -1,19 +1,22 @@
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
+
 import { useRouter } from 'next/router';
-import React, { ReactNode, useState, useEffect, useRef } from 'react';
+
+import { loadApplication } from '../../lib/store/application';
+import { exit } from '../../lib/store/auth';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { hasPhaseBanner } from '../../lib/utils/phase-banner';
 import Breadcrumbs from '../breadcrumbs';
-import Header from '../header';
-import PhaseBanner from '../phase-banner';
-import SkipLink from '../skip-link';
-import Seo from '../seo';
-import Footer from '../footer';
 import CookieBanner from '../content/CookieBanner';
-import { exit } from '../../lib/store/auth';
-import { loadApplication } from '../../lib/store/application';
-import Dialog from '../dialog';
 import Paragraph from '../content/paragraph';
-import Loading from '../../components/loading';
+import Dialog from '../dialog';
+import Footer from '../footer';
+import Header from '../header';
+import Loading from '../loading';
+import PhaseBanner from '../phase-banner';
+import Seo from '../seo';
+import SkipLink from '../skip-link';
+
 interface ResidentLayoutProps {
   pageName?: string;
   breadcrumbs?: { href: string; name: string }[];
@@ -65,7 +68,7 @@ export default function ResidentLayout({
   };
 
   const handleShowSignOutDialog = () => {
-    let timeBeforeAutoSignOut = setTimeout(
+    const timeBeforeAutoSignOut = setTimeout(
       () => autoSignOut(),
       TIME_TO_SHOW_DIALOG_BEFORE_SIGN_OUT
     );
@@ -86,7 +89,7 @@ export default function ResidentLayout({
   };
 
   useEffect(() => {
-    let timeBeforeShowSignOutDialog = setTimeout(
+    const timeBeforeShowSignOutDialog = setTimeout(
       () => handleShowSignOutDialog(),
       INACTIVITY_TIME_BEFORE_WARNING_DIALOG
     );

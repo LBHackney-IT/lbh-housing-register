@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   ApplicantWithPersonID,
   getQuestionValue,
@@ -11,9 +12,9 @@ interface ImmigrationStatusSummaryProps {
   currentResident: ApplicantWithPersonID;
 }
 
-export function ImmigrationStatusSummary({
+export const ImmigrationStatusSummary = ({
   currentResident,
-}: ImmigrationStatusSummaryProps) {
+}: ImmigrationStatusSummaryProps) => {
   const citizenship = getQuestionValue(
     currentResident.questions,
     FormID.IMMIGRATION_STATUS,
@@ -146,4 +147,4 @@ export function ImmigrationStatusSummary({
       </SummaryAnswer>
     </SummarySection>
   );
-}
+};

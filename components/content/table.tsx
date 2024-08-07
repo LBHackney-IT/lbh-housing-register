@@ -37,28 +37,28 @@ interface TableCellProps {
   children: number | string;
 }
 
-export function TableCell({ children }: TableCellProps): JSX.Element {
+export const TableCell = ({ children }: TableCellProps): JSX.Element => {
   let className = 'govuk-table__cell';
 
-  if (typeof children == 'number') {
+  if (typeof children === 'number') {
     className += ` ${className}--numeric`;
   }
 
   return <td className={className}>{children}</td>;
-}
+};
 
 interface TableHeadingProps {
   children: string;
 }
 
-export function TableHeading({ children }: TableHeadingProps): JSX.Element {
+export const TableHeading = ({ children }: TableHeadingProps): JSX.Element => {
   return (
     <th scope="col" className="govuk-table__header">
       {children}
     </th>
   );
-}
+};
 
-export function TableRow({ children }: TableProps): JSX.Element {
+export const TableRow = ({ children }: TableProps): JSX.Element => {
   return <tr className="govuk-table__row">{children}</tr>;
-}
+};

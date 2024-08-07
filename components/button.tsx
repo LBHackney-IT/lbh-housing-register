@@ -46,14 +46,14 @@ interface ButtonLinkProps extends ButtonProps {
   additionalCssClasses?: string;
 }
 
-export function ButtonLink({
+export const ButtonLink = ({
   children,
   disabled,
   href,
   secondary,
   svg,
   additionalCssClasses,
-}: ButtonLinkProps) {
+}: ButtonLinkProps) => {
   let className = 'govuk-button lbh-button';
 
   if (disabled) {
@@ -71,11 +71,9 @@ export function ButtonLink({
         draggable="false"
         {...(disabled && `disabled aria-disabled="true"`)}
       >
-        <>
-          {children}
-          {svg}
-        </>
+        {children}
+        {svg}
       </a>
     </Link>
   );
-}
+};

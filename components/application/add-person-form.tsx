@@ -1,18 +1,22 @@
 import { useEffect } from 'react';
+
 import { Form, Formik } from 'formik';
-import Input from '../form/input';
-import Select from '../form/select';
-import DateInput, { INVALID_DATE } from '../form/dateinput';
+import * as Yup from 'yup';
+
+import { Applicant, Person } from '../../domain/HousingApi';
+import { getQuestionsForFormAsValues } from '../../lib/store/applicant';
+import {
+  getAgeInYearsFromDate,
+  isOver16 as isOver16Func,
+} from '../../lib/utils/dateOfBirth';
+import { FormID } from '../../lib/utils/form-data';
 import Button from '../button';
+import DateInput, { INVALID_DATE } from '../form/dateinput';
+import Input from '../form/input';
 import RadioConditional, {
   RadioConditionalProps,
 } from '../form/radioconditional';
-import * as Yup from 'yup';
-import { getAgeInYearsFromDate } from '../../lib/utils/dateOfBirth';
-import { isOver16 as isOver16Func } from '../../lib//utils/dateOfBirth';
-import { Person, Applicant } from '../../domain/HousingApi';
-import { getQuestionsForFormAsValues } from '../../lib/store/applicant';
-import { FormID } from '../../lib/utils/form-data';
+import Select from '../form/select';
 
 interface FormValues {
   title: string | Person.TitleEnum;
@@ -249,16 +253,14 @@ const AddPersonForm = ({
     if (isOver16) {
       if (isMainApplicant) {
         return schema.omit(['relationshipType']);
-      } else {
-        return schema.omit(['phoneNumber', 'emailAddress']);
       }
-    } else {
-      return schema.omit([
-        'nationalInsuranceNumber',
-        'phoneNumber',
-        'emailAddress',
-      ]);
+      return schema.omit(['phoneNumber', 'emailAddress']);
     }
+    return schema.omit([
+      'nationalInsuranceNumber',
+      'phoneNumber',
+      'emailAddress',
+    ]);
   }
 
   return (
@@ -270,8 +272,8 @@ const AddPersonForm = ({
       {({ isSubmitting }) => (
         <Form>
           <Select
-            label={'Title'}
-            name={'title'}
+            label="Title"
+            name="title"
             options={titleOptions.map((title) => ({
               label: title.label,
               value: title.value,
@@ -281,8 +283,8 @@ const AddPersonForm = ({
           <Input name="surname" label="Last name" />
           {!isMainApplicant ? (
             <Select
-              label={'Relationship to you'}
-              name={'relationshipType'}
+              label="Relationship to you"
+              name="relationshipType"
               options={relationshipOptions.map((relationshipType) => ({
                 label: relationshipType.label,
                 value: relationshipType.value,
@@ -290,10 +292,10 @@ const AddPersonForm = ({
             />
           ) : null}
           <DateInput
-            name={'dateOfBirth'}
-            label={'Date of birth'}
-            hint={'For example, 31 3 1980'}
-            showDay={true}
+            name="dateOfBirth"
+            label="Date of birth"
+            hint="For example, 31 3 1980"
+            showDay
           />
           <RadioConditional
             value={genderProps.value}

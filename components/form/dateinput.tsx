@@ -1,5 +1,7 @@
-import { useField } from 'formik';
 import { FocusEvent, useRef, useState } from 'react';
+
+import { useField } from 'formik';
+
 import { DateFormField } from '../../lib/types/form';
 import ErrorMessage from './error-message';
 import FormGroup from './form-group';
@@ -81,7 +83,7 @@ export default function DateInput({
 
   return (
     <FormGroup error={!!meta.touched && !!meta.error}>
-      {label && <Label content={label} strong={true} hideLabel={hideLabel} />}
+      {label && <Label content={label} strong hideLabel={hideLabel} />}
       {meta.touched && meta.error && <ErrorMessage message={meta.error} />}
 
       <fieldset className="govuk-fieldset" role="group">

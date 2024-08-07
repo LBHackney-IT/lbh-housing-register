@@ -1,21 +1,20 @@
 import cookie from 'cookie';
 import jsonwebtoken from 'jsonwebtoken';
+
 import { HackneyResident } from '../../domain/HackneyResident';
 import { VerifyAuthResponse } from '../../domain/HousingApi';
 
 export function getUser(req: any) {
   try {
     const cookies = cookie.parse(req.headers.cookie ?? '');
-    const parsedToken = cookies['housing_user'];
+    const parsedToken = cookies.housing_user;
 
     if (!parsedToken) return;
 
-    var secret = process.env.HACKNEY_JWT_SECRET as string;
-    const user = (
-      process.env.SKIP_VERIFY_TOKEN !== 'true'
-        ? jsonwebtoken.verify(parsedToken, secret)
-        : jsonwebtoken.decode(parsedToken)
-    ) as HackneyResident | undefined;
+    const secret = process.env.HACKNEY_JWT_SECRET as string;
+    const user = (process.env.SKIP_VERIFY_TOKEN !== 'true'
+      ? jsonwebtoken.verify(parsedToken, secret)
+      : jsonwebtoken.decode(parsedToken)) as HackneyResident | undefined;
 
     return user;
   } catch (err) {

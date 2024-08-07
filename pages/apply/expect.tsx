@@ -1,14 +1,15 @@
-import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { useRouter } from 'next/router';
+
+import Announcement from '../../components/announcement';
 import { ButtonLink } from '../../components/button';
 import { HeadingOne } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
-import Layout from '../../components/layout/resident-layout';
 import DeleteLink from '../../components/delete-link';
-import Announcement from '../../components/announcement';
-import { getWaitingTime } from '../../lib/utils/bedroomWaitingTime';
+import Layout from '../../components/layout/resident-layout';
 import withApplication from '../../lib/hoc/withApplication';
 import { exit } from '../../lib/store/auth';
+import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
+import { getWaitingTime } from '../../lib/utils/bedroomWaitingTime';
 
 const WhatToExpect = (): JSX.Element => {
   const router = useRouter();

@@ -14,14 +14,14 @@ interface TimelineEventProps {
   variant?: 'action-needed' | 'major' | 'minor';
 }
 
-export function TimelineEvent({
+export const TimelineEvent = ({
   heading,
   children,
   variant,
-}: TimelineEventProps): JSX.Element {
+}: TimelineEventProps): JSX.Element => {
   let className = 'lbh-timeline__event';
   if (variant) {
-    className += ' lbh-timeline__event--' + variant;
+    className += ` lbh-timeline__event--${variant}`;
   }
 
   return (
@@ -30,4 +30,4 @@ export function TimelineEvent({
       {children}
     </li>
   );
-}
+};

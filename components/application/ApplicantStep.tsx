@@ -1,11 +1,12 @@
 import { ReactElement, ReactNode } from 'react';
+
 import { Applicant } from '../../domain/HousingApi';
 import { FormID, getFormData } from '../../lib/utils/form-data';
 import { HeadingOne } from '../content/headings';
 import Paragraph from '../content/paragraph';
 import Layout from '../layout/resident-layout';
 
-function ApplicantStep({
+const ApplicantStep = ({
   children,
   formID,
   applicant,
@@ -15,7 +16,7 @@ function ApplicantStep({
   formID: FormID;
   stepName: string;
   applicant: Applicant;
-}): ReactElement {
+}): ReactElement => {
   const formData = getFormData(formID);
   const breadcrumbs = [
     {
@@ -44,5 +45,5 @@ function ApplicantStep({
       {children}
     </Layout>
   );
-}
+};
 export default ApplicantStep;

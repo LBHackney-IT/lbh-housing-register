@@ -1,35 +1,37 @@
-import Layout from '../../../components/layout/resident-layout';
-import {
-  ApplicantWithPersonID,
-  selectApplicant,
-  getQuestionValue,
-} from '../../../lib/store/applicant';
-import { useAppSelector, useAppDispatch } from '../../../lib/store/hooks';
-import { useRouter } from 'next/router';
-import Custom404 from '../../404';
-import DeleteLink from '../../../components/delete-link';
-import PersonalDetailsSummary from '../../../components/summary/PersonalDetails';
 import React from 'react';
+
+import { useRouter } from 'next/router';
+
+import Button from '../../../components/button';
+import DeleteLink from '../../../components/delete-link';
+import Layout from '../../../components/layout/resident-layout';
 import { AddressHistorySummary } from '../../../components/summary/AddressHistory';
 import { CurrentAccommodationSummary } from '../../../components/summary/CurrentAccommodation';
 import { EmploymentSummary } from '../../../components/summary/Employment';
 import { ImmigrationStatusSummary } from '../../../components/summary/ImmigrationStatus';
 import { IncomeSavingsSummary } from '../../../components/summary/IncomeSavings';
 import { MedicalNeedsSummary } from '../../../components/summary/MedicalNeeds';
+import PersonalDetailsSummary from '../../../components/summary/PersonalDetails';
 import { ResidentialStatusSummary } from '../../../components/summary/ResidentialStatus';
 import { YourSituationSummary } from '../../../components/summary/YourSituation';
-import { checkEligible } from '../../../lib/utils/form';
-import Button from '../../../components/button';
-import { isOver18 } from '../../../lib/utils/dateOfBirth';
-import { FormID } from '../../../lib/utils/form-data';
+import { Applicant } from '../../../domain/HousingApi';
 import withApplication from '../../../lib/hoc/withApplication';
-import { removeApplicant } from '../../../lib/store/otherMembers';
-import { getDisqualificationReasonOption } from '../../../lib/utils/disqualificationReasonOptions';
+import {
+  ApplicantWithPersonID,
+  getQuestionValue,
+  selectApplicant,
+} from '../../../lib/store/applicant';
 import {
   disqualifyApplication,
   sendDisqualifyEmail,
 } from '../../../lib/store/application';
-import { Applicant } from '../../../domain/HousingApi';
+import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
+import { removeApplicant } from '../../../lib/store/otherMembers';
+import { isOver18 } from '../../../lib/utils/dateOfBirth';
+import { getDisqualificationReasonOption } from '../../../lib/utils/disqualificationReasonOptions';
+import { checkEligible } from '../../../lib/utils/form';
+import { FormID } from '../../../lib/utils/form-data';
+import Custom404 from '../../404';
 
 const UserSummary = (): JSX.Element => {
   const router = useRouter();

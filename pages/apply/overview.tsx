@@ -1,18 +1,19 @@
 import Link from 'next/link';
+
+import ApplicantSummary from '../../components/application/ApplicantSummary';
 import { ButtonLink } from '../../components/button';
 import { HeadingOne } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
 import Layout from '../../components/layout/resident-layout';
 import {
-  SummaryListSpaced,
   SummaryListKey as Key,
   SummaryListRow as Row,
+  SummaryListSpaced,
 } from '../../components/summary-list';
-import ApplicantSummary from '../../components/application/ApplicantSummary';
 import { Applicant } from '../../domain/HousingApi';
+import withApplication from '../../lib/hoc/withApplication';
 import { useAppSelector } from '../../lib/store/hooks';
 import { applicationSteps } from '../../lib/utils/resident';
-import withApplication from '../../lib/hoc/withApplication';
 import Custom404 from '../404';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
@@ -40,37 +41,36 @@ const ApplicationPersonsOverview = (): JSX.Element => {
   }).length;
 
   return (
-    <>
-      <Layout pageName="Application overview" breadcrumbs={breadcrumbs}>
-        <HeadingOne content="Provide information about your household" />
-        <p className="lbh-body lbh-body-l lbh-body--grey">
-          You've completed information for {applicantsCompletedCount} of{' '}
-          {applicants.length} people.
-        </p>
+    <Layout pageName="Application overview" breadcrumbs={breadcrumbs}>
+      <HeadingOne content="Provide information about your household" />
+      <p className="lbh-body lbh-body-l lbh-body--grey">
+        You've completed information for {applicantsCompletedCount} of{' '}
+        {applicants.length} people.
+      </p>
 
-        <SummaryListSpaced>
-          {applicants.map((applicant, index) => {
-            const tasks = applicationSteps(
-              applicant,
-              applicant === application.mainApplicant
-            );
+      <SummaryListSpaced>
+        {applicants.map((applicant, index) => {
+          const tasks = applicationSteps(
+            applicant,
+            applicant === application.mainApplicant
+          );
 
-            return (
-              <Row key={index} verticalAlign="middle">
-                <Key>
-                  <ApplicantSummary
-                    applicant={applicant}
-                    isMainApplicant={applicant === application.mainApplicant}
-                    mainApplicantCompleted={
-                      mainResident
-                        ? applicationSteps(mainResident, true).remaining === 0
-                        : false
-                    }
-                    applicantNumber={index + 1}
-                    tasks={tasks}
-                  />
-                </Key>
-                {/* <Actions>
+          return (
+            <Row key={index} verticalAlign="middle">
+              <Key>
+                <ApplicantSummary
+                  applicant={applicant}
+                  isMainApplicant={applicant === application.mainApplicant}
+                  mainApplicantCompleted={
+                    mainResident
+                      ? applicationSteps(mainResident, true).remaining === 0
+                      : false
+                  }
+                  applicantNumber={index + 1}
+                  tasks={tasks}
+                />
+              </Key>
+              {/* <Actions>
                   {tasksRemaining == 0 ? (
                     <Tag content="Completed" variant="green" />
                   ) : (
@@ -81,35 +81,34 @@ const ApplicationPersonsOverview = (): JSX.Element => {
                     />
                   )}
                 </Actions> */}
-              </Row>
-            );
-          })}
-        </SummaryListSpaced>
+            </Row>
+          );
+        })}
+      </SummaryListSpaced>
 
-        <Paragraph>
-          <Link href="/apply/household">
-            <a className="lbh-body-s lbh-link lbh-link--no-visited-state ">
-              Edit my household
-            </a>
-          </Link>
-        </Paragraph>
+      <Paragraph>
+        <Link href="/apply/household">
+          <a className="lbh-body-s lbh-link lbh-link--no-visited-state ">
+            Edit my household
+          </a>
+        </Link>
+      </Paragraph>
 
-        {applicants.every(
-          (applicant) =>
-            applicationSteps(applicant, applicant === application.mainApplicant)
-              .remaining == 0
-        ) && (
-          <>
-            <Paragraph>
-              Please make sure you have checked your answers for each applicant.
-            </Paragraph>
-            <ButtonLink href="/apply/submit/additional-questions">
-              Save and continue
-            </ButtonLink>
-          </>
-        )}
-      </Layout>
-    </>
+      {applicants.every(
+        (applicant) =>
+          applicationSteps(applicant, applicant === application.mainApplicant)
+            .remaining == 0
+      ) && (
+        <>
+          <Paragraph>
+            Please make sure you have checked your answers for each applicant.
+          </Paragraph>
+          <ButtonLink href="/apply/submit/additional-questions">
+            Save and continue
+          </ButtonLink>
+        </>
+      )}
+    </Layout>
   );
 };
 

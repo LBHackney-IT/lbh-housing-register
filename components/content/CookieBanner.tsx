@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
-import Paragraph from '../content/paragraph';
+
+import Paragraph from './paragraph';
 
 export default function CookieBanner(): JSX.Element {
   const ref = useRef(null);

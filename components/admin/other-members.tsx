@@ -1,12 +1,13 @@
-import { Applicant } from '../../domain/HousingApi';
-import { ButtonLink } from '../button';
-import { formatDob } from '../../lib/utils/dateOfBirth';
 import React, { useState } from 'react';
-import { HeadingThree } from '../content/headings';
-import { getGenderName } from '../../lib/utils/gender';
+
+import { Applicant } from '../../domain/HousingApi';
 import capitalize from '../../lib/utils/capitalize';
-import Dialog from '../dialog';
+import { formatDob } from '../../lib/utils/dateOfBirth';
+import { getGenderName } from '../../lib/utils/gender';
+import { ButtonLink } from '../button';
+import { HeadingThree } from '../content/headings';
 import Paragraph from '../content/paragraph';
+import Dialog from '../dialog';
 
 interface SummaryProps {
   heading: string;

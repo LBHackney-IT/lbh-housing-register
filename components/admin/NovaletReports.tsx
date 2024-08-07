@@ -1,13 +1,14 @@
 import { useState } from 'react';
-import Button, { ButtonLink } from '../button';
+
 import {
-  generateNovaletExport,
   approveNovaletExport,
+  generateNovaletExport,
 } from '../../lib/gateways/internal-api';
-import { Report } from './../../pages/applications/reports';
-import Paragraph from '../content/paragraph';
+import { Report } from '../../pages/applications/reports';
 import Announcement from '../announcement';
+import Button, { ButtonLink } from '../button';
 import { HeadingTwo } from '../content/headings';
+import Paragraph from '../content/paragraph';
 import Dialog from '../dialog';
 
 interface NovaletReportsProps {
@@ -124,7 +125,7 @@ export default function NovaletReports({
                 <td className="govuk-table__cell">
                   <ButtonLink
                     additionalCssClasses="lbh-!-margin-top-0 lbh-!-no-wrap"
-                    secondary={true}
+                    secondary
                     href={`/api/reports/novalet/download/${encodeURIComponent(
                       mostRecentReport.fileName
                     )}`}
@@ -236,7 +237,7 @@ export default function NovaletReports({
                   <td className="govuk-table__cell">
                     <ButtonLink
                       additionalCssClasses="lbh-!-margin-top-0 lbh-!-no-wrap"
-                      secondary={true}
+                      secondary
                       href={`/api/reports/novalet/download/${encodeURIComponent(
                         report.fileName
                       )}`}

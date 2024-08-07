@@ -1,10 +1,11 @@
-import { NotifyRequest, NotifyResponse } from '../../domain/govukNotify';
 import { NotifyClient } from 'notifications-node-client';
+
+import { NotifyRequest, NotifyResponse } from '../../domain/govukNotify';
 
 export const sendNewApplicationEmail = async (
   request: NotifyRequest
 ): Promise<NotifyResponse> => {
-  var notifyClient = new NotifyClient(process.env.NOTIFY_API_KEY);
+  const notifyClient = new NotifyClient(process.env.NOTIFY_API_KEY);
   const response = await notifyClient
     .sendEmail(
       process.env.NOTIFY_TEMPLATE_NEW_APPLICATION,
@@ -23,7 +24,7 @@ export const sendNewApplicationEmail = async (
 export const sendMedicalNeedEmail = async (
   request: NotifyRequest
 ): Promise<NotifyResponse> => {
-  var notifyClient = new NotifyClient(process.env.NOTIFY_API_KEY);
+  const notifyClient = new NotifyClient(process.env.NOTIFY_API_KEY);
   const response = await notifyClient
     .sendEmail(process.env.NOTIFY_TEMPLATE_MEDICAL_NEED, request.emailAddress, {
       personalisation: request.personalisation,
@@ -38,7 +39,7 @@ export const sendMedicalNeedEmail = async (
 export const sendDisqualifyEmail = async (
   request: NotifyRequest
 ): Promise<NotifyResponse> => {
-  var notifyClient = new NotifyClient(process.env.NOTIFY_API_KEY);
+  const notifyClient = new NotifyClient(process.env.NOTIFY_API_KEY);
   const response = await notifyClient
     .sendEmail(process.env.NOTIFY_TEMPLATE_DISQUALIFY, request.emailAddress, {
       personalisation: request.personalisation,

@@ -1,18 +1,19 @@
 import { useRouter } from 'next/router';
+
 import { ButtonLink } from '../../../components/button';
 import { HeadingOne } from '../../../components/content/headings';
 import Paragraph from '../../../components/content/paragraph';
-import Hint from '../../../components/form/hint';
 import DeleteLink from '../../../components/delete-link';
+import Hint from '../../../components/form/hint';
 import Layout from '../../../components/layout/resident-layout';
 import SummaryList, {
   SummaryListKey as Key,
   SummaryListRow as Row,
 } from '../../../components/summary-list';
 import { Applicant } from '../../../domain/HousingApi';
-import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import withApplication from '../../../lib/hoc/withApplication';
 import { exit } from '../../../lib/store/auth';
+import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 
 const ApplicationHouseholdOverview = (): JSX.Element => {
   const router = useRouter();
@@ -53,12 +54,11 @@ const ApplicationHouseholdOverview = (): JSX.Element => {
               <Key>
                 <>
                   <Hint
-                    content={
-                      `Person ${index + 1}` +
-                      (applicant === mainApplicant
+                    content={`Person ${index + 1}${
+                      applicant === mainApplicant
                         ? ': Me'
-                        : `: My ${applicant.person?.relationshipType}`)
-                    }
+                        : `: My ${applicant.person?.relationshipType}`
+                    }`}
                   />
                   {applicant.person?.firstName} {applicant.person?.surname}
                 </>
@@ -68,7 +68,7 @@ const ApplicationHouseholdOverview = (): JSX.Element => {
         })}
       </SummaryList>
 
-      <ButtonLink href="/apply/household/add-person" secondary={true}>
+      <ButtonLink href="/apply/household/add-person" secondary>
         Add a person
       </ButtonLink>
       <Paragraph>

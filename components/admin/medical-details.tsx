@@ -1,17 +1,19 @@
+import React from 'react';
+
+import { Form, Formik, FormikValues } from 'formik';
 import { useRouter } from 'next/router';
 import * as Yup from 'yup';
-import { Form, Formik, FormikValues } from 'formik';
+
 import { Applicant, Application } from '../../domain/HousingApi';
-import { applicantHasId } from '../../lib/store/applicant';
-import DateInput, { INVALID_DATE } from '../form/dateinput';
 import { updateApplication } from '../../lib/gateways/internal-api';
-import React from 'react';
+import { applicantHasId } from '../../lib/store/applicant';
+import { applicantHasMedicalNeed } from '../../lib/utils/medicalNeed';
 import Button from '../button';
-import Select from '../form/select';
 import { HeadingThree } from '../content/headings';
 import Paragraph from '../content/paragraph';
+import DateInput, { INVALID_DATE } from '../form/dateinput';
+import Select from '../form/select';
 import Textarea from '../form/textarea';
-import { applicantHasMedicalNeed } from '../../lib/utils/medicalNeed';
 
 export interface MedicalDetailPageProps {
   data: Application;
@@ -166,7 +168,7 @@ export default function MedicalDetail({
     data.otherMembers && memberIndex > -1
       ? data.otherMembers[memberIndex]
       : data.mainApplicant;
-  var initialValues: FormikValues = {
+  const initialValues: FormikValues = {
     dateFormRecieved: applicant?.medicalNeed?.formRecieved ?? '',
     assessmentDate: applicant?.medicalNeed?.assessmentDate ?? '',
     outcome: applicant?.medicalNeed?.outcome ?? '',
@@ -238,10 +240,7 @@ export default function MedicalDetail({
                 {hasMedicalNeed ? 'Yes' : 'No'}
               </Paragraph>
               {hasMedicalNeed && (
-                <DateInput
-                  name={'dateFormRecieved'}
-                  label={'Date form received'}
-                />
+                <DateInput name="dateFormRecieved" label="Date form received" />
               )}
             </div>
           </div>
@@ -255,10 +254,7 @@ export default function MedicalDetail({
               </div>
               <div className="govuk-grid-row">
                 <div className="govuk-grid-column-two-thirds">
-                  <DateInput
-                    name={'assessmentDate'}
-                    label={'Assessment Date'}
-                  />
+                  <DateInput name="assessmentDate" label="Assessment Date" />
                   <Select
                     label="Outcome"
                     name="outcome"
@@ -277,7 +273,7 @@ export default function MedicalDetail({
                   <Textarea
                     label="Additional information"
                     name="additionalInformation"
-                    as={'textarea'}
+                    as="textarea"
                   />
                 </div>
               </div>

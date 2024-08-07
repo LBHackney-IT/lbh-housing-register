@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   ApplicantWithPersonID,
   getQuestionValue,
@@ -11,7 +12,9 @@ interface EmploymentSummaryProps {
   currentResident: ApplicantWithPersonID;
 }
 
-export function EmploymentSummary({ currentResident }: EmploymentSummaryProps) {
+export const EmploymentSummary = ({
+  currentResident,
+}: EmploymentSummaryProps) => {
   const employment = getQuestionValue(
     currentResident.questions,
     FormID.EMPLOYMENT,
@@ -51,4 +54,4 @@ export function EmploymentSummary({ currentResident }: EmploymentSummaryProps) {
       </SummaryAnswer>
     </SummarySection>
   );
-}
+};

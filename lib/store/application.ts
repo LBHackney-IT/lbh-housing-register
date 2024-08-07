@@ -1,23 +1,25 @@
-import throttle from 'lodash.throttle';
 import {
   AnyAction,
-  createAsyncThunk,
-  createSlice,
   Middleware,
   ThunkDispatch,
+  createAsyncThunk,
+  createSlice,
 } from '@reduxjs/toolkit';
-import { Store } from '.';
+import throttle from 'lodash.throttle';
+
+import { NotifyRequest, NotifyResponse } from '../../domain/govukNotify';
 import {
   Application,
   CreateEvidenceRequest,
   EvidenceRequestResponse,
 } from '../../domain/HousingApi';
+import { ApplicationStatus } from '../types/application-status';
+import { getRequiredDocumentsForApplication } from '../utils/evidence';
 import { exit } from './auth';
 import mainApplicant from './mainApplicant';
 import otherMembers from './otherMembers';
-import { NotifyRequest, NotifyResponse } from '../../domain/govukNotify';
-import { getRequiredDocumentsForApplication } from '../utils/evidence';
-import { ApplicationStatus } from '../types/application-status';
+
+import { Store } from '.';
 
 export const loadApplication = createAsyncThunk(
   'application/load',
@@ -43,7 +45,7 @@ export const disqualifyApplication = createAsyncThunk(
   'application/disqualify',
   async (id: string) => {
     const request: Application = {
-      id: id,
+      id,
       status: ApplicationStatus.DISQUALIFIED,
     };
     await fetch(`/api/applications/${id}`, {
@@ -143,7 +145,7 @@ export const sendDisqualifyEmail = createAsyncThunk(
       personalisation: {
         ref_number: application.reference ?? '',
         resident_name: application.mainApplicant?.person?.firstName ?? '',
-        reason: reason,
+        reason,
       },
       reference: `${application.reference}`,
     };

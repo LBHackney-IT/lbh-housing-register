@@ -1,17 +1,18 @@
 import { FormikValues } from 'formik';
 import { useRouter } from 'next/router';
-import { HeadingOne, HeadingFour } from '../../../components/content/headings';
+
+import { HeadingFour, HeadingOne } from '../../../components/content/headings';
 import Form from '../../../components/form/form';
 import Layout from '../../../components/layout/resident-layout';
-import { FormID, getFormData } from '../../../lib/utils/form-data';
-import Custom404 from '../../404';
-import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
+import { Applicant } from '../../../domain/HousingApi';
+import withApplication from '../../../lib/hoc/withApplication';
 import {
   getQuestionsForFormAsValues,
   updateWithFormValues,
 } from '../../../lib/store/applicant';
-import withApplication from '../../../lib/hoc/withApplication';
-import { Applicant } from '../../../domain/HousingApi';
+import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
+import { FormID, getFormData } from '../../../lib/utils/form-data';
+import Custom404 from '../../404';
 
 const AdditonalQuestions = (): JSX.Element => {
   const router = useRouter();

@@ -1,19 +1,22 @@
 import { useState } from 'react';
+
+import { FormikValues } from 'formik';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import { FormikValues } from 'formik';
+
+import HouseholdMemberForm from '../../../../../components/admin/HouseholdMemberForm';
+import { HackneyGoogleUser } from '../../../../../domain/HackneyGoogleUser';
 import { Application } from '../../../../../domain/HousingApi';
 import { getApplication } from '../../../../../lib/gateways/applications-api';
-import { getRedirect, getSession } from '../../../../../lib/utils/googleAuth';
 import { updateApplication } from '../../../../../lib/gateways/internal-api';
-import Custom404 from '../../../../404';
-import { HackneyGoogleUser } from '../../../../../domain/HackneyGoogleUser';
 import {
   Address,
   generateQuestionArray,
 } from '../../../../../lib/utils/adminHelpers';
+import { getRedirect, getSession } from '../../../../../lib/utils/googleAuth';
 import { scrollToTop } from '../../../../../lib/utils/scroll';
-import HouseholdMemberForm from '../../../../../components/admin/HouseholdMemberForm';
+import Custom404 from '../../../../404';
+
 interface PageProps {
   user: HackneyGoogleUser;
   data: Application;
@@ -96,7 +99,7 @@ export default function EditApplicant({
     <>
       {data.id ? (
         <HouseholdMemberForm
-          isEditing={true}
+          isEditing
           user={user}
           onSubmit={onSubmit}
           isSubmitted={isSubmitted}

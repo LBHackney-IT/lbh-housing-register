@@ -19,7 +19,7 @@ export default function AddressSelector({
               value={[address.line1, address.town, address.postcode]}
               key={address.UPRN}
             >
-              {address.line1 + ',' + address.town + '' + address.postcode}
+              {`${address.line1},${address.town}${address.postcode}`}
             </option>
           );
         })}

@@ -1,20 +1,21 @@
-import { Form, Formik, FormikValues, FormikErrors } from 'formik';
-import { UserContext } from '../../lib/contexts/user-context';
-import Button from '../../components/button';
-import ErrorSummary from '../../components/errors/error-summary';
-import { FormID } from '../../lib/utils/form-data';
+import { Form, Formik, FormikErrors, FormikValues } from 'formik';
+
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
+import { UserContext } from '../../lib/contexts/user-context';
 import {
-  getSectionData,
-  generateInitialValues,
-  generateEditInitialValues,
   addCaseSchema,
+  generateEditInitialValues,
+  generateInitialValues,
+  getSectionData,
 } from '../../lib/utils/adminHelpers';
-import AddCaseSection from '../../components/admin/AddCaseSection';
-import AddCaseAddress from '../../components/admin/AddCaseAddress';
-import AddRelationshipType from '../../components/admin/AddRelationshipType';
-import Layout from '../../components/layout/staff-layout';
-import { HeadingOne } from '../../components/content/headings';
+import { FormID } from '../../lib/utils/form-data';
+import Button from '../button';
+import { HeadingOne } from '../content/headings';
+import ErrorSummary from '../errors/error-summary';
+import Layout from '../layout/staff-layout';
+import AddCaseAddress from './AddCaseAddress';
+import AddCaseSection from './AddCaseSection';
+import AddRelationshipType from './AddRelationshipType';
 
 const personalDetailsSection = getSectionData(FormID.PERSONAL_DETAILS);
 const immigrationStatusSection = getSectionData(FormID.IMMIGRATION_STATUS);

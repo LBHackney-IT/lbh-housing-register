@@ -1,24 +1,25 @@
 import { useState } from 'react';
-import { useRouter } from 'next/router';
-import { GetServerSideProps } from 'next';
-import { getRedirect, getSession } from '../../lib/utils/googleAuth';
-import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
-import { FormikValues } from 'formik';
-import { Application, Address as ApiAddress } from '../../domain/HousingApi';
-import {
-  generateQuestionArray,
-  Address,
-  convertAddressToPrimary,
-} from '../../lib/utils/adminHelpers';
 
+import { FormikValues } from 'formik';
+import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
+
+import MainApplicantForm from '../../components/admin/MainApplicantForm';
+import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
+import { Address as ApiAddress, Application } from '../../domain/HousingApi';
 import {
-  createApplication,
   completeApplication,
+  createApplication,
   updateApplication,
 } from '../../lib/gateways/internal-api';
 import { ApplicationStatus } from '../../lib/types/application-status';
+import {
+  Address,
+  convertAddressToPrimary,
+  generateQuestionArray,
+} from '../../lib/utils/adminHelpers';
+import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 import { scrollToTop } from '../../lib/utils/scroll';
-import MainApplicantForm from '../../components/admin/MainApplicantForm';
 
 interface PageProps {
   user: HackneyGoogleUser;

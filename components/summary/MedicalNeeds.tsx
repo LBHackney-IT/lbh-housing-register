@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   ApplicantWithPersonID,
   getQuestionValue,
@@ -11,9 +12,9 @@ interface MedicalNeedsSummaryProps {
   currentResident: ApplicantWithPersonID;
 }
 
-export function MedicalNeedsSummary({
+export const MedicalNeedsSummary = ({
   currentResident,
-}: MedicalNeedsSummaryProps) {
+}: MedicalNeedsSummaryProps) => {
   const medicalNeeds = getQuestionValue(
     currentResident.questions,
     FormID.MEDICAL_NEEDS,
@@ -48,4 +49,4 @@ export function MedicalNeedsSummary({
       )}
     </SummarySection>
   );
-}
+};

@@ -6,11 +6,11 @@ interface NoVisitedLinkProps {
   children: JSX.Element | JSX.Element[];
 }
 
-export function NoVisitedLink({
+export const NoVisitedLink = ({
   href,
   isBold,
   children,
-}: NoVisitedLinkProps): JSX.Element {
+}: NoVisitedLinkProps): JSX.Element => {
   const cssClasses = isBold
     ? 'lbh-link lbh-link--no-visited-state lbh-!-font-weight-bold'
     : 'lbh-link lbh-link--no-visited-state';
@@ -19,7 +19,7 @@ export function NoVisitedLink({
       <a className={cssClasses}>{children}</a>
     </Link>
   );
-}
+};
 
 interface NoVisitedButtonLinkProps {
   onClick?: () => void;
@@ -27,11 +27,11 @@ interface NoVisitedButtonLinkProps {
   children: JSX.Element | JSX.Element[];
 }
 
-export function NoVisitedButtonLink({
+export const NoVisitedButtonLink = ({
   onClick,
   isBold,
   children,
-}: NoVisitedButtonLinkProps): JSX.Element {
+}: NoVisitedButtonLinkProps): JSX.Element => {
   const cssClasses = isBold
     ? 'lbh-link lbh-link--no-visited-state lbh-!-font-weight-bold'
     : 'lbh-link lbh-link--no-visited-state';
@@ -40,4 +40,4 @@ export function NoVisitedButtonLink({
       {children}
     </button>
   );
-}
+};

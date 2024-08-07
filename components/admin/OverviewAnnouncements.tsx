@@ -1,7 +1,7 @@
-import Announcement from '../../components/announcement';
-import Details from '../../components/details';
-import Paragraph from '../../components/content/paragraph';
 import { Applicant } from '../../domain/HousingApi';
+import Announcement from '../announcement';
+import Paragraph from '../content/paragraph';
+import Details from '../details';
 
 const additionalQuestionsArray = [
   {
@@ -45,10 +45,10 @@ interface OverviewAnnouncementProps {
   description: (string | undefined)[] | undefined;
 }
 
-function OverviewAnnouncement({
+const OverviewAnnouncement = ({
   title,
   description,
-}: OverviewAnnouncementProps) {
+}: OverviewAnnouncementProps) => {
   return (
     <Announcement variant="info">
       <h3 className="lbh-page-announcement__title">{title}</h3>
@@ -59,7 +59,7 @@ function OverviewAnnouncement({
       </div>
     </Announcement>
   );
-}
+};
 
 interface OverviewAnnouncementsProps {
   applicant: Applicant;

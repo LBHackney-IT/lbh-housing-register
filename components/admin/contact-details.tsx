@@ -16,12 +16,12 @@ export default function ContactDetails({
         <div className="govuk-summary-list__row">
           <dt className="govuk-summary-list__key">Email Address</dt>
           <dd className="govuk-summary-list__value">{contact.emailAddress}</dd>
-          <span className="govuk-summary-list__actions"></span>
+          <span className="govuk-summary-list__actions" />
         </div>
         <div className="govuk-summary-list__row">
           <dt className="govuk-summary-list__key">Phone Number</dt>
           <dd className="govuk-summary-list__value">{contact.phoneNumber} </dd>
-          <span className="govuk-summary-list__actions"></span>
+          <span className="govuk-summary-list__actions" />
         </div>
       </dl>
     </Collapsible>

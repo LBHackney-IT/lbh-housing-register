@@ -1,6 +1,8 @@
-import axios, { AxiosResponse } from 'axios';
 import { IncomingMessage } from 'http';
+
+import axios, { AxiosResponse } from 'axios';
 import { NextApiRequest } from 'next';
+
 import { ActivityHistoryPagedResult } from '../../domain/ActivityHistoryApi';
 import {
   AddNoteToHistoryRequest,
@@ -9,11 +11,11 @@ import {
   CreateAuthResponse,
   CreateEvidenceRequest,
   EvidenceRequestResponse,
+  InternalReportRequest,
   PaginatedApplicationListResponse,
   PaginatedSearchResultsResponse,
   VerifyAuthRequest,
   VerifyAuthResponse,
-  InternalReportRequest,
 } from '../../domain/HousingApi';
 import { Stat } from '../../domain/stat';
 import asssertServerOnly from '../utils/assertServerOnly';
@@ -25,14 +27,15 @@ import {
 
 asssertServerOnly();
 
-const emptyActivityHistoryPagedResult: ActivityHistoryPagedResult =
-  Object.freeze({
+const emptyActivityHistoryPagedResult: ActivityHistoryPagedResult = Object.freeze(
+  {
     results: [],
     paginationDetails: {
       hasNext: false,
       nextToken: '',
     },
-  });
+  }
+);
 
 export const getApplications = async (
   page: string,
@@ -58,7 +61,7 @@ export const getApplicationsByStatus = async (
 };
 
 export const getApplicationStatusCounts = async () => {
-  return await housingAxios()
+  return housingAxios()
     .get('applications/breakdown/status')
     .then((response) => response.data);
 };
@@ -193,14 +196,14 @@ export const downloadNovaletExport = async (
   filename: string
 ): Promise<AxiosResponse | null> => {
   const url = `reporting/novaletexport/${filename}`;
-  return await housingAxios().get(url, {
+  return housingAxios().get(url, {
     responseType: 'blob',
   });
 };
 
 export const generateNovaletExport = async (): Promise<AxiosResponse> => {
   const url = `reporting/generatenovaletexport`;
-  return await housingAxios().post(url, null);
+  return housingAxios().post(url, null);
 };
 
 export const downloadInternalReport = async (
@@ -221,7 +224,7 @@ export const approveNovaletExport = async (
   filename: string
 ): Promise<AxiosResponse | null> => {
   const url = `reporting/approvenovaletexport/${filename}`;
-  return await housingAxios().post(url, { filename });
+  return housingAxios().post(url, { filename });
 };
 
 // Application history

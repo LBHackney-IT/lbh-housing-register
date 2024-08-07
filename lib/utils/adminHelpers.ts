@@ -1,10 +1,12 @@
-import { getFormData, FormID } from '../utils/form-data';
-import { FormField } from '../../lib/types/form';
-import { kebabToCamelCase, camelCaseToKebab } from '../../lib/utils/capitalize';
-import { Address as ApiAddress } from '../../domain/HousingApi';
 import { FormikValues } from 'formik';
 import * as Yup from 'yup';
+
 import { INVALID_DATE } from '../../components/form/dateinput';
+import { Address as ApiAddress } from '../../domain/HousingApi';
+import { FormField } from '../types/form';
+import { camelCaseToKebab, kebabToCamelCase } from './capitalize';
+import { FormID, getFormData } from './form-data';
+
 export interface Address {
   address: {
     line1: string;
@@ -29,7 +31,7 @@ export const convertAddressToPrimary = (addressHistoryItem: Address) => {
     addressLine1: line1,
     addressLine2: line2,
     addressLine3: town ?? county,
-    postcode: postcode,
+    postcode,
     addressType: '1',
   };
 };

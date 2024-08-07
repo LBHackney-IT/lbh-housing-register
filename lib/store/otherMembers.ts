@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { FormikValues } from 'formik';
-import { Store } from '.';
+
 import { Applicant } from '../../domain/HousingApi';
 import {
   applyQuestions,
@@ -8,6 +8,8 @@ import {
   updateApplicantReducer,
   updateWithFormValues,
 } from './applicant';
+
+import { Store } from '.';
 
 const initialState: Applicant[] = [];
 
@@ -92,7 +94,7 @@ const slice = createSlice({
         );
         if (applicant > -1) {
           if (action.payload.markAsComplete) {
-            action.payload.values['sectionCompleted'] = true;
+            action.payload.values.sectionCompleted = true;
           }
           state[applicant] = applyQuestions(
             state[applicant],
@@ -106,5 +108,8 @@ const slice = createSlice({
 });
 
 export default slice;
-export const { addApplicant, addResidentFromFormData, deleteApplicant } =
-  slice.actions;
+export const {
+  addApplicant,
+  addResidentFromFormData,
+  deleteApplicant,
+} = slice.actions;

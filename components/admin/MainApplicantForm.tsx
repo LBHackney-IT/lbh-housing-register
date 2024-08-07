@@ -1,22 +1,23 @@
-import { Form, Formik, FormikValues, FormikErrors } from 'formik';
-import { UserContext } from '../../lib/contexts/user-context';
-import Button from '../../components/button';
-import ErrorSummary from '../../components/errors/error-summary';
-import { FormID } from '../../lib/utils/form-data';
+import { Form, Formik, FormikErrors, FormikValues } from 'formik';
+
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { Application } from '../../domain/HousingApi';
+import { UserContext } from '../../lib/contexts/user-context';
 import {
   allFormSections,
-  getSectionData,
-  generateInitialValues,
   generateEditInitialValues,
+  generateInitialValues,
+  getSectionData,
   mainApplicantSchema,
 } from '../../lib/utils/adminHelpers';
-import AddCaseSection from '../../components/admin/AddCaseSection';
-import AddCaseAddress from '../../components/admin/AddCaseAddress';
-import AddCaseEthnicity from '../../components/admin/AddCaseEthnicity';
-import Layout from '../../components/layout/staff-layout';
-import { HeadingOne } from '../../components/content/headings';
+import { FormID } from '../../lib/utils/form-data';
+import Button from '../button';
+import { HeadingOne } from '../content/headings';
+import ErrorSummary from '../errors/error-summary';
+import Layout from '../layout/staff-layout';
+import AddCaseAddress from './AddCaseAddress';
+import AddCaseEthnicity from './AddCaseEthnicity';
+import AddCaseSection from './AddCaseSection';
 
 const keysToOmit = [
   'AGREEMENT',

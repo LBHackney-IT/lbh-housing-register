@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react';
+
 import { useRouter } from 'next/router';
-import { HeadingOne } from '../../components/content/headings';
+
 import Announcement from '../../components/announcement';
+import { HeadingOne } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
+import ErrorSummary from '../../components/errors/error-summary';
 import Form from '../../components/form/form';
 import Layout from '../../components/layout/resident-layout';
+import { loadApplication } from '../../lib/store/application';
+import { confirmVerifyCode, createVerifyCode } from '../../lib/store/auth';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
+import { Errors } from '../../lib/types/errors';
 import { FormData } from '../../lib/types/form';
 import { FormID, getFormData } from '../../lib/utils/form-data';
-import ErrorSummary from '../../components/errors/error-summary';
-import { Errors } from '../../lib/types/errors';
 import { scrollToError } from '../../lib/utils/scroll';
-import { confirmVerifyCode, createVerifyCode } from '../../lib/store/auth';
-import { loadApplication } from '../../lib/store/application';
 
 const ApplicationVerifyPage = (): JSX.Element => {
   const router = useRouter();
@@ -37,7 +39,6 @@ const ApplicationVerifyPage = (): JSX.Element => {
 
     if (!email) {
       router.push('/apply/sign-in');
-      return;
     }
   }, [application, router]);
 

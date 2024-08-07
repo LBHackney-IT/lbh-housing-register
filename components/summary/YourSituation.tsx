@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   ApplicantWithPersonID,
   getQuestionValue,
@@ -11,9 +12,9 @@ interface YourSituationSummaryProps {
   currentResident: ApplicantWithPersonID;
 }
 
-export function YourSituationSummary({
+export const YourSituationSummary = ({
   currentResident,
-}: YourSituationSummaryProps) {
+}: YourSituationSummaryProps) => {
   // TODO: this could be nicer, but we've got a mixture of questions and forms to get answers for
   const armedForces = getQuestionValue(
     currentResident.questions,
@@ -257,4 +258,4 @@ export function YourSituationSummary({
       )}
     </SummarySection>
   );
-}
+};

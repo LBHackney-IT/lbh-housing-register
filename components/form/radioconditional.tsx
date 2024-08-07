@@ -1,9 +1,11 @@
 import React from 'react';
+
 import { Field, FieldInputProps, FieldMetaProps } from 'formik';
+
 import {
   BaseFormField,
-  RadioConditionalFormField,
   ConditionalFormFieldOptionInput,
+  RadioConditionalFormField,
 } from '../../lib/types/form';
 import Paragraph from '../content/paragraph';
 import Details from '../details';
@@ -12,32 +14,30 @@ import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
 
-export function ConditionalInput({
+export const ConditionalInput = ({
   as,
   containerId,
   fieldId,
   fieldName,
   label,
   display,
-}: ConditionalFormFieldOptionInput) {
+}: ConditionalFormFieldOptionInput) => {
   return (
-    <>
-      <div
-        className={'govuk-radios__conditional' + (display ? '' : '--hidden')}
-        id={containerId}
-      >
-        <Label content={label} htmlFor={fieldId} />
-        <Field
-          className="govuk-input govuk-!-width-one-third"
-          type={as}
-          id={fieldId}
-          name={fieldName}
-          data-aria-controls={containerId}
-        />
-      </div>
-    </>
+    <div
+      className={`govuk-radios__conditional${display ? '' : '--hidden'}`}
+      id={containerId}
+    >
+      <Label content={label} htmlFor={fieldId} />
+      <Field
+        className="govuk-input govuk-!-width-one-third"
+        type={as}
+        id={fieldId}
+        name={fieldName}
+        data-aria-controls={containerId}
+      />
+    </div>
   );
-}
+};
 
 interface RadioProps extends BaseFormField {
   index?: number;
@@ -45,14 +45,14 @@ interface RadioProps extends BaseFormField {
   containerId?: string;
 }
 
-export function Radio({
+export const Radio = ({
   index,
   hint,
   label,
   name,
   value,
   containerId,
-}: RadioProps): JSX.Element {
+}: RadioProps): JSX.Element => {
   let id = name;
 
   if (index !== undefined) {
@@ -78,7 +78,7 @@ export function Radio({
       {hint && <Hint className="govuk-radios__hint" content={hint} />}
     </div>
   );
-}
+};
 
 export interface RadioConditionalProps extends RadioConditionalFormField {
   value: string;
@@ -104,9 +104,7 @@ export default function RadioConditional({
         meta: FieldMetaProps<string>;
       }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
-          {label && (
-            <Label content={label} strong={true} hideLabel={hideLabel} />
-          )}
+          {label && <Label content={label} strong hideLabel={hideLabel} />}
           {hint && <Hint content={hint} />}
           {details && (
             <Details summary={details.title ?? 'Help with this question'}>

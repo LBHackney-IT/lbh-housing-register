@@ -38,7 +38,7 @@ export function getDisqualificationReasonOption(
   reason: DisqualificationReason
 ): string {
   if (!disqualificationReasonOptions[reason]) {
-    console.error('Unkown disqualification reason: ' + reason);
+    console.error(`Unkown disqualification reason: ${reason}`);
   }
   return disqualificationReasonOptions[reason];
 }

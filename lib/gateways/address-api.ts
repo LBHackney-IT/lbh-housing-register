@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import asssertServerOnly from '../utils/assertServerOnly';
 
 asssertServerOnly();

@@ -24,8 +24,8 @@ export default function CheckBoxList({
             scope="col"
             className="govuk-table__header"
             style={{ width: '45%' }}
-          ></th>
-          <th scope="col" className="govuk-table__header"></th>
+          />
+          <th scope="col" className="govuk-table__header" />
           {/* <th scope="col" className="govuk-table__header">
             checked
           </th> */}

@@ -1,20 +1,22 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
+
 import { useRouter } from 'next/router';
-import Layout from '../../components/layout/resident-layout';
-import { HeadingTwo, HeadingThree } from '../../components/content/headings';
+
 import Button from '../../components/button';
+import ContactUsDialog from '../../components/content/ContactUsDialog';
+import { HeadingThree, HeadingTwo } from '../../components/content/headings';
 import InsetText from '../../components/content/inset-text';
 import List, { ListItem } from '../../components/content/list';
 import Paragraph from '../../components/content/paragraph';
-import ContactUsDialog from '../../components/content/ContactUsDialog';
+import WarningText from '../../components/content/WarningText';
+import Layout from '../../components/layout/resident-layout';
 import Panel from '../../components/panel';
-import { useAppSelector, useAppDispatch } from '../../lib/store/hooks';
-import { checkEligible } from '../../lib/utils/form';
-import { exit } from '../../lib/store/auth';
 import withApplication from '../../lib/hoc/withApplication';
+import { exit } from '../../lib/store/auth';
+import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { ApplicationStatus } from '../../lib/types/application-status';
 import { getDisqualificationReasonOption } from '../../lib/utils/disqualificationReasonOptions';
-import WarningText from '../../components/content/WarningText';
+import { checkEligible } from '../../lib/utils/form';
 
 const NotEligible = (): JSX.Element => {
   const router = useRouter();
@@ -66,14 +68,12 @@ const NotEligible = (): JSX.Element => {
       <WarningText>
         Please check if any of the following apply to you:
         <List>
-          <ListItem bold={true}>You are currently homeless</ListItem>
-          <ListItem bold={true}>
-            You have been threatened with homelessness
-          </ListItem>
-          <ListItem bold={true}>You are a victim of domestic abuse</ListItem>
-          <ListItem bold={true}>You are a victim of gang violence </ListItem>
+          <ListItem bold>You are currently homeless</ListItem>
+          <ListItem bold>You have been threatened with homelessness</ListItem>
+          <ListItem bold>You are a victim of domestic abuse</ListItem>
+          <ListItem bold>You are a victim of gang violence </ListItem>
         </List>
-        <Paragraph bold={true}>
+        <Paragraph bold>
           In these circumstances you should contact us on 020 8356 2929 or{' '}
           <a className="lbh-link" href="https://forms.gle/riaWcWbAY1j6uszR7">
             complete this form

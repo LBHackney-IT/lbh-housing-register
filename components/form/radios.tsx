@@ -1,4 +1,5 @@
 import { Field, FieldInputProps, FieldMetaProps } from 'formik';
+
 import { BaseFormField, RadioFormField } from '../../lib/types/form';
 import Paragraph from '../content/paragraph';
 import Details from '../details';
@@ -12,13 +13,13 @@ interface RadioProps extends BaseFormField {
   value: string;
 }
 
-export function Radio({
+export const Radio = ({
   index,
   hint,
   label,
   name,
   value,
-}: RadioProps): JSX.Element {
+}: RadioProps): JSX.Element => {
   let id = name;
 
   if (index !== undefined) {
@@ -43,7 +44,7 @@ export function Radio({
       {hint && <Hint className="govuk-radios__hint" content={hint} />}
     </div>
   );
-}
+};
 
 export interface RadiosProps extends RadioFormField {
   subheading?: string;
@@ -68,9 +69,7 @@ export default function Radios({
         meta: FieldMetaProps<string>;
       }) => (
         <FormGroup error={!!meta.touched && !!meta.error}>
-          {label && (
-            <Label content={label} strong={true} hideLabel={hideLabel} />
-          )}
+          {label && <Label content={label} strong hideLabel={hideLabel} />}
           {hint && <Hint content={hint} />}
           {details && (
             <Details summary={details.title ?? 'Help with this question'}>

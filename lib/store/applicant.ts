@@ -1,8 +1,10 @@
 import { createAction } from '@reduxjs/toolkit';
 import { FormikValues } from 'formik';
-import { Store } from '.';
+
 import { Applicant, Question } from '../../domain/HousingApi';
 import { FormID } from '../utils/form-data';
+
+import { Store } from '.';
 
 export type ApplicantWithPersonID = Applicant & {
   person: Applicant['person'] & { id: string };
@@ -65,24 +67,24 @@ export function updateApplicantReducer(
   };
 }
 
-export const selectApplicant =
-  (applicantPersonId: string) =>
-  (store: Store): ApplicantWithPersonID | undefined => {
-    if (
-      applicantHasId(store.application.mainApplicant) &&
-      store.application.mainApplicant?.person?.id === applicantPersonId
-    ) {
-      return store.application.mainApplicant;
-    }
-    return store.application.otherMembers?.find(
-      (a): a is ApplicantWithPersonID =>
-        applicantHasId(a) && a.person?.id === applicantPersonId
-    );
-  };
+export const selectApplicant = (applicantPersonId: string) => (
+  store: Store
+): ApplicantWithPersonID | undefined => {
+  if (
+    applicantHasId(store.application.mainApplicant) &&
+    store.application.mainApplicant?.person?.id === applicantPersonId
+  ) {
+    return store.application.mainApplicant;
+  }
+  return store.application.otherMembers?.find(
+    (a): a is ApplicantWithPersonID =>
+      applicantHasId(a) && a.person?.id === applicantPersonId
+  );
+};
 
-export const findQuestion =
-  (formID: FormID, questionName: string) => (question: Question) =>
-    question.id === `${formID}/${questionName}`;
+export const findQuestion = (formID: FormID, questionName: string) => (
+  question: Question
+) => question.id === `${formID}/${questionName}`;
 
 export function getQuestionValue(
   questions: Question[] | undefined,

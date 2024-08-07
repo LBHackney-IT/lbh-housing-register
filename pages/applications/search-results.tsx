@@ -1,16 +1,17 @@
 import { GetServerSideProps } from 'next';
+
+import ApplicationsTable from '../../components/admin/ApplicationsTable';
 import SearchBox from '../../components/admin/SearchBox';
 import Sidebar from '../../components/admin/sidebar';
 import { HeadingOne } from '../../components/content/headings';
+import Paragraph from '../../components/content/paragraph';
 import Layout from '../../components/layout/staff-layout';
+import SimplePaginationSearch from '../../components/SimplePaginationSearch';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { PaginatedSearchResultsResponse } from '../../domain/HousingApi';
 import { UserContext } from '../../lib/contexts/user-context';
 import { searchAllApplications } from '../../lib/gateways/applications-api';
 import { getRedirect, getSession } from '../../lib/utils/googleAuth';
-import ApplicationsTable from '../../components/admin/ApplicationsTable';
-import SimplePaginationSearch from '../../components/SimplePaginationSearch';
-import Paragraph from '../../components/content/paragraph';
 
 interface PageProps {
   user?: HackneyGoogleUser;
@@ -39,30 +40,28 @@ export default function ApplicationListPage({
           </div>
           <div className="govuk-grid-column-three-quarters">
             <HeadingOne content="Results" />
-            <>
-              {applications ? (
-                <>
-                  {applications.totalResults !== 0 ? (
-                    <>
-                      <ApplicationsTable
-                        applications={applications}
-                        showStatus={true}
-                        page={page}
-                        pageSize={pageSize}
-                      />
+            {applications ? (
+              <>
+                {applications.totalResults !== 0 ? (
+                  <>
+                    <ApplicationsTable
+                      applications={applications}
+                      showStatus
+                      page={page}
+                      pageSize={pageSize}
+                    />
 
-                      <SimplePaginationSearch
-                        totalItems={applications.totalResults}
-                        page={applications.page}
-                        numberOfItemsPerPage={applications.pageSize}
-                      />
-                    </>
-                  ) : (
-                    <Paragraph>No applications to show</Paragraph>
-                  )}
-                </>
-              ) : null}
-            </>
+                    <SimplePaginationSearch
+                      totalItems={applications.totalResults}
+                      page={applications.page}
+                      numberOfItemsPerPage={applications.pageSize}
+                    />
+                  </>
+                ) : (
+                  <Paragraph>No applications to show</Paragraph>
+                )}
+              </>
+            ) : null}
           </div>
         </div>
       </Layout>
@@ -84,11 +83,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
     };
   }
 
-  const {
-    searchString = '',
-    page = '',
-    pageSize = '',
-  } = context.query as {
+  const { searchString = '', page = '', pageSize = '' } = context.query as {
     searchString: string;
     page: string;
     pageSize: string;

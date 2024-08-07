@@ -1,5 +1,7 @@
-import { Applicant } from '../../domain/HousingApi';
 import Link from 'next/link';
+
+import { Applicant } from '../../domain/HousingApi';
+
 interface ApplicantSummaryProps {
   applicant: Applicant;
   isMainApplicant: boolean;

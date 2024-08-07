@@ -1,5 +1,6 @@
-import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { ReactElement } from 'react';
+
+import Document, { Head, Html, Main, NextScript } from 'next/document';
 
 export default class AppDocument extends Document {
   render(): ReactElement {
@@ -19,7 +20,7 @@ export default class AppDocument extends Document {
               height="0"
               width="0"
               style={{ display: 'none', visibility: 'hidden' }}
-            ></iframe>
+            />
           </noscript>
           <Main />
           <NextScript />

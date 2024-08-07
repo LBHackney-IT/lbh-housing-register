@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   ApplicantWithPersonID,
   getQuestionValue,
@@ -11,9 +12,9 @@ interface CurrentAccommodationSummaryProps {
   currentResident: ApplicantWithPersonID;
 }
 
-export function CurrentAccommodationSummary({
+export const CurrentAccommodationSummary = ({
   currentResident,
-}: CurrentAccommodationSummaryProps) {
+}: CurrentAccommodationSummaryProps) => {
   const livingSituation = getQuestionValue(
     currentResident.questions,
     FormID.CURRENT_ACCOMMODATION,
@@ -194,4 +195,4 @@ export function CurrentAccommodationSummary({
       )}
     </SummarySection>
   );
-}
+};

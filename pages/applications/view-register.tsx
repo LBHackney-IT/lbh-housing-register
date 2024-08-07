@@ -1,21 +1,23 @@
 import { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
+
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
+
 import ApplicationsTable from '../../components/admin/ApplicationsTable';
-import SimplePaginationSearch from '../../components/SimplePaginationSearch';
 import SearchBox from '../../components/admin/SearchBox';
 import Sidebar from '../../components/admin/sidebar';
 import Button from '../../components/button';
-import Details from '../../components/details';
 import { HeadingOne } from '../../components/content/headings';
+import Details from '../../components/details';
 import Layout from '../../components/layout/staff-layout';
+import SimplePaginationSearch from '../../components/SimplePaginationSearch';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { PaginatedSearchResultsResponse } from '../../domain/HousingApi';
 import { UserContext } from '../../lib/contexts/user-context';
 import {
+  getApplicationStatusCounts,
   getApplications,
   getApplicationsByStatus,
-  getApplicationStatusCounts,
 } from '../../lib/gateways/applications-api';
 import {
   ApplicationStatus,
@@ -80,7 +82,7 @@ export default function ViewAllApplicationsPage({
           <div className="govuk-grid-column-three-quarters">
             <div className="lbh-flex-heading">
               <HeadingOne content="All applications" />
-              <Button secondary={true} onClick={() => addCase()}>
+              <Button secondary onClick={() => addCase()}>
                 + Add new case
               </Button>
             </div>
@@ -128,7 +130,7 @@ export default function ViewAllApplicationsPage({
               <>
                 <ApplicationsTable
                   applications={applications}
-                  showStatus={true}
+                  showStatus
                   page={page}
                   pageSize={pageSize}
                 />
@@ -161,11 +163,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
     };
   }
 
-  const {
-    status = '',
-    page = '1',
-    pageSize = '10',
-  } = context.query as {
+  const { status = '', page = '1', pageSize = '10' } = context.query as {
     status: string;
     page: string;
     pageSize: string;

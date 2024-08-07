@@ -1,8 +1,10 @@
+import { withSentry } from '@sentry/nextjs';
 import { StatusCodes } from 'http-status-codes';
-import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+
 import { completeApplication } from '../../../../lib/gateways/applications-api';
 import { canUpdateApplication } from '../../../../lib/utils/requestAuth';
-import { withSentry } from '@sentry/nextjs';
+
+import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,

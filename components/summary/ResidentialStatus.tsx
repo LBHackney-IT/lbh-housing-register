@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   ApplicantWithPersonID,
   getQuestionValue,
@@ -11,9 +12,9 @@ interface ResidentialStatusSummaryProps {
   currentResident: ApplicantWithPersonID;
 }
 
-export function ResidentialStatusSummary({
+export const ResidentialStatusSummary = ({
   currentResident,
-}: ResidentialStatusSummaryProps) {
+}: ResidentialStatusSummaryProps) => {
   function lookupAnswer(question: string) {
     return getQuestionValue(
       currentResident.questions,
@@ -184,4 +185,4 @@ export function ResidentialStatusSummary({
       )}
     </SummarySection>
   );
-}
+};

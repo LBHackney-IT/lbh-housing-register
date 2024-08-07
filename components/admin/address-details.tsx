@@ -26,7 +26,7 @@ export default function AddressDetails({
               {address.postcode}
             </p>
           </dd>
-          <span className="govuk-summary-list__actions"></span>
+          <span className="govuk-summary-list__actions" />
         </div>
       </dl>
     </Collapsible>

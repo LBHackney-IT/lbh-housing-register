@@ -1,4 +1,5 @@
 import { NextApiRequest } from 'next';
+
 import { Application } from '../../domain/HousingApi';
 import { ApplicationStatus } from '../types/application-status';
 import { getSession, hasAnyPermissions } from './googleAuth';

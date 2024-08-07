@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   ApplicantWithPersonID,
   getQuestionValue,
@@ -16,9 +17,9 @@ interface AddressHistorySummaryProps {
   currentResident: ApplicantWithPersonID;
 }
 
-export function AddressHistorySummary({
+export const AddressHistorySummary = ({
   currentResident,
-}: AddressHistorySummaryProps) {
+}: AddressHistorySummaryProps) => {
   const addressHistory = getQuestionValue(
     currentResident.questions,
     FormID.ADDRESS_HISTORY,
@@ -58,4 +59,4 @@ export function AddressHistorySummary({
         })}
     </SummarySection>
   );
-}
+};

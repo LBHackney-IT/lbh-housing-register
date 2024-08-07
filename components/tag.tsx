@@ -13,7 +13,7 @@ export default function Tag({
   className += ' govuk-tag lbh-tag';
 
   if (variant) {
-    className += ' lbh-tag--' + variant;
+    className += ` lbh-tag--${variant}`;
   }
 
   return <span className={className}>{content}</span>;

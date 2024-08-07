@@ -5,16 +5,16 @@ interface HorizontalNavProps {
   children: JSX.Element | JSX.Element[];
 }
 
-export function HorizontalNav({
+export const HorizontalNav = ({
   children,
   spaced,
-}: HorizontalNavProps): JSX.Element {
+}: HorizontalNavProps): JSX.Element => {
   return (
     <nav className={`lbh-link-group ${spaced ? 'lbh-link-group--spaced' : ''}`}>
       <ul>{children}</ul>
     </nav>
   );
-}
+};
 
 interface HorizontalNavItemProps {
   itemName: string;
@@ -23,12 +23,12 @@ interface HorizontalNavItemProps {
   handleSelectNavItem: (event: SyntheticEvent) => void;
 }
 
-export function HorizontalNavItem({
+export const HorizontalNavItem = ({
   itemName,
   isActive,
   children,
   handleSelectNavItem,
-}: HorizontalNavItemProps): JSX.Element {
+}: HorizontalNavItemProps): JSX.Element => {
   return (
     <li className="lbh-link-group__item">
       <button
@@ -42,4 +42,4 @@ export function HorizontalNavItem({
       </button>
     </li>
   );
-}
+};

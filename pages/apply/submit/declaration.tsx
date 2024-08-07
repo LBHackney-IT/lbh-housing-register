@@ -1,24 +1,25 @@
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
-import {
-  sendConfirmation,
-  completeApplication,
-  sendDisqualifyEmail,
-  sendMedicalNeed,
-  disqualifyApplication,
-  createEvidenceRequest,
-} from '../../../lib/store/application';
-import withApplication from '../../../lib/hoc/withApplication';
-import { applicantsWithMedicalNeed } from '../../../lib/utils/medicalNeed';
-import { checkEligible } from '../../../lib/utils/form';
-import { getFormData, FormID } from '../../../lib/utils/form-data';
-import Form from '../../../components/form/form';
-import Layout from '../../../components/layout/resident-layout';
+
 import { HeadingOne } from '../../../components/content/headings';
 import Paragraph from '../../../components/content/paragraph';
+import Form from '../../../components/form/form';
+import Layout from '../../../components/layout/resident-layout';
+import withApplication from '../../../lib/hoc/withApplication';
+import {
+  completeApplication,
+  createEvidenceRequest,
+  disqualifyApplication,
+  sendConfirmation,
+  sendDisqualifyEmail,
+  sendMedicalNeed,
+} from '../../../lib/store/application';
+import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import { getDisqualificationReasonOption } from '../../../lib/utils/disqualificationReasonOptions';
+import { checkEligible } from '../../../lib/utils/form';
+import { FormID, getFormData } from '../../../lib/utils/form-data';
+import { applicantsWithMedicalNeed } from '../../../lib/utils/medicalNeed';
 import Custom404 from '../../404';
-import Link from 'next/link';
 
 const Declaration = (): JSX.Element => {
   const router = useRouter();

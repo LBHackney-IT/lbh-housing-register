@@ -1,4 +1,5 @@
 import { Field, FieldInputProps, FieldMetaProps } from 'formik';
+
 import { TextareaFormField } from '../../lib/types/form';
 import Details from '../details';
 import ErrorMessage from './error-message';
@@ -28,7 +29,7 @@ export default function Textarea({
             <Label
               content={label}
               htmlFor={field.name}
-              strong={true}
+              strong
               hideLabel={hideLabel}
             />
           )}

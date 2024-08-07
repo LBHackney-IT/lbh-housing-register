@@ -1,7 +1,7 @@
 import { Application } from '../../domain/HousingApi';
-import Paragraph from '../content/paragraph';
-import { applicantsWithMedicalNeed } from '../../lib/utils/medicalNeed';
 import { questionLookup } from '../../lib/utils/applicationQuestions';
+import { applicantsWithMedicalNeed } from '../../lib/utils/medicalNeed';
+import Paragraph from '../content/paragraph';
 
 interface PageProps {
   data: Application;

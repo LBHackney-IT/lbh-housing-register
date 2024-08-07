@@ -1,5 +1,5 @@
-import { HeadingTwo } from './headings';
 import Dialog from '../dialog';
+import { HeadingTwo } from './headings';
 
 interface ContactUsDialogProps {
   contactUsDialogOpen: boolean;

@@ -1,17 +1,17 @@
 import { FormField } from '../../lib/types/form';
 import assertNever from '../../lib/utils/assertNever';
 import Paragraph from '../content/paragraph';
-import Checkboxes, { CheckboxesProps } from './checkboxes';
-import DateInput from './dateinput';
-import Input from './input';
 import AnnouncementText from './announcement-text';
-import Radios, { RadiosProps } from './radios';
-import Select from './select';
-import Textarea from './textarea';
-import RadioConditional, { RadioConditionalProps } from './radioconditional';
+import Checkboxes, { CheckboxesProps } from './checkboxes';
 import CheckboxesConditional, {
   CheckboxesConditionalProps,
 } from './CheckboxesConditional';
+import DateInput from './dateinput';
+import Input from './input';
+import RadioConditional, { RadioConditionalProps } from './radioconditional';
+import Radios, { RadiosProps } from './radios';
+import Select from './select';
+import Textarea from './textarea';
 
 interface DynamicFieldProps {
   field: FormField;
@@ -43,7 +43,7 @@ export default function DynamicField({
       return <Paragraph>{field.label}</Paragraph>;
 
     case 'announcement':
-      return <AnnouncementText {...field}></AnnouncementText>;
+      return <AnnouncementText {...field} />;
 
     case 'radioconditional':
       return <RadioConditional {...(field as RadioConditionalProps)} />;

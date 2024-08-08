@@ -8,22 +8,19 @@
     "start": "next start -p $PORT",
     "mocks": "mocks-server",
     "lint": "eslint . --max-warnings 0 --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --fix --max-warnings 0 --ext .js,.jsx,.ts,.tsx",
     "prettier:test": "npx prettier -c .",
     "prettier:fix": "npx prettier --write .",
-    "test:ci": "prettier --check . && tsc --noEmit && jest --ci",
-    "test": "jest",
+    "test:ci": "jest --ci --coverage --reporters=default --reporters=jest-junit && tsc --noEmit",
+    "test": "jest && tsc --noEmit",
     "test:watch": "jest --watch",
+    "prepare": "husky",
     "cypress:open": "cypress open --browser chrome",
     "cypress:run": "cypress run --browser chrome"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ],
-    "env": {
-      "jest": true
-    }
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "eslint --fix --max-warnings 0",
+    "!package-lock.json": "prettier --ignore-unknown --write"
   },
   "browserslist": {
     "production": [
@@ -63,7 +60,10 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
+    "@hackney/eslint-config": "^1.4.0",
+    "@hackney/prettier-config": "^1.0.1",
     "@mocks-server/main": "^2.3.1",
+    "@next/eslint-plugin-next": "^14.2.5",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^12.1.5",
     "@types/cookie": "^0.4.0",
@@ -73,13 +73,26 @@
     "@types/react": "^17.0.5",
     "@types/uuid": "^8.3.1",
     "@types/yup": "^0.29.11",
+    "@typescript-eslint/eslint-plugin": "5.4.0",
+    "@typescript-eslint/parser": "5.45",
     "babel-jest": "^27.0.2",
     "concurrently": "^6.1.0",
     "cypress": "^13.13.2",
     "cypress-circleci-reporter": "^0.2.0",
+    "eslint": "7.32.0",
+    "eslint-config-airbnb": "19.0.0",
+    "eslint-config-airbnb-typescript": "16.0.0",
+    "eslint-config-prettier": "8.3.0",
+    "eslint-plugin-import": "2.25.3",
+    "eslint-plugin-jest": "25.2.4",
+    "eslint-plugin-prettier": "3.4.0",
+    "eslint-plugin-testing-library": "4.9.0",
+    "husky": "^8.0.3",
     "jest": "^27.5.1",
+    "jest-junit": "^16.0.0",
+    "lint-staged": "^14.0.1",
     "mockdate": "^3.0.5",
-    "prettier": "^2.3.0",
+    "prettier": "2.2.1",
     "sass": "^1.32.12",
     "typescript": "^4.2.4"
   }

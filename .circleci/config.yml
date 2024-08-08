@@ -50,6 +50,16 @@ jobs:
       - run:
           name: Run Tests
           command: npm run test:ci
+          environment:
+            JEST_JUNIT_OUTPUT_DIR: test_results
+            JEST_JUNIT_ADD_FILE_ATTRIBUTE: 'true'
+      - store_test_results:
+          path: test_results
+      - store_artifacts:
+          path: coverage
+      - persist_to_workspace:
+          root: *workspace_root
+          paths: .
 
   sonar-scan:
     executor: orb-executor
@@ -131,7 +141,7 @@ workflows:
       - sonar-scan:
           context: SonarCloud
           requires:
-            - install-dependencies
+            - tests
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:

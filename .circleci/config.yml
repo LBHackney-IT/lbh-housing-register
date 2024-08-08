@@ -158,10 +158,12 @@ workflows:
             branches:
               only: development
       - cypress/run:
+          name: Chrome
           requires:
-            - build-deploy-development
+            - tests
           package-manager: npm
-          cypress-command: npx cypress run --reporter cypress-circleci-reporter
+          install-browsers: true
+          cypress-command: npx cypress run --browser chrome --reporter cypress-circleci-reporter
           post-steps:
             - store_test_results:
                 path: test_results
@@ -173,7 +175,45 @@ workflows:
                 path: cypress/reports
           filters:
             branches:
-              only: development
+              only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing
+      - cypress/run:
+          name: Firefox
+          requires:
+            - tests
+          package-manager: npm
+          cypress-command: npx cypress run --browser firefox --reporter cypress-circleci-reporter
+          install-browsers: true
+          post-steps:
+            - store_test_results:
+                path: test_results
+            - store_artifacts:
+                path: cypress/screenshot
+            - store_artifacts:
+                path: cypress/videos
+            - store_artifacts:
+                path: cypress/reports
+          filters:
+            branches:
+              only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing
+      - cypress/run:
+          name: Edge
+          requires:
+            - tests
+          package-manager: npm
+          cypress-command: npx cypress run --reporter --browser edge cypress-circleci-reporter
+          install-browsers: true
+          post-steps:
+            - store_test_results:
+                path: test_results
+            - store_artifacts:
+                path: cypress/screenshot
+            - store_artifacts:
+                path: cypress/videos
+            - store_artifacts:
+                path: cypress/reports
+          filters:
+            branches:
+              only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:

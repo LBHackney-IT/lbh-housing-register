@@ -158,7 +158,7 @@ workflows:
             branches:
               only: development
       - cypress/run:
-          name: Chrome
+          name: E2E:Chrome
           requires:
             - tests
           package-manager: npm
@@ -173,14 +173,11 @@ workflows:
                 path: cypress/videos
             - store_artifacts:
                 path: cypress/reports
-            - persist_to_workspace:
-                root: *workspace_root
-                paths: .
           filters:
             branches:
               only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing
       - cypress/run:
-          name: Firefox
+          name: E2E:Firefox
           requires:
             - tests
           package-manager: npm
@@ -195,18 +192,15 @@ workflows:
                 path: cypress/videos
             - store_artifacts:
                 path: cypress/reports
-            - persist_to_workspace:
-                root: *workspace_root
-                paths: .
           filters:
             branches:
               only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing
       - cypress/run:
-          name: Edge
+          name: E2E:Edge
           requires:
             - tests
           package-manager: npm
-          cypress-command: npx cypress run --reporter --browser edge cypress-circleci-reporter
+          cypress-command: npx cypress run --reporter --browser edge --reporter cypress-circleci-reporter
           install-browsers: true
           post-steps:
             - store_test_results:
@@ -217,9 +211,6 @@ workflows:
                 path: cypress/videos
             - store_artifacts:
                 path: cypress/reports
-            - persist_to_workspace:
-                root: *workspace_root
-                paths: .
           filters:
             branches:
               only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing

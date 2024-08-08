@@ -217,7 +217,7 @@ workflows:
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:
-            - cypress/run
+            - tests
           filters:
             branches:
               only: main

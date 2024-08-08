@@ -173,6 +173,9 @@ workflows:
                 path: cypress/videos
             - store_artifacts:
                 path: cypress/reports
+            - persist_to_workspace:
+                root: *workspace_root
+                paths: .
           filters:
             branches:
               only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing
@@ -192,6 +195,9 @@ workflows:
                 path: cypress/videos
             - store_artifacts:
                 path: cypress/reports
+            - persist_to_workspace:
+                root: *workspace_root
+                paths: .
           filters:
             branches:
               only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing
@@ -211,6 +217,9 @@ workflows:
                 path: cypress/videos
             - store_artifacts:
                 path: cypress/reports
+            - persist_to_workspace:
+                root: *workspace_root
+                paths: .
           filters:
             branches:
               only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing

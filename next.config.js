@@ -30,6 +30,13 @@ const moduleExports = {
       },
     ];
   },
+  eslint: {
+    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors. This is due to the current ESLint setup
+    // for staged files only as we clear the linting errors as we work.
+    // eslint-disable-next-line
+    ignoreDuringBuilds: true,
+  },
 
   webpack: (config, { webpack }) => {
     config.plugins.push(

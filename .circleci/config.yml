@@ -175,10 +175,7 @@ workflows:
                 path: cypress/reports
             - persist_to_workspace:
                 root: *workspace_root
-                paths:
-                  - cypress/screenshot
-                  - cypress/videos
-                  - cypress/reports
+                paths: .
           filters:
             branches:
               only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing
@@ -200,10 +197,7 @@ workflows:
                 path: cypress/reports
             - persist_to_workspace:
                 root: *workspace_root
-                paths:
-                  - cypress/screenshot
-                  - cypress/videos
-                  - cypress/reports
+                paths: .
           filters:
             branches:
               only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing

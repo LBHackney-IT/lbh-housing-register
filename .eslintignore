@@ -2,5 +2,3 @@ node_modules
 build
 next.config.js
 db
-cypress
-src/tests

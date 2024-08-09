@@ -12,7 +12,8 @@
     "@hackney/eslint-config",
     "eslint:recommended",
     "plugin:prettier/recommended",
-    "plugin:@next/next/recommended"
+    "plugin:@next/next/recommended",
+    "plugin:cypress/recommended"
   ],
   "parserOptions": {
     "sourceType": "module",

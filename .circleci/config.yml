@@ -163,7 +163,7 @@ workflows:
             - tests
           package-manager: npm
           install-browsers: true
-          cypress-command: npx cypress run --browser chrome --reporter cypress-circleci-reporter --group $CIRCLE_JOB
+          cypress-command: npx cypress run --browser chrome --reporter cypress-circleci-reporter
           post-steps:
             - store_test_results:
                 path: test_results
@@ -187,7 +187,7 @@ workflows:
           requires:
             - tests
           package-manager: npm
-          cypress-command: npx cypress run --browser firefox --reporter cypress-circleci-reporter --group $CIRCLE_JOB
+          cypress-command: npx cypress run --browser firefox --reporter cypress-circleci-reporter
           install-browsers: true
           post-steps:
             - store_test_results:

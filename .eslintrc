@@ -17,7 +17,8 @@
   ],
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 2018
+    "ecmaVersion": 2018,
+    "project": ["./tsconfig.json", "./cypress/tsconfig.json"]
   },
   "settings": {
     "react": {

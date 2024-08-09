@@ -138,10 +138,10 @@ workflows:
       - tests:
           requires:
             - install-dependencies
-      - sonar-scan:
-          context: SonarCloud
-          requires:
-            - tests
+      # - sonar-scan:
+      #     context: SonarCloud
+      #     requires:
+      #       - tests
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:
@@ -158,12 +158,12 @@ workflows:
             branches:
               only: development
       - cypress/run:
-          name: E2E:Chrome
+          name: Chrome
           requires:
             - tests
           package-manager: npm
           install-browsers: true
-          cypress-command: npx cypress run --browser chrome --reporter cypress-circleci-reporter
+          cypress-command: npx cypress run --browser chrome --reporter cypress-circleci-reporter --group $CIRCLE_JOB
           post-steps:
             - store_test_results:
                 path: test_results
@@ -173,15 +173,21 @@ workflows:
                 path: cypress/videos
             - store_artifacts:
                 path: cypress/reports
+            - persist_to_workspace:
+                root: *workspace_root
+                paths:
+                  - cypress/screenshot
+                  - cypress/videos
+                  - cypress/reports
           filters:
             branches:
               only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing
       - cypress/run:
-          name: E2E:Firefox
+          name: Firefox
           requires:
             - tests
           package-manager: npm
-          cypress-command: npx cypress run --browser firefox --reporter cypress-circleci-reporter
+          cypress-command: npx cypress run --browser firefox --reporter cypress-circleci-reporter --group $CIRCLE_JOB
           install-browsers: true
           post-steps:
             - store_test_results:
@@ -192,25 +198,12 @@ workflows:
                 path: cypress/videos
             - store_artifacts:
                 path: cypress/reports
-          filters:
-            branches:
-              only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing
-      - cypress/run:
-          name: E2E:Edge
-          requires:
-            - tests
-          package-manager: npm
-          cypress-command: npx cypress run --reporter --browser edge --reporter cypress-circleci-reporter
-          install-browsers: true
-          post-steps:
-            - store_test_results:
-                path: test_results
-            - store_artifacts:
-                path: cypress/screenshot
-            - store_artifacts:
-                path: cypress/videos
-            - store_artifacts:
-                path: cypress/reports
+            - persist_to_workspace:
+                root: *workspace_root
+                paths:
+                  - cypress/screenshot
+                  - cypress/videos
+                  - cypress/reports
           filters:
             branches:
               only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing

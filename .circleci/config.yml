@@ -138,10 +138,10 @@ workflows:
       - tests:
           requires:
             - install-dependencies
-      # - sonar-scan:
-      #     context: SonarCloud
-      #     requires:
-      #       - tests
+      - sonar-scan:
+          context: SonarCloud
+          requires:
+            - tests
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:

@@ -1,32 +1,56 @@
-// Given that I am a user I can make a new application
+import { faker } from '@faker-js/faker/locale/en_GB';
 
 import ApplyPage from '../pages/apply';
 import HomePage from '../pages/home';
-import { intercept_verify_api } from '../support/intercepts';
+import SignInPage from '../pages/signIn';
+import StartPage from '../pages/start';
+import { screenPresets } from '../support/helpers';
+import {
+  interceptApplicatonApi,
+  interceptAuthApi,
+} from '../support/intercepts';
 
 describe('User makes a housing application', () => {
   it('allows a user to submit an application', () => {
-    // screenPresets.forEach((screenPreset) => {
-    // cy.viewport(screenPreset);
-    cy.clearCookies();
+    screenPresets.forEach((screenPreset) => {
+      cy.viewport(screenPreset);
+      cy.clearCookies();
 
-    HomePage.visit();
-    // accept cookies
-    HomePage.getCookiesButton().click();
+      HomePage.visit();
+      // accept cookies
+      HomePage.getCookiesButton().click();
 
-    // start application
-    HomePage.getStartApplicationButton().scrollIntoView();
-    HomePage.getStartApplicationButton().click();
+      // start application
+      HomePage.getStartApplicationButton().scrollIntoView().click();
 
-    // give an email address for verification code
-    cy.get('input[name="emailAddress"]').type('test@example.com');
-    intercept_verify_api();
-    cy.get('button[type="submit"]').click();
+      // give an email address for verification code
+      const generateEmailAddress = faker.internet.email({
+        provider: 'hackneyTEST.gov.uk',
+      });
+      SignInPage.getEmailInput().scrollIntoView().type(generateEmailAddress);
 
-    // confirmation verification code has been sent
+      interceptAuthApi('generate');
+      SignInPage.getSubmitButton().scrollIntoView().click();
 
-    ApplyPage.getVerifyCodePage().should('be.visible');
-    cy.get('input[name="code"]').type('im the boss');
-    // cy.get('button[type="continue"]').click();
+      cy.get('button[type="submit"]').click();
+
+      // confirmation verification code has been sent
+
+      ApplyPage.getVerifyCodePage().should('be.visible');
+      const generateCode = faker.number
+        .int({ min: 100000, max: 999999 })
+        .toString();
+
+      ApplyPage.getVerifyCodeInput().scrollIntoView().type(generateCode);
+
+      interceptAuthApi('verify');
+      interceptApplicatonApi();
+
+      ApplyPage.getVerifySubmitButton().scrollIntoView().click();
+
+      // application has been started
+
+      StartPage.getStartApplicationPage().should('be.visible');
+    });
   });
 });

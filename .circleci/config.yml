@@ -57,6 +57,13 @@ jobs:
           path: test_results
       - store_artifacts:
           path: coverage
+      - cypress/run:
+          name: cypress-component-chrome
+          package-manager: npm
+          cypress-command: npx cypress run --component --reporter cypress-circleci-reporter
+          post-steps:
+            - store_test_results:
+                path: test_results
       - persist_to_workspace:
           root: *workspace_root
           paths: .
@@ -158,12 +165,12 @@ workflows:
             branches:
               only: development
       - cypress/run:
-          name: Chrome
+          name: cypress-e2e-chrome
           requires:
             - tests
           package-manager: npm
           install-browsers: true
-          cypress-command: npx cypress run --browser chrome --reporter cypress-circleci-reporter
+          cypress-command: npx cypress run --e2e --browser chrome --reporter cypress-circleci-reporter
           post-steps:
             - store_test_results:
                 path: test_results
@@ -178,29 +185,7 @@ workflows:
                 paths: .
           filters:
             branches:
-              only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing
-      - cypress/run:
-          name: Firefox
-          requires:
-            - tests
-          package-manager: npm
-          cypress-command: npx cypress run --browser firefox --reporter cypress-circleci-reporter
-          install-browsers: true
-          post-steps:
-            - store_test_results:
-                path: test_results
-            - store_artifacts:
-                path: cypress/screenshot
-            - store_artifacts:
-                path: cypress/videos
-            - store_artifacts:
-                path: cypress/reports
-            - persist_to_workspace:
-                root: *workspace_root
-                paths: .
-          filters:
-            branches:
-              only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing
+              only: development
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:

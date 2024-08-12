@@ -1,4 +1,6 @@
-/// <reference types="cypress" />
+import { faker } from '@faker-js/faker/locale/en_GB';
+import { mount } from 'cypress/react';
+
 // ***********************************************
 // This example commands.ts shows you how to
 // create various custom commands and overwrite
@@ -24,14 +26,32 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-//
-// declare global {
-//   namespace Cypress {
-//     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-//     }
-//   }
-// }
+Cypress.Commands.add('mount', mount);
+
+Cypress.Commands.add('generateEmptyApplication', () => {
+  cy.writeFile('cypress/fixtures/application.json', {
+    id: faker.string.uuid(),
+    reference: faker.string.alphanumeric(10),
+    status: 'New',
+    sensitiveData: false,
+    assignedTo: 'unassigned',
+    createdAt: faker.date.recent().toISOString(),
+    submittedAt: null,
+    mainApplicant: {
+      person: null,
+      address: null,
+      contactInformation: {
+        email: faker.internet.email({ provider: 'hackneyTEST.gov.uk' }),
+        phoneNumber: null,
+        preferredMethodOfContact: null,
+      },
+      questions: null,
+      requiresMedical: false,
+      medicalNeed: null,
+    },
+    calculatedBedroomNeed: null,
+    otherMembers: [],
+    assessment: null,
+    importedFromLegacyDatabase: false,
+  });
+});

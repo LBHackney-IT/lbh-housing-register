@@ -16,7 +16,8 @@
     "test:watch": "jest --watch",
     "prepare": "husky",
     "cypress:open": "cypress open --browser electron",
-    "cypress:run": "cypress run --browser electron"
+    "e2e:run": "cypress run --e2e --browser electron",
+    "component:run": "cypress run --component --browser electron"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --fix --max-warnings 0",
@@ -60,6 +61,7 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@hackney/eslint-config": "^1.4.0",
     "@hackney/prettier-config": "^1.0.1",
     "@mocks-server/main": "^2.3.1",

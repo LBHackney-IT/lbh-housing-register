@@ -14,8 +14,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "typeRoots": ["./types", "./node_modules/@types"]
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.js"],
-  "exclude": ["cypress.config.ts", "cypress", "node_modules"]
+  "exclude": ["cypress.config.ts", "cypress", "node_modules", "**/*.cy.tsx"]
 }

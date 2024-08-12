@@ -1,5 +1,3 @@
-/// <reference types="cypress" />
-
 import HomePage from '../pages/home';
 import { screenPresets } from '../support/helpers';
 
@@ -10,8 +8,7 @@ context('Cookies', () => {
 
       Cypress.Cookies.debug(true);
       HomePage.visit();
-      // clear cookies again after visiting to remove
-      // any 3rd party cookies picked up such as cloudflare
+
       cy.clearCookies();
 
       HomePage.getCookiesButton().scrollIntoView();

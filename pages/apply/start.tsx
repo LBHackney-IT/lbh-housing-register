@@ -1,15 +1,17 @@
 import { useState } from 'react';
+
 import { FormikValues } from 'formik';
 import { useRouter } from 'next/router';
+
 import { HeadingOne } from '../../components/content/headings';
+import ErrorSummary from '../../components/errors/error-summary';
 import Form from '../../components/form/form';
 import Layout from '../../components/layout/resident-layout';
 import { useAppDispatch } from '../../lib/store/hooks';
 import { updateBeforeFirstSave } from '../../lib/store/mainApplicant';
+import { Errors } from '../../lib/types/errors';
 import { FormID, getFormData } from '../../lib/utils/form-data';
 import processPhonenumber from '../../lib/utils/processPhonenumber';
-import ErrorSummary from '../../components/errors/error-summary';
-import { Errors } from '../../lib/types/errors';
 import { scrollToError } from '../../lib/utils/scroll';
 
 const ApplicationStartPage = (): JSX.Element => {
@@ -47,7 +49,10 @@ const ApplicationStartPage = (): JSX.Element => {
   };
 
   return (
-    <Layout pageName="Start your application">
+    <Layout
+      pageName="Start your application"
+      dataTestId="test-start-application-page"
+    >
       <HeadingOne content="Start your application" />
       {userError && <ErrorSummary>{userError}</ErrorSummary>}
       <Form

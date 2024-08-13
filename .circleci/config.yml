@@ -132,6 +132,7 @@ workflows:
   continuous-delivery:
     jobs:
       - install-dependencies
+      # Because we're using jest and cypress component, we'll use the cypress orb to run both tests.
       - cypress/run:
           name: tests
           package-manager: npm
@@ -169,7 +170,7 @@ workflows:
       - cypress/run:
           name: cypress-e2e-chrome
           requires:
-            - install-dependencies
+            - build-deploy-development
           package-manager: npm
           install-browsers: true
           cypress-command: npx cypress run --e2e --browser chrome --reporter cypress-circleci-reporter
@@ -182,29 +183,11 @@ workflows:
                 path: cypress/reports
           filters:
             branches:
-              only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing
-      - cypress/run:
-          name: cypress-e2e-webkit
-          requires:
-            - install-dependencies
-          package-manager: npm
-          install-browsers: true
-          cypress-command: npx cypress run --e2e --browser webkit --reporter cypress-circleci-reporter
-          post-steps:
-            - store_test_results:
-                path: test_results
-            - store_artifacts:
-                path: cypress/videos
-            - store_artifacts:
-                path: cypress/reports
-          filters:
-            branches:
-              only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing
+              only: development
       - cypress/run:
           name: cypress-e2e-firefox
           requires:
-            # - tests
-            - install-dependencies
+            - build-deploy-development
           package-manager: npm
           install-browsers: true
           cypress-command: npx cypress run --e2e --browser firefox --reporter cypress-circleci-reporter
@@ -219,7 +202,7 @@ workflows:
                 path: cypress/reports
           filters:
             branches:
-              only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing
+              only: development
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:

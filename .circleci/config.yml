@@ -198,10 +198,10 @@ workflows:
                 path: test_results
             - store_artifacts:
                 path: cypress/videos
-                destination: cypress/videos-firefox
+            - store_artifacts:
+                path: cypress/screenshots
             - store_artifacts:
                 path: cypress/reports
-                destination: cypress/reports-firefox
           filters:
             branches:
               only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing

@@ -94,6 +94,7 @@
     "jest": "^27.5.1",
     "jest-junit": "^16.0.0",
     "lint-staged": "^14.0.1",
+    "mocha": "^10.7.3",
     "mockdate": "^3.0.5",
     "prettier": "2.2.1",
     "sass": "^1.32.12",

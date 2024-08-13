@@ -136,22 +136,32 @@ workflows:
           requires:
             - install-dependencies
       - cypress/run:
-          name: cypress-component
+          name: cypress-test
+          # there are no jobs to follow this one
+          # so no need to save the workspace files (saves time)
           package-manager: npm
           cypress-command: npx cypress run --component --reporter cypress-circleci-reporter
-          post-steps:
-            - store_test_results:
-                path: test_results
           requires:
             - install-dependencies
+          post-steps:
+            - run: npm run test:ci
+      # - cypress/run:
+      #     name: cypress-component
+      #     package-manager: npm
+      #     cypress-command: npx cypress run --component --reporter cypress-circleci-reporter
+      #     post-steps:
+      #       - store_test_results:
+      #           path: test_results
+      #     requires:
+      #       - install-dependencies
       - sonar-scan:
           context: SonarCloud
           requires:
             - tests
+            # - cypress/run
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:
-            - tests
             - sonar-scan
           filters:
             branches:

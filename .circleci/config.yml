@@ -136,7 +136,7 @@ workflows:
           requires:
             - install-dependencies
       - cypress/run:
-          name: cypress-test
+          name: test
           # there are no jobs to follow this one
           # so no need to save the workspace files (saves time)
           package-manager: npm
@@ -145,6 +145,8 @@ workflows:
             - install-dependencies
           post-steps:
             - run: npm run test:ci
+            - store_test_results:
+                path: test_results
       # - cypress/run:
       #     name: cypress-component
       #     package-manager: npm

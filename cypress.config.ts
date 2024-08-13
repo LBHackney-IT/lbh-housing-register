@@ -16,6 +16,7 @@ const baseUrl = baseUrlSites[environment];
 export default defineConfig({
   e2e: {
     baseUrl,
+    experimentalWebKitSupport: true,
     setupNodeEvents() // on, config
     {
       // implement node event listeners here

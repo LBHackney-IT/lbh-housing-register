@@ -169,7 +169,7 @@ workflows:
       - cypress/run:
           name: cypress-e2e-chrome
           requires:
-            - tests
+            - install-dependencies
           package-manager: npm
           install-browsers: true
           cypress-command: npx cypress run --e2e --browser chrome --reporter cypress-circleci-reporter
@@ -186,7 +186,7 @@ workflows:
       - cypress/run:
           name: cypress-e2e-webkit
           requires:
-            - tests
+            - install-dependencies
           package-manager: npm
           install-browsers: true
           cypress-command: npx cypress run --e2e --browser webkit --reporter cypress-circleci-reporter

@@ -148,10 +148,11 @@ workflows:
       #           path: test_results
       #       - store_artifacts:
       #           path: coverage
-      # - sonar-scan:
-      #     context: SonarCloud
-      #     requires:
-      #       - tests
+      - sonar-scan:
+          context: SonarCloud
+          requires:
+            # - tests
+            - install-dependencies
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:

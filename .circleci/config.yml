@@ -136,7 +136,7 @@ workflows:
           requires:
             - install-dependencies
       - cypress/run:
-          name: cypress-component-chrome
+          name: cypress-component
           package-manager: npm
           cypress-command: npx cypress run --component --reporter cypress-circleci-reporter
           post-steps:

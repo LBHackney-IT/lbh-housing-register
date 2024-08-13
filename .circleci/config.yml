@@ -43,20 +43,20 @@ jobs:
           root: *workspace_root
           paths: .
 
-  tests:
-    executor: node-executor
-    steps:
-      - *attach_workspace
-      - run:
-          name: Run Tests
-          command: npm run test:ci
-          environment:
-            JEST_JUNIT_OUTPUT_DIR: test_results
-            JEST_JUNIT_ADD_FILE_ATTRIBUTE: 'true'
-      - store_test_results:
-          path: test_results
-      - store_artifacts:
-          path: coverage
+  # tests:
+  #   executor: node-executor
+  #   steps:
+  #     - *attach_workspace
+  #     - run:
+  #         name: Run Tests
+  #         command: npm run test:ci
+  #         environment:
+  #           JEST_JUNIT_OUTPUT_DIR: test_results
+  #           JEST_JUNIT_ADD_FILE_ATTRIBUTE: 'true'
+  #     - store_test_results:
+  #         path: test_results
+  #     - store_artifacts:
+  #         path: coverage
 
   sonar-scan:
     executor: orb-executor
@@ -132,11 +132,11 @@ workflows:
   continuous-delivery:
     jobs:
       - install-dependencies
-      - tests:
-          requires:
-            - install-dependencies
+      # - tests:
+      #     requires:
+      #       - install-dependencies
       - cypress/run:
-          name: test
+          name: tests
           # there are no jobs to follow this one
           # so no need to save the workspace files (saves time)
           package-manager: npm
@@ -151,6 +151,11 @@ workflows:
                   JEST_JUNIT_ADD_FILE_ATTRIBUTE: 'true'
             - store_test_results:
                 path: test_results
+            - store_artifacts:
+                path: coverage
+            - persist_to_workspace:
+                root: *workspace_root
+                paths: .
       # - cypress/run:
       #     name: cypress-component
       #     package-manager: npm

@@ -132,13 +132,8 @@ workflows:
   continuous-delivery:
     jobs:
       - install-dependencies
-      # - tests:
-      #     requires:
-      #       - install-dependencies
       - cypress/run:
           name: tests
-          # there are no jobs to follow this one
-          # so no need to save the workspace files (saves time)
           package-manager: npm
           cypress-command: npx cypress run --component --reporter cypress-circleci-reporter
           requires:
@@ -153,23 +148,10 @@ workflows:
                 path: test_results
             - store_artifacts:
                 path: coverage
-            - persist_to_workspace:
-                root: *workspace_root
-                paths: .
-      # - cypress/run:
-      #     name: cypress-component
-      #     package-manager: npm
-      #     cypress-command: npx cypress run --component --reporter cypress-circleci-reporter
-      #     post-steps:
-      #       - store_test_results:
-      #           path: test_results
-      #     requires:
-      #       - install-dependencies
       - sonar-scan:
           context: SonarCloud
           requires:
             - tests
-            # - cypress/run
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:
@@ -194,18 +176,34 @@ workflows:
           post-steps:
             - store_test_results:
                 path: test_results
-            - store_artifacts:
-                path: cypress/screenshot
-            - store_artifacts:
-                path: cypress/videos
-            - store_artifacts:
-                path: cypress/reports
-            - persist_to_workspace:
-                root: *workspace_root
-                paths: .
+            # - store_artifacts:
+            #     path: cypress/chrome/screenshot
+            # - store_artifacts:
+            #     path: cypress/chrome/videos
+            # - store_artifacts:
+            #     path: cypress/reports
           filters:
             branches:
-              only: development
+              only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing
+      - cypress/run:
+          name: cypress-e2e-firefox
+          requires:
+            - tests
+          package-manager: npm
+          install-browsers: true
+          cypress-command: npx cypress run --e2e --browser firefox --reporter cypress-circleci-reporter
+          post-steps:
+            - store_test_results:
+                path: test_results
+            # - store_artifacts:
+            #     path: cypress/firefox/screenshot
+            # - store_artifacts:
+            #     path: cypress/firefox/videos
+            # - store_artifacts:
+            #     path: cypress/reports
+          filters:
+            branches:
+              only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:

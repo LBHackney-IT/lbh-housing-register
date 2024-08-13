@@ -176,10 +176,8 @@ workflows:
           post-steps:
             - store_test_results:
                 path: test_results
-            # - store_artifacts:
-            #     path: cypress/chrome/screenshot
-            # - store_artifacts:
-            #     path: cypress/chrome/videos
+            - store_artifacts:
+                path: cypress/videos
             # - store_artifacts:
             #     path: cypress/reports
           filters:
@@ -195,8 +193,8 @@ workflows:
           post-steps:
             - store_test_results:
                 path: test_results
-            # - store_artifacts:
-            #     path: cypress/firefox/screenshot
+            - store_artifacts:
+                path: cypress/videos
             # - store_artifacts:
             #     path: cypress/firefox/videos
             # - store_artifacts:

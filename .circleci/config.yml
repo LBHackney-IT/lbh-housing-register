@@ -177,7 +177,7 @@ workflows:
             - store_test_results:
                 path: test_results
             - store_artifacts:
-                path: cypress/videos
+                path: cypress/videos/chrome
             # - store_artifacts:
             #     path: cypress/reports
           filters:
@@ -194,7 +194,7 @@ workflows:
             - store_test_results:
                 path: test_results
             - store_artifacts:
-                path: cypress/videos
+                path: cypress/videos/firefox
             # - store_artifacts:
             #     path: cypress/firefox/videos
             # - store_artifacts:

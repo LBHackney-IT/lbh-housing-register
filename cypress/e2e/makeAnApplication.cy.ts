@@ -12,7 +12,7 @@ import {
 
 describe('Housing application', () => {
   screenPresets.forEach((screenPreset) => {
-    it(`user successfully submits an application on ${screenPreset}`, () => {
+    it(`user successfully verifies and starts application on ${screenPreset}`, () => {
       cy.viewport(screenPreset);
       cy.clearCookies();
 

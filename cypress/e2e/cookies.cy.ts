@@ -2,8 +2,8 @@ import HomePage from '../pages/home';
 import { screenPresets } from '../support/helpers';
 
 context('Cookies', () => {
-  it('selects accept cookies button', () => {
-    screenPresets.forEach((screenPreset) => {
+  screenPresets.forEach((screenPreset) => {
+    it(`user successfully selects accept cookies button on ${screenPreset}`, () => {
       cy.viewport(screenPreset);
 
       Cypress.Cookies.debug(true);

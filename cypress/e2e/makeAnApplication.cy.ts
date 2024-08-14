@@ -10,9 +10,9 @@ import {
   interceptAuthApi,
 } from '../support/intercepts';
 
-describe('User makes a housing application', () => {
-  it('allows a user to submit an application', () => {
-    screenPresets.forEach((screenPreset) => {
+describe('Housing application', () => {
+  screenPresets.forEach((screenPreset) => {
+    it(`user successfully submits an application on ${screenPreset}`, () => {
       cy.viewport(screenPreset);
       cy.clearCookies();
 

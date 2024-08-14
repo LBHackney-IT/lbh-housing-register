@@ -43,21 +43,6 @@ jobs:
           root: *workspace_root
           paths: .
 
-  # tests:
-  #   executor: node-executor
-  #   steps:
-  #     - *attach_workspace
-  #     - run:
-  #         name: Run Tests
-  #         command: npm run test:ci
-  #         environment:
-  #           JEST_JUNIT_OUTPUT_DIR: test_results
-  #           JEST_JUNIT_ADD_FILE_ATTRIBUTE: 'true'
-  #     - store_test_results:
-  #         path: test_results
-  #     - store_artifacts:
-  #         path: coverage
-
   sonar-scan:
     executor: orb-executor
     steps:
@@ -203,43 +188,6 @@ workflows:
           filters:
             branches:
               only: development
-      - cypress/run:
-          name: cypress-e2e-edge
-          requires:
-            - install-dependencies
-          install-command: npm install && echo hello
-          cypress-command: npx cypress run --e2e --browser edge --reporter cypress-circleci-reporter
-          start-command: npm run start:dev
-          post-steps:
-            - store_test_results:
-                path: test_results
-            - store_artifacts:
-                path: cypress/videos
-            - store_artifacts:
-                path: cypress/screenshots
-            - store_artifacts:
-                path: cypress/reports
-          filters:
-            branches:
-              only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing
-      - cypress/run:
-          name: cypress-e2e-webkit
-          requires:
-            - install-dependencies
-          install-command: npm install && echo hello
-          cypress-command: npx cypress run --e2e --browser webkit --reporter cypress-circleci-reporter
-          post-steps:
-            - store_test_results:
-                path: test_results
-            - store_artifacts:
-                path: cypress/videos
-            - store_artifacts:
-                path: cypress/screenshots
-            - store_artifacts:
-                path: cypress/reports
-          filters:
-            branches:
-              only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:

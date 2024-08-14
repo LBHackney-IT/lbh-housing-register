@@ -206,7 +206,7 @@ workflows:
       - cypress/run:
           name: cypress-e2e-edge
           requires:
-            - build-deploy-development
+            - install-dependencies
           package-manager: npm
           install-browsers: true
           cypress-command: npx cypress run --e2e --browser edge --reporter cypress-circleci-reporter

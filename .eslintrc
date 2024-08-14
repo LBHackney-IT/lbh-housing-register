@@ -12,11 +12,13 @@
     "@hackney/eslint-config",
     "eslint:recommended",
     "plugin:prettier/recommended",
-    "plugin:@next/next/recommended"
+    "plugin:@next/next/recommended",
+    "plugin:cypress/recommended"
   ],
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 2018
+    "ecmaVersion": 2018,
+    "project": ["./tsconfig.json", "./cypress/tsconfig.json"]
   },
   "settings": {
     "react": {
@@ -32,8 +34,9 @@
       "error",
       {
         "devDependencies": [
-          "**/*.+(test|spec).+(j|t)s?(x)",
-          "cypress.config.ts"
+          "**/*.+(test|spec|cy).+(j|t)s?(x)",
+          "cypress.config.ts",
+          "cypress/support/commands.ts"
         ]
       }
     ]
@@ -46,7 +49,8 @@
     {
       "files": ["**/*.ts", "**/*.tsx"],
       "rules": {
-        "react-hooks/exhaustive-deps": "off"
+        "react-hooks/exhaustive-deps": "off",
+        "react/function-component-definition": "off"
       }
     },
     {

@@ -43,24 +43,6 @@ jobs:
           root: *workspace_root
           paths: .
 
-  tests:
-    executor: node-executor
-    steps:
-      - *attach_workspace
-      - run:
-          name: Run Tests
-          command: npm run test:ci
-          environment:
-            JEST_JUNIT_OUTPUT_DIR: test_results
-            JEST_JUNIT_ADD_FILE_ATTRIBUTE: 'true'
-      - store_test_results:
-          path: test_results
-      - store_artifacts:
-          path: coverage
-      - persist_to_workspace:
-          root: *workspace_root
-          paths: .
-
   sonar-scan:
     executor: orb-executor
     steps:
@@ -135,9 +117,23 @@ workflows:
   continuous-delivery:
     jobs:
       - install-dependencies
-      - tests:
+      # Because we're using jest and cypress component, we'll use the cypress orb to run both tests.
+      - cypress/run:
+          name: tests
+          package-manager: npm
+          cypress-command: npx cypress run --component --reporter cypress-circleci-reporter
           requires:
             - install-dependencies
+          post-steps:
+            - run:
+                command: npm run test:ci
+                environment:
+                  JEST_JUNIT_OUTPUT_DIR: test_results
+                  JEST_JUNIT_ADD_FILE_ATTRIBUTE: 'true'
+            - store_test_results:
+                path: test_results
+            - store_artifacts:
+                path: coverage
       - sonar-scan:
           context: SonarCloud
           requires:
@@ -145,7 +141,6 @@ workflows:
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:
-            - tests
             - sonar-scan
           filters:
             branches:
@@ -158,17 +153,38 @@ workflows:
             branches:
               only: development
       - cypress/run:
+          name: cypress-e2e-chrome
           requires:
             - build-deploy-development
           package-manager: npm
-          cypress-command: npx cypress run --reporter cypress-circleci-reporter
+          install-browsers: true
+          cypress-command: npx cypress run --e2e --browser chrome --reporter cypress-circleci-reporter
           post-steps:
             - store_test_results:
                 path: test_results
             - store_artifacts:
-                path: cypress/screenshot
+                path: cypress/videos
+            - store_artifacts:
+                path: cypress/screenshots
+            - store_artifacts:
+                path: cypress/reports
+          filters:
+            branches:
+              only: development
+      - cypress/run:
+          name: cypress-e2e-firefox
+          requires:
+            - build-deploy-development
+          package-manager: npm
+          install-browsers: true
+          cypress-command: npx cypress run --e2e --browser firefox --reporter cypress-circleci-reporter
+          post-steps:
+            - store_test_results:
+                path: test_results
             - store_artifacts:
                 path: cypress/videos
+            - store_artifacts:
+                path: cypress/screenshots
             - store_artifacts:
                 path: cypress/reports
           filters:
@@ -177,7 +193,7 @@ workflows:
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:
-            - cypress/run
+            - tests
           filters:
             branches:
               only: main

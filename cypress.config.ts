@@ -1,5 +1,5 @@
 import { defineConfig } from 'cypress';
-require('dotenv').config();
+import 'dotenv/config';
 
 type Environment = 'localdev' | 'development';
 
@@ -16,10 +16,19 @@ const baseUrl = baseUrlSites[environment];
 export default defineConfig({
   e2e: {
     baseUrl,
-    setupNodeEvents(on, config) {
+    experimentalWebKitSupport: true,
+    setupNodeEvents() // on, config
+    {
       // implement node event listeners here
     },
     video: true,
     screenshotOnRunFailure: true,
+  },
+
+  component: {
+    devServer: {
+      framework: 'next',
+      bundler: 'webpack',
+    },
   },
 });

@@ -6,7 +6,6 @@ context('Cookies', () => {
     it(`user successfully selects accept cookies button on ${screenPreset}`, () => {
       cy.viewport(screenPreset);
 
-      Cypress.Cookies.debug(true);
       HomePage.visit();
 
       cy.clearCookies();

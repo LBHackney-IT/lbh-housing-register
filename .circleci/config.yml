@@ -207,6 +207,7 @@ workflows:
           name: cypress-e2e-edge
           requires:
             - install-dependencies
+          install-command: npm install && echo hello
           cypress-command: npx cypress run --e2e --browser edge --reporter cypress-circleci-reporter
           start-command: npm run start:dev
           post-steps:
@@ -225,8 +226,8 @@ workflows:
           name: cypress-e2e-webkit
           requires:
             - install-dependencies
+          install-command: npm install && echo hello
           cypress-command: npx cypress run --e2e --browser webkit --reporter cypress-circleci-reporter
-          start-command: npm run start:dev
           post-steps:
             - store_test_results:
                 path: test_results

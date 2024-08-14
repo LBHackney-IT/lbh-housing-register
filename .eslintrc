@@ -50,10 +50,7 @@
       "files": ["**/*.ts", "**/*.tsx"],
       "rules": {
         "react-hooks/exhaustive-deps": "off",
-        "react/function-component-definition": "off",
-        "@typescript-eslint/no-shadow": "warn"
-        // "@typescript-eslint/no-var-requires": "warn",
-        // "eslint/global-require": "off"
+        "react/function-component-definition": "off"
       }
     },
     {

@@ -203,6 +203,25 @@ workflows:
           filters:
             branches:
               only: development
+      - cypress/run:
+          name: cypress-e2e-edge
+          requires:
+            - build-deploy-development
+          package-manager: npm
+          install-browsers: true
+          cypress-command: npx cypress run --e2e --browser edge --reporter cypress-circleci-reporter
+          post-steps:
+            - store_test_results:
+                path: test_results
+            - store_artifacts:
+                path: cypress/videos
+            - store_artifacts:
+                path: cypress/screenshots
+            - store_artifacts:
+                path: cypress/reports
+          filters:
+            branches:
+              only: TS-1555-Housing-reg-view-only-Implement-Cypress-for-e2e-testing
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:

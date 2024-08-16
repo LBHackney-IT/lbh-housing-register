@@ -117,11 +117,11 @@ workflows:
   continuous-delivery:
     jobs:
       - install-dependencies
-      - cypress/install: # Use Cypress step to install and cache dependencies
-          build: npm run build
-          executor: cypress/base-16-14-2-slim
-          # post-checkout:
-          #   - run: cp .env.sample .env
+      # - cypress/install: # Use Cypress step to install and cache dependencies
+      #     build: npm run build
+      #     executor: cypress/base-16-14-2-slim
+      # post-checkout:
+      #   - run: cp .env.sample .env
       # Because we're using jest and cypress component, we'll use the cypress orb to run both tests.
       - cypress/run:
           name: tests
@@ -161,9 +161,10 @@ workflows:
           name: cypress-e2e-chrome
           requires:
             - tests
-          executor: cypress/base-16-14-2-slim
+          # executor: cypress/base-16-14-2-slim
           attach-workspace: true
           # package-manager: npm
+          build: npm run build
           start: npm run start
           wait-on: 'http-get://127.0.0.1:3000/api/ping'
           install-browsers: true

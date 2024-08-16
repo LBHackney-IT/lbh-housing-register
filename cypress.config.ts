@@ -1,5 +1,6 @@
 import { defineConfig } from 'cypress';
 import 'dotenv/config';
+import { sign } from 'jsonwebtoken';
 
 type Environment = 'localdev' | 'development';
 
@@ -17,9 +18,16 @@ export default defineConfig({
   e2e: {
     baseUrl,
     experimentalWebKitSupport: true,
-    setupNodeEvents() // on, config
-    {
-      // implement node event listeners here
+    setupNodeEvents(on, config) {
+      on('task', {
+        generateToken({ user, secret }) {
+          return sign(user, secret);
+        },
+      });
+      config.env = {
+        ...process.env,
+      };
+      return config;
     },
     video: true,
     screenshotOnRunFailure: true,

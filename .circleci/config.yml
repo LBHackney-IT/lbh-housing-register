@@ -167,7 +167,7 @@ workflows:
           install-command: npm install && echo "Cypress installed"
           post-install: npm run build
           # wait-on: 'http-get://127.0.0.1:3000/api/ping'
-          start-command: npm run start
+          start-command: npm run start 3000
           install-browsers: true
           cypress-command: npx wait-on http://127.0.0.1:3000/api/ping && npx cypress run --e2e --browser chrome --reporter cypress-circleci-reporter
           post-steps:

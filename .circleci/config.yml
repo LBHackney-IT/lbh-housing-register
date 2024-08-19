@@ -71,6 +71,10 @@ jobs:
 
   run-cypress-e2e:
     executor: node-executor
+    parameters:
+      browser:
+        type: string
+        default: chrome
     steps:
       - cypress/install:
           package-manager: npm
@@ -79,7 +83,7 @@ jobs:
           post-install: npm run build
       - cypress/run-tests:
           start-command: npm run start
-          cypress-command: npx cypress run --browser chrome --reporter cypress-circleci-reporter
+          cypress-command: npx cypress run --browser << parameters.browser >> --reporter cypress-circleci-reporter
       - store_test_results:
           path: test_results
 
@@ -160,6 +164,16 @@ workflows:
           requires:
             - run-tests
       - run-cypress-e2e:
+          name: Run Cypress E2E Tests in Chrome
+          requires:
+            - install-dependencies
+          browser: chrome
+          filters:
+            branches:
+              only: TS-1585-Housing-reg-view-only-Implement-new-view-only-group-in-the-app
+      - run-cypress-e2e:
+          name: Run Cypress E2E Tests in Firefox
+          browser: firefox
           requires:
             - install-dependencies
           filters:

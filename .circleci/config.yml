@@ -9,16 +9,16 @@ orbs:
 executors:
   node-executor:
     docker:
-      - image: cimg/node:16.20.2
+      - image: cimg/node:16.20-browsers
   docker-python:
     docker:
       - image: circleci/python:3.7
-  orb-executor:
-    docker:
-      - image: cimg/node:21.6.1-browsers
-  cypress-node-16:
-    docker:
-      - image: cypress/included:cypress-12.6.0-node-16.18.1-chrome-110.0.5481.96-1-ff-109.0-edge-110.0.1587.41-1
+  # sonar-executor:
+  #   docker:
+  #     - image: cimg/node:21.6.1-browsers
+  # cypress-node-16:
+  #   docker:
+  #     - image: cypress/included:cypress-12.6.0-node-16.18.1-chrome-110.0.5481.96-1-ff-109.0-edge-110.0.1587.41-1
 
 references:
   workspace_root: &workspace_root '~'
@@ -70,16 +70,17 @@ jobs:
           path: coverage
 
   sonar-scan:
-    executor: orb-executor
+    executor: node-executor
     steps:
       - *attach_workspace
       - sonarcloud/scan
 
   run-cypress-e2e:
-    executor: cypress-node-16
+    executor: node-executor
     steps:
       - cypress/install:
           package-manager: npm
+          install-browsers: true
           install-command: npm install
           post-install: npm run build
       - cypress/run-tests:

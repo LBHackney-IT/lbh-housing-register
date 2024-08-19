@@ -16,13 +16,18 @@ executors:
   orb-executor:
     docker:
       - image: cimg/node:21.6.1-browsers
+  cypress/base-16-18-1:
+    docker:
+      - image: cypress/base:16.18.1
 
 references:
   workspace_root: &workspace_root '~'
   attach_workspace: &attach_workspace
     attach_workspace:
       at: *workspace_root
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Commands ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Jobs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 jobs:
   install-dependencies:
     executor: node-executor
@@ -111,7 +116,7 @@ jobs:
           root: *workspace_root
           paths:
             - .aws
-
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Workflows ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 workflows:
   version: 2
   continuous-delivery:
@@ -161,7 +166,6 @@ workflows:
           name: cypress-e2e-chrome
           requires:
             - tests
-          # executor: cypress/base-16-14-2-slim
           # attach-workspace: true
           # package-manager: npm
           install-command: npm install && echo "Cypress installed"
@@ -169,7 +173,9 @@ workflows:
           # wait-on: 'http-get://127.0.0.1:3000/api/ping'
           start-command: npm run start
           install-browsers: true
-          cypress-command: npx wait-on@latest http://localhost:3000 && npx cypress run --e2e --browser chrome --reporter cypress-circleci-reporter
+          cypress-command: |
+            npx wait-on@latest http-get://localhost:3000/api/ping
+            npx cypress run --e2e --browser chrome --reporter cypress-circleci-reporter
           post-steps:
             - store_test_results:
                 path: test_results

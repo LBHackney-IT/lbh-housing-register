@@ -132,7 +132,7 @@ jobs:
           root: *workspace_root
           paths:
             - .cache/Cypress
-            # - project
+            - project
   run-e2e-tests-in-chrome:
     docker:
       - image: cypress/browsers:node-16.18.1-chrome-110.0.5481.96-1-ff-109.0-edge-110.0.1587.41-1
@@ -142,6 +142,7 @@ jobs:
           at: *workspace_root
       - cypress/run-tests:
           start-command: npm run start
+          working-directory: &workspace_root /project
           # working-directory: examples/angular-app
           # wait-on: 'http://localhost:3000'
           cypress-command: 'npx cypress run --e2e --browser chrome'

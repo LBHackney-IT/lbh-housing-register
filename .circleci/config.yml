@@ -170,7 +170,7 @@ jobs:
       - cypress/run-tests:
           # name: Run Cypress Tests
           cypress-command: |
-            npx run wait-on && npx cypress run --e2e --browser chrome --reporter cypress-circleci-reporter
+            npm run wait-on && npx cypress run --e2e --browser chrome --reporter cypress-circleci-reporter
       # - post-steps:
       #     store_test_results:
       #         path: test_results

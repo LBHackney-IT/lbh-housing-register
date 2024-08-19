@@ -116,18 +116,61 @@ jobs:
           root: *workspace_root
           paths:
             - .aws
+
+  install-and-persist:
+    executor:
+      name: cypress/default
+      node-version: '16.18.1'
+    steps:
+      - cypress/install:
+          # build-command: npm run build
+          # working-directory: examples/angular-app
+          cypress-cache-key: cypress-cache-{{ arch }}-{{ checksum "package.json" }}
+          include-branch-in-node-cache-key: true
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - .cache/Cypress
+            # - project
+  run-e2e-tests-in-chrome:
+    docker:
+      - image: cypress/browsers:node-16.18.1-chrome-110.0.5481.96-1-ff-109.0-edge-110.0.1587.41-1
+    steps:
+      - run: echo "This step assumes dependencies were installed using the cypress/install job"
+      - attach_workspace:
+          at: *workspace_root
+      - cypress/run-tests:
+          start-command: npm run start
+          # working-directory: examples/angular-app
+          # wait-on: 'http://localhost:3000'
+          cypress-command: 'npx cypress run --e2e --browser chrome'
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Workflows ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 workflows:
   version: 2
   continuous-delivery:
     jobs:
       - install-dependencies
+      - install-and-persist
+      - run-e2e-tests-in-chrome:
+          filters:
+            branches:
+              only: TS-1585-Housing-reg-view-only-Implement-new-view-only-group-in-the-app
+          name: Run CT Tests in Chrome
+          requires:
+            - install-and-persist
       # - cypress/install: # Use Cypress step to install and cache dependencies
       #     build: npm run build
       #     executor: cypress/base-16-14-2-slim
       # post-checkout:
       #   - run: cp .env.sample .env
       # Because we're using jest and cypress component, we'll use the cypress orb to run both tests.
+      # - cypress/run:
+      #     filters: *filters
+      #     name: Standard Npm Example
+      #     # working-directory: examples/npm-install
+      #     cypress-cache-key: cypress-cache-{{ arch }}-{{ checksum "package.json" }}
+      #     post-install: "npm run say-hello && npm run say-goodbye"
       - cypress/run:
           name: tests
           package-manager: npm

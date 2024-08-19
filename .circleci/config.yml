@@ -150,13 +150,13 @@ jobs:
 
   run-e2e-tests:
     docker:
-      - image: cypress/browsers:node-16.18.1-chrome-110.0.5481.96-1-ff-109.0-edge-110.0.1587.41-1
+      - image: cypress/included:cypress-12.6.0-node-16.18.1-chrome-110.0.5481.96-1-ff-109.0-edge-110.0.1587.41-1
     steps:
       - attach_workspace:
           at: *workspace_root
-      - restore_cache:
-          keys:
-            - cypress-cache-{{ checksum "package-lock.json" }}
+      # - restore_cache:
+      #     keys:
+      #       - cypress-cache-{{ checksum "package-lock.json" }}
       - run:
           name: Install Dependencies
           command: npm install
@@ -173,10 +173,10 @@ jobs:
       - cypress/run-tests:
           # name: Run Cypress Tests
           cypress-command: npx cypress run --e2e --browser chrome --reporter cypress-circleci-reporter
-      - save_cache:
-          paths:
-            - /root/.cache/Cypress
-          key: cypress-cache-{{ checksum "package-lock.json" }}
+      # - save_cache:
+      #     paths:
+      #       - /root/.cache/Cypress
+      #     key: cypress-cache-{{ checksum "package-lock.json" }}
       # - post-steps:
       #     store_test_results:
       #         path: test_results

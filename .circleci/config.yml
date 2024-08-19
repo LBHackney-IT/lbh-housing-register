@@ -16,9 +16,9 @@ executors:
   orb-executor:
     docker:
       - image: cimg/node:21.6.1-browsers
-  with-chrome-and-firefox:
+  cypress-node-16:
     docker:
-      - image: 'cypress/browsers:node-16.18.1-chrome-110.0.5481.96-1-ff-109.0-edge-110.0.1587.41-1'
+      - image: cypress/included:12.6.0-node-16.18.1-chrome-110.0.5481.96-1-ff-109.0-edge-110.0.1587.41-1
 
 references:
   workspace_root: &workspace_root '~'
@@ -185,9 +185,7 @@ jobs:
   #         path: cypress/reports
 
   run-cypress-e2e:
-    executor:
-      name: cypress/default
-      node-version: '16.18.1'
+    executor: cypress-node-16
     steps:
       - cypress/install:
           package-manager: npm
@@ -195,7 +193,7 @@ jobs:
           post-install: npm run build
       - cypress/run-tests:
           start-command: npm run start
-          cypress-command: npx cypress run --reporter --browser chrome cypress-circleci-reporter
+          cypress-command: npx cypress run --browser chrome --reporter cypress-circleci-reporter
       - store_test_results:
           path: test_results
 

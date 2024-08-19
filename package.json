@@ -19,7 +19,8 @@
     "prepare": "husky",
     "cypress:open": "cypress open --browser electron",
     "e2e:run": "cypress run --e2e --browser electron",
-    "component:run": "cypress run --component --browser electron"
+    "component:run": "cypress run --component --browser electron",
+    "wait-on": "wait-on http-get://localhost:3000/api/ping -v"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

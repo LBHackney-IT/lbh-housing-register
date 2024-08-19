@@ -153,12 +153,20 @@ jobs:
       - image: cypress/browsers:node-16.18.1-chrome-110.0.5481.96-1-ff-109.0-edge-110.0.1587.41-1
     steps:
       - run:
+          name: Install Dependencies
+          command: npm install
+      - run:
+          name: Build Application
+          command: npm run build
+      - run:
           name: Start Application
           command: npm run start
+      - run:
+          name: Wait for Application to be Ready
+          command: npx wait-on@latest http-get://localhost:3000/api/ping
       - cypress/run-tests:
           # name: Run Cypress Tests
           cypress-command: |
-            npx wait-on@latest http-get://localhost:3000/api/ping
             npx cypress run --e2e --browser chrome --reporter cypress-circleci-reporter
       # - post-steps:
       #     store_test_results:

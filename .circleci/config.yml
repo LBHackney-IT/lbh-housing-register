@@ -163,9 +163,10 @@ jobs:
       - run:
           name: Start Application
           command: npm run start
-      - run:
-          name: Wait for Application to be Ready
-          command: npx wait-on@latest http-get://localhost:3000/api/ping
+          wait-on: 'http-get://localhost:3000/api/ping'
+      # - run:
+      #     name: Wait for Application to be Ready
+      #     command: npx wait-on@latest http-get://localhost:3000/api/ping
       - cypress/run-tests:
           # name: Run Cypress Tests
           cypress-command: |

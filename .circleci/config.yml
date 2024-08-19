@@ -180,8 +180,8 @@ workflows:
             branches:
               only: TS-1585-Housing-reg-view-only-Implement-new-view-only-group-in-the-app
       - run-cypress-e2e:
-          name: E2E Tests - Edge
-          browser: edge
+          name: E2E Tests - Webkit
+          browser: webkit
           requires:
             - install-dependencies
           filters:

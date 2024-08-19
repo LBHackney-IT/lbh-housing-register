@@ -45,7 +45,6 @@ jobs:
           paths:
             - ./node_modules
             - ./.next/cache
-            - ./.cache/Cypress
       - persist_to_workspace:
           root: *workspace_root
           paths: .
@@ -146,44 +145,44 @@ jobs:
   #             - .cache/Cypress # this caches the Cypress binary for use across multiple jobs
   #             - project # this caches your source code (from the `-checkout` command) for use across multiple jobs
 
-  run-e2e-tests:
-    docker:
-      - image: cypress/browsers:node-16.18.1-chrome-110.0.5481.96-1-ff-109.0-edge-110.0.1587.41-1
-    steps:
-      - *attach_workspace
-      - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-      - run:
-          name: Install Dependencies
-          command: npm install
-      - run:
-          name: Build Application
-          command: npm run build
-      - run:
-          name: Start Application
-          command: npm run start &
-      # - run:
-      #     name: Wait for Application to be Ready
-      #     # wait-on: 'http-get://localhost:3000/api/ping'
-      #     command: npx wait-on http-get://localhost:3000/api/ping
-      - cypress/run-tests:
-          # name: Run Cypress Tests
-          cypress-command: npx cypress run --e2e --browser chrome --reporter cypress-circleci-reporter
-      - save_cache:
-          paths:
-            - ./.cache/Cypress
-          key: dependency-cache-{{ checksum "package-lock.json" }}
+  # run-e2e-tests:
+  #   # docker:
+  #   #   - image: cypress/browsers:node-16.18.1-chrome-110.0.5481.96-1-ff-109.0-edge-110.0.1587.41-1
+  #   steps:
+  #     - *attach_workspace
+  #     - checkout
+  #     - restore_cache:
+  #         key: dependency-cache-{{ checksum "package-lock.json" }}
+  #     - run:
+  #         name: Install Dependencies
+  #         command: npm install
+  #     - run:
+  #         name: Build Application
+  #         command: npm run build
+  #     - run:
+  #         name: Start Application
+  #         command: npm run start &
+  #     # - run:
+  #     #     name: Wait for Application to be Ready
+  #     #     # wait-on: 'http-get://localhost:3000/api/ping'
+  #     #     command: npx wait-on http-get://localhost:3000/api/ping
+  #     - cypress/run-tests:
+  #         # name: Run Cypress Tests
+  #         cypress-command: npx cypress run --e2e --browser chrome --reporter cypress-circleci-reporter
+  #     - save_cache:
+  #         paths:
+  #           - ./.cache/Cypress
+  #         key: dependency-cache-{{ checksum "package-lock.json" }}
 
-      # - post-steps:
-      #     store_test_results:
-      #         path: test_results
-      #     - store_artifacts:
-      #         path: cypress/videos
-      #     - store_artifacts:
-      #         path: cypress/screenshots
-      #     - store_artifacts:
-      #         path: cypress/reports
+  # - post-steps:
+  #     store_test_results:
+  #         path: test_results
+  #     - store_artifacts:
+  #         path: cypress/videos
+  #     - store_artifacts:
+  #         path: cypress/screenshots
+  #     - store_artifacts:
+  #         path: cypress/reports
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Workflows ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 workflows:
@@ -246,34 +245,34 @@ workflows:
           filters:
             branches:
               only: development
-      - run-e2e-tests:
+      - cypress/run:
           name: cypress-e2e-chrome
           requires:
             - install-dependencies
-          # # attach-workspace: true
-          # # package-manager: npm
-          # install-command: npm install && echo "Cypress installed"
-          # post-install: npm run build
-          # # wait-on: 'http-get://127.0.0.1:3000/api/ping'
-          # start-command: npm run start
-          # install-browsers: true
-          # cypress-command: |
-          #   npx wait-on@latest http-get://localhost:3000/api/ping
-          #   npx cypress run --e2e --browser chrome --reporter cypress-circleci-reporter
-          # post-steps:
-          #   - store_test_results:
-          #       path: test_results
-          #   - store_artifacts:
-          #       path: cypress/videos
-          #   - store_artifacts:
-          #       path: cypress/screenshots
-          #   - store_artifacts:
-          #       path: cypress/reports
+          install-command: npm install && echo "Cypress installed"
+          post-install: npm run build && npx cypress cache list
+          # wait-on: 'http-get://127.0.0.1:3000/api/ping'
+          start-command: npm run start
+          install-browsers: true
+          cypress-command: |
+            npx wait-on@latest http-get://localhost:3000/api/ping
+            npx cypress run --e2e --browser chrome --reporter cypress-circleci-reporter
+          post-steps:
+            - store_test_results:
+                path: test_results
+            - store_artifacts:
+                path: cypress/videos
+            - store_artifacts:
+                path: cypress/screenshots
+            - store_artifacts:
+                path: cypress/reports
           filters:
             branches:
               only: TS-1585-Housing-reg-view-only-Implement-new-view-only-group-in-the-app
       # - cypress/run:
+      #     post-install: npx cypress cache list
       #     name: cypress-e2e-firefox
+      #     post-install: npx cypress cache list
       #     requires:
       #       - build-deploy-development
       #     package-manager: npm

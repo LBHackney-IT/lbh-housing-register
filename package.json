@@ -4,8 +4,10 @@
   "private": true,
   "scripts": {
     "build": "next build",
+    "build:ci": "next build",
     "dev": "next dev --hostname=localdev.hackney.gov.uk",
     "start": "next start",
+    "start:ci": "next start",
     "mocks": "mocks-server",
     "lint": "eslint . --max-warnings 0 --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint . --fix --max-warnings 0",
@@ -102,6 +104,7 @@
     "playwright-webkit": "^1.46.0",
     "prettier": "2.2.1",
     "sass": "^1.32.12",
-    "typescript": "^4.2.4"
+    "typescript": "^4.2.4",
+    "wait-on": "^7.2.0"
   }
 }

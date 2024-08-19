@@ -148,6 +148,28 @@ jobs:
           # wait-on: 'http://localhost:3000'
           cypress-command: 'npx cypress run --e2e --browser chrome'
 
+  run-e2e-tests:
+    docker:
+      - image: cypress/browsers:node-16.18.1-chrome-110.0.5481.96-1-ff-109.0-edge-110.0.1587.41-1
+    steps:
+      - run:
+          name: Start Application
+          command: npm run start
+      - cypress/run-tests:
+          # name: Run Cypress Tests
+          cypress-command: |
+            npx wait-on@latest http-get://localhost:3000/api/ping
+            npx cypress run --e2e --browser chrome --reporter cypress-circleci-reporter
+      # - post-steps:
+      #     store_test_results:
+      #         path: test_results
+      #     - store_artifacts:
+      #         path: cypress/videos
+      #     - store_artifacts:
+      #         path: cypress/screenshots
+      #     - store_artifacts:
+      #         path: cypress/reports
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Workflows ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 workflows:
   version: 2
@@ -209,29 +231,29 @@ workflows:
           filters:
             branches:
               only: development
-      - cypress/run:
+      - run-e2e-tests:
           name: cypress-e2e-chrome
           requires:
             - tests
-          # attach-workspace: true
-          # package-manager: npm
-          install-command: npm install && echo "Cypress installed"
-          post-install: npm run build
-          # wait-on: 'http-get://127.0.0.1:3000/api/ping'
-          start-command: npx run start
-          install-browsers: true
-          cypress-command: |
-            npx wait-on@latest http-get://localhost:3000/api/ping
-            npx cypress run --e2e --browser chrome --reporter cypress-circleci-reporter
-          post-steps:
-            - store_test_results:
-                path: test_results
-            - store_artifacts:
-                path: cypress/videos
-            - store_artifacts:
-                path: cypress/screenshots
-            - store_artifacts:
-                path: cypress/reports
+          # # attach-workspace: true
+          # # package-manager: npm
+          # install-command: npm install && echo "Cypress installed"
+          # post-install: npm run build
+          # # wait-on: 'http-get://127.0.0.1:3000/api/ping'
+          # start-command: npm run start
+          # install-browsers: true
+          # cypress-command: |
+          #   npx wait-on@latest http-get://localhost:3000/api/ping
+          #   npx cypress run --e2e --browser chrome --reporter cypress-circleci-reporter
+          # post-steps:
+          #   - store_test_results:
+          #       path: test_results
+          #   - store_artifacts:
+          #       path: cypress/videos
+          #   - store_artifacts:
+          #       path: cypress/screenshots
+          #   - store_artifacts:
+          #       path: cypress/reports
           filters:
             branches:
               only: TS-1585-Housing-reg-view-only-Implement-new-view-only-group-in-the-app

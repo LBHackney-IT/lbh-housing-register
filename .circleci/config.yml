@@ -16,12 +16,9 @@ executors:
   orb-executor:
     docker:
       - image: cimg/node:21.6.1-browsers
-  cypress-node-16:
-    docker:
-      - image: cypress/included:cypress-12.6.0-node-16.18.1-chrome-110.0.5481.96-1-ff-109.0-edge-110.0.1587.41-1
-    # working_directory: ~/project
-    # environment:
-    #   CYPRESS_CACHE_FOLDER: ~/.cache/Cypress
+  # cypress-node-16:
+  #   docker:
+  #     - image: cypress/included:cypress-12.6.0-node-16.18.1-chrome-110.0.5481.96-1-ff-109.0-edge-110.0.1587.41-1
 
 references:
   workspace_root: &workspace_root '~'
@@ -53,11 +50,43 @@ jobs:
           root: *workspace_root
           paths: .
 
+  run-tests:
+    executor: node-executor
+    steps:
+      - cypress/install:
+          package-manager: npm
+          install-command: npm install
+      - cypress/run-tests:
+          cypress-command: npx cypress run --component --reporter cypress-circleci-reporter
+      - run:
+          name: Run Jest Tests
+          command: npm run test:ci
+          environment:
+            JEST_JUNIT_OUTPUT_DIR: test_results
+            JEST_JUNIT_ADD_FILE_ATTRIBUTE: 'true'
+      - store_test_results:
+          path: test_results
+      - store_artifacts:
+          path: coverage
+
   sonar-scan:
     executor: orb-executor
     steps:
       - *attach_workspace
       - sonarcloud/scan
+
+  run-cypress-e2e:
+    executor: node-executor
+    steps:
+      - cypress/install:
+          package-manager: npm
+          install-command: npm install
+          post-install: npm run build
+      - cypress/run-tests:
+          start-command: npm run start
+          cypress-command: npx cypress run --browser chrome --reporter cypress-circleci-reporter
+      - store_test_results:
+          path: test_results
 
   build-deploy-development:
     executor: aws-cli/default
@@ -122,42 +151,6 @@ jobs:
           paths:
             - .aws
 
-  run-cypress-e2e:
-    executor: cypress-node-16
-    steps:
-      - cypress/install:
-          package-manager: npm
-          install-command: npm install
-          post-install: npm run build
-      - cypress/run-tests:
-          start-command: npm run start
-          cypress-command: npx cypress run --browser chrome --reporter cypress-circleci-reporter
-      - store_test_results:
-          path: test_results
-
-  run-tests:
-    executor: cypress-node-16
-    # name: Lint & Test
-    steps:
-      - cypress/install:
-          package-manager: npm
-          install-command: npm install
-      - cypress/run-tests:
-          cypress-command: npx cypress run --component --reporter cypress-circleci-reporter
-      # - store_test_results:
-      #     path: test_results
-      # - post-steps:
-      - run:
-          name: Run Jest Tests
-          command: npm run test:ci
-          environment:
-            JEST_JUNIT_OUTPUT_DIR: test_results
-            JEST_JUNIT_ADD_FILE_ATTRIBUTE: 'true'
-      - store_test_results:
-          path: test_results
-      - store_artifacts:
-          path: coverage
-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Workflows ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 workflows:
   version: 2
@@ -167,22 +160,6 @@ workflows:
       - run-tests:
           requires:
             - install-dependencies
-      # - cypress/run:
-      #     name: e2e Tests
-      #     package-manager: npm
-      #     cypress-command: npx cypress run --component --reporter cypress-circleci-reporter
-      #     requires:
-      #       - install-dependencies
-      #     post-steps:
-      #       - run:
-      #           command: npm run test:ci
-      #           environment:
-      #             JEST_JUNIT_OUTPUT_DIR: test_results
-      #             JEST_JUNIT_ADD_FILE_ATTRIBUTE: 'true'
-      # - store_test_results:
-      #     path: test_results
-      # - store_artifacts:
-      #     path: coverage
       - sonar-scan:
           context: SonarCloud
           requires:

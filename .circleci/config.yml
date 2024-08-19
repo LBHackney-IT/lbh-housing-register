@@ -187,7 +187,7 @@ jobs:
   run-cypress-e2e:
     executor:
       name: cypress/default
-      node-version: '16.20.2'
+      node-version: '16.18.1'
     steps:
       - cypress/install:
           package-manager: npm
@@ -195,7 +195,8 @@ jobs:
           post-install: npm run build
       - cypress/run-tests:
           start-command: npm run start
-          cypress-command: npx cypress run --reporter cypress-circleci-reporter
+          install-browsers: true
+          cypress-command: npx cypress run --reporter --browser chrome cypress-circleci-reporter
       - store_test_results:
           path: test_results
 
@@ -240,27 +241,27 @@ workflows:
             branches:
               only: development
       #--------------------------------------------- this is a working config -----------------------------------------------------------------
-      - cypress/run:
-          name: cypress-e2e-chrome
-          requires:
-            - install-dependencies
-          install-command: npm install
-          post-install: npm run build
-          install-browsers: true
-          start-command: npm run start
-          cypress-command: npx cypress run --e2e --reporter cypress-circleci-reporter
-          post-steps:
-            - store_test_results:
-                path: test_results
-            - store_artifacts:
-                path: cypress/videos
-            - store_artifacts:
-                path: cypress/screenshots
-            - store_artifacts:
-                path: cypress/reports
-          filters:
-            branches:
-              only: TS-1585-Housing-reg-view-only-Implement-new-view-only-group-in-the-app
+      # - cypress/run:
+      #     name: cypress-e2e-chrome
+      #     requires:
+      #       - install-dependencies
+      #     install-command: npm install
+      #     post-install: npm run build
+      #     install-browsers: true
+      #     start-command: npm run start
+      #     cypress-command: npx cypress run --e2e --reporter cypress-circleci-reporter
+      #     post-steps:
+      #       - store_test_results:
+      #           path: test_results
+      #       - store_artifacts:
+      #           path: cypress/videos
+      #       - store_artifacts:
+      #           path: cypress/screenshots
+      #       - store_artifacts:
+      #           path: cypress/reports
+      #     filters:
+      #       branches:
+      #         only: TS-1585-Housing-reg-view-only-Implement-new-view-only-group-in-the-app
       # ------------------------------------------- this is a working config -----------------------------------------------------------------
       - run-cypress-e2e:
           requires:

@@ -124,8 +124,8 @@ jobs:
       node-version: '16.18.1'
     steps:
       - cypress/install:
-          install-command: npm install
-          post-install: npm run build
+          # install-command: npm install
+          # post-install: npm run build
           # working-directory: examples/angular-app
           cypress-cache-key: cypress-cache-{{ arch }}-{{ checksum "package.json" }}
           include-branch-in-node-cache-key: true
@@ -134,9 +134,21 @@ jobs:
           paths:
             - .cache/Cypress
             # - project
+
+  # install-and-persist:
+  #     executor: cypress/default
+  #     steps:
+  #       - cypress/install:
+  #       - persist_to_workspace:
+  #           root: ~/
+  #           paths:
+  #             - .cache/Cypress # this caches the Cypress binary for use across multiple jobs
+  #             - project # this caches your source code (from the `-checkout` command) for use across multiple jobs
+
   run-e2e-tests-in-chrome:
     docker:
       - image: 'cypress/browsers:node-16.18.1-chrome-110.0.5481.96-1-ff-109.0-edge-110.0.1587.41-1'
+    # executor: cypress/default
     steps:
       - run: echo "This step assumes dependencies were installed using the cypress/install job"
       - attach_workspace:
@@ -150,13 +162,13 @@ jobs:
 
   run-e2e-tests:
     docker:
-      - image: cypress/included:cypress-12.6.0-node-16.18.1-chrome-110.0.5481.96-1-ff-109.0-edge-110.0.1587.41-1
+      - image: cypress/browsers:node-16.18.1-chrome-110.0.5481.96-1-ff-109.0-edge-110.0.1587.41-1
     steps:
       - attach_workspace:
           at: *workspace_root
-      # - restore_cache:
-      #     keys:
-      #       - cypress-cache-{{ checksum "package-lock.json" }}
+      - restore_cache:
+          keys:
+            - cypress-cache-{{ checksum "package-lock.json" }}
       - run:
           name: Install Dependencies
           command: npm install
@@ -173,10 +185,10 @@ jobs:
       - cypress/run-tests:
           # name: Run Cypress Tests
           cypress-command: npx cypress run --e2e --browser chrome --reporter cypress-circleci-reporter
-      # - save_cache:
-      #     paths:
-      #       - /root/.cache/Cypress
-      #     key: cypress-cache-{{ checksum "package-lock.json" }}
+      - save_cache:
+          paths:
+            - /root/.cache/Cypress
+          key: cypress-cache-{{ checksum "package-lock.json" }}
       # - post-steps:
       #     store_test_results:
       #         path: test_results
@@ -193,6 +205,7 @@ workflows:
   continuous-delivery:
     jobs:
       - install-dependencies
+      - install-and-persist
       # Run E2E tests in Chrome
       # - install-and-persist
       # - run-e2e-tests-in-chrome:
@@ -251,7 +264,7 @@ workflows:
       - run-e2e-tests:
           name: cypress-e2e-chrome
           requires:
-            - tests
+            - install-and-persist
           # # attach-workspace: true
           # # package-manager: npm
           # install-command: npm install && echo "Cypress installed"

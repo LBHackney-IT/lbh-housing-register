@@ -132,7 +132,7 @@ jobs:
           root: *workspace_root
           paths:
             - .cache/Cypress
-            - project
+            # - project
   run-e2e-tests-in-chrome:
     docker:
       - image: cypress/browsers:node-16.18.1-chrome-110.0.5481.96-1-ff-109.0-edge-110.0.1587.41-1
@@ -142,7 +142,7 @@ jobs:
           at: *workspace_root
       - cypress/run-tests:
           start-command: npm run start
-          working-directory: &workspace_root /project
+          working-directory: *workspace_root
           # working-directory: examples/angular-app
           # wait-on: 'http://localhost:3000'
           cypress-command: 'npx cypress run --e2e --browser chrome'
@@ -158,7 +158,7 @@ workflows:
           filters:
             branches:
               only: TS-1585-Housing-reg-view-only-Implement-new-view-only-group-in-the-app
-          name: Run CT Tests in Chrome
+          name: Run E2E Tests in Chrome
           requires:
             - install-and-persist
       # - cypress/install: # Use Cypress step to install and cache dependencies

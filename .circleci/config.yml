@@ -18,7 +18,10 @@ executors:
       - image: cimg/node:21.6.1-browsers
   cypress-node-16:
     docker:
-      - image: cypress/included:12.6.0-node-16.18.1-chrome-110.0.5481.96-1-ff-109.0-edge-110.0.1587.41-1
+      - image: cypress/included:cypress-12.6.0-node-16.18.1-chrome-110.0.5481.96-1-ff-109.0-edge-110.0.1587.41-1
+    working_directory: ~/project
+    environment:
+      CYPRESS_CACHE_FOLDER: ~/.cache/Cypress
 
 references:
   workspace_root: &workspace_root '~'
@@ -45,6 +48,7 @@ jobs:
           paths:
             - ./node_modules
             - ./.next/cache
+            - ./.cache/Cypress
       - persist_to_workspace:
           root: *workspace_root
           paths: .

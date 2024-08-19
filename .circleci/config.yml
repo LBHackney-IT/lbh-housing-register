@@ -13,12 +13,6 @@ executors:
   docker-python:
     docker:
       - image: circleci/python:3.7
-  # sonar-executor:
-  #   docker:
-  #     - image: cimg/node:21.6.1-browsers
-  # cypress-node-16:
-  #   docker:
-  #     - image: cypress/included:cypress-12.6.0-node-16.18.1-chrome-110.0.5481.96-1-ff-109.0-edge-110.0.1587.41-1
 
 references:
   workspace_root: &workspace_root '~'

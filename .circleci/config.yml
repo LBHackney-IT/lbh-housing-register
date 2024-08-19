@@ -154,6 +154,9 @@ jobs:
     steps:
       - attach_workspace:
           at: *workspace_root
+      - restore_cache:
+          keys:
+            - cypress-cache-{{ checksum "package-lock.json" }}
       - run:
           name: Install Dependencies
           command: npm install
@@ -170,6 +173,10 @@ jobs:
       - cypress/run-tests:
           # name: Run Cypress Tests
           cypress-command: npx cypress run --e2e --browser chrome --reporter cypress-circleci-reporter
+      - save_cache:
+          paths:
+            - /root/.cache/Cypress
+          key: cypress-cache-{{ checksum "package-lock.json" }}
       # - post-steps:
       #     store_test_results:
       #         path: test_results

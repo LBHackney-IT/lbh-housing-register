@@ -164,7 +164,7 @@ workflows:
           requires:
             - run-tests
       - run-cypress-e2e:
-          name: E2E Tests:Chrome
+          name: E2E Tests - Chrome
           requires:
             - install-dependencies
           browser: chrome
@@ -172,8 +172,16 @@ workflows:
             branches:
               only: TS-1585-Housing-reg-view-only-Implement-new-view-only-group-in-the-app
       - run-cypress-e2e:
-          name: E2E Tests:Firefox
+          name: E2E Tests - Firefox
           browser: firefox
+          requires:
+            - install-dependencies
+          filters:
+            branches:
+              only: TS-1585-Housing-reg-view-only-Implement-new-view-only-group-in-the-app
+      - run-cypress-e2e:
+          name: E2E Tests - Edge
+          browser: edge
           requires:
             - install-dependencies
           filters:

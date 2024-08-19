@@ -4,7 +4,7 @@ import ApplicationsPage from '../pages/applications';
 
 describe('Search for an application', () => {
   it('as a read only user I only see the search results', () => {
-    cy.clearAllCookies();
+    // cy.clearAllCookies();
     cy.loginAsUser('readOnly');
     ApplicationsPage.visit();
 
@@ -28,7 +28,7 @@ describe('Search for an application', () => {
     ApplicationsPage.getWorktraySidebar().should('not.exist');
   });
   it('as an officer I can engage with worktray', () => {
-    cy.clearAllCookies();
+    // cy.clearAllCookies();
     cy.loginAsUser('officer');
     ApplicationsPage.visit();
 

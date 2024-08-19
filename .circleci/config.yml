@@ -168,7 +168,7 @@ jobs:
           at: *workspace_root
       - restore_cache:
           keys:
-            - cypress-cache-{{ checksum "package-lock.json" }}
+            - cypress-cache-{{ checksum "package.json" }}
       - run:
           name: Install Dependencies
           command: npm install
@@ -188,7 +188,7 @@ jobs:
       - save_cache:
           paths:
             - /root/.cache/Cypress
-          key: cypress-cache-{{ checksum "package-lock.json" }}
+          key: cypress-cache-{{ checksum "package.json" }}
       # - post-steps:
       #     store_test_results:
       #         path: test_results

@@ -8,7 +8,7 @@
     "start": "next start",
     "mocks": "mocks-server",
     "lint": "eslint . --max-warnings 0 --ext .js,.jsx,.ts,.tsx",
-    "lint:fix": "eslint . --fix --max-warnings 0",
+    "lint:fix": "eslint . --fix --max-warnings 0 --ext .js,.jsx,.ts,.tsx",
     "prettier:test": "npx prettier -c .",
     "prettier:fix": "npx prettier --write .",
     "test:ci": "jest --ci --coverage --reporters=default --reporters=jest-junit && tsc --noEmit",

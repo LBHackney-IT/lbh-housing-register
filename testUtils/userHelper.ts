@@ -9,6 +9,7 @@ import { generateJWTTokenTestData } from './jwtTokenHelper';
 export const AUTHORISED_OFFICER_GROUP_TEST = 'authorized-officer-group';
 export const AUTHORISED_MANAGER_GROUP_TEST = 'authorized-manager-group';
 export const AUTHORISED_ADMIN_GROUP_TEST = 'authorized-admin-group';
+export const AUTHORISED_READONLY_GROUP_TEST = 'authorized-readonly-group';
 export const JWT_TEST_SECRET = 'secret';
 
 const issuedAtInMilliseconds = new Date().getMilliseconds();
@@ -17,16 +18,21 @@ export enum UserRole {
   Officer,
   Manager,
   Admin,
+  ReadOnly,
 }
 
 interface UserClaims {
   hasAdminPermissions: boolean;
   hasManagerPermissions: boolean;
   hasOfficerPermissions: boolean;
+  hasReadOnlyPermissions: boolean;
 }
 
 export const getGroupByRole = (role: UserRole): string => {
   switch (role) {
+    case UserRole.ReadOnly: {
+      return AUTHORISED_READONLY_GROUP_TEST;
+    }
     case UserRole.Officer: {
       return AUTHORISED_OFFICER_GROUP_TEST;
     }
@@ -43,11 +49,20 @@ export const getGroupByRole = (role: UserRole): string => {
 
 export const getClaimsByRole = (role?: UserRole): UserClaims => {
   switch (role) {
+    case UserRole.ReadOnly: {
+      return {
+        hasAdminPermissions: false,
+        hasManagerPermissions: false,
+        hasOfficerPermissions: false,
+        hasReadOnlyPermissions: true,
+      };
+    }
     case UserRole.Officer: {
       return {
         hasAdminPermissions: false,
         hasManagerPermissions: false,
         hasOfficerPermissions: true,
+        hasReadOnlyPermissions: false,
       };
     }
     case UserRole.Manager: {
@@ -55,6 +70,7 @@ export const getClaimsByRole = (role?: UserRole): UserClaims => {
         hasAdminPermissions: false,
         hasManagerPermissions: true,
         hasOfficerPermissions: false,
+        hasReadOnlyPermissions: false,
       };
     }
     case UserRole.Admin: {
@@ -62,6 +78,7 @@ export const getClaimsByRole = (role?: UserRole): UserClaims => {
         hasAdminPermissions: true,
         hasManagerPermissions: false,
         hasOfficerPermissions: false,
+        hasReadOnlyPermissions: false,
       };
     }
     default:
@@ -69,6 +86,7 @@ export const getClaimsByRole = (role?: UserRole): UserClaims => {
         hasAdminPermissions: false,
         hasManagerPermissions: false,
         hasOfficerPermissions: false,
+        hasReadOnlyPermissions: false,
       };
   }
 };
@@ -95,7 +113,8 @@ export const generateSignedTokenByRole = (
   switch (role) {
     case UserRole.Admin:
     case UserRole.Manager:
-    case UserRole.Officer: {
+    case UserRole.Officer:
+    case UserRole.ReadOnly: {
       const tokenData = generateJWTTokenTestData(
         [getGroupByRole(role)],
         issuedAtInMilliseconds

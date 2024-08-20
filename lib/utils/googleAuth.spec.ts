@@ -15,6 +15,7 @@ import {
   AUTHORISED_ADMIN_GROUP_TEST,
   AUTHORISED_MANAGER_GROUP_TEST,
   AUTHORISED_OFFICER_GROUP_TEST,
+  AUTHORISED_READONLY_GROUP_TEST,
   UserRole,
   generateHRUserWithPermissions,
   generateSignedTokenByRole,
@@ -22,7 +23,9 @@ import {
 } from '../../testUtils/userHelper';
 import {
   HackneyGoogleUserWithPermissions,
+  Permissions,
   canViewSensitiveApplication,
+  canViewWorktray,
   getAuth,
   getPermissions,
   getRedirect,
@@ -274,22 +277,26 @@ describe('googleAuth', () => {
       const adminGroupFixture = envVarsFixture('AUTHORISED_ADMIN_GROUP');
       const managerGroupFixture = envVarsFixture('AUTHORISED_MANAGER_GROUP');
       const officerGroupFixture = envVarsFixture('AUTHORISED_OFFICER_GROUP');
+      const readOnlyGroupFixture = envVarsFixture('AUTHORISED_READONLY_GROUP');
       adminGroupFixture.mock(AUTHORISED_ADMIN_GROUP_TEST);
       managerGroupFixture.mock(AUTHORISED_MANAGER_GROUP_TEST);
       officerGroupFixture.mock(AUTHORISED_OFFICER_GROUP_TEST);
+      readOnlyGroupFixture.mock(AUTHORISED_READONLY_GROUP_TEST);
 
       const groupClaims = [
         AUTHORISED_ADMIN_GROUP_TEST,
         AUTHORISED_MANAGER_GROUP_TEST,
         AUTHORISED_OFFICER_GROUP_TEST,
+        AUTHORISED_READONLY_GROUP_TEST,
       ];
 
       const user = generateJWTTokenTestData(groupClaims, issuedAt);
 
-      const expectedPermissions = {
+      const expectedPermissions: Permissions = {
         hasAdminPermissions: true,
         hasManagerPermissions: true,
         hasOfficerPermissions: true,
+        hasReadOnlyPermissions: true,
       };
 
       expect(getPermissions(user)).toStrictEqual(expectedPermissions);
@@ -314,6 +321,15 @@ describe('googleAuth', () => {
   });
 
   describe('hasAnyPermissions', () => {
+    it('returns true when user has read only permissions', () => {
+      const tokenData = generateJWTTokenTestData();
+      const user: HackneyGoogleUserWithPermissions = {
+        ...tokenData,
+        ...getClaimsByRole(UserRole.ReadOnly),
+      };
+      expect(hasAnyPermissions(user)).toBeTruthy();
+    });
+
     it('returns true when user has officer permissions', () => {
       const tokenData = generateJWTTokenTestData();
       const user: HackneyGoogleUserWithPermissions = {
@@ -369,6 +385,13 @@ describe('googleAuth', () => {
     it('returns false when user has officer permissions', () => {
       const user: HackneyGoogleUserWithPermissions = generateHRUserWithPermissions(
         UserRole.Officer
+      );
+      expect(canViewSensitiveApplication('', user)).toBeFalsy();
+    });
+
+    it('returns false when user has read only permissions', () => {
+      const user: HackneyGoogleUserWithPermissions = generateHRUserWithPermissions(
+        UserRole.ReadOnly
       );
       expect(canViewSensitiveApplication('', user)).toBeFalsy();
     });
@@ -433,6 +456,28 @@ describe('googleAuth', () => {
       const expectedResponse = { user };
 
       expect(getAuth(requiredGroup, user)).toStrictEqual(expectedResponse);
+    });
+  });
+
+  describe('canViewWorktray', () => {
+    it('return true when user has admin permissions', () => {
+      const user = generateHRUserWithPermissions(UserRole.Admin);
+      expect(canViewWorktray(user)).toBeTruthy();
+    });
+
+    it('return true when user has manager permissions', () => {
+      const user = generateHRUserWithPermissions(UserRole.Manager);
+      expect(canViewWorktray(user)).toBeTruthy();
+    });
+
+    it('return true when user has officer permissions', () => {
+      const user = generateHRUserWithPermissions(UserRole.Officer);
+      expect(canViewWorktray(user)).toBeTruthy();
+    });
+
+    it('return true when user has read only permissions', () => {
+      const user = generateHRUserWithPermissions(UserRole.ReadOnly);
+      expect(canViewWorktray(user)).toBeFalsy();
     });
   });
 });

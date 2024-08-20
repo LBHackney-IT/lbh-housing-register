@@ -26,6 +26,8 @@ import { mount } from 'cypress/react';
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+// ***********************************************
+
 Cypress.Commands.add('mount', mount);
 
 Cypress.Commands.add('generateEmptyApplication', () => {
@@ -53,5 +55,43 @@ Cypress.Commands.add('generateEmptyApplication', () => {
     otherMembers: [],
     assessment: null,
     importedFromLegacyDatabase: false,
+  });
+});
+
+Cypress.Commands.add('loginAsUser', (userType: string) => {
+  const users = {
+    officer: {
+      email: faker.internet.email({ provider: 'hackneyTEST.gov.uk' }),
+      name: faker.person.fullName(),
+      groups: Cypress.env('AUTHORISED_OFFICER_GROUP'),
+    },
+    manager: {
+      email: faker.internet.email({ provider: 'hackneyTEST.gov.uk' }),
+      name: faker.person.fullName(),
+      groups: Cypress.env('AUTHORISED_MANAGER_GROUP'),
+    },
+    admin: {
+      email: faker.internet.email({ provider: 'hackneyTEST.gov.uk' }),
+      name: faker.person.fullName(),
+      groups: Cypress.env('AUTHORISED_ADMIN_GROUP'),
+    },
+    readOnly: {
+      email: faker.internet.email({ provider: 'hackneyTEST.gov.uk' }),
+      name: faker.person.fullName(),
+      groups: Cypress.env('AUTHORISED_READONLY_GROUP'),
+    },
+  };
+
+  const user = users[userType];
+  if (!user) {
+    throw new Error(`No user data found for user type "${userType}"`);
+  }
+  const secret = 'aDummySecret';
+
+  cy.task('generateToken', { user, secret }).then((token) => {
+    const cookieName = 'hackneyToken';
+    cy.getCookies().should('be.empty');
+    cy.setCookie(cookieName, token as string);
+    cy.getCookie(cookieName).should('have.property', 'value', token);
   });
 });

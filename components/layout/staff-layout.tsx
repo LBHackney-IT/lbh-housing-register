@@ -1,6 +1,8 @@
+import React, { ReactNode } from 'react';
+
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { ReactNode } from 'react';
+
 import { useUser } from '../../lib/contexts/user-context';
 import { hasPhaseBanner } from '../../lib/utils/phase-banner';
 import Header from '../header';
@@ -11,11 +13,13 @@ import SkipLink from '../skip-link';
 interface StaffLayoutProps {
   pageName?: string;
   children: ReactNode;
+  dataTestId?: string;
 }
 
 export default function StaffLayout({
   pageName,
   children,
+  dataTestId,
 }: StaffLayoutProps): JSX.Element {
   const { user } = useUser();
   const router = useRouter();
@@ -46,7 +50,7 @@ export default function StaffLayout({
         <div className="lbh-container">
           <nav>
             <strong className="lbh-heading-h5">
-              <Link href={`/applications/`}>
+              <Link href="/applications/">
                 <a className="lbh-link lbh-link--no-visited-state">
                   Back to dashboard
                 </a>
@@ -67,7 +71,11 @@ export default function StaffLayout({
         </div>
       )}
 
-      <main id="main-content" className="lbh-main-wrapper">
+      <main
+        id="main-content"
+        className="lbh-main-wrapper"
+        data-testid={dataTestId}
+      >
         <div className="lbh-container">{children}</div>
       </main>
     </>

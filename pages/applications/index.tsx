@@ -1,8 +1,9 @@
 import { SyntheticEvent, useEffect, useState } from 'react';
+
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
+
 import ApplicationsTable from '../../components/admin/ApplicationsTable';
-import SimplePaginationSearch from '../../components/SimplePaginationSearch';
 import {
   HorizontalNav,
   HorizontalNavItem,
@@ -11,11 +12,17 @@ import SearchBox from '../../components/admin/SearchBox';
 import Sidebar from '../../components/admin/sidebar';
 import { HeadingOne } from '../../components/content/headings';
 import Layout from '../../components/layout/staff-layout';
+import SimplePaginationSearch from '../../components/SimplePaginationSearch';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { PaginatedSearchResultsResponse } from '../../domain/HousingApi';
 import { UserContext } from '../../lib/contexts/user-context';
 import { getApplicationsByStatusAndAssignedTo } from '../../lib/gateways/applications-api';
-import { getRedirect, getSession } from '../../lib/utils/googleAuth';
+import {
+  HackneyGoogleUserWithPermissions,
+  canViewWorktray,
+  getRedirect,
+  getSession,
+} from '../../lib/utils/googleAuth';
 
 interface PageProps {
   user?: HackneyGoogleUser;
@@ -46,61 +53,67 @@ export default function ApplicationListPage({
   };
 
   return (
+    // noting here the possibility of unecessary re-renders that will need some investigation.
+    // eslint-disable-next-line react/jsx-no-constructed-context-values
     <UserContext.Provider value={{ user }}>
-      <Layout pageName="My worktray">
+      <Layout pageName="My worktray" dataTestId="test-applications-page">
         <SearchBox
           title="Housing Register"
           buttonTitle="Search"
           watermark="Search all applications (name, reference, bidding number)"
         />
+        {canViewWorktray(user as HackneyGoogleUserWithPermissions) && (
+          <div
+            className="govuk-grid-row"
+            data-testid="test-applications-worktray"
+          >
+            <div className="govuk-grid-column-one-quarter">
+              <Sidebar />
+            </div>
+            <div className="govuk-grid-column-three-quarters">
+              <HeadingOne content="My worktray" />
+              <HorizontalNav>
+                <HorizontalNavItem
+                  handleSelectNavItem={handleSelectNavItem}
+                  itemName="Submitted"
+                  isActive={activeNavItem === 'Submitted'}
+                >
+                  New applications
+                </HorizontalNavItem>
+                <HorizontalNavItem
+                  handleSelectNavItem={handleSelectNavItem}
+                  itemName="AwaitingReassessment"
+                  isActive={activeNavItem === 'AwaitingReassessment'}
+                >
+                  Reviews
+                </HorizontalNavItem>
+                <HorizontalNavItem
+                  handleSelectNavItem={handleSelectNavItem}
+                  itemName="Pending"
+                  isActive={activeNavItem === 'Pending'}
+                >
+                  Pending
+                </HorizontalNavItem>
+              </HorizontalNav>
+              {applications ? (
+                <>
+                  <ApplicationsTable
+                    applications={applications}
+                    showStatus
+                    page={page}
+                    pageSize={pageSize}
+                  />
 
-        <div className="govuk-grid-row">
-          <div className="govuk-grid-column-one-quarter">
-            <Sidebar />
+                  <SimplePaginationSearch
+                    totalItems={applications.totalResults}
+                    page={applications.page}
+                    numberOfItemsPerPage={applications.pageSize}
+                  />
+                </>
+              ) : null}
+            </div>
           </div>
-          <div className="govuk-grid-column-three-quarters">
-            <HeadingOne content="My worktray" />
-            <HorizontalNav>
-              <HorizontalNavItem
-                handleSelectNavItem={handleSelectNavItem}
-                itemName="Submitted"
-                isActive={activeNavItem === 'Submitted'}
-              >
-                New applications
-              </HorizontalNavItem>
-              <HorizontalNavItem
-                handleSelectNavItem={handleSelectNavItem}
-                itemName="AwaitingReassessment"
-                isActive={activeNavItem === 'AwaitingReassessment'}
-              >
-                Reviews
-              </HorizontalNavItem>
-              <HorizontalNavItem
-                handleSelectNavItem={handleSelectNavItem}
-                itemName="Pending"
-                isActive={activeNavItem === 'Pending'}
-              >
-                Pending
-              </HorizontalNavItem>
-            </HorizontalNav>
-            {applications ? (
-              <>
-                <ApplicationsTable
-                  applications={applications}
-                  showStatus={true}
-                  page={page}
-                  pageSize={pageSize}
-                />
-
-                <SimplePaginationSearch
-                  totalItems={applications.totalResults}
-                  page={applications.page}
-                  numberOfItemsPerPage={applications.pageSize}
-                />
-              </>
-            ) : null}
-          </div>
-        </div>
+        )}
       </Layout>
     </UserContext.Provider>
   );

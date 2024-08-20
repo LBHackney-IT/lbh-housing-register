@@ -1,16 +1,19 @@
-import { useRouter } from 'next/router';
 import React, { useState } from 'react';
+
+import { useRouter } from 'next/router';
 
 interface SearchBoxProps {
   title: string;
   watermark: string;
   buttonTitle: string;
+  dataTestId?: string;
 }
 
 export default function SearchBox({
   title,
   watermark,
   buttonTitle,
+  dataTestId,
 }: SearchBoxProps): JSX.Element {
   const [searchInputValue, setsearchInputValue] = useState('');
   const router = useRouter();
@@ -33,7 +36,7 @@ export default function SearchBox({
 
   return (
     <form onSubmit={onSearchSubmit}>
-      <div className="govuk-form-group c-flex">
+      <div className="govuk-form-group c-flex" data-testid={dataTestId}>
         <label className="govuk-visually-hidden" htmlFor="input-search">
           Search {title}
         </label>

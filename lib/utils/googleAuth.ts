@@ -1,31 +1,63 @@
 import cookie from 'cookie';
 import jsonwebtoken from 'jsonwebtoken';
 import { Redirect } from 'next';
+
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 
 type Permissions = {
   hasAdminPermissions: boolean;
   hasManagerPermissions: boolean;
   hasOfficerPermissions: boolean;
+  hasReadOnlyPermissions: boolean;
 };
 
 export type HackneyGoogleUserWithPermissions = HackneyGoogleUser & Permissions;
 
+export const hasUserGroup = (
+  group: string,
+  user: HackneyGoogleUser
+): boolean => {
+  return user.groups.includes(group);
+};
+
+export const getPermissions = (user: HackneyGoogleUser): Permissions => {
+  const {
+    AUTHORISED_ADMIN_GROUP,
+    AUTHORISED_MANAGER_GROUP,
+    AUTHORISED_OFFICER_GROUP,
+    AUTHORISED_READONLY_GROUP,
+  } = process.env;
+
+  return {
+    hasAdminPermissions: hasUserGroup(AUTHORISED_ADMIN_GROUP as string, user),
+    hasManagerPermissions: hasUserGroup(
+      AUTHORISED_MANAGER_GROUP as string,
+      user
+    ),
+    hasOfficerPermissions: hasUserGroup(
+      AUTHORISED_OFFICER_GROUP as string,
+      user
+    ),
+    hasReadOnlyPermissions: hasUserGroup(
+      AUTHORISED_READONLY_GROUP as string,
+      user
+    ),
+  };
+};
 export function getSession(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   req: any
 ): HackneyGoogleUserWithPermissions | undefined {
   try {
     const cookies = cookie.parse(req.headers.cookie ?? '');
-    const parsedToken = cookies['hackneyToken'];
+    const parsedToken = cookies.hackneyToken;
 
     if (!parsedToken) return;
 
-    var secret = process.env.HACKNEY_JWT_SECRET as string;
-    const user = (
-      process.env.SKIP_VERIFY_TOKEN !== 'true'
-        ? jsonwebtoken.verify(parsedToken, secret)
-        : jsonwebtoken.decode(parsedToken)
-    ) as HackneyGoogleUser | undefined;
+    const secret = process.env.HACKNEY_JWT_SECRET as string;
+    const user = (process.env.SKIP_VERIFY_TOKEN !== 'true'
+      ? jsonwebtoken.verify(parsedToken, secret)
+      : jsonwebtoken.decode(parsedToken)) as HackneyGoogleUser | undefined;
 
     if (user) {
       return {
@@ -43,6 +75,7 @@ export function getSession(
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const removeHackneyToken = (res: any): void => {
   const jwtCookie = cookie.serialize('hackneyToken', '', {
     maxAge: -1,
@@ -53,34 +86,14 @@ export const removeHackneyToken = (res: any): void => {
   res.setHeader('Set-Cookie', jwtCookie);
 };
 
-export const getPermissions = (user: HackneyGoogleUser): Permissions => {
-  const {
-    AUTHORISED_ADMIN_GROUP,
-    AUTHORISED_MANAGER_GROUP,
-    AUTHORISED_OFFICER_GROUP,
-  } = process.env;
-
-  return {
-    hasAdminPermissions: hasUserGroup(AUTHORISED_ADMIN_GROUP!, user),
-    hasManagerPermissions: hasUserGroup(AUTHORISED_MANAGER_GROUP!, user),
-    hasOfficerPermissions: hasUserGroup(AUTHORISED_OFFICER_GROUP!, user),
-  };
-};
-
-export const hasUserGroup = (
-  group: string,
-  user: HackneyGoogleUser
-): boolean => {
-  return user.groups.includes(group);
-};
-
 export const hasAnyPermissions = (
   user: HackneyGoogleUserWithPermissions
 ): boolean => {
   return (
     user.hasAdminPermissions ||
     user.hasManagerPermissions ||
-    user.hasOfficerPermissions
+    user.hasOfficerPermissions ||
+    user.hasReadOnlyPermissions
   );
 };
 
@@ -91,10 +104,23 @@ export const canViewSensitiveApplication = (
   if (user.hasAdminPermissions || user.hasManagerPermissions) {
     // can see everything
     return true;
-  } else {
-    // check assigned
-    return user.hasOfficerPermissions && assignedTo === user.email;
   }
+  // check assigned
+  return user.hasOfficerPermissions && assignedTo === user.email;
+};
+
+export const canViewWorktray = (
+  user: HackneyGoogleUserWithPermissions
+): boolean => {
+  // is not part of the read only group
+  if (
+    user.hasAdminPermissions ||
+    user.hasManagerPermissions ||
+    user.hasOfficerPermissions
+  ) {
+    return true;
+  }
+  return false;
 };
 
 export const getRedirect = (

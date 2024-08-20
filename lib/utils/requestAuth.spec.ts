@@ -97,6 +97,15 @@ describe('requestAuth', () => {
 
       expect(hasStaffPermissions(req)).toBeFalsy();
     });
+
+    it('returns true when user is staff member and has HR permissions', () => {
+      const { signedToken } = generateSignedTokenByRole(UserRole.Manager);
+      req.headers = {
+        cookie: `hackneyToken=${signedToken}`,
+      };
+
+      expect(hasStaffPermissions(req)).toBeTruthy();
+    });
   });
 
   describe('isStaffAction', () => {

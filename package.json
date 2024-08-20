@@ -5,7 +5,7 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev --hostname=localdev.hackney.gov.uk",
-    "start": "next start -p $PORT",
+    "start": "next start",
     "mocks": "mocks-server",
     "lint": "eslint . --max-warnings 0 --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint . --fix --max-warnings 0 --ext .js,.jsx,.ts,.tsx",
@@ -20,8 +20,11 @@
     "component:run": "cypress run --component --browser electron"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "eslint --fix --max-warnings 0",
-    "!package-lock.json": "prettier --ignore-unknown --write"
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix --max-warnings 0",
+      "prettier --ignore-unknown --write"
+    ],
+    "!(*.js|*.jsx|*.ts|*.tsx|package-lock.json)": "prettier --ignore-unknown --write"
   },
   "browserslist": {
     "production": [

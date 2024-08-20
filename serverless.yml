@@ -38,6 +38,7 @@ functions:
       AUTHORISED_ADMIN_GROUP: ${ssm:/housing-register/${self:provider.stage}/authorised_admin_group}
       AUTHORISED_MANAGER_GROUP: ${ssm:/housing-register/${self:provider.stage}/authorised_manager_group}
       AUTHORISED_OFFICER_GROUP: ${ssm:/housing-register/${self:provider.stage}/authorised_officer_group}
+      AUTHORISED_READONLY_GROUP: ${ssm:/housing-register/${self:provider.stage}/authorised_readonly_group}
       HACKNEY_JWT_SECRET: ${ssm:/housing-register/${self:provider.stage}/hackney-jwt-secret}
       HOUSING_REGISTER_API: ${ssm:/housing-register/${self:provider.stage}/housing-register-api-url}
       HOUSING_REGISTER_KEY: ${ssm:/housing-register/${self:provider.stage}/housing-register-api-key}

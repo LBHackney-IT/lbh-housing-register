@@ -17,13 +17,11 @@ describe('Housing application', () => {
       cy.clearCookies();
 
       HomePage.visit();
-      // accept cookies
+
       HomePage.getCookiesButton().click();
 
-      // start application
       HomePage.getStartApplicationButton().scrollIntoView().click();
 
-      // give an email address for verification code
       const generateEmailAddress = faker.internet.email({
         provider: 'hackneyTEST.gov.uk',
       });
@@ -33,8 +31,6 @@ describe('Housing application', () => {
       SignInPage.getSubmitButton().scrollIntoView().click();
 
       cy.get('button[type="submit"]').click();
-
-      // confirmation verification code has been sent
 
       ApplyPage.getVerifyCodePage().should('be.visible');
       const generateCode = faker.number
@@ -47,8 +43,6 @@ describe('Housing application', () => {
       interceptApplicatonApi();
 
       ApplyPage.getVerifySubmitButton().scrollIntoView().click();
-
-      // application has been started
 
       StartPage.getStartApplicationPage().should('be.visible');
     });

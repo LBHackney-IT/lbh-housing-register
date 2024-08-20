@@ -25,7 +25,6 @@
       "version": "detect"
     }
   },
-  "ignorePatterns": ["mocks/**", "coverage/**", "next.config.js"],
   "rules": {
     "linebreak-style": ["error", "unix"],
     "require-atomic-updates": "off",

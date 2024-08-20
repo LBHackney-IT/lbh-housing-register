@@ -1,11 +1,5 @@
 import { faker } from '@faker-js/faker/locale/en_GB';
 import { mount } from 'cypress/react';
-// import 'dotenv/config';
-
-// type Environment = 'localdev' | 'development';
-
-// const environment: Environment =
-//   (process.env.NEXT_PUBLIC_ENV as Environment) || 'development';
 
 // ***********************************************
 // This example commands.ts shows you how to
@@ -32,6 +26,8 @@ import { mount } from 'cypress/react';
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+// ***********************************************
+
 Cypress.Commands.add('mount', mount);
 
 Cypress.Commands.add('generateEmptyApplication', () => {
@@ -63,7 +59,6 @@ Cypress.Commands.add('generateEmptyApplication', () => {
 });
 
 Cypress.Commands.add('loginAsUser', (userType: string) => {
-  // if it's running against the local env then should be set from the env vaars, otherwise match the congg.
   const users = {
     officer: {
       email: faker.internet.email({ provider: 'hackneyTEST.gov.uk' }),

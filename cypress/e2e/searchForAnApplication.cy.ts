@@ -1,54 +1,53 @@
 import { faker } from '@faker-js/faker/locale/en_GB';
 
 import ApplicationsPage from '../pages/applications';
+import { screenPresets } from '../support/helpers';
 
 describe('Search for an application', () => {
-  it('as a read only user I only see the search results', () => {
-    // cy.clearAllCookies();
-    cy.loginAsUser('readOnly');
-    ApplicationsPage.visit();
+  screenPresets.forEach((screenPreset) => {
+    it('as a read only user I only see the search results', () => {
+      cy.viewport(screenPreset);
+      cy.clearCookies();
 
-    ApplicationsPage.getApplicationsPage().should('be.visible');
+      cy.loginAsUser('readOnly');
+      ApplicationsPage.visit();
 
-    // can see the application page and search bar
-    ApplicationsPage.getSearchInput().should('be.visible');
-    // doesn't see the worktray
-    ApplicationsPage.getWorktray().should('not.exist');
-    ApplicationsPage.getWorktraySidebar().should('not.exist');
+      ApplicationsPage.getApplicationsPage().should('be.visible');
 
-    // can search for an application
-    ApplicationsPage.getSearchInput().type(faker.lorem.words(2));
-    ApplicationsPage.getSearchSubmitButton().click();
+      ApplicationsPage.getSearchInput().should('be.visible');
 
-    // can see the search results
-    ApplicationsPage.getSearchResults().should('be.visible');
+      ApplicationsPage.getWorktray().should('not.exist');
+      ApplicationsPage.getWorktraySidebar().should('not.exist');
 
-    // doesn't see the sidebar
+      ApplicationsPage.getSearchInput().type(faker.lorem.words(2));
+      ApplicationsPage.getSearchSubmitButton().click();
 
-    ApplicationsPage.getWorktraySidebar().should('not.exist');
+      ApplicationsPage.getSearchResults().should('be.visible');
+
+      ApplicationsPage.getWorktraySidebar().should('not.exist');
+    });
   });
-  it('as an officer I can engage with worktray', () => {
-    // cy.clearAllCookies();
-    cy.loginAsUser('officer');
-    ApplicationsPage.visit();
+  screenPresets.forEach((screenPreset) => {
+    it('as an officer I can engage with worktray', () => {
+      cy.viewport(screenPreset);
+      cy.clearCookies();
 
-    ApplicationsPage.getApplicationsPage().should('be.visible');
+      cy.loginAsUser('officer');
+      ApplicationsPage.visit();
 
-    // can see the application page and search bar
-    ApplicationsPage.getSearchInput().should('be.visible');
+      ApplicationsPage.getApplicationsPage().should('be.visible');
 
-    // can see the worktray
-    ApplicationsPage.getWorktray().should('be.visible');
-    ApplicationsPage.getWorktraySidebar().should('be.visible');
+      ApplicationsPage.getSearchInput().should('be.visible');
 
-    // can search for an application
-    ApplicationsPage.getSearchInput().type(faker.lorem.words(2));
-    ApplicationsPage.getSearchSubmitButton().click();
+      ApplicationsPage.getWorktray().should('be.visible');
+      ApplicationsPage.getWorktraySidebar().should('be.visible');
 
-    // can see the search results
-    ApplicationsPage.getSearchResults().should('be.visible');
+      ApplicationsPage.getSearchInput().type(faker.lorem.words(2));
+      ApplicationsPage.getSearchSubmitButton().click();
 
-    // can see the sidebar
-    ApplicationsPage.getWorktraySidebar().should('be.visible');
+      ApplicationsPage.getSearchResults().should('be.visible');
+
+      ApplicationsPage.getWorktraySidebar().should('be.visible');
+    });
   });
 });

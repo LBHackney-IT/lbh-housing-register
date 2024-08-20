@@ -69,36 +69,21 @@ Cypress.Commands.add('loginAsUser', (userType: string) => {
       email: faker.internet.email({ provider: 'hackneyTEST.gov.uk' }),
       name: faker.person.fullName(),
       groups: Cypress.env('AUTHORISED_OFFICER_GROUP'),
-      // groups:
-      //   Cypress.env('NEXT_PUBLIC_ENV') === 'localdev'
-      //     ? [Cypress.env('AUTHORISED_OFFICER_GROUP')]
-      //     : ['WHATEVA'],
     },
     manager: {
       email: faker.internet.email({ provider: 'hackneyTEST.gov.uk' }),
       name: faker.person.fullName(),
       groups: Cypress.env('AUTHORISED_MANAGER_GROUP'),
-      // Cypress.env('NEXT_PUBLIC_ENV') === 'localdev'
-      //   ? [Cypress.env('AUTHORISED_MANAGER_GROUP')]
-      //   : ['WHATEVA'],
     },
     admin: {
       email: faker.internet.email({ provider: 'hackneyTEST.gov.uk' }),
       name: faker.person.fullName(),
       groups: Cypress.env('AUTHORISED_ADMIN_GROUP'),
-      // groups:
-      //   Cypress.env('NEXT_PUBLIC_ENV') === 'localdev'
-      //     ? [Cypress.env('AUTHORISED_ADMIN_GROUP')]
-      //     : ['WHATEVA'],
     },
     readOnly: {
       email: faker.internet.email({ provider: 'hackneyTEST.gov.uk' }),
       name: faker.person.fullName(),
       groups: Cypress.env('AUTHORISED_READONLY_GROUP'),
-      // groups:
-      //   Cypress.env('NEXT_PUBLIC_ENV') === 'localdev'
-      //     ? [Cypress.env('AUTHORISED_READONLY_GROUP')]
-      //     : ['WHATEVA'],
     },
   };
 

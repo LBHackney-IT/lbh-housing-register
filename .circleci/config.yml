@@ -170,7 +170,7 @@ workflows:
           browser: chrome
           filters:
             branches:
-              only: TS-1585-Housing-reg-view-only-Implement-new-view-only-group-in-the-app
+              only: development
       - run-cypress-e2e:
           name: E2E Tests - Firefox
           browser: firefox
@@ -178,19 +178,12 @@ workflows:
             - install-dependencies
           filters:
             branches:
-              only: TS-1585-Housing-reg-view-only-Implement-new-view-only-group-in-the-app
-      - run-cypress-e2e:
-          name: E2E Tests - Webkit
-          browser: webkit
-          requires:
-            - install-dependencies
-          filters:
-            branches:
-              only: TS-1585-Housing-reg-view-only-Implement-new-view-only-group-in-the-app
+              only: development
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:
-            - sonar-scan
+            - E2E Tests - Chrome
+            - E2E Tests - Firefox
           filters:
             branches:
               only: development

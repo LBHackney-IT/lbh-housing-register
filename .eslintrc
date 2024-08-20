@@ -36,7 +36,8 @@
         "devDependencies": [
           "**/*.+(test|spec|cy).+(j|t)s?(x)",
           "cypress.config.ts",
-          "cypress/support/commands.ts"
+          "cypress/support/commands.ts",
+          "testUtils/*"
         ]
       }
     ]

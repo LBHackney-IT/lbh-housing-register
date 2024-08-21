@@ -3,7 +3,10 @@ import jwt from 'jsonwebtoken';
 
 import { HackneyGoogleUser } from '../domain/HackneyGoogleUser';
 import { HackneyResident } from '../domain/HackneyResident';
-import { HackneyGoogleUserWithPermissions } from '../lib/utils/googleAuth';
+import {
+  HackneyGoogleUserWithPermissions,
+  Permissions,
+} from '../lib/utils/googleAuth';
 import { generateJWTTokenTestData } from './jwtTokenHelper';
 
 export const AUTHORISED_OFFICER_GROUP_TEST = 'authorized-officer-group';
@@ -19,13 +22,6 @@ export enum UserRole {
   Manager,
   Admin,
   ReadOnly,
-}
-
-interface UserClaims {
-  hasAdminPermissions: boolean;
-  hasManagerPermissions: boolean;
-  hasOfficerPermissions: boolean;
-  hasReadOnlyPermissions: boolean;
 }
 
 export const getGroupByRole = (role: UserRole): string => {
@@ -47,48 +43,36 @@ export const getGroupByRole = (role: UserRole): string => {
   }
 };
 
-export const getClaimsByRole = (role?: UserRole): UserClaims => {
+export const getClaimsByRole = (role?: UserRole): Permissions => {
+  const userPermissions: Permissions = {
+    hasAdminPermissions: false,
+    hasManagerPermissions: false,
+    hasOfficerPermissions: false,
+    hasReadOnlyPermissions: false,
+  };
+
   switch (role) {
     case UserRole.ReadOnly: {
-      return {
-        hasAdminPermissions: false,
-        hasManagerPermissions: false,
-        hasOfficerPermissions: false,
-        hasReadOnlyPermissions: true,
-      };
+      userPermissions.hasReadOnlyPermissions = true;
+      break;
     }
     case UserRole.Officer: {
-      return {
-        hasAdminPermissions: false,
-        hasManagerPermissions: false,
-        hasOfficerPermissions: true,
-        hasReadOnlyPermissions: false,
-      };
+      userPermissions.hasOfficerPermissions = true;
+      break;
     }
     case UserRole.Manager: {
-      return {
-        hasAdminPermissions: false,
-        hasManagerPermissions: true,
-        hasOfficerPermissions: false,
-        hasReadOnlyPermissions: false,
-      };
+      userPermissions.hasManagerPermissions = true;
+      break;
     }
     case UserRole.Admin: {
-      return {
-        hasAdminPermissions: true,
-        hasManagerPermissions: false,
-        hasOfficerPermissions: false,
-        hasReadOnlyPermissions: false,
-      };
+      userPermissions.hasAdminPermissions = true;
+      break;
     }
     default:
-      return {
-        hasAdminPermissions: false,
-        hasManagerPermissions: false,
-        hasOfficerPermissions: false,
-        hasReadOnlyPermissions: false,
-      };
+      break;
   }
+
+  return userPermissions;
 };
 
 export const generateHRUserWithPermissions = (

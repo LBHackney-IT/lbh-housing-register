@@ -6,7 +6,7 @@ import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { Application } from '../../domain/HousingApi';
 import { ApplicationStatus } from '../types/application-status';
 
-type Permissions = {
+export type Permissions = {
   hasAdminPermissions: boolean;
   hasManagerPermissions: boolean;
   hasOfficerPermissions: boolean;

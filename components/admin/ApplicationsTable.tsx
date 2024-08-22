@@ -1,12 +1,14 @@
 import React from 'react';
+
+import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
+
 import { PaginatedSearchResultsResponse } from '../../domain/HousingApi';
-import Paragraph from '../content/paragraph';
-import { formatDate } from '../../lib/utils/dateOfBirth';
 import { lookupStatus } from '../../lib/types/application-status';
+import { formatDate } from '../../lib/utils/dateOfBirth';
 import { ButtonLink } from '../button';
+import Paragraph from '../content/paragraph';
 
 interface ResultsToShowLinkProps {
   query: NextParsedUrlQuery;
@@ -17,7 +19,7 @@ const ResultsToShowLink = ({
   query,
   numberOfResults,
 }: ResultsToShowLinkProps) =>
-  parseInt(query.pageSize as string) !== numberOfResults ? (
+  parseInt(query.pageSize as string, 10) !== numberOfResults ? (
     <Link
       href={{
         query: { ...query, pageSize: numberOfResults },
@@ -43,28 +45,38 @@ export default function ApplicationsTable({
   pageSize,
 }: ApplicationsTableProps): JSX.Element {
   const { query } = useRouter();
-  const firstResult = (parseInt(page) - 1) * parseInt(pageSize) + 1;
+  const firstResult = (parseInt(page, 10) - 1) * parseInt(pageSize, 10) + 1;
   const lastResult = Math.min(
-    firstResult + parseInt(pageSize) - 1,
+    firstResult + parseInt(pageSize, 10) - 1,
     applications?.totalResults || 0
   );
 
+  const applicationResultsTotalText = () => {
+    if (!applications) {
+      return null;
+    }
+    if (applications.totalResults === 1) {
+      return <>{applications.totalResults} application found</>;
+    }
+    if (applications.totalResults > 10) {
+      return (
+        <>
+          Showing {firstResult} to {lastResult} of {applications.totalResults}{' '}
+          applications
+        </>
+      );
+    }
+    return <>{applications.totalResults} applications found</>;
+  };
+
   return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {applications && applications.totalResults > 0 ? (
         <>
           <div className="c-flex" style={{ justifyContent: 'space-between' }}>
             <p className="lbh-body-m lbh-body-bold">
-              {applications.totalResults === 1 ? (
-                <>{applications.totalResults} application found</>
-              ) : applications.totalResults > 10 ? (
-                <>
-                  Showing {firstResult} to {lastResult} of{' '}
-                  {applications.totalResults} applications
-                </>
-              ) : (
-                <>{applications.totalResults} applications found</>
-              )}
+              {applicationResultsTotalText()}
             </p>
             {applications.totalResults > 10 ? (
               <div className="lbh-!-margin-top-0 lbh-!-margin-left-1">
@@ -91,11 +103,6 @@ export default function ApplicationsTable({
             ) : null}
           </div>
           <table className="govuk-table lbh-table">
-            {/* {caption ? (
-              <caption className="govuk-table__caption lbh-heading-h3 lbh-table__caption">
-                {caption}
-              </caption>
-            ) : null} */}
             <thead className="govuk-table__head">
               <tr className="govuk-table__row">
                 <th scope="col" className="govuk-table__header">
@@ -107,12 +114,13 @@ export default function ApplicationsTable({
                 <th
                   scope="col"
                   className="govuk-table__header govuk-table__header--numeric"
-                ></th>
+                  aria-label="View application"
+                />
               </tr>
             </thead>
             <tbody className="govuk-table__body">
-              {applications?.results.map((application, index) => (
-                <tr key={index} className="govuk-table__row">
+              {applications?.results.map((application, applicationIndex) => (
+                <tr key={applicationIndex} className="govuk-table__row">
                   <th className="govuk-table__cell">
                     <p className="govuk-body govuk-body-xs lbh-!-margin-bottom-0 lbh-!-margin-top-0">
                       Main applicant
@@ -149,18 +157,20 @@ export default function ApplicationsTable({
                           Other household members
                         </p>
                         <ul className="govuk-list lbh-list lbh-list--bullet lbh-!-margin-top-0">
-                          {application.otherMembers.map((member, index) => (
-                            <li key={index} style={{ margin: 0 }}>
-                              <p className="govuk-body govuk-body-s lbh-!-margin-bottom-0 lbh-!-margin-top-0 lbh-!-font-weight-bold">
-                                {member.firstName} {member.surname}
-                              </p>
-                            </li>
-                          ))}
+                          {application.otherMembers.map(
+                            (member, memberIndex) => (
+                              <li key={memberIndex} style={{ margin: 0 }}>
+                                <p className="govuk-body govuk-body-s lbh-!-margin-bottom-0 lbh-!-margin-top-0 lbh-!-font-weight-bold">
+                                  {member.firstName} {member.surname}
+                                </p>
+                              </li>
+                            )
+                          )}
                         </ul>
                       </>
                     ) : null}
                   </th>
-                  <td scope="row" className="govuk-table__header">
+                  <td className="govuk-table__header">
                     {application.reference ? (
                       <>
                         <p className="govuk-body govuk-body-xs lbh-!-margin-bottom-0 lbh-!-margin-top-0">
@@ -203,7 +213,9 @@ export default function ApplicationsTable({
                           Status
                         </p>
                         <p className="govuk-body govuk-body-m lbh-!-margin-bottom-1 lbh-!-margin-top-0 lbh-!-font-weight-bold">
-                          {lookupStatus(application.status!)}
+                          {application.status
+                            ? lookupStatus(application.status)
+                            : ''}
                         </p>
                       </>
                     ) : null}
@@ -213,6 +225,7 @@ export default function ApplicationsTable({
                       href={`/applications/view/${application.applicationId}`}
                       secondary
                       additionalCssClasses="lbh-!-margin-top-0"
+                      dataTestId={`test-view-application-link-${application.applicationId}`}
                     >
                       View application
                     </ButtonLink>

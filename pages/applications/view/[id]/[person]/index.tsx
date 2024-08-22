@@ -1,40 +1,40 @@
+import React, { SyntheticEvent, useState } from 'react';
+
 import { GetServerSideProps } from 'next';
-import React, { useState, SyntheticEvent } from 'react';
-import Layout from '../../../../../components/layout/staff-layout';
-import {
-  Application,
-  ContactInformation,
-} from '../../../../../domain/HousingApi';
-import { UserContext } from '../../../../../lib/contexts/user-context';
-import { getApplication } from '../../../../../lib/gateways/applications-api';
-import {
-  canViewSensitiveApplication,
-  getRedirect,
-  getSession,
-  HackneyGoogleUserWithPermissions,
-} from '../../../../../lib/utils/googleAuth';
-import Custom404 from '../../../../404';
+
 import CheckBoxList, {
   CheckBoxListPageProps,
 } from '../../../../../components/admin/checkbox-list';
 import {
-  personalDetailsCheckboxList,
-  immigrationStatusCheckboxList,
-  residentialStatusCheckboxList,
-  addressHistoryCheckboxList,
-  currentAccomodationCheckboxList,
-  situationCheckboxList,
-  employmentCheckboxList,
-  incomeAndSavingsCheckboxList,
-} from '../../../../../lib/utils/checkboxListData';
-import MedicalDetail from '../../../../../components/admin/medical-details';
-import { HeadingOne } from '../../../../../components/content/headings';
-import Button from '../../../../../components/button';
-import Paragraph from '../../../../../components/content/paragraph';
-import {
   HorizontalNav,
   HorizontalNavItem,
 } from '../../../../../components/admin/HorizontalNav';
+import MedicalDetail from '../../../../../components/admin/medical-details';
+import Button from '../../../../../components/button';
+import { HeadingOne } from '../../../../../components/content/headings';
+import Paragraph from '../../../../../components/content/paragraph';
+import Layout from '../../../../../components/layout/staff-layout';
+import { Application } from '../../../../../domain/HousingApi';
+import { UserContext } from '../../../../../lib/contexts/user-context';
+import { getApplication } from '../../../../../lib/gateways/applications-api';
+import {
+  addressHistoryCheckboxList,
+  currentAccomodationCheckboxList,
+  employmentCheckboxList,
+  immigrationStatusCheckboxList,
+  incomeAndSavingsCheckboxList,
+  personalDetailsCheckboxList,
+  residentialStatusCheckboxList,
+  situationCheckboxList,
+} from '../../../../../lib/utils/checkboxListData';
+import {
+  HackneyGoogleUserWithPermissions,
+  canViewSensitiveApplication,
+  getRedirect,
+  getSession,
+  hasReadOnlyPermissionOnly,
+} from '../../../../../lib/utils/googleAuth';
+import Custom404 from '../../../../404';
 
 interface PageProps {
   user: HackneyGoogleUserWithPermissions;
@@ -49,8 +49,8 @@ export default function ApplicationPersonPage({
   person,
   evidenceLink,
 }: PageProps): JSX.Element {
-  let isMainApplicant = data.mainApplicant?.person?.id === person;
-  let applicant = isMainApplicant
+  const isMainApplicant = data.mainApplicant?.person?.id === person;
+  const applicant = isMainApplicant
     ? data.mainApplicant
     : data.otherMembers?.find((x) => x.person?.id === person);
 
@@ -81,22 +81,25 @@ export default function ApplicationPersonPage({
   const situation = situationCheckboxList(applicant);
   const employment = employmentCheckboxList(applicant);
   const incomeAndSavings = incomeAndSavingsCheckboxList(applicant);
+  const userHasReadOnlyPermissionOnly = hasReadOnlyPermissionOnly(user);
 
-  let cleanUpParams = function (string: string) {
+  const cleanUpParams = (string: string) => {
     return encodeURIComponent(string.trim());
   };
-  let fullName =
-    cleanUpParams(applicant?.person?.firstName ?? '') +
-    '%20' +
-    cleanUpParams(applicant?.person?.surname ?? '');
+  const fullName = `${cleanUpParams(
+    applicant?.person?.firstName ?? ''
+  )}%20${cleanUpParams(applicant?.person?.surname ?? '')}`;
 
   return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {data.id ? (
+        // eslint-disable-next-line react/jsx-no-constructed-context-values
         <UserContext.Provider value={{ user }}>
           <Layout>
             {data.sensitiveData &&
-            !canViewSensitiveApplication(data.assignedTo!, user) ? (
+            data.assignedTo &&
+            !canViewSensitiveApplication(data.assignedTo, user) ? (
               <>
                 <h2>Access denied</h2>
                 <Paragraph>You are unable to view this application.</Paragraph>
@@ -122,31 +125,24 @@ export default function ApplicationPersonPage({
                     style={{ textAlign: 'right' }}
                   >
                     <a
-                      href={
-                        evidenceLink +
-                        '/deeplink?searchTerm=' +
-                        fullName +
-                        '&groupId=' +
-                        cleanUpParams(applicant?.person?.id ?? '') +
-                        '&name=' +
-                        fullName +
-                        '&phone=' +
-                        cleanUpParams(
-                          applicant?.contactInformation?.phoneNumber ?? ''
-                        ) +
-                        '&email=' +
-                        cleanUpParams(
-                          applicant?.contactInformation?.emailAddress ?? ''
-                        )
-                      }
+                      href={`${evidenceLink}/deeplink?searchTerm=${fullName}&groupId=${cleanUpParams(
+                        applicant?.person?.id ?? ''
+                      )}&name=${fullName}&phone=${cleanUpParams(
+                        applicant?.contactInformation?.phoneNumber ?? ''
+                      )}&email=${cleanUpParams(
+                        applicant?.contactInformation?.emailAddress ?? ''
+                      )}`}
                       target="_blank"
+                      rel="noreferrer"
                     >
-                      <Button>View Documents</Button>
+                      {!userHasReadOnlyPermissionOnly && (
+                        <Button>View Documents</Button>
+                      )}
                     </a>
                   </div>
                 </div>
 
-                <HorizontalNav spaced={true}>
+                <HorizontalNav spaced>
                   <HorizontalNavItem
                     handleSelectNavItem={handleSelectNavItem}
                     itemName="identity"

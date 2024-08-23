@@ -8,23 +8,27 @@ describe('View an application', () => {
 
     ApplicationsPage.visit();
     ApplicationsPage.getSearchInput().should('be.visible');
-    ApplicationsPage.getSearchInput().type(
-      // faker.number.int({ max: 10 }).toString()
-      '1'
-    );
+    ApplicationsPage.getSearchInput().type('1');
     ApplicationsPage.getSearchSubmitButton().click();
     ApplicationsPage.getSearchResultsBox().should('be.visible');
-    cy.task('nock', {
-      hostname: Cypress.env('ACTIVITY_HISTORY_API'),
-      method: 'GET',
-      path:
-        '/activityhistory?targetId=84d87c59-9c87-4f90-89fa-326b5f14869c&pageSize=100',
-      status: 200,
-      body: {
-        results: [{}],
-        paginationDetails: { hasNext: false, nextToken: '' },
-      },
-    });
-    ApplicationsPage.getViewApplicationLink().first().click();
+
+    ApplicationsPage.getViewApplicationLink()
+      .first()
+      .invoke('attr', 'href')
+      .then((href) => {
+        const targetId = href.split('/').pop();
+        cy.task('nock', {
+          hostname: Cypress.env('ACTIVITY_HISTORY_API'),
+          method: 'GET',
+          path: `/activityhistory?targetId=${targetId}&pageSize=100`,
+          status: 200,
+          body: {
+            results: [{}],
+            paginationDetails: { hasNext: false, nextToken: '' },
+          },
+        });
+
+        ApplicationsPage.getViewApplicationLink().first().click();
+      });
   });
 });

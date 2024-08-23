@@ -12,7 +12,7 @@ import { hasStaffPermissions } from '../../../../../lib/utils/hasStaffPermission
 import { isStaffAction } from '../../../../../lib/utils/isStaffAction';
 import * as requestAuth from '../../../../../lib/utils/requestAuth';
 import endpoint from '../../../../../pages/api/applications/[id]/index';
-import { generateMockRequestResponse } from '../../../../../testUtils/apiHelper';
+import { generateMockRequestResponseWithHackneyToken } from '../../../../../testUtils/apiHelper';
 import {
   UserRole,
   generateSignedTokenByRole,
@@ -45,6 +45,7 @@ describe('PATCH', () => {
     const jsonParseSpy = jest
       .spyOn(JSON, 'parse')
       .mockReturnValue(mockApplicationData);
+
     const canUpdateApplicationSpy = jest
       .spyOn(requestAuth, 'canUpdateApplication')
       .mockReturnValue(true);
@@ -64,7 +65,11 @@ describe('PATCH', () => {
     );
 
     it('calls parse on JSON with the request body', async () => {
-      const { req, res } = generateMockRequestResponse(signedToken, 'PATCH');
+      const { req, res } = generateMockRequestResponseWithHackneyToken({
+        hackneyToken: signedToken,
+        requestBody: undefined,
+        method: 'PATCH',
+      });
 
       await endpoint(req, res);
 
@@ -73,7 +78,10 @@ describe('PATCH', () => {
     });
 
     it('calls canUpdateApplication with request and application id from the query', async () => {
-      const { req, res } = generateMockRequestResponse(signedToken, 'PATCH');
+      const { req, res } = generateMockRequestResponseWithHackneyToken({
+        hackneyToken: signedToken,
+        method: 'PATCH',
+      });
       req.query.id = applicationId;
 
       await endpoint(req, res);
@@ -83,7 +91,10 @@ describe('PATCH', () => {
     });
 
     it('calls isStaffAction with application, hasStaffPermissions and hasReadOnlyStaffPermissions with the request when canUpdateApplication returns false', async () => {
-      const { req, res } = generateMockRequestResponse(signedToken, 'PATCH');
+      const { req, res } = generateMockRequestResponseWithHackneyToken({
+        hackneyToken: signedToken,
+        method: 'PATCH',
+      });
       canUpdateApplicationSpy.mockReturnValueOnce(false);
 
       await endpoint(req, res);
@@ -97,7 +108,10 @@ describe('PATCH', () => {
     });
 
     it('returns status code 200 and application data when application is updated is successfully', async () => {
-      const { req, res } = generateMockRequestResponse(signedToken, 'PATCH');
+      const { req, res } = generateMockRequestResponseWithHackneyToken({
+        hackneyToken: signedToken,
+        method: 'PATCH',
+      });
 
       await endpoint(req, res);
 
@@ -106,7 +120,10 @@ describe('PATCH', () => {
     });
 
     it('sets response status code to 403 and json response to correct error message when user is not authorized to update the application', async () => {
-      const { req, res } = generateMockRequestResponse(signedToken, 'PATCH');
+      const { req, res } = generateMockRequestResponseWithHackneyToken({
+        hackneyToken: signedToken,
+        method: 'PATCH',
+      });
       canUpdateApplicationSpy.mockReturnValue(false);
       isStaffActionMock.mockReturnValue(false);
       const expectedError = { message: 'Unable to update application' };
@@ -122,7 +139,10 @@ describe('PATCH', () => {
 
     //staff member with read only permissions
     it('sets response status to 403 when canUpdateApplication returns false and isStaffAction, hasStaffPermissions, hasReadOnlyStaffPermissions return true', async () => {
-      const { req, res } = generateMockRequestResponse(signedToken, 'PATCH');
+      const { req, res } = generateMockRequestResponseWithHackneyToken({
+        hackneyToken: signedToken,
+        method: 'PATCH',
+      });
       canUpdateApplicationSpy.mockReturnValue(false);
       isStaffActionMock.mockReturnValue(true);
       hasStaffPermissionsMock.mockReturnValue(true);
@@ -144,7 +164,10 @@ describe('PATCH', () => {
     }));
 
     it('sets response status code to 500 and returns correct error message when non AxiosError is thrown', async () => {
-      const { req, res } = generateMockRequestResponse(signedToken, 'PATCH');
+      const { req, res } = generateMockRequestResponseWithHackneyToken({
+        hackneyToken: signedToken,
+        method: 'PATCH',
+      });
       jest.spyOn(JSON, 'parse').mockImplementationOnce(() => {
         throw new Error();
       });
@@ -167,7 +190,10 @@ describe('PATCH', () => {
         },
       } as AxiosError;
 
-      const { req, res } = generateMockRequestResponse(signedToken, 'PATCH');
+      const { req, res } = generateMockRequestResponseWithHackneyToken({
+        hackneyToken: signedToken,
+        method: 'PATCH',
+      });
 
       //mock json parse to return two different values on consecutive calls. This is because the same parser is used in JSON.parse() and res.status().json()
       const jsonParseSpy = jest
@@ -209,7 +235,10 @@ describe('PATCH', () => {
         },
       } as AxiosError;
 
-      const { req, res } = generateMockRequestResponse(signedToken, 'PATCH');
+      const { req, res } = generateMockRequestResponseWithHackneyToken({
+        hackneyToken: signedToken,
+        method: 'PATCH',
+      });
 
       jest.spyOn(JSON, 'parse').mockReturnValueOnce(mockApplicationData);
       jest.spyOn(requestAuth, 'canUpdateApplication').mockReturnValue(true);
@@ -235,7 +264,10 @@ describe('PATCH', () => {
         message: 'error code from axios',
       } as AxiosError;
 
-      const { req, res } = generateMockRequestResponse(signedToken, 'PATCH');
+      const { req, res } = generateMockRequestResponseWithHackneyToken({
+        hackneyToken: signedToken,
+        method: 'PATCH',
+      });
 
       jest.spyOn(JSON, 'parse').mockReturnValueOnce(mockApplicationData);
       jest.spyOn(requestAuth, 'canUpdateApplication').mockReturnValue(true);
@@ -260,7 +292,10 @@ describe('PATCH', () => {
     });
 
     it('sets response status to 400 and returns correct error message when wrong request method is used', async () => {
-      const { req, res } = generateMockRequestResponse(signedToken, 'GET');
+      const { req, res } = generateMockRequestResponseWithHackneyToken({
+        hackneyToken: signedToken,
+        method: 'GET',
+      });
 
       await endpoint(req, res);
 

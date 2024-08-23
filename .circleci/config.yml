@@ -172,7 +172,7 @@ workflows:
           browser: chrome
           filters:
             branches:
-              only: development
+              only: TS-1558-Housing-reg-view-only-Hide-edit-button-from-application-overview
       - run-cypress-e2e:
           name: E2E Tests - Firefox
           browser: firefox
@@ -180,7 +180,7 @@ workflows:
             - install-dependencies
           filters:
             branches:
-              only: development
+              only: TS-1558-Housing-reg-view-only-Hide-edit-button-from-application-overview
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:

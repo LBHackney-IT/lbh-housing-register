@@ -7,7 +7,7 @@ interface APIResponseRequest {
   res: ApiResponse;
 }
 
-interface MockRequestResponseParams {
+export interface MockRequestResponseParams {
   hackneyToken: string;
   requestBody?: string;
   method?: RequestMethod;

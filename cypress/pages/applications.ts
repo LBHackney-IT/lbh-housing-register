@@ -26,9 +26,19 @@ class ApplicationsPage {
     return cy.get(`[data-testid="${testId}"]`);
   }
 
-  static getSearchResults() {
+  static getSearchInputBox() {
     const testId = 'test-search-box';
     return cy.get(`[data-testid="${testId}"]`);
+  }
+
+  static getSearchResultsBox() {
+    const testId = 'test-search-results-box';
+    return cy.get(`[data-testid="${testId}"]`);
+  }
+
+  static getViewApplicationLink() {
+    const testIdPrefix = 'test-view-application-link-';
+    return this.getSearchResultsBox().get(`[data-testid^="${testIdPrefix}"]`);
   }
 }
 export default ApplicationsPage;

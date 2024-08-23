@@ -91,6 +91,9 @@ export const removeHackneyToken = (res: any): void => {
 export const hasAnyPermissions = (
   user: HackneyGoogleUserWithPermissions
 ): boolean => {
+  if (!user) {
+    return false;
+  }
   return (
     user.hasAdminPermissions ||
     user.hasManagerPermissions ||
@@ -114,6 +117,9 @@ export const canViewSensitiveApplication = (
 export const hasReadOnlyPermissionOnly = (
   user: HackneyGoogleUserWithPermissions
 ): boolean => {
+  if (!user) {
+    return false;
+  }
   // is not part of the read only group
   if (
     user.hasReadOnlyPermissions &&

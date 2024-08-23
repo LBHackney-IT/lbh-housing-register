@@ -100,6 +100,7 @@
     "lint-staged": "^14.0.1",
     "mocha": "^10.7.3",
     "mockdate": "^3.0.5",
+    "nock": "^14.0.0-beta.11",
     "node-mocks-http": "^1.15.1",
     "playwright-webkit": "^1.46.0",
     "prettier": "2.2.1",

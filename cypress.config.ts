@@ -71,7 +71,6 @@ export default defineConfig({
     experimentalWebKitSupport: true,
     video: true,
     screenshotOnRunFailure: true,
-    chromeWebSecurity: false,
   },
 
   component: {

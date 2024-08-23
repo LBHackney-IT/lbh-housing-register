@@ -97,6 +97,17 @@ export const hasAnyPermissions = (
   );
 };
 
+export const hasReadOnlyPermissions = (
+  user: HackneyGoogleUserWithPermissions
+): boolean => {
+  return (
+    !user.hasAdminPermissions &&
+    !user.hasManagerPermissions &&
+    !user.hasOfficerPermissions &&
+    user.hasReadOnlyPermissions
+  );
+};
+
 export const canViewSensitiveApplication = (
   assignedTo: string,
   user: HackneyGoogleUserWithPermissions

@@ -31,6 +31,7 @@ import {
   getRedirect,
   getSession,
   hasAnyPermissions,
+  hasReadOnlyPermissions,
   hasUserGroup,
   removeHackneyToken,
 } from './googleAuth';
@@ -364,6 +365,36 @@ describe('googleAuth', () => {
         ...getClaimsByRole(),
       };
       expect(hasAnyPermissions(user)).toBeFalsy();
+    });
+  });
+
+  describe('hasReadOnlyPermissions', () => {
+    it('returns true when user has only read only permissions', () => {
+      const user: HackneyGoogleUserWithPermissions = generateHRUserWithPermissions(
+        UserRole.ReadOnly
+      );
+      expect(hasReadOnlyPermissions(user)).toBeTruthy();
+    });
+
+    it('returns false when user has admin permissions', () => {
+      const user: HackneyGoogleUserWithPermissions = generateHRUserWithPermissions(
+        UserRole.Admin
+      );
+      expect(hasReadOnlyPermissions(user)).toBeFalsy();
+    });
+
+    it('returns false when user has manager permissions', () => {
+      const user: HackneyGoogleUserWithPermissions = generateHRUserWithPermissions(
+        UserRole.Manager
+      );
+      expect(hasReadOnlyPermissions(user)).toBeFalsy();
+    });
+
+    it('returns false when user has officer permissions', () => {
+      const user: HackneyGoogleUserWithPermissions = generateHRUserWithPermissions(
+        UserRole.Officer
+      );
+      expect(hasReadOnlyPermissions(user)).toBeFalsy();
     });
   });
 

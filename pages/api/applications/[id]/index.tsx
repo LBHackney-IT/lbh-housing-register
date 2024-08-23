@@ -1,13 +1,17 @@
-import { StatusCodes } from 'http-status-codes';
-import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { updateApplication } from '../../../../lib/gateways/applications-api';
+/*  eslint-disable @typescript-eslint/no-unused-vars */
+/*  eslint-disable @typescript-eslint/no-explicit-any */
+// disable unused AxiosError and usage of any until reconfiguration/refactor
 import { withSentry } from '@sentry/nextjs';
-import {
-  canUpdateApplication,
-  hasStaffPermissions,
-  isStaffAction,
-} from '../../../../lib/utils/requestAuth';
 import axios, { AxiosError } from 'axios';
+import { StatusCodes } from 'http-status-codes';
+
+import { updateApplication } from '../../../../lib/gateways/applications-api';
+import { hasReadOnlyStaffPermissions } from '../../../../lib/utils/hasReadOnlyStaffPermissions';
+import { hasStaffPermissions } from '../../../../lib/utils/hasStaffPermissions';
+import { isStaffAction } from '../../../../lib/utils/isStaffAction';
+import { canUpdateApplication } from '../../../../lib/utils/requestAuth';
+
+import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -18,10 +22,11 @@ const endpoint: NextApiHandler = async (
       try {
         const application = JSON.parse(req.body);
         const id = req.query.id as string;
-
         if (
           canUpdateApplication(req, id) ||
-          (isStaffAction(application) && hasStaffPermissions(req))
+          (isStaffAction(application) &&
+            hasStaffPermissions(req) &&
+            !hasReadOnlyStaffPermissions(req))
         ) {
           const data = await updateApplication(application, id, req);
           res.status(StatusCodes.OK).json(data);

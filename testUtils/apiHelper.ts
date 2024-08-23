@@ -9,6 +9,7 @@ interface APIResponseRequest {
 
 export function generateMockRequestResponse(
   token: string,
+  requestBody?: string,
   method: RequestMethod = 'GET'
 ): APIResponseRequest {
   const { req, res }: { req: ApiRequest; res: ApiResponse } = createMocks({
@@ -19,6 +20,8 @@ export function generateMockRequestResponse(
     'content-type': 'Application/json',
     cookie: `hackneyToken=${token}`,
   };
+
+  req.body = requestBody ?? '{}';
 
   return { req, res };
 }

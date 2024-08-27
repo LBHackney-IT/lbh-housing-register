@@ -102,6 +102,24 @@ describe('POST', () => {
       expect(res._getJSONData()).toStrictEqual(expectedErrorMessage);
     });
 
+    it('sets response status code to 403 and adds an error message to the response when isStaffAction returns true, hasStaffPermissions returns false and hasReadOnlyStaffPermissions returns true', async () => {
+      const { req, res } = generateMockRequestResponseWithHackneyToken(
+        mockRequestResponseParameters
+      );
+      const expectedErrorMessage = {
+        message: 'Unable to add application with assessment',
+      };
+
+      isStaffActionMock.mockReturnValue(true);
+      hasStaffPermissionsMock.mockReturnValue(false);
+      hasReadOnlyStaffPermissionsMock.mockReturnValue(true);
+
+      await endpoint(req, res);
+
+      expect(res.statusCode).toBe(StatusCodes.FORBIDDEN);
+      expect(res._getJSONData()).toStrictEqual(expectedErrorMessage);
+    });
+
     it('sets response status code to 403 and adds an error message to the response when isStaffAction returns true and hasReadOnlyStaffPermissions returns true', async () => {
       const { req, res } = generateMockRequestResponseWithHackneyToken(
         mockRequestResponseParameters

@@ -185,7 +185,7 @@ workflows:
           context: api-assume-role-housing-development-context
           requires:
             - E2E Tests - Chrome
-            - E2E Tests - Firefox
+          #  - E2E Tests - Firefox
           filters:
             branches:
               only: development

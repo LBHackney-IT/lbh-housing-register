@@ -11,8 +11,6 @@ describe('View an application', () => {
     ApplicationsPage.getSearchInput().type('1');
     ApplicationsPage.getSearchSubmitButton().click();
     ApplicationsPage.getSearchResultsBox().should('be.visible');
-    ApplicationsPage.getAssessment().should('not.exist');
-
 
     ApplicationsPage.getViewApplicationLink()
       .first()
@@ -31,6 +29,7 @@ describe('View an application', () => {
         });
 
         ApplicationsPage.getViewApplicationLink().first().click();
+        ApplicationsPage.getAssessment().should('not.exist');
       });
   });
 });

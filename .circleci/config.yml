@@ -172,7 +172,7 @@ workflows:
           browser: chrome
           filters:
             branches:
-              only: only: TS-1564
+              only: TS-1564
       #- run-cypress-e2e:
       #    name: E2E Tests - Firefox
       #    browser: firefox

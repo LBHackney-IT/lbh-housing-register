@@ -11,6 +11,8 @@ describe('View an application', () => {
     ApplicationsPage.getSearchInput().type('1');
     ApplicationsPage.getSearchSubmitButton().click();
     ApplicationsPage.getSearchResultsBox().should('be.visible');
+    ApplicationsPage.getAssessment().should('not.exist');
+
 
     ApplicationsPage.getViewApplicationLink()
       .first()

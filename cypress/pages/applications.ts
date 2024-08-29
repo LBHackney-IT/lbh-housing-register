@@ -21,6 +21,11 @@ class ApplicationsPage {
     return this.getApplicationsPage().get(`[data-testid="${testId}"]`);
   }
 
+  static getAssessment() {
+    const testId = 'assessment-test';
+    return this.getApplicationsPage().get(`[data-testid="${testId}"]`);
+  }  
+
   static getWorktraySidebar() {
     const testId = 'test-admin-sidebar';
     return cy.get(`[data-testid="${testId}"]`);

@@ -25,12 +25,12 @@ import {
   HackneyGoogleUserWithPermissions,
   Permissions,
   canViewSensitiveApplication,
-  canViewWorktray,
   getAuth,
   getPermissions,
   getRedirect,
   getSession,
   hasAnyPermissions,
+  hasReadOnlyPermissionOnly,
   hasUserGroup,
   removeHackneyToken,
 } from './googleAuth';
@@ -459,25 +459,63 @@ describe('googleAuth', () => {
     });
   });
 
-  describe('canViewWorktray', () => {
-    it('return true when user has admin permissions', () => {
+  describe('hasReadOnlyPermissionOnly', () => {
+    it('return false when user has admin permissions', () => {
       const user = generateHRUserWithPermissions(UserRole.Admin);
-      expect(canViewWorktray(user)).toBeTruthy();
+      expect(hasReadOnlyPermissionOnly(user)).toBeFalsy();
     });
 
-    it('return true when user has manager permissions', () => {
+    it('return false when user has admin permissions and readOnly', () => {
+      const user = generateHRUserWithPermissions(UserRole.Admin);
+      const userWithReadOnlyAdded = {
+        ...user,
+        hasReadOnlyPermissions: true,
+      };
+      expect(hasReadOnlyPermissionOnly(userWithReadOnlyAdded)).toBeFalsy();
+    });
+
+    it('return false when user has manager permissions', () => {
       const user = generateHRUserWithPermissions(UserRole.Manager);
-      expect(canViewWorktray(user)).toBeTruthy();
+      expect(hasReadOnlyPermissionOnly(user)).toBeFalsy();
     });
 
-    it('return true when user has officer permissions', () => {
+    it('return false when user has manager permissions and readOnly', () => {
+      const user = generateHRUserWithPermissions(UserRole.Manager);
+      const userWithReadOnlyAdded = {
+        ...user,
+        hasReadOnlyPermissions: true,
+      };
+      expect(hasReadOnlyPermissionOnly(userWithReadOnlyAdded)).toBeFalsy();
+    });
+
+    it('return false when user has officer permissions', () => {
       const user = generateHRUserWithPermissions(UserRole.Officer);
-      expect(canViewWorktray(user)).toBeTruthy();
+      expect(hasReadOnlyPermissionOnly(user)).toBeFalsy();
+    });
+
+    it('return false when user has officer permissions and readOnly', () => {
+      const user = generateHRUserWithPermissions(UserRole.Officer);
+      const userWithReadOnlyAdded = {
+        ...user,
+        hasReadOnlyPermissions: true,
+      };
+      expect(hasReadOnlyPermissionOnly(userWithReadOnlyAdded)).toBeFalsy();
+    });
+
+    it('return false when user has all permissions', () => {
+      const user = generateHRUserWithPermissions(UserRole.Officer);
+      const userWithReadOnlyAdded = {
+        ...user,
+        hasReadOnlyPermissions: true,
+        hasAdminPermissions: true,
+        hasManagerPermissions: true,
+      };
+      expect(hasReadOnlyPermissionOnly(userWithReadOnlyAdded)).toBeFalsy();
     });
 
     it('return true when user has read only permissions', () => {
       const user = generateHRUserWithPermissions(UserRole.ReadOnly);
-      expect(canViewWorktray(user)).toBeFalsy();
+      expect(hasReadOnlyPermissionOnly(user)).toBeTruthy();
     });
   });
 });

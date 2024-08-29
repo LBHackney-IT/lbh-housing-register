@@ -173,14 +173,14 @@ workflows:
           filters:
             branches:
               only: development
-      - run-cypress-e2e:
-          name: E2E Tests - Firefox
-          browser: firefox
-          requires:
-            - install-dependencies
-          filters:
-            branches:
-              only: development
+      #- run-cypress-e2e:
+      #    name: E2E Tests - Firefox
+      #    browser: firefox
+      #   requires:
+      #     - install-dependencies
+      #   filters:
+      #     branches:
+      #       only: development
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:

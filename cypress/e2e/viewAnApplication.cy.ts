@@ -29,7 +29,7 @@ describe('View an application', () => {
         });
 
         ApplicationsPage.getViewApplicationLink().first().click();
-        ApplicationsPage.getAssessment().should('not.exist');
+        ApplicationsPage.getAssessment().should('be.visible');
       });
   });
 });

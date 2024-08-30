@@ -7,10 +7,17 @@ interface APIResponseRequest {
   res: ApiResponse;
 }
 
-export function generateMockRequestResponse(
-  token: string,
-  method: RequestMethod = 'GET'
-): APIResponseRequest {
+export interface MockRequestResponseParams {
+  hackneyToken: string;
+  requestBody?: string;
+  method?: RequestMethod;
+}
+
+export const generateMockRequestResponseWithHackneyToken = ({
+  hackneyToken: token,
+  requestBody,
+  method = 'GET',
+}: MockRequestResponseParams): APIResponseRequest => {
   const { req, res }: { req: ApiRequest; res: ApiResponse } = createMocks({
     method,
   });
@@ -20,5 +27,7 @@ export function generateMockRequestResponse(
     cookie: `hackneyToken=${token}`,
   };
 
+  req.body = requestBody ?? '{}';
+
   return { req, res };
-}
+};

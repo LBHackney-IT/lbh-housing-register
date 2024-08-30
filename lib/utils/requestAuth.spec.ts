@@ -1,147 +1,104 @@
 import { faker } from '@faker-js/faker';
 import { createRequest } from 'node-mocks-http';
 
-import { Application } from '../../domain/HousingApi';
-import { envVarsFixture } from '../../testUtils/envVarsHelper';
+import { HackneyResident } from 'domain/HackneyResident';
+
 import { ApiRequest } from '../../testUtils/types';
-import {
-  AUTHORISED_ADMIN_GROUP_TEST,
-  AUTHORISED_MANAGER_GROUP_TEST,
-  AUTHORISED_OFFICER_GROUP_TEST,
-  UserRole,
-  generateSignedResidentToken,
-  generateSignedTokenByRole,
-} from '../../testUtils/userHelper';
-import { ApplicationStatus } from '../types/application-status';
-import {
-  canUpdateApplication,
-  hasStaffPermissions,
-  isStaffAction,
-} from './requestAuth';
+import { generateHRUserWithPermissions } from '../../testUtils/userHelper';
+import { HackneyGoogleUserWithPermissions } from './googleAuth';
+import { hasReadOnlyStaffPermissions } from './hasReadOnlyStaffPermissions';
+import { hasStaffPermissions } from './hasStaffPermissions';
+import { canUpdateApplication } from './requestAuth';
+import { getUser } from './users';
 
 const req: ApiRequest = createRequest();
 const applicationId = faker.string.uuid();
+const user: HackneyGoogleUserWithPermissions = generateHRUserWithPermissions();
+const resident: HackneyResident = {
+  application_id: applicationId,
+};
+
+jest.mock('../utils/hasStaffPermissions', () => ({
+  hasStaffPermissions: jest.fn(),
+}));
+
+jest.mock('../utils/hasReadOnlyStaffPermissions', () => ({
+  hasReadOnlyStaffPermissions: jest.fn(),
+}));
+
+jest.mock('./users', () => ({
+  getUser: jest.fn(),
+}));
 
 describe('requestAuth', () => {
-  //testing with real implementations since the current requestAuth structure doesn't allow mocking as usual
-  // due to functions calling other functions within the module without specific export setup
-  const skipTokenVerifyFixture = envVarsFixture('SKIP_VERIFY_TOKEN');
-  const adminGroupFixture = envVarsFixture('AUTHORISED_ADMIN_GROUP');
-  const managerGroupFixture = envVarsFixture('AUTHORISED_MANAGER_GROUP');
-  const officerGroupFixture = envVarsFixture('AUTHORISED_OFFICER_GROUP');
-
   beforeEach(() => {
-    skipTokenVerifyFixture.mock('true');
-    adminGroupFixture.mock(AUTHORISED_ADMIN_GROUP_TEST);
-    managerGroupFixture.mock(AUTHORISED_MANAGER_GROUP_TEST);
-    officerGroupFixture.mock(AUTHORISED_OFFICER_GROUP_TEST);
-  });
-
-  afterEach(() => {
-    skipTokenVerifyFixture.restore();
-    adminGroupFixture.restore();
-    managerGroupFixture.restore();
-    officerGroupFixture.restore();
+    jest.resetAllMocks();
   });
 
   describe('canUpdateApplication', () => {
-    //member of staff
-    it('returns true when user has staff permissions', () => {
-      const { signedToken } = generateSignedTokenByRole(UserRole.Admin);
+    //staff member
+    it('calls hasStaffPermissions with correct request', () => {
+      (hasStaffPermissions as jest.Mock).mockReturnValueOnce(true);
 
-      req.headers = {
-        cookie: `hackneyToken=${signedToken}`,
-      };
+      canUpdateApplication(req, applicationId);
+
+      expect(hasStaffPermissions).toHaveBeenCalledTimes(1);
+      expect(hasStaffPermissions).toHaveBeenCalledWith(req);
+    });
+
+    it('returns true when hasStaffPermissions returns true', () => {
+      (hasStaffPermissions as jest.Mock).mockReturnValueOnce(true);
 
       expect(canUpdateApplication(req, applicationId)).toBeTruthy();
     });
 
+    it('calls hasReadOnlyStaffPermission with correct request', () => {
+      (hasStaffPermissions as jest.Mock).mockReturnValueOnce(true);
+      (hasReadOnlyStaffPermissions as jest.Mock).mockReturnValueOnce(true);
+
+      canUpdateApplication(req, applicationId);
+
+      expect(hasReadOnlyStaffPermissions).toHaveBeenCalledTimes(1);
+      expect(hasReadOnlyStaffPermissions).toHaveBeenCalledWith(req);
+    });
+
+    it('returns true when hasStaffPermissions returns true and hasReadOnlyStaffPermissions returns false', () => {
+      (hasStaffPermissions as jest.Mock).mockReturnValueOnce(true);
+      (hasReadOnlyStaffPermissions as jest.Mock).mockReturnValueOnce(false);
+
+      expect(canUpdateApplication(req, applicationId)).toBeTruthy();
+    });
+
+    it('returns false when hasStaffPermissions returns true and hasReadOnlyStaffPermissions returns true', () => {
+      (hasStaffPermissions as jest.Mock).mockReturnValueOnce(true);
+      (hasReadOnlyStaffPermissions as jest.Mock).mockReturnValueOnce(true);
+
+      expect(canUpdateApplication(req, applicationId)).toBeFalsy();
+    });
+
+    it('calls getUser with request when hasStaffPermissions returns false', () => {
+      (hasStaffPermissions as jest.Mock).mockReturnValueOnce(false);
+      (getUser as jest.Mock).mockReturnValueOnce(user);
+
+      canUpdateApplication(req, applicationId);
+
+      expect(getUser).toHaveBeenCalledTimes(1);
+      expect(getUser).toHaveBeenCalledWith(req);
+    });
+
     //resident
-    it('returns true when user does not have staff permissions, but have claims to the application with given id', () => {
-      const { signedToken, tokenData } = generateSignedResidentToken();
+    it('returns true when user returned by getUser has claims to the given application id', () => {
+      (hasStaffPermissions as jest.Mock).mockReturnValueOnce(false);
+      (getUser as jest.Mock).mockReturnValueOnce(resident);
 
-      req.headers = {
-        cookie: `housing_user=${signedToken}`,
-      };
-
-      expect(canUpdateApplication(req, tokenData.application_id)).toBeTruthy();
+      expect(canUpdateApplication(req, applicationId)).toBeTruthy();
     });
 
-    it('returns false when user does not have staff permissions or correct claims', () => {
-      const { signedToken } = generateSignedResidentToken('random-id');
+    it('returns false  when user returned by getUser does not have claims to the given application id', () => {
+      (hasStaffPermissions as jest.Mock).mockReturnValueOnce(false);
+      (getUser as jest.Mock).mockReturnValueOnce(resident);
 
-      req.headers = {
-        cookie: `housing_user=${signedToken}`,
-      };
-
-      expect(canUpdateApplication(req, 'different-id')).toBeFalsy();
-    });
-  });
-
-  describe('hasStaffPermissions', () => {
-    it('returns false when user is not staff member', () => {
-      const { signedToken } = generateSignedResidentToken();
-
-      req.headers = {
-        cookie: `housing_user=${signedToken}`,
-      };
-
-      expect(hasStaffPermissions(req)).toBeFalsy();
-    });
-
-    it('returns false when user is staff member but does not have HR permissions', () => {
-      const { signedToken } = generateSignedTokenByRole();
-      req.headers = {
-        cookie: `hackneyToken=${signedToken}`,
-      };
-
-      expect(hasStaffPermissions(req)).toBeFalsy();
-    });
-
-    it('returns true when user is staff member and has HR permissions', () => {
-      const { signedToken } = generateSignedTokenByRole(UserRole.Manager);
-      req.headers = {
-        cookie: `hackneyToken=${signedToken}`,
-      };
-
-      expect(hasStaffPermissions(req)).toBeTruthy();
-    });
-  });
-
-  describe('isStaffAction', () => {
-    it('returns true when application is flagged to contain sensitive data', () => {
-      const application: Application = {
-        sensitiveData: true,
-      };
-      expect(isStaffAction(application)).toBeTruthy();
-    });
-
-    it('returns true when application has assessment', () => {
-      const application: Application = {
-        assessment: {
-          reason: 'test',
-        },
-      };
-      expect(isStaffAction(application)).toBeTruthy();
-    });
-
-    it('returns true when application is assigned to staff member', () => {
-      const application: Application = {
-        assignedTo: 'member of staff',
-      };
-      expect(isStaffAction(application)).toBeTruthy();
-    });
-
-    it('returns true when application has status and it is not draft', () => {
-      const application: Application = {
-        status: ApplicationStatus.ACTIVE,
-      };
-      expect(isStaffAction(application)).toBeTruthy();
-    });
-
-    it('returns false when application does not have sensitive data, assessment, assigned to or status set', () => {
-      const application: Application = {};
-      expect(isStaffAction(application)).toBeFalsy();
+      expect(canUpdateApplication(req, 'non-matching-id')).toBeFalsy();
     });
   });
 });

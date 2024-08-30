@@ -5,13 +5,13 @@ import { generateHRUserWithPermissions } from '../../testUtils/userHelper';
 import {
   HackneyGoogleUserWithPermissions,
   getSession,
-  hasReadOnlyPermissions,
+  hasReadOnlyPermissionOnly,
 } from './googleAuth';
 import { hasReadOnlyStaffPermissions } from './hasReadOnlyStaffPermissions';
 
 jest.mock('./googleAuth', () => ({
   getSession: jest.fn(),
-  hasReadOnlyPermissions: jest.fn(),
+  hasReadOnlyPermissionOnly: jest.fn(),
 }));
 
 const req: ApiRequest = createRequest();
@@ -32,26 +32,26 @@ describe('hasReadOnlyStaffPermissions', () => {
     expect(hasReadOnlyStaffPermissions(req)).toBeFalsy();
   });
 
-  it('calls hasReadOnlyPermissions with the user returned by getSession', () => {
+  it('calls hasReadOnlyPermissionOnly with the user returned by getSession', () => {
     (getSession as jest.Mock).mockReturnValueOnce(user);
-    (hasReadOnlyPermissions as jest.Mock).mockReturnValueOnce(true);
+    (hasReadOnlyPermissionOnly as jest.Mock).mockReturnValueOnce(true);
 
     hasReadOnlyStaffPermissions(req);
 
-    expect(hasReadOnlyPermissions).toHaveBeenCalledTimes(1);
-    expect(hasReadOnlyPermissions).toHaveBeenCalledWith(user);
+    expect(hasReadOnlyPermissionOnly).toHaveBeenCalledTimes(1);
+    expect(hasReadOnlyPermissionOnly).toHaveBeenCalledWith(user);
   });
 
-  it('returns false when hasReadOnlyPermissions returns false', () => {
+  it('returns false when hasReadOnlyPermissionOnly returns false', () => {
     (getSession as jest.Mock).mockReturnValueOnce(user);
-    (hasReadOnlyPermissions as jest.Mock).mockReturnValueOnce(false);
+    (hasReadOnlyPermissionOnly as jest.Mock).mockReturnValueOnce(false);
 
     expect(hasReadOnlyStaffPermissions(req)).toBeFalsy();
   });
 
-  it('returns true when hasReadOnlyPermissions returns true', () => {
+  it('returns true when hasReadOnlyPermissionOnly returns true', () => {
     (getSession as jest.Mock).mockReturnValueOnce(user);
-    (hasReadOnlyPermissions as jest.Mock).mockReturnValueOnce(true);
+    (hasReadOnlyPermissionOnly as jest.Mock).mockReturnValueOnce(true);
 
     expect(hasReadOnlyStaffPermissions(req)).toBeTruthy();
   });

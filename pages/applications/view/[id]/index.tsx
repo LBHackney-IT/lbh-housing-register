@@ -1,6 +1,8 @@
+import React from 'react';
+
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import React, { SyntheticEvent, useState, useEffect } from 'react';
+
 import Actions from '../../../../components/admin/actions';
 import ApplicationHistory from '../../../../components/admin/ApplicationHistory';
 import AssignUser from '../../../../components/admin/assign-user';
@@ -24,7 +26,7 @@ import List, { ListItem } from '../../../../components/content/list';
 import Paragraph from '../../../../components/content/paragraph';
 import Layout from '../../../../components/layout/staff-layout';
 import { ActivityHistoryPagedResult } from '../../../../domain/ActivityHistoryApi';
-import { Application, Applicant } from '../../../../domain/HousingApi';
+import { Applicant, Application } from '../../../../domain/HousingApi';
 import { UserContext } from '../../../../lib/contexts/user-context';
 import {
   getApplication,
@@ -37,11 +39,12 @@ import {
 } from '../../../../lib/types/application-status';
 import { formatDate } from '../../../../lib/utils/dateOfBirth';
 import {
+  HackneyGoogleUserWithPermissions,
+  canEditApplications,
   canViewSensitiveApplication,
   getRedirect,
   getSession,
-  HackneyGoogleUserWithPermissions,
-  hasAnyPermissions,
+  hasReadOnlyPermissionOnly,
 } from '../../../../lib/utils/googleAuth';
 import { getPersonName } from '../../../../lib/utils/person';
 import Custom404 from '../../../404';
@@ -59,35 +62,13 @@ export default function ApplicationPage({
 }: PageProps): JSX.Element | null {
   const router = useRouter();
   const tab = router.query.tab ?? 'overview';
+  const userCanEditApplication = canEditApplications(user, data);
+  const userHasReadOnlyPermissionOnly = hasReadOnlyPermissionOnly(user);
 
   const handleTabChange = (newValue: string) => {
     router.push({
       query: { ...router.query, tab: newValue },
     });
-  };
-
-  // Can edit applications if:
-  // - user is a manager (all statuses)
-  // - it has a status of manual draft
-  // - it has a status of awaiting assessment (SUBMITTED) and current user is assigned to it
-  // - it has a status of awaiting reassessment and current user is assigned to it
-  const canEditApplications = () => {
-    if (!hasAnyPermissions(user)) return false;
-    if (user.hasManagerPermissions) return true;
-    if (data.status === ApplicationStatus.MANUAL_DRAFT) {
-      return true;
-    }
-    const assignedToCurrentUser = data.assignedTo === user.email;
-    if (data.status === ApplicationStatus.SUBMITTED && assignedToCurrentUser) {
-      return true;
-    }
-    if (
-      data.status === ApplicationStatus.AWAITING_REASSESSMENT &&
-      assignedToCurrentUser
-    ) {
-      return true;
-    }
-    return false;
   };
 
   const handleDelete = (applicant: Applicant) => {
@@ -106,12 +87,14 @@ export default function ApplicationPage({
   };
 
   return (
-    <>
+    <div>
       {data.id ? (
+        // eslint-disable-next-line react/jsx-no-constructed-context-values
         <UserContext.Provider value={{ user }}>
           <Layout pageName="View application">
             {data.sensitiveData &&
-            !canViewSensitiveApplication(data.assignedTo!, user) ? (
+            data.assignedTo &&
+            !canViewSensitiveApplication(data.assignedTo, user) ? (
               <>
                 <h2>Access denied</h2>
                 <Paragraph>You are unable to view this application.</Paragraph>
@@ -135,7 +118,7 @@ export default function ApplicationPage({
                   {getPersonName(data)}
                 </h2>
 
-                <HorizontalNav spaced={true}>
+                <HorizontalNav spaced>
                   <HorizontalNavItem
                     handleSelectNavItem={() => handleTabChange('overview')}
                     itemName="overview"
@@ -150,7 +133,8 @@ export default function ApplicationPage({
                   >
                     Notes and history
                   </HorizontalNavItem>
-                  {data.status !== ApplicationStatus.DRAFT &&
+                  {!hasReadOnlyPermissionOnly(user) &&
+                  data.status !== ApplicationStatus.DRAFT &&
                   data.status !== ApplicationStatus.MANUAL_DRAFT ? (
                     <HorizontalNavItem
                       handleSelectNavItem={() => handleTabChange('assessment')}
@@ -160,6 +144,7 @@ export default function ApplicationPage({
                       Assessment
                     </HorizontalNavItem>
                   ) : (
+                    // eslint-disable-next-line react/jsx-no-useless-fragment
                     <></>
                   )}
                 </HorizontalNav>
@@ -210,7 +195,7 @@ export default function ApplicationPage({
                             heading="Main applicant"
                             applicant={data.mainApplicant}
                             applicationId={data.id}
-                            canEdit={canEditApplications()}
+                            canEdit={userCanEditApplication}
                           />
                         )}
                         {data.otherMembers && data.otherMembers.length > 0 ? (
@@ -218,13 +203,13 @@ export default function ApplicationPage({
                             heading="Other household members"
                             others={data.otherMembers}
                             applicationId={data.id}
-                            canEdit={canEditApplications()}
+                            canEdit={userCanEditApplication}
                             handleDelete={handleDelete}
                           />
                         ) : (
                           <HeadingThree content="Other household members" />
                         )}
-                        {canEditApplications() && (
+                        {!userHasReadOnlyPermissionOnly && (
                           <ButtonLink
                             additionalCssClasses="govuk-secondary lbh-button--secondary"
                             href={`/applications/edit/${data.id}/add-household-member`}
@@ -250,8 +235,14 @@ export default function ApplicationPage({
 
                         <CaseDetailsItem
                           itemHeading="Status"
-                          itemValue={lookupStatus(data.status!)}
-                          buttonText="Change"
+                          itemValue={
+                            data.status ? lookupStatus(data.status) : undefined
+                          }
+                          buttonText={
+                            !userHasReadOnlyPermissionOnly
+                              ? 'Change'
+                              : undefined
+                          }
                           onClick={() => handleTabChange('assessment')}
                         />
 
@@ -268,7 +259,11 @@ export default function ApplicationPage({
                             itemValue={formatDate(
                               data.assessment?.effectiveDate
                             )}
-                            buttonText="Change"
+                            buttonText={
+                              !userHasReadOnlyPermissionOnly
+                                ? 'Change'
+                                : undefined
+                            }
                             onClick={() => handleTabChange('assessment')}
                           />
                         )}
@@ -287,22 +282,29 @@ export default function ApplicationPage({
                           user={user}
                           assignee={data.assignedTo}
                         />
-
-                        <SensitiveData
-                          id={data.id}
-                          isSensitive={data.sensitiveData || false}
-                          user={user}
-                        />
+                        {!userHasReadOnlyPermissionOnly && (
+                          <SensitiveData
+                            id={data.id}
+                            isSensitive={data.sensitiveData || false}
+                            user={user}
+                          />
+                        )}
                       </div>
                     </div>
                   </>
                 )}
 
                 {tab === 'history' && (
-                  <ApplicationHistory history={history} id={data.id} />
+                  <ApplicationHistory
+                    history={history}
+                    id={data.id}
+                    showDetails={!userHasReadOnlyPermissionOnly}
+                  />
                 )}
 
-                {tab === 'assessment' && <Actions data={data} />}
+                {!userHasReadOnlyPermissionOnly && tab === 'assessment' && (
+                  <Actions data={data} />
+                )}
               </>
             )}
           </Layout>
@@ -310,7 +312,7 @@ export default function ApplicationPage({
       ) : (
         <Custom404 />
       )}
-    </>
+    </div>
   );
 }
 

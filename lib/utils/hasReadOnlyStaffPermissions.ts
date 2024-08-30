@@ -1,10 +1,10 @@
 import { NextApiRequest } from 'next';
 
-import { getSession, hasReadOnlyPermissions } from './googleAuth';
+import { getSession, hasReadOnlyPermissionOnly } from './googleAuth';
 
 export const hasReadOnlyStaffPermissions = (req: NextApiRequest): boolean => {
   const staff = getSession(req);
   if (!staff) return false;
 
-  return hasReadOnlyPermissions(staff);
+  return hasReadOnlyPermissionOnly(staff);
 };

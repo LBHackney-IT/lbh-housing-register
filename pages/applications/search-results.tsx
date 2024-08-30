@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { GetServerSideProps } from 'next';
 
 import ApplicationsTable from '../../components/admin/ApplicationsTable';
@@ -13,9 +15,9 @@ import { UserContext } from '../../lib/contexts/user-context';
 import { searchAllApplications } from '../../lib/gateways/applications-api';
 import {
   HackneyGoogleUserWithPermissions,
-  canViewWorktray,
   getRedirect,
   getSession,
+  hasReadOnlyPermissionOnly,
 } from '../../lib/utils/googleAuth';
 
 interface PageProps {
@@ -43,12 +45,17 @@ export default function ApplicationListPage({
           dataTestId="test-search-box"
         />
         <div className="govuk-grid-row">
-          {canViewWorktray(user as HackneyGoogleUserWithPermissions) && (
+          {!hasReadOnlyPermissionOnly(
+            user as HackneyGoogleUserWithPermissions
+          ) && (
             <div className="govuk-grid-column-one-quarter">
               <Sidebar />
             </div>
           )}
-          <div className="govuk-grid-column-three-quarters">
+          <div
+            className="govuk-grid-column-three-quarters"
+            data-testid="test-search-results-box"
+          >
             <HeadingOne content="Results" />
 
             {applications && applications.totalResults !== 0 ? (

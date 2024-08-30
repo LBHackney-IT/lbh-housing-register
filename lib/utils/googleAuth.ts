@@ -3,6 +3,8 @@ import jsonwebtoken from 'jsonwebtoken';
 import { Redirect } from 'next';
 
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
+import { Application } from '../../domain/HousingApi';
+import { ApplicationStatus } from '../types/application-status';
 
 export type Permissions = {
   hasAdminPermissions: boolean;
@@ -89,21 +91,13 @@ export const removeHackneyToken = (res: any): void => {
 export const hasAnyPermissions = (
   user: HackneyGoogleUserWithPermissions
 ): boolean => {
+  if (!user) {
+    return false;
+  }
   return (
     user.hasAdminPermissions ||
     user.hasManagerPermissions ||
     user.hasOfficerPermissions ||
-    user.hasReadOnlyPermissions
-  );
-};
-
-export const hasReadOnlyPermissions = (
-  user: HackneyGoogleUserWithPermissions
-): boolean => {
-  return (
-    !user.hasAdminPermissions &&
-    !user.hasManagerPermissions &&
-    !user.hasOfficerPermissions &&
     user.hasReadOnlyPermissions
   );
 };
@@ -120,14 +114,18 @@ export const canViewSensitiveApplication = (
   return user.hasOfficerPermissions && assignedTo === user.email;
 };
 
-export const canViewWorktray = (
+export const hasReadOnlyPermissionOnly = (
   user: HackneyGoogleUserWithPermissions
 ): boolean => {
+  if (!user) {
+    return false;
+  }
   // is not part of the read only group
   if (
-    user.hasAdminPermissions ||
-    user.hasManagerPermissions ||
-    user.hasOfficerPermissions
+    user.hasReadOnlyPermissions &&
+    !user.hasAdminPermissions &&
+    !user.hasManagerPermissions &&
+    !user.hasOfficerPermissions
   ) {
     return true;
   }
@@ -157,3 +155,30 @@ export function getAuth(
   }
   return { user };
 }
+
+// Can edit applications if:
+// - user is a manager (all statuses)
+// - it has a status of manual draft
+// - it has a status of awaiting assessment (SUBMITTED) and current user is assigned to it
+// - it has a status of awaiting reassessment and current user is assigned to it
+export const canEditApplications = (
+  user: HackneyGoogleUserWithPermissions,
+  data: Application
+) => {
+  if (!hasAnyPermissions(user)) return false;
+  if (user.hasManagerPermissions) return true;
+  if (data.status === ApplicationStatus.MANUAL_DRAFT) {
+    return true;
+  }
+  const assignedToCurrentUser = data.assignedTo === user.email;
+  if (data.status === ApplicationStatus.SUBMITTED && assignedToCurrentUser) {
+    return true;
+  }
+  if (
+    data.status === ApplicationStatus.AWAITING_REASSESSMENT &&
+    assignedToCurrentUser
+  ) {
+    return true;
+  }
+  return false;
+};

@@ -1,4 +1,4 @@
-import { SyntheticEvent, useEffect, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
@@ -19,9 +19,9 @@ import { UserContext } from '../../lib/contexts/user-context';
 import { getApplicationsByStatusAndAssignedTo } from '../../lib/gateways/applications-api';
 import {
   HackneyGoogleUserWithPermissions,
-  canViewWorktray,
   getRedirect,
   getSession,
+  hasReadOnlyPermissionOnly,
 } from '../../lib/utils/googleAuth';
 
 interface PageProps {
@@ -62,7 +62,9 @@ export default function ApplicationListPage({
           buttonTitle="Search"
           watermark="Search all applications (name, reference, bidding number)"
         />
-        {canViewWorktray(user as HackneyGoogleUserWithPermissions) && (
+        {!hasReadOnlyPermissionOnly(
+          user as HackneyGoogleUserWithPermissions
+        ) && (
           <div
             className="govuk-grid-row"
             data-testid="test-applications-worktray"

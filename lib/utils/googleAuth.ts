@@ -134,14 +134,14 @@ export const hasReadOnlyPermissionOnly = (
 
 export const getRedirect = (
   user?: HackneyGoogleUserWithPermissions,
-  checkForReadOnlyPermissions?: boolean
+  writePermissionsRequired?: boolean
 ): string | undefined => {
   if (!user) {
     return '/login';
   }
   if (
     !hasAnyPermissions(user) ||
-    (checkForReadOnlyPermissions && hasReadOnlyPermissionOnly(user))
+    (writePermissionsRequired && hasReadOnlyPermissionOnly(user))
   ) {
     return '/access-denied';
   }

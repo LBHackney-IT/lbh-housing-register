@@ -1,19 +1,23 @@
 import { useState } from 'react';
+
+import { FormikValues } from 'formik';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import { FormikValues } from 'formik';
+
+import HouseholdMemberForm from '../../../../../components/admin/HouseholdMemberForm';
+import { HackneyGoogleUser } from '../../../../../domain/HackneyGoogleUser';
 import { Application } from '../../../../../domain/HousingApi';
 import { getApplication } from '../../../../../lib/gateways/applications-api';
-import { getRedirect, getSession } from '../../../../../lib/utils/googleAuth';
 import { updateApplication } from '../../../../../lib/gateways/internal-api';
-import Custom404 from '../../../../404';
-import { HackneyGoogleUser } from '../../../../../domain/HackneyGoogleUser';
 import {
   Address,
   generateQuestionArray,
 } from '../../../../../lib/utils/adminHelpers';
+import { getRedirect, getSession } from '../../../../../lib/utils/googleAuth';
 import { scrollToTop } from '../../../../../lib/utils/scroll';
-import HouseholdMemberForm from '../../../../../components/admin/HouseholdMemberForm';
+import Custom404 from '../../../../404';
+
+/* eslint-disable react/no-unused-prop-types */
 interface PageProps {
   user: HackneyGoogleUser;
   data: Application;
@@ -44,6 +48,7 @@ export default function EditApplicant({
     const questionValues = generateQuestionArray(values, addresses);
     const addressToSubmit = addresses.length > 0 ? addresses[0] : {};
 
+    /*  eslint-disable @typescript-eslint/no-explicit-any */
     const householdMemberFormData = {
       person: {
         id: person,
@@ -82,7 +87,7 @@ export default function EditApplicant({
       });
     });
   };
-
+  /*  eslint-disable @typescript-eslint/no-explicit-any */
   const handleSaveApplication = (isValid: any, touched: any) => {
     const isTouched = Object.keys(touched).length !== 0;
     if (!isValid || !isTouched) {
@@ -91,12 +96,12 @@ export default function EditApplicant({
 
     setIsSubmitted(true);
   };
-
+  /*  eslint-disable react/jsx-no-useless-fragment */
   return (
     <>
       {data.id ? (
         <HouseholdMemberForm
-          isEditing={true}
+          isEditing={true} /* eslint-disable-line */
           user={user}
           onSubmit={onSubmit}
           isSubmitted={isSubmitted}
@@ -114,7 +119,7 @@ export default function EditApplicant({
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const user = getSession(context.req);
-  const redirect = getRedirect(user);
+  const redirect = getRedirect(user, true);
   if (redirect) {
     return {
       props: {},

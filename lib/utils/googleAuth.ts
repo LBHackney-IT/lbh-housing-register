@@ -133,12 +133,16 @@ export const hasReadOnlyPermissionOnly = (
 };
 
 export const getRedirect = (
-  user?: HackneyGoogleUserWithPermissions
+  user?: HackneyGoogleUserWithPermissions,
+  checkForReadOnlyPermissions?: boolean
 ): string | undefined => {
   if (!user) {
     return '/login';
   }
-  if (!hasAnyPermissions(user)) {
+  if (
+    !hasAnyPermissions(user) ||
+    (checkForReadOnlyPermissions && hasReadOnlyPermissionOnly(user))
+  ) {
     return '/access-denied';
   }
 };

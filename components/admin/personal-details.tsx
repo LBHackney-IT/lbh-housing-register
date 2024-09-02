@@ -1,9 +1,11 @@
+import React from 'react';
+
+import Link from 'next/link';
+
 import { Applicant } from '../../domain/HousingApi';
 import { formatDob } from '../../lib/utils/dateOfBirth';
 import { getGenderName } from '../../lib/utils/gender';
 import { ButtonLink } from '../button';
-import Link from 'next/link';
-import React from 'react';
 import { HeadingThree } from '../content/headings';
 
 interface SummaryProps {
@@ -22,7 +24,11 @@ export default function PersonalDetails({
   return (
     <>
       <HeadingThree content={heading} />
-      <table className="govuk-table lbh-table" style={{ marginTop: '1em' }}>
+      <table
+        className="govuk-table lbh-table"
+        style={{ marginTop: '1em' }}
+        data-testid="test-applicant-table"
+      >
         <tbody className="govuk-table__body">
           <tr className="govuk-table__row">
             <td className="govuk-table__cell">
@@ -49,15 +55,13 @@ export default function PersonalDetails({
                 </li>
                 <li>
                   {applicant.contactInformation?.emailAddress && (
-                    <>
-                      <Link
-                        href={`mailto:${applicant.contactInformation.emailAddress}`}
-                      >
-                        <a className="lbh-link">
-                          {applicant.contactInformation.emailAddress}
-                        </a>
-                      </Link>
-                    </>
+                    <Link
+                      href={`mailto:${applicant.contactInformation.emailAddress}`}
+                    >
+                      <a className="lbh-link">
+                        {applicant.contactInformation.emailAddress}
+                      </a>
+                    </Link>
                   )}
                 </li>
               </ul>
@@ -67,6 +71,7 @@ export default function PersonalDetails({
                 <ButtonLink
                   additionalCssClasses="govuk-secondary lbh-button--secondary lbh-button--inline"
                   href={`/applications/edit/${applicationId}/${applicant.person?.id}`}
+                  dataTestId={`test-edit-applicant-button-${applicant.person?.id}`}
                 >
                   Edit
                 </ButtonLink>

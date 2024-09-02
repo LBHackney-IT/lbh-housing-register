@@ -5,7 +5,7 @@ import { screenPresets } from '../support/helpers';
 
 describe('Search for an application', () => {
   screenPresets.forEach((screenPreset) => {
-    it('as a read only user I only see the search results', () => {
+    it(`as a user in the read only group I only see the search results on ${screenPreset}`, () => {
       cy.viewport(screenPreset);
       cy.clearCookies();
       cy.loginAsUser('readOnly');
@@ -21,7 +21,7 @@ describe('Search for an application', () => {
     });
   });
   screenPresets.forEach((screenPreset) => {
-    it('as an officer I can engage with worktray', () => {
+    it(`as a user in the officer group I can engage with worktray on ${screenPreset}`, () => {
       cy.viewport(screenPreset);
       cy.clearCookies();
       cy.loginAsUser('officer');

@@ -213,12 +213,16 @@ export default function ApplicationPage({
                           <ButtonLink
                             additionalCssClasses="govuk-secondary lbh-button--secondary"
                             href={`/applications/edit/${data.id}/add-household-member`}
+                            dataTestId="test-add-household-member-button"
                           >
                             + Add household member
                           </ButtonLink>
                         )}
                       </div>
-                      <div className="govuk-grid-column-one-third">
+                      <div
+                        className="govuk-grid-column-one-third"
+                        data-testid="test-view-application-sidebar"
+                      >
                         <HeadingThree content="Case details" />
 
                         <CaseDetailsItem
@@ -243,6 +247,7 @@ export default function ApplicationPage({
                               ? 'Change'
                               : undefined
                           }
+                          dataTestId="test-change-application-status-button"
                           onClick={() => handleTabChange('assessment')}
                         />
 
@@ -264,6 +269,7 @@ export default function ApplicationPage({
                                 ? 'Change'
                                 : undefined
                             }
+                            dataTestId="test-change-application-date-button"
                             onClick={() => handleTabChange('assessment')}
                           />
                         )}

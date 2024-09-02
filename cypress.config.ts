@@ -48,16 +48,17 @@ export default defineConfig({
       on('task', {
         nock: async ({ hostname, method, path, statusCode, body }) => {
           nock.activate();
-          console.log(
-            'nock will: %s %s%s respond with %d %o',
-            method,
-            hostname,
-            path,
-            statusCode,
-            body
-          );
+          // leving this here for debugging purposes.
+          // console.log(
+          //   'nock will: %s %s%s respond with %d %o',
+          //   method,
+          //   hostname,
+          //   path,
+          //   statusCode,
+          //   body
+          // );
           method = method.toLowerCase();
-          nock(hostname)[method](path).reply(statusCode, 'body');
+          nock(hostname)[method](path).reply(statusCode, body);
 
           return null;
         },

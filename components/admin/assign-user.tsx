@@ -1,6 +1,8 @@
-import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { Application, APPLICATION_UNNASIGNED } from '../../domain/HousingApi';
+
+import { useRouter } from 'next/router';
+
+import { APPLICATION_UNNASIGNED, Application } from '../../domain/HousingApi';
 import { updateApplication } from '../../lib/gateways/internal-api';
 import { HackneyGoogleUserWithPermissions } from '../../lib/utils/googleAuth';
 import ErrorMessage from '../form/error-message';
@@ -42,7 +44,7 @@ export default function AssignUser({
     setDisableControls(true);
 
     const request: Application = {
-      id: id,
+      id,
       assignedTo: updateTo,
     };
     await updateApplication(request).then(() => {
@@ -60,36 +62,32 @@ export default function AssignUser({
   };
 
   return (
-    <div>
+    <div data-testid="test-assign-user">
       <label className="govuk-label lbh-label" htmlFor="input-assignee">
         <ul className="lbh-list lbh-list--compressed">
           <li>
             <strong>Assigned to</strong>
           </li>
-          {!showControls ? (
-            <>
-              {assignee !== APPLICATION_UNNASIGNED ? (
-                <li>
-                  This application is currently assigned to{' '}
-                  {assignedTo === user.email ? (
-                    <>
-                      <span>you</span> (<strong>{assignee}</strong>)
-                    </>
-                  ) : (
-                    <strong>{assignee}</strong>
-                  )}
-                </li>
-              ) : (
-                <li>
-                  This application is currently <strong>unassigned</strong>
-                </li>
-              )}
-            </>
-          ) : null}
+          {!showControls &&
+            (assignee !== APPLICATION_UNNASIGNED ? (
+              <li>
+                This application is currently assigned to{' '}
+                {assignedTo === user.email ? (
+                  <>
+                    <span>you</span> (<strong>{assignee}</strong>)
+                  </>
+                ) : (
+                  <strong>{assignee}</strong>
+                )}
+              </li>
+            ) : (
+              <li>
+                This application is currently <strong>unassigned</strong>
+              </li>
+            ))}
         </ul>
       </label>
-
-      {showControls ? (
+      {showControls && (
         <>
           <ErrorMessage
             message={!isValidEmail ? 'Please enter a valid email address' : ''}
@@ -119,11 +117,12 @@ export default function AssignUser({
             Cancel
           </button>
         </>
-      ) : // For now, allow all user groups to reassign cases
-      user.hasAdminPermissions ||
+      )}
+      {/* For now, allow all user groups to reassign cases */}
+      {(user.hasAdminPermissions ||
         user.hasManagerPermissions ||
-        user.hasOfficerPermissions ? (
-        <>
+        user.hasOfficerPermissions) && (
+        <div data-testid="test-assign-user-button">
           <button
             onClick={() => handleClickAssignToAnother(true)}
             className="lbh-link lbh-link--no-visited-state lbh-!-margin-top-1"
@@ -138,35 +137,31 @@ export default function AssignUser({
             <span className="lbh-body-m">, </span>
           )}
 
-          {assignee !== user.email ? (
-            <>
-              <button
-                onClick={() => updateAssignee(user.email)}
-                className="lbh-link lbh-link--no-visited-state lbh-!-margin-top-0"
-                disabled={disableControls}
-              >
-                assign to me
-              </button>
-            </>
-          ) : null}
+          {assignee !== user.email && (
+            <button
+              onClick={() => updateAssignee(user.email)}
+              className="lbh-link lbh-link--no-visited-state lbh-!-margin-top-0"
+              disabled={disableControls}
+            >
+              assign to me
+            </button>
+          )}
 
-          {assignee !== APPLICATION_UNNASIGNED && assignee !== user.email ? (
+          {assignee !== APPLICATION_UNNASIGNED && assignee !== user.email && (
             <span className="lbh-body-m"> or </span>
-          ) : null}
+          )}
 
-          {assignee !== APPLICATION_UNNASIGNED ? (
-            <>
-              <button
-                onClick={() => updateAssignee(APPLICATION_UNNASIGNED)}
-                className="lbh-link lbh-link--no-visited-state lbh-!-margin-top-0"
-                disabled={disableControls}
-              >
-                unassign
-              </button>
-            </>
-          ) : null}
-        </>
-      ) : null}
+          {assignee !== APPLICATION_UNNASIGNED && (
+            <button
+              onClick={() => updateAssignee(APPLICATION_UNNASIGNED)}
+              className="lbh-link lbh-link--no-visited-state lbh-!-margin-top-0"
+              disabled={disableControls}
+            >
+              unassign
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }

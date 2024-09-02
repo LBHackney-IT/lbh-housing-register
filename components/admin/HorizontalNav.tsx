@@ -1,4 +1,4 @@
-import { SyntheticEvent } from 'react';
+import React, { SyntheticEvent } from 'react';
 
 interface HorizontalNavProps {
   spaced?: boolean;
@@ -20,6 +20,7 @@ interface HorizontalNavItemProps {
   itemName: string;
   isActive?: boolean;
   children: string;
+
   handleSelectNavItem: (event: SyntheticEvent) => void;
 }
 
@@ -34,6 +35,7 @@ export function HorizontalNavItem({
       <button
         name={itemName}
         onClick={handleSelectNavItem}
+        data-testid={`test-nav-item-${itemName}`}
         className={`lbh-link lbh-link--no-visited-state lbh-!-font-weight-bold ${
           isActive ? 'active' : ''
         }`}

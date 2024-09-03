@@ -172,8 +172,7 @@ workflows:
           browser: chrome
           filters:
             branches:
-              # only: development
-              only: TS-1561-Housing-reg-view-only-Hide-remove-household-member-edit-household-member-assign-and-mark-as-sensitive-from-application-overview-page
+              only: development
       - run-cypress-e2e:
           name: E2E Tests - Firefox
           requires:
@@ -181,13 +180,12 @@ workflows:
           browser: firefox
           filters:
             branches:
-              # only: development
-              only: TS-1561-Housing-reg-view-only-Hide-remove-household-member-edit-household-member-assign-and-mark-as-sensitive-from-application-overview-page
+              only: development
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:
             - E2E Tests - Chrome
-          #  - E2E Tests - Firefox
+            - E2E Tests - Firefox
           filters:
             branches:
               only: development

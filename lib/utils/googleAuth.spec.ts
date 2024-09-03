@@ -409,11 +409,20 @@ describe('googleAuth', () => {
       const expectedResponse = '/login';
       expect(getRedirect()).toBe(expectedResponse);
     });
-    it("return /access-denied when user is provided but they don't have any HR permissions", () => {
+
+    it("returns /access-denied when user is provided but they don't have any HR permissions", () => {
       const user: HackneyGoogleUserWithPermissions = generateHRUserWithPermissions();
 
       const expectedResponse = '/access-denied';
       expect(getRedirect(user)).toBe(expectedResponse);
+    });
+
+    it('returns /access-denied when user is provided but they only have read only HR permissions', () => {
+      const user: HackneyGoogleUserWithPermissions = generateHRUserWithPermissions(
+        UserRole.ReadOnly
+      );
+      const expectedResponse = '/access-denied';
+      expect(getRedirect(user, true)).toBe(expectedResponse);
     });
 
     it('returns undefined when user is provided and has HR permissions', () => {

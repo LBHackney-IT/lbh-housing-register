@@ -1,24 +1,25 @@
 import { useState } from 'react';
-import { useRouter } from 'next/router';
-import { GetServerSideProps } from 'next';
-import { getRedirect, getSession } from '../../lib/utils/googleAuth';
-import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
-import { FormikValues } from 'formik';
-import { Application, Address as ApiAddress } from '../../domain/HousingApi';
-import {
-  generateQuestionArray,
-  Address,
-  convertAddressToPrimary,
-} from '../../lib/utils/adminHelpers';
 
+import { FormikValues } from 'formik';
+import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
+
+import MainApplicantForm from '../../components/admin/MainApplicantForm';
+import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
+import { Address as ApiAddress, Application } from '../../domain/HousingApi';
 import {
-  createApplication,
   completeApplication,
+  createApplication,
   updateApplication,
 } from '../../lib/gateways/internal-api';
 import { ApplicationStatus } from '../../lib/types/application-status';
+import {
+  Address,
+  convertAddressToPrimary,
+  generateQuestionArray,
+} from '../../lib/utils/adminHelpers';
+import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 import { scrollToTop } from '../../lib/utils/scroll';
-import MainApplicantForm from '../../components/admin/MainApplicantForm';
 
 interface PageProps {
   user: HackneyGoogleUser;
@@ -29,6 +30,17 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
   const [addressHistory, setAddressHistory] = useState([] as Address[]);
   const [ethnicity, setEthnicity] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const createManualApplication = async (request: Application) => {
+    const newApplication = await createApplication(request);
+    const completedApplication = await completeApplication(newApplication);
+    const setToManualDraft = await updateApplication({
+      ...completedApplication,
+      status: ApplicationStatus.MANUAL_DRAFT,
+    });
+
+    router.push(`/applications/view/${setToManualDraft.id}`);
+  };
 
   const onSubmit = (values: FormikValues) => {
     const questionValues = generateQuestionArray(
@@ -66,18 +78,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
 
     createManualApplication(request);
   };
-
-  const createManualApplication = async (request: Application) => {
-    const newApplication = await createApplication(request);
-    const completedApplication = await completeApplication(newApplication);
-    const setToManualDraft = await updateApplication({
-      ...completedApplication,
-      status: ApplicationStatus.MANUAL_DRAFT,
-    });
-
-    router.push(`/applications/view/${setToManualDraft.id}`);
-  };
-
+  /*  eslint-disable @typescript-eslint/no-explicit-any */
   const handleSaveApplication = (isValid: any, touched: any) => {
     const isTouched = Object.keys(touched).length !== 0;
     if (!isValid || !isTouched) {
@@ -104,7 +105,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const user = getSession(context.req);
-  const redirect = getRedirect(user);
+  const redirect = getRedirect(user, true);
   if (redirect) {
     return {
       props: {},

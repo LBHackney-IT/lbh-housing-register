@@ -35,7 +35,11 @@ export default function OtherMembers({
   return (
     <>
       <HeadingThree content={heading} />
-      <table className="govuk-table lbh-table" style={{ marginTop: '1em' }}>
+      <table
+        className="govuk-table lbh-table"
+        style={{ marginTop: '1em' }}
+        data-testid="test-other-household-members"
+      >
         <tbody className="govuk-table__body">
           {others.map((applicant, index) => (
             <tr key={index} className="govuk-table__row">
@@ -90,6 +94,7 @@ export default function OtherMembers({
                   <ButtonLink
                     additionalCssClasses="govuk-secondary lbh-button--secondary lbh-button--inline"
                     href={`/applications/edit/${applicationId}/${applicant.person?.id}/edit-household-member`}
+                    dataTestId={`test-edit-household-member-button-${applicant.person?.id}`}
                   >
                     Edit
                   </ButtonLink>

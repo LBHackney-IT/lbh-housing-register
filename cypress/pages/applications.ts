@@ -42,14 +42,18 @@ class ApplicationsPage {
   }
 
   // applications/view/:id
-  static getApplicantTable() {
-    const testId = 'test-applicant-table';
-    return cy.get(`[data-testid="${testId}"]`);
-  }
+  // static getApplicantTable() {
+  //   const testId = 'test-applicant-table';
+  //   return cy.get(`[data-testid="${testId}"]`);
+  // }
 
+  // static getEditApplicantButton() {
+  //   const testIdPrefix = 'test-edit-applicant-button-';
+  //   return this.getApplicantTable().get(`[data-testid^="${testIdPrefix}"]`);
+  // }
   static getEditApplicantButton() {
     const testIdPrefix = 'test-edit-applicant-button-';
-    return this.getApplicantTable().get(`[data-testid^="${testIdPrefix}"]`);
+    return cy.get(`[data-testid^="${testIdPrefix}"]`);
   }
 
   // static getOtherHouseholdMembersTable() {
@@ -80,29 +84,48 @@ class ApplicationsPage {
   }
 
   // sidebar
-  static getViewApplicationSidebar() {
-    const testId = 'test-view-application-sidebar';
-    return cy.get(`[data-testid="${testId}"]`);
-  }
+  // static getViewApplicationSidebar() {
+  //   const testId = 'test-view-application-sidebar';
+  //   return cy.get(`[data-testid="${testId}"]`);
+  // }
 
+  // static getAssignUserButton() {
+  //   const testId = 'test-assign-user-button';
+  //   return this.getViewApplicationSidebar().get(`[data-testid="${testId}"]`);
+  // }
+
+  // static getSensitiveDataButton() {
+  //   const testId = 'test-sensitive-data-button';
+  //   return this.getViewApplicationSidebar().get(`[data-testid="${testId}"]`);
+  // }
+
+  // static getChangeApplicationDateButton() {
+  //   const testId = 'test-change-application-date-button';
+  //   return this.getViewApplicationSidebar().get(`[data-testid="${testId}"]`);
+  // }
+
+  // static getChangeApplicationStatusButton() {
+  //   const testId = 'test-change-application-status-button';
+  //   return this.getViewApplicationSidebar().get(`[data-testid="${testId}"]`);
+  // }
   static getAssignUserButton() {
     const testId = 'test-assign-user-button';
-    return this.getViewApplicationSidebar().get(`[data-testid="${testId}"]`);
+    return cy.get(`[data-testid="${testId}"]`);
   }
 
   static getSensitiveDataButton() {
     const testId = 'test-sensitive-data-button';
-    return this.getViewApplicationSidebar().get(`[data-testid="${testId}"]`);
+    return cy.get(`[data-testid="${testId}"]`);
   }
 
   static getChangeApplicationDateButton() {
     const testId = 'test-change-application-date-button';
-    return this.getViewApplicationSidebar().get(`[data-testid="${testId}"]`);
+    return cy.get(`[data-testid="${testId}"]`);
   }
 
   static getChangeApplicationStatusButton() {
     const testId = 'test-change-application-status-button';
-    return this.getViewApplicationSidebar().get(`[data-testid="${testId}"]`);
+    return cy.get(`[data-testid="${testId}"]`);
   }
 }
 

@@ -176,13 +176,13 @@ workflows:
               only: TS-1561-Housing-reg-view-only-Hide-remove-household-member-edit-household-member-assign-and-mark-as-sensitive-from-application-overview-page
       - run-cypress-e2e:
           name: E2E Tests - Firefox
+          requires:
+            - install-dependencies
           browser: firefox
-        requires:
-          - install-dependencies
-        filters:
-          branches:
-            # only: development
-            only: TS-1561-Housing-reg-view-only-Hide-remove-household-member-edit-household-member-assign-and-mark-as-sensitive-from-application-overview-page
+          filters:
+            branches:
+              # only: development
+              only: TS-1561-Housing-reg-view-only-Hide-remove-household-member-edit-household-member-assign-and-mark-as-sensitive-from-application-overview-page
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:

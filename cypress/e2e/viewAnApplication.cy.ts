@@ -11,7 +11,7 @@ describe('View a resident application', () => {
 
       ApplicationsPage.visit();
       ApplicationsPage.getSearchInput().should('be.visible');
-      ApplicationsPage.getSearchInput().type('1');
+      ApplicationsPage.getSearchInput().type('John');
       ApplicationsPage.getSearchSubmitButton().click();
       ApplicationsPage.getSearchResultsBox().should('be.visible');
 
@@ -54,7 +54,7 @@ describe('View a resident application', () => {
 
       ApplicationsPage.visit();
       ApplicationsPage.getSearchInput().should('be.visible');
-      ApplicationsPage.getSearchInput().type('1');
+      ApplicationsPage.getSearchInput().type('John');
       ApplicationsPage.getSearchSubmitButton().click();
       ApplicationsPage.getSearchResultsBox().should('be.visible');
 
@@ -82,7 +82,7 @@ describe('View a resident application', () => {
       ApplicationsPage.getChangeApplicationDateButton().should('be.visible');
       ApplicationsPage.getChangeApplicationStatusButton().should('be.visible');
       // will only exist if there are household members. This is commented out until the application data is mocked and we ensure there are household members.
-      // ApplicationsPage.getEditHouseholdMemberButton().should('be.visible');
+      ApplicationsPage.getEditHouseholdMemberButton().should('be.visible');
       ApplicationsPage.getAddHouseholdMemberButton().should('be.visible');
       cy.task('clearNock');
     });

@@ -91,7 +91,10 @@ export default function ApplicationPage({
       {data.id ? (
         // eslint-disable-next-line react/jsx-no-constructed-context-values
         <UserContext.Provider value={{ user }}>
-          <Layout pageName="View application">
+          <Layout
+            pageName="View application"
+            dataTestId="test-view-application-page"
+          >
             {data.sensitiveData &&
             data.assignedTo &&
             !canViewSensitiveApplication(data.assignedTo, user) ? (

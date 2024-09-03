@@ -8,6 +8,11 @@ class ApplicationsPage {
     return cy.get(`[data-testid="${testId}"]`);
   }
 
+  static getViewApplicationPage() {
+    const testId = 'test-view-application-page';
+    return cy.get(`[data-testid="${testId}"]`);
+  }
+
   static getSearchInput() {
     return this.getApplicationsPage().find('input[name="search"]');
   }

@@ -35,9 +35,7 @@ describe('Application view page', () => {
 
         ApplicationsPage.getViewApplicationLink().first().click();
       });
-
-    cy.contains('Snapshot').should('be.visible');
-
+    ApplicationsPage.getViewApplicationPage().should('be.visible');
     ApplicationsPage.getEditApplicantButton().should('not.exist');
     ApplicationsPage.getEditHouseholdMemberButton().should('not.exist');
     ApplicationsPage.getSensitiveDataButton().should('not.exist');

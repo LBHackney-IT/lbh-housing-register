@@ -52,16 +52,21 @@ class ApplicationsPage {
     return this.getApplicantTable().get(`[data-testid^="${testIdPrefix}"]`);
   }
 
-  static getOtherHouseholdMembersTable() {
-    const testId = 'test-other-household-members';
-    return cy.get(`[data-testid="${testId}"]`);
-  }
+  // static getOtherHouseholdMembersTable() {
+  //   const testId = 'test-other-household-members';
+  //   return cy.get(`[data-testid="${testId}"]`);
+  // }
+
+  // static getEditHouseholdMemberButton() {
+  //   const testIdPrefix = 'test-edit-household-member-button-';
+  //   return this.getOtherHouseholdMembersTable().get(
+  //     `[data-testid^="${testIdPrefix}"]`
+  //   );
+  // }
 
   static getEditHouseholdMemberButton() {
     const testIdPrefix = 'test-edit-household-member-button-';
-    return this.getOtherHouseholdMembersTable().get(
-      `[data-testid^="${testIdPrefix}"]`
-    );
+    return cy.get(`[data-testid^="${testIdPrefix}"]`);
   }
 
   static getAddHouseholdMemberButton() {

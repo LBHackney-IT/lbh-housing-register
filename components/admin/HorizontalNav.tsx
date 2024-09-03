@@ -21,6 +21,7 @@ interface HorizontalNavItemProps {
   isActive?: boolean;
   children: string;
   handleSelectNavItem: (event: SyntheticEvent) => void;
+  dataTestId?: string;
 }
 
 export function HorizontalNavItem({
@@ -28,9 +29,10 @@ export function HorizontalNavItem({
   isActive,
   children,
   handleSelectNavItem,
+  dataTestId,
 }: HorizontalNavItemProps): JSX.Element {
   return (
-    <li className="lbh-link-group__item">
+    <li className="lbh-link-group__item" data-testid={dataTestId}>
       <button
         name={itemName}
         onClick={handleSelectNavItem}

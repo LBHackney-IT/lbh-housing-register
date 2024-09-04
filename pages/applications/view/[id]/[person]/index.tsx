@@ -143,47 +143,42 @@ export default function ApplicationPersonPage({
                 </div>
 
                 <HorizontalNav spaced>
-                  <HorizontalNavItem
-                    handleSelectNavItem={handleSelectNavItem}
-                    itemName="identity"
-                    isActive={activeNavItem === 'identity'}
-                  >
-                    Identity
-                  </HorizontalNavItem>
-                  <HorizontalNavItem
-                    handleSelectNavItem={handleSelectNavItem}
-                    itemName="livingsituation"
-                    isActive={activeNavItem === 'livingsituation'}
-                  >
-                    Living Situation
-                  </HorizontalNavItem>
-                  {!hasReadOnlyPermissionOnly(user) ? (
+                  <>
                     <HorizontalNavItem
                       handleSelectNavItem={handleSelectNavItem}
-                      itemName="money"
-                      isActive={activeNavItem === 'money'}
-                      dataTestId="test-applicant-money-section-navigation"
+                      itemName="identity"
+                      isActive={activeNavItem === 'identity'}
                     >
-                      Money
+                      Identity
                     </HorizontalNavItem>
-                  ) : (
-                    // eslint-disable-next-line react/jsx-no-useless-fragment
-                    <></>
-                  )}
-                  {!hasReadOnlyPermissionOnly(user) ? (
                     <HorizontalNavItem
                       handleSelectNavItem={handleSelectNavItem}
-                      itemName="health"
-                      isActive={activeNavItem === 'health'}
-                      dataTestId="test-applicant-health-section-navigation"
+                      itemName="livingsituation"
+                      isActive={activeNavItem === 'livingsituation'}
                     >
-                      Health
+                      Living Situation
                     </HorizontalNavItem>
-                  ) : (
-                    // eslint-disable-next-line react/jsx-no-useless-fragment
-                    <></>
-                  )}
-                  {/*
+                    {!hasReadOnlyPermissionOnly(user) && (
+                      <HorizontalNavItem
+                        handleSelectNavItem={handleSelectNavItem}
+                        itemName="money"
+                        isActive={activeNavItem === 'money'}
+                        dataTestId="test-applicant-money-section-navigation"
+                      >
+                        Money
+                      </HorizontalNavItem>
+                    )}
+                    {!hasReadOnlyPermissionOnly(user) && (
+                      <HorizontalNavItem
+                        handleSelectNavItem={handleSelectNavItem}
+                        itemName="health"
+                        isActive={activeNavItem === 'health'}
+                        dataTestId="test-applicant-health-section-navigation"
+                      >
+                        Health
+                      </HorizontalNavItem>
+                    )}
+                    {/*
                   <HorizontalNavItem
                     handleSelectNavItem={handleSelectNavItem}
                     itemName="checklist"
@@ -192,6 +187,7 @@ export default function ApplicationPersonPage({
                     Checklist
                   </HorizontalNavItem>
                   */}
+                  </>
                 </HorizontalNav>
 
                 {activeNavItem === 'identity' && (

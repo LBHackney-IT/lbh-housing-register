@@ -8,6 +8,11 @@ class ApplicationsPage {
     return cy.get(`[data-testid="${testId}"]`);
   }
 
+  static getViewApplicationPage() {
+    const testId = 'test-view-application-page';
+    return cy.get(`[data-testid="${testId}"]`);
+  }
+
   static getSearchInput() {
     return this.getApplicationsPage().find('input[name="search"]');
   }
@@ -42,26 +47,14 @@ class ApplicationsPage {
   }
 
   // applications/view/:id
-  static getApplicantTable() {
-    const testId = 'test-applicant-table';
-    return cy.get(`[data-testid="${testId}"]`);
-  }
-
   static getEditApplicantButton() {
     const testIdPrefix = 'test-edit-applicant-button-';
-    return this.getApplicantTable().get(`[data-testid^="${testIdPrefix}"]`);
-  }
-
-  static getOtherHouseholdMembersTable() {
-    const testId = 'test-other-household-members';
-    return cy.get(`[data-testid="${testId}"]`);
+    return cy.get(`[data-testid^="${testIdPrefix}"]`);
   }
 
   static getEditHouseholdMemberButton() {
     const testIdPrefix = 'test-edit-household-member-button-';
-    return this.getOtherHouseholdMembersTable().get(
-      `[data-testid^="${testIdPrefix}"]`
-    );
+    return cy.get(`[data-testid^="${testIdPrefix}"]`);
   }
 
   static getAddHouseholdMemberButton() {
@@ -75,29 +68,24 @@ class ApplicationsPage {
   }
 
   // sidebar
-  static getViewApplicationSidebar() {
-    const testId = 'test-view-application-sidebar';
-    return cy.get(`[data-testid="${testId}"]`);
-  }
-
   static getAssignUserButton() {
     const testId = 'test-assign-user-button';
-    return this.getViewApplicationSidebar().get(`[data-testid="${testId}"]`);
+    return cy.get(`[data-testid="${testId}"]`);
   }
 
   static getSensitiveDataButton() {
     const testId = 'test-sensitive-data-button';
-    return this.getViewApplicationSidebar().get(`[data-testid="${testId}"]`);
+    return cy.get(`[data-testid="${testId}"]`);
   }
 
   static getChangeApplicationDateButton() {
     const testId = 'test-change-application-date-button';
-    return this.getViewApplicationSidebar().get(`[data-testid="${testId}"]`);
+    return cy.get(`[data-testid="${testId}"]`);
   }
 
   static getChangeApplicationStatusButton() {
     const testId = 'test-change-application-status-button';
-    return this.getViewApplicationSidebar().get(`[data-testid="${testId}"]`);
+    return cy.get(`[data-testid="${testId}"]`);
   }
 }
 

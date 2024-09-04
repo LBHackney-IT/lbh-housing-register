@@ -1,18 +1,17 @@
 import ApplicationsPage from '../pages/applications';
 import { screenPresets } from '../support/helpers';
 
-describe('Application view page', () => {
+describe('View a resident application', () => {
   screenPresets.forEach((screenPreset) => {
     it(`as a read only group user I cannot edit application details on ${screenPreset}`, () => {
-      cy.viewport(screenPreset);
-
       cy.task('clearNock');
       cy.clearCookies();
+      cy.viewport(screenPreset);
       cy.loginAsUser('readOnly');
 
       ApplicationsPage.visit();
       ApplicationsPage.getSearchInput().should('be.visible');
-      ApplicationsPage.getSearchInput().type('1');
+      ApplicationsPage.getSearchInput().type('John');
       ApplicationsPage.getSearchSubmitButton().click();
       ApplicationsPage.getSearchResultsBox().should('be.visible');
 
@@ -34,7 +33,7 @@ describe('Application view page', () => {
 
           ApplicationsPage.getViewApplicationLink().first().click();
         });
-
+      ApplicationsPage.getViewApplicationPage().should('be.visible');
       ApplicationsPage.getEditApplicantButton().should('not.exist');
       ApplicationsPage.getEditHouseholdMemberButton().should('not.exist');
       ApplicationsPage.getSensitiveDataButton().should('not.exist');
@@ -45,17 +44,17 @@ describe('Application view page', () => {
       cy.task('clearNock');
     });
   });
+
   screenPresets.forEach((screenPreset) => {
     it(`as a manager group user I can edit all application details on ${screenPreset}`, () => {
-      cy.viewport(screenPreset);
-
       cy.task('clearNock');
       cy.clearCookies();
+      cy.viewport(screenPreset);
       cy.loginAsUser('manager');
 
       ApplicationsPage.visit();
       ApplicationsPage.getSearchInput().should('be.visible');
-      ApplicationsPage.getSearchInput().type('1');
+      ApplicationsPage.getSearchInput().type('John');
       ApplicationsPage.getSearchSubmitButton().click();
       ApplicationsPage.getSearchResultsBox().should('be.visible');
 
@@ -77,12 +76,13 @@ describe('Application view page', () => {
 
           ApplicationsPage.getViewApplicationLink().first().click();
         });
-
+      ApplicationsPage.getViewApplicationPage().should('be.visible');
       ApplicationsPage.getEditApplicantButton().should('be.visible');
-      ApplicationsPage.getEditHouseholdMemberButton().should('be.visible');
       ApplicationsPage.getSensitiveDataButton().should('be.visible');
       ApplicationsPage.getChangeApplicationDateButton().should('be.visible');
       ApplicationsPage.getChangeApplicationStatusButton().should('be.visible');
+      // will only exist if there are household members. This is commented out until the application data is mocked and we ensure there are household members.
+      ApplicationsPage.getEditHouseholdMemberButton().should('be.visible');
       ApplicationsPage.getAddHouseholdMemberButton().should('be.visible');
       cy.task('clearNock');
     });

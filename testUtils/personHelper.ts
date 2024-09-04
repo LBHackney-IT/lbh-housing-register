@@ -3,11 +3,8 @@ import { faker } from '@faker-js/faker';
 import { relationshipOptions } from '../components/application/add-person-form';
 import { Person } from '../domain/HousingApi';
 
-const firstName = faker.person.firstName();
-const lastName = faker.person.lastName();
-const middleName = faker.person.middleName();
 const dateOfBirth = faker.date.birthdate();
-const personRelationshipOption = relationshipOptions.map(({ value }) => value);
+const personRelationshipOptions = relationshipOptions.map(({ value }) => value);
 
 //Logic from the HR API
 export const calculateAge = (birthDate: Date): number => {
@@ -29,13 +26,13 @@ export const generatePerson = (personId: string): Person => {
   return {
     id: personId,
     title: faker.helpers.enumValue(Person.TitleEnum),
-    firstName,
-    middleName,
-    surname: lastName,
+    firstName: faker.person.firstName(),
+    middleName: faker.person.middleName(),
+    surname: faker.person.lastName(),
     dateOfBirth: dateOfBirth.toDateString(),
     gender: faker.helpers.arrayElement(['M', 'F', 'self']),
     genderDescription: faker.lorem.lines(1),
-    relationshipType: faker.helpers.arrayElement(personRelationshipOption),
+    relationshipType: faker.helpers.arrayElement(personRelationshipOptions),
     nationalInsuranceNumber: faker.string.alphanumeric(9),
     age: calculateAge(dateOfBirth),
   };

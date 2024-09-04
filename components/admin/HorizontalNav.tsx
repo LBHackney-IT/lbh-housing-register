@@ -2,7 +2,7 @@ import React, { SyntheticEvent } from 'react';
 
 interface HorizontalNavProps {
   spaced?: boolean;
-  children: JSX.Element | JSX.Element[];
+  children: JSX.Element | (JSX.Element | boolean)[];
 }
 
 export function HorizontalNav({

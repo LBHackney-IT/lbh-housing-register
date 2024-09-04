@@ -143,42 +143,41 @@ export default function ApplicationPersonPage({
                 </div>
 
                 <HorizontalNav spaced>
-                  <>
+                  <HorizontalNavItem
+                    handleSelectNavItem={handleSelectNavItem}
+                    itemName="identity"
+                    isActive={activeNavItem === 'identity'}
+                  >
+                    Identity
+                  </HorizontalNavItem>
+                  <HorizontalNavItem
+                    handleSelectNavItem={handleSelectNavItem}
+                    itemName="livingsituation"
+                    isActive={activeNavItem === 'livingsituation'}
+                  >
+                    Living Situation
+                  </HorizontalNavItem>
+                  {!hasReadOnlyPermissionOnly(user) && (
                     <HorizontalNavItem
                       handleSelectNavItem={handleSelectNavItem}
-                      itemName="identity"
-                      isActive={activeNavItem === 'identity'}
+                      itemName="money"
+                      isActive={activeNavItem === 'money'}
+                      dataTestId="test-applicant-money-section-navigation"
                     >
-                      Identity
+                      Money
                     </HorizontalNavItem>
+                  )}
+                  {!hasReadOnlyPermissionOnly(user) && (
                     <HorizontalNavItem
                       handleSelectNavItem={handleSelectNavItem}
-                      itemName="livingsituation"
-                      isActive={activeNavItem === 'livingsituation'}
+                      itemName="health"
+                      isActive={activeNavItem === 'health'}
+                      dataTestId="test-applicant-health-section-navigation"
                     >
-                      Living Situation
+                      Health
                     </HorizontalNavItem>
-                    {!hasReadOnlyPermissionOnly(user) && (
-                      <HorizontalNavItem
-                        handleSelectNavItem={handleSelectNavItem}
-                        itemName="money"
-                        isActive={activeNavItem === 'money'}
-                        dataTestId="test-applicant-money-section-navigation"
-                      >
-                        Money
-                      </HorizontalNavItem>
-                    )}
-                    {!hasReadOnlyPermissionOnly(user) && (
-                      <HorizontalNavItem
-                        handleSelectNavItem={handleSelectNavItem}
-                        itemName="health"
-                        isActive={activeNavItem === 'health'}
-                        dataTestId="test-applicant-health-section-navigation"
-                      >
-                        Health
-                      </HorizontalNavItem>
-                    )}
-                    {/*
+                  )}
+                  {/*
                   <HorizontalNavItem
                     handleSelectNavItem={handleSelectNavItem}
                     itemName="checklist"
@@ -187,7 +186,6 @@ export default function ApplicationPersonPage({
                     Checklist
                   </HorizontalNavItem>
                   */}
-                  </>
                 </HorizontalNav>
 
                 {activeNavItem === 'identity' && (

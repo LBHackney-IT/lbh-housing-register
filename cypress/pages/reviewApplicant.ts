@@ -1,7 +1,7 @@
+import { Application } from '../../domain/HousingApi';
+
 class ReviewApplicantPage {
-  static visit() {
-    const applicationId = 'a8724d4f-e0ed-4cf0-a898-a10d96f2a475'; //faker.string.uuid();
-    const personId = '497e44cc-6614-4380-a331-75763ae6dd29'; //faker.string.uuid();
+  static visit(applicationId: string, personId: string) {
     cy.visit(`applications/view/${applicationId}/${personId}`);
   }
 
@@ -13,6 +13,19 @@ class ReviewApplicantPage {
   static getHealthSectionNavLink() {
     const testId = 'test-applicant-health-section-navigation';
     return cy.get(`[data-testid="${testId}"]`);
+  }
+
+  static mockHousingRegisterApiGetApplications(
+    applicationId: string,
+    application: Application
+  ) {
+    cy.task('nock', {
+      hostname: `${Cypress.env('HOUSING_REGISTER_API')}`,
+      method: 'GET',
+      path: `/applications/${applicationId}`,
+      status: 200,
+      body: application,
+    });
   }
 }
 

@@ -10,7 +10,7 @@ const dateOfBirth = faker.date.birthdate();
 const personRelationshipOption = relationshipOptions.map(({ value }) => value);
 
 //Logic from the HR API
-export const calculateAge = (birthDate: Date) => {
+export const calculateAge = (birthDate: Date): number => {
   const now = new Date();
   let age = now.getUTCFullYear() - birthDate.getUTCFullYear();
 

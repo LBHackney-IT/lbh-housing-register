@@ -28,4 +28,8 @@ describe('Review applicant details', () => {
     ReviewApplicantPage.visit(applicationId, personId);
     ReviewApplicantPage.getHealthSectionNavLink().should('not.exist');
   });
+  it("doesn't show the view documents button for read only users", () => {
+    ReviewApplicantPage.visit(applicationId, personId);
+    ReviewApplicantPage.getViewDocumentsButton().should('not.exist');
+  });
 });

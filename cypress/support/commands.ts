@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker/locale/en_GB';
 import { mount } from 'cypress/react';
 
+import { Application } from '../../domain/HousingApi';
 // ***********************************************
 // This example commands.ts shows you how to
 // create various custom commands and overwrite
@@ -58,6 +59,72 @@ Cypress.Commands.add('generateEmptyApplication', () => {
   });
 });
 
+Cypress.Commands.add(
+  'mockActivityHistoryApiEmptyResponse',
+  (targetId: string) => {
+    cy.task('nock', {
+      hostname: Cypress.env('ACTIVITY_HISTORY_API'),
+      method: 'GET',
+      path: `/activityhistory?targetId=${targetId}&pageSize=100`,
+      status: 200,
+      body: {
+        results: [{}],
+        paginationDetails: { nextToken: null },
+      },
+    });
+  }
+);
+
+Cypress.Commands.add(
+  'mockHousingRegisterApiGetApplications',
+  (applicationId: string, application: Application) => {
+    cy.task('nock', {
+      hostname: Cypress.env('HOUSING_REGISTER_API'),
+      method: 'GET',
+      path: `/applications/${applicationId}`,
+      status: 200,
+      body: application,
+    });
+  }
+);
+Cypress.Commands.add(
+  'mockHousingRegisterApiPostSearchResults',
+  (application: Application) => {
+    cy.task('nock', {
+      hostname: Cypress.env('HOUSING_REGISTER_API'),
+      method: 'POST',
+      path: `/applications/search`,
+      statusCode: 200,
+      body: {
+        results: [
+          {
+            applicationId: application.id,
+            assignedTo: application.assignedTo,
+            biddingNumber: null,
+            createdAt: application.createdAt,
+            dateOfBirth: application.mainApplicant.person.dateOfBirth,
+            firstName: application.mainApplicant.person.firstName,
+            hasAssessment: application.assessment,
+            middleName: application.mainApplicant.person.middleName,
+            nationalInsuranceNumber:
+              application.mainApplicant.person.nationalInsuranceNumber,
+            otherMembers: application.otherMembers,
+            reference: application.reference,
+            sensativeData: application.sensitiveData,
+            status: application.status,
+            submittedAt: application.submittedAt,
+            surname: application.mainApplicant.person.surname,
+            title: application.mainApplicant.person.title,
+          },
+        ],
+        totalResults: 1,
+        page: 1,
+        pageSize: 10,
+      },
+    });
+  }
+);
+
 Cypress.Commands.add('loginAsUser', (userType: string) => {
   const users = {
     officer: {
@@ -86,6 +153,7 @@ Cypress.Commands.add('loginAsUser', (userType: string) => {
   if (!user) {
     throw new Error(`No user data found for user type "${userType}"`);
   }
+
   const secret = 'aDummySecret';
 
   cy.task('generateToken', { user, secret }).then((token) => {

@@ -47,8 +47,10 @@ export default defineConfig({
       });
       on('task', {
         nock: async ({ hostname, method, path, statusCode, body }) => {
-          nock.activate();
-          // leving this here for debugging purposes.
+          if (!nock.isActive()) {
+            nock.activate();
+          }
+          // leaving this here for debugging purposes.
           // console.log(
           //   'nock will: %s %s%s respond with %d %o',
           //   method,

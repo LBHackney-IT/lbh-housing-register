@@ -143,6 +143,7 @@ export default function ApplicationPage({
                       handleSelectNavItem={() => handleTabChange('assessment')}
                       itemName="assessment"
                       isActive={tab === 'assessment'}
+                      dataTestId="test-applicant-assessment-section-navigation"
                     >
                       Assessment
                     </HorizontalNavItem>

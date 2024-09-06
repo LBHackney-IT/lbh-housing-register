@@ -179,7 +179,7 @@ workflows:
               height: [480, 768, 960]
               # mobile, tablet, chromebook, desktop
               width: [320, 1024, 1366, 1536]
-            exclude:
+            excludes:
               - browser: [chrome, firefox]
                 height: 480
                 width: [1536, 1366, 1024]

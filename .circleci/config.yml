@@ -172,6 +172,8 @@ workflows:
           requires:
             - run-tests
       - run-cypress-e2e:
+          requires:
+            - install-dependencies
           matrix:
             parameters:
               browser: [chrome, firefox]
@@ -228,10 +230,9 @@ workflows:
               - browser: firefox
                 height: 960
                 width: 320
-            requires: install-dependencies
-            filters:
-              branches:
-                only: TS-1635-Housing-reg-view-only-viewport-testing
+          filters:
+            branches:
+              only: TS-1635-Housing-reg-view-only-viewport-testing
       # - run-cypress-e2e:
       #     name: E2E Tests - Chrome - Desktop
       #     requires:

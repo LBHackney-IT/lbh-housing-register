@@ -173,14 +173,32 @@ workflows:
             - run-tests
       - run-cypress-e2e:
           matrix:
-            name: E2E Tests
             parameters:
               browser: [chrome, firefox]
-              height: [800, 1000]
-              width: [1280, 200]
-            requires:
-              - install-dependencies
-            # browser: chrome
+              # mobile, tablet, chromebook/desktop
+              height: [480, 768, 960]
+              # mobile, tablet, chromebook, desktop
+              width: [320, 1024, 1366, 1536]
+            exclude:
+              - height: 480
+                width: 1536
+              - height: 480
+                width: 1366
+              - height: 480
+                width: 1024
+              - height: 768
+                width: 320
+              - height: 768
+                width: 1366
+              - height: 768
+                width: 1536
+              - height: 960
+                width: 1366
+              - height: 960
+                width: 1024
+              - height: 960
+                width: 320
+            requires: install-dependencies
             filters:
               branches:
                 only: TS-1635-Housing-reg-view-only-viewport-testing
@@ -244,8 +262,12 @@ workflows:
           context: api-assume-role-housing-development-context
           requires:
             - run-cypress-e2e
-            # - E2E Tests - Chrome
-            # - E2E Tests - Firefox
+            # - E2E Tests - Chrome - Desktop
+            # - E2E Tests - Firefox - Desktop
+            # - E2E Tests - Chrome - Mobile
+            # - E2E Tests - Firefox - Mobile
+            # - E2E Tests - Chrome - Tablet
+            # - E2E Tests - Firefox - Tablet
           filters:
             branches:
               only: development

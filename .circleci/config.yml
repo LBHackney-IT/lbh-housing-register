@@ -78,6 +78,12 @@ jobs:
       browser:
         type: string
         default: chrome
+      height:
+        type: integer
+        default: 768
+      width:
+        type: integer
+        default: 1366
     steps:
       - cypress/install:
           package-manager: npm
@@ -85,7 +91,7 @@ jobs:
           install-command: npm install
           post-install: npm run build
       - cypress/run-tests:
-          cypress-command: npx cypress run --browser=<< parameters.browser >> --config viewportHeight=1000 viewportWidth=1920 --reporter cypress-circleci-reporter
+          cypress-command: npx cypress run --browser=<< parameters.browser >> --config viewportHeight=<< parameters.height >> viewportWidth=<< parameters.width >> --reporter cypress-circleci-reporter
       - store_test_results:
           path: test_results
 
@@ -166,26 +172,80 @@ workflows:
           requires:
             - run-tests
       - run-cypress-e2e:
-          name: E2E Tests - Chrome
-          requires:
-            - install-dependencies
-          browser: chrome
-          filters:
-            branches:
-              only: TS-1635-Housing-reg-view-only-viewport-testing
-      - run-cypress-e2e:
-          name: E2E Tests - Firefox
-          requires:
-            - install-dependencies
-          browser: firefox
-          filters:
-            branches:
-              only: TS-1635-Housing-reg-view-only-viewport-testing
+          matrix:
+            name: E2E Tests
+            parameters:
+              browser: [chrome, firefox]
+              height: [800, 1000]
+              width: [1280, 200]
+            requires:
+              - install-dependencies
+            # browser: chrome
+            filters:
+              branches:
+                only: TS-1635-Housing-reg-view-only-viewport-testing
+      # - run-cypress-e2e:
+      #     name: E2E Tests - Chrome - Desktop
+      #     requires:
+      #       - install-dependencies
+      #     browser: chrome
+      #     filters:
+      #       branches:
+      #         only: TS-1635-Housing-reg-view-only-viewport-testing
+      # - run-cypress-e2e:
+      #     name: E2E Tests - Firefox - Desktop
+      #     requires:
+      #       - install-dependencies
+      #     browser: firefox
+      #     filters:
+      #       branches:
+      #         only: TS-1635-Housing-reg-view-only-viewport-testing
+      # - run-cypress-e2e:
+      #     name: E2E Tests - Chrome - Mobile
+      #     requires:
+      #       - install-dependencies
+      #     browser: chrome
+      #     height: 480
+      #     width: 320
+      #     filters:
+      #       branches:
+      #         only: TS-1635-Housing-reg-view-only-viewport-testing
+      # - run-cypress-e2e:
+      #     name: E2E Tests - Firefox - Mobile
+      #     requires:
+      #       - install-dependencies
+      #     browser: firefox
+      #     height: 480
+      #     width: 320
+      #     filters:
+      #       branches:
+      #         only: TS-1635-Housing-reg-view-only-viewport-testing
+      # - run-cypress-e2e:
+      #     name: E2E Tests - Chrome - Tablet
+      #     requires:
+      #       - install-dependencies
+      #     browser: chrome
+      #     height: 768
+      #     width: 1024
+      #     filters:
+      #       branches:
+      #         only: TS-1635-Housing-reg-view-only-viewport-testing
+      # - run-cypress-e2e:
+      #     name: E2E Tests - Firefox - Tablet
+      #     requires:
+      #       - install-dependencies
+      #     browser: firefox
+      #     height: 768
+      #     width: 1024
+      #     filters:
+      #       branches:
+      #         only: TS-1635-Housing-reg-view-only-viewport-testing
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:
-            - E2E Tests - Chrome
-            - E2E Tests - Firefox
+            - run-cypress-e2e
+            # - E2E Tests - Chrome
+            # - E2E Tests - Firefox
           filters:
             branches:
               only: development

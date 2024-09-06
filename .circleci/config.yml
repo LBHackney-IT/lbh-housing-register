@@ -190,7 +190,7 @@ workflows:
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:
-            - run-tests
+            - run-tests-and-sonar-scan
           filters:
             branches:
               only: main

@@ -179,16 +179,55 @@ workflows:
               height: [480, 768, 960]
               # mobile, tablet, chromebook, desktop
               width: [320, 1024, 1366, 1536]
-            excludes:
-              - browser: [chrome, firefox]
+            exclude:
+              - browser: chrome
                 height: 480
-                width: [1536, 1366, 1024]
-              - browser: [chrome, firefox]
+                width: 1536
+              - browser: chrome
+                height: 480
+                width: 1366
+              - browser: chrome
+                height: 480
+                width: 1024
+              - browser: firefox
+                height: 480
+                width: 1536
+              - browser: firefox
+                height: 480
+                width: 1366
+              - browser: firefox
+                height: 480
+                width: 1024
+              - browser: chrome
                 height: 768
-                width: [1536, 1366, 320]
-              - browser: [chrome, firefox]
+                width: 1536
+              - browser: chrome
+                height: 768
+                width: 1366
+              - browser: chrome
+                height: 768
+                width: 320
+              - browser: firefox
+                height: 768
+                width: 1536
+              - browser: firefox
+                height: 768
+                width: 1366
+              - browser: firefox
+                height: 768
+                width: 320
+              - browser: chrome
                 height: 960
-                width: [1024, 320]
+                width: 1024
+              - browser: chrome
+                height: 960
+                width: 320
+              - browser: firefox
+                height: 960
+                width: 1024
+              - browser: firefox
+                height: 960
+                width: 320
             requires: install-dependencies
             filters:
               branches:

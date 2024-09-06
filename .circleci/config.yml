@@ -47,7 +47,7 @@ jobs:
           root: *workspace_root
           paths: .
 
-  run-tests-and-sonar-scan:
+  run-tests:
     executor: node-executor
     steps:
       - cypress/install:
@@ -65,6 +65,15 @@ jobs:
           path: test_results
       - store_artifacts:
           path: coverage
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - coverage
+
+  sonar-scan:
+    executor: node-executor
+    steps:
+      - *attach_workspace
       - sonarcloud/scan
 
   run-cypress-e2e:
@@ -153,9 +162,13 @@ workflows:
   continuous-delivery:
     jobs:
       - install-dependencies
-      - run-tests-and-sonar-scan:
+      - run-tests:
           requires:
             - install-dependencies
+      - sonar-scan:
+          context: SonarCloud
+          requires:
+            - run-tests
       - run-cypress-e2e:
           name: E2E Tests - Chrome
           requires:
@@ -190,7 +203,7 @@ workflows:
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:
-            - run-tests-and-sonar-scan
+            - run-tests
           filters:
             branches:
               only: main

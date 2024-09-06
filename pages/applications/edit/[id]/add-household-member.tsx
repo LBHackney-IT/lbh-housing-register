@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
-import { GetServerSideProps } from 'next';
+
 import { FormikValues } from 'formik';
-import { getRedirect, getSession } from '../../../../lib/utils/googleAuth';
+import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
+
+import HouseholdMemberForm from '../../../../components/admin/HouseholdMemberForm';
 import { HackneyGoogleUser } from '../../../../domain/HackneyGoogleUser';
 import { Application } from '../../../../domain/HousingApi';
 import { getApplication } from '../../../../lib/gateways/applications-api';
 import { updateApplication } from '../../../../lib/gateways/internal-api';
 import {
-  generateQuestionArray,
   Address,
+  generateQuestionArray,
 } from '../../../../lib/utils/adminHelpers';
-
+import { getRedirect, getSession } from '../../../../lib/utils/googleAuth';
 import { scrollToTop } from '../../../../lib/utils/scroll';
 import Custom404 from '../../../404';
-import HouseholdMemberForm from '../../../../components/admin/HouseholdMemberForm';
+
 interface PageProps {
   user: HackneyGoogleUser;
   data: Application;
@@ -32,6 +34,7 @@ export default function AddHouseholdMember({
     const questionValues = generateQuestionArray(values, addresses);
     const addressToSubmit = addresses.length > 0 ? addresses[0] : {};
 
+    /*  eslint-disable @typescript-eslint/no-explicit-any */
     const householdMemberFormData = {
       person: {
         title: values.personalDetails_title,
@@ -66,7 +69,7 @@ export default function AddHouseholdMember({
       });
     });
   };
-
+  /*  eslint-disable @typescript-eslint/no-explicit-any */
   const handleSaveApplication = (isValid: any, touched: any) => {
     const isTouched = Object.keys(touched).length !== 0;
     if (!isValid || !isTouched) {
@@ -75,7 +78,7 @@ export default function AddHouseholdMember({
 
     setIsSubmitted(true);
   };
-
+  /*  eslint-disable react/jsx-no-useless-fragment */
   return (
     <>
       {data.id ? (
@@ -97,7 +100,7 @@ export default function AddHouseholdMember({
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const user = getSession(context.req);
-  const redirect = getRedirect(user);
+  const redirect = getRedirect(user, true);
   if (redirect) {
     return {
       props: {},

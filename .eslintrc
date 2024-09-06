@@ -1,0 +1,64 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "node": true,
+    "jest": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "@hackney/eslint-config",
+    "eslint:recommended",
+    "plugin:prettier/recommended",
+    "plugin:@next/next/recommended",
+    "plugin:cypress/recommended"
+  ],
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2018,
+    "project": ["./tsconfig.json", "./cypress/tsconfig.json"]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "linebreak-style": ["error", "unix"],
+    "require-atomic-updates": "off",
+    "react/react-in-jsx-scope": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": [
+          "**/*.+(test|spec|cy).+(j|t)s?(x)",
+          "cypress.config.ts",
+          "cypress/support/commands.ts",
+          "testUtils/*"
+        ]
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "extends": "plugin:@typescript-eslint/recommended"
+    },
+    {
+      "files": ["**/*.ts", "**/*.tsx"],
+      "rules": {
+        "react-hooks/exhaustive-deps": "off",
+        "react/function-component-definition": "off"
+      }
+    },
+    {
+      "files": ["*.js"],
+      "rules": {
+        "no-unused-vars": "warn",
+        "no-console": "off"
+      }
+    }
+  ]
+}

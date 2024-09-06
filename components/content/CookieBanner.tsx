@@ -1,20 +1,26 @@
 import { useEffect, useRef } from 'react';
-import Paragraph from '../content/paragraph';
 
-export default function CookieBanner(): JSX.Element {
-  const ref = useRef(null);
+import Paragraph from './paragraph';
+
+const CookieBanner: React.FC = (): JSX.Element => {
+  const ref = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    if (window !== undefined) {
-      const CookieBanner = require('lbh-frontend').CookieBanner;
-      new CookieBanner(ref.current).init();
-    }
+    const loadCookieBanner = async () => {
+      if (typeof window !== 'undefined') {
+        const { CookieBanner: LbhCookieBanner } = await import('lbh-frontend');
+        new LbhCookieBanner(ref.current as HTMLElement).init();
+      }
+    };
+
+    loadCookieBanner();
   }, []);
 
   return (
     <section
       className="lbh-cookie-banner"
       data-module="lbh-cookie-banner"
+      data-testid="test-cookie-banner"
       ref={ref}
     >
       <div className="lbh-container">
@@ -32,6 +38,7 @@ export default function CookieBanner(): JSX.Element {
               className="govuk-button lbh-cookie-banner__button lbh-button govuk-button--secondary lbh-button--secondary"
               data-module="govuk-button"
               data-behavior="lbh-cookie-close"
+              data-testid="test-cookie-button"
             >
               Accept and close
             </button>
@@ -40,4 +47,6 @@ export default function CookieBanner(): JSX.Element {
       </div>
     </section>
   );
-}
+};
+
+export default CookieBanner;

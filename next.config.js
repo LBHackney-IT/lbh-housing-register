@@ -5,7 +5,9 @@
 
 const { withSentryConfig } = require('@sentry/nextjs');
 
-const moduleExports = {
+// @ts-check
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   distDir: 'build/_next',
   poweredByHeader: false,
   reactStrictMode: true,
@@ -30,6 +32,12 @@ const moduleExports = {
       },
     ];
   },
+  eslint: {
+    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors. This is due to the current ESLint setup
+    // for staged files only as we clear the linting errors as we work.
+    ignoreDuringBuilds: true,
+  },
 
   webpack: (config, { webpack }) => {
     config.plugins.push(
@@ -49,10 +57,11 @@ const sentryWebpackPluginOptions = {
   //   urlPrefix, include, ignore
 
   silent: true, // Suppresses all logs
+  dryRun: process.env.NEXT_PUBLIC_ENV !== 'production',
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options.
 };
 
 // Make sure adding Sentry options is the last code to run before exporting, to
 // ensure that your source maps include changes from all other Webpack plugins
-module.exports = withSentryConfig(moduleExports, sentryWebpackPluginOptions);
+module.exports = withSentryConfig(nextConfig, sentryWebpackPluginOptions);

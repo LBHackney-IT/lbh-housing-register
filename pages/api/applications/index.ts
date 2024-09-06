@@ -1,16 +1,17 @@
-import { StatusCodes } from 'http-status-codes';
 import { withSentry } from '@sentry/nextjs';
-import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import { StatusCodes } from 'http-status-codes';
+
 import { Application } from '../../../domain/HousingApi';
 import {
   addApplication,
   getApplication,
 } from '../../../lib/gateways/applications-api';
-import {
-  hasStaffPermissions,
-  isStaffAction,
-} from '../../../lib/utils/requestAuth';
+import { hasReadOnlyStaffPermissions } from '../../../lib/utils/hasReadOnlyStaffPermissions';
+import { hasStaffPermissions } from '../../../lib/utils/hasStaffPermissions';
+import { isStaffAction } from '../../../lib/utils/isStaffAction';
 import { getUser } from '../../../lib/utils/users';
+
+import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -41,7 +42,10 @@ const endpoint: NextApiHandler = async (
     case 'POST':
       try {
         const application: Application = JSON.parse(req.body);
-        if (isStaffAction(application) && !hasStaffPermissions(req)) {
+        if (
+          isStaffAction(application) &&
+          (!hasStaffPermissions(req) || hasReadOnlyStaffPermissions(req))
+        ) {
           res
             .status(StatusCodes.FORBIDDEN)
             .json({ message: 'Unable to add application with assessment' });

@@ -1,9 +1,9 @@
-import { useState, useEffect, SyntheticEvent } from 'react';
+import { SyntheticEvent, useEffect, useState } from 'react';
+
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import ApplicationsTable from '../../components/admin/ApplicationsTable';
-import SimplePaginationSearch from '../../components/SimplePaginationSearch';
 
+import ApplicationsTable from '../../components/admin/ApplicationsTable';
 import {
   HorizontalNav,
   HorizontalNavItem,
@@ -12,6 +12,7 @@ import SearchBox from '../../components/admin/SearchBox';
 import Sidebar from '../../components/admin/sidebar';
 import { HeadingOne } from '../../components/content/headings';
 import Layout from '../../components/layout/staff-layout';
+import SimplePaginationSearch from '../../components/SimplePaginationSearch';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import {
   APPLICATION_UNNASIGNED,
@@ -48,7 +49,7 @@ export default function ApplicationListPage({
     const { name } = event.target as HTMLButtonElement;
     setActiveNavItem(name);
   };
-
+  /*  eslint-disable react/jsx-no-constructed-context-values */
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="Group worktray">
@@ -84,7 +85,7 @@ export default function ApplicationListPage({
               <>
                 <ApplicationsTable
                   applications={applications}
-                  showStatus={true}
+                  showStatus={true} /* eslint-disable-line */
                   page={page}
                   pageSize={pageSize}
                 />
@@ -107,7 +108,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
   context
 ) => {
   const user = getSession(context.req);
-  const redirect = getRedirect(user);
+  const redirect = getRedirect(user, true);
   if (redirect) {
     return {
       redirect: {

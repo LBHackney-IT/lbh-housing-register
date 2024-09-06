@@ -1,0 +1,1 @@
+npx lint-staged && npm run test && npm run component:run && ggshield secret scan pre-commit

@@ -3,14 +3,19 @@ version: 2.1
 orbs:
   aws-cli: circleci/aws-cli@1.0.0
   aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
+  cypress: cypress-io/cypress@3.3.1
+  sonarcloud: sonarsource/sonarcloud@2.0.0
 
 executors:
   node-executor:
     docker:
-      - image: cimg/node:16.20.2-browsers
+      - image: cimg/node:16.20-browsers
   docker-python:
     docker:
       - image: circleci/python:3.7
+  cypress-e2e-executor:
+    docker:
+      - image: cimg/node:18.20-browsers
 
 references:
   workspace_root: &workspace_root '~'
@@ -18,6 +23,9 @@ references:
     attach_workspace:
       at: *workspace_root
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Commands ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Jobs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 jobs:
   install-dependencies:
     executor: node-executor
@@ -34,17 +42,52 @@ jobs:
           paths:
             - ./node_modules
             - ./.next/cache
+            - ./.cache/Cypress
       - persist_to_workspace:
           root: *workspace_root
           paths: .
 
-  tests:
+  run-tests:
+    executor: node-executor
+    steps:
+      - cypress/install:
+          package-manager: npm
+          install-command: npm install
+      - cypress/run-tests:
+          cypress-command: npx cypress run --component --reporter cypress-circleci-reporter
+      - run:
+          name: Run Jest Tests
+          command: npm run test:ci
+          environment:
+            JEST_JUNIT_OUTPUT_DIR: test_results
+            JEST_JUNIT_ADD_FILE_ATTRIBUTE: 'true'
+      - store_test_results:
+          path: test_results
+      - store_artifacts:
+          path: coverage
+
+  sonar-scan:
     executor: node-executor
     steps:
       - *attach_workspace
-      - run:
-          name: Run Tests
-          command: npm run test:ci
+      - sonarcloud/scan
+
+  run-cypress-e2e:
+    executor: cypress-e2e-executor
+    parameters:
+      browser:
+        type: string
+        default: chrome
+    steps:
+      - cypress/install:
+          package-manager: npm
+          install-browsers: true
+          install-command: npm install
+          post-install: npm run build
+      - cypress/run-tests:
+          cypress-command: npx cypress run --browser=<< parameters.browser >> --reporter cypress-circleci-reporter
+      - store_test_results:
+          path: test_results
 
   build-deploy-development:
     executor: aws-cli/default
@@ -52,7 +95,7 @@ jobs:
       - *attach_workspace
       - run:
           name: deploy
-          command: npm run build && sudo npm i -g serverless && sls deploy --stage development
+          command: npm run build && sudo npm i -g serverless@^3 && sls deploy --stage development
 
   build-deploy-staging:
     executor: aws-cli/default
@@ -60,7 +103,7 @@ jobs:
       - *attach_workspace
       - run:
           name: deploy
-          command: npm run build && sudo npm i -g serverless && sls deploy --stage staging
+          command: npm run build && sudo npm i -g serverless@^3 && sls deploy --stage staging
 
   build-deploy-production:
     executor: aws-cli/default
@@ -68,7 +111,7 @@ jobs:
       - *attach_workspace
       - run:
           name: deploy
-          command: npm run build && sudo npm i -g serverless && sls deploy --stage production
+          command: npm run build && sudo npm i -g serverless@^3 && sls deploy --stage production
 
   assume-role-development:
     executor: docker-python
@@ -109,18 +152,40 @@ jobs:
           paths:
             - .aws
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Workflows ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 workflows:
   version: 2
   continuous-delivery:
     jobs:
       - install-dependencies
-      - tests:
+      - run-tests:
           requires:
             - install-dependencies
+      - sonar-scan:
+          context: SonarCloud
+          requires:
+            - run-tests
+      - run-cypress-e2e:
+          name: E2E Tests - Chrome
+          requires:
+            - install-dependencies
+          browser: chrome
+          filters:
+            branches:
+              only: development
+      - run-cypress-e2e:
+          name: E2E Tests - Firefox
+          requires:
+            - install-dependencies
+          browser: firefox
+          filters:
+            branches:
+              only: development
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:
-            - tests
+            - E2E Tests - Chrome
+            - E2E Tests - Firefox
           filters:
             branches:
               only: development
@@ -134,7 +199,7 @@ workflows:
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:
-            - tests
+            - run-tests
           filters:
             branches:
               only: main

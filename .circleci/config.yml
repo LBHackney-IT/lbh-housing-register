@@ -85,7 +85,7 @@ jobs:
           install-command: npm install
           post-install: npm run build
       - cypress/run-tests:
-          cypress-command: npx cypress run --browser=<< parameters.browser >> --reporter cypress-circleci-reporter
+          cypress-command: npx cypress run --browser=<< parameters.browser >> --viewportHeight="1000" --viewportWidth="1920" --reporter cypress-circleci-reporter
       - store_test_results:
           path: test_results
 
@@ -172,7 +172,7 @@ workflows:
           browser: chrome
           filters:
             branches:
-              only: development
+              only: TS-1635-Housing-reg-view-only-viewport-testing
       - run-cypress-e2e:
           name: E2E Tests - Firefox
           requires:
@@ -180,7 +180,7 @@ workflows:
           browser: firefox
           filters:
             branches:
-              only: development
+              only: TS-1635-Housing-reg-view-only-viewport-testing
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:

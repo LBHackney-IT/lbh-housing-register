@@ -65,7 +65,7 @@ jobs:
           path: test_results
       - store_artifacts:
           path: coverage
-      - sonarcloud/scan:
+      - sonarcloud/scan
 
   run-cypress-e2e:
     executor: cypress-e2e-executor

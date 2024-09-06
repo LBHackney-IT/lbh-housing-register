@@ -15,6 +15,11 @@ class ReviewApplicantPage {
     return cy.get(`[data-testid="${testId}"]`);
   }
 
+  static getViewDocumentsButton() {
+    const testId = 'test-view-documents-button';
+    return cy.get(`[data-testid="${testId}"]`);
+  }
+
   static mockHousingRegisterApiGetApplications(
     applicationId: string,
     application: Application

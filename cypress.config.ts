@@ -50,7 +50,7 @@ export default defineConfig({
           if (!nock.isActive()) {
             nock.activate();
           }
-          // leving this here for debugging purposes.
+          // leaving this here for debugging purposes.
           // console.log(
           //   'nock will: %s %s%s respond with %d %o',
           //   method,

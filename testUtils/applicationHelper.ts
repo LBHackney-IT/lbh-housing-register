@@ -22,6 +22,19 @@ export const generateApplication = (
         emailAddress: faker.internet.email({ provider: 'hackneyTEST.gov.uk' }),
       },
     },
+    otherMembers: [
+      {
+        person: generatePerson(personId + 1),
+        contactInformation: {
+          emailAddress: faker.internet.email({
+            provider: 'hackneyTEST.gov.uk',
+          }),
+        },
+      },
+    ],
+    assessment: {
+      effectiveDate: faker.date.recent().toISOString(),
+    },
     importedFromLegacyDatabase: false,
   };
 };

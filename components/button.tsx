@@ -7,6 +7,7 @@ interface ButtonProps {
   onClick?: () => void;
   secondary?: boolean;
   type?: 'button' | 'reset' | 'submit';
+  dataTestId?: string;
 }
 
 export default function Button({
@@ -16,6 +17,7 @@ export default function Button({
   onClick,
   secondary,
   type,
+  dataTestId,
 }: ButtonProps): JSX.Element {
   className += ' govuk-button lbh-button';
 
@@ -34,6 +36,7 @@ export default function Button({
       type={type}
       disabled={disabled}
       aria-disabled={disabled}
+      data-testid={dataTestId}
     >
       {children}
     </button>
@@ -43,7 +46,7 @@ export default function Button({
 interface ButtonLinkProps extends ButtonProps {
   href: string;
   dataTestId?: string;
-  svg?: any;
+  svg?: React.SVGProps<SVGSVGElement>;
   additionalCssClasses?: string;
 }
 
@@ -74,10 +77,8 @@ export function ButtonLink({
         draggable="false"
         {...(disabled && `disabled aria-disabled="true"`)}
       >
-        <>
-          {children}
-          {svg}
-        </>
+        {children}
+        {svg}
       </a>
     </Link>
   );

@@ -136,7 +136,9 @@ export default function ApplicationPersonPage({
                       rel="noreferrer"
                     >
                       {!userHasReadOnlyPermissionOnly && (
-                        <Button>View Documents</Button>
+                        <Button dataTestId="test-view-documents-button">
+                          View Documents
+                        </Button>
                       )}
                     </a>
                   </div>

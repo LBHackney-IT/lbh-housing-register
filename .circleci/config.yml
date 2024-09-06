@@ -85,7 +85,7 @@ jobs:
           install-command: npm install
           post-install: npm run build
       - cypress/run-tests:
-          cypress-command: npx cypress run --browser=<< parameters.browser >> --viewportHeight="1000" --viewportWidth="1920" --reporter cypress-circleci-reporter
+          cypress-command: npx cypress run --browser=<< parameters.browser >> --viewportHeight=1000 --viewportWidth=1920 --reporter cypress-circleci-reporter
       - store_test_results:
           path: test_results
 

@@ -182,6 +182,7 @@ workflows:
               # mobile, tablet, chromebook, desktop
               width: [320, 1024, 1366, 1536]
             exclude:
+              # exclude screen combinations that don't make sense
               - browser: chrome
                 height: 480
                 width: 1536
@@ -232,73 +233,11 @@ workflows:
                 width: 320
           filters:
             branches:
-              only: TS-1635-Housing-reg-view-only-viewport-testing
-      # - run-cypress-e2e:
-      #     name: E2E Tests - Chrome - Desktop
-      #     requires:
-      #       - install-dependencies
-      #     browser: chrome
-      #     filters:
-      #       branches:
-      #         only: TS-1635-Housing-reg-view-only-viewport-testing
-      # - run-cypress-e2e:
-      #     name: E2E Tests - Firefox - Desktop
-      #     requires:
-      #       - install-dependencies
-      #     browser: firefox
-      #     filters:
-      #       branches:
-      #         only: TS-1635-Housing-reg-view-only-viewport-testing
-      # - run-cypress-e2e:
-      #     name: E2E Tests - Chrome - Mobile
-      #     requires:
-      #       - install-dependencies
-      #     browser: chrome
-      #     height: 480
-      #     width: 320
-      #     filters:
-      #       branches:
-      #         only: TS-1635-Housing-reg-view-only-viewport-testing
-      # - run-cypress-e2e:
-      #     name: E2E Tests - Firefox - Mobile
-      #     requires:
-      #       - install-dependencies
-      #     browser: firefox
-      #     height: 480
-      #     width: 320
-      #     filters:
-      #       branches:
-      #         only: TS-1635-Housing-reg-view-only-viewport-testing
-      # - run-cypress-e2e:
-      #     name: E2E Tests - Chrome - Tablet
-      #     requires:
-      #       - install-dependencies
-      #     browser: chrome
-      #     height: 768
-      #     width: 1024
-      #     filters:
-      #       branches:
-      #         only: TS-1635-Housing-reg-view-only-viewport-testing
-      # - run-cypress-e2e:
-      #     name: E2E Tests - Firefox - Tablet
-      #     requires:
-      #       - install-dependencies
-      #     browser: firefox
-      #     height: 768
-      #     width: 1024
-      #     filters:
-      #       branches:
-      #         only: TS-1635-Housing-reg-view-only-viewport-testing
+              only: development
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:
             - run-cypress-e2e
-            # - E2E Tests - Chrome - Desktop
-            # - E2E Tests - Firefox - Desktop
-            # - E2E Tests - Chrome - Mobile
-            # - E2E Tests - Firefox - Mobile
-            # - E2E Tests - Chrome - Tablet
-            # - E2E Tests - Firefox - Tablet
           filters:
             branches:
               only: development

@@ -47,7 +47,7 @@ jobs:
           root: *workspace_root
           paths: .
 
-  run-tests:
+  run-tests-and-sonar-scan:
     executor: node-executor
     steps:
       - cypress/install:
@@ -65,12 +65,7 @@ jobs:
           path: test_results
       - store_artifacts:
           path: coverage
-
-  sonar-scan:
-    executor: node-executor
-    steps:
-      - *attach_workspace
-      - sonarcloud/scan
+      - sonarcloud/scan:
 
   run-cypress-e2e:
     executor: cypress-e2e-executor
@@ -161,10 +156,6 @@ workflows:
       - run-tests:
           requires:
             - install-dependencies
-      - sonar-scan:
-          context: SonarCloud
-          requires:
-            - run-tests
       - run-cypress-e2e:
           name: E2E Tests - Chrome
           requires:

@@ -11,20 +11,22 @@ describe('User searches for an application', () => {
 
     cy.task('clearNock');
     cy.clearCookies();
-    cy.loginAsUser('readOnly');
-    ApplicationsPage.visit();
-    ApplicationsPage.getApplicationsPage().should('be.visible');
-    ApplicationsPage.getSearchInput().should('be.visible');
-    ApplicationsPage.getWorktray().should('not.exist');
-    ApplicationsPage.getWorktraySidebar().should('not.exist');
-    ApplicationsPage.getSearchInput().type(
-      application.mainApplicant.person.firstName
-    );
-    cy.mockHousingRegisterApiPostSearchResults(application);
+    cy.loginAsUser('readOnly').then((user) => {
+      cy.mockHousingRegisterApiGetApplicationsByStatusAndAssignedTo(user);
+      ApplicationsPage.visit();
+      ApplicationsPage.getApplicationsPage().should('be.visible');
+      ApplicationsPage.getSearchInput().should('be.visible');
+      ApplicationsPage.getWorktray().should('not.exist');
+      ApplicationsPage.getWorktraySidebar().should('not.exist');
+      ApplicationsPage.getSearchInput().type(
+        application.mainApplicant.person.firstName
+      );
+      cy.mockHousingRegisterApiPostSearchResults(application);
 
-    ApplicationsPage.getSearchSubmitButton().click();
-    ApplicationsPage.getSearchInputBox().should('be.visible');
-    ApplicationsPage.getWorktraySidebar().should('not.exist');
+      ApplicationsPage.getSearchSubmitButton().click();
+      ApplicationsPage.getSearchInputBox().should('be.visible');
+      ApplicationsPage.getWorktraySidebar().should('not.exist');
+    });
   });
 
   it(`as a user in the officer group I can engage with the worktray features`, () => {
@@ -33,19 +35,21 @@ describe('User searches for an application', () => {
     const application = generateApplication(applicationId, personId);
     cy.task('clearNock');
     cy.clearCookies();
-    cy.loginAsUser('officer');
+    cy.loginAsUser('officer').then((user) => {
+      cy.mockHousingRegisterApiGetApplicationsByStatusAndAssignedTo(user);
 
-    ApplicationsPage.visit();
-    ApplicationsPage.getApplicationsPage().should('be.visible');
-    ApplicationsPage.getSearchInput().should('be.visible');
-    ApplicationsPage.getWorktray().should('be.visible');
-    ApplicationsPage.getWorktraySidebar().should('be.visible');
-    ApplicationsPage.getSearchInput().type(
-      application.mainApplicant.person.firstName
-    );
-    cy.mockHousingRegisterApiPostSearchResults(application);
-    ApplicationsPage.getSearchSubmitButton().click();
-    ApplicationsPage.getSearchResultsBox().should('be.visible');
-    ApplicationsPage.getWorktraySidebar().should('be.visible');
+      ApplicationsPage.visit();
+      ApplicationsPage.getApplicationsPage().should('be.visible');
+      ApplicationsPage.getSearchInput().should('be.visible');
+      ApplicationsPage.getWorktray().should('be.visible');
+      ApplicationsPage.getWorktraySidebar().should('be.visible');
+      ApplicationsPage.getSearchInput().type(
+        application.mainApplicant.person.firstName
+      );
+      cy.mockHousingRegisterApiPostSearchResults(application);
+      ApplicationsPage.getSearchSubmitButton().click();
+      ApplicationsPage.getSearchResultsBox().should('be.visible');
+      ApplicationsPage.getWorktraySidebar().should('be.visible');
+    });
   });
 });

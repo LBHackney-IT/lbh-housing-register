@@ -172,7 +172,7 @@ workflows:
           browser: chrome
           filters:
             branches:
-              only: TS-1637-Housing-reg-view-only-ensure-dev-api-is-not-being-called-e2e
+              only: development
       - run-cypress-e2e:
           name: E2E Tests - Firefox
           requires:
@@ -180,7 +180,7 @@ workflows:
           browser: firefox
           filters:
             branches:
-              only: TS-1637-Housing-reg-view-only-ensure-dev-api-is-not-being-called-e2e
+              only: development
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:

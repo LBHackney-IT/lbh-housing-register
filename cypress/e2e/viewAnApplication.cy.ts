@@ -11,37 +11,38 @@ describe('User views a resident application', () => {
 
     cy.task('clearNock');
     cy.clearCookies();
-    cy.loginAsUser('readOnly');
 
-    ApplicationsPage.visit();
-    ApplicationsPage.getSearchInput().should('be.visible');
+    cy.loginAsUser('readOnly').then((user) => {
+      cy.mockHousingRegisterApiGetApplicationsByStatusAndAssignedTo(user);
+      ApplicationsPage.visit();
+      ApplicationsPage.getSearchInput().should('be.visible');
 
-    ApplicationsPage.getSearchInput().type(
-      application.mainApplicant.person.firstName
-    );
+      ApplicationsPage.getSearchInput().type(
+        application.mainApplicant.person.firstName
+      );
+      cy.mockHousingRegisterApiPostSearchResults(application);
 
-    cy.mockHousingRegisterApiPostSearchResults(application);
+      ApplicationsPage.getSearchSubmitButton().click();
+      ApplicationsPage.getSearchResultsBox().should('be.visible');
+      ApplicationsPage.getViewApplicationLink()
+        .first()
+        .invoke('attr', 'href')
+        .then((href) => {
+          const targetId = href.split('/').pop();
+          cy.mockActivityHistoryApiEmptyResponse(targetId);
+          ApplicationsPage.getViewApplicationLink().first().click();
+        });
 
-    ApplicationsPage.getSearchSubmitButton().click();
-    ApplicationsPage.getSearchResultsBox().should('be.visible');
-    ApplicationsPage.getViewApplicationLink()
-      .first()
-      .invoke('attr', 'href')
-      .then((href) => {
-        const targetId = href.split('/').pop();
-        cy.mockActivityHistoryApiEmptyResponse(targetId);
-        ApplicationsPage.getViewApplicationLink().first().click();
-      });
+      cy.mockHousingRegisterApiGetApplications(applicationId, application);
 
-    cy.mockHousingRegisterApiGetApplications(applicationId, application);
-
-    ApplicationsPage.getViewApplicationPage().should('be.visible');
-    ApplicationsPage.getEditApplicantButton().should('not.exist');
-    ApplicationsPage.getEditHouseholdMemberButton().should('not.exist');
-    ApplicationsPage.getSensitiveDataButton().should('not.exist');
-    ApplicationsPage.getChangeApplicationDateButton().should('not.exist');
-    ApplicationsPage.getChangeApplicationStatusButton().should('not.exist');
-    ApplicationsPage.getAddHouseholdMemberButton().should('not.exist');
+      ApplicationsPage.getViewApplicationPage().should('be.visible');
+      ApplicationsPage.getEditApplicantButton().should('not.exist');
+      ApplicationsPage.getEditHouseholdMemberButton().should('not.exist');
+      ApplicationsPage.getSensitiveDataButton().should('not.exist');
+      ApplicationsPage.getChangeApplicationDateButton().should('not.exist');
+      ApplicationsPage.getChangeApplicationStatusButton().should('not.exist');
+      ApplicationsPage.getAddHouseholdMemberButton().should('not.exist');
+    });
   });
 
   it('as a manager group user I can edit all application details', () => {
@@ -51,36 +52,38 @@ describe('User views a resident application', () => {
 
     cy.task('clearNock');
     cy.clearCookies();
-    cy.loginAsUser('manager');
 
-    ApplicationsPage.visit();
-    ApplicationsPage.getSearchInput().should('be.visible');
-    ApplicationsPage.getSearchInput().type(
-      application.mainApplicant.person.firstName
-    );
+    cy.loginAsUser('manager').then((user) => {
+      cy.mockHousingRegisterApiGetApplicationsByStatusAndAssignedTo(user);
+      ApplicationsPage.visit();
+      ApplicationsPage.getSearchInput().should('be.visible');
+      ApplicationsPage.getSearchInput().type(
+        application.mainApplicant.person.firstName
+      );
 
-    cy.mockHousingRegisterApiPostSearchResults(application);
+      cy.mockHousingRegisterApiPostSearchResults(application);
 
-    ApplicationsPage.getSearchSubmitButton().click();
-    ApplicationsPage.getSearchResultsBox().should('be.visible');
+      ApplicationsPage.getSearchSubmitButton().click();
+      ApplicationsPage.getSearchResultsBox().should('be.visible');
 
-    ApplicationsPage.getViewApplicationLink()
-      .first()
-      .invoke('attr', 'href')
-      .then((href) => {
-        const targetId = href.split('/').pop();
-        cy.mockActivityHistoryApiEmptyResponse(targetId);
-        ApplicationsPage.getViewApplicationLink().first().click();
-      });
+      ApplicationsPage.getViewApplicationLink()
+        .first()
+        .invoke('attr', 'href')
+        .then((href) => {
+          const targetId = href.split('/').pop();
+          cy.mockActivityHistoryApiEmptyResponse(targetId);
+          ApplicationsPage.getViewApplicationLink().first().click();
+        });
 
-    cy.mockHousingRegisterApiGetApplications(applicationId, application);
+      cy.mockHousingRegisterApiGetApplications(applicationId, application);
 
-    ApplicationsPage.getViewApplicationPage().should('be.visible');
-    ApplicationsPage.getEditApplicantButton().should('be.visible');
-    ApplicationsPage.getSensitiveDataButton().should('be.visible');
-    ApplicationsPage.getChangeApplicationDateButton().should('be.visible');
-    ApplicationsPage.getChangeApplicationStatusButton().should('be.visible');
-    ApplicationsPage.getEditHouseholdMemberButton().should('be.visible');
-    ApplicationsPage.getAddHouseholdMemberButton().should('be.visible');
+      ApplicationsPage.getViewApplicationPage().should('be.visible');
+      ApplicationsPage.getEditApplicantButton().should('be.visible');
+      ApplicationsPage.getSensitiveDataButton().should('be.visible');
+      ApplicationsPage.getChangeApplicationDateButton().should('be.visible');
+      ApplicationsPage.getChangeApplicationStatusButton().should('be.visible');
+      ApplicationsPage.getEditHouseholdMemberButton().should('be.visible');
+      ApplicationsPage.getAddHouseholdMemberButton().should('be.visible');
+    });
   });
 });

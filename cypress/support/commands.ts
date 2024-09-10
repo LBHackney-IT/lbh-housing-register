@@ -2,6 +2,8 @@ import { faker } from '@faker-js/faker/locale/en_GB';
 import { mount } from 'cypress/react';
 
 import { Application } from '../../domain/HousingApi';
+import { HackneyGoogleUserWithPermissions } from '../../lib/utils/googleAuth';
+
 // ***********************************************
 // This example commands.ts shows you how to
 // create various custom commands and overwrite
@@ -76,6 +78,20 @@ Cypress.Commands.add(
 );
 
 Cypress.Commands.add(
+  'mockHousingRegisterApiGetApplicationsByStatusAndAssignedTo',
+  (user: HackneyGoogleUserWithPermissions) => {
+    cy.task('nock', {
+      hostname: Cypress.env('HOUSING_REGISTER_API'),
+      method: 'GET',
+      path: `/applications/ListApplicationsByAssignedTo?status=Submitted&assignedTo=${user.email}&Page=1&PageSize=10`,
+      persist: true,
+      status: 200,
+      body: { user, results: [], totalResults: 0, page: 1, pageSize: 10 },
+    });
+  }
+);
+
+Cypress.Commands.add(
   'mockHousingRegisterApiGetApplications',
   (applicationId: string, application: Application) => {
     cy.task('nock', {
@@ -125,31 +141,27 @@ Cypress.Commands.add(
   }
 );
 
+const issuedAtInMilliseconds = new Date().getMilliseconds();
+
+const generateUser = (groupEnv: string) => ({
+  email: faker.internet.email({ provider: 'hackneyTEST.gov.uk' }),
+  name: faker.person.fullName(),
+  groups: [Cypress.env(groupEnv)],
+  sub: faker.number.int().toString(),
+  iss: 'TestIssuer',
+  iat: issuedAtInMilliseconds,
+});
+
 Cypress.Commands.add('loginAsUser', (userType: string) => {
   const users = {
-    officer: {
-      email: faker.internet.email({ provider: 'hackneyTEST.gov.uk' }),
-      name: faker.person.fullName(),
-      groups: Cypress.env('AUTHORISED_OFFICER_GROUP'),
-    },
-    manager: {
-      email: faker.internet.email({ provider: 'hackneyTEST.gov.uk' }),
-      name: faker.person.fullName(),
-      groups: Cypress.env('AUTHORISED_MANAGER_GROUP'),
-    },
-    admin: {
-      email: faker.internet.email({ provider: 'hackneyTEST.gov.uk' }),
-      name: faker.person.fullName(),
-      groups: Cypress.env('AUTHORISED_ADMIN_GROUP'),
-    },
-    readOnly: {
-      email: faker.internet.email({ provider: 'hackneyTEST.gov.uk' }),
-      name: faker.person.fullName(),
-      groups: Cypress.env('AUTHORISED_READONLY_GROUP'),
-    },
+    officer: generateUser('AUTHORISED_OFFICER_GROUP'),
+    manager: generateUser('AUTHORISED_MANAGER_GROUP'),
+    admin: generateUser('AUTHORISED_ADMIN_GROUP'),
+    readOnly: generateUser('AUTHORISED_READONLY_GROUP'),
   };
 
   const user = users[userType];
+
   if (!user) {
     throw new Error(`No user data found for user type "${userType}"`);
   }
@@ -161,5 +173,6 @@ Cypress.Commands.add('loginAsUser', (userType: string) => {
     cy.getCookies().should('be.empty');
     cy.setCookie(cookieName, token as string);
     cy.getCookie(cookieName).should('have.property', 'value', token);
+    cy.wrap(user).as('currentUser');
   });
 });

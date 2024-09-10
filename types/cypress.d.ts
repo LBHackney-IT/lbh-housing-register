@@ -4,7 +4,7 @@ declare global {
   namespace Cypress {
     interface Chainable {
       generateEmptyApplication(): Chainable<void>;
-      loginAsUser(groups: string): Chainable<void>;
+      loginAsUser(userType: string): Chainable<void>;
       mockHousingRegisterApiGetApplicationsByStatusAndAssignedTo(
         user: HackneyGoogleUserWithPermissions
       ): Chainable<void>;

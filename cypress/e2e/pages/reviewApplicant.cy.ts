@@ -8,11 +8,11 @@ const applicationId = faker.string.uuid();
 
 const application = generateApplication(applicationId, personId);
 
-describe.skip('Review applicant details', () => {
+describe('Review applicant details', () => {
   beforeEach(() => {
+    cy.task('clearNock');
     cy.clearAllCookies();
     cy.loginAsUser('readOnly');
-    cy.task('clearNock');
     ReviewApplicantPage.mockHousingRegisterApiGetApplications(
       applicationId,
       application

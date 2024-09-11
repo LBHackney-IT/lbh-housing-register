@@ -82,6 +82,12 @@ jobs:
       browser:
         type: string
         default: chrome
+      height:
+        type: integer
+        default: 768
+      width:
+        type: integer
+        default: 1366
     steps:
       - cypress/install:
           package-manager: npm
@@ -89,7 +95,7 @@ jobs:
           install-command: npm install
           post-install: npm run build
       - cypress/run-tests:
-          cypress-command: npx cypress run --browser=<< parameters.browser >> --reporter cypress-circleci-reporter
+          cypress-command: npx cypress run --browser=<< parameters.browser >> --config viewportHeight=<< parameters.height >>,viewportWidth=<< parameters.width >> --reporter cypress-circleci-reporter
       - store_test_results:
           path: test_results
 
@@ -170,26 +176,72 @@ workflows:
           requires:
             - run-tests
       - run-cypress-e2e:
-          name: E2E Tests - Chrome
           requires:
             - install-dependencies
-          browser: chrome
-          filters:
-            branches:
-              only: development
-      - run-cypress-e2e:
-          name: E2E Tests - Firefox
-          requires:
-            - install-dependencies
-          browser: firefox
+          matrix:
+            parameters:
+              browser: [chrome, firefox]
+              # mobile, tablet, chromebook/desktop
+              height: [480, 768, 960]
+              # mobile, tablet, chromebook, desktop
+              width: [320, 1024, 1366, 1536]
+            exclude:
+              # exclude screen combinations that don't make sense
+              - browser: chrome
+                height: 480
+                width: 1536
+              - browser: chrome
+                height: 480
+                width: 1366
+              - browser: chrome
+                height: 480
+                width: 1024
+              - browser: firefox
+                height: 480
+                width: 1536
+              - browser: firefox
+                height: 480
+                width: 1366
+              - browser: firefox
+                height: 480
+                width: 1024
+              - browser: chrome
+                height: 768
+                width: 1536
+              - browser: chrome
+                height: 768
+                width: 1366
+              - browser: chrome
+                height: 768
+                width: 320
+              - browser: firefox
+                height: 768
+                width: 1536
+              - browser: firefox
+                height: 768
+                width: 1366
+              - browser: firefox
+                height: 768
+                width: 320
+              - browser: chrome
+                height: 960
+                width: 1024
+              - browser: chrome
+                height: 960
+                width: 320
+              - browser: firefox
+                height: 960
+                width: 1024
+              - browser: firefox
+                height: 960
+                width: 320
           filters:
             branches:
               only: development
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:
-            - E2E Tests - Chrome
-            - E2E Tests - Firefox
+            - run-cypress-e2e
           filters:
             branches:
               only: development

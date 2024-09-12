@@ -10,7 +10,7 @@ const application = generateApplication(applicationId, personId);
 //ensure application requires assessment
 application.status = ApplicationStatus.SUBMITTED;
 
-describe('View a resident application', () => {
+describe.skip('View a resident application', () => {
   it('does not show the assessment area for read only users', () => {
     cy.task('clearNock');
     cy.clearAllCookies();

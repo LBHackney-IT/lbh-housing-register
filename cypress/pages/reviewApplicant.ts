@@ -1,4 +1,4 @@
-import { Application } from '../../domain/HousingApi';
+// import { Application } from '../../domain/HousingApi';
 
 class ReviewApplicantPage {
   static visit(applicationId: string, personId: string) {
@@ -20,18 +20,18 @@ class ReviewApplicantPage {
     return cy.get(`[data-testid="${testId}"]`);
   }
 
-  static mockHousingRegisterApiGetApplications(
-    applicationId: string,
-    application: Application
-  ) {
-    cy.task('nock', {
-      hostname: `${Cypress.env('HOUSING_REGISTER_API')}`,
-      method: 'GET',
-      path: `/applications/${applicationId}`,
-      status: 200,
-      body: application,
-    });
-  }
+  //   static mockHousingRegisterApiGetApplications(
+  //     applicationId: string,
+  //     application: Application
+  //   ) {
+  //     cy.task('nock', {
+  //       hostname: `${Cypress.env('HOUSING_REGISTER_API')}`,
+  //       method: 'GET',
+  //       path: `/applications/${applicationId}`,
+  //       status: 200,
+  //       body: application,
+  //     });
+  //   }
 }
 
 export default ReviewApplicantPage;

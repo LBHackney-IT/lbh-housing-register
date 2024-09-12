@@ -11,15 +11,13 @@ const application = generateApplication(applicationId, personId);
 application.status = ApplicationStatus.SUBMITTED;
 
 describe('View a resident application', () => {
-  beforeEach(() => {
+  it('does not show the assessment area for read only users', () => {
     cy.task('clearNock');
     cy.clearAllCookies();
     cy.loginAsUser('readOnly');
 
     cy.mockHousingRegisterApiGetApplications(applicationId, application);
     cy.mockActivityHistoryApiEmptyResponse(applicationId);
-  });
-  it('does not show the assessment area for read only users', () => {
     ViewApplicationPage.visit(applicationId);
     ViewApplicationPage.getAssessmentNavLink().should('not.exist');
   });

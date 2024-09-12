@@ -9,25 +9,15 @@ const applicationId = faker.string.uuid();
 const application = generateApplication(applicationId, personId);
 
 describe('Review applicant details', () => {
-  beforeEach(() => {
+  it('shows correct tabs for read only users', () => {
     cy.task('clearNock');
     cy.clearAllCookies();
     cy.loginAsUser('readOnly');
     cy.mockHousingRegisterApiGetApplications(applicationId, application);
-  });
 
-  it('shows the money section for read only users', () => {
     ReviewApplicantPage.visit(applicationId, personId);
     ReviewApplicantPage.getMoneySectionNavLink().should('be.visible');
-  });
-
-  it('shows the health section for read only users', () => {
-    ReviewApplicantPage.visit(applicationId, personId);
     ReviewApplicantPage.getHealthSectionNavLink().should('be.visible');
-  });
-
-  it("doesn't show the view documents button for read only users", () => {
-    ReviewApplicantPage.visit(applicationId, personId);
     ReviewApplicantPage.getViewDocumentsButton().should('not.exist');
   });
 });

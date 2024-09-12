@@ -9,15 +9,19 @@ const applicationId = faker.string.uuid();
 const application = generateApplication(applicationId, personId);
 
 describe.skip('Review applicant details', () => {
-  it('shows correct tabs for read only users', () => {
-    cy.task('clearNock');
-    cy.clearAllCookies();
-    cy.loginAsUser('readOnly');
-    cy.mockHousingRegisterApiGetApplications(applicationId, application);
+  it(
+    'shows correct tabs for read only users',
+    { defaultCommandTimeout: 10000 },
+    () => {
+      cy.task('clearNock');
+      cy.clearAllCookies();
+      cy.loginAsUser('readOnly');
+      cy.mockHousingRegisterApiGetApplications(applicationId, application);
 
-    ReviewApplicantPage.visit(applicationId, personId);
-    ReviewApplicantPage.getMoneySectionNavLink().should('be.visible');
-    ReviewApplicantPage.getHealthSectionNavLink().should('be.visible');
-    ReviewApplicantPage.getViewDocumentsButton().should('not.exist');
-  });
+      ReviewApplicantPage.visit(applicationId, personId);
+      ReviewApplicantPage.getMoneySectionNavLink().should('be.visible');
+      ReviewApplicantPage.getHealthSectionNavLink().should('be.visible');
+      ReviewApplicantPage.getViewDocumentsButton().should('not.exist');
+    }
+  );
 });

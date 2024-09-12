@@ -10,9 +10,9 @@ const application = generateApplication(applicationId, personId);
 
 describe('Review applicant details', () => {
   beforeEach(() => {
+    cy.task('clearNock');
     cy.clearAllCookies();
     cy.loginAsUser('readOnly');
-    cy.task('clearNock');
     cy.mockHousingRegisterApiGetApplications(applicationId, application);
   });
 

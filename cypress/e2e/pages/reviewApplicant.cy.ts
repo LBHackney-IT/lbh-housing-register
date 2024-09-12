@@ -9,20 +9,13 @@ const applicationId = faker.string.uuid();
 const application = generateApplication(applicationId, personId);
 
 describe('Review applicant details', () => {
-  // beforeEach(() => {
-  //   cy.task('clearNock');
-  //   cy.clearAllCookies();
-  //   cy.loginAsUser('readOnly');
-  //   ReviewApplicantPage.mockHousingRegisterApiGetApplications(
-  //     applicationId,
-  //     application
-  //   );
-  // });
-
-  it('shows the money section for read only users', () => {
+  beforeEach(() => {
     cy.task('clearNock');
     cy.clearAllCookies();
     cy.loginAsUser('readOnly');
+  });
+
+  it('shows the money section for read only users', () => {
     ReviewApplicantPage.mockHousingRegisterApiGetApplications(
       applicationId,
       application
@@ -32,9 +25,6 @@ describe('Review applicant details', () => {
   });
 
   it('shows the health section for read only users', () => {
-    cy.task('clearNock');
-    cy.clearAllCookies();
-    cy.loginAsUser('readOnly');
     ReviewApplicantPage.mockHousingRegisterApiGetApplications(
       applicationId,
       application
@@ -44,9 +34,6 @@ describe('Review applicant details', () => {
   });
 
   it("doesn't show the view documents button for read only users", () => {
-    cy.task('clearNock');
-    cy.clearAllCookies();
-    cy.loginAsUser('readOnly');
     ReviewApplicantPage.mockHousingRegisterApiGetApplications(
       applicationId,
       application

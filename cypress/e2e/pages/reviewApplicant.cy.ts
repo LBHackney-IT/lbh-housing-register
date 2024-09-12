@@ -8,20 +8,26 @@ const applicationId = faker.string.uuid();
 
 const application = generateApplication(applicationId, personId);
 
-describe.skip('Review applicant details', () => {
-  it(
-    'shows correct tabs for read only users',
-    { defaultCommandTimeout: 10000 },
-    () => {
-      cy.task('clearNock');
-      cy.clearAllCookies();
-      cy.loginAsUser('readOnly');
-      cy.mockHousingRegisterApiGetApplications(applicationId, application);
+describe('Review applicant details', { defaultCommandTimeout: 10000 }, () => {
+  beforeEach(() => {
+    cy.clearAllCookies();
+    cy.loginAsUser('readOnly');
+    cy.task('clearNock');
+    cy.mockHousingRegisterApiGetApplications(applicationId, application);
+  });
 
-      ReviewApplicantPage.visit(applicationId, personId);
-      ReviewApplicantPage.getMoneySectionNavLink().should('be.visible');
-      ReviewApplicantPage.getHealthSectionNavLink().should('be.visible');
-      ReviewApplicantPage.getViewDocumentsButton().should('not.exist');
-    }
-  );
+  it('shows the money section for read only users', () => {
+    ReviewApplicantPage.visit(applicationId, personId);
+    ReviewApplicantPage.getMoneySectionNavLink().should('be.visible');
+  });
+
+  it('shows the health section for read only users', () => {
+    ReviewApplicantPage.visit(applicationId, personId);
+    ReviewApplicantPage.getHealthSectionNavLink().should('be.visible');
+  });
+
+  it("doesn't show the view documents button for read only users", () => {
+    ReviewApplicantPage.visit(applicationId, personId);
+    ReviewApplicantPage.getViewDocumentsButton().should('not.exist');
+  });
 });

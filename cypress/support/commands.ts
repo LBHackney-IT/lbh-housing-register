@@ -3,6 +3,7 @@ import { mount } from 'cypress/react';
 
 import { Application } from '../../domain/HousingApi';
 import { HackneyGoogleUserWithPermissions } from '../../lib/utils/googleAuth';
+//import { method } from 'cypress/types/bluebird';
 
 // ***********************************************
 // This example commands.ts shows you how to
@@ -35,7 +36,7 @@ Cypress.Commands.add('mount', mount);
 
 Cypress.Commands.add('generateEmptyApplication', () => {
   cy.writeFile('cypress/fixtures/application.json', {
-    id: faker.string.uuid(),
+    id: '61d0b1d5-bcf1-44a2-978d-46f02a9d98e6',
     reference: faker.string.alphanumeric(10),
     status: 'New',
     sensitiveData: false,
@@ -92,6 +93,19 @@ Cypress.Commands.add(
 );
 
 Cypress.Commands.add(
+  'mockHousingRegisterApiPostApplications',
+  (application: Application) => {
+    cy.task('nock', {
+      hostname: Cypress.env('HOUSING_REGISTER_API'),
+      method: 'POST',
+      path: '/applications',
+      status: 201,
+      body: application,
+    });
+  }
+);
+
+Cypress.Commands.add(
   'mockHousingRegisterApiGetApplications',
   (applicationId: string, application: Application) => {
     cy.task('nock', {
@@ -103,6 +117,31 @@ Cypress.Commands.add(
     });
   }
 );
+
+Cypress.Commands.add('mockHousingRegisterApiGenerate', () => {
+  cy.task('nock', {
+    hostname: Cypress.env('HOUSING_REGISTER_API'),
+    method: 'POST',
+    path: `auth/generate`,
+    status: 200,
+    body: {
+      success: true,
+    },
+  });
+});
+
+Cypress.Commands.add('mockHousingRegisterApiVerify', () => {
+  cy.task('nock', {
+    hostname: Cypress.env('HOUSING_REGISTER_API'),
+    method: 'POST',
+    path: `auth/verify`,
+    status: 200,
+    body: {
+      AccessToken: '123456',
+    },
+  });
+});
+
 Cypress.Commands.add(
   'mockHousingRegisterApiPostSearchResults',
   (application: Application) => {
@@ -175,4 +214,16 @@ Cypress.Commands.add('loginAsUser', (userType: string) => {
     cy.getCookie(cookieName).should('have.property', 'value', token);
     cy.wrap(user).as('currentUser');
   });
+});
+
+Cypress.Commands.add('loginAsResident', (applicationId: string) => {
+  const cookieDetails = { application_id: applicationId };
+  const cookieName = 'housing_user';
+  cy.getCookies().should('be.empty');
+  cy.setCookie(cookieName, 'token_here');
+  cy.getCookie(cookieName).should(
+    'have.property',
+    'value',
+    JSON.stringify(cookieDetails)
+  );
 });

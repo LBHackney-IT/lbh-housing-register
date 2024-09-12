@@ -1,3 +1,4 @@
+//import { Applicant } from 'domain/HousingApi';
 import { HackneyGoogleUserWithPermissions } from 'lib/utils/googleAuth';
 
 declare global {
@@ -5,6 +6,7 @@ declare global {
     interface Chainable {
       generateEmptyApplication(): Chainable<void>;
       loginAsUser(userType: string): Chainable<void>;
+      loginAsResident(applicationId: string): Chainable<void>;
       mockHousingRegisterApiGetApplicationsByStatusAndAssignedTo(
         user: HackneyGoogleUserWithPermissions
       ): Chainable<void>;
@@ -16,6 +18,11 @@ declare global {
         applicationId: string,
         application: Application
       ): Chainable<void>;
+      mockHousingRegisterApiPostApplications(
+        application: Application
+      ): Chainable<void>;
+      mockHousingRegisterApiGenerate(): Chainable<void>;
+      mockHousingRegisterApiVerify(): Chainable<void>;
       mount: typeof mount;
     }
   }

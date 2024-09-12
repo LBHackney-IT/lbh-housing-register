@@ -21,7 +21,10 @@ const endpoint: NextApiHandler = async (
     case 'PATCH':
       try {
         const application = JSON.parse(req.body);
+        console.dir(application);
+
         const id = req.query.id as string;
+        console.log(canUpdateApplication(req, id));
         if (
           canUpdateApplication(req, id) ||
           (isStaffAction(application) &&

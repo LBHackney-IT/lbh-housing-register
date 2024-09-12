@@ -1,7 +1,9 @@
 import { withSentry } from '@sentry/nextjs';
 import { StatusCodes } from 'http-status-codes';
-import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+
 import { createVerifyCode } from '../../../lib/gateways/applications-api';
+
+import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -11,7 +13,11 @@ const endpoint: NextApiHandler = async (
     case 'POST':
       try {
         const request = JSON.parse(req.body);
+        console.log('auth generate request');
+        console.dir(request);
         const data = await createVerifyCode(request);
+        console.log('auth generate data');
+        console.dir(data);
         res.status(StatusCodes.OK).json(data);
       } catch (error) {
         console.error(error);

@@ -4,7 +4,7 @@ import { ApplicationStatus } from '../../../lib/types/application-status';
 import { generateApplication } from '../../../testUtils/applicationHelper';
 import ViewApplicationPage from '../../pages/viewApplication';
 
-describe.skip('View a resident application', () => {
+describe('View a resident application', () => {
   it('does not show the assessment area for read only users', () => {
     const applicationId = faker.string.uuid();
     const personId = faker.string.uuid();

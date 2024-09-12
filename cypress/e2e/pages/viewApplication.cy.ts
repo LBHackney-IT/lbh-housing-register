@@ -16,11 +16,8 @@ describe.skip('View a resident application', () => {
     cy.clearAllCookies();
     cy.loginAsUser('readOnly');
 
-    ViewApplicationPage.mockActivityHistoryApi(applicationId);
-    ViewApplicationPage.mockHousingRegisterApiGetApplications(
-      applicationId,
-      application
-    );
+    cy.mockActivityHistoryApiEmptyResponse(applicationId);
+    cy.mockHousingRegisterApiGetApplications(applicationId, application);
 
     ViewApplicationPage.visit(applicationId);
     ViewApplicationPage.getAssessmentNavLink().should('not.exist');

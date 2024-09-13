@@ -9,13 +9,13 @@ orbs:
 executors:
   node-executor:
     docker:
-      - image: cimg/node:16.20-browsers
+      - image: cimg/node:20.17-browsers
   docker-python:
     docker:
       - image: circleci/python:3.7
   cypress-e2e-executor:
     docker:
-      - image: cimg/node:18.20-browsers
+      - image: cimg/node:20.17-browsers
 
 references:
   workspace_root: &workspace_root '~'
@@ -237,7 +237,7 @@ workflows:
                 width: 320
           filters:
             branches:
-              only: development
+              only: TS-1666-HR-Update-Node-and-packages
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:

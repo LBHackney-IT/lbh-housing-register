@@ -29,6 +29,7 @@
     "linebreak-style": ["error", "unix"],
     "require-atomic-updates": "off",
     "react/react-in-jsx-scope": "off",
+    "no-warning-comments": "off",
     "import/no-extraneous-dependencies": [
       "error",
       {

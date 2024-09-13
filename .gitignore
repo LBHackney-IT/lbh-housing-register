@@ -18,6 +18,7 @@
 .serverless
 /.idea/.idea.lbh-housing-register.dir/.idea
 /.vs
+tsconfig.tsbuildinfo
 
 # Sentry
 .sentryclirc

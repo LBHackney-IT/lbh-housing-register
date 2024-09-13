@@ -109,14 +109,6 @@ These are as follows:
 
 The scope and expectations around permissions have been kept fairly limited at this stage, but is an area for future enhancements.
 
-### Mock Server
-
-The app comes with a [mock server](http://mocks-server.org) for mock requests to external APIs. This can be be run with `npm run mocks`, and will be available on port 5000.
-
-e.g. `http://localhost:5000/api/applications` will return a list of applications.
-
-To connect directly to the Housing Register API, update the `HOUSING_REGISTER_API` variable in the `.env` file.
-
 ### Pre-commit hooks
 
 Repository has pre-commit hooks configuration to prevent direct commits to main branches and for scanning secrets. Please ensure you have [pre-commit framework](https://pre-commit.com/) installed before starting development work.

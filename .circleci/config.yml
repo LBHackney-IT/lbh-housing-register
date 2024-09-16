@@ -45,8 +45,7 @@ jobs:
             - ./.cache/Cypress
       - persist_to_workspace:
           root: *workspace_root
-          paths:
-            - .
+          paths: .
 
   run-tests:
     executor: node-executor
@@ -55,7 +54,7 @@ jobs:
           package-manager: npm
           install-command: npm install
       - cypress/run-tests:
-          cypress-command: npx cypress run --component --reporter junit --reporter-options "mochaFile=test_results/cypress-component-[hash].xml"
+          cypress-command: npx cypress run --component --reporter junit
       - run:
           name: Run Jest Tests
           command: npm run test:ci
@@ -238,7 +237,7 @@ workflows:
                 width: 320
           filters:
             branches:
-              only: TS-1666-HR-Update-Node-and-packages
+              only: development
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:

@@ -79,10 +79,6 @@ export default defineConfig({
     experimentalWebKitSupport: true,
     video: true,
     screenshotOnRunFailure: true,
-    reporter: 'junit',
-    reporterOptions: {
-      mochaFile: 'test_results/e2e-[hash].xml',
-    },
   },
   component: {
     devServer: {

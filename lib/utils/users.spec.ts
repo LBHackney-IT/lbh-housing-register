@@ -21,14 +21,19 @@ describe('users', () => {
       it('calls parse on cookie with cookie header value when provided', () => {
         const parseSpy = jest.spyOn(cookie, 'parse');
         const req: ApiRequest = createRequest();
-        req.headers = {
-          cookie: `someToken=abc123`,
+
+        const newReq = {
+          ...req,
+          headers: {
+            ...req.headers,
+            cookie: `someToken=abc123`,
+          },
         };
 
-        getUser(req);
+        getUser(newReq);
 
         expect(parseSpy).toHaveBeenCalledTimes(1);
-        expect(parseSpy).toHaveBeenCalledWith(req.headers.cookie);
+        expect(parseSpy).toHaveBeenCalledWith(newReq.headers.cookie);
       });
 
       it('calls parse on cookie with empty string when cookie not present in the header', () => {
@@ -43,11 +48,16 @@ describe('users', () => {
 
       it('returns undefined when housing_user cookie not found in the headers', () => {
         const req: ApiRequest = createRequest();
-        req.headers = {
-          cookie: `someToken=abc123`,
+        const newReq = {
+          ...req,
+          headers: {
+            ...req.headers,
+
+            cookie: `someToken=abc123`,
+          },
         };
 
-        expect(getUser(req)).toBeUndefined();
+        expect(getUser(newReq)).toBeUndefined();
       });
     });
 
@@ -59,9 +69,13 @@ describe('users', () => {
       const tokenSecret = 'secret';
       const verifyFunctionName = 'verify';
       const decodeFunctionName = 'decode';
+      const newReq = {
+        ...req,
+        headers: {
+          ...req.headers,
 
-      req.headers = {
-        cookie: `housing_user=${parsedToken}`,
+          cookie: `housing_user=${parsedToken}`,
+        },
       };
 
       beforeEach(() => {
@@ -78,7 +92,7 @@ describe('users', () => {
           throw new jwt.JsonWebTokenError('token parse error');
         });
 
-        expect(getUser(req)).toBeUndefined();
+        expect(getUser(newReq)).toBeUndefined();
       });
 
       it('verifies token when SKIP_VERIFY_TOKEN is not set', () => {
@@ -87,7 +101,7 @@ describe('users', () => {
         const verifySpy = jest.spyOn(jsonwebtoken, verifyFunctionName);
         const decodeSpy = jest.spyOn(jsonwebtoken, decodeFunctionName);
 
-        getUser(req);
+        getUser(newReq);
 
         expect(verifySpy).toHaveBeenCalledTimes(1);
         expect(verifySpy).toHaveBeenCalledWith(parsedToken, tokenSecret);
@@ -100,7 +114,7 @@ describe('users', () => {
         const verifySpy = jest.spyOn(jsonwebtoken, verifyFunctionName);
         const decodeSpy = jest.spyOn(jsonwebtoken, decodeFunctionName);
 
-        getUser(req);
+        getUser(newReq);
 
         expect(verifySpy).toHaveBeenCalledTimes(1);
         expect(verifySpy).toHaveBeenCalledWith(parsedToken, tokenSecret);
@@ -113,7 +127,7 @@ describe('users', () => {
         const verifySpy = jest.spyOn(jsonwebtoken, verifyFunctionName);
         const decodeSpy = jest.spyOn(jsonwebtoken, decodeFunctionName);
 
-        getUser(req);
+        getUser(newReq);
 
         expect(decodeSpy).toHaveBeenCalledTimes(1);
         expect(decodeSpy).toHaveBeenCalledWith(parsedToken);
@@ -140,16 +154,20 @@ describe('users', () => {
         const applicationId = faker.string.uuid();
         const { signedToken } = generateSignedResidentToken(applicationId);
         const req: ApiRequest = createRequest();
+        const newReq = {
+          ...req,
+          headers: {
+            ...req.headers,
 
-        req.headers = {
-          cookie: `housing_user=${signedToken}`,
+            cookie: `housing_user=${signedToken}`,
+          },
         };
 
         jest
           .spyOn(cookie, 'parse')
           .mockReturnValueOnce({ housing_user: signedToken });
 
-        const user = getUser(req);
+        const user = getUser(newReq);
         expect(user?.application_id).toBe(applicationId);
       });
     });

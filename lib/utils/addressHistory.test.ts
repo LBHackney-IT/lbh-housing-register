@@ -71,7 +71,7 @@ test('formatDate', () => {
   expect(formatDate(new Date())).toBe('June 2020');
 });
 
-test.skip('calculateDurations calculates accurately', () => {
+test('calculateDurations calculates accurately', () => {
   expect(
     calculateDurations([
       {

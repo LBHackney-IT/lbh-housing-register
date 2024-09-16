@@ -54,7 +54,7 @@ jobs:
           package-manager: npm
           install-command: npm install
       - cypress/run-tests:
-          cypress-command: npx cypress run --component --reporter junit --reporter-options "mochaFile=component-[hash].xml"
+          cypress-command: npx cypress run --component --reporter cypress-circleci-reporter
       - run:
           name: Run Jest Tests
           command: npm run test:ci
@@ -95,7 +95,7 @@ jobs:
           install-command: npm install
           post-install: npm run build
       - cypress/run-tests:
-          cypress-command: npx cypress run --browser=<< parameters.browser >> --config viewportHeight=<< parameters.height >>,viewportWidth=<< parameters.width >> --reporter junit
+          cypress-command: npx cypress run --browser=<< parameters.browser >> --config viewportHeight=<< parameters.height >>,viewportWidth=<< parameters.width >> --reporter cypress-circleci-reporter
       - store_test_results:
           path: test_results
 

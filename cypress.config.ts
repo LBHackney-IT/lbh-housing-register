@@ -81,7 +81,7 @@ export default defineConfig({
     screenshotOnRunFailure: true,
     reporter: 'junit',
     reporterOptions: {
-      mochaFile: 'results/e2e-[hash].xml',
+      mochaFile: 'test_results/e2e-[hash].xml',
     },
   },
   component: {

@@ -45,7 +45,8 @@ jobs:
             - ./.cache/Cypress
       - persist_to_workspace:
           root: *workspace_root
-          paths: .
+          paths:
+            - .
 
   run-tests:
     executor: node-executor

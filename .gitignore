@@ -28,6 +28,7 @@ tsconfig.tsbuildinfo
 
 # test coverage
 /coverage
+/results
 
 # Cypress
 cypress.env.json

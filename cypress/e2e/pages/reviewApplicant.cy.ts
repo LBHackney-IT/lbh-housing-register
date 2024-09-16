@@ -8,7 +8,7 @@ const applicationId = faker.string.uuid();
 
 const application = generateApplication(applicationId, personId);
 
-describe('Review applicant details', { defaultCommandTimeout: 10000 }, () => {
+describe('Review applicant details', () => {
   beforeEach(() => {
     cy.clearAllCookies();
     cy.loginAsUser('readOnly');

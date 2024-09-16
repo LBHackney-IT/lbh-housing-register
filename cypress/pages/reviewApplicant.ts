@@ -1,5 +1,3 @@
-// import { Application } from '../../domain/HousingApi';
-
 class ReviewApplicantPage {
   static visit(applicationId: string, personId: string) {
     cy.visit(`applications/view/${applicationId}/${personId}`);

@@ -237,7 +237,7 @@ workflows:
                 width: 320
           filters:
             branches:
-              only: TS-1663-HR-intermittent-pipeline-failure-on-e2e
+              only: development
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:

@@ -75,7 +75,7 @@ export function ButtonLink({
         className={`${className} ${additionalCssClasses}`}
         data-testid={dataTestId}
         draggable="false"
-        {...(disabled && `disabled aria-disabled="true"`)}
+        {...(disabled && { disabled: true, 'aria-disabled': true })}
       >
         {children}
         {svg}

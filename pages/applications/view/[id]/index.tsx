@@ -354,7 +354,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     return { props: { user, data, history } };
   } catch (e) {
-    console.error(e.message);
+    if (e instanceof Error) {
+      console.error(e.message);
+    } else {
+      console.error('An unknown error occurred');
+    }
     return { props: {} };
   }
 };

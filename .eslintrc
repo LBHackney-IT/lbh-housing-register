@@ -4,12 +4,12 @@
     "commonjs": true,
     "es6": true,
     "node": true,
-    "jest": true
+    "jest": true,
+    "es2020": true
   },
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint"],
   "extends": [
-    "@hackney/eslint-config",
     "eslint:recommended",
     "plugin:prettier/recommended",
     "plugin:@next/next/recommended",
@@ -28,18 +28,21 @@
   "rules": {
     "linebreak-style": ["error", "unix"],
     "require-atomic-updates": "off",
-    "react/react-in-jsx-scope": "off",
-    "import/no-extraneous-dependencies": [
-      "error",
-      {
-        "devDependencies": [
-          "**/*.+(test|spec|cy).+(j|t)s?(x)",
-          "cypress.config.ts",
-          "cypress/support/commands.ts",
-          "testUtils/*"
-        ]
-      }
-    ]
+    "react/react-in-jsx-scope": "off"
+    // "import/no-extraneous-dependencies": [
+    //   "error",
+    //   {
+    //     "devDependencies": [
+    //       "**/*.+(test|spec|cy).+(j|t)s?(x)",
+    //       "cypress.config.ts",
+    //       "cypress/support/commands.ts",
+    //       "testUtils/*",
+    //       "**/jest.config.ts",
+    //       "**/jest.setup.ts",
+    //       "**/jest.polyfills.ts"
+    //     ]
+    //   }
+    // ]
   },
   "overrides": [
     {

@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
 import { combineReducers } from 'redux';
+
 import { Application } from '../../domain/HousingApi';
 import application, { autoSaveMiddleware } from './application';
 
@@ -12,15 +13,17 @@ const reducer = combineReducers<Store>({
   application: application.reducer,
 });
 
-const makeStore = () =>
+export const makeStore = (preloadedState: Partial<RootState>) =>
   configureStore({
     reducer,
+    preloadedState,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(autoSaveMiddleware),
   });
 
+export type RootState = ReturnType<typeof reducer>;
 export type AppStore = ReturnType<typeof makeStore>;
-export type RootState = ReturnType<AppStore['getState']>;
 export type AppDispatch = AppStore['dispatch'];
 
-export const wrapper = createWrapper(makeStore);
+// @ts-expect-error create wrapper throws test error. Needs correting
+export const wrapper = createWrapper(makeStore, { debug: true });

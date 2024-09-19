@@ -9,7 +9,6 @@
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint"],
   "extends": [
-    "@hackney/eslint-config",
     "eslint:recommended",
     "plugin:prettier/recommended",
     "plugin:@next/next/recommended",

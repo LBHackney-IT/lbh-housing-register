@@ -13,10 +13,7 @@ describe('Review applicant details', () => {
     cy.clearAllCookies();
     cy.loginAsUser('readOnly');
     cy.task('clearNock');
-    ReviewApplicantPage.mockHousingRegisterApiGetApplications(
-      applicationId,
-      application
-    );
+    cy.mockHousingRegisterApiGetApplications(applicationId, application);
   });
 
   it('shows the money section for read only users', () => {

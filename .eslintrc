@@ -14,6 +14,8 @@
     "plugin:prettier/recommended",
     "plugin:@next/next/recommended",
     "plugin:cypress/recommended"
+    // note these are commented out because the hackney eslint needs updaring to support the newer libraries we're using. To be updated in a future PR.
+    // "@hackney/eslint-config"
   ],
   "parserOptions": {
     "sourceType": "module",
@@ -36,10 +38,7 @@
     //       "**/*.+(test|spec|cy).+(j|t)s?(x)",
     //       "cypress.config.ts",
     //       "cypress/support/commands.ts",
-    //       "testUtils/*",
-    //       "**/jest.config.ts",
-    //       "**/jest.setup.ts",
-    //       "**/jest.polyfills.ts"
+    //       "testUtils/*"
     //     ]
     //   }
     // ]

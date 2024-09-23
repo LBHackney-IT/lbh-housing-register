@@ -15,7 +15,8 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "baseUrl": ".",
-    "typeRoots": ["./types", "./node_modules/@types"]
+    "typeRoots": ["./types", "./node_modules/@types"],
+    "incremental": true
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.js"],
   "exclude": ["cypress.config.ts", "cypress", "node_modules", "**/*.cy.tsx"]

@@ -18,24 +18,27 @@ const endpoint: NextApiHandler = async (
         const template = req.query.template as string;
 
         switch (template) {
-          case 'new-application':
+          case 'new-application': {
             const sendNewApplicationData = await sendNewApplicationEmail(
               notification
             );
             res.status(StatusCodes.OK).json(sendNewApplicationData);
             break;
-          case 'medical':
+          }
+          case 'medical': {
             const sendMedicalEmailData = await sendMedicalNeedEmail(
               notification
             );
             res.status(StatusCodes.OK).json(sendMedicalEmailData);
             break;
-          case 'disqualify':
+          }
+          case 'disqualify': {
             const sendDisqualifyEmailData = await sendDisqualifyEmail(
               notification
             );
             res.status(StatusCodes.OK).json(sendDisqualifyEmailData);
             break;
+          }
           default:
             res
               .status(StatusCodes.BAD_REQUEST)

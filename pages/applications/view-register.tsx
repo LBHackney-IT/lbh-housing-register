@@ -40,6 +40,8 @@ export default function ViewAllApplicationsPage({
   page,
   pageSize,
 }: PageProps): JSX.Element {
+  console.log('applications', applications);
+  console.log('applicationStatusCounts', applicationStatusCounts);
   const router = useRouter();
   const [selectedFilter, setSelectedFilter] = useState('');
 
@@ -65,7 +67,6 @@ export default function ViewAllApplicationsPage({
     event.preventDefault();
     setSelectedFilter('');
   };
-  /*  eslint-disable react/jsx-no-constructed-context-values */
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="All applications">

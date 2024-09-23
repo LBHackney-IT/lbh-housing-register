@@ -25,5 +25,5 @@ export type RootState = ReturnType<typeof reducer>;
 export type AppStore = ReturnType<typeof makeStore>;
 export type AppDispatch = AppStore['dispatch'];
 
-// @ts-expect-error create wrapper throws test error. Needs correting
+// @ts-expect-error create wrapper throws test error. Needs correcting.
 export const wrapper = createWrapper(makeStore, { debug: true });

@@ -4,7 +4,7 @@ import { NotifyClient } from 'notifications-node-client';
 export const sendNewApplicationEmail = async (
   request: NotifyRequest
 ): Promise<NotifyResponse> => {
-  var notifyClient = new NotifyClient(process.env.NOTIFY_API_KEY);
+  const notifyClient = new NotifyClient(process.env.NOTIFY_API_KEY);
   const response = await notifyClient
     .sendEmail(
       process.env.NOTIFY_TEMPLATE_NEW_APPLICATION,
@@ -14,8 +14,8 @@ export const sendNewApplicationEmail = async (
         reference: request.reference,
       }
     )
-    .then((response: any) => console.log(response.data))
-    .catch((err: any) => console.error(err.response.data.errors));
+    .then((response: NotifyResponse) => console.log(response))
+    .catch((err: NotifyResponse) => console.error(err));
 
   return response as NotifyResponse;
 };
@@ -23,14 +23,14 @@ export const sendNewApplicationEmail = async (
 export const sendMedicalNeedEmail = async (
   request: NotifyRequest
 ): Promise<NotifyResponse> => {
-  var notifyClient = new NotifyClient(process.env.NOTIFY_API_KEY);
+  const notifyClient = new NotifyClient(process.env.NOTIFY_API_KEY);
   const response = await notifyClient
     .sendEmail(process.env.NOTIFY_TEMPLATE_MEDICAL_NEED, request.emailAddress, {
       personalisation: request.personalisation,
       reference: request.reference,
     })
-    .then((response: any) => console.log(response.data))
-    .catch((err: any) => console.error(err.response.data.errors));
+    .then((response: NotifyResponse) => console.log(response))
+    .catch((err: NotifyResponse) => console.error(err));
 
   return response as NotifyResponse;
 };
@@ -38,14 +38,14 @@ export const sendMedicalNeedEmail = async (
 export const sendDisqualifyEmail = async (
   request: NotifyRequest
 ): Promise<NotifyResponse> => {
-  var notifyClient = new NotifyClient(process.env.NOTIFY_API_KEY);
+  const notifyClient = new NotifyClient(process.env.NOTIFY_API_KEY);
   const response = await notifyClient
     .sendEmail(process.env.NOTIFY_TEMPLATE_DISQUALIFY, request.emailAddress, {
       personalisation: request.personalisation,
       reference: request.reference,
     })
-    .then((response: any) => console.log(response.data))
-    .catch((err: any) => console.error(err.response.data.errors));
+    .then((response: NotifyResponse) => console.log(response))
+    .catch((err: NotifyResponse) => console.error(err));
 
   return response as NotifyResponse;
 };

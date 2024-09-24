@@ -10,7 +10,7 @@ const endpoint: NextApiHandler = async (
   switch (req.method) {
     case 'POST':
       try {
-        await removeAuthCookie(res);
+        removeAuthCookie(res);
 
         res
           .status(StatusCodes.OK)

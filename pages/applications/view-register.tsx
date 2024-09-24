@@ -40,8 +40,6 @@ export default function ViewAllApplicationsPage({
   page,
   pageSize,
 }: PageProps): JSX.Element {
-  console.log('applications', applications);
-  console.log('applicationStatusCounts', applicationStatusCounts);
   const router = useRouter();
   const [selectedFilter, setSelectedFilter] = useState('');
 

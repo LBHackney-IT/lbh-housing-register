@@ -5,6 +5,11 @@ class ReviewApplicantPage {
     cy.visit(`applications/view/${applicationId}/${personId}`);
   }
 
+  static getNotesSection() {
+    const testId = 'test-applicant-notes-section';
+    return cy.get(`[data-testid="${testId}"]`);
+  }
+
   static getMoneySectionNavLink() {
     const testId = 'test-applicant-money-section-navigation';
     return cy.get(`[data-testid="${testId}"]`);

@@ -12,8 +12,9 @@ export const getGenderName = (applicant: Applicant): string => {
       return 'Male';
     case 'F':
       return 'Female';
-    default:
     case 'self':
       return applicant.person?.genderDescription ?? '';
+    default:
+      return '';
   }
 };

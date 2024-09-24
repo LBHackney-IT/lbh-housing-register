@@ -13,7 +13,7 @@ export const applicantHasMedicalNeed = (applicant?: Applicant): boolean => {
     'medical-needs'
   );
 
-  return medicalNeeds === 'yes' ?? false;
+  return medicalNeeds === 'yes';
 };
 
 export const applicantsWithMedicalNeed = (application: Application): number => {

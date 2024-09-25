@@ -1,7 +1,7 @@
 /*  eslint-disable @typescript-eslint/no-unused-vars */
 /*  eslint-disable @typescript-eslint/no-explicit-any */
 // disable unused AxiosError and usage of any until reconfiguration/refactor
-import { withSentry } from '@sentry/nextjs';
+import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 import axios, { AxiosError } from 'axios';
 import { StatusCodes } from 'http-status-codes';
 
@@ -62,4 +62,4 @@ const endpoint: NextApiHandler = async (
   }
 };
 
-export default withSentry(endpoint);
+export default wrapApiHandlerWithSentry(endpoint, '/api/applications/[id]');

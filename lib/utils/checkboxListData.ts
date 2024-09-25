@@ -311,7 +311,7 @@ export const residentialStatusCheckboxList = (
 
   let institutionsText = '';
   if (institutions) {
-    var institutionsArray = JSON.parse(institutions);
+    const institutionsArray = JSON.parse(institutions);
     institutionsArray.map((item: string) => {
       institutionsText += item;
     });
@@ -460,7 +460,7 @@ export const addressHistoryCheckboxList = (
 
   if (addressHistory) {
     //Address Line one, Hackney, London, E8 1AB, From Jan 2021 (6 months)
-    var addressHistorysArray = JSON.parse(addressHistory);
+    const addressHistorysArray = JSON.parse(addressHistory);
 
     const durations = calculateDurations(addressHistorysArray);
     const history = addressHistorysArray.map(

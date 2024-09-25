@@ -19,5 +19,12 @@
     "incremental": true
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.js"],
-  "exclude": ["cypress.config.ts", "cypress", "node_modules", "**/*.cy.tsx"]
+  "exclude": [
+    "cypress.config.ts",
+    "cypress",
+    "node_modules",
+    "**/*.cy.tsx",
+    "coverage",
+    "build"
+  ]
 }

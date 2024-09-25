@@ -6,14 +6,15 @@ import { Applicant } from '../../domain/HousingApi';
  * @returns {string}
  */
 export const getGenderName = (applicant: Applicant): string => {
-  const gender = applicant.person?.gender?.toString();
+  const gender = applicant?.person?.gender?.toString() ?? '';
   switch (gender) {
     case 'M':
       return 'Male';
     case 'F':
       return 'Female';
-    default:
     case 'self':
       return applicant.person?.genderDescription ?? '';
+    default:
+      return '';
   }
 };

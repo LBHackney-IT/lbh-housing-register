@@ -1,4 +1,4 @@
-import { withSentry } from '@sentry/nextjs';
+import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { approveNovaletExport } from '../../../../../lib/gateways/applications-api';
@@ -10,32 +10,34 @@ const endpoint: NextApiHandler = async (
 ) => {
   switch (req.method) {
     case 'POST':
-      const user = getSession(req);
+      {
+        const user = getSession(req);
 
-      const auth = getAuth(
-        process.env.AUTHORISED_MANAGER_GROUP as string,
-        user
-      );
+        const auth = getAuth(
+          process.env.AUTHORISED_MANAGER_GROUP as string,
+          user
+        );
 
-      if (!('user' in auth)) {
-        res.status(StatusCodes.FORBIDDEN).json({ message: 'access denied' });
-        return;
-      }
+        if (!('user' in auth)) {
+          res.status(StatusCodes.FORBIDDEN).json({ message: 'access denied' });
+          return;
+        }
 
-      const fileName = req.query.fileName as string;
-      const response = await approveNovaletExport(fileName);
+        const fileName = req.query.fileName as string;
+        const response = await approveNovaletExport(fileName);
 
-      if (response) {
-        res.status(response.status);
+        if (response) {
+          res.status(response.status);
 
-        if (response.status == StatusCodes.OK) {
-          res.send({
-            message: 'Export file approved successfully',
-          });
-        } else {
-          res.send({
-            message: 'Unable to approve export file',
-          });
+          if (response.status == StatusCodes.OK) {
+            res.send({
+              message: 'Export file approved successfully',
+            });
+          } else {
+            res.send({
+              message: 'Unable to approve export file',
+            });
+          }
         }
       }
 
@@ -48,4 +50,7 @@ const endpoint: NextApiHandler = async (
   }
 };
 
-export default withSentry(endpoint);
+export default wrapApiHandlerWithSentry(
+  endpoint,
+  '/api/reports/novalet/approve/[fileName]'
+);

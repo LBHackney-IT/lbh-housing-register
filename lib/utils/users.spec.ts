@@ -1,4 +1,3 @@
-/* eslint-disable import/no-duplicates */
 import { faker } from '@faker-js/faker';
 import cookie from 'cookie';
 import jsonwebtoken from 'jsonwebtoken';

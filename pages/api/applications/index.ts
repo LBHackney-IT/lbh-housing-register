@@ -1,4 +1,4 @@
-import { withSentry } from '@sentry/nextjs';
+import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 import { StatusCodes } from 'http-status-codes';
 
 import { Application } from '../../../domain/HousingApi';
@@ -67,4 +67,4 @@ const endpoint: NextApiHandler = async (
   }
 };
 
-export default withSentry(endpoint);
+export default wrapApiHandlerWithSentry(endpoint, '/api/applications');

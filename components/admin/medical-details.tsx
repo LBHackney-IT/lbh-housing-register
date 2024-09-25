@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import * as Yup from 'yup';
 import { Form, Formik, FormikValues } from 'formik';
-import { Applicant, Application } from '../../domain/HousingApi';
+import { Application } from '../../domain/HousingApi';
 import { applicantHasId } from '../../lib/store/applicant';
 import DateInput, { INVALID_DATE } from '../form/dateinput';
 import { updateApplication } from '../../lib/gateways/internal-api';
@@ -166,7 +166,7 @@ export default function MedicalDetail({
     data.otherMembers && memberIndex > -1
       ? data.otherMembers[memberIndex]
       : data.mainApplicant;
-  var initialValues: FormikValues = {
+  const initialValues: FormikValues = {
     dateFormRecieved: applicant?.medicalNeed?.formRecieved ?? '',
     assessmentDate: applicant?.medicalNeed?.assessmentDate ?? '',
     outcome: applicant?.medicalNeed?.outcome ?? '',

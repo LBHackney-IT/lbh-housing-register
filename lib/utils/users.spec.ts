@@ -1,11 +1,12 @@
 import { faker } from '@faker-js/faker';
 import cookie from 'cookie';
 import jsonwebtoken from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { createRequest, createResponse } from 'node-mocks-http';
 
 import { VerifyAuthResponse } from '../../domain/HousingApi';
 import { envVarsFixture } from '../../testUtils/envVarsHelper';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { ApiRequest, ApiResponse } from '../../testUtils/types';
 import { generateSignedResidentToken } from '../../testUtils/userHelper';
 import { getUser, removeAuthCookie, setAuthCookie } from './users';
 
@@ -18,7 +19,7 @@ describe('users', () => {
     describe('token parse', () => {
       it('calls parse on cookie with cookie header value when provided', () => {
         const parseSpy = jest.spyOn(cookie, 'parse');
-        const req: NextApiRequest = createRequest();
+        const req: ApiRequest = createRequest();
 
         const newReq = {
           ...req,
@@ -26,7 +27,7 @@ describe('users', () => {
             ...req.headers,
             cookie: `someToken=abc123`,
           },
-        } as NextApiRequest;
+        };
 
         getUser(newReq);
 
@@ -36,7 +37,7 @@ describe('users', () => {
 
       it('calls parse on cookie with empty string when cookie not present in the header', () => {
         const parseSpy = jest.spyOn(cookie, 'parse');
-        const req: NextApiRequest = createRequest();
+        const req: ApiRequest = createRequest();
 
         getUser(req);
 
@@ -45,7 +46,7 @@ describe('users', () => {
       });
 
       it('returns undefined when housing_user cookie not found in the headers', () => {
-        const req: NextApiRequest = createRequest();
+        const req: ApiRequest = createRequest();
         const newReq = {
           ...req,
           headers: {
@@ -53,7 +54,7 @@ describe('users', () => {
 
             cookie: `someToken=abc123`,
           },
-        } as NextApiRequest;
+        };
 
         expect(getUser(newReq)).toBeUndefined();
       });
@@ -62,7 +63,7 @@ describe('users', () => {
     describe('token verification', () => {
       const secretFixture = envVarsFixture('HACKNEY_JWT_SECRET');
       const skipTokenVerifyFixture = envVarsFixture('SKIP_VERIFY_TOKEN');
-      const req: NextApiRequest = createRequest();
+      const req: ApiRequest = createRequest();
       const parsedToken = 'abc123';
       const tokenSecret = 'secret';
       const verifyFunctionName = 'verify';
@@ -74,7 +75,7 @@ describe('users', () => {
 
           cookie: `housing_user=${parsedToken}`,
         },
-      } as NextApiRequest;
+      };
 
       beforeEach(() => {
         secretFixture.mock(tokenSecret);
@@ -87,7 +88,7 @@ describe('users', () => {
 
       it('returns undefined when cookie parse throws JsonWebTokenError', () => {
         jest.spyOn(cookie, 'parse').mockImplementationOnce(() => {
-          throw new jsonwebtoken.JsonWebTokenError('token parse error');
+          throw new jwt.JsonWebTokenError('token parse error');
         });
 
         expect(getUser(newReq)).toBeUndefined();
@@ -151,7 +152,7 @@ describe('users', () => {
       it('returns user with correct claims when valid token is provided', () => {
         const applicationId = faker.string.uuid();
         const { signedToken } = generateSignedResidentToken(applicationId);
-        const req: NextApiRequest = createRequest();
+        const req: ApiRequest = createRequest();
         const newReq = {
           ...req,
           headers: {
@@ -159,7 +160,7 @@ describe('users', () => {
 
             cookie: `housing_user=${signedToken}`,
           },
-        } as NextApiRequest;
+        };
 
         jest
           .spyOn(cookie, 'parse')
@@ -180,7 +181,7 @@ describe('users', () => {
             throw new Error(errorMessage);
           });
 
-        const req: NextApiRequest = createRequest();
+        const req: ApiRequest = createRequest();
 
         expect(() => getUser(req)).toThrow(errorMessage);
         expect(parseSpy).toHaveBeenCalledTimes(1);
@@ -196,7 +197,7 @@ describe('users', () => {
     const verifyAuthResponse: VerifyAuthResponse = {
       accessToken: signedToken,
     };
-    const res: NextApiResponse = createResponse();
+    const res: ApiResponse = createResponse();
 
     it('calls serialize on cookie with correct values', () => {
       const serializeSpy = jest.spyOn(cookie, 'serialize');
@@ -233,7 +234,7 @@ describe('users', () => {
       const exp = 'Thu, 01 Jan 1970 00:00:00 GMT';
 
       const expectedCookie = `housing_user=; Domain=.hackney.gov.uk; Path=/; Expires=${exp}`;
-      const res: NextApiResponse = createResponse();
+      const res: ApiResponse = createResponse();
 
       removeAuthCookie(res);
 

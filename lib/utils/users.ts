@@ -1,10 +1,10 @@
 import cookie from 'cookie';
 import jsonwebtoken from 'jsonwebtoken';
-import { NextApiRequest, NextApiResponse } from 'next';
 import { HackneyResident } from '../../domain/HackneyResident';
 import { VerifyAuthResponse } from '../../domain/HousingApi';
 
-export function getUser(req: NextApiRequest) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getUser(req: any) {
   try {
     const cookies = cookie.parse(req.headers.cookie ?? '');
     const parsedToken = cookies['housing_user'];
@@ -26,10 +26,8 @@ export function getUser(req: NextApiRequest) {
   }
 }
 
-export const setAuthCookie = (
-  res: NextApiResponse,
-  data: VerifyAuthResponse
-): void => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const setAuthCookie = (res: any, data: VerifyAuthResponse): void => {
   const jwtCookie = cookie.serialize('housing_user', data.accessToken, {
     domain: '.hackney.gov.uk',
     path: '/',
@@ -38,7 +36,8 @@ export const setAuthCookie = (
   res.setHeader('Set-Cookie', jwtCookie);
 };
 
-export const removeAuthCookie = (res: NextApiResponse): void => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const removeAuthCookie = (res: any): void => {
   const jwtCookie = cookie.serialize('housing_user', '', {
     expires: new Date(0),
     domain: '.hackney.gov.uk',

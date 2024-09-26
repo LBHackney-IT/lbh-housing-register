@@ -62,9 +62,9 @@ const ResidentIndex = (): JSX.Element => {
     currentResident === mainResident
   );
 
-  let sectionNames: FormID[] = [];
-  steps.map((step) => {
-    step.sections.map((section) => {
+  const sectionNames: FormID[] = [];
+  steps.forEach((step) => {
+    step.sections.forEach((section) => {
       sectionNames.push(section.id);
     });
   });

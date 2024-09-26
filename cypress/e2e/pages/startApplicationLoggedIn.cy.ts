@@ -31,7 +31,7 @@ const applicationWithMainApplicant = {
   calculatedBedroomNeed: 1,
 };
 
-const fillInTheForm = () => {
+const fillInTheSignUpForm = () => {
   StartPage.getTitleDropdown().select(title);
   StartPage.getFirstNameInput().type(faker.person.firstName());
   StartPage.getLastNameInput().type(faker.person.lastName());
@@ -89,7 +89,7 @@ describe('Application', () => {
     StartPage.visit();
 
     //fill in the personal details form and submit
-    fillInTheForm();
+    fillInTheSignUpForm();
     StartPage.getSubmitButton().click();
 
     //check that message is shown until (delayed) PATCH call has finished
@@ -123,7 +123,7 @@ describe('Application', () => {
     StartPage.visit();
     StartPage.getErrorSummary().should('not.exist');
 
-    fillInTheForm();
+    fillInTheSignUpForm();
     StartPage.getSubmitButton().click();
 
     StartPage.getErrorSummary().should('be.visible');

@@ -3,6 +3,7 @@ import { mount } from 'cypress/react';
 
 import { Application } from '../../domain/HousingApi';
 import { HackneyGoogleUserWithPermissions } from '../../lib/utils/googleAuth';
+import { StatusCodes } from 'http-status-codes';
 
 // ***********************************************
 // This example commands.ts shows you how to
@@ -30,6 +31,8 @@ import { HackneyGoogleUserWithPermissions } from '../../lib/utils/googleAuth';
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 // ***********************************************
+
+const secret = 'aDummySecret';
 
 Cypress.Commands.add('mount', mount);
 
@@ -93,16 +96,43 @@ Cypress.Commands.add(
 
 Cypress.Commands.add(
   'mockHousingRegisterApiGetApplications',
-  (applicationId: string, application: Application) => {
+  (
+    applicationId: string,
+    application: Application,
+    persist: boolean,
+    delay: number = 0
+  ) => {
     cy.task('nock', {
       hostname: Cypress.env('HOUSING_REGISTER_API'),
       method: 'GET',
       path: `/applications/${applicationId}`,
-      status: 200,
+      statusCode: StatusCodes.OK,
       body: application,
+      persist,
+      delay,
     });
   }
 );
+
+Cypress.Commands.add(
+  'mockHousingRegisterApiPatchApplication',
+  (
+    applicationId: string,
+    body?: Application,
+    delay: number = 0,
+    statusCode: number = StatusCodes.OK
+  ) => {
+    cy.task('nock', {
+      hostname: Cypress.env('HOUSING_REGISTER_API'),
+      method: 'PATCH',
+      path: `/applications/${applicationId}`,
+      statusCode,
+      body,
+      delay,
+    });
+  }
+);
+
 Cypress.Commands.add(
   'mockHousingRegisterApiPostSearchResults',
   (application: Application) => {
@@ -166,8 +196,6 @@ Cypress.Commands.add('loginAsUser', (userType: string) => {
     throw new Error(`No user data found for user type "${userType}"`);
   }
 
-  const secret = 'aDummySecret';
-
   cy.task('generateToken', { user, secret }).then((token) => {
     const cookieName = 'hackneyToken';
     cy.getCookies().should('be.empty');
@@ -176,3 +204,32 @@ Cypress.Commands.add('loginAsUser', (userType: string) => {
     cy.wrap(user).as('currentUser');
   });
 });
+
+Cypress.Commands.add(
+  'loginAsResident',
+  (applicationId: string, setSeenCookieMessage?: boolean) => {
+    const user = {
+      application_id: applicationId,
+    };
+
+    cy.task('generateToken', { user, secret }).then((token) => {
+      const authCookieName = 'housing_user';
+      const cookieMessageCookieName = 'seen_cookie_message';
+
+      cy.getCookies().should('be.empty');
+      cy.setCookie(authCookieName, token as string);
+      cy.getCookie(authCookieName).should('have.property', 'value', token);
+
+      if (setSeenCookieMessage) {
+        cy.setCookie(cookieMessageCookieName, 'true');
+        cy.getCookie(cookieMessageCookieName).should(
+          'have.a.property',
+          'value',
+          'true'
+        );
+      }
+
+      cy.wrap(user).as('currentUser');
+    });
+  }
+);

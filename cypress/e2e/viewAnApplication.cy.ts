@@ -48,7 +48,14 @@ describe('User views a resident application', () => {
   it('as a manager group user I can edit all application details', () => {
     const personId = faker.string.uuid();
     const applicationId = faker.string.uuid();
-    const application = generateApplication(applicationId, personId);
+    const application = generateApplication(
+      applicationId,
+      personId,
+      true,
+      true,
+      true,
+      faker.date.recent().toString()
+    );
 
     cy.task('clearNock');
     cy.clearCookies();

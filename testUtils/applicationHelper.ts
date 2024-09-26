@@ -6,7 +6,11 @@ import { generatePerson } from './personHelper';
 
 export const generateApplication = (
   applicationId: string,
-  personId: string
+  personId: string,
+  addMainApplicant: boolean = true,
+  addOtherMembers: boolean = true,
+  addAssessment?: boolean,
+  submittedAt?: string
 ): Application => {
   return {
     id: applicationId,
@@ -15,26 +19,37 @@ export const generateApplication = (
     sensitiveData: false,
     assignedTo: 'unassigned',
     createdAt: faker.date.recent().toISOString(),
-    submittedAt: faker.date.recent().toString(),
+    submittedAt,
     mainApplicant: {
-      person: generatePerson(personId),
+      person: addMainApplicant ? generatePerson(personId) : undefined,
+      address: undefined,
       contactInformation: {
         emailAddress: faker.internet.email({ provider: 'hackneyTEST.gov.uk' }),
+        phoneNumber: undefined,
+        preferredMethodOfContact: undefined,
       },
+      questions: undefined,
+      requiresMedical: false,
+      medicalNeed: undefined,
     },
-    otherMembers: [
-      {
-        person: generatePerson(personId + 1),
-        contactInformation: {
-          emailAddress: faker.internet.email({
-            provider: 'hackneyTEST.gov.uk',
-          }),
-        },
-      },
-    ],
-    assessment: {
-      effectiveDate: faker.date.recent().toISOString(),
-    },
+    calculatedBedroomNeed: undefined,
+    otherMembers: addOtherMembers
+      ? [
+          {
+            person: generatePerson(personId + 1),
+            contactInformation: {
+              emailAddress: faker.internet.email({
+                provider: 'hackneyTEST.gov.uk',
+              }),
+            },
+          },
+        ]
+      : [],
+    assessment: addAssessment
+      ? {
+          effectiveDate: faker.date.recent().toISOString(),
+        }
+      : undefined,
     importedFromLegacyDatabase: false,
   };
 };

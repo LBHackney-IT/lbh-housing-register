@@ -46,7 +46,15 @@ export default defineConfig({
         },
       });
       on('task', {
-        nock: async ({ hostname, method, path, statusCode, body, persist }) => {
+        nock: async ({
+          hostname,
+          method,
+          path,
+          statusCode,
+          body,
+          persist,
+          delay,
+        }) => {
           if (!nock.isActive()) {
             nock.activate();
           }
@@ -59,11 +67,14 @@ export default defineConfig({
           //   path,
           //   persist,
           //   statusCode,
-          //   body
+          //   body,
+          //   delay
           // );
           method = method.toLowerCase();
+
           nock(hostname)
             [method](path)
+            .delay(delay ?? 0)
             .reply(statusCode, body)
             .persist(!!persist);
 

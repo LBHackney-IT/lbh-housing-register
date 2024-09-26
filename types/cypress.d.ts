@@ -5,6 +5,10 @@ declare global {
     interface Chainable {
       generateEmptyApplication(): Chainable<void>;
       loginAsUser(userType: string): Chainable<void>;
+      loginAsResident(
+        applicationId: string,
+        setSeenCookieMessage?: boolean
+      ): Chainable<void>;
       mockHousingRegisterApiGetApplicationsByStatusAndAssignedTo(
         user: HackneyGoogleUserWithPermissions
       ): Chainable<void>;
@@ -14,9 +18,17 @@ declare global {
       ): Chainable<void>;
       mockHousingRegisterApiGetApplications(
         applicationId: string,
-        application: Application
+        application: Application,
+        persist?: boolean,
+        delay?: number
       ): Chainable<void>;
       mount: typeof mount;
+      mockHousingRegisterApiPatchApplication(
+        applicationId: string,
+        body?: Application,
+        delay?: number,
+        statusCode?: number
+      ): Chainable<void>;
     }
   }
 }

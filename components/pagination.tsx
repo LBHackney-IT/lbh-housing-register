@@ -36,13 +36,12 @@ const Pagination = ({
   totalItems,
   page,
   numberOfItemsPerPage,
-  pageUrl,
 }: PaginationProps) => {
   const { query, pathname } = useRouter();
   const numberOfPages = Math.ceil(totalItems / numberOfItemsPerPage);
 
-  var paginationItems = [];
-  for (var i = 0; i < numberOfPages; i++) {
+  const paginationItems = [];
+  for (let i = 0; i < numberOfPages; i++) {
     query.page = i.toString();
     const newRelativePathQuery = `${pathname}?page=${query.page}&pageSize=${query.pageSize}&searchString=${query.searchString}`;
 

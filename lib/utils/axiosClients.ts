@@ -6,8 +6,8 @@ import asssertServerOnly from './assertServerOnly';
 asssertServerOnly();
 
 export function housingAxios() {
-  var apiUrlString = process.env.HOUSING_REGISTER_API as string;
-  let url = new URL(apiUrlString);
+  const apiUrlString = process.env.HOUSING_REGISTER_API as string;
+  const url = new URL(apiUrlString);
   return axios.create({
     baseURL: process.env.HOUSING_REGISTER_API,
     headers: {

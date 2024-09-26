@@ -1,14 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`calculateDurations calculates accurately 1`] = `
-Array [
-  Object {
+[
+  {
     "from": 2020-01-01T00:00:00.000Z,
     "label": "0 years 5 months (January 2020 - Now)",
     "months": 5,
     "years": 0,
   },
-  Object {
+  {
     "from": 2019-06-01T00:00:00.000Z,
     "label": "0 years 7 months (June 2019 – January 2020)",
     "months": 7,

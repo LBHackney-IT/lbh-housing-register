@@ -2,7 +2,7 @@ service: housing-register-frontend
 
 provider:
   name: aws
-  runtime: nodejs16.x
+  runtime: nodejs20.x
   versionFunctions: false
   region: eu-west-2
   stage: ${opt:stage}

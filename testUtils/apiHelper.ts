@@ -22,11 +22,15 @@ export const generateMockRequestResponseWithHackneyToken = ({
     method,
   });
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   req.headers = {
     'content-type': 'Application/json',
     cookie: `hackneyToken=${token}`,
   };
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   req.body = requestBody ?? '{}';
 
   return { req, res };

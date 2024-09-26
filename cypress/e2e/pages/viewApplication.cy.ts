@@ -16,7 +16,7 @@ describe('View a resident application', () => {
     cy.clearAllCookies();
     cy.loginAsUser('readOnly');
 
-    ViewApplicationPage.mockActivityHistoryApi(applicationId);
+    cy.mockActivityHistoryApiEmptyResponse(applicationId);
     ViewApplicationPage.mockHousingRegisterApiGetApplications(
       applicationId,
       application

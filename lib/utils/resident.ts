@@ -13,7 +13,7 @@ export const applicationSteps = (
   );
   let completeSteps = 0;
 
-  steps.map((step) =>
+  steps.forEach((step) =>
     hasResidentAnsweredForm(applicant, step) ? completeSteps++ : null
   );
 

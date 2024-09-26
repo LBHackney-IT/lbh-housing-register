@@ -15,14 +15,15 @@ const Footer = ({ referenceNumber }: FooterProps) => {
         <div className="lbh-container">
           <HeadingThree content="Help" />
           <Paragraph>
-            If you need help completing this form, please contact us quoting
-            your
-            <strong>
-              {' '}
-              application reference {referenceNumber.toUpperCase()}
-            </strong>{' '}
-            and we will assist you.
-            <br />
+            <div>
+              If you need help completing this form, please contact us quoting
+              your
+              <strong>
+                {' '}
+                application reference {referenceNumber.toUpperCase()}
+              </strong>{' '}
+              and we will assist you.
+            </div>
             <button
               className="govuk-button govuk-secondary lbh-button lbh-button--secondary"
               onClick={() => setContactUsDialogOpen(true)}

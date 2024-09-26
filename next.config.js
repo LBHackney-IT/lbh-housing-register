@@ -51,6 +51,7 @@ const nextConfig = {
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.NEXT_PUBLIC_ENV === 'localdev',
+  openAnalyzer: false,
 });
 
 const sentryWebpackPluginOptions = {

@@ -88,8 +88,7 @@ export default function ApplicationPage({
 
   return (
     <div>
-      {data.id ? (
-        // eslint-disable-next-line react/jsx-no-constructed-context-values
+      {data && data.id ? (
         <UserContext.Provider value={{ user }}>
           <Layout
             pageName="View application"
@@ -148,7 +147,6 @@ export default function ApplicationPage({
                       Assessment
                     </HorizontalNavItem>
                   ) : (
-                    // eslint-disable-next-line react/jsx-no-useless-fragment
                     <></>
                   )}
                 </HorizontalNav>

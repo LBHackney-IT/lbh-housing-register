@@ -1,6 +1,6 @@
 class AgreeTermsPage {
   static getAgreeTermsPage() {
-    const testId = 'agree-terms-page';
+    const testId = 'test-agree-terms-page';
     return cy.get(`[data-testid="${testId}"]`);
   }
 }

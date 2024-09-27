@@ -59,6 +59,9 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:service}-${self:provider.stage}-cfd-logs
+        OwnershipControls:
+          Rules:
+            - ObjectOwnership: BucketOwnerPreferred
     CloudFrontDistribution:
       Type: AWS::CloudFront::Distribution
       Properties:
@@ -98,7 +101,7 @@ resources:
                 HTTPSPort: 443
                 OriginProtocolPolicy: https-only
           Logging:
-            Bucket: !Ref CloudFrontDistributionLogsS3Bucket
+            Bucket: !GetAtt CloudFrontDistributionLogsS3Bucket.DomainName
             IncludeCookies: false
             Prefix:
 

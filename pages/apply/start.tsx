@@ -35,7 +35,7 @@ const ApplicationStartPage = (): JSX.Element => {
       router.push('/apply/agree-terms');
     }
 
-    if (patchApplicationStatus?.callStatus == ApiCallStatusCode.REJECTED) {
+    if (patchApplicationStatus?.callStatus === ApiCallStatusCode.REJECTED) {
       setUserError(
         patchApplicationStatus.error ?? 'Error patching the application'
       );

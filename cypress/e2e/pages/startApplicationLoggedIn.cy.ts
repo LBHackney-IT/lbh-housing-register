@@ -52,8 +52,6 @@ describe('Application', () => {
   });
 
   it('shows the loading spinner while application data is being fetched on the background', () => {
-    console.dir(application);
-    console.dir(applicationWithMainApplicant);
     cy.loginAsResident(applicationId, true);
     cy.mockHousingRegisterApiGetApplications(
       applicationId,

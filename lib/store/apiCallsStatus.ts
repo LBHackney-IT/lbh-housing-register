@@ -48,7 +48,6 @@ export const hrApiCallsStatus = createSlice({
         };
       })
       .addCase(updateApplication.rejected, (state, action) => {
-        console.dir(action.payload);
         state.patchApplication = {
           callStatus: ApiCallStatusCode.REJECTED,
           error: action.payload as string,

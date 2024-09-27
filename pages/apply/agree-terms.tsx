@@ -24,7 +24,7 @@ const ApplicationTermsPage = (): JSX.Element => {
   };
 
   return (
-    <Layout pageName="Agreement" dataTestId="agree-terms-page">
+    <Layout pageName="Agreement" dataTestId="test-agree-terms-page">
       <HeadingOne content="Confidentiality and data protection" />
 
       <Paragraph>

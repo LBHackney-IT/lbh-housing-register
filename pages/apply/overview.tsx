@@ -13,7 +13,6 @@ import { Applicant } from '../../domain/HousingApi';
 import { useAppSelector } from '../../lib/store/hooks';
 import { applicationSteps } from '../../lib/utils/resident';
 import withApplication from '../../lib/hoc/withApplication';
-import Custom404 from '../404';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
   const breadcrumbs = [
@@ -56,7 +55,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
             );
 
             return (
-              <Row key={index} verticalAlign="middle">
+              <Row key={applicant.person?.id} verticalAlign="middle">
                 <Key>
                   <ApplicantSummary
                     applicant={applicant}

@@ -26,6 +26,7 @@ import { isOver18 } from '../../../lib/utils/dateOfBirth';
 import { FormID } from '../../../lib/utils/form-data';
 import { checkEligible } from '../../../lib/utils/form';
 import withApplication from '../../../lib/hoc/withApplication';
+import { v4 as uniqueID } from 'uuid';
 
 const ResidentIndex = (): JSX.Element => {
   const router = useRouter();
@@ -124,12 +125,12 @@ const ResidentIndex = (): JSX.Element => {
           {`${currentResident.person?.firstName} ${currentResident.person?.surname}`}
         </h1>
 
-        {steps.map((step, index) => (
-          <div key={index}>
+        {steps.map((step) => (
+          <div key={uniqueID()}>
             <HeadingTwo content={step.heading} />
             <SummaryList>
-              {step.sections.map((formStep, index) => (
-                <SummaryListRow key={index}>
+              {step.sections.map((formStep) => (
+                <SummaryListRow key={formStep.id}>
                   <SummaryListValue>
                     {isSectionActive(formStep.id) ? (
                       <Link href={`${baseHref}/${formStep.id}`}>

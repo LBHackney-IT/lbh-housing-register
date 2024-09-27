@@ -32,6 +32,7 @@ import {
 } from '../../../lib/utils/addressHistory';
 import { FormID } from '../../../lib/utils/form-data';
 import Custom404 from '../../404';
+import { v4 as uniqueID } from 'uuid';
 
 type State = 'postcode-entry' | 'manual-entry' | 'choose-address' | 'review';
 
@@ -158,7 +159,7 @@ function Summary({
   return (
     <>
       {addressHistory.map((entry, index) => (
-        <React.Fragment key={index}>
+        <React.Fragment key={uniqueID()}>
           {index === 1 && <h2 className="lbh-heading-h2">Previous address</h2>}
           {index > 1 && (
             <h2 className="lbh-heading-h2">Previous address {index}</h2>
@@ -187,8 +188,8 @@ function Summary({
                 entry.postcode,
               ]
                 .filter((addressLine) => !!addressLine)
-                .map((addressLine, index) => (
-                  <React.Fragment key={index}>
+                .map((addressLine) => (
+                  <React.Fragment key={uniqueID()}>
                     {addressLine}
                     <br />
                   </React.Fragment>

@@ -49,7 +49,7 @@ const ApplicationHouseholdOverview = (): JSX.Element => {
       <SummaryList>
         {applicants.map((applicant, index) => {
           return (
-            <Row key={index} verticalAlign="middle">
+            <Row key={applicant.person?.id} verticalAlign="middle">
               <Key>
                 <>
                   <Hint

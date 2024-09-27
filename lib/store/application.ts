@@ -30,12 +30,18 @@ export const loadApplication = createAsyncThunk(
 
 export const updateApplication = createAsyncThunk(
   'application/update',
-  async (application: Application) => {
+  async (application: Application, { rejectWithValue }) => {
     const res = await fetch(`/api/applications/${application.id}`, {
       method: 'PATCH',
       body: JSON.stringify(application),
     });
-    return (await res.json()) as Application;
+    if (res.ok) {
+      return (await res.json()) as Application;
+    } else {
+      return rejectWithValue(
+        `Unable to update application: ${res.statusText} (${res.status})`
+      );
+    }
   }
 );
 
@@ -175,7 +181,7 @@ const slice = createSlice({
         (state, action) => action.payload
       )
       .addCase(completeApplication.fulfilled, (state, action) => action.payload)
-      .addCase(exit.fulfilled, (state, action) => ({}))
+      .addCase(exit.fulfilled, (state, action) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
 
       .addDefaultCase((state, action) => {
         state.mainApplicant = mainApplicant.reducer(
@@ -188,7 +194,7 @@ const slice = createSlice({
 });
 
 export const autoSaveMiddleware: Middleware<
-  {},
+  {}, // eslint-disable-line @typescript-eslint/ban-types
   Store,
   ThunkDispatch<Store, null, AnyAction>
 > = (storeAPI) => {
@@ -197,6 +203,7 @@ export const autoSaveMiddleware: Middleware<
   // for that we'd also need to cancel existing fetch requests before issuing new ones.
 
   const throttledDispatch = throttle(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (action: any) => {
       storeAPI.dispatch(action);
     },

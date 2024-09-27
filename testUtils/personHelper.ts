@@ -6,6 +6,16 @@ import { Person } from '../domain/HousingApi';
 const dateOfBirth = faker.date.birthdate();
 const personRelationshipOptions = relationshipOptions.map(({ value }) => value);
 
+//matches the values in data/sign-up-details.json
+export enum TitleEnum {
+  Mrs = 'Mrs',
+  Mr = 'Mr',
+  Miss = 'Miss',
+  Mx = 'Mx',
+  Other = 'Other',
+  Ms = 'Ms',
+}
+
 //Logic from the HR API
 export const calculateAge = (birthDate: Date): number => {
   const now = new Date();
@@ -36,4 +46,10 @@ export const generatePerson = (personId: string): Person => {
     nationalInsuranceNumber: faker.string.alphanumeric(9),
     age: calculateAge(dateOfBirth),
   };
+};
+
+export const getRandomGender = (): string => {
+  //values match the current form
+  const genderOptions = ['M', 'F', 'self'];
+  return genderOptions[Math.floor(Math.random() * genderOptions.length)];
 };

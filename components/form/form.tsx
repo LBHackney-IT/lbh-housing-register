@@ -13,11 +13,13 @@ import Button from '../button';
 import { HeadingTwo } from '../content/headings';
 import Paragraph from '../content/paragraph';
 import DynamicField from './dynamic-field';
+import { v4 as uniqueID } from 'uuid';
+
 interface FormProps {
   buttonText?: string;
   formData: MultiStepForm;
   onSave?: (values: FormData) => void;
-  onSubmit?: (values: FormData, bag: any) => void;
+  onSubmit?: (values: FormData, bag: FormikHelpers<FormData>) => void;
   initialValues?: FormikValues;
   activeStep?: string;
 }
@@ -28,7 +30,6 @@ export default function Form({
   onSave,
   onSubmit,
   initialValues,
-  activeStep,
 }: FormProps): JSX.Element {
   const [stepNumber, setStepNumber] = useState(0);
 
@@ -98,9 +99,9 @@ export default function Form({
             {step.heading && <HeadingTwo content={step.heading} />}
             {step.copy && <Paragraph>{step.copy}</Paragraph>}
             {step.fields.map(
-              (field, index) =>
+              (field) =>
                 getDisplayStateOfField(field, values) && (
-                  <DynamicField key={index} field={field} />
+                  <DynamicField key={uniqueID()} field={field} />
                 )
             )}
 

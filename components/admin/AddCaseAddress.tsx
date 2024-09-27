@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { v4 as uniqueID } from 'uuid';
+
 import {
   SummaryListNoBorder,
   SummaryListActions,
@@ -141,7 +143,7 @@ export default function AddCaseAddress({
           <SummaryListActions wideActions={true}>
             {addresses
               ? addresses.map((addressItem, index) => (
-                  <FormGroup key={index}>
+                  <FormGroup key={uniqueID()}>
                     {index === 0 ? (
                       <HeadingThree content="Current address" />
                     ) : null}

@@ -45,7 +45,7 @@ export const getApplicationSectionsForResident = (
   if (isMainApplicant) {
     return getMainApplicantQuestions();
   } else {
-    return getOtherMemberQuestions(isOver18, isPartner);
+    return getOtherMemberQuestions(isPartner, isOver18);
   }
 };
 

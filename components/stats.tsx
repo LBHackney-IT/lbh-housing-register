@@ -1,4 +1,5 @@
 import { Stat } from '../domain/stat';
+import { v4 as uniqueID } from 'uuid';
 
 interface StatsProps {
   className: string;
@@ -13,7 +14,7 @@ export function Stats({ className, stats }: StatsProps): JSX.Element {
   return (
     <div className="govuk-grid-row">
       {stats.map((stat, index) => (
-        <div key={index} className={className}>
+        <div key={uniqueID()} className={className}>
           <StatItem index={index} value={stat.value} caption={stat.caption} />
         </div>
       ))}

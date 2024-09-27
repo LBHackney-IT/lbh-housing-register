@@ -6,6 +6,7 @@ import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
+import { v4 as uniqueID } from 'uuid';
 
 interface RadioProps extends BaseFormField {
   index?: number;
@@ -83,7 +84,7 @@ export default function Radios({
           <div className="govuk-radios lbh-radios">
             {options?.map((radio, index) => (
               <Radio
-                key={index}
+                key={uniqueID()}
                 index={index}
                 hint={radio.hint}
                 label={radio.label!}

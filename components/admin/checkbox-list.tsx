@@ -1,9 +1,9 @@
+import { v4 as uniqueID } from 'uuid';
 export interface CheckBoxListDataProps {
   title: string;
   value: string;
   isChecked: boolean;
 }
-
 export interface CheckBoxListPageProps {
   title: string;
   data: CheckBoxListDataProps[];
@@ -32,8 +32,8 @@ export default function CheckBoxList({
         </tr>
       </thead>
       <tbody className="govuk-table__body">
-        {data.map((info, index) => (
-          <tr key={index} className="govuk-table__row">
+        {data.map((info) => (
+          <tr key={uniqueID()} className="govuk-table__row">
             <th scope="row" className="govuk-table__header">
               {info.title}
             </th>

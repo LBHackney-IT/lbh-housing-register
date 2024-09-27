@@ -1,5 +1,7 @@
 import React from 'react';
 import { Field, FieldInputProps, FieldMetaProps } from 'formik';
+import { v4 as uniqueID } from 'uuid';
+
 import {
   BaseFormField,
   CheckboxesConditionalFormField,
@@ -127,9 +129,9 @@ export default function CheckboxesConditional({
           {subheading && <Paragraph>{subheading}</Paragraph>}
           <div className="govuk-checkboxes lbh-checkboxes">
             {options?.map((radio, index) => (
-              <React.Fragment key={index}>
+              <React.Fragment key={uniqueID()}>
                 <Checkbox
-                  key={index}
+                  key={uniqueID()}
                   index={index}
                   hint={radio.hint}
                   label={radio.label!}

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { diff } from 'nested-object-diff';
+import { v4 as uniqueID } from 'uuid';
 
 import {
   ActivityEntity,
@@ -260,7 +261,7 @@ export function renderBody(item: ActivityHistoryResponse) {
             </tr>
           </thead>
           <tbody className="govuk-table__body">
-            {differences.map((difference: Difference, index: number) => {
+            {differences.map((difference: Difference) => {
               const { path } = difference;
               let { lhs, rhs } = difference;
 
@@ -288,7 +289,7 @@ export function renderBody(item: ActivityHistoryResponse) {
               }
               if (path !== 'person.id') {
                 return (
-                  <tr key={index} className="govuk-table__row">
+                  <tr key={uniqueID()} className="govuk-table__row">
                     <td className="govuk-table__cell">{path}</td>
                     <td className="govuk-table__cell lbh-!-break-word">
                       <pre className="lbh-audit-history-json">{rhs}</pre>

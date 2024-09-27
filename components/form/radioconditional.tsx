@@ -11,6 +11,7 @@ import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
+import { v4 as uniqueID } from 'uuid';
 
 export function ConditionalInput({
   as,
@@ -117,9 +118,9 @@ export default function RadioConditional({
           {subheading && <Paragraph>{subheading}</Paragraph>}
           <div className="govuk-radios lbh-radios">
             {options?.map((radio, index) => (
-              <React.Fragment key={index}>
+              <React.Fragment key={uniqueID()}>
                 <Radio
-                  key={index}
+                  key={uniqueID()}
                   index={index}
                   hint={radio.hint}
                   label={radio.label!}

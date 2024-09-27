@@ -55,6 +55,10 @@ functions:
 
 resources:
   Resources:
+    CloudFrontDistributionLogsS3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:service}-${self:provider.stage}-cfd-logs
     CloudFrontDistribution:
       Type: AWS::CloudFront::Distribution
       Properties:
@@ -93,6 +97,10 @@ resources:
                 HTTPPort: 80
                 HTTPSPort: 443
                 OriginProtocolPolicy: https-only
+          Logging:
+            Bucket: !Ref CloudFrontDistributionLogsS3Bucket
+            IncludeCookies: false
+            Prefix:
 
 custom:
   domain-name:

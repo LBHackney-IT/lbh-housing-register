@@ -17,7 +17,7 @@ interface FormProps {
   buttonText?: string;
   formData: MultiStepForm;
   onSave?: (values: FormData) => void;
-  onSubmit?: (values: FormData, bag: any) => void;
+  onSubmit?: (values: FormData, bag: FormikHelpers<FormData>) => void;
   initialValues?: FormikValues;
   activeStep?: string;
 }
@@ -28,7 +28,6 @@ export default function Form({
   onSave,
   onSubmit,
   initialValues,
-  activeStep,
 }: FormProps): JSX.Element {
   const [stepNumber, setStepNumber] = useState(0);
 
@@ -118,7 +117,11 @@ export default function Form({
               )}
 
               <div className="c-flex__1 text-right">
-                <Button disabled={isSubmitting} type="submit">
+                <Button
+                  disabled={isSubmitting}
+                  type="submit"
+                  dataTestId={`test-submit-form-button`}
+                >
                   {buttonText ? buttonText : 'Save'}
                 </Button>
               </div>

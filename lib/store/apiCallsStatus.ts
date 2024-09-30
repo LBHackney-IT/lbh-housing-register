@@ -29,6 +29,10 @@ export const selectPatchApplicationStatus = (
   state: RootState
 ): ApiCallStatus | undefined => state.hrApiCallsStatus.patchApplication;
 
+export const selectSaveApplicationStatus = (
+  state: RootState
+): ApiCallStatus | undefined => state.hrApiCallsStatus.patchApplication;
+
 export const hrApiCallsStatus = createSlice({
   name: 'hrApiCallsStatus',
   initialState,

@@ -1,3 +1,7 @@
+import {
+  // useEffect,
+  useState,
+} from 'react';
 import { HeadingOne } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
 import Layout from '../../components/layout/resident-layout';
@@ -5,27 +9,57 @@ import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { agree } from '../../lib/store/mainApplicant';
 import { getFormData, FormID } from '../../lib/utils/form-data';
 import Form from '../../components/form/form';
-import router from 'next/router';
+// import router from 'next/router';
 import withApplication from '../../lib/hoc/withApplication';
+import {
+  selectPatchApplicationStatus,
+  ApiCallStatusCode,
+} from 'lib/store/apiCallsStatus';
+import ErrorSummary from 'components/errors/error-summary';
+import useApplicationUpdateStatus from 'lib/hooks/useApplicationUpdateStatus';
+import { scrollToError } from '../../lib/utils/scroll';
+import { Errors } from 'lib/types/errors';
+import Loading from 'components/loading';
 
 const ApplicationTermsPage = (): JSX.Element => {
   // TODO: might not be right place for this,
   // but we need to ensure new user is linked to application
   const dispatch = useAppDispatch();
   const applicationId = useAppSelector((store) => store.application.id);
+  const [hasSaved, setHasSaved] = useState<boolean>(false);
+  const patchApplicationStatus = useAppSelector(selectPatchApplicationStatus);
+  const [userError, setUserError] = useState<string | null>(null);
 
   const onSave = () => {
     if (!applicationId) {
       throw new Error('No application.');
     }
-
-    dispatch(agree());
-    router.push('/apply/household');
+    try {
+      dispatch(agree());
+      setHasSaved(true);
+    } catch (error) {
+      console.error('Error saving agreement:', error);
+      setUserError(Errors.GENERIC_ERROR);
+      scrollToError();
+    }
   };
+
+  useApplicationUpdateStatus({
+    selector: patchApplicationStatus,
+    userActionCompleted: hasSaved,
+    setUserError,
+    scrollToError,
+    pathToPush: '/apply/household',
+  });
 
   return (
     <Layout pageName="Agreement" dataTestId="test-agree-terms-page">
       <HeadingOne content="Confidentiality and data protection" />
+      {userError && (
+        <ErrorSummary dataTestId="test-agree-terms-error-summary">
+          {userError}
+        </ErrorSummary>
+      )}
 
       <Paragraph>
         We will use the information given on the form to help us decide about
@@ -62,12 +96,15 @@ const ApplicationTermsPage = (): JSX.Element => {
         </a>{' '}
         for more information.
       </Paragraph>
-
-      <Form
-        buttonText="Save and continue"
-        formData={getFormData(FormID.AGREEMENT)}
-        onSave={onSave}
-      />
+      {patchApplicationStatus?.callStatus == ApiCallStatusCode.PENDING ? (
+        <Loading text="Saving..." />
+      ) : (
+        <Form
+          buttonText="Save and continue"
+          formData={getFormData(FormID.AGREEMENT)}
+          onSave={onSave}
+        />
+      )}
     </Layout>
   );
 };

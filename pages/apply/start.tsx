@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { FormikValues } from 'formik';
-import { useRouter } from 'next/router';
 
 import { HeadingOne } from '../../components/content/headings';
 import ErrorSummary from '../../components/errors/error-summary';
@@ -15,33 +14,26 @@ import processPhonenumber from '../../lib/utils/processPhonenumber';
 import { scrollToError } from '../../lib/utils/scroll';
 import {
   ApiCallStatusCode,
-  selectPatchApplicationStatus,
+  selectSaveApplicationStatus,
 } from 'lib/store/apiCallsStatus';
 import Loading from 'components/loading';
+import useApplicationUpdateStatus from 'lib/hooks/useApplicationUpdateStatus';
 
 const ApplicationStartPage = (): JSX.Element => {
-  const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const [userError, setUserError] = useState<string | null>(null);
-  const patchApplicationStatus = useAppSelector(selectPatchApplicationStatus);
+  const saveApplicationStatus = useAppSelector(selectSaveApplicationStatus);
+
   const [hasSignedUp, setHasSignedUp] = useState<boolean>(false);
+  const [userError, setUserError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (
-      patchApplicationStatus?.callStatus === ApiCallStatusCode.FULFILLED &&
-      hasSignedUp
-    ) {
-      router.push('/apply/agree-terms');
-    }
-
-    if (patchApplicationStatus?.callStatus === ApiCallStatusCode.REJECTED) {
-      setUserError(
-        patchApplicationStatus.error ?? 'Error patching the application'
-      );
-      scrollToError();
-    }
-  }, [patchApplicationStatus]);
+  useApplicationUpdateStatus({
+    selector: saveApplicationStatus,
+    userActionCompleted: hasSignedUp,
+    setUserError,
+    scrollToError,
+    pathToPush: '/apply/agree-terms',
+  });
 
   const signUp = async (values: FormikValues) => {
     const phone = values.phoneNumber && processPhonenumber(values.phoneNumber);
@@ -81,7 +73,7 @@ const ApplicationStartPage = (): JSX.Element => {
           {userError}
         </ErrorSummary>
       )}
-      {patchApplicationStatus?.callStatus == ApiCallStatusCode.PENDING ? (
+      {saveApplicationStatus?.callStatus === ApiCallStatusCode.PENDING ? (
         <Loading text="Saving..." />
       ) : (
         <Form

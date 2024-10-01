@@ -25,7 +25,7 @@ const initialState: HRApiCallsStatusState = {
   },
 };
 
-export const selectPatchApplicationStatus = (
+export const selectSaveApplicationStatus = (
   state: RootState
 ): ApiCallStatus | undefined => state.hrApiCallsStatus.patchApplication;
 

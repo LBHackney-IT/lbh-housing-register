@@ -158,7 +158,7 @@ function Summary({
   return (
     <>
       {addressHistory.map((entry, index) => (
-        <React.Fragment key={entry.address.UPRN}>
+        <React.Fragment key={index}>
           {index === 1 && <h2 className="lbh-heading-h2">Previous address</h2>}
           {index > 1 && (
             <h2 className="lbh-heading-h2">Previous address {index}</h2>

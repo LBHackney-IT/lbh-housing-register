@@ -92,7 +92,7 @@ export default function ApplicationPersonPage({
 
   return (
     <>
-      {data && data.id ? (
+      {data?.id ? (
         <UserContext.Provider value={{ user }}>
           <Layout>
             {data.sensitiveData &&

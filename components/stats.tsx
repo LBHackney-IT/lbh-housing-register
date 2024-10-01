@@ -13,7 +13,7 @@ export function Stats({ className, stats }: StatsProps): JSX.Element {
   return (
     <div className="govuk-grid-row">
       {stats.map((stat, index) => (
-        <div key={`${stat.value}-${index}`} className={className}>
+        <div key={index} className={className}>
           <StatItem index={index} value={stat.value} caption={stat.caption} />
         </div>
       ))}

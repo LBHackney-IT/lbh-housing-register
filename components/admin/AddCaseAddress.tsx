@@ -142,7 +142,7 @@ export default function AddCaseAddress({
           <SummaryListActions wideActions={true}>
             {addresses
               ? addresses.map((addressItem, index) => (
-                  <FormGroup key={`${addressItem.address.postcode}-${index}`}>
+                  <FormGroup key={index}>
                     {index === 0 ? (
                       <HeadingThree content="Current address" />
                     ) : null}

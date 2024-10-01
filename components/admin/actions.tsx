@@ -166,7 +166,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
             <div className="lbh-page-announcement__content">
               <List>
                 {disqualificationReasons.map((reason, index) => (
-                  <ListItem key={`${reason}-${index}`}>
+                  <ListItem key={index}>
                     {getDisqualificationReasonOption(reason)}
                   </ListItem>
                 ))}

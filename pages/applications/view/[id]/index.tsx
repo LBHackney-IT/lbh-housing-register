@@ -88,7 +88,7 @@ export default function ApplicationPage({
 
   return (
     <div>
-      {data && data.id ? (
+      {data?.id ? (
         <UserContext.Provider value={{ user }}>
           <Layout
             pageName="View application"

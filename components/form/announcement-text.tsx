@@ -16,7 +16,7 @@ export default function AnnouncementText({
           {content && <p className="lbh-body-m">{content}</p>}
           {list && (
             <ul>
-              {list.map((content: string, index) => (
+              {list.map((content: string, index: number) => (
                 <li key={index}>{content}</li>
               ))}
             </ul>

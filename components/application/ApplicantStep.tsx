@@ -26,7 +26,7 @@ function ApplicantStep({
     {
       id: 'applicant-apply-id',
       href: `/apply/${applicant.person?.id}`,
-      name: applicant.person?.firstName ?? '',
+      name: applicant.person?.firstName || '',
     },
     {
       id: 'applicant-apply-form',

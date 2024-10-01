@@ -260,7 +260,7 @@ export function renderBody(item: ActivityHistoryResponse) {
             </tr>
           </thead>
           <tbody className="govuk-table__body">
-            {differences.map((difference: Difference, index) => {
+            {differences.map((difference: Difference, index: number) => {
               const { path } = difference;
               let { lhs, rhs } = difference;
 

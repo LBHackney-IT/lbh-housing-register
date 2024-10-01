@@ -241,17 +241,17 @@ workflows:
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:
-            - install-dependencies
+            - run-cypress-e2e
           filters:
             branches:
-              only: bug-config-cleaning
+              only: development
       - build-deploy-development:
           context: housing-register-fe-build-context
           requires:
             - assume-role-development
           filters:
             branches:
-              only: bug-config-cleaning
+              only: development
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:

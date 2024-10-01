@@ -1,6 +1,5 @@
 import React from 'react';
 import { Field, FieldInputProps, FieldMetaProps } from 'formik';
-import { v4 as uniqueID } from 'uuid';
 
 import {
   BaseFormField,
@@ -24,29 +23,25 @@ export function ConditionalInput({
   display,
 }: ConditionalFormFieldOptionInput) {
   return (
-    <>
-      <div
-        className={
-          'govuk-checkboxes__conditional' + (display ? '' : '--hidden')
-        }
-        id={containerId}
-      >
-        {as === 'textarea' ? (
-          <Textarea as="textarea" name={fieldName!} label={label!} />
-        ) : (
-          <>
-            <Label content={label} htmlFor={fieldId} />
-            <Field
-              className="govuk-input govuk-!-width-one-third"
-              type={as}
-              id={fieldId}
-              name={fieldName}
-              data-aria-controls={containerId}
-            />
-          </>
-        )}
-      </div>
-    </>
+    <div
+      className={'govuk-checkboxes__conditional' + (display ? '' : '--hidden')}
+      id={containerId}
+    >
+      {as === 'textarea' ? (
+        <Textarea as="textarea" name={fieldName!} label={label!} />
+      ) : (
+        <>
+          <Label content={label} htmlFor={fieldId} />
+          <Field
+            className="govuk-input govuk-!-width-one-third"
+            type={as}
+            id={fieldId}
+            name={fieldName}
+            data-aria-controls={containerId}
+          />
+        </>
+      )}
+    </div>
   );
 }
 
@@ -129,9 +124,9 @@ export default function CheckboxesConditional({
           {subheading && <Paragraph>{subheading}</Paragraph>}
           <div className="govuk-checkboxes lbh-checkboxes">
             {options?.map((radio, index) => (
-              <React.Fragment key={uniqueID()}>
+              <React.Fragment key={index}>
                 <Checkbox
-                  key={uniqueID()}
+                  key={index}
                   index={index}
                   hint={radio.hint}
                   label={radio.label!}

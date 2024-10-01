@@ -11,7 +11,6 @@ import { FormID } from '../../lib/utils/form-data';
 import Paragraph from '../content/paragraph';
 import Hint from '../form/hint';
 import { SummaryAnswer, SummarySection, SummaryTitle } from './SummaryInfo';
-import { v4 as uniqueID } from 'uuid';
 
 interface AddressHistorySummaryProps {
   currentResident: ApplicantWithPersonID;
@@ -42,7 +41,7 @@ export function AddressHistorySummary({
       {addressHistory?.addressHistory.map(
         (address: AddressHistoryEntry, index: number) => {
           return (
-            <SummaryAnswer key={uniqueID()}>
+            <SummaryAnswer key={index}>
               <Paragraph>
                 <Hint
                   content={index === 0 ? 'Current address' : 'Previous address'}

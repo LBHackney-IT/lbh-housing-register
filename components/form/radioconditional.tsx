@@ -11,7 +11,6 @@ import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
-import { v4 as uniqueID } from 'uuid';
 
 export function ConditionalInput({
   as,
@@ -22,21 +21,19 @@ export function ConditionalInput({
   display,
 }: ConditionalFormFieldOptionInput) {
   return (
-    <>
-      <div
-        className={'govuk-radios__conditional' + (display ? '' : '--hidden')}
-        id={containerId}
-      >
-        <Label content={label} htmlFor={fieldId} />
-        <Field
-          className="govuk-input govuk-!-width-one-third"
-          type={as}
-          id={fieldId}
-          name={fieldName}
-          data-aria-controls={containerId}
-        />
-      </div>
-    </>
+    <div
+      className={'govuk-radios__conditional' + (display ? '' : '--hidden')}
+      id={containerId}
+    >
+      <Label content={label} htmlFor={fieldId} />
+      <Field
+        className="govuk-input govuk-!-width-one-third"
+        type={as}
+        id={fieldId}
+        name={fieldName}
+        data-aria-controls={containerId}
+      />
+    </div>
   );
 }
 
@@ -118,9 +115,9 @@ export default function RadioConditional({
           {subheading && <Paragraph>{subheading}</Paragraph>}
           <div className="govuk-radios lbh-radios">
             {options?.map((radio, index) => (
-              <React.Fragment key={uniqueID()}>
+              <React.Fragment key={index}>
                 <Radio
-                  key={uniqueID()}
+                  key={index}
                   index={index}
                   hint={radio.hint}
                   label={radio.label!}

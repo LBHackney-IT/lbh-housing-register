@@ -9,7 +9,6 @@ import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
-import { v4 as uniqueID } from 'uuid';
 
 interface CheckboxProps extends BaseFormField {
   index?: number;
@@ -97,7 +96,7 @@ export default function Checkboxes({
                 <>
                   {checkboxes.map((checkbox, index) => (
                     <Checkbox
-                      key={uniqueID()}
+                      key={index}
                       index={index}
                       hint={checkbox.hint}
                       label={checkbox.label!}

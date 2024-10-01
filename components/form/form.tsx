@@ -13,7 +13,6 @@ import Button from '../button';
 import { HeadingTwo } from '../content/headings';
 import Paragraph from '../content/paragraph';
 import DynamicField from './dynamic-field';
-import { v4 as uniqueID } from 'uuid';
 
 interface FormProps {
   buttonText?: string;
@@ -86,47 +85,45 @@ export default function Form({
   };
 
   return (
-    <>
-      <Formik
-        // If you notice that initial values aren't working then it's probably because of the way that _app is loading state incrementally through multiple renders.
-        // A loading screen that waited for initial state to be avaialble would do the trick.
-        initialValues={calculatedInitialValues}
-        onSubmit={handleSubmit}
-        validationSchema={buildValidationSchema(step.fields)}
-      >
-        {({ isSubmitting, values }) => (
-          <FormikForm>
-            {step.heading && <HeadingTwo content={step.heading} />}
-            {step.copy && <Paragraph>{step.copy}</Paragraph>}
-            {step.fields.map(
-              (field) =>
-                getDisplayStateOfField(field, values) && (
-                  <DynamicField key={uniqueID()} field={field} />
-                )
-            )}
+    <Formik
+      // If you notice that initial values aren't working then it's probably because of the way that _app is loading state incrementally through multiple renders.
+      // A loading screen that waited for initial state to be avaialble would do the trick.
+      initialValues={calculatedInitialValues}
+      onSubmit={handleSubmit}
+      validationSchema={buildValidationSchema(step.fields)}
+    >
+      {({ isSubmitting, values }) => (
+        <FormikForm>
+          {step.heading && <HeadingTwo content={step.heading} />}
+          {step.copy && <Paragraph>{step.copy}</Paragraph>}
+          {step.fields.map(
+            (field, index) =>
+              getDisplayStateOfField(field, values) && (
+                <DynamicField key={index} field={field} />
+              )
+          )}
 
-            <div className="c-flex lbh-simple-pagination">
-              {stepNumber > 0 && (
-                <div className="c-flex__1">
-                  <Button
-                    onClick={() => previous()}
-                    secondary={true}
-                    type="button"
-                  >
-                    Previous step
-                  </Button>
-                </div>
-              )}
-
-              <div className="c-flex__1 text-right">
-                <Button disabled={isSubmitting} type="submit">
-                  {buttonText ? buttonText : 'Save'}
+          <div className="c-flex lbh-simple-pagination">
+            {stepNumber > 0 && (
+              <div className="c-flex__1">
+                <Button
+                  onClick={() => previous()}
+                  secondary={true}
+                  type="button"
+                >
+                  Previous step
                 </Button>
               </div>
+            )}
+
+            <div className="c-flex__1 text-right">
+              <Button disabled={isSubmitting} type="submit">
+                {buttonText ? buttonText : 'Save'}
+              </Button>
             </div>
-          </FormikForm>
-        )}
-      </Formik>
-    </>
+          </div>
+        </FormikForm>
+      )}
+    </Formik>
   );
 }

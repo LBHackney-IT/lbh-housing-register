@@ -2,7 +2,6 @@ import router from 'next/router';
 import { useState } from 'react';
 import * as Yup from 'yup';
 import { Formik, Form, FormikValues, FormikProps } from 'formik';
-import { v4 as uniqueID } from 'uuid';
 
 import { Application } from '../../domain/HousingApi';
 import { updateApplication } from '../../lib/gateways/internal-api';
@@ -166,8 +165,8 @@ export default function Actions({ data }: PageProps): JSX.Element {
             </h3>
             <div className="lbh-page-announcement__content">
               <List>
-                {disqualificationReasons.map((reason) => (
-                  <ListItem key={uniqueID()}>
+                {disqualificationReasons.map((reason, index) => (
+                  <ListItem key={`${reason}-${index}`}>
                     {getDisqualificationReasonOption(reason)}
                   </ListItem>
                 ))}

@@ -6,7 +6,6 @@ import ErrorMessage from './error-message';
 import FormGroup from './form-group';
 import Hint from './hint';
 import Label from './label';
-import { v4 as uniqueID } from 'uuid';
 
 export default function Select({
   hint,
@@ -52,8 +51,8 @@ export default function Select({
             id={field.name}
             {...field}
           >
-            {options?.map((option) => (
-              <option key={uniqueID()} value={option.value}>
+            {options?.map((option, index) => (
+              <option key={index} value={option.value}>
                 {option.label || option.value}
               </option>
             ))}

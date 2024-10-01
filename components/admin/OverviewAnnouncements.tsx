@@ -1,7 +1,6 @@
 import Announcement from '../../components/announcement';
 import Details from '../../components/details';
 import Paragraph from '../../components/content/paragraph';
-import { v4 as uniqueID } from 'uuid';
 import { Applicant } from '../../domain/HousingApi';
 
 const additionalQuestionsArray = [
@@ -94,9 +93,9 @@ export default function OverviewAnnouncements({
 
   return (
     <>
-      {announcementInfo.map((announcement) => (
+      {announcementInfo.map((announcement, index) => (
         <OverviewAnnouncement
-          key={uniqueID()}
+          key={index}
           title={announcement.title}
           description={announcement.description}
         />

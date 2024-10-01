@@ -15,7 +15,6 @@ import withApplication from '../../lib/hoc/withApplication';
 import { ApplicationStatus } from '../../lib/types/application-status';
 import { getDisqualificationReasonOption } from '../../lib/utils/disqualificationReasonOptions';
 import WarningText from '../../components/content/WarningText';
-import { v4 as uniqueID } from 'uuid';
 
 const NotEligible = (): JSX.Element => {
   const router = useRouter();
@@ -49,8 +48,8 @@ const NotEligible = (): JSX.Element => {
       {reasons && reasons.length > 0 && (
         <>
           <HeadingTwo content="Why is this?" />
-          {reasons?.map((reason) => (
-            <InsetText key={uniqueID()}>
+          {reasons?.map((reason, index) => (
+            <InsetText key={index}>
               <Paragraph>{getDisqualificationReasonOption(reason)}</Paragraph>
             </InsetText>
           ))}

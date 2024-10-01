@@ -61,14 +61,17 @@ const YourSituation = (): JSX.Element => {
 
   const breadcrumbs = [
     {
+      id: 'apply-overview',
       href: returnHref,
       name: 'Application',
     },
     {
+      id: 'apply-person-id',
       href: baseHref,
       name: applicant.person?.firstName || '',
     },
     {
+      id: 'apply-person-your-situation',
       href: `${baseHref}/your-situation`,
       name: `Your situation`,
     },

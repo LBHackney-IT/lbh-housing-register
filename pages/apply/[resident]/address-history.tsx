@@ -32,7 +32,6 @@ import {
 } from '../../../lib/utils/addressHistory';
 import { FormID } from '../../../lib/utils/form-data';
 import Custom404 from '../../404';
-import { v4 as uniqueID } from 'uuid';
 
 type State = 'postcode-entry' | 'manual-entry' | 'choose-address' | 'review';
 
@@ -159,7 +158,7 @@ function Summary({
   return (
     <>
       {addressHistory.map((entry, index) => (
-        <React.Fragment key={uniqueID()}>
+        <React.Fragment key={entry.address.UPRN}>
           {index === 1 && <h2 className="lbh-heading-h2">Previous address</h2>}
           {index > 1 && (
             <h2 className="lbh-heading-h2">Previous address {index}</h2>
@@ -188,8 +187,8 @@ function Summary({
                 entry.postcode,
               ]
                 .filter((addressLine) => !!addressLine)
-                .map((addressLine) => (
-                  <React.Fragment key={uniqueID()}>
+                .map((addressLine, index) => (
+                  <React.Fragment key={index}>
                     {addressLine}
                     <br />
                   </React.Fragment>
@@ -273,20 +272,19 @@ const ApplicationStep = (): JSX.Element => {
 
     switch (state) {
       case 'postcode-entry':
-        {
-          try {
-            const r = await lookUpAddress(values.postcode);
-            setPostcodeResults(r.address);
-            formikHelpers.setValues({
-              ...values,
-              uprn: r.address[0]?.UPRN.toString(),
-            });
-            setState('choose-address');
-          } catch (e) {
-            console.error(e);
-            setState('manual-entry');
-          }
+        try {
+          const r = await lookUpAddress(values.postcode);
+          setPostcodeResults(r.address);
+          formikHelpers.setValues({
+            ...values,
+            uprn: r.address[0]?.UPRN.toString(),
+          });
+          setState('choose-address');
+        } catch (e) {
+          console.error(e);
+          setState('manual-entry');
         }
+
         break;
 
       case 'manual-entry': {

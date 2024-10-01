@@ -30,6 +30,7 @@ const ApplicationHouseholdOverview = (): JSX.Element => {
 
   const breadcrumbs = [
     {
+      id: 'application-overview',
       href: '/apply/overview',
       name: 'Application',
     },

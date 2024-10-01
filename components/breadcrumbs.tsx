@@ -1,16 +1,22 @@
 import Link from 'next/link';
-import { v4 as uniqueID } from 'uuid';
 
-interface BreadcrumbsProps {
-  items: { href: string; name: string }[];
+export interface BreadcrumbItem {
+  id: string;
+  href: string;
+  name: string;
+}
+export interface BreadcrumbsProps {
+  items: BreadcrumbItem[];
 }
 
-export default function Breadcrumbs({ items }: BreadcrumbsProps): JSX.Element {
+export default function Breadcrumbs({
+  items,
+}: Readonly<BreadcrumbsProps>): JSX.Element {
   return (
     <div className="govuk-breadcrumbs lbh-breadcrumbs lbh-container">
       <ol className="govuk-breadcrumbs__list">
         {items?.map((item, index, array) => (
-          <li key={uniqueID()} className="govuk-breadcrumbs__list-item">
+          <li key={item.id} className="govuk-breadcrumbs__list-item">
             {array.length - 1 === index ? (
               item.name
             ) : (

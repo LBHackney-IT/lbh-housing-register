@@ -75,10 +75,12 @@ const UserSummary = (): JSX.Element => {
 
   const breadcrumbs = [
     {
+      id: 'apply-overview',
       href: returnHref,
       name: 'Application',
     },
     {
+      id: 'apply-resident',
       href: baseHref,
       name: currentResident.person?.firstName || '',
     },

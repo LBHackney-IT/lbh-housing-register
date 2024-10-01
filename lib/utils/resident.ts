@@ -13,7 +13,7 @@ export const applicationSteps = (
   );
   let completeSteps = 0;
 
-  steps.map((step) =>
+  steps.forEach((step) =>
     hasResidentAnsweredForm(applicant, step) ? completeSteps++ : null
   );
 
@@ -45,7 +45,7 @@ export const getApplicationSectionsForResident = (
   if (isMainApplicant) {
     return getMainApplicantQuestions();
   } else {
-    return getOtherMemberQuestions(isOver18, isPartner);
+    return getOtherMemberQuestions(isPartner, isOver18);
   }
 };
 

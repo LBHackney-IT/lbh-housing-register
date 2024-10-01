@@ -8,7 +8,7 @@ export default function Table({ children }: TableProps): JSX.Element {
   const headings: JSX.Element[] = [];
   const rows: JSX.Element[] = [];
 
-  children.map((child) => {
+  children.forEach((child) => {
     switch (child.type) {
       case TableHeading:
         headings.push(child);

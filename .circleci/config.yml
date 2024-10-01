@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  aws-cli: circleci/aws-cli@1.0.0
+  aws-cli: circleci/aws-cli@3.2.0
   aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
   cypress: cypress-io/cypress@3.3.1
   sonarcloud: sonarsource/sonarcloud@2.0.0
@@ -12,7 +12,7 @@ executors:
       - image: cimg/node:20.17-browsers
   docker-python:
     docker:
-      - image: circleci/python:3.7
+      - image: cimg/python:3.7
   cypress-e2e-executor:
     docker:
       - image: cimg/node:20.17-browsers

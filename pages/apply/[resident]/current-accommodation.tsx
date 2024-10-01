@@ -43,14 +43,17 @@ const CurrentAccommodation = (): JSX.Element => {
 
   const breadcrumbs = [
     {
+      id: 'apply-overview',
       href: returnHref,
       name: 'Application',
     },
     {
+      id: 'apply-person',
       href: baseHref,
       name: applicant.person?.firstName || '',
     },
     {
+      id: 'apply-person-current-accommodation',
       href: `${baseHref}/current-accommodation`,
       name: `Current accommodation`,
     },

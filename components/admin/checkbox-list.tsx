@@ -3,7 +3,6 @@ export interface CheckBoxListDataProps {
   value: string;
   isChecked: boolean;
 }
-
 export interface CheckBoxListPageProps {
   title: string;
   data: CheckBoxListDataProps[];

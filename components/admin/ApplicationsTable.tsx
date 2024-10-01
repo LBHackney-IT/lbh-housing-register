@@ -70,7 +70,6 @@ export default function ApplicationsTable({
   };
 
   return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {applications && applications.totalResults > 0 ? (
         <>
@@ -119,8 +118,11 @@ export default function ApplicationsTable({
               </tr>
             </thead>
             <tbody className="govuk-table__body">
-              {applications?.results.map((application, applicationIndex) => (
-                <tr key={applicationIndex} className="govuk-table__row">
+              {applications?.results.map((application) => (
+                <tr
+                  key={application.applicationId}
+                  className="govuk-table__row"
+                >
                   <th className="govuk-table__cell">
                     <p className="govuk-body govuk-body-xs lbh-!-margin-bottom-0 lbh-!-margin-top-0">
                       Main applicant
@@ -157,15 +159,13 @@ export default function ApplicationsTable({
                           Other household members
                         </p>
                         <ul className="govuk-list lbh-list lbh-list--bullet lbh-!-margin-top-0">
-                          {application.otherMembers.map(
-                            (member, memberIndex) => (
-                              <li key={memberIndex} style={{ margin: 0 }}>
-                                <p className="govuk-body govuk-body-s lbh-!-margin-bottom-0 lbh-!-margin-top-0 lbh-!-font-weight-bold">
-                                  {member.firstName} {member.surname}
-                                </p>
-                              </li>
-                            )
-                          )}
+                          {application.otherMembers.map((member) => (
+                            <li key={member.id} style={{ margin: 0 }}>
+                              <p className="govuk-body govuk-body-s lbh-!-margin-bottom-0 lbh-!-margin-top-0 lbh-!-font-weight-bold">
+                                {member.firstName} {member.surname}
+                              </p>
+                            </li>
+                          ))}
                         </ul>
                       </>
                     ) : null}

@@ -91,10 +91,8 @@ export default function ApplicationPersonPage({
   )}%20${cleanUpParams(applicant?.person?.surname ?? '')}`;
 
   return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
-      {data.id ? (
-        // eslint-disable-next-line react/jsx-no-constructed-context-values
+      {data?.id ? (
         <UserContext.Provider value={{ user }}>
           <Layout>
             {data.sensitiveData &&

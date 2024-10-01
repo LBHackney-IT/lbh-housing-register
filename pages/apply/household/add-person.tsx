@@ -17,6 +17,7 @@ const AddPersonToApplication = (): JSX.Element => {
 
   const breadcrumbs = [
     {
+      id: 'application-overview',
       href: returnHref,
       name: 'Application',
     },

@@ -6,7 +6,7 @@ import { loadApplication } from '../../lib/store/application';
 import { exit } from '../../lib/store/auth';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { hasPhaseBanner } from '../../lib/utils/phase-banner';
-import Breadcrumbs from '../breadcrumbs';
+import Breadcrumbs, { BreadcrumbItem } from '../breadcrumbs';
 import CookieBanner from '../content/CookieBanner';
 import Paragraph from '../content/paragraph';
 import Dialog from '../dialog';
@@ -19,7 +19,7 @@ import SkipLink from '../skip-link';
 
 interface ResidentLayoutProps {
   pageName?: string;
-  breadcrumbs?: { href: string; name: string }[];
+  breadcrumbs?: BreadcrumbItem[];
   pageLoadsApplication?: boolean;
   children: ReactNode;
   dataTestId?: string;

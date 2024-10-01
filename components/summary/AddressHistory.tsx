@@ -38,8 +38,8 @@ export function AddressHistorySummary({
           <Paragraph>Not provided yet</Paragraph>
         </SummaryAnswer>
       )}
-      {addressHistory &&
-        addressHistory.map((address: AddressHistoryEntry, index: number) => {
+      {addressHistory?.addressHistory.map(
+        (address: AddressHistoryEntry, index: number) => {
           return (
             <SummaryAnswer key={index}>
               <Paragraph>
@@ -55,7 +55,8 @@ export function AddressHistorySummary({
               </Paragraph>
             </SummaryAnswer>
           );
-        })}
+        }
+      )}
     </SummarySection>
   );
 }

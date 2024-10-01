@@ -1,4 +1,3 @@
-import { SetStateAction } from 'react';
 import { FormikValues } from 'formik';
 import { FormID } from '../utils/form-data';
 import { DisqualificationReason } from '../utils/disqualificationReasonOptions';
@@ -21,6 +20,7 @@ export interface BaseFormField {
   conditionalDisplay?: FormFieldDisplayCriteria[];
   validation?: FormFieldValidation;
   placeholder?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialValue?: any;
   hideLabel?: boolean;
 }

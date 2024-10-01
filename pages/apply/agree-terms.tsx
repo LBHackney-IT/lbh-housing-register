@@ -1,7 +1,4 @@
-import {
-  // useEffect,
-  useState,
-} from 'react';
+import { useState } from 'react';
 import { HeadingOne } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
 import Layout from '../../components/layout/resident-layout';
@@ -9,10 +6,9 @@ import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { agree } from '../../lib/store/mainApplicant';
 import { getFormData, FormID } from '../../lib/utils/form-data';
 import Form from '../../components/form/form';
-// import router from 'next/router';
 import withApplication from '../../lib/hoc/withApplication';
 import {
-  selectPatchApplicationStatus,
+  selectSaveApplicationStatus,
   ApiCallStatusCode,
 } from 'lib/store/apiCallsStatus';
 import ErrorSummary from 'components/errors/error-summary';
@@ -27,7 +23,7 @@ const ApplicationTermsPage = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const applicationId = useAppSelector((store) => store.application.id);
   const [hasSaved, setHasSaved] = useState<boolean>(false);
-  const patchApplicationStatus = useAppSelector(selectPatchApplicationStatus);
+  const saveApplicationStatus = useAppSelector(selectSaveApplicationStatus);
   const [userError, setUserError] = useState<string | null>(null);
 
   const onSave = () => {
@@ -45,7 +41,7 @@ const ApplicationTermsPage = (): JSX.Element => {
   };
 
   useApplicationUpdateStatus({
-    selector: patchApplicationStatus,
+    selector: saveApplicationStatus,
     userActionCompleted: hasSaved,
     setUserError,
     scrollToError,
@@ -96,7 +92,7 @@ const ApplicationTermsPage = (): JSX.Element => {
         </a>{' '}
         for more information.
       </Paragraph>
-      {patchApplicationStatus?.callStatus == ApiCallStatusCode.PENDING ? (
+      {saveApplicationStatus?.callStatus === ApiCallStatusCode.PENDING ? (
         <Loading text="Saving..." />
       ) : (
         <Form

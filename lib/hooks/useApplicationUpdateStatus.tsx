@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { ApiCallStatusCode } from '../store/apiCallsStatus';
+import { ApiCallStatus, ApiCallStatusCode } from '../store/apiCallsStatus';
 
 // custom hook to manage the application status and ensure promises are fulfilled before moving to the next page.
 
 interface UseApplicationUpdateStatusProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  selector: any;
-  userActionCompleted?: boolean;
+  selector: ApiCallStatus | undefined;
+  userActionCompleted: boolean;
   pathToPush: string;
   setUserError: (error: string) => void;
   scrollToError: () => void;
@@ -15,7 +14,7 @@ interface UseApplicationUpdateStatusProps {
 
 const useApplicationUpdateStatus = ({
   selector,
-  userActionCompleted = true,
+  userActionCompleted = false,
   setUserError,
   scrollToError,
   pathToPush,
@@ -34,8 +33,7 @@ const useApplicationUpdateStatus = ({
       setUserError(selector.error ?? 'Error patching the application');
       scrollToError();
     }
-    // should use all dependencies in this array?
-  }, [selector]);
+  }, [selector?.callStatus]);
 };
 
 export default useApplicationUpdateStatus;

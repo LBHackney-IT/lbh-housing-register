@@ -14,7 +14,7 @@ import processPhonenumber from '../../lib/utils/processPhonenumber';
 import { scrollToError } from '../../lib/utils/scroll';
 import {
   ApiCallStatusCode,
-  selectPatchApplicationStatus,
+  selectSaveApplicationStatus,
 } from 'lib/store/apiCallsStatus';
 import Loading from 'components/loading';
 import useApplicationUpdateStatus from 'lib/hooks/useApplicationUpdateStatus';
@@ -22,13 +22,13 @@ import useApplicationUpdateStatus from 'lib/hooks/useApplicationUpdateStatus';
 const ApplicationStartPage = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
-  const patchApplicationStatus = useAppSelector(selectPatchApplicationStatus);
+  const saveApplicationStatus = useAppSelector(selectSaveApplicationStatus);
 
   const [hasSignedUp, setHasSignedUp] = useState<boolean>(false);
   const [userError, setUserError] = useState<string | null>(null);
 
   useApplicationUpdateStatus({
-    selector: patchApplicationStatus,
+    selector: saveApplicationStatus,
     userActionCompleted: hasSignedUp,
     setUserError,
     scrollToError,
@@ -73,7 +73,7 @@ const ApplicationStartPage = (): JSX.Element => {
           {userError}
         </ErrorSummary>
       )}
-      {patchApplicationStatus?.callStatus == ApiCallStatusCode.PENDING ? (
+      {saveApplicationStatus?.callStatus === ApiCallStatusCode.PENDING ? (
         <Loading text="Saving..." />
       ) : (
         <Form

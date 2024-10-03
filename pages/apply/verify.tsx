@@ -15,6 +15,7 @@ import { Errors } from '../../lib/types/errors';
 import { FormData } from '../../lib/types/form';
 import { FormID, getFormData } from '../../lib/utils/form-data';
 import { scrollToError } from '../../lib/utils/scroll';
+import Loading from 'components/loading';
 
 const ApplicationVerifyPage = (): JSX.Element => {
   const router = useRouter();
@@ -25,6 +26,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
 
   const email = router.query.email as string;
   const application = useAppSelector((store) => store.application);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
 
   useEffect(() => {
     if (application.mainApplicant?.person) {
@@ -45,11 +47,24 @@ const ApplicationVerifyPage = (): JSX.Element => {
   const confirmSignUp = async (values: FormData) => {
     try {
       const code = values.code as string;
-      dispatch(confirmVerifyCode({ email, code })).then(() =>
-        dispatch(loadApplication())
-      );
+      setIsSaving(true);
+      dispatch(confirmVerifyCode({ email, code }))
+        .unwrap()
+        .then(() => {
+          setIsSaving(false);
+          dispatch(loadApplication())
+            .unwrap()
+            .catch((err) => {
+              setUserError(err);
+              scrollToError();
+            });
+        })
+        .catch((err) => {
+          setIsSaving(false);
+          setUserError(err);
+          scrollToError();
+        });
     } catch (e) {
-      console.error(e);
       setUserError(Errors.VERIFY_ERROR);
       scrollToError();
     }
@@ -68,39 +83,45 @@ const ApplicationVerifyPage = (): JSX.Element => {
     >
       <HeadingOne content="Enter your verification code" />
       {userError && <ErrorSummary>{userError}</ErrorSummary>}
-      <Announcement variant="success">
-        <Paragraph>
-          We have sent an email containing a six digit verification code to{' '}
-          <strong>{email}</strong>
-        </Paragraph>
-        <Paragraph>
-          {codeSent ? (
-            <>
-              New code sent to <strong>{email}</strong>
-            </>
-          ) : (
-            <>
-              Haven't received an email?
-              <br />
-              <a>
-                <button
-                  type="button"
-                  className="lbh-link lbh-link--announcement"
-                  onClick={resendCode}
-                >
-                  Send a new code
-                </button>
-              </a>
-            </>
-          )}
-        </Paragraph>
-      </Announcement>
 
-      <Form
-        formData={getFormData(FormID.SIGN_IN_VERIFY)}
-        buttonText="Continue"
-        onSubmit={confirmSignUp}
-      />
+      {isSaving ? (
+        <Loading text="Saving..." />
+      ) : (
+        <>
+          <Announcement variant="success">
+            <Paragraph>
+              We have sent an email containing a six digit verification code to{' '}
+              <strong>{email}</strong>
+            </Paragraph>
+            <Paragraph>
+              {codeSent ? (
+                <>
+                  New code sent to <strong>{email}</strong>
+                </>
+              ) : (
+                <>
+                  Haven't received an email?
+                  <br />
+                  <a>
+                    <button
+                      type="button"
+                      className="lbh-link lbh-link--announcement"
+                      onClick={resendCode}
+                    >
+                      Send a new code
+                    </button>
+                  </a>
+                </>
+              )}
+            </Paragraph>
+          </Announcement>
+          <Form
+            formData={getFormData(FormID.SIGN_IN_VERIFY)}
+            buttonText="Continue"
+            onSubmit={confirmSignUp}
+          />
+        </>
+      )}
     </Layout>
   );
 };

@@ -105,11 +105,10 @@ describe('Application', () => {
       applicationWithMainApplicant
     );
 
-    const errorStatus = 'Bad Request';
     const errorStatusCode = StatusCodes.BAD_REQUEST;
 
     //based on current API layer setup
-    const expectedErrorMessage = `Unable to update application: ${errorStatus} (${errorStatusCode})`;
+    const expectedErrorMessage = `Unable to update application (${errorStatusCode})`;
 
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,

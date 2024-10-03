@@ -8,7 +8,7 @@ import {
 
 export const createVerifyCode = createAsyncThunk(
   'auth/create',
-  async (emailAddress: string) => {
+  async (emailAddress: string, { rejectWithValue }) => {
     const request: CreateAuthRequest = {
       email: emailAddress,
     };
@@ -17,13 +17,21 @@ export const createVerifyCode = createAsyncThunk(
       method: 'POST',
       body: JSON.stringify(request),
     });
-    return (await res.json()) as CreateAuthResponse;
+
+    if (res.ok) {
+      return (await res.json()) as CreateAuthResponse;
+    } else {
+      return rejectWithValue(`Unable to create verify code (${res.status})`);
+    }
   }
 );
 
 export const confirmVerifyCode = createAsyncThunk(
   'auth/confirm',
-  async ({ email, code }: { email: string; code: string }) => {
+  async (
+    { email, code }: { email: string; code: string },
+    { rejectWithValue }
+  ) => {
     const request: VerifyAuthRequest = {
       email,
       code,
@@ -32,7 +40,12 @@ export const confirmVerifyCode = createAsyncThunk(
       method: 'POST',
       body: JSON.stringify(request),
     });
-    return (await res.json()) as VerifyAuthResponse;
+
+    if (res.ok) {
+      return (await res.json()) as VerifyAuthResponse;
+    } else {
+      return rejectWithValue(`Unable to confirm verify code (${res.status})`);
+    }
   }
 );
 
@@ -43,6 +56,7 @@ export const exit = createAsyncThunk('auth/exit', async () => {
   return (await res.json()) as VerifyAuthResponse;
 });
 
+/* eslint-disable no-empty-pattern */
 const slice = createSlice({
   name: 'user',
   initialState: null,

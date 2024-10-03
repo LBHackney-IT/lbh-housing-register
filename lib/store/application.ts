@@ -21,10 +21,15 @@ import { ApplicationStatus } from '../types/application-status';
 
 export const loadApplication = createAsyncThunk(
   'application/load',
-  async () => {
+  async (_: void, { rejectWithValue }) => {
     const res = await fetch(`/api/applications`);
-    const application = (await res.json()) as Application;
-    return application.id ? application : null;
+
+    if (res.ok) {
+      const application = (await res.json()) as Application;
+      return application.id ? application : null;
+    } else {
+      return rejectWithValue(`Unable to load application (${res.status})`);
+    }
   }
 );
 
@@ -35,12 +40,11 @@ export const updateApplication = createAsyncThunk(
       method: 'PATCH',
       body: JSON.stringify(application),
     });
+
     if (res.ok) {
       return (await res.json()) as Application;
     } else {
-      return rejectWithValue(
-        `Unable to update application: ${res.statusText} (${res.status})`
-      );
+      return rejectWithValue(`Unable to update application (${res.status})`);
     }
   }
 );

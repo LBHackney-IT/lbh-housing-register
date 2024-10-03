@@ -7,7 +7,8 @@ declare global {
       loginAsUser(userType: string): Chainable<void>;
       loginAsResident(
         applicationId: string,
-        setSeenCookieMessage?: boolean
+        setSeenCookieMessage?: boolean,
+        seenCookieMessageAlreadySet?: boolean
       ): Chainable<void>;
       mockHousingRegisterApiGetApplicationsByStatusAndAssignedTo(
         user: HackneyGoogleUserWithPermissions
@@ -20,12 +21,23 @@ declare global {
         applicationId: string,
         application: Application,
         persist?: boolean,
-        delay?: number
+        delay?: number,
+        statusCode?: number
       ): Chainable<void>;
       mount: typeof mount;
       mockHousingRegisterApiPatchApplication(
         applicationId: string,
         body?: Application,
+        delay?: number,
+        statusCode?: number
+      ): Chainable<void>;
+      mockHousingRegisterApiPostGenerateToken(
+        delay?: number,
+        persist?: boolean,
+        statusCode?: number
+      ): Chainable<void>;
+      mockHousingRegisterApiPostVerifyToken(
+        applicationId: string,
         delay?: number,
         statusCode?: number
       ): Chainable<void>;

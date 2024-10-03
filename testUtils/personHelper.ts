@@ -53,3 +53,9 @@ export const getRandomGender = (): string => {
   const genderOptions = ['M', 'F', 'self'];
   return genderOptions[Math.floor(Math.random() * genderOptions.length)];
 };
+
+export const generateEmailAddress = (): string => {
+  return faker.internet.email({
+    provider: 'hackneyTEST.gov.uk',
+  });
+};

@@ -100,10 +100,6 @@ resources:
                 HTTPPort: 80
                 HTTPSPort: 443
                 OriginProtocolPolicy: https-only
-          Logging:
-            Bucket: !GetAtt CloudFrontDistributionLogsS3Bucket.DomainName
-            IncludeCookies: false
-            Prefix:
 
 custom:
   domain-name:

@@ -1,4 +1,4 @@
-import { Form, Formik, FormikValues, FormikErrors } from 'formik';
+import { Form, Formik, FormikValues } from 'formik';
 import { UserContext } from '../../lib/contexts/user-context';
 import Button from '../../components/button';
 import ErrorSummary from '../../components/errors/error-summary';
@@ -17,6 +17,7 @@ import AddCaseAddress from '../../components/admin/AddCaseAddress';
 import AddCaseEthnicity from '../../components/admin/AddCaseEthnicity';
 import Layout from '../../components/layout/staff-layout';
 import { HeadingOne } from '../../components/content/headings';
+import Loading from 'components/loading';
 
 const keysToOmit = [
   'AGREEMENT',
@@ -84,12 +85,15 @@ interface PageProps {
   user: HackneyGoogleUser;
   onSubmit: (values: FormikValues) => void;
   isSubmitted: boolean;
-  addressHistory: any;
-  setAddressHistory: (addresses: any) => void;
-  handleSaveApplication: (isValid: boolean, touched: {}) => void;
+  addressHistory: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  setAddressHistory: (addresses: any) => void; // eslint-disable-line @typescript-eslint/no-explicit-any
+  handleSaveApplication: (isValid: boolean, touched: {}) => void; // eslint-disable-line @typescript-eslint/ban-types
   ethnicity: string;
   setEthnicity: (ethnicity: string) => void;
   data?: Application;
+  dataTestId?: string;
+  isSaving?: boolean;
+  userError?: string | null;
 }
 
 export default function MainApplicantForm({
@@ -103,6 +107,9 @@ export default function MainApplicantForm({
   ethnicity,
   setEthnicity,
   data,
+  dataTestId,
+  isSaving,
+  userError,
 }: PageProps) {
   const initialValues = isEditing
     ? generateEditInitialValues(data, true)
@@ -111,117 +118,129 @@ export default function MainApplicantForm({
   const isEditingCopy = isEditing ? 'Edit' : 'Add new';
   return (
     <UserContext.Provider value={{ user }}>
-      <Layout pageName={`${isEditingCopy} case`}>
+      <Layout pageName={`${isEditingCopy} case`} dataTestId={dataTestId}>
         <HeadingOne content={`${isEditingCopy} case`} />
         <h2 className="lbh-caption-xl lbh-caption govuk-!-margin-top-1">
           Main applicant details
         </h2>
-        <Formik
-          initialValues={initialValues}
-          onSubmit={onSubmit}
-          validationSchema={mainApplicantSchema}
-        >
-          {({ touched, isSubmitting, errors, isValid }) => {
-            const isTouched = Object.keys(touched).length !== 0;
-            return (
-              <>
-                {!isValid && isTouched && isSubmitted ? (
-                  <ErrorSummary title="There is a problem">
-                    <ul className="govuk-list govuk-error-summary__list">
-                      {Object.entries(errors).map(([inputName, errorTitle]) => (
-                        <li key={inputName}>
-                          <a href={`#${inputName}`}>{errorTitle}</a>
-                        </li>
-                      ))}
-                    </ul>
-                  </ErrorSummary>
-                ) : null}
-                <Form>
-                  {/* Identity */}
-                  <AddCaseSection section={personalDetailsSection} />
-                  <AddCaseSection section={immigrationStatusSection} />
-
-                  {/* Health */}
-                  <AddCaseSection section={medicalNeedsSection} />
-
-                  {/* Living situation */}
-                  <AddCaseSection section={residentialStatusSection} />
-                  <AddCaseAddress
-                    addresses={addressHistory}
-                    setAddresses={setAddressHistory}
-                  />
-
-                  {/* Current accommodation */}
-                  <AddCaseSection section={currentAccommodationSection} />
-                  <AddCaseSection section={currentAccommodationHostSection} />
-                  <AddCaseSection
-                    section={currentAccommodationLandlordSection}
-                  />
-
-                  {/* Your situation */}
-                  <AddCaseSection section={armedForcesSection} />
-                  <AddCaseSection section={courtOrderSection} />
-                  <AddCaseSection section={accomodationTypeSection} />
-                  <AddCaseSection section={sublettingSection} />
-                  <AddCaseSection section={domesticViolenceSection} />
-                  <AddCaseSection section={homelessnessSection} />
-                  <AddCaseSection section={propertyOwnwershipSection} />
-                  <AddCaseSection section={soldPropertySection} />
-                  <AddCaseSection section={medicalNeedSection} />
-                  <AddCaseSection section={purchasingPropertySection} />
-                  <AddCaseSection section={arrearsSection} />
-                  <AddCaseSection section={underOccupyingSection} />
-                  <AddCaseSection section={otherHousingRegisterSection} />
-                  <AddCaseSection section={breachOfTenancySection} />
-                  <AddCaseSection section={legalRestrictionsSection} />
-                  <AddCaseSection section={unspentConvictionsSection} />
-                  <AddCaseSection section={employmentSection} />
-                  <AddCaseSection section={incomeSavingsSection} />
-                  <AddCaseSection section={additionalQuestionsSection} />
-
-                  {/* Ethnicity */}
-                  {/* <AddCaseSection section={ethnicitySection} /> */}
-                  <AddCaseEthnicity
-                    section={ethnicitySection}
-                    ethnicity={ethnicity}
-                    setEthnicity={setEthnicity}
-                  />
-
-                  {ethnicity === 'asian-asian-british' ? (
-                    <AddCaseSection section={ethnicityAsianSection} />
+        {userError && (
+          <ErrorSummary dataTestId="test-agree-terms-error-summary">
+            {userError}
+          </ErrorSummary>
+        )}
+        {isSaving ? (
+          <Loading text="Saving..." />
+        ) : (
+          <Formik
+            initialValues={initialValues}
+            onSubmit={onSubmit}
+            validationSchema={mainApplicantSchema}
+          >
+            {({ touched, isSubmitting, errors, isValid }) => {
+              const isTouched = Object.keys(touched).length !== 0;
+              return (
+                <>
+                  {!isValid && isTouched && isSubmitted ? (
+                    <ErrorSummary title="There is a problem">
+                      <ul className="govuk-list govuk-error-summary__list">
+                        {Object.entries(errors).map(
+                          ([inputName, errorTitle]) => (
+                            <li key={inputName}>
+                              <a href={`#${inputName}`}>{errorTitle}</a>
+                            </li>
+                          )
+                        )}
+                      </ul>
+                    </ErrorSummary>
                   ) : null}
+                  <Form>
+                    {/* Identity */}
+                    <AddCaseSection section={personalDetailsSection} />
+                    <AddCaseSection section={immigrationStatusSection} />
 
-                  {ethnicity === 'black-black-british' ? (
-                    <AddCaseSection section={ethnicityBlackSection} />
-                  ) : null}
-                  {ethnicity === 'mixed-or-multiple-background' ? (
-                    <AddCaseSection section={ethnicityMixedSection} />
-                  ) : null}
+                    {/* Health */}
+                    <AddCaseSection section={medicalNeedsSection} />
 
-                  {ethnicity === 'white' ? (
-                    <AddCaseSection section={ethnicityWhiteSection} />
-                  ) : null}
+                    {/* Living situation */}
+                    <AddCaseSection section={residentialStatusSection} />
+                    <AddCaseAddress
+                      addresses={addressHistory}
+                      setAddresses={setAddressHistory}
+                    />
 
-                  {ethnicity === 'other-ethnic-group' ? (
-                    <AddCaseSection section={ethnicityOtherSection} />
-                  ) : null}
+                    {/* Current accommodation */}
+                    <AddCaseSection section={currentAccommodationSection} />
+                    <AddCaseSection section={currentAccommodationHostSection} />
+                    <AddCaseSection
+                      section={currentAccommodationLandlordSection}
+                    />
 
-                  <div className="c-flex__1 text-right">
-                    <Button
-                      onClick={() => handleSaveApplication(isValid, touched)}
-                      disabled={isSubmitting}
-                      type="submit"
-                    >
-                      {isEditing
-                        ? 'Update application'
-                        : 'Save new application'}
-                    </Button>
-                  </div>
-                </Form>
-              </>
-            );
-          }}
-        </Formik>
+                    {/* Your situation */}
+                    <AddCaseSection section={armedForcesSection} />
+                    <AddCaseSection section={courtOrderSection} />
+                    <AddCaseSection section={accomodationTypeSection} />
+                    <AddCaseSection section={sublettingSection} />
+                    <AddCaseSection section={domesticViolenceSection} />
+                    <AddCaseSection section={homelessnessSection} />
+                    <AddCaseSection section={propertyOwnwershipSection} />
+                    <AddCaseSection section={soldPropertySection} />
+                    <AddCaseSection section={medicalNeedSection} />
+                    <AddCaseSection section={purchasingPropertySection} />
+                    <AddCaseSection section={arrearsSection} />
+                    <AddCaseSection section={underOccupyingSection} />
+                    <AddCaseSection section={otherHousingRegisterSection} />
+                    <AddCaseSection section={breachOfTenancySection} />
+                    <AddCaseSection section={legalRestrictionsSection} />
+                    <AddCaseSection section={unspentConvictionsSection} />
+                    <AddCaseSection section={employmentSection} />
+                    <AddCaseSection section={incomeSavingsSection} />
+                    <AddCaseSection section={additionalQuestionsSection} />
+
+                    {/* Ethnicity */}
+                    {/* <AddCaseSection section={ethnicitySection} /> */}
+                    <AddCaseEthnicity
+                      section={ethnicitySection}
+                      ethnicity={ethnicity}
+                      setEthnicity={setEthnicity}
+                    />
+
+                    {ethnicity === 'asian-asian-british' ? (
+                      <AddCaseSection section={ethnicityAsianSection} />
+                    ) : null}
+
+                    {ethnicity === 'black-black-british' ? (
+                      <AddCaseSection section={ethnicityBlackSection} />
+                    ) : null}
+                    {ethnicity === 'mixed-or-multiple-background' ? (
+                      <AddCaseSection section={ethnicityMixedSection} />
+                    ) : null}
+
+                    {ethnicity === 'white' ? (
+                      <AddCaseSection section={ethnicityWhiteSection} />
+                    ) : null}
+
+                    {ethnicity === 'other-ethnic-group' ? (
+                      <AddCaseSection section={ethnicityOtherSection} />
+                    ) : null}
+
+                    <div className="c-flex__1 text-right">
+                      <Button
+                        onClick={() => handleSaveApplication(isValid, touched)}
+                        disabled={isSubmitting}
+                        type="submit"
+                        dataTestId="test-submit-main-applicant-button"
+                      >
+                        {isEditing
+                          ? 'Update application'
+                          : 'Save new application'}
+                      </Button>
+                    </div>
+                  </Form>
+                </>
+              );
+            }}
+          </Formik>
+        )}
       </Layout>
     </UserContext.Provider>
   );

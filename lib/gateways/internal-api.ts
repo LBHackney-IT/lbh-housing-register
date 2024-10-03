@@ -14,10 +14,12 @@ export const updateApplication = async (application: Application) => {
     method: 'PATCH',
     body: JSON.stringify(application),
   });
-  if (res.status == 400) {
-    throw (await res.json()).message;
+
+  if (res.ok) {
+    return (await res.json()) as Application;
+  } else {
+    throw Error(`Unable to update application (${res.status})`);
   }
-  return (await res.json()) as Application;
 };
 
 export const createApplication = async (application: Application) => {

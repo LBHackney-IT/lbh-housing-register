@@ -10,6 +10,11 @@ class ViewApplicationPage {
     return cy.get(`[data-testid="${testId}"]`);
   }
 
+  static getViewApplicationPage() {
+    const testId = 'test-view-application-page';
+    return cy.get(`[data-testid="${testId}"]`);
+  }
+
   static mockHousingRegisterApiGetApplications(
     applicationId: string,
     application: Application

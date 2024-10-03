@@ -17,7 +17,7 @@ import {
   selectSaveApplicationStatus,
 } from 'lib/store/apiCallsStatus';
 import Loading from 'components/loading';
-import useApplicationUpdateStatus from 'lib/hooks/useApplicationUpdateStatus';
+import useApiCallSelectorStatus from 'lib/hooks/useApiCallStatus';
 
 const ApplicationStartPage = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -27,7 +27,7 @@ const ApplicationStartPage = (): JSX.Element => {
   const [hasSignedUp, setHasSignedUp] = useState<boolean>(false);
   const [userError, setUserError] = useState<string | null>(null);
 
-  useApplicationUpdateStatus({
+  useApiCallSelectorStatus({
     selector: saveApplicationStatus,
     userActionCompleted: hasSignedUp,
     setUserError,

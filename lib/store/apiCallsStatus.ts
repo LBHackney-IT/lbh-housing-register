@@ -15,11 +15,11 @@ export interface ApiCallStatus {
 }
 
 export interface HRApiCallsStatusState {
-  patchApplication: ApiCallStatus;
+  updateApplication: ApiCallStatus;
 }
 
 const initialState: HRApiCallsStatusState = {
-  patchApplication: {
+  updateApplication: {
     callStatus: ApiCallStatusCode.IDLE,
     error: null,
   },
@@ -27,7 +27,7 @@ const initialState: HRApiCallsStatusState = {
 
 export const selectSaveApplicationStatus = (
   state: RootState
-): ApiCallStatus | undefined => state.hrApiCallsStatus.patchApplication;
+): ApiCallStatus | undefined => state.hrApiCallsStatus.updateApplication;
 
 export const hrApiCallsStatus = createSlice({
   name: 'hrApiCallsStatus',
@@ -35,29 +35,27 @@ export const hrApiCallsStatus = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      //update application
       .addCase(updateApplication.pending, (state) => {
-        state.patchApplication = {
+        state.updateApplication = {
           callStatus: ApiCallStatusCode.PENDING,
           error: null,
         };
       })
       .addCase(updateApplication.fulfilled, (state) => {
-        state.patchApplication = {
+        state.updateApplication = {
           callStatus: ApiCallStatusCode.FULFILLED,
           error: null,
         };
       })
       .addCase(updateApplication.rejected, (state, action) => {
-        state.patchApplication = {
+        state.updateApplication = {
           callStatus: ApiCallStatusCode.REJECTED,
           error: action.payload as string,
         };
       })
-      .addDefaultCase((state) => {
-        state.patchApplication = {
-          callStatus: ApiCallStatusCode.IDLE,
-          error: null,
-        };
+      .addDefaultCase(() => {
+        initialState;
       });
   },
 });

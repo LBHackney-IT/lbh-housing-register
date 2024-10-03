@@ -12,7 +12,7 @@ import {
   ApiCallStatusCode,
 } from 'lib/store/apiCallsStatus';
 import ErrorSummary from 'components/errors/error-summary';
-import useApplicationUpdateStatus from 'lib/hooks/useApplicationUpdateStatus';
+import useApiCallSelectorStatus from 'lib/hooks/useApiCallStatus';
 import { scrollToError } from '../../lib/utils/scroll';
 import { Errors } from 'lib/types/errors';
 import Loading from 'components/loading';
@@ -40,7 +40,7 @@ const ApplicationTermsPage = (): JSX.Element => {
     }
   };
 
-  useApplicationUpdateStatus({
+  useApiCallSelectorStatus({
     selector: saveApplicationStatus,
     userActionCompleted: hasSaved,
     setUserError,

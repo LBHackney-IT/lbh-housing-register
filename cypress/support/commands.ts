@@ -100,13 +100,14 @@ Cypress.Commands.add(
     applicationId: string,
     application: Application,
     persist: boolean,
-    delay: number = 0
+    delay: number = 0,
+    statusCode: number = StatusCodes.OK
   ) => {
     cy.task('nock', {
       hostname: Cypress.env('HOUSING_REGISTER_API'),
       method: 'GET',
       path: `/applications/${applicationId}`,
-      statusCode: StatusCodes.OK,
+      statusCode,
       body: application,
       persist,
       delay,
@@ -207,7 +208,11 @@ Cypress.Commands.add('loginAsUser', (userType: string) => {
 
 Cypress.Commands.add(
   'loginAsResident',
-  (applicationId: string, setSeenCookieMessage?: boolean) => {
+  (
+    applicationId: string,
+    setSeenCookieMessage?: boolean,
+    seenCookieMessageAlreadySet?: boolean
+  ) => {
     const user = {
       application_id: applicationId,
     };
@@ -216,7 +221,10 @@ Cypress.Commands.add(
       const authCookieName = 'housing_user';
       const cookieMessageCookieName = 'seen_cookie_message';
 
-      cy.getCookies().should('be.empty');
+      if (!seenCookieMessageAlreadySet) {
+        cy.getCookies().should('be.empty');
+      }
+
       cy.setCookie(authCookieName, token as string);
       cy.getCookie(authCookieName).should('have.property', 'value', token);
 
@@ -230,6 +238,53 @@ Cypress.Commands.add(
       }
 
       cy.wrap(user).as('currentUser');
+    });
+  }
+);
+
+Cypress.Commands.add(
+  'mockHousingRegisterApiPostGenerateToken',
+  (
+    delay: number = 0,
+    persist: boolean = false,
+    statusCode: number = StatusCodes.OK
+  ) => {
+    cy.task('nock', {
+      hostname: Cypress.env('HOUSING_REGISTER_API'),
+      method: 'POST',
+      path: `/auth/generate`,
+      statusCode,
+      body: {
+        success: true,
+      },
+      delay,
+      persist,
+    });
+  }
+);
+
+Cypress.Commands.add(
+  'mockHousingRegisterApiPostVerifyToken',
+  (
+    applicationId: string,
+    delay: number = 0,
+    statusCode: number = StatusCodes.OK
+  ) => {
+    const user = {
+      application_id: applicationId,
+    };
+
+    cy.task('generateToken', { user, secret }).then((token) => {
+      cy.task('nock', {
+        hostname: Cypress.env('HOUSING_REGISTER_API'),
+        method: 'POST',
+        path: `/auth/verify`,
+        statusCode,
+        body: {
+          accessToken: token,
+        },
+        delay,
+      });
     });
   }
 );

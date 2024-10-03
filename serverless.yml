@@ -55,13 +55,6 @@ functions:
 
 resources:
   Resources:
-    CloudFrontDistributionLogsS3Bucket:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: ${self:service}-${self:provider.stage}-cfd-logs
-        OwnershipControls:
-          Rules:
-            - ObjectOwnership: BucketOwnerPreferred
     CloudFrontDistribution:
       Type: AWS::CloudFront::Distribution
       Properties:

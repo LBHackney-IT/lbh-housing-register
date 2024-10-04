@@ -72,4 +72,26 @@ describe('Edit person in application', () => {
     //user not pushed to view application page
     ViewApplicationPage.getViewApplicationPage().should('not.exist');
   });
+
+  it('shows correct status code in error message when application update fails', () => {
+    const errorCode = StatusCodes.BAD_REQUEST;
+    cy.mockHousingRegisterApiGetApplications(applicationId, application, true);
+    cy.mockHousingRegisterApiPatchApplication(
+      applicationId,
+      application,
+      0,
+      errorCode
+    );
+    cy.mockActivityHistoryApiEmptyResponse(applicationId);
+    ApplicationEditPersonPage.visit(applicationId, personId);
+    ApplicationEditPersonPage.getApplicationEditPersonPage().should(
+      'be.visible'
+    );
+    ApplicationEditPersonPage.getLivingSituationDropdown().select(
+      'private-rental'
+    );
+    ApplicationEditPersonPage.getCitizenshipDropdown().select('british');
+    ApplicationEditPersonPage.getSubmitMainApplicantDetailsButton().click();
+    cy.contains(`Unable to update application (${errorCode})`);
+  });
 });

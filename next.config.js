@@ -58,6 +58,7 @@ const sentryWebpackPluginOptions = {
 
   silent: true, // Suppresses all logs
   dryRun: process.env.NEXT_PUBLIC_ENV !== 'production',
+  hideSourceMaps: true, // Sentry CLI will not upload the source maps
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options.
 };

@@ -48,14 +48,18 @@ describe('googleAuth', () => {
       it('calls parse with the cookie from the headers when provided', () => {
         const req: ApiRequest = createRequest();
         const parseSpy = jest.spyOn(cookie, 'parse');
-        req.headers = {
-          cookie: 'abc123',
+        const newReq = {
+          ...req,
+          headers: {
+            ...req.headers,
+            cookie: 'abc123',
+          },
         };
 
-        getSession(req);
+        getSession(newReq);
 
         expect(parseSpy).toHaveBeenCalledTimes(1);
-        expect(parseSpy).toHaveBeenCalledWith(req.headers.cookie);
+        expect(parseSpy).toHaveBeenCalledWith(newReq.headers.cookie);
       });
 
       it('calls parse with empty string when cookie is not provided in the header', () => {
@@ -82,11 +86,16 @@ describe('googleAuth', () => {
 
       it("returns undefined when cookie is provided but it's not hackneyToken", () => {
         const req: ApiRequest = createRequest();
-        req.headers = {
-          cookie: 'someToken=123',
+
+        const newReq = {
+          ...req,
+          headers: {
+            ...req.headers,
+            cookie: 'someToken=123',
+          },
         };
 
-        const response = getSession(req);
+        const response = getSession(newReq);
         expect(response).toBeUndefined();
       });
     });
@@ -100,8 +109,13 @@ describe('googleAuth', () => {
       const verifyFunctionName = 'verify';
       const decodeFunctionName = 'decode';
 
-      req.headers = {
-        cookie: `hackneyToken=${parsedToken}`,
+      const newReq = {
+        ...req,
+        headers: {
+          ...req.headers,
+
+          cookie: `hackneyToken=${parsedToken}`,
+        },
       };
 
       beforeEach(() => {
@@ -118,7 +132,7 @@ describe('googleAuth', () => {
           throw new jwt.JsonWebTokenError('token parse error');
         });
 
-        expect(getSession(req)).toBeUndefined();
+        expect(getSession(newReq)).toBeUndefined();
       });
 
       it('verifies token when SKIP_VERIFY_TOKEN is not set', () => {
@@ -127,7 +141,7 @@ describe('googleAuth', () => {
         const verifySpy = jest.spyOn(jsonwebtoken, verifyFunctionName);
         const decodeSpy = jest.spyOn(jsonwebtoken, decodeFunctionName);
 
-        getSession(req);
+        getSession(newReq);
 
         expect(verifySpy).toHaveBeenCalledTimes(1);
         expect(verifySpy).toHaveBeenCalledWith(parsedToken, tokenSecret);
@@ -140,7 +154,7 @@ describe('googleAuth', () => {
         const verifySpy = jest.spyOn(jsonwebtoken, verifyFunctionName);
         const decodeSpy = jest.spyOn(jsonwebtoken, decodeFunctionName);
 
-        getSession(req);
+        getSession(newReq);
 
         expect(verifySpy).toHaveBeenCalledTimes(1);
         expect(verifySpy).toHaveBeenCalledWith(parsedToken, tokenSecret);
@@ -153,7 +167,7 @@ describe('googleAuth', () => {
         const verifySpy = jest.spyOn(jsonwebtoken, verifyFunctionName);
         const decodeSpy = jest.spyOn(jsonwebtoken, decodeFunctionName);
 
-        getSession(req);
+        getSession(newReq);
 
         expect(decodeSpy).toHaveBeenCalledTimes(1);
         expect(decodeSpy).toHaveBeenCalledWith(parsedToken);
@@ -194,11 +208,16 @@ describe('googleAuth', () => {
       it('returns correct session details when valid hackney cookie provided', () => {
         const { signedToken, tokenData } = generateSignedTokenByRole();
 
-        req.headers = {
-          cookie: `hackneyToken=${signedToken}`,
+        const newReq = {
+          ...req,
+          headers: {
+            ...req.headers,
+
+            cookie: `hackneyToken=${signedToken}`,
+          },
         };
 
-        const session = getSession(req);
+        const session = getSession(newReq);
         const expectedSession: HackneyGoogleUserWithPermissions = {
           ...tokenData,
           ...getClaimsByRole(),
@@ -211,11 +230,16 @@ describe('googleAuth', () => {
           UserRole.Admin
         );
 
-        req.headers = {
-          cookie: `hackneyToken=${signedToken}`,
+        const newReq = {
+          ...req,
+          headers: {
+            ...req.headers,
+
+            cookie: `hackneyToken=${signedToken}`,
+          },
         };
 
-        const session = getSession(req);
+        const session = getSession(newReq);
         const expectedSession: HackneyGoogleUserWithPermissions = {
           ...tokenData,
           ...getClaimsByRole(UserRole.Admin),
@@ -228,11 +252,16 @@ describe('googleAuth', () => {
           UserRole.Manager
         );
 
-        req.headers = {
-          cookie: `hackneyToken=${signedToken}`,
+        const newReq = {
+          ...req,
+          headers: {
+            ...req.headers,
+
+            cookie: `hackneyToken=${signedToken}`,
+          },
         };
 
-        const session = getSession(req);
+        const session = getSession(newReq);
         const expectedSession: HackneyGoogleUserWithPermissions = {
           ...tokenData,
           ...getClaimsByRole(UserRole.Manager),
@@ -245,11 +274,16 @@ describe('googleAuth', () => {
           UserRole.Officer
         );
 
-        req.headers = {
-          cookie: `hackneyToken=${signedToken}`,
+        const newReq = {
+          ...req,
+          headers: {
+            ...req.headers,
+
+            cookie: `hackneyToken=${signedToken}`,
+          },
         };
 
-        const session = getSession(req);
+        const session = getSession(newReq);
         const expectedSession: HackneyGoogleUserWithPermissions = {
           ...tokenData,
           ...getClaimsByRole(UserRole.Officer),

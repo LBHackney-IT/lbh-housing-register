@@ -18,6 +18,7 @@
 .serverless
 /.idea/.idea.lbh-housing-register.dir/.idea
 /.vs
+tsconfig.tsbuildinfo
 
 # Sentry
 .sentryclirc
@@ -27,6 +28,7 @@
 
 # test coverage
 /coverage
+/results
 
 # Cypress
 cypress.env.json

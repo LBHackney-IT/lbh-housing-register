@@ -13,21 +13,19 @@ describe('Review applicant details', () => {
     cy.clearAllCookies();
     cy.loginAsUser('readOnly');
     cy.task('clearNock');
-    ReviewApplicantPage.mockHousingRegisterApiGetApplications(
-      applicationId,
-      application
-    );
+    cy.mockHousingRegisterApiGetApplications(applicationId, application);
   });
 
-  it("doesn't show the money section for read only users", () => {
+  it('shows the money section for read only users', () => {
     ReviewApplicantPage.visit(applicationId, personId);
-    ReviewApplicantPage.getMoneySectionNavLink().should('not.exist');
+    ReviewApplicantPage.getMoneySectionNavLink().should('be.visible');
   });
 
-  it("doesn't show the health section for read only users", () => {
+  it('shows the health section for read only users', () => {
     ReviewApplicantPage.visit(applicationId, personId);
-    ReviewApplicantPage.getHealthSectionNavLink().should('not.exist');
+    ReviewApplicantPage.getHealthSectionNavLink().should('be.visible');
   });
+
   it("doesn't show the view documents button for read only users", () => {
     ReviewApplicantPage.visit(applicationId, personId);
     ReviewApplicantPage.getViewDocumentsButton().should('not.exist');

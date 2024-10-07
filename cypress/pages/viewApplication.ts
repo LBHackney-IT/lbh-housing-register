@@ -27,19 +27,6 @@ class ViewApplicationPage {
       body: application,
     });
   }
-
-  static mockActivityHistoryApi(targetId) {
-    cy.task('nock', {
-      hostname: `${Cypress.env('ACTIVITY_HISTORY_API')}`,
-      method: 'GET',
-      path: `/activityhistory?targetId=${targetId}&pageSize=100`,
-      status: 200,
-      body: {
-        results: [{}],
-        paginationDetails: { hasNext: false, nextToken: '' },
-      },
-    });
-  }
 }
 
 export default ViewApplicationPage;

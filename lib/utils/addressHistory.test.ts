@@ -1,9 +1,11 @@
 import MockDate from 'mockdate';
+
 import {
   calculateDurations,
   checkAddressHistory,
   formatDate,
 } from './addressHistory';
+
 MockDate.set('2020-06-01');
 
 const partialEntry = {

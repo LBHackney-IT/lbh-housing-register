@@ -9,11 +9,12 @@
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint"],
   "extends": [
-    "@hackney/eslint-config",
     "eslint:recommended",
     "plugin:prettier/recommended",
     "plugin:@next/next/recommended",
     "plugin:cypress/recommended"
+    // note these are commented out because the hackney eslint needs updaring to support the newer libraries we're using. To be updated in a future PR.
+    // "@hackney/eslint-config"
   ],
   "parserOptions": {
     "sourceType": "module",
@@ -28,18 +29,18 @@
   "rules": {
     "linebreak-style": ["error", "unix"],
     "require-atomic-updates": "off",
-    "react/react-in-jsx-scope": "off",
-    "import/no-extraneous-dependencies": [
-      "error",
-      {
-        "devDependencies": [
-          "**/*.+(test|spec|cy).+(j|t)s?(x)",
-          "cypress.config.ts",
-          "cypress/support/commands.ts",
-          "testUtils/*"
-        ]
-      }
-    ]
+    "react/react-in-jsx-scope": "off"
+    // "import/no-extraneous-dependencies": [
+    //   "error",
+    //   {
+    //     "devDependencies": [
+    //       "**/*.+(test|spec|cy).+(j|t)s?(x)",
+    //       "cypress.config.ts",
+    //       "cypress/support/commands.ts",
+    //       "testUtils/*"
+    //     ]
+    //   }
+    // ]
   },
   "overrides": [
     {

@@ -159,26 +159,22 @@ export default function ApplicationPersonPage({
                   >
                     Living Situation
                   </HorizontalNavItem>
-                  {!hasReadOnlyPermissionOnly(user) && (
-                    <HorizontalNavItem
-                      handleSelectNavItem={handleSelectNavItem}
-                      itemName="money"
-                      isActive={activeNavItem === 'money'}
-                      dataTestId="test-applicant-money-section-navigation"
-                    >
-                      Money
-                    </HorizontalNavItem>
-                  )}
-                  {!hasReadOnlyPermissionOnly(user) && (
-                    <HorizontalNavItem
-                      handleSelectNavItem={handleSelectNavItem}
-                      itemName="health"
-                      isActive={activeNavItem === 'health'}
-                      dataTestId="test-applicant-health-section-navigation"
-                    >
-                      Health
-                    </HorizontalNavItem>
-                  )}
+                  <HorizontalNavItem
+                    handleSelectNavItem={handleSelectNavItem}
+                    itemName="money"
+                    isActive={activeNavItem === 'money'}
+                    dataTestId="test-applicant-money-section-navigation"
+                  >
+                    Money
+                  </HorizontalNavItem>
+                  <HorizontalNavItem
+                    handleSelectNavItem={handleSelectNavItem}
+                    itemName="health"
+                    isActive={activeNavItem === 'health'}
+                    dataTestId="test-applicant-health-section-navigation"
+                  >
+                    Health
+                  </HorizontalNavItem>
                   {/*
                   <HorizontalNavItem
                     handleSelectNavItem={handleSelectNavItem}

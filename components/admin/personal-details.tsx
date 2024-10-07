@@ -49,10 +49,7 @@ export default function PersonalDetails({
                 </li>
               </ul>
               <ul className="lbh-list lbh-list--compressed">
-                <li>
-                  {applicant.contactInformation?.phoneNumber &&
-                    applicant.contactInformation?.phoneNumber}
-                </li>
+                <li>{applicant.contactInformation?.phoneNumber}</li>
                 <li>
                   {applicant.contactInformation?.emailAddress && (
                     <Link

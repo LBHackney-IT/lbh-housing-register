@@ -19,8 +19,8 @@ const application = generateApplication(
 describe('Edit person in application', () => {
   beforeEach(() => {
     cy.clearAllCookies();
-    cy.loginAsUser('manager');
     cy.task('clearNock');
+    cy.loginAsUser('manager');
   });
 
   it('shows a saving message while application is updating', () => {
@@ -48,32 +48,7 @@ describe('Edit person in application', () => {
     ViewApplicationPage.getViewApplicationPage().should('be.visible');
   });
 
-  it('shows an error message when application update fails', () => {
-    const errorCode = StatusCodes.INTERNAL_SERVER_ERROR;
-    cy.mockHousingRegisterApiGetApplications(applicationId, application, true);
-    cy.mockHousingRegisterApiPatchApplication(
-      applicationId,
-      application,
-      0,
-      errorCode
-    );
-    cy.mockActivityHistoryApiEmptyResponse(applicationId);
-    ApplicationEditPersonPage.visit(applicationId, personId);
-    ApplicationEditPersonPage.getApplicationEditPersonPage().should(
-      'be.visible'
-    );
-    ApplicationEditPersonPage.getLivingSituationDropdown().select(
-      'private-rental'
-    );
-    ApplicationEditPersonPage.getCitizenshipDropdown().select('british');
-    ApplicationEditPersonPage.getSubmitMainApplicantDetailsButton().click();
-    cy.contains(`Unable to update application (${errorCode})`);
-
-    //user not pushed to view application page
-    ViewApplicationPage.getViewApplicationPage().should('not.exist');
-  });
-
-  it('shows correct status code in error message when application update fails', () => {
+  it('shows an error message with correct status code when application update fails', () => {
     const errorCode = StatusCodes.BAD_REQUEST;
     cy.mockHousingRegisterApiGetApplications(applicationId, application, true);
     cy.mockHousingRegisterApiPatchApplication(
@@ -92,6 +67,10 @@ describe('Edit person in application', () => {
     );
     ApplicationEditPersonPage.getCitizenshipDropdown().select('british');
     ApplicationEditPersonPage.getSubmitMainApplicantDetailsButton().click();
+    ApplicationEditPersonPage.getErrorSummary().should('be.visible');
     cy.contains(`Unable to update application (${errorCode})`);
+
+    //user not pushed to view application page
+    ViewApplicationPage.getViewApplicationPage().should('not.exist');
   });
 });

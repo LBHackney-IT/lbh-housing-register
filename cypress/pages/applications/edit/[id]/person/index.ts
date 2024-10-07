@@ -26,6 +26,13 @@ class ApplicationEditPersonPage {
       '#immigrationStatus_citizenship'
     );
   }
+
+  static getErrorSummary() {
+    const testId = 'test-edit-main-applicant-error-summary';
+    return this.getApplicationEditPersonPage().find(
+      `[data-testId="${testId}"]`
+    );
+  }
 }
 
 export default ApplicationEditPersonPage;

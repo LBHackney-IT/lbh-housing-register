@@ -93,7 +93,7 @@ interface PageProps {
   data?: Application;
   dataTestId?: string;
   isSaving?: boolean;
-  userError?: string | null;
+  userError?: string;
 }
 
 export default function MainApplicantForm({
@@ -124,7 +124,7 @@ export default function MainApplicantForm({
           Main applicant details
         </h2>
         {userError && (
-          <ErrorSummary dataTestId="test-agree-terms-error-summary">
+          <ErrorSummary dataTestId="test-edit-main-applicant-error-summary">
             {userError}
           </ErrorSummary>
         )}

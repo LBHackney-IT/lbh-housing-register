@@ -43,11 +43,9 @@ const Declaration = (): JSX.Element => {
         getDisqualificationReasonOption(reason)
       );
       const reason = reasonStrings.join(',');
-      // this is just a notification, so for now we don't need to handle errors
       dispatch(sendDisqualifyEmail({ application, reason }));
 
       try {
-        console.log('hello');
         await dispatch(disqualifyApplication(application.id!)).unwrap();
         router.push('/apply/not-eligible');
       } catch (error) {
@@ -58,12 +56,10 @@ const Declaration = (): JSX.Element => {
         setLoading(false);
       }
     } else {
-      // these are just notifications, so we don't need to handle errors yet
       dispatch(sendConfirmation(application));
 
       const medicalNeeds = applicantsWithMedicalNeed(application);
       if (medicalNeeds > 0) {
-        // these are just notifications, so we don't need to handle errors yet
         dispatch(sendMedicalNeed({ application, medicalNeeds }));
       }
       try {
@@ -71,7 +67,6 @@ const Declaration = (): JSX.Element => {
         await dispatch(createEvidenceRequest(application)).unwrap();
         router.push('/apply/confirmation');
       } catch (error) {
-        console.log('Error completing the application:', error);
         setUserError(error as string);
         console.error('Error completing the application:', error);
         scrollToError();

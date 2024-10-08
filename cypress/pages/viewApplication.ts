@@ -12,6 +12,10 @@ class ViewApplicationPage {
     const testId = `test-remove-household-member-button-${personId}`;
     return cy.get(`[data-testid="${testId}"]`);
   }
+  static getViewApplicationPage() {
+    const testId = 'test-view-application-page';
+    return cy.get(`[data-testid="${testId}"]`);
+  }
 
   static getRemoveHouseHoldMemberConfirmationButton(personId: string) {
     const testId = `test-remove-household-member-confirmation-button-${personId}`;

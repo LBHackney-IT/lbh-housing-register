@@ -15,6 +15,7 @@ interface SummaryProps {
   applicationId: string;
   canEdit: boolean;
   handleDelete: (applicant: Applicant) => void;
+  userError?: string;
 }
 
 export default function OtherMembers({
@@ -23,6 +24,7 @@ export default function OtherMembers({
   applicationId,
   canEdit,
   handleDelete,
+  userError,
 }: SummaryProps): JSX.Element {
   const [showDeleteWarningDialog, setShowDeleteWarningDialog] = useState(false);
   const [applicantToDelete, setApplicantToDelete] = useState({} as Applicant);
@@ -70,16 +72,18 @@ export default function OtherMembers({
                   <button
                     onClick={() => handleDeleteDialog(applicant)}
                     className="lbh-body-s lbh-link lbh-link--no-visited-state lbh-delete-link"
+                    data-testid={`test-remove-household-member-button-${applicant.person?.id}`}
                   >
                     Remove household member
                   </button>
                 )}
 
                 <Dialog
-                  isOpen={showDeleteWarningDialog}
+                  isOpen={showDeleteWarningDialog && !userError}
                   title="Confirm delete"
                   onConfirmation={() => handleDelete(applicantToDelete)}
                   onCancel={() => setShowDeleteWarningDialog(false)}
+                  confirmationButtonTestId={`test-remove-household-member-confirmation-button-${applicant.person?.id}`}
                 >
                   <Paragraph>
                     Are you sure you want to remove{' '}

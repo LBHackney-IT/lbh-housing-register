@@ -13,7 +13,10 @@ declare global {
       mockHousingRegisterApiGetApplicationsByStatusAndAssignedTo(
         user: HackneyGoogleUserWithPermissions
       ): Chainable<void>;
-      mockActivityHistoryApiEmptyResponse(targetId: string): Chainable<void>;
+      mockActivityHistoryApiEmptyResponse(
+        targetId: string,
+        persist?: boolean
+      ): Chainable<void>;
       mockHousingRegisterApiPostSearchResults(
         application: Application
       ): Chainable<void>;

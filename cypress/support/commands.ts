@@ -66,7 +66,7 @@ Cypress.Commands.add('generateEmptyApplication', () => {
 
 Cypress.Commands.add(
   'mockActivityHistoryApiEmptyResponse',
-  (targetId: string) => {
+  (targetId: string, persist?: boolean) => {
     cy.task('nock', {
       hostname: Cypress.env('ACTIVITY_HISTORY_API'),
       method: 'GET',
@@ -76,6 +76,7 @@ Cypress.Commands.add(
         results: [{}],
         paginationDetails: { nextToken: null },
       },
+      persist,
     });
   }
 );

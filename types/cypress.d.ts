@@ -51,6 +51,7 @@ declare global {
         delay?: number,
         statusCode?: number
       ): Chainable<void>;
+      mockNotifyEmailResponse(statusCode?: number): Chainable<void>;
     }
   }
 }

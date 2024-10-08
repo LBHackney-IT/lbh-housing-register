@@ -321,3 +321,15 @@ Cypress.Commands.add(
     });
   }
 );
+Cypress.Commands.add(
+  'mockNotifyEmailResponse',
+  (statusCode: number = StatusCodes.OK) => {
+    cy.task('nock', {
+      hostname: 'https://api.notifications.service.gov.uk',
+      method: 'POST',
+      path: '/v2/notifications/email',
+      statusCode,
+      persist: true,
+    });
+  }
+);

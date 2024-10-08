@@ -48,6 +48,7 @@ describe('Declaration', () => {
   beforeEach(() => {
     cy.clearAllCookies();
     cy.task('clearNock');
+    cy.mockNotifyEmailResponse(200);
   });
 
   it('shows the loading spinner while application data is being fetched on the background', () => {

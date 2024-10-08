@@ -5,18 +5,21 @@ import { generateApplication } from '../../../testUtils/applicationHelper';
 import ViewApplicationPage from '../../pages/viewApplication';
 import { StatusCodes } from 'http-status-codes';
 
+const applicationId = faker.string.uuid();
+const personId = faker.string.uuid();
+
 describe('View a resident application', () => {
+  beforeEach(() => {
+    cy.task('clearNock');
+    cy.clearAllCookies();
+  });
+
   it('does not show the assessment area for read only users', () => {
-    const applicationId = faker.string.uuid();
-    const personId = faker.string.uuid();
     const application = generateApplication(applicationId, personId);
     //ensure application requires assessment
     application.status = ApplicationStatus.SUBMITTED;
 
-    cy.task('clearNock');
-    cy.clearAllCookies();
     cy.loginAsUser('readOnly');
-
     cy.mockActivityHistoryApiEmptyResponse(applicationId);
     cy.mockHousingRegisterApiGetApplications(applicationId, application);
 
@@ -25,8 +28,6 @@ describe('View a resident application', () => {
   });
 
   it('shows an error message when deleting household member fails', () => {
-    const applicationId = faker.string.uuid();
-    const personId = faker.string.uuid();
     const submittedAt = faker.date.recent().toISOString();
     const errorCode = StatusCodes.CONFLICT;
 
@@ -39,7 +40,6 @@ describe('View a resident application', () => {
       submittedAt
     );
 
-    cy.task('clearNock');
     cy.loginAsUser('manager');
     cy.mockHousingRegisterApiGetApplications(
       applicationId,

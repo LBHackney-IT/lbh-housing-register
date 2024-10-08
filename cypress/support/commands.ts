@@ -288,3 +288,36 @@ Cypress.Commands.add(
     });
   }
 );
+
+Cypress.Commands.add(
+  'mockHousingRegisterApiPostEvidenceRequest',
+  (
+    applicationId: string,
+    delay: number = 0,
+    statusCode: number = StatusCodes.OK
+  ) => {
+    cy.task('nock', {
+      hostname: Cypress.env('HOUSING_REGISTER_API'),
+      method: 'POST',
+      path: `/applications/${applicationId}/evidence`,
+      statusCode,
+      delay,
+    });
+  }
+);
+Cypress.Commands.add(
+  'mockHousingRegisterApiPatchCompleteApplication',
+  (
+    applicationId: string,
+    delay: number = 0,
+    statusCode: number = StatusCodes.OK
+  ) => {
+    cy.task('nock', {
+      hostname: Cypress.env('HOUSING_REGISTER_API'),
+      method: 'PATCH',
+      path: `/applications/${applicationId}/complete`,
+      statusCode,
+      delay,
+    });
+  }
+);

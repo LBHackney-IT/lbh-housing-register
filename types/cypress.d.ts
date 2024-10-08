@@ -41,6 +41,16 @@ declare global {
         delay?: number,
         statusCode?: number
       ): Chainable<void>;
+      mockHousingRegisterApiPostEvidenceRequest(
+        applicationId: string,
+        delay?: number,
+        statusCode?: number
+      ): Chainable<void>;
+      mockHousingRegisterApiPatchCompleteApplication(
+        applicationId: string,
+        delay?: number,
+        statusCode?: number
+      ): Chainable<void>;
     }
   }
 }

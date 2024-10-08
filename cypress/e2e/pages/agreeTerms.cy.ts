@@ -1,4 +1,3 @@
-// import StartPage from '../../pages/start';
 import { generateApplication } from '../../../testUtils/applicationHelper';
 import { generatePerson } from '../../../testUtils/personHelper';
 import { faker } from '@faker-js/faker/locale/en_GB';
@@ -39,7 +38,7 @@ const applicationWithMainApplicantAndAgreedTerms = {
   },
 };
 
-describe('Application', () => {
+describe('Agree terms', () => {
   beforeEach(() => {
     cy.clearAllCookies();
     cy.task('clearNock');
@@ -60,24 +59,20 @@ describe('Application', () => {
     cy.contains('Checking information…');
   });
 
-  it('lets user fill in and submit their personal details when logged in', () => {
-    //login with claims to specific application id
+  it('lets user agree to terms when logged in', () => {
     cy.loginAsResident(applicationId, true);
 
-    //initial GET request for agree-terms page
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithMainApplicant
     );
 
-    //PATCH request to update the application with agreed terms
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,
       applicationWithMainApplicantAndAgreedTerms,
       apiResponseDelay
     );
 
-    //second GET request for household page after the application has been patched
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithMainApplicantAndAgreedTerms
@@ -85,14 +80,11 @@ describe('Application', () => {
 
     AgreeTermsPage.visit();
 
-    // Agree to terms and submit
     AgreeTermsPage.getAgreeCheckbox().click();
     AgreeTermsPage.getAgreeButton().click();
 
-    //check that message is shown until (delayed) PATCH call has finished
     cy.contains('Saving...');
 
-    //check that user is now on the household member page
     HouseholdPage.getHouseholdPage().should('be.visible');
   });
 
@@ -106,7 +98,6 @@ describe('Application', () => {
 
     const errorStatusCode = StatusCodes.BAD_REQUEST;
 
-    //based on current API layer setup
     const expectedErrorMessage = `Unable to update application (${errorStatusCode})`;
 
     cy.mockHousingRegisterApiPatchApplication(

@@ -74,7 +74,7 @@ const Declaration = (): JSX.Element => {
         console.log('Error completing the application:', error);
         setUserError(error as string);
         console.error('Error completing the application:', error);
-        scrollToError;
+        scrollToError();
       } finally {
         setLoading(false);
       }

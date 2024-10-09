@@ -37,15 +37,16 @@ const Declaration = (): JSX.Element => {
   const submitApplication = async () => {
     const [isEligible, reasons] = checkEligible(application);
     setUserError(null);
-    setLoading(true);
+
     if (!isEligible) {
       const reasonStrings = reasons.map((reason) =>
         getDisqualificationReasonOption(reason)
       );
       const reason = reasonStrings.join(',');
-      dispatch(sendDisqualifyEmail({ application, reason }));
+      await dispatch(sendDisqualifyEmail({ application, reason }));
 
       try {
+        setLoading(true);
         await dispatch(disqualifyApplication(application.id!)).unwrap();
         router.push('/apply/not-eligible');
       } catch (error) {
@@ -56,13 +57,14 @@ const Declaration = (): JSX.Element => {
         setLoading(false);
       }
     } else {
-      dispatch(sendConfirmation(application));
+      await dispatch(sendConfirmation(application));
 
       const medicalNeeds = applicantsWithMedicalNeed(application);
       if (medicalNeeds > 0) {
-        dispatch(sendMedicalNeed({ application, medicalNeeds }));
+        await dispatch(sendMedicalNeed({ application, medicalNeeds }));
       }
       try {
+        setLoading(true);
         await dispatch(completeApplication(application)).unwrap();
         await dispatch(createEvidenceRequest(application)).unwrap();
         router.push('/apply/confirmation');

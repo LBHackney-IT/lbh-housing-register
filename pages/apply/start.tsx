@@ -69,7 +69,7 @@ const ApplicationStartPage = (): JSX.Element => {
     >
       <HeadingOne content="Start your application" />
       {userError && (
-        <ErrorSummary dataTestId="start-page-error-summary">
+        <ErrorSummary dataTestId="test-start-page-error-summary">
           {userError}
         </ErrorSummary>
       )}

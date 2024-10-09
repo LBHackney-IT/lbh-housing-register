@@ -29,6 +29,7 @@ interface FormValues {
 
 interface AddPersonFormProps {
   applicant: Applicant;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSubmit: (values: FormValues) => void | Promise<any>;
   isMainApplicant: boolean;
   buttonText: string;
@@ -323,7 +324,11 @@ const AddPersonForm = ({
           ) : null}
 
           <div className="c-flex__1 text-right">
-            <Button disabled={isSubmitting} type="submit">
+            <Button
+              disabled={isSubmitting}
+              type="submit"
+              dataTestId="test-submit-form-button"
+            >
               {buttonText}
             </Button>
           </div>

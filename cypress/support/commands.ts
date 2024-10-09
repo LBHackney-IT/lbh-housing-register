@@ -136,6 +136,43 @@ Cypress.Commands.add(
 );
 
 Cypress.Commands.add(
+  'mockHousingRegisterApiCompleteApplication',
+  (
+    applicationId: string,
+    body?: Application,
+    delay: number = 0,
+    statusCode: number = StatusCodes.OK
+  ) => {
+    cy.task('nock', {
+      hostname: Cypress.env('HOUSING_REGISTER_API'),
+      method: 'PATCH',
+      path: `/applications/${applicationId}/complete`,
+      statusCode,
+      body,
+      delay,
+    });
+  }
+);
+
+Cypress.Commands.add(
+  'mockHousingRegisterApiPostApplication',
+  (
+    body?: Application,
+    delay: number = 0,
+    statusCode: number = StatusCodes.OK
+  ) => {
+    cy.task('nock', {
+      hostname: Cypress.env('HOUSING_REGISTER_API'),
+      method: 'POST',
+      path: `/applications`,
+      statusCode,
+      body,
+      delay,
+    });
+  }
+);
+
+Cypress.Commands.add(
   'mockHousingRegisterApiPostSearchResults',
   (application: Application) => {
     cy.task('nock', {

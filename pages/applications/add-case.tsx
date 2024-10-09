@@ -19,7 +19,7 @@ import {
   generateQuestionArray,
 } from '../../lib/utils/adminHelpers';
 import { getRedirect, getSession } from '../../lib/utils/googleAuth';
-import { scrollToTop } from '../../lib/utils/scroll';
+import { scrollToError, scrollToTop } from '../../lib/utils/scroll';
 
 interface PageProps {
   user: HackneyGoogleUser;
@@ -30,16 +30,32 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
   const [addressHistory, setAddressHistory] = useState([] as Address[]);
   const [ethnicity, setEthnicity] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [userError, setUserError] = useState<string | undefined>(undefined);
 
   const createManualApplication = async (request: Application) => {
-    const newApplication = await createApplication(request);
-    const completedApplication = await completeApplication(newApplication);
-    const setToManualDraft = await updateApplication({
-      ...completedApplication,
-      status: ApplicationStatus.MANUAL_DRAFT,
-    });
+    setIsSaving(true);
 
-    router.push(`/applications/view/${setToManualDraft.id}`);
+    try {
+      const newApplication = await createApplication(request);
+      const completedApplication = await completeApplication(newApplication);
+      const setToManualDraft = await updateApplication({
+        ...completedApplication,
+        status: ApplicationStatus.MANUAL_DRAFT,
+      });
+
+      setIsSaving(false);
+      router.push(`/applications/view/${setToManualDraft.id}`);
+    } catch (err) {
+      setIsSaving(false);
+
+      if (err instanceof Error) {
+        setUserError(err.message);
+      } else {
+        setUserError('Unable to create application');
+      }
+      scrollToError();
+    }
   };
 
   const onSubmit = (values: FormikValues) => {
@@ -99,6 +115,9 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
       handleSaveApplication={handleSaveApplication}
       ethnicity={ethnicity}
       setEthnicity={setEthnicity}
+      dataTestId="test-add-case-page"
+      isSaving={isSaving}
+      userError={userError}
     />
   );
 }

@@ -27,7 +27,12 @@ export const createApplication = async (application: Application) => {
     method: 'POST',
     body: JSON.stringify(application),
   });
-  return (await res.json()) as Application;
+
+  if (res.ok) {
+    return (await res.json()) as Application;
+  } else {
+    throw Error(`Unable to create application (${res.status})`);
+  }
 };
 
 export const completeApplication = async (application: Application) => {
@@ -35,7 +40,11 @@ export const completeApplication = async (application: Application) => {
     method: 'PATCH',
     body: JSON.stringify(application),
   });
-  return (await res.json()) as Application;
+  if (res.ok) {
+    return (await res.json()) as Application;
+  } else {
+    throw Error(`Unable to complete application (${res.status})`);
+  }
 };
 
 export const generateNovaletExport = async () => {

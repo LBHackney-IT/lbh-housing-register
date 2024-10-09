@@ -13,7 +13,10 @@ declare global {
       mockHousingRegisterApiGetApplicationsByStatusAndAssignedTo(
         user: HackneyGoogleUserWithPermissions
       ): Chainable<void>;
-      mockActivityHistoryApiEmptyResponse(targetId: string): Chainable<void>;
+      mockActivityHistoryApiEmptyResponse(
+        targetId: string,
+        persist?: boolean
+      ): Chainable<void>;
       mockHousingRegisterApiPostSearchResults(
         application: Application
       ): Chainable<void>;
@@ -24,9 +27,19 @@ declare global {
         delay?: number,
         statusCode?: number
       ): Chainable<void>;
-      mount: typeof mount;
       mockHousingRegisterApiPatchApplication(
         applicationId: string,
+        body?: Application,
+        delay?: number,
+        statusCode?: number
+      ): Chainable<void>;
+      mockHousingRegisterApiCompleteApplication(
+        applicationId: string,
+        body?: Application,
+        delay?: number,
+        statusCode?: number
+      ): Chainable<void>;
+      mockHousingRegisterApiPostApplication(
         body?: Application,
         delay?: number,
         statusCode?: number
@@ -41,6 +54,8 @@ declare global {
         delay?: number,
         statusCode?: number
       ): Chainable<void>;
+
+      mount: typeof mount;
       mockHousingRegisterApiPostEvidenceRequest(
         applicationId: string,
         delay?: number,

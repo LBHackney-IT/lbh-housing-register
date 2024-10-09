@@ -66,7 +66,7 @@ Cypress.Commands.add('generateEmptyApplication', () => {
 
 Cypress.Commands.add(
   'mockActivityHistoryApiEmptyResponse',
-  (targetId: string) => {
+  (targetId: string, persist?: boolean) => {
     cy.task('nock', {
       hostname: Cypress.env('ACTIVITY_HISTORY_API'),
       method: 'GET',
@@ -76,6 +76,7 @@ Cypress.Commands.add(
         results: [{}],
         paginationDetails: { nextToken: null },
       },
+      persist,
     });
   }
 );
@@ -127,6 +128,43 @@ Cypress.Commands.add(
       hostname: Cypress.env('HOUSING_REGISTER_API'),
       method: 'PATCH',
       path: `/applications/${applicationId}`,
+      statusCode,
+      body,
+      delay,
+    });
+  }
+);
+
+Cypress.Commands.add(
+  'mockHousingRegisterApiCompleteApplication',
+  (
+    applicationId: string,
+    body?: Application,
+    delay: number = 0,
+    statusCode: number = StatusCodes.OK
+  ) => {
+    cy.task('nock', {
+      hostname: Cypress.env('HOUSING_REGISTER_API'),
+      method: 'PATCH',
+      path: `/applications/${applicationId}/complete`,
+      statusCode,
+      body,
+      delay,
+    });
+  }
+);
+
+Cypress.Commands.add(
+  'mockHousingRegisterApiPostApplication',
+  (
+    body?: Application,
+    delay: number = 0,
+    statusCode: number = StatusCodes.OK
+  ) => {
+    cy.task('nock', {
+      hostname: Cypress.env('HOUSING_REGISTER_API'),
+      method: 'POST',
+      path: `/applications`,
       statusCode,
       body,
       delay,

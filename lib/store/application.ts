@@ -51,30 +51,42 @@ export const updateApplication = createAsyncThunk(
 
 export const disqualifyApplication = createAsyncThunk(
   'application/disqualify',
-  async (id: string) => {
+  async (id: string, { rejectWithValue }) => {
     const request: Application = {
       id: id,
       status: ApplicationStatus.DISQUALIFIED,
     };
-    await fetch(`/api/applications/${id}`, {
+    const res = await fetch(`/api/applications/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(request),
     });
+    if (res.ok) {
+      return (await res.json()) as EvidenceRequestResponse;
+    } else {
+      return rejectWithValue(`Unable to complete application (${res.status})`);
+    }
   }
 );
 
-export const completeApplication = createAsyncThunk(
+export const completeApplication = createAsyncThunk<
+  void,
+  Application,
+  { rejectValue: string }
+>(
   'application/complete',
-  async (application: Application) => {
-    await fetch(`/api/applications/${application.id}/complete`, {
+  async (application: Application, { rejectWithValue }) => {
+    const res = await fetch(`/api/applications/${application.id}/complete`, {
       method: 'PATCH',
     });
+    if (!res.ok) {
+      return rejectWithValue(`Unable to complete application (${res.status})`);
+    }
   }
 );
 
 export const createEvidenceRequest = createAsyncThunk(
   'application/evidence',
-  async (application: Application) => {
+  async (application: Application, { rejectWithValue }) => {
     const request: CreateEvidenceRequest = {
       documentTypes: getRequiredDocumentsForApplication(
         application.mainApplicant!
@@ -84,7 +96,11 @@ export const createEvidenceRequest = createAsyncThunk(
       method: 'POST',
       body: JSON.stringify(request),
     });
-    return (await res.json()) as EvidenceRequestResponse;
+    if (res.ok) {
+      return (await res.json()) as EvidenceRequestResponse;
+    } else {
+      return rejectWithValue(`Unable to complete application (${res.status})`);
+    }
   }
 );
 

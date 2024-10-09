@@ -56,6 +56,17 @@ declare global {
       ): Chainable<void>;
 
       mount: typeof mount;
+      mockHousingRegisterApiPostEvidenceRequest(
+        applicationId: string,
+        delay?: number,
+        statusCode?: number
+      ): Chainable<void>;
+      mockHousingRegisterApiPatchCompleteApplication(
+        applicationId: string,
+        delay?: number,
+        statusCode?: number
+      ): Chainable<void>;
+      mockNotifyEmailResponse(statusCode?: number): Chainable<void>;
     }
   }
 }

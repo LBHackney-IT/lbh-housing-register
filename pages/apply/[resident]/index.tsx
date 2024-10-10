@@ -26,6 +26,13 @@ import { isOver18 } from '../../../lib/utils/dateOfBirth';
 import { FormID } from '../../../lib/utils/form-data';
 import { checkEligible } from '../../../lib/utils/form';
 import withApplication from '../../../lib/hoc/withApplication';
+import {
+  ApiCallStatusCode,
+  selectSaveApplicationStatus,
+} from 'lib/store/apiCallsStatus';
+import { useEffect, useState } from 'react';
+import Loading from 'components/loading';
+import ErrorSummary from 'components/errors/error-summary';
 
 const ResidentIndex = (): JSX.Element => {
   const router = useRouter();
@@ -38,12 +45,79 @@ const ResidentIndex = (): JSX.Element => {
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
   const application = useAppSelector((store) => store.application);
 
+  const saveApplicationStatus = useAppSelector(selectSaveApplicationStatus);
+  const [userHasSaved, setUserHasSaved] = useState<boolean>(false);
+  const [userError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [isReadyToPush, setReadyToPush] = useState<boolean>(false);
+
+  const returnHref = '/apply/overview';
+  console.log(`rendering page, hasSaved: ${userHasSaved}`);
+  useEffect(() => {
+    if (userHasSaved) {
+      dispatch(removeApplicant(currentResident.person.id));
+      setUserHasSaved(false);
+    }
+
+    if (saveApplicationStatus?.callStatus === ApiCallStatusCode.FULFILLED) {
+      setIsSaving(false);
+      setReadyToPush(true);
+      router.push(returnHref);
+    }
+    if (saveApplicationStatus?.callStatus === ApiCallStatusCode.PENDING) {
+      setIsSaving(true);
+    }
+    if (saveApplicationStatus?.callStatus === ApiCallStatusCode.REJECTED) {
+      setIsSaving(false);
+      setReadyToPush(false);
+      router.push(
+        {
+          pathname: returnHref,
+          query: {
+            error: 'Unable to delete household member. Please try again.',
+          },
+        },
+        returnHref
+      );
+    }
+  }, [saveApplicationStatus?.callStatus, userHasSaved]);
+
+  const baseHref = currentResident
+    ? `/ apply / ${currentResident.person?.id} `
+    : '/ apply /';
+  const breadcrumbs = currentResident
+    ? [
+        {
+          href: returnHref,
+          name: 'Application',
+        },
+        {
+          href: baseHref,
+          name: currentResident.person?.firstName || '',
+        },
+      ]
+    : [];
+
   if (!currentResident || !mainResident) {
-    return <Custom404 />;
+    if (!isSaving && isReadyToPush) {
+      return <Custom404 />;
+    } else if (!userError) {
+      return (
+        <Layout pageName="Person overview" pageLoadsApplication={false}>
+          <Loading text="Saving..." />
+        </Layout>
+      );
+    } else {
+      <Layout pageName="Person overview" pageLoadsApplication={false}>
+        {userError && (
+          <ErrorSummary dataTestId="test-apply-resident-index-error-summary">
+            {userError}
+          </ErrorSummary>
+        )}
+      </Layout>;
+    }
   }
 
-  const baseHref = `/apply/${currentResident.person?.id}`;
-  const returnHref = '/apply/overview';
   const checkAnswers = `${baseHref}/summary`;
 
   const [isEligible] = checkEligible(application);
@@ -62,28 +136,15 @@ const ResidentIndex = (): JSX.Element => {
     currentResident === mainResident
   );
 
-  let sectionNames: FormID[] = [];
+  const sectionNames: FormID[] = [];
   steps.map((step) => {
     step.sections.map((section) => {
       sectionNames.push(section.id);
     });
   });
 
-  const breadcrumbs = [
-    {
-      href: returnHref,
-      name: 'Application',
-    },
-    {
-      href: baseHref,
-      name: currentResident.person?.firstName || '',
-    },
-  ];
-
   const onDelete = () => {
-    dispatch(removeApplicant(currentResident.person.id));
-
-    router.push(returnHref);
+    setUserHasSaved(true);
   };
 
   const goBack = () => {
@@ -117,63 +178,60 @@ const ResidentIndex = (): JSX.Element => {
   };
 
   return (
-    <>
-      <Layout pageName="Person overview" breadcrumbs={breadcrumbs}>
-        <h1 className="lbh-heading-h1" style={{ marginBottom: '40px' }}>
-          <span className="govuk-hint lbh-hint">Complete information for:</span>
-          {`${currentResident.person?.firstName} ${currentResident.person?.surname}`}
-        </h1>
-
-        {steps.map((step, index) => (
-          <div key={index}>
-            <HeadingTwo content={step.heading} />
-            <SummaryList>
-              {step.sections.map((formStep, index) => (
-                <SummaryListRow key={index}>
-                  <SummaryListValue>
-                    {isSectionActive(formStep.id) ? (
-                      <Link href={`${baseHref}/${formStep.id}`}>
-                        <a className="lbh-link">{formStep.heading}</a>
-                      </Link>
-                    ) : (
-                      formStep.heading
-                    )}
-                  </SummaryListValue>
-                  <SummaryListActions>
-                    {getQuestionValue(
-                      currentResident.questions,
-                      formStep.id,
-                      'sectionCompleted',
-                      false
-                    ) ? (
-                      <Tag content="Completed" variant="green" />
-                    ) : (
-                      cantStartYetTag(formStep.id)
-                    )}
-                  </SummaryListActions>
-                </SummaryListRow>
-              ))}
-            </SummaryList>
-          </div>
-        ))}
-        {tasks.remaining == 0 && (
-          <ButtonLink href={`/apply/${currentResident.person?.id}/summary/`}>
-            Check answers
-          </ButtonLink>
-        )}
-        <br />
-        <Button onClick={goBack} secondary={true}>
-          Save and go back
-        </Button>
-        {currentResident !== mainResident && (
-          <DeleteLink
-            content="Delete this information"
-            details="This information will be permanently deleted."
-            onDelete={onDelete}
-          />
-        )}
-      </Layout>
-    </>
+    <Layout pageName="Person overview" breadcrumbs={breadcrumbs}>
+      <h1 className="lbh-heading-h1" style={{ marginBottom: '40px' }}>
+        <span className="govuk-hint lbh-hint">Complete information for:</span>
+        {`${currentResident.person?.firstName} ${currentResident.person?.surname}`}
+      </h1>
+      {steps.map((step, index) => (
+        <div key={index}>
+          <HeadingTwo content={step.heading} />
+          <SummaryList>
+            {step.sections.map((formStep, index) => (
+              <SummaryListRow key={index}>
+                <SummaryListValue>
+                  {isSectionActive(formStep.id) ? (
+                    <Link href={`${baseHref}/${formStep.id}`}>
+                      <a className="lbh-link">{formStep.heading}</a>
+                    </Link>
+                  ) : (
+                    formStep.heading
+                  )}
+                </SummaryListValue>
+                <SummaryListActions>
+                  {getQuestionValue(
+                    currentResident.questions,
+                    formStep.id,
+                    'sectionCompleted',
+                    false
+                  ) ? (
+                    <Tag content="Completed" variant="green" />
+                  ) : (
+                    cantStartYetTag(formStep.id)
+                  )}
+                </SummaryListActions>
+              </SummaryListRow>
+            ))}
+          </SummaryList>
+        </div>
+      ))}
+      {tasks.remaining == 0 && (
+        <ButtonLink href={`/apply/${currentResident.person?.id}/summary/`}>
+          Check answers
+        </ButtonLink>
+      )}
+      <br />
+      <Button onClick={goBack} secondary={true}>
+        Save and go back
+      </Button>
+      {currentResident !== mainResident && (
+        <DeleteLink
+          content="Delete this information"
+          details="This information will be permanently deleted."
+          onDelete={onDelete}
+        />
+      )}
+    </Layout>
   );
 };
 

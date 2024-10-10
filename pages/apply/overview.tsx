@@ -13,15 +13,29 @@ import { Applicant } from '../../domain/HousingApi';
 import { useAppSelector } from '../../lib/store/hooks';
 import { applicationSteps } from '../../lib/utils/resident';
 import withApplication from '../../lib/hoc/withApplication';
-import Custom404 from '../404';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { scrollToError } from 'lib/utils/scroll';
+import ErrorSummary from 'components/errors/error-summary';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
+  const [userError, setUserError] = useState<string | null>(null);
   const breadcrumbs = [
     {
       href: '/apply/overview',
       name: 'Application',
     },
   ];
+
+  const { query } = useRouter();
+  console.dir(query);
+
+  useEffect(() => {
+    if (query.error) {
+      setUserError(query.error as string);
+      scrollToError();
+    }
+  }, [query]);
 
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
   const application = useAppSelector((store) => store.application);
@@ -47,7 +61,11 @@ const ApplicationPersonsOverview = (): JSX.Element => {
           You've completed information for {applicantsCompletedCount} of{' '}
           {applicants.length} people.
         </p>
-
+        {userError && (
+          <ErrorSummary dataTestId="test-apply-overciw-error-summary">
+            {userError}
+          </ErrorSummary>
+        )}
         <SummaryListSpaced>
           {applicants.map((applicant, index) => {
             const tasks = applicationSteps(

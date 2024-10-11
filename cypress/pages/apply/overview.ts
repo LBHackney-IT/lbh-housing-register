@@ -1,5 +1,5 @@
 class ApplyOverviewPage {
-  static getHouseHoldMemberButton(personId: string) {
+  static getApplicantButton(personId: string) {
     return cy.get(
       `[data-testid="test-application-applicant-summary-section-button-${personId}"]`
     );

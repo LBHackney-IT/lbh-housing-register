@@ -110,7 +110,11 @@ const UserSummary = (): JSX.Element => {
   const medicalNeedsCompleted = isSectionComplete(FormID.MEDICAL_NEEDS);
 
   return (
-    <Layout pageName="Application summary" breadcrumbs={breadcrumbs}>
+    <Layout
+      pageName="Application summary"
+      breadcrumbs={breadcrumbs}
+      dataTestId="test-apply-resident-summary-page"
+    >
       <h1 className="lbh-heading-h1">
         <span className="govuk-hint lbh-hint">Check answers for:</span>
         {currentResident.person?.firstName} {currentResident.person?.surname}

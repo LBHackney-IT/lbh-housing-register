@@ -49,6 +49,14 @@ const ResidentIndex = (): JSX.Element => {
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
   const returnHref = '/apply/overview';
+  let isEligible = true;
+
+  //use effect to stop router.push firing multiple times
+  useEffect(() => {
+    if (!isEligible && currentResident === mainResident) {
+      router.push(checkAnswers);
+    }
+  }, [isEligible]);
 
   useEffect(() => {
     if (userHasSaved) {
@@ -88,7 +96,7 @@ const ResidentIndex = (): JSX.Element => {
     return <Custom404 />;
   }
 
-  const baseHref = !isSaving ? `/ apply / ${currentResident.person?.id} ` : '';
+  const baseHref = !isSaving ? `/apply/${currentResident.person?.id}` : '';
 
   const breadcrumbs = !isSaving
     ? [
@@ -105,11 +113,7 @@ const ResidentIndex = (): JSX.Element => {
 
   const checkAnswers = `${baseHref}/summary`;
 
-  const [isEligible] = checkEligible(application);
-
-  if (!isEligible && currentResident === mainResident) {
-    router.push(checkAnswers);
-  }
+  [isEligible] = checkEligible(application);
 
   const steps = getApplicationSectionsForResident(
     currentResident === mainResident,

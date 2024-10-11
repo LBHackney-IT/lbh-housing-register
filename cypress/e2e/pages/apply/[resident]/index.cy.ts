@@ -9,12 +9,13 @@ import { StatusCodes } from 'http-status-codes';
 import ApplyResidentIndexPage from '../../../../pages/apply/[resident]';
 import ApplyExpectPage from '../../../../pages/apply/expect';
 import ApplyOverviewPage from '../../../../pages/apply/overview';
+import ApplyResidentSummaryPage from '../../../../pages/apply/[resident]/summary';
 
 const personId = faker.string.uuid();
 const applicationId = faker.string.uuid();
 const application = generateApplication(applicationId, personId, true, true);
 
-//mark main applicant sections complete, so household member can be accessed
+//mark main applicant sections complete, so household member's section can be accessed
 const applicationWithCompletedMainApplicantSections = {
   ...application,
   mainApplicant: {
@@ -81,9 +82,10 @@ describe('Apply resident index page', () => {
     ApplyHouseholdPage.visit();
     ApplyHouseholdPage.getContinueToNextStepLink().scrollIntoView().click();
     ApplyExpectPage.getContinueToNextStepButton().click();
-    ApplyOverviewPage.getHouseHoldMemberButton(personId + 1).click();
+    ApplyOverviewPage.getApplicantButton(personId + 1).click();
     ApplyResidentIndexPage.getDeleteThisInformationButton().click();
     ApplyResidentIndexPage.getYesDeleteButton().click();
+
     cy.contains('Saving...');
   });
 
@@ -104,7 +106,7 @@ describe('Apply resident index page', () => {
     ApplyHouseholdPage.visit();
     ApplyHouseholdPage.getContinueToNextStepLink().scrollIntoView().click();
     ApplyExpectPage.getContinueToNextStepButton().click();
-    ApplyOverviewPage.getHouseHoldMemberButton(personId + 1).click();
+    ApplyOverviewPage.getApplicantButton(personId + 1).click();
     ApplyResidentIndexPage.getDeleteThisInformationButton().click();
     ApplyResidentIndexPage.getYesDeleteButton().click();
 
@@ -116,5 +118,35 @@ describe('Apply resident index page', () => {
 
     //expect 404 since the page won't have correct state
     cy.contains('404 Page not found');
+  });
+
+  it('redirects to summary page when applicant is not eligible to apply', () => {
+    cy.task('clearNock');
+    const dateOfBirth = faker.date
+      .birthdate({ mode: 'age', min: 1, max: 10 })
+      .toISOString();
+
+    const applicationWithNonEligibleApplicant: Application = {
+      ...applicationWithHouseholdMemberRemoved,
+      mainApplicant: {
+        ...applicationWithHouseholdMemberRemoved.mainApplicant,
+        person: {
+          ...applicationWithHouseholdMemberRemoved.mainApplicant.person,
+          dateOfBirth: dateOfBirth,
+        },
+      },
+    };
+
+    cy.mockHousingRegisterApiGetApplications(
+      applicationId,
+      applicationWithNonEligibleApplicant,
+      true
+    );
+
+    ApplyHouseholdPage.visit();
+    ApplyHouseholdPage.getContinueToNextStepLink().scrollIntoView().click();
+    ApplyExpectPage.getContinueToNextStepButton().click();
+    ApplyOverviewPage.getApplicantButton(personId).click();
+    ApplyResidentSummaryPage.getApplyResidentSummaryPage().should('be.visible');
   });
 });

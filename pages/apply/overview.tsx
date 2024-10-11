@@ -28,7 +28,6 @@ const ApplicationPersonsOverview = (): JSX.Element => {
   ];
 
   const { query } = useRouter();
-  console.dir(query);
 
   useEffect(() => {
     if (query.error) {
@@ -86,6 +85,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
                     }
                     applicantNumber={index + 1}
                     tasks={tasks}
+                    applicantLinkTestId={applicant.person?.id}
                   />
                 </Key>
                 {/* <Actions>

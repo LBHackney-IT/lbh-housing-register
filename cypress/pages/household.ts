@@ -1,4 +1,4 @@
-class HouseholdPage {
+class ApplyHouseholdPage {
   static visit() {
     cy.visit(`/apply/household`);
   }
@@ -8,9 +8,10 @@ class HouseholdPage {
     return cy.get(`[data-testid="${testId}"]`);
   }
 
-  // static getContinueToNextStepLink() {
-  //   return cy.get('lbh-button').contains('Continue to next step');
-  // }
+  static getContinueToNextStepLink() {
+    const testId = 'test-apply-household-index-continue-to-next-step-button';
+    return cy.get(`[data-testid="${testId}"]`);
+  }
 }
 
-export default HouseholdPage;
+export default ApplyHouseholdPage;

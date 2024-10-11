@@ -3,7 +3,7 @@ import { generateApplication } from '../../../testUtils/applicationHelper';
 import { generatePerson } from '../../../testUtils/personHelper';
 import { faker } from '@faker-js/faker/locale/en_GB';
 import AgreeTermsPage from '../../pages/agreeTerms';
-import HouseholdPage from '../../pages/household';
+import ApplyHouseholdPage from '../../pages/household';
 import { StatusCodes } from 'http-status-codes';
 
 const applicationId = faker.string.uuid();
@@ -93,7 +93,7 @@ describe('Application', () => {
     cy.contains('Saving...');
 
     //check that user is now on the household member page
-    HouseholdPage.getHouseholdPage().should('be.visible');
+    ApplyHouseholdPage.getHouseholdPage().should('be.visible');
   });
 
   it('shows an error message when application update fails', () => {

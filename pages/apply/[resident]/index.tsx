@@ -32,7 +32,6 @@ import {
 } from 'lib/store/apiCallsStatus';
 import { useEffect, useState } from 'react';
 import Loading from 'components/loading';
-import ErrorSummary from 'components/errors/error-summary';
 
 const ResidentIndex = (): JSX.Element => {
   const router = useRouter();
@@ -47,29 +46,22 @@ const ResidentIndex = (): JSX.Element => {
 
   const saveApplicationStatus = useAppSelector(selectSaveApplicationStatus);
   const [userHasSaved, setUserHasSaved] = useState<boolean>(false);
-  const [userError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState<boolean>(false);
-  const [isReadyToPush, setReadyToPush] = useState<boolean>(false);
 
   const returnHref = '/apply/overview';
-  console.log(`rendering page, hasSaved: ${userHasSaved}`);
+
   useEffect(() => {
     if (userHasSaved) {
+      setIsSaving(true);
       dispatch(removeApplicant(currentResident.person.id));
       setUserHasSaved(false);
     }
 
     if (saveApplicationStatus?.callStatus === ApiCallStatusCode.FULFILLED) {
-      setIsSaving(false);
-      setReadyToPush(true);
       router.push(returnHref);
     }
-    if (saveApplicationStatus?.callStatus === ApiCallStatusCode.PENDING) {
-      setIsSaving(true);
-    }
+
     if (saveApplicationStatus?.callStatus === ApiCallStatusCode.REJECTED) {
-      setIsSaving(false);
-      setReadyToPush(false);
       router.push(
         {
           pathname: returnHref,
@@ -82,10 +74,23 @@ const ResidentIndex = (): JSX.Element => {
     }
   }, [saveApplicationStatus?.callStatus, userHasSaved]);
 
-  const baseHref = currentResident
-    ? `/ apply / ${currentResident.person?.id} `
-    : '/ apply /';
-  const breadcrumbs = currentResident
+  //render simple layout without loading application when saving
+  if (isSaving) {
+    return (
+      <Layout pageName="Person overview" pageLoadsApplication={false}>
+        <Loading text="Saving..." />
+      </Layout>
+    );
+  }
+
+  //redirect when applicant details missing and not saving
+  if (!currentResident || !mainResident) {
+    return <Custom404 />;
+  }
+
+  const baseHref = !isSaving ? `/ apply / ${currentResident.person?.id} ` : '';
+
+  const breadcrumbs = !isSaving
     ? [
         {
           href: returnHref,
@@ -98,29 +103,10 @@ const ResidentIndex = (): JSX.Element => {
       ]
     : [];
 
-  if (!currentResident || !mainResident) {
-    if (!isSaving && isReadyToPush) {
-      return <Custom404 />;
-    } else if (!userError) {
-      return (
-        <Layout pageName="Person overview" pageLoadsApplication={false}>
-          <Loading text="Saving..." />
-        </Layout>
-      );
-    } else {
-      <Layout pageName="Person overview" pageLoadsApplication={false}>
-        {userError && (
-          <ErrorSummary dataTestId="test-apply-resident-index-error-summary">
-            {userError}
-          </ErrorSummary>
-        )}
-      </Layout>;
-    }
-  }
-
   const checkAnswers = `${baseHref}/summary`;
 
   const [isEligible] = checkEligible(application);
+
   if (!isEligible && currentResident === mainResident) {
     router.push(checkAnswers);
   }
@@ -229,6 +215,8 @@ const ResidentIndex = (): JSX.Element => {
           content="Delete this information"
           details="This information will be permanently deleted."
           onDelete={onDelete}
+          mainButtonTestId="test-apply-resident-index-delete-this-information-button"
+          dialogConfirmButtonTestId="test-apply-resident-index-delete-this-information-confirm-button"
         />
       )}
     </Layout>

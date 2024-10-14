@@ -31,6 +31,10 @@ class Components {
     const testId = `test-date-input-${value}`;
     return cy.get(`[data-testid="${testId}"]`);
   }
+  static getErrorSumamry(value: string) {
+    const testId = `test-${value}-error-summary`;
+    return cy.get(`[data-testid="${testId}"]`);
+  }
 }
 
 export default Components;

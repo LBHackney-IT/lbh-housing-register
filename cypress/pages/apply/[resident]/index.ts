@@ -13,6 +13,10 @@ class ApplyResidentIndexPage {
       'test-apply-resident-index-delete-this-information-confirm-button';
     return cy.get(`[data-testid="${testId}"]`);
   }
+
+  static getPersonalDetailsSectionLink() {
+    return cy.get('.lbh-link').contains('Personal details');
+  }
 }
 
 export default ApplyResidentIndexPage;

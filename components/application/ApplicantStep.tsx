@@ -10,11 +10,13 @@ function ApplicantStep({
   formID,
   applicant,
   stepName,
+  dataTestId,
 }: {
   children: ReactNode;
   formID: FormID;
   stepName: string;
   applicant: Applicant;
+  dataTestId?: string;
 }): ReactElement {
   const formData = getFormData(formID);
   const breadcrumbs = [
@@ -33,7 +35,11 @@ function ApplicantStep({
   ];
 
   return (
-    <Layout pageName={stepName} breadcrumbs={breadcrumbs}>
+    <Layout
+      pageName={stepName}
+      breadcrumbs={breadcrumbs}
+      dataTestId={dataTestId}
+    >
       {formData.heading && <HeadingOne content={formData.heading} />}
       {formData.copy && (
         <Paragraph>

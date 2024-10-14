@@ -1,5 +1,4 @@
 import { FormikValues, getIn } from 'formik';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { HeadingOne } from '../../../components/content/headings';
 import Form from '../../../components/form/form';
@@ -10,15 +9,26 @@ import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import { updateWithFormValues } from '../../../lib/store/applicant';
 import withApplication from '../../../lib/hoc/withApplication';
 import { Applicant } from '../../../domain/HousingApi';
+import Loading from 'components/loading';
+import { scrollToError } from '../../../lib/utils/scroll';
+import {
+  selectSaveApplicationStatus,
+  ApiCallStatusCode,
+} from 'lib/store/apiCallsStatus';
+import useApiCallStatus from 'lib/hooks/useApiCallStatus';
+import ErrorSummary from 'components/errors/error-summary';
+import { Errors } from 'lib/types/errors';
 
 const EthnicityQuestions = (): JSX.Element => {
-  const router = useRouter();
   const dispatch = useAppDispatch();
   const applicant = useAppSelector(
     (store) => store.application.mainApplicant
   ) as Applicant;
 
   const [formId, setFormId] = useState('ethnicity-questions');
+  const [hasSaved, setHasSaved] = useState<boolean>(false);
+  const [userError, setUserError] = useState<string | null>(null);
+  const saveApplicationStatus = useAppSelector(selectSaveApplicationStatus);
   const [activeStepID, setActiveStepId] = useState(() => {
     switch (formId) {
       case 'ethnicity-extended-category-asian-asian-british':
@@ -40,12 +50,19 @@ const EthnicityQuestions = (): JSX.Element => {
         return FormID.ETHNICITY_QUESTIONS;
     }
   });
+  const formData = getFormData(activeStepID);
+
+  useApiCallStatus({
+    selector: saveApplicationStatus,
+    userActionCompleted: hasSaved,
+    setUserError,
+    pathToPush: '/apply/submit/declaration',
+    scrollToError,
+  });
 
   if (!applicant) {
     return <Custom404 />;
   }
-
-  const formData = getFormData(activeStepID);
 
   const nextStep = (values: FormikValues) => {
     const { nextFormId } = formData.conditionals?.find(
@@ -53,15 +70,21 @@ const EthnicityQuestions = (): JSX.Element => {
     ) ?? { nextFormId: 'exit' };
 
     if (nextFormId === 'exit') {
-      dispatch(
-        updateWithFormValues({
-          formID: activeStepID,
-          personID: applicant.person!.id!,
-          values,
-          markAsComplete: true,
-        })
-      );
-      router.push('/apply/submit/declaration');
+      try {
+        dispatch(
+          updateWithFormValues({
+            formID: activeStepID,
+            personID: applicant.person!.id!,
+            values,
+            markAsComplete: true,
+          })
+        );
+        setHasSaved(true);
+      } catch (error) {
+        console.error('Error saving agreement:', error);
+        setUserError(Errors.GENERIC_ERROR);
+        scrollToError();
+      }
       return;
     }
 
@@ -70,26 +93,45 @@ const EthnicityQuestions = (): JSX.Element => {
   };
 
   const onSave = (values: FormikValues) => {
-    dispatch(
-      updateWithFormValues({
-        formID: activeStepID,
-        personID: applicant.person!.id!,
-        values,
-        markAsComplete: true,
-      })
-    );
+    try {
+      dispatch(
+        updateWithFormValues({
+          formID: activeStepID,
+          personID: applicant.person!.id!,
+          values,
+          markAsComplete: true,
+        })
+      );
+      setHasSaved(true);
+    } catch (error) {
+      console.error('Error saving agreement:', error);
+      setUserError(Errors.GENERIC_ERROR);
+      scrollToError();
+    }
   };
 
   return (
-    <Layout pageName="Before you submit">
+    <Layout
+      pageName="Before you submit"
+      dataTestId="test-ethnicity-questions-page"
+    >
       <HeadingOne content="Before you submit" />
-      <Form
-        key={activeStepID}
-        buttonText="Save and continue"
-        formData={formData}
-        onSave={onSave}
-        onSubmit={nextStep}
-      />
+      {userError && (
+        <ErrorSummary dataTestId="test-ethnicity-questions-error-summary">
+          {userError}
+        </ErrorSummary>
+      )}
+      {saveApplicationStatus?.callStatus === ApiCallStatusCode.PENDING ? (
+        <Loading text="Saving..." />
+      ) : (
+        <Form
+          key={activeStepID}
+          buttonText="Save and continue"
+          formData={formData}
+          onSave={onSave}
+          onSubmit={nextStep}
+        />
+      )}
     </Layout>
   );
 };

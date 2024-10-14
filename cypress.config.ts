@@ -6,6 +6,8 @@ import { sign } from 'jsonwebtoken';
 import next from 'next';
 import nock from 'nock';
 
+import { unlinkSync } from 'fs';
+
 const baseUrl = 'http://localhost:3000';
 
 export default defineConfig({
@@ -70,6 +72,19 @@ export default defineConfig({
           return null;
         },
       });
+      if (config.video) {
+        // delete video if test failed
+        on('after:spec', (spec, results) => {
+          if (results.video) {
+            if (results.stats.failures || results.stats.skipped) {
+              console.log('keeping the video %s', results.video);
+            } else {
+              unlinkSync(results.video);
+            }
+          }
+        });
+      }
+
       config.env = {
         ...process.env,
       };
@@ -79,6 +94,7 @@ export default defineConfig({
     experimentalWebKitSupport: true,
     video: true,
     screenshotOnRunFailure: true,
+    videoCompression: true,
   },
 
   component: {

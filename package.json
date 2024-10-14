@@ -14,7 +14,7 @@
     "test": "jest && tsc --noEmit",
     "test:watch": "jest --watch",
     "prepare": "husky",
-    "cypress:open": "cypress open --browser electron",
+    "cypress:open": "cypress open --browser chrome",
     "e2e:run": "cypress run --e2e --browser electron",
     "component:run": "cypress run --component --browser electron"
   },

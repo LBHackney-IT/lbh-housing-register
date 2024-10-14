@@ -5,7 +5,7 @@ import { ParsedUrlQueryInput } from 'querystring';
 
 // custom hook to manage the application status and ensure promises are fulfilled before moving to the next page.
 
-interface UseApplicationUpdateStatusProps {
+interface UseApiCallStatusProps {
   selector: ApiCallStatus | undefined;
   userActionCompleted: boolean;
   pathToPush: string;
@@ -21,7 +21,7 @@ const useApiCallStatus = ({
   scrollToError,
   pathToPush,
   query,
-}: UseApplicationUpdateStatusProps) => {
+}: UseApiCallStatusProps) => {
   const router = useRouter();
 
   useEffect(() => {

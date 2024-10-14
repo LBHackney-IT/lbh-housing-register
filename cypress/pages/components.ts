@@ -19,6 +19,22 @@ class Components {
     const testId = 'test-checkbox-conditional-';
     return cy.get(`[data-testid*="${testId}"]`);
   }
+  static getSelect(label: string) {
+    const testId = `test-select-${label}`;
+    return cy.get(`[data-testid="${testId}"]`);
+  }
+  static getInput(label: string) {
+    const testId = `test-input-${label}`;
+    return cy.get(`[data-testid="${testId}"]`);
+  }
+  static getDateInput(value: string) {
+    const testId = `test-date-input-${value}`;
+    return cy.get(`[data-testid="${testId}"]`);
+  }
+  static getErrorSumamry(value: string) {
+    const testId = `test-${value}-error-summary`;
+    return cy.get(`[data-testid="${testId}"]`);
+  }
 }
 
 export default Components;

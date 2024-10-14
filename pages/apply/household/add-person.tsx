@@ -18,7 +18,7 @@ import { Errors } from 'lib/types/errors';
 
 const AddPersonToApplication = (): JSX.Element => {
   const returnHref = '/apply/household';
-  // const router = useRouter();
+
   const dispatch = useAppDispatch();
 
   const saveApplicationStatus = useAppSelector(selectSaveApplicationStatus);

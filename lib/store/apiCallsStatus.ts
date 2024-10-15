@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSelector, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '.';
 import { updateApplication } from './application';
 
@@ -25,9 +25,12 @@ const initialState: HRApiCallsStatusState = {
   },
 };
 
-export const selectSaveApplicationStatus = (
-  state: RootState
-): ApiCallStatus | undefined => state.hrApiCallsStatus.updateApplication;
+const selectHRApiCallsStatus = (state: RootState) => state.hrApiCallsStatus;
+
+export const selectSaveApplicationStatus = createSelector(
+  [selectHRApiCallsStatus],
+  (hrApiCallsStatus) => hrApiCallsStatus.updateApplication
+);
 
 export const hrApiCallsStatus = createSlice({
   name: 'hrApiCallsStatus',

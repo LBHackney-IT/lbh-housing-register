@@ -20,6 +20,7 @@ const AddPersonToApplication = (): JSX.Element => {
   const returnHref = '/apply/household';
 
   const dispatch = useAppDispatch();
+
   const saveApplicationStatus = useAppSelector(selectSaveApplicationStatus);
   const [isOver16State, setIsOver16State] = useState(true);
   const [submit, setSubmit] = useState<boolean>(false);

@@ -54,7 +54,7 @@ declare global {
         delay?: number,
         statusCode?: number
       ): Chainable<void>;
-
+      mockAddressAPISearchByPostcode(postcode: string);
       mount: typeof mount;
     }
   }

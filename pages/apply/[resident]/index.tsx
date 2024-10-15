@@ -65,20 +65,22 @@ const ResidentIndex = (): JSX.Element => {
       setUserHasSaved(false);
     }
 
-    if (saveApplicationStatus?.callStatus === ApiCallStatusCode.FULFILLED) {
-      router.push(returnHref);
-    }
+    if (isSaving) {
+      if (saveApplicationStatus?.callStatus === ApiCallStatusCode.FULFILLED) {
+        router.push(returnHref);
+      }
 
-    if (saveApplicationStatus?.callStatus === ApiCallStatusCode.REJECTED) {
-      router.push(
-        {
-          pathname: returnHref,
-          query: {
-            error: 'Unable to delete household member. Please try again.',
+      if (saveApplicationStatus?.callStatus === ApiCallStatusCode.REJECTED) {
+        router.push(
+          {
+            pathname: returnHref,
+            query: {
+              error: 'Unable to delete household member. Please try again.',
+            },
           },
-        },
-        returnHref
-      );
+          returnHref
+        );
+      }
     }
   }, [saveApplicationStatus?.callStatus, userHasSaved]);
 
@@ -168,7 +170,11 @@ const ResidentIndex = (): JSX.Element => {
   };
 
   return (
-    <Layout pageName="Person overview" breadcrumbs={breadcrumbs}>
+    <Layout
+      pageName="Person overview"
+      breadcrumbs={breadcrumbs}
+      dataTestId="test-apply-resident-index-page"
+    >
       <h1 className="lbh-heading-h1" style={{ marginBottom: '40px' }}>
         <span className="govuk-hint lbh-hint">Complete information for:</span>
         {`${currentResident.person?.firstName} ${currentResident.person?.surname}`}

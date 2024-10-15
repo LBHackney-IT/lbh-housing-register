@@ -9,8 +9,7 @@ export type ApplicantWithPersonID = Applicant & {
   person: Applicant['person'] & { id: string };
 };
 
-// two types of applicatings that are used from store.
-const selectMainApplicant = (state: RootState) =>
+export const selectMainApplicant = (state: RootState) =>
   state.application.mainApplicant;
 
 const selectOtherMembers = (state: RootState) => state.application.otherMembers;
@@ -23,12 +22,6 @@ export const selectApplicantsMemorised = createSelector(
       .filter((v): v is Applicant | Applicant[] => v !== undefined)
       .flat();
   }
-);
-
-// use the createSelector to memoise the result of the selector
-export const selectMainApplicantMemoised = createSelector(
-  [selectMainApplicant],
-  (mainApplicant) => mainApplicant
 );
 
 export function applicantHasId(

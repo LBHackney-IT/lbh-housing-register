@@ -14,7 +14,7 @@ import withApplication from '../../../lib/hoc/withApplication';
 import { exit } from '../../../lib/store/auth';
 import {
   selectApplicantsMemorised,
-  selectMainApplicantMemoised,
+  selectMainApplicant,
 } from 'lib/store/applicant';
 
 const ApplicationHouseholdOverview = (): JSX.Element => {
@@ -22,7 +22,7 @@ const ApplicationHouseholdOverview = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   const applicants = useAppSelector(selectApplicantsMemorised);
-  const mainApplicant = useAppSelector(selectMainApplicantMemoised);
+  const mainApplicant = useAppSelector(selectMainApplicant);
 
   const breadcrumbs = [
     {

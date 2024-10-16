@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker';
-import VerifyPage from '../../pages/verify';
-import SignInPage from '../../pages/signIn';
-import { generateApplication } from '../../../testUtils/applicationHelper';
-import StartPage from '../../pages/start';
-import { generateEmailAddress } from '../../../testUtils/personHelper';
+import VerifyPage from '../../../pages/verify';
+import SignInPage from '../../../pages/signIn';
+import { generateApplication } from '../../../../testUtils/applicationHelper';
+import StartPage from '../../../pages/start';
+import { generateEmailAddress } from '../../../../testUtils/personHelper';
 import { StatusCodes } from 'http-status-codes';
 
 const applicationId = faker.string.uuid();

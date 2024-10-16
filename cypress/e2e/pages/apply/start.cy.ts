@@ -1,12 +1,12 @@
-import StartPage from '../../pages/start';
-import { generateApplication } from '../../../testUtils/applicationHelper';
+import StartPage from '../../../pages/start';
+import { generateApplication } from '../../../../testUtils/applicationHelper';
 import {
   generatePerson,
   getRandomGender,
   TitleEnum,
-} from '../../../testUtils/personHelper';
+} from '../../../../testUtils/personHelper';
 import { faker } from '@faker-js/faker/locale/en_GB';
-import AgreeTermsPage from '../../pages/agreeTerms';
+import AgreeTermsPage from '../../../pages/agreeTerms';
 import { StatusCodes } from 'http-status-codes';
 
 const applicationId = faker.string.uuid();

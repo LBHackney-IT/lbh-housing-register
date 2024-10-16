@@ -33,6 +33,7 @@ export function Radio({
         id={id}
         name={name}
         value={value}
+        data-testid={`test-radio-${id}`}
       />
       <Label
         className="govuk-radios__label"

@@ -49,7 +49,7 @@ class StartPage {
   }
 
   static getErrorSummary() {
-    const testId = 'start-page-error-summary';
+    const testId = 'test-start-page-error-summary';
     return this.getStartApplicationPage().find(`[data-testid="${testId}"]`);
   }
 }

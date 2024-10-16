@@ -40,7 +40,7 @@ const NotEligible = (): JSX.Element => {
   };
 
   return (
-    <Layout>
+    <Layout dataTestId="test-apply-rejection-page">
       <Panel heading="You don't qualify to join the housing register">
         Your reference number: {application.reference?.toUpperCase()}
       </Panel>

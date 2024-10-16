@@ -22,29 +22,26 @@ export function ConditionalInput({
   display,
 }: ConditionalFormFieldOptionInput) {
   return (
-    <>
-      <div
-        className={
-          'govuk-checkboxes__conditional' + (display ? '' : '--hidden')
-        }
-        id={containerId}
-      >
-        {as === 'textarea' ? (
-          <Textarea as="textarea" name={fieldName!} label={label!} />
-        ) : (
-          <>
-            <Label content={label} htmlFor={fieldId} />
-            <Field
-              className="govuk-input govuk-!-width-one-third"
-              type={as}
-              id={fieldId}
-              name={fieldName}
-              data-aria-controls={containerId}
-            />
-          </>
-        )}
-      </div>
-    </>
+    <div
+      className={'govuk-checkboxes__conditional' + (display ? '' : '--hidden')}
+      data-testid={`test-checkbox-conditional-container-${containerId}`}
+      id={containerId}
+    >
+      {as === 'textarea' ? (
+        <Textarea as="textarea" name={fieldName!} label={label!} />
+      ) : (
+        <>
+          <Label content={label} htmlFor={fieldId} />
+          <Field
+            className="govuk-input govuk-!-width-one-third"
+            type={as}
+            id={fieldId}
+            name={fieldName}
+            data-aria-controls={containerId}
+          />
+        </>
+      )}
+    </div>
   );
 }
 
@@ -69,7 +66,10 @@ export function Checkbox({
   }
 
   return (
-    <div className="govuk-checkboxes__item">
+    <div
+      className="govuk-checkboxes__item"
+      data-testid={`test-checkbox-conditional-${id}`}
+    >
       <Field
         className="govuk-checkboxes__input"
         type="checkbox"

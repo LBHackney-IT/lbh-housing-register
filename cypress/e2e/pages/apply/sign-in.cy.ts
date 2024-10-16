@@ -1,6 +1,6 @@
-import SignInPage from '../../pages/signIn';
-import VerifyPage from '../../pages/verify';
-import { generateEmailAddress } from '../../../testUtils/personHelper';
+import SignInPage from '../../../pages/signIn';
+import VerifyPage from '../../../pages/verify';
+import { generateEmailAddress } from '../../../../testUtils/personHelper';
 import { StatusCodes } from 'http-status-codes';
 
 const email = generateEmailAddress();

@@ -1,10 +1,12 @@
-// import StartPage from '../../pages/start';
-import { generateApplication } from '../../../testUtils/applicationHelper';
-import { generatePerson } from '../../../testUtils/personHelper';
+import { generateApplication } from '../../../../../testUtils/applicationHelper';
+import { generatePerson } from '../../../../../testUtils/personHelper';
 import { faker } from '@faker-js/faker/locale/en_GB';
-import AgreeTermsPage from '../../pages/agreeTerms';
-import ApplyHouseholdPage from '../../pages/household';
 import { StatusCodes } from 'http-status-codes';
+
+import EthnicityPage from '../../../../pages/ethnicity';
+import { Errors } from '../../../../../lib/types/errors';
+import DeclarationPage from '../../../../pages/declaration';
+import Components from '../../../../pages/components';
 
 const applicationId = faker.string.uuid();
 const personId = faker.string.uuid();
@@ -26,20 +28,7 @@ const applicationWithMainApplicant = {
   calculatedBedroomNeed: 1,
 };
 
-const applicationWithMainApplicantAndAgreedTerms = {
-  ...applicationWithMainApplicant,
-  mainApplicant: {
-    ...applicationWithMainApplicant.mainApplicant,
-    questions: [
-      {
-        id: 'AGREEMENT/agree',
-        answer: 'true',
-      },
-    ],
-  },
-};
-
-describe('Application', () => {
+describe('Ethnicity questions', () => {
   beforeEach(() => {
     cy.clearAllCookies();
     cy.task('clearNock');
@@ -54,51 +43,46 @@ describe('Application', () => {
       apiResponseDelay
     );
 
-    AgreeTermsPage.visit();
-    AgreeTermsPage.getAgreeTermsPage().should('be.visible');
+    EthnicityPage.visit();
+    EthnicityPage.getEthnicityPage().should('be.visible');
 
     cy.contains('Checking information…');
   });
 
   it('lets user fill in and submit their personal details when logged in', () => {
-    //login with claims to specific application id
     cy.loginAsResident(applicationId, true);
 
-    //initial GET request for agree-terms page
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithMainApplicant
     );
 
-    //PATCH request to update the application with agreed terms
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,
-      applicationWithMainApplicantAndAgreedTerms,
+      applicationWithMainApplicant,
       apiResponseDelay
     );
 
-    //second GET request for household page after the application has been patched
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
-      applicationWithMainApplicantAndAgreedTerms
+      applicationWithMainApplicant
     );
 
-    AgreeTermsPage.visit();
+    EthnicityPage.visit();
+    EthnicityPage.getEthnicityPage().should('be.visible');
 
-    // Agree to terms and submit
-    AgreeTermsPage.getAgreeCheckbox().click();
-    AgreeTermsPage.getAgreeButton().click();
+    Components.getRadioButtons().first().click();
 
-    //check that message is shown until (delayed) PATCH call has finished
+    Components.getSaveButton().click();
+
     cy.contains('Saving...');
 
-    //check that user is now on the household member page
-    ApplyHouseholdPage.getHouseholdPage().should('be.visible');
+    Components.getLoadingSpinner().should('not.exist');
+    DeclarationPage.getDeclarationPage().should('be.visible');
   });
 
-  it('shows an error message when application update fails', () => {
+  it('shows an error message when patch is not fulfilled', () => {
     cy.loginAsResident(applicationId, true);
-    cy.mockHousingRegisterApiGetApplications(applicationId, application);
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithMainApplicant
@@ -106,24 +90,50 @@ describe('Application', () => {
 
     const errorStatusCode = StatusCodes.BAD_REQUEST;
 
-    //based on current API layer setup
     const expectedErrorMessage = `Unable to update application (${errorStatusCode})`;
 
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,
-      null,
+      applicationWithMainApplicant,
       apiResponseDelay,
       errorStatusCode
     );
 
-    AgreeTermsPage.visit();
+    EthnicityPage.visit();
 
-    AgreeTermsPage.getErrorSummary().should('not.exist');
+    EthnicityPage.getErrorSummary().should('not.exist');
 
-    AgreeTermsPage.getAgreeCheckbox().click();
-    AgreeTermsPage.getAgreeButton().click();
+    Components.getRadioButtons().first().click();
 
-    AgreeTermsPage.getErrorSummary().should('be.visible');
+    Components.getSaveButton().click();
+
+    EthnicityPage.getErrorSummary().should('be.visible');
+    cy.contains(expectedErrorMessage);
+  });
+  it('shows an error message when dispatch fails', () => {
+    cy.loginAsResident(applicationId, true);
+    cy.mockHousingRegisterApiGetApplications(applicationId, application);
+
+    const errorStatusCode = StatusCodes.BAD_REQUEST;
+
+    const expectedErrorMessage = Errors.GENERIC_ERROR;
+
+    cy.mockHousingRegisterApiPatchApplication(
+      applicationId,
+      applicationWithMainApplicant,
+      apiResponseDelay,
+      errorStatusCode
+    );
+
+    EthnicityPage.visit();
+
+    EthnicityPage.getErrorSummary().should('not.exist');
+
+    Components.getRadioButtons().first().click();
+
+    Components.getSaveButton().click();
+
+    EthnicityPage.getErrorSummary().should('be.visible');
     cy.contains(expectedErrorMessage);
   });
 });

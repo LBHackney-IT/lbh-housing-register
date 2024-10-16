@@ -63,6 +63,7 @@ export default function Input({
               type={type ? type : 'text'}
               {...field}
               maxLength={500}
+              data-testid={`test-input-${name}`}
             />
           </FormGroup>
         )}

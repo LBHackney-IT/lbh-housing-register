@@ -50,6 +50,7 @@ export default function Select({
             } govuk-select lbh-select`}
             id={field.name}
             {...field}
+            data-testid={`test-select-${field.name}`}
           >
             {options?.map((option, index) => (
               <option key={index} value={option.value}>

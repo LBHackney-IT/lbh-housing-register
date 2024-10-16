@@ -92,7 +92,6 @@ const ResidentIndex = (): JSX.Element => {
       </Layout>
     );
   }
-
   //redirect when applicant details missing and not saving
   if (!currentResident || !mainResident) {
     return <Custom404 />;

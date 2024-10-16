@@ -26,6 +26,10 @@ class ApplyResidentIndexPage {
   static getAddressHistorySectionLink() {
     return cy.get('.lbh-link').contains('Address history');
   }
+
+  static getCurrentAccommodationSectionLink() {
+    return cy.get('.lbh-link').contains('Current accommodation');
+  }
 }
 
 export default ApplyResidentIndexPage;

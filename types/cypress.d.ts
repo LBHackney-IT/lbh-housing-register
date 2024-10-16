@@ -31,7 +31,8 @@ declare global {
         applicationId: string,
         body?: Application,
         delay?: number,
-        statusCode?: number
+        statusCode?: number,
+        persist?: boolean
       ): Chainable<void>;
       mockHousingRegisterApiCompleteApplication(
         applicationId: string,

@@ -122,7 +122,8 @@ Cypress.Commands.add(
     applicationId: string,
     body?: Application,
     delay: number = 0,
-    statusCode: number = StatusCodes.OK
+    statusCode: number = StatusCodes.OK,
+    persist?: boolean
   ) => {
     cy.task('nock', {
       hostname: Cypress.env('HOUSING_REGISTER_API'),
@@ -130,6 +131,7 @@ Cypress.Commands.add(
       path: `/applications/${applicationId}`,
       statusCode,
       body,
+      persist,
       delay,
     });
   }

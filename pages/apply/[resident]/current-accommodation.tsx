@@ -1,6 +1,6 @@
 import { FormikValues, getIn } from 'formik';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HeadingOne } from '../../../components/content/headings';
 import Form from '../../../components/form/form';
 import Layout from '../../../components/layout/resident-layout';
@@ -15,6 +15,12 @@ import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import { FormID, getFormData } from '../../../lib/utils/form-data';
 import Custom404 from '../../404';
 import { Applicant } from '../../../domain/HousingApi';
+import {
+  ApiCallStatusCode,
+  selectSaveApplicationStatus,
+} from 'lib/store/apiCallsStatus';
+import { scrollToError } from 'lib/utils/scroll';
+import ErrorSummary from 'components/errors/error-summary';
 
 const CurrentAccommodation = (): JSX.Element => {
   const router = useRouter();
@@ -22,10 +28,24 @@ const CurrentAccommodation = (): JSX.Element => {
   const { resident } = router.query as { resident: string };
 
   const applicant = useAppSelector(selectApplicant(resident)) as Applicant;
-
   const [activeStepID, setActiveStepId] = useState(
     FormID.CURRENT_ACCOMMODATION
   );
+
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [userError, setUserError] = useState<string | null>(null);
+  const saveApplicationStatus = useAppSelector(selectSaveApplicationStatus);
+
+  useEffect(() => {
+    if (saveApplicationStatus?.callStatus === ApiCallStatusCode.FULFILLED) {
+      setIsSaving(false);
+    }
+    if (saveApplicationStatus?.callStatus === ApiCallStatusCode.REJECTED) {
+      setIsSaving(false);
+      setUserError('Unable to save application');
+      scrollToError();
+    }
+  }, [saveApplicationStatus?.callStatus]);
 
   if (!applicantHasId(applicant)) {
     return <Custom404 />;
@@ -62,6 +82,7 @@ const CurrentAccommodation = (): JSX.Element => {
     ) ?? { nextFormId: 'exit' };
 
     if (nextFormId === 'exit') {
+      //Save status has been handled elsewhere before this triggers
       router.push(baseHref);
       return;
     }
@@ -70,6 +91,7 @@ const CurrentAccommodation = (): JSX.Element => {
   };
 
   const onSave = (values: FormikValues) => {
+    setIsSaving(true);
     dispatch(
       updateWithFormValues({
         formID: activeStepID,
@@ -83,6 +105,11 @@ const CurrentAccommodation = (): JSX.Element => {
   return (
     <Layout pageName="Current accommodation" breadcrumbs={breadcrumbs}>
       <HeadingOne content="Current accommodation" />
+      {userError && (
+        <ErrorSummary dataTestId="test-agree-terms-error-summary">
+          {userError}
+        </ErrorSummary>
+      )}
       <Form
         // Intentional key outside of an array. Force a fresh form component when we change steps to avoid values persisting between forms.
         initialValues={initialValues}
@@ -91,6 +118,7 @@ const CurrentAccommodation = (): JSX.Element => {
         formData={formData}
         onSave={onSave}
         onSubmit={nextStep}
+        isSavingToDatabase={isSaving}
       />
     </Layout>
   );

@@ -1,8 +1,8 @@
-import { generateApplication } from '../../../testUtils/applicationHelper';
-import { generatePerson } from '../../../testUtils/personHelper';
+import { generateApplication } from '../../../../testUtils/applicationHelper';
+import { generatePerson } from '../../../../testUtils/personHelper';
 import { faker } from '@faker-js/faker/locale/en_GB';
-import AgreeTermsPage from '../../pages/agreeTerms';
-import HouseholdPage from '../../pages/household';
+import AgreeTermsPage from '../../../pages/agreeTerms';
+import HouseholdPage from '../../../pages/household';
 import { StatusCodes } from 'http-status-codes';
 
 const applicationId = faker.string.uuid();

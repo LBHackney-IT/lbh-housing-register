@@ -9,24 +9,20 @@ import SummaryList, {
   SummaryListKey as Key,
   SummaryListRow as Row,
 } from '../../../components/summary-list';
-import { Applicant } from '../../../domain/HousingApi';
 import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import withApplication from '../../../lib/hoc/withApplication';
 import { exit } from '../../../lib/store/auth';
+import {
+  selectApplicantsMemorised,
+  selectMainApplicant,
+} from 'lib/store/applicant';
 
 const ApplicationHouseholdOverview = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const applicants = useAppSelector((store) =>
-    [store.application.mainApplicant, store.application.otherMembers]
-      .filter((v): v is Applicant | Applicant[] => v !== undefined)
-      .flat()
-  );
-
-  const mainApplicant = useAppSelector(
-    (store) => store.application.mainApplicant
-  );
+  const applicants = useAppSelector(selectApplicantsMemorised);
+  const mainApplicant = useAppSelector(selectMainApplicant);
 
   const breadcrumbs = [
     {

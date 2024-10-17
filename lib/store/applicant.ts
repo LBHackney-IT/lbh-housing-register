@@ -1,12 +1,28 @@
-import { createAction } from '@reduxjs/toolkit';
+import { createAction, createSelector } from '@reduxjs/toolkit';
 import { FormikValues } from 'formik';
 import { Store } from '.';
 import { Applicant, Question } from '../../domain/HousingApi';
 import { FormID } from '../utils/form-data';
+import { RootState } from '.';
 
 export type ApplicantWithPersonID = Applicant & {
   person: Applicant['person'] & { id: string };
 };
+
+export const selectMainApplicant = (state: RootState) =>
+  state.application.mainApplicant;
+
+const selectOtherMembers = (state: RootState) => state.application.otherMembers;
+
+// use createSelector to memoise the result of the selector
+export const selectApplicantsMemorised = createSelector(
+  [selectMainApplicant, selectOtherMembers],
+  (mainApplicant, otherMembers) => {
+    return [mainApplicant, otherMembers]
+      .filter((v): v is Applicant | Applicant[] => v !== undefined)
+      .flat();
+  }
+);
 
 export function applicantHasId(
   applicant: Applicant | undefined = {}
@@ -65,29 +81,30 @@ export function updateApplicantReducer(
   };
 }
 
-export const selectApplicant =
-  (applicantPersonId: string) =>
-  (store: Store): ApplicantWithPersonID | undefined => {
-    if (
-      applicantHasId(store.application.mainApplicant) &&
-      store.application.mainApplicant?.person?.id === applicantPersonId
-    ) {
-      return store.application.mainApplicant;
-    }
-    return store.application.otherMembers?.find(
-      (a): a is ApplicantWithPersonID =>
-        applicantHasId(a) && a.person?.id === applicantPersonId
-    );
-  };
+export const selectApplicant = (applicantPersonId: string) => (
+  store: Store
+): ApplicantWithPersonID | undefined => {
+  if (
+    applicantHasId(store.application.mainApplicant) &&
+    store.application.mainApplicant?.person?.id === applicantPersonId
+  ) {
+    return store.application.mainApplicant;
+  }
+  return store.application.otherMembers?.find(
+    (a): a is ApplicantWithPersonID =>
+      applicantHasId(a) && a.person?.id === applicantPersonId
+  );
+};
 
-export const findQuestion =
-  (formID: FormID, questionName: string) => (question: Question) =>
-    question.id === `${formID}/${questionName}`;
+export const findQuestion = (formID: FormID, questionName: string) => (
+  question: Question
+) => question.id === `${formID}/${questionName}`;
 
 export function getQuestionValue(
   questions: Question[] | undefined,
   formID: FormID,
   questionName: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fallbackValue: any = undefined
 ) {
   const a = questions?.find(findQuestion(formID, questionName))?.answer;

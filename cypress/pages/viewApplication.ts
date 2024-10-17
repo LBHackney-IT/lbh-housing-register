@@ -3,6 +3,11 @@ class ViewApplicationPage {
     cy.visit(`/applications/view/${applicationId}`);
   }
 
+  static getNotesAndHistorySection() {
+    const testId = 'test-applicant-notes-and-history-section';
+    return cy.get(`[data-testid="${testId}"]`);
+  }
+
   static getAssessmentNavLink() {
     const testId = 'test-applicant-assessment-section-navigation';
     return cy.get(`[data-testid="${testId}"]`);

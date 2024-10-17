@@ -34,7 +34,7 @@ export default function PersonalDetails({
             <td className="govuk-table__cell">
               <ul className="lbh-list lbh-list--compressed">
                 <li>
-                  <strong>
+                  <strong data-testid="applicant-name">
                     {applicant.person?.title} {applicant.person?.firstName}{' '}
                     {applicant.person?.surname}
                   </strong>{' '}
@@ -55,7 +55,7 @@ export default function PersonalDetails({
                     <Link
                       href={`mailto:${applicant.contactInformation.emailAddress}`}
                     >
-                      <a className="lbh-link">
+                      <a className="lbh-link" data-testid={'applicant-email'}>
                         {applicant.contactInformation.emailAddress}
                       </a>
                     </Link>

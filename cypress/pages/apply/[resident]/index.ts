@@ -31,6 +31,10 @@ class ApplyResidentIndexPage {
     return cy.get('.lbh-link').contains('Current accommodation');
   }
 
+  static getImmigrationStatusSectionLink() {
+    return cy.get('.lbh-link').contains('Immigration status');
+  }
+
   static getYourSituationSectionLink() {
     return cy.get('.lbh-link').contains('Your situation');
   }

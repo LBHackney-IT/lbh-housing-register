@@ -54,7 +54,11 @@ const ApplicationPersonsOverview = (): JSX.Element => {
 
   return (
     <>
-      <Layout pageName="Application overview" breadcrumbs={breadcrumbs}>
+      <Layout
+        pageName="Application overview"
+        breadcrumbs={breadcrumbs}
+        dataTestId="test-apply-resident-overview-page"
+      >
         <HeadingOne content="Provide information about your household" />
         <p className="lbh-body lbh-body-l lbh-body--grey">
           You've completed information for {applicantsCompletedCount} of{' '}

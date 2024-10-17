@@ -30,6 +30,11 @@ class ApplyResidentIndexPage {
   static getCurrentAccommodationSectionLink() {
     return cy.get('.lbh-link').contains('Current accommodation');
   }
+
+  static getCheckAnswersButton() {
+    const testId = 'test-apply-resident-index-check-answers-button';
+    return cy.get(`[data-testid="${testId}"]`);
+  }
 }
 
 export default ApplyResidentIndexPage;

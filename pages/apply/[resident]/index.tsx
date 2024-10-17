@@ -211,7 +211,10 @@ const ResidentIndex = (): JSX.Element => {
         </div>
       ))}
       {tasks.remaining == 0 && (
-        <ButtonLink href={`/apply/${currentResident.person?.id}/summary/`}>
+        <ButtonLink
+          href={`/apply/${currentResident.person?.id}/summary/`}
+          dataTestId="test-apply-resident-index-check-answers-button"
+        >
           Check answers
         </ButtonLink>
       )}

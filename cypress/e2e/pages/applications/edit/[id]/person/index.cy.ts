@@ -73,4 +73,10 @@ describe('Edit person in application', () => {
     //user not pushed to view application page
     ViewApplicationPage.getViewApplicationPage().should('not.exist');
   });
+  it('shows access denied page for user with read only permissions', () => {
+    cy.clearAllCookies();
+    cy.loginAsUser('readOnly');
+    ApplicationEditPersonPage.visit(applicationId, personId);
+    cy.contains('Access denied');
+  });
 });

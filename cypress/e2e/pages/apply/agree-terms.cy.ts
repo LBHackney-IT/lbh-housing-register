@@ -1,8 +1,8 @@
-import { generateApplication } from '../../../testUtils/applicationHelper';
-import { generatePerson } from '../../../testUtils/personHelper';
+import { generateApplication } from '../../../../testUtils/applicationHelper';
+import { generatePerson } from '../../../../testUtils/personHelper';
 import { faker } from '@faker-js/faker/locale/en_GB';
-import AgreeTermsPage from '../../pages/agreeTerms';
-import HouseholdPage from '../../pages/household';
+import AgreeTermsPage from '../../../pages/agreeTerms';
+import HouseholdPage from '../../../pages/household';
 import { StatusCodes } from 'http-status-codes';
 
 const applicationId = faker.string.uuid();
@@ -88,7 +88,7 @@ describe('Agree terms', () => {
     HouseholdPage.getHouseholdPage().should('be.visible');
   });
 
-  it('shows an error message when application update fails', () => {
+  it('shows an error message when agree terms update fails', () => {
     cy.loginAsResident(applicationId, true);
     cy.mockHousingRegisterApiGetApplications(applicationId, application);
     cy.mockHousingRegisterApiGetApplications(

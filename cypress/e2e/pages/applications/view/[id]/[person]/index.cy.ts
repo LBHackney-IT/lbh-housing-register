@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 
-import { generateApplication } from '../../../testUtils/applicationHelper';
-import ReviewApplicantPage from '../../pages/reviewApplicant';
+import { generateApplication } from '../../../../../../../testUtils/applicationHelper';
+import ReviewApplicantPage from '../../../../../../pages/reviewApplicant';
 
 const personId = faker.string.uuid();
 const applicationId = faker.string.uuid();

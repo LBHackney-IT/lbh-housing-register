@@ -1,10 +1,8 @@
 import { generateApplication } from '../../../../../testUtils/applicationHelper';
 import { generatePerson } from '../../../../../testUtils/personHelper';
 import { faker } from '@faker-js/faker/locale/en_GB';
-import { StatusCodes } from 'http-status-codes';
 import AdditionalQuestionsPage from '../../../../pages/additionalQuestions';
 
-import EthnicityPage from '../../../../pages/ethnicity';
 import { Errors } from '../../../../../lib/types/errors';
 import Components from '../../../../pages/components';
 
@@ -124,7 +122,7 @@ describe('Additional questions', () => {
   it('shows an error message when dispatch fails', () => {
     cy.loginAsResident(applicationId, true);
 
-    cy.mockHousingRegisterApiGetApplications(applicationId, application);
+    cy.mockHousingRegisterApiGetApplications(applicationId, application, true);
 
     const expectedErrorMessage = Errors.GENERIC_ERROR;
 
@@ -133,6 +131,8 @@ describe('Additional questions', () => {
       applicationWithMainApplicant,
       apiResponseDelay
     );
+
+    cy.mockActivityHistoryApiEmptyResponse(applicationId, true);
 
     AdditionalQuestionsPage.visit();
 

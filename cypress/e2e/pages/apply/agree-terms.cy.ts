@@ -88,7 +88,7 @@ describe('Agree terms', () => {
     HouseholdPage.getHouseholdPage().should('be.visible');
   });
 
-  it('shows an error message when application update fails', () => {
+  it('shows an error message when agree terms update fails', () => {
     cy.loginAsResident(applicationId, true);
     cy.mockHousingRegisterApiGetApplications(applicationId, application);
     cy.mockHousingRegisterApiGetApplications(

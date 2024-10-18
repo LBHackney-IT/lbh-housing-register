@@ -145,7 +145,6 @@ export default function ApplicationPage({
                     handleSelectNavItem={() => handleTabChange('history')}
                     itemName="history"
                     isActive={tab === 'history'}
-                    dataTestId="test-applicant-notes-and-history-section"
                   >
                     Notes and history
                   </HorizontalNavItem>

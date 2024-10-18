@@ -1,3 +1,4 @@
+import { ActivityHistoryResponse } from 'domain/ActivityHistoryApi';
 import { HackneyGoogleUserWithPermissions } from 'lib/utils/googleAuth';
 
 declare global {
@@ -15,6 +16,7 @@ declare global {
       ): Chainable<void>;
       mockActivityHistoryApiEmptyResponse(
         targetId: string,
+        results?: ActivityHistoryResponse,
         persist?: boolean
       ): Chainable<void>;
       mockHousingRegisterApiPostSearchResults(

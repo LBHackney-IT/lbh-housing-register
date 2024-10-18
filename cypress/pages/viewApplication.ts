@@ -3,11 +3,6 @@ class ViewApplicationPage {
     cy.visit(`/applications/view/${applicationId}`);
   }
 
-  static getNotesAndHistorySection() {
-    const testId = 'test-applicant-notes-and-history-section';
-    return cy.get(`[data-testid="${testId}"]`);
-  }
-
   static getAssessmentNavLink() {
     const testId = 'test-applicant-assessment-section-navigation';
     return cy.get(`[data-testid="${testId}"]`);
@@ -29,6 +24,11 @@ class ViewApplicationPage {
 
   static getErrorSummary() {
     const testId = 'test-view-application-page-error-summary';
+    return cy.get(`[data-testid="${testId}"]`);
+  }
+
+  static getNavItem(menuItem: string) {
+    const testId = `test-nav-item-${menuItem}`;
     return cy.get(`[data-testid="${testId}"]`);
   }
 }

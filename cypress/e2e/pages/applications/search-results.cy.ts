@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker/locale/en_GB';
 
-import { generateApplication } from '../../testUtils/applicationHelper';
-import ApplicationsPage from '../pages/applications';
+import { generateApplication } from '../../../../testUtils/applicationHelper';
+import ApplicationsPage from '../../../pages/applications';
 
 describe('User searches for an application', () => {
   it(`as a user in the read only group I only see the search results`, () => {

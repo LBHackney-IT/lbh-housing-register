@@ -1,9 +1,20 @@
 import { faker } from '@faker-js/faker';
+import { StatusCodes } from 'http-status-codes';
+import { ApplicationStatus } from '../../../../../../lib/types/application-status';
 
-import { generateApplication } from '../../testUtils/applicationHelper';
-import ApplicationsPage from '../pages/applications';
+import { generateApplication } from '../../../../../../testUtils/applicationHelper';
+import ApplicationsPage from '../../../../../pages/applications';
+import ViewApplicationPage from '../../../../../pages/viewApplication';
+
+const applicationId = faker.string.uuid();
+const personId = faker.string.uuid();
 
 describe('User views a resident application', () => {
+  beforeEach(() => {
+    cy.task('clearNock');
+    cy.clearAllCookies();
+  });
+
   it('as a read only group user I cannot edit an application', () => {
     const personId = faker.string.uuid();
     const applicationId = faker.string.uuid();
@@ -92,5 +103,60 @@ describe('User views a resident application', () => {
       ApplicationsPage.getEditHouseholdMemberButton().should('be.visible');
       ApplicationsPage.getAddHouseholdMemberButton().should('be.visible');
     });
+  });
+  it('does not show the assessment area for read only users', () => {
+    const application = generateApplication(applicationId, personId);
+    //ensure application requires assessment
+    application.status = ApplicationStatus.SUBMITTED;
+
+    cy.loginAsUser('readOnly');
+    cy.mockActivityHistoryApiEmptyResponse(applicationId);
+    cy.mockHousingRegisterApiGetApplications(applicationId, application);
+
+    ViewApplicationPage.visit(applicationId);
+    ViewApplicationPage.getAssessmentNavLink().should('not.exist');
+  });
+
+  it('shows an error message when deleting household member fails', () => {
+    const submittedAt = faker.date.recent().toISOString();
+    const errorCode = StatusCodes.CONFLICT;
+
+    const application = generateApplication(
+      applicationId,
+      personId,
+      true,
+      true,
+      true,
+      submittedAt
+    );
+
+    cy.loginAsUser('manager');
+    cy.mockHousingRegisterApiGetApplications(
+      applicationId,
+      application,
+      true,
+      0,
+      StatusCodes.OK
+    );
+    cy.mockActivityHistoryApiEmptyResponse(applicationId, true);
+    cy.mockHousingRegisterApiPatchApplication(
+      applicationId,
+      application,
+      0,
+      errorCode
+    );
+
+    ViewApplicationPage.visit(applicationId);
+
+    ViewApplicationPage.getRemoveHouseHoldMemberButton(personId + 1).click();
+    cy.contains('Confirm delete');
+    ViewApplicationPage.getRemoveHouseHoldMemberConfirmationButton(
+      personId + 1
+    ).should('be.visible');
+    ViewApplicationPage.getRemoveHouseHoldMemberConfirmationButton(
+      personId + 1
+    ).click();
+    ViewApplicationPage.getErrorSummary().should('be.visible');
+    cy.contains(`Unable to delete household member`);
   });
 });

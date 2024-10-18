@@ -34,7 +34,7 @@ export default function PersonalDetails({
             <td className="govuk-table__cell">
               <ul className="lbh-list lbh-list--compressed">
                 <li>
-                  <strong data-testid="applicant-name">
+                  <strong data-testid="test-applicant-name">
                     {applicant.person?.title} {applicant.person?.firstName}{' '}
                     {applicant.person?.surname}
                   </strong>{' '}

@@ -148,7 +148,7 @@ describe('View a resident application', () => {
     cy.mockHousingRegisterApiGetApplications(applicationId, application, true);
 
     ViewApplicationPage.visit(applicationId);
-    cy.get('[data-testid="applicant-name"]').should(
+    cy.get('[data-testid="test-applicant-name"]').should(
       'contain',
       application.mainApplicant.person.firstName
     );

@@ -49,6 +49,7 @@ export default function Textarea({
             rows={5}
             {...field}
             maxLength={10000}
+            data-testid="test-add-text-input"
           />
         </FormGroup>
       )}

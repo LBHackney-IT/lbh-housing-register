@@ -62,11 +62,6 @@ class ApplicationsPage {
     return cy.get(`[data-testid="${testId}"]`);
   }
 
-  static getNavItem(menuItem: string) {
-    const testId = `test-nav-item-${menuItem}`;
-    return cy.get(`[data-testid="${testId}"]`);
-  }
-
   // sidebar
   static getAssignUserButton() {
     const testId = 'test-assign-user-button';

@@ -26,6 +26,11 @@ class ViewApplicationPage {
     const testId = 'test-view-application-page-error-summary';
     return cy.get(`[data-testid="${testId}"]`);
   }
+
+  static getNavItem(menuItem: string) {
+    const testId = `test-nav-item-${menuItem}`;
+    return cy.get(`[data-testid="${testId}"]`);
+  }
 }
 
 export default ViewApplicationPage;

@@ -9,7 +9,7 @@ import {
   SummaryListRow as Row,
 } from '../../components/summary-list';
 import ApplicantSummary from '../../components/application/ApplicantSummary';
-import { Applicant } from '../../domain/HousingApi';
+import { selectApplicantsMemorised } from '../../lib/store/applicant';
 import { useAppSelector } from '../../lib/store/hooks';
 import { applicationSteps } from '../../lib/utils/resident';
 import withApplication from '../../lib/hoc/withApplication';
@@ -38,11 +38,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
 
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
   const application = useAppSelector((store) => store.application);
-  const applicants = useAppSelector((store) =>
-    [store.application.mainApplicant, store.application.otherMembers]
-      .filter((v): v is Applicant | Applicant[] => v !== undefined)
-      .flat()
-  );
+  const applicants = useAppSelector(selectApplicantsMemorised);
 
   const applicantsCompletedCount = applicants.filter((applicant) => {
     const tasks = applicationSteps(

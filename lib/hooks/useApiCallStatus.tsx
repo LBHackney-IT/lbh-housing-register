@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { ApiCallStatus, ApiCallStatusCode } from '../store/apiCallsStatus';
 import { ParsedUrlQueryInput } from 'querystring';
@@ -23,8 +23,12 @@ const useApiCallStatus = ({
   query,
 }: UseApiCallStatusProps) => {
   const router = useRouter();
+  const [delayedPendingStatus, setDelayedPendingStatus] = useState<boolean>(
+    false
+  );
 
   useEffect(() => {
+    let timer: NodeJS.Timeout;
     if (
       selector?.callStatus === ApiCallStatusCode.FULFILLED &&
       userActionCompleted
@@ -34,12 +38,18 @@ const useApiCallStatus = ({
         query,
       });
     }
-
     if (selector?.callStatus === ApiCallStatusCode.REJECTED) {
       setUserError(selector.error ?? 'API error');
       scrollToError();
     }
+    if (selector?.callStatus === ApiCallStatusCode.PENDING) {
+      timer = setTimeout(() => {
+        setDelayedPendingStatus(true);
+      }, 300);
+    }
+    return () => clearTimeout(timer);
   }, [selector?.callStatus]);
+  return { delayedPendingStatus };
 };
 
 export default useApiCallStatus;

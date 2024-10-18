@@ -35,6 +35,7 @@ const Declaration = (): JSX.Element => {
   const [userError, setUserError] = useState<string | null>(null);
 
   const submitApplication = async () => {
+    let timer: NodeJS.Timeout;
     const [isEligible, reasons] = checkEligible(application);
     setUserError(null);
 
@@ -46,7 +47,9 @@ const Declaration = (): JSX.Element => {
       await dispatch(sendDisqualifyEmail({ application, reason }));
 
       try {
-        setLoading(true);
+        timer = setTimeout(() => {
+          setLoading(true);
+        }, 300);
         await dispatch(disqualifyApplication(application.id!)).unwrap();
         router.push('/apply/not-eligible');
       } catch (error) {
@@ -64,7 +67,9 @@ const Declaration = (): JSX.Element => {
         await dispatch(sendMedicalNeed({ application, medicalNeeds }));
       }
       try {
-        setLoading(true);
+        timer = setTimeout(() => {
+          setLoading(true);
+        }, 300);
         await dispatch(completeApplication(application)).unwrap();
         await dispatch(createEvidenceRequest(application)).unwrap();
         router.push('/apply/confirmation');
@@ -76,6 +81,7 @@ const Declaration = (): JSX.Element => {
         setLoading(false);
       }
     }
+    return () => clearTimeout(timer);
   };
 
   if (!mainResident) {

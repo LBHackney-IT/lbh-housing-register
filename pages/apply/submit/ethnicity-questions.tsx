@@ -11,10 +11,7 @@ import withApplication from '../../../lib/hoc/withApplication';
 import { Applicant } from '../../../domain/HousingApi';
 import Loading from 'components/loading';
 import { scrollToError } from '../../../lib/utils/scroll';
-import {
-  selectSaveApplicationStatus,
-  ApiCallStatusCode,
-} from 'lib/store/apiCallsStatus';
+import { selectSaveApplicationStatus } from 'lib/store/apiCallsStatus';
 import useApiCallStatus from 'lib/hooks/useApiCallStatus';
 import ErrorSummary from 'components/errors/error-summary';
 import { Errors } from 'lib/types/errors';
@@ -52,7 +49,7 @@ const EthnicityQuestions = (): JSX.Element => {
   });
   const formData = getFormData(activeStepID);
 
-  useApiCallStatus({
+  const { delayedPendingStatus } = useApiCallStatus({
     selector: saveApplicationStatus,
     userActionCompleted: hasSaved,
     setUserError,
@@ -121,7 +118,7 @@ const EthnicityQuestions = (): JSX.Element => {
           {userError}
         </ErrorSummary>
       )}
-      {saveApplicationStatus?.callStatus === ApiCallStatusCode.PENDING ? (
+      {delayedPendingStatus ? (
         <Loading text="Saving..." />
       ) : (
         <Form

@@ -80,9 +80,7 @@ describe('View a resident application', () => {
     cy.mockHousingRegisterApiGetApplications(applicationId, application);
 
     ViewApplicationPage.visit(applicationId);
-    ViewApplicationPage.getNotesAndHistorySection().should('exist', {
-      timeout: 5000,
-    });
+    ViewApplicationPage.getNotesAndHistorySection().should('exist');
   });
 
   it('allows readonly users to see note section', () => {
@@ -96,7 +94,7 @@ describe('View a resident application', () => {
     ViewApplicationPage.visit(applicationId);
     ViewApplicationPage.getNotesAndHistorySection()
       .click()
-      .get('[data-testid="add-text-input"]')
+      .get('[data-testid="test-add-text-input"]')
       .should('exist');
   });
 
@@ -112,11 +110,11 @@ describe('View a resident application', () => {
     ViewApplicationPage.visit(applicationId);
     ViewApplicationPage.getNotesAndHistorySection()
       .click()
-      .get('[data-testid="activity-history"]')
+      .get('[data-testid="test-activity-history"]')
       .should('exist');
     ViewApplicationPage.getNotesAndHistorySection()
       .click()
-      .get('[data-testid="detailed-history-items"]')
+      .get('[data-testid="test-detailed-history-items"]')
       .should('not.exist');
   });
 
@@ -134,7 +132,7 @@ describe('View a resident application', () => {
       'contain',
       application.mainApplicant.person.firstName
     );
-    cy.get('[data-testid="applicant-email"]').should(
+    cy.get('[data-testid="test-applicant-email"]').should(
       'contain',
       application.mainApplicant.contactInformation.emailAddress
     );

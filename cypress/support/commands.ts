@@ -66,37 +66,39 @@ Cypress.Commands.add('generateEmptyApplication', () => {
 
 Cypress.Commands.add(
   'mockActivityHistoryApiEmptyResponse',
-  (targetId: string, persist?: boolean) => {
+  (targetId: string, persist?: boolean, returnEmptyResponse?: boolean) => {
     cy.task('nock', {
       hostname: Cypress.env('ACTIVITY_HISTORY_API'),
       method: 'GET',
       path: `/activityhistory?targetId=${targetId}&pageSize=100`,
       status: 200,
-      body: {
-        results: [
-          {
-            id: 'b0058e24-ef9c-4672-a830-dc5c1a329dce',
-            targetId: targetId,
-            type: 'update',
-            targetType: 'housingApplication',
-            createdAt: '2024-09-04T13:13:59.7981926Z',
-            timetoLiveForRecord: 0,
-            oldData: {
-              'assessment.biddingNumber': null,
-            },
-            newData: {
-              _activityType: 'biddingNumberChangedByUser',
-              'assessment.biddingNumber': '1000001',
-            },
-            authorDetails: {
-              fullName: 'John Jones',
-              email: 'test@hackney.gov.uk',
-            },
-            sourceDomain: 'HousingRegister',
+      body: returnEmptyResponse
+        ? { results: [], paginationDetails: { nextToken: null } }
+        : {
+            results: [
+              {
+                id: 'b0058e24-ef9c-4672-a830-dc5c1a329dce',
+                targetId: targetId,
+                type: 'update',
+                targetType: 'housingApplication',
+                createdAt: '2024-09-04T13:13:59.7981926Z',
+                timetoLiveForRecord: 0,
+                oldData: {
+                  'assessment.biddingNumber': null,
+                },
+                newData: {
+                  _activityType: 'biddingNumberChangedByUser',
+                  'assessment.biddingNumber': '1000001',
+                },
+                authorDetails: {
+                  fullName: 'John Jones',
+                  email: 'test@hackney.gov.uk',
+                },
+                sourceDomain: 'HousingRegister',
+              },
+            ],
+            paginationDetails: { nextToken: null },
           },
-        ],
-        paginationDetails: { nextToken: null },
-      },
       persist,
     });
   }

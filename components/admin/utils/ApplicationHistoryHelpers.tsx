@@ -250,7 +250,7 @@ export function renderBody(item: ActivityHistoryResponse) {
     const differences = diff(historyItem.newData, historyItem.oldData);
 
     return (
-      <Details summary="Show details" data-testid="detailed-history-items">
+      <Details summary="Show details" data-testid="test-detailed-history-items">
         <table className="govuk-table lbh-table lbh-table--small">
           <thead className="govuk-table__head">
             <tr className="govuk-table__row">

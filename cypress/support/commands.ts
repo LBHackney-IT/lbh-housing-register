@@ -4,6 +4,7 @@ import { mount } from 'cypress/react';
 import { Application } from '../../domain/HousingApi';
 import { HackneyGoogleUserWithPermissions } from '../../lib/utils/googleAuth';
 import { StatusCodes } from 'http-status-codes';
+import { ActivityHistoryResponse } from '../../domain/ActivityHistoryApi';
 
 // ***********************************************
 // This example commands.ts shows you how to
@@ -66,16 +67,13 @@ Cypress.Commands.add('generateEmptyApplication', () => {
 
 Cypress.Commands.add(
   'mockActivityHistoryApiEmptyResponse',
-  (targetId: string, persist?: boolean) => {
+  (targetId: string, results?: ActivityHistoryResponse, persist?: boolean) => {
     cy.task('nock', {
       hostname: Cypress.env('ACTIVITY_HISTORY_API'),
       method: 'GET',
       path: `/activityhistory?targetId=${targetId}&pageSize=100`,
       status: 200,
-      body: {
-        results: [{}],
-        paginationDetails: { nextToken: null },
-      },
+      body: { results: [results], paginationDetails: { nextToken: null } },
       persist,
     });
   }

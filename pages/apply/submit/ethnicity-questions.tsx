@@ -49,7 +49,7 @@ const EthnicityQuestions = (): JSX.Element => {
   });
   const formData = getFormData(activeStepID);
 
-  const { delayedPendingStatus } = useApiCallStatus({
+  const { pendingStatus } = useApiCallStatus({
     selector: saveApplicationStatus,
     userActionCompleted: hasSaved,
     setUserError,
@@ -118,7 +118,7 @@ const EthnicityQuestions = (): JSX.Element => {
           {userError}
         </ErrorSummary>
       )}
-      {delayedPendingStatus ? (
+      {pendingStatus ? (
         <Loading text="Saving..." />
       ) : (
         <Form

@@ -12,6 +12,7 @@ interface UseApiCallStatusProps {
   query?: ParsedUrlQueryInput;
   setUserError: (error: string) => void;
   scrollToError: () => void;
+  pendingStatusStateDelay?: number;
 }
 
 const useApiCallStatus = ({
@@ -21,14 +22,25 @@ const useApiCallStatus = ({
   scrollToError,
   pathToPush,
   query,
+  pendingStatusStateDelay = 0,
 }: UseApiCallStatusProps) => {
   const router = useRouter();
-  const [delayedPendingStatus, setDelayedPendingStatus] = useState<boolean>(
-    false
-  );
+  const [pendingStatus, setPendingStatus] = useState<boolean>(false);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+    let timer: NodeJS.Timeout | null = null;
+
+    if (selector?.callStatus === ApiCallStatusCode.PENDING) {
+      timer = setTimeout(() => {
+        setPendingStatus(true);
+      }, pendingStatusStateDelay);
+    } else {
+      setPendingStatus(false);
+      if (timer !== null) {
+        clearTimeout(timer);
+      }
+    }
+
     if (
       selector?.callStatus === ApiCallStatusCode.FULFILLED &&
       userActionCompleted
@@ -37,19 +49,17 @@ const useApiCallStatus = ({
         pathname: pathToPush,
         query,
       });
-    }
-    if (selector?.callStatus === ApiCallStatusCode.REJECTED) {
+    } else if (selector?.callStatus === ApiCallStatusCode.REJECTED) {
       setUserError(selector.error ?? 'API error');
       scrollToError();
     }
-    if (selector?.callStatus === ApiCallStatusCode.PENDING) {
-      timer = setTimeout(() => {
-        setDelayedPendingStatus(true);
-      }, 300);
-    }
-    return () => clearTimeout(timer);
+    return () => {
+      if (timer !== null) {
+        clearTimeout(timer);
+      }
+    };
   }, [selector?.callStatus]);
-  return { delayedPendingStatus };
+  return { pendingStatus };
 };
 
 export default useApiCallStatus;

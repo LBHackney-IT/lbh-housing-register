@@ -26,19 +26,16 @@ const useApiCallStatus = ({
 }: UseApiCallStatusProps) => {
   const router = useRouter();
   const [pendingStatus, setPendingStatus] = useState<boolean>(false);
+  let timer: NodeJS.Timeout;
 
   useEffect(() => {
-    let timer: NodeJS.Timeout | null = null;
-
     if (selector?.callStatus === ApiCallStatusCode.PENDING) {
       timer = setTimeout(() => {
         setPendingStatus(true);
       }, pendingStatusStateDelay);
     } else {
       setPendingStatus(false);
-      if (timer !== null) {
-        clearTimeout(timer);
-      }
+      clearTimeout(timer);
     }
 
     if (
@@ -53,11 +50,6 @@ const useApiCallStatus = ({
       setUserError(selector.error ?? 'API error');
       scrollToError();
     }
-    return () => {
-      if (timer !== null) {
-        clearTimeout(timer);
-      }
-    };
   }, [selector?.callStatus]);
   return { pendingStatus };
 };

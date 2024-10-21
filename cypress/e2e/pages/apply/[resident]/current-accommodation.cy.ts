@@ -54,14 +54,14 @@ describe('Apply resident current accommodation page', () => {
     );
   });
 
-  it('shows saving message when user submits accommodation details', () => {
+  it('shows saving message when user submits accommodation details section', () => {
     //Application object does not reflect the correct state after patch, but it doesn't matter for this test
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,
       application,
       1000,
       StatusCodes.OK,
-      false
+      true
     );
 
     ApplyHouseholdPage.visit();
@@ -71,6 +71,48 @@ describe('Apply resident current accommodation page', () => {
     ApplyResidentIndexPage.getCurrentAccommodationSectionLink().click();
     ApplyResidentCurrentAccommodationPage.getRadioButton().check(
       'private-rental'
+    );
+    ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
+    cy.contains('Saving...');
+  });
+
+  //different flow for last section, so need to be covered separately
+  it('shows saving message when user submits the last accommodation details section', () => {
+    cy.mockHousingRegisterApiPatchApplication(
+      applicationId,
+      application,
+      1000,
+      StatusCodes.OK,
+      true
+    );
+
+    ApplyHouseholdPage.visit();
+    ApplyHouseholdPage.getContinueToNextStepLink().scrollIntoView().click();
+    ApplyExpectPage.getContinueToNextStepButton().click();
+    ApplyOverviewPage.getApplicantButton(personId).click();
+    ApplyResidentIndexPage.getCurrentAccommodationSectionLink().click();
+    ApplyResidentCurrentAccommodationPage.getRadioButton().check(
+      'private-rental'
+    );
+
+    ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
+    ApplyResidentCurrentAccommodationPage.getDescribeHomeRadioButton(0).check();
+    ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
+    ApplyResidentCurrentAccommodationPage.getFloorInput().type('1');
+    ApplyResidentCurrentAccommodationPage.getShareInput().type('3');
+    ApplyResidentCurrentAccommodationPage.getBedroomsInput().type('1');
+    ApplyResidentCurrentAccommodationPage.getLivingRoomsInput().type('1');
+    ApplyResidentCurrentAccommodationPage.getDiningRoomsInput().type('0');
+    ApplyResidentCurrentAccommodationPage.getBathRoomsInput().type('1');
+    ApplyResidentCurrentAccommodationPage.getKitchensInput().type('1');
+    ApplyResidentCurrentAccommodationPage.getOtherRoomsInput().type('none');
+    ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
+    ApplyResidentCurrentAccommodationPage.getUnsuitableHomeReasonInput().type(
+      faker.lorem.paragraph()
+    );
+    ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
+    ApplyResidentCurrentAccommodationPage.getLandlordNameInput().type(
+      faker.person.fullName()
     );
     ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
     cy.contains('Saving...');

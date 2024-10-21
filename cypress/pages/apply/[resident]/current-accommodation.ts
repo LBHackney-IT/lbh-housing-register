@@ -8,6 +8,11 @@ class ApplyResidentCurrentAccommodationPage {
     return cy.get(`[data-testid="${testId}"]`);
   }
 
+  static getDescribeHomeRadioButton(index: number) {
+    const testId = `test-radio-home.${index}`;
+    return cy.get(`[data-testid="${testId}"]`);
+  }
+
   static getFloorInput() {
     return cy.get('#home-floor');
   }

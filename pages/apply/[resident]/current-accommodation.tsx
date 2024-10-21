@@ -35,10 +35,16 @@ const CurrentAccommodation = (): JSX.Element => {
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [userError, setUserError] = useState<string | null>(null);
   const saveApplicationStatus = useAppSelector(selectSaveApplicationStatus);
+  const [isLastFormPageSubmit, setIsLastFormPageSubmit] = useState<boolean>(
+    false
+  );
 
   useEffect(() => {
     if (saveApplicationStatus?.callStatus === ApiCallStatusCode.FULFILLED) {
       setIsSaving(false);
+      if (isLastFormPageSubmit) {
+        router.push(baseHref);
+      }
     }
     if (saveApplicationStatus?.callStatus === ApiCallStatusCode.REJECTED) {
       setIsSaving(false);
@@ -82,8 +88,7 @@ const CurrentAccommodation = (): JSX.Element => {
     ) ?? { nextFormId: 'exit' };
 
     if (nextFormId === 'exit') {
-      //Save status has been handled elsewhere before this triggers
-      router.push(baseHref);
+      setIsLastFormPageSubmit(true);
       return;
     }
 

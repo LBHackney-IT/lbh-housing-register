@@ -4,7 +4,7 @@ import { defineConfig } from 'cypress';
 import 'dotenv/config';
 import { sign } from 'jsonwebtoken';
 import next from 'next';
-// import nock from 'nock';
+import nock from 'nock';
 
 const baseUrl = 'http://localhost:3000';
 
@@ -37,50 +37,50 @@ export default defineConfig({
           return sign(user, secret);
         },
       });
-      // on('task', {
-      //   clearNock() {
-      //     nock.restore();
-      //     nock.cleanAll();
+      on('task', {
+        clearNock() {
+          nock.restore();
+          nock.cleanAll();
 
-      //     return null;
-      //   },
-      // });
-      // on('task', {
-      //   nock: async ({
-      //     hostname,
-      //     method,
-      //     path,
-      //     statusCode,
-      //     body,
-      //     persist,
-      //     delay,
-      //   }) => {
-      //     if (!nock.isActive()) {
-      //       nock.activate();
-      //     }
+          return null;
+        },
+      });
+      on('task', {
+        nock: async ({
+          hostname,
+          method,
+          path,
+          statusCode,
+          body,
+          persist,
+          delay,
+        }) => {
+          if (!nock.isActive()) {
+            nock.activate();
+          }
 
-      //     // leaving this here for debugging purposes.
-      //     // console.log(
-      //     //   'nock will: %s %s%s respond with %d %o',
-      //     //   method,
-      //     //   hostname,
-      //     //   path,
-      //     //   persist,
-      //     //   statusCode,
-      //     //   body,
-      //     //   delay
-      //     // );
-      //     method = method.toLowerCase();
+          // leaving this here for debugging purposes.
+          // console.log(
+          //   'nock will: %s %s%s respond with %d %o',
+          //   method,
+          //   hostname,
+          //   path,
+          //   persist,
+          //   statusCode,
+          //   body,
+          //   delay
+          // );
+          method = method.toLowerCase();
 
-      //     nock(hostname)
-      //       [method](path)
-      //       .delay(delay ?? 0)
-      //       .reply(statusCode, body)
-      //       .persist(!!persist);
+          nock(hostname)
+            [method](path)
+            .delay(delay ?? 0)
+            .reply(statusCode, body)
+            .persist(!!persist);
 
-      //     return null;
-      //   },
-      // });
+          return null;
+        },
+      });
       config.env = {
         ...process.env,
       };

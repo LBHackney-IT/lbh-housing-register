@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import Announcement from '../components/announcement';
 import { ButtonLink } from '../components/button';
 import {
@@ -20,6 +21,11 @@ import List, { ListItem } from '../components/content/list';
 
 export default function ApplicationHomePage(): JSX.Element {
   const [contactUsDialogOpen, setContactUsDialogOpen] = useState(false);
+  const router = useRouter();
+  const { query } = router;
+
+  const applicationId = query.applicationId;
+  const signinLink = `/apply/sign-in?applicationId=${applicationId}`;
 
   return (
     <>
@@ -138,7 +144,7 @@ export default function ApplicationHomePage(): JSX.Element {
 
         <HeadingTwo content="I still want to apply" />
         <ButtonLink
-          href="/apply/sign-in"
+          href={signinLink}
           dataTestId="test-start-application-button"
           svg={
             <svg

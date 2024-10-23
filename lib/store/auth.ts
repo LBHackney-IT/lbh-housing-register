@@ -8,9 +8,17 @@ import {
 
 export const createVerifyCode = createAsyncThunk(
   'auth/create',
-  async (emailAddress: string, { rejectWithValue }) => {
+  // async (emailAddress: string, { rejectWithValue }) => {
+  async (
+    {
+      emailAddress,
+      applicationId,
+    }: { emailAddress: string; applicationId?: string },
+    { rejectWithValue }
+  ) => {
     const request: CreateAuthRequest = {
       email: emailAddress,
+      applicationId: applicationId,
     };
 
     const res = await fetch(`/api/auth/generate`, {

@@ -501,11 +501,14 @@ export interface Person {
  * @export
  * @namespace Person
  */
+
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace Person {
   /**
    * @export
    * @enum {string}
    */
+
   export enum TitleEnum {
     Mrs = 'Mrs',
     Mr = 'Mr',
@@ -591,6 +594,7 @@ export interface PaginatedApplicationListResponse {
 
 export interface CreateAuthRequest {
   email: string;
+  applicationId?: string;
 }
 export interface CreateAuthResponse {
   success: boolean;
@@ -624,5 +628,6 @@ export interface InternalReportRequest {
   StartDate: string;
   EndDate: string;
   ReportType: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }

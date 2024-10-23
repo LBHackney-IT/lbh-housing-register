@@ -25,6 +25,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
   const [codeSent, setCodeSent] = useState(false);
 
   const email = router.query.email as string;
+
   const application = useAppSelector((store) => store.application);
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
@@ -71,7 +72,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
   };
 
   const resendCode = async () => {
-    dispatch(createVerifyCode(email));
+    dispatch(createVerifyCode({ emailAddress: email }));
     setCodeSent(true);
   };
 

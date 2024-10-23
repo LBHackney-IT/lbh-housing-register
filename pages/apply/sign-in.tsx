@@ -21,6 +21,8 @@ const ApplicationSignInPage = (): JSX.Element => {
   const router = useRouter();
   const [userError, setUserError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const { query } = router;
+  const applicationId = query.applicationId as string;
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -31,13 +33,18 @@ const ApplicationSignInPage = (): JSX.Element => {
   const onSubmit = async (values: FormData) => {
     try {
       setIsSaving(true);
-      dispatch(createVerifyCode(values.emailAddress))
+      dispatch(
+        createVerifyCode({
+          emailAddress: values.emailAddress,
+          applicationId: applicationId,
+        })
+      )
         .unwrap()
         .then(() => {
           setIsSaving(false);
           router.push({
             pathname: '/apply/verify',
-            query: { email: values.emailAddress },
+            query: { email: values.emailAddress, applicationId: applicationId },
           });
         })
         .catch((err) => {

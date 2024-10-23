@@ -43,8 +43,8 @@ export default function OtherMembers({
         data-testid="test-other-household-members"
       >
         <tbody className="govuk-table__body">
-          {others.map((applicant, index) => (
-            <tr key={index} className="govuk-table__row">
+          {others.map((applicant) => (
+            <tr key={applicant.person?.id} className="govuk-table__row">
               <td className="govuk-table__cell">
                 <ul className="lbh-list lbh-list--compressed">
                   <li>

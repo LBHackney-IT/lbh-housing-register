@@ -54,14 +54,17 @@ const ApplicationSection = (): JSX.Element => {
 
   const breadcrumbs = [
     {
+      id: 'apply-overview',
       href: returnHref,
       name: 'Application',
     },
     {
+      id: 'apply-resident',
       href: baseHref,
       name: applicant?.person?.firstName || '',
     },
     {
+      id: 'apply-resident-section',
       href: `${baseHref}/${section}`,
       name: sectionName,
     },

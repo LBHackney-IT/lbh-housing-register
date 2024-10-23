@@ -102,10 +102,12 @@ const ResidentIndex = (): JSX.Element => {
   const breadcrumbs = !isSaving
     ? [
         {
+          id: 'apply-overview',
           href: returnHref,
           name: 'Application',
         },
         {
+          id: 'apply-resident',
           href: baseHref,
           name: currentResident.person?.firstName || '',
         },
@@ -128,8 +130,8 @@ const ResidentIndex = (): JSX.Element => {
   );
 
   const sectionNames: FormID[] = [];
-  steps.map((step) => {
-    step.sections.map((section) => {
+  steps.forEach((step) => {
+    step.sections.forEach((section) => {
       sectionNames.push(section.id);
     });
   });

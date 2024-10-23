@@ -21,14 +21,17 @@ function ApplicantStep({
   const formData = getFormData(formID);
   const breadcrumbs = [
     {
+      id: 'application-overview',
       href: '/apply/overview',
       name: 'Application',
     },
     {
+      id: 'applicant-apply-id',
       href: `/apply/${applicant.person?.id}`,
       name: applicant.person?.firstName || '',
     },
     {
+      id: 'applicant-apply-form',
       href: `/apply/${applicant.person?.id}/${formID}`,
       name: stepName,
     },

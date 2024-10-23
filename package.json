@@ -20,7 +20,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "eslint --fix --max-warnings 0",
+      "eslint --fix --max-warnings 0 --no-ignore",
       "prettier --ignore-unknown --write"
     ],
     "!(*.js|*.jsx|*.ts|*.tsx|package-lock.json)": "prettier --ignore-unknown --write"
@@ -38,6 +38,7 @@
     ]
   },
   "dependencies": {
+    "@next/bundle-analyzer": "^14.2.13",
     "@reduxjs/toolkit": "^1.9.7",
     "@sentry/nextjs": "^7.119.0",
     "axios": "^0.21.1",

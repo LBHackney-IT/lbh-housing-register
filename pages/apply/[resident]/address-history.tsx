@@ -292,20 +292,19 @@ const ApplicationStep = (): JSX.Element => {
 
     switch (state) {
       case 'postcode-entry':
-        {
-          try {
-            const r = await lookUpAddress(values.postcode);
-            setPostcodeResults(r.address);
-            formikHelpers.setValues({
-              ...values,
-              uprn: r.address[0]?.UPRN.toString(),
-            });
-            setState('choose-address');
-          } catch (e) {
-            console.error(e);
-            setState('manual-entry');
-          }
+        try {
+          const r = await lookUpAddress(values.postcode);
+          setPostcodeResults(r.address);
+          formikHelpers.setValues({
+            ...values,
+            uprn: r.address[0]?.UPRN.toString(),
+          });
+          setState('choose-address');
+        } catch (e) {
+          console.error(e);
+          setState('manual-entry');
         }
+
         break;
 
       case 'manual-entry': {

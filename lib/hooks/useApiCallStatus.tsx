@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { ApiCallStatus, ApiCallStatusCode } from '../store/apiCallsStatus';
 import { ParsedUrlQueryInput } from 'querystring';
@@ -12,6 +12,7 @@ interface UseApiCallStatusProps {
   query?: ParsedUrlQueryInput;
   setUserError: (error: string) => void;
   scrollToError: () => void;
+  pendingStatusStateDelay?: number;
 }
 
 const useApiCallStatus = ({
@@ -21,10 +22,22 @@ const useApiCallStatus = ({
   scrollToError,
   pathToPush,
   query,
+  pendingStatusStateDelay = 0,
 }: UseApiCallStatusProps) => {
   const router = useRouter();
+  const [pendingStatus, setPendingStatus] = useState<boolean>(false);
+  let timer: NodeJS.Timeout;
 
   useEffect(() => {
+    if (selector?.callStatus === ApiCallStatusCode.PENDING) {
+      timer = setTimeout(() => {
+        setPendingStatus(true);
+      }, pendingStatusStateDelay);
+    } else {
+      setPendingStatus(false);
+      clearTimeout(timer);
+    }
+
     if (
       selector?.callStatus === ApiCallStatusCode.FULFILLED &&
       userActionCompleted
@@ -33,13 +46,12 @@ const useApiCallStatus = ({
         pathname: pathToPush,
         query,
       });
-    }
-
-    if (selector?.callStatus === ApiCallStatusCode.REJECTED) {
+    } else if (selector?.callStatus === ApiCallStatusCode.REJECTED) {
       setUserError(selector.error ?? 'API error');
       scrollToError();
     }
   }, [selector?.callStatus]);
+  return { pendingStatus };
 };
 
 export default useApiCallStatus;

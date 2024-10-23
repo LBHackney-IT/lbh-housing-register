@@ -14,10 +14,7 @@ import { Applicant } from '../../../domain/HousingApi';
 import { useState } from 'react';
 import { scrollToError } from '../../../lib/utils/scroll';
 import useApiCallStatus from 'lib/hooks/useApiCallStatus';
-import {
-  selectSaveApplicationStatus,
-  ApiCallStatusCode,
-} from 'lib/store/apiCallsStatus';
+import { selectSaveApplicationStatus } from 'lib/store/apiCallsStatus';
 import { Errors } from 'lib/types/errors';
 import Loading from 'components/loading';
 import ErrorSummary from 'components/errors/error-summary';
@@ -32,7 +29,7 @@ const AdditonalQuestions = (): JSX.Element => {
   const saveApplicationStatus = useAppSelector(selectSaveApplicationStatus);
 
   const returnHref = '/apply/submit/ethnicity-questions';
-  useApiCallStatus({
+  const { pendingStatus } = useApiCallStatus({
     selector: saveApplicationStatus,
     userActionCompleted: hasSaved,
     setUserError,
@@ -79,7 +76,7 @@ const AdditonalQuestions = (): JSX.Element => {
       )}
       <HeadingFour content="Do any of the following apply to your household?" />
       <p className="lbh-body lbh-body--grey">Select all options that apply.</p>
-      {saveApplicationStatus?.callStatus === ApiCallStatusCode.PENDING ? (
+      {pendingStatus ? (
         <Loading text="Saving..." />
       ) : (
         <Form

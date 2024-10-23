@@ -8,10 +8,7 @@ import withApplication from '../../../lib/hoc/withApplication';
 import AddPersonForm from '../../../components/application/add-person-form';
 import ErrorSummary from 'components/errors/error-summary';
 import Loading from 'components/loading';
-import {
-  selectSaveApplicationStatus,
-  ApiCallStatusCode,
-} from 'lib/store/apiCallsStatus';
+import { selectSaveApplicationStatus } from 'lib/store/apiCallsStatus';
 import useApiCallSelectorStatus from 'lib/hooks/useApiCallStatus';
 import { scrollToError } from 'lib/utils/scroll';
 import { Errors } from 'lib/types/errors';
@@ -26,7 +23,7 @@ const AddPersonToApplication = (): JSX.Element => {
   const [submit, setSubmit] = useState<boolean>(false);
   const [userError, setUserError] = useState<string | null>(null);
 
-  useApiCallSelectorStatus({
+  const { pendingStatus } = useApiCallSelectorStatus({
     selector: saveApplicationStatus,
     userActionCompleted: submit,
     setUserError,
@@ -67,7 +64,7 @@ const AddPersonToApplication = (): JSX.Element => {
           {userError}
         </ErrorSummary>
       )}
-      {saveApplicationStatus?.callStatus === ApiCallStatusCode.PENDING ? (
+      {pendingStatus ? (
         <Loading text="Saving..." />
       ) : (
         <AddPersonForm

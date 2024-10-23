@@ -7,10 +7,7 @@ import { agree } from '../../lib/store/mainApplicant';
 import { getFormData, FormID } from '../../lib/utils/form-data';
 import Form from '../../components/form/form';
 import withApplication from '../../lib/hoc/withApplication';
-import {
-  selectSaveApplicationStatus,
-  ApiCallStatusCode,
-} from 'lib/store/apiCallsStatus';
+import { selectSaveApplicationStatus } from 'lib/store/apiCallsStatus';
 import ErrorSummary from 'components/errors/error-summary';
 import useApiCallSelectorStatus from 'lib/hooks/useApiCallStatus';
 import { scrollToError } from '../../lib/utils/scroll';
@@ -40,7 +37,7 @@ const ApplicationTermsPage = (): JSX.Element => {
     }
   };
 
-  useApiCallSelectorStatus({
+  const { pendingStatus } = useApiCallSelectorStatus({
     selector: saveApplicationStatus,
     userActionCompleted: hasSaved,
     setUserError,
@@ -92,7 +89,7 @@ const ApplicationTermsPage = (): JSX.Element => {
         </a>{' '}
         for more information.
       </Paragraph>
-      {saveApplicationStatus?.callStatus === ApiCallStatusCode.PENDING ? (
+      {pendingStatus ? (
         <Loading text="Saving..." />
       ) : (
         <Form

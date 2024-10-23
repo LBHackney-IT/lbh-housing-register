@@ -12,10 +12,7 @@ import { Errors } from '../../lib/types/errors';
 import { FormID, getFormData } from '../../lib/utils/form-data';
 import processPhonenumber from '../../lib/utils/processPhonenumber';
 import { scrollToError } from '../../lib/utils/scroll';
-import {
-  ApiCallStatusCode,
-  selectSaveApplicationStatus,
-} from 'lib/store/apiCallsStatus';
+import { selectSaveApplicationStatus } from 'lib/store/apiCallsStatus';
 import Loading from 'components/loading';
 import useApiCallSelectorStatus from 'lib/hooks/useApiCallStatus';
 
@@ -27,7 +24,7 @@ const ApplicationStartPage = (): JSX.Element => {
   const [hasSignedUp, setHasSignedUp] = useState<boolean>(false);
   const [userError, setUserError] = useState<string | null>(null);
 
-  useApiCallSelectorStatus({
+  const { pendingStatus } = useApiCallSelectorStatus({
     selector: saveApplicationStatus,
     userActionCompleted: hasSignedUp,
     setUserError,
@@ -73,7 +70,7 @@ const ApplicationStartPage = (): JSX.Element => {
           {userError}
         </ErrorSummary>
       )}
-      {saveApplicationStatus?.callStatus === ApiCallStatusCode.PENDING ? (
+      {pendingStatus ? (
         <Loading text="Saving..." />
       ) : (
         <Form

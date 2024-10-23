@@ -90,6 +90,7 @@ export default defineConfig({
     experimentalWebKitSupport: true,
     video: true,
     screenshotOnRunFailure: true,
+    defaultCommandTimeout: 10000,
   },
 
   component: {

@@ -36,6 +36,7 @@ export function Checkbox({
         id={id}
         name={name}
         value={value}
+        data-testid={`test-checkbox-${name}-${index}`}
       />
       <Label
         className="govuk-checkboxes__label"

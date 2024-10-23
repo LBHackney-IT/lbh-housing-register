@@ -1,5 +1,3 @@
-import { Application } from '../../domain/HousingApi';
-
 class ViewApplicationPage {
   static visit(applicationId: string) {
     cy.visit(`/applications/view/${applicationId}`);
@@ -10,22 +8,28 @@ class ViewApplicationPage {
     return cy.get(`[data-testid="${testId}"]`);
   }
 
-  static mockHousingRegisterApiGetApplications(
-    applicationId: string,
-    application: Application
-  );
+  static getRemoveHouseHoldMemberButton(personId: string) {
+    const testId = `test-remove-household-member-button-${personId}`;
+    return cy.get(`[data-testid="${testId}"]`);
+  }
+  static getViewApplicationPage() {
+    const testId = 'test-view-application-page';
+    return cy.get(`[data-testid="${testId}"]`);
+  }
 
-  static mockHousingRegisterApiGetApplications(
-    applicationId: string,
-    application: Application
-  ) {
-    cy.task('nock', {
-      hostname: `${Cypress.env('HOUSING_REGISTER_API')}`,
-      method: 'GET',
-      path: `/applications/${applicationId}`,
-      status: 200,
-      body: application,
-    });
+  static getRemoveHouseHoldMemberConfirmationButton(personId: string) {
+    const testId = `test-remove-household-member-confirmation-button-${personId}`;
+    return cy.get(`[data-testid="${testId}"]`);
+  }
+
+  static getErrorSummary() {
+    const testId = 'test-view-application-page-error-summary';
+    return cy.get(`[data-testid="${testId}"]`);
+  }
+
+  static getNavItem(menuItem: string) {
+    const testId = `test-nav-item-${menuItem}`;
+    return cy.get(`[data-testid="${testId}"]`);
   }
 }
 

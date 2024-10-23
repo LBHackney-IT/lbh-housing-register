@@ -107,6 +107,7 @@ export default function DateInput({
                     value={d}
                     onBlur={onBlur}
                     ref={dRef}
+                    data-testid="test-date-input-day"
                   />
                 </div>
               )}
@@ -128,6 +129,7 @@ export default function DateInput({
                   value={m}
                   onBlur={onBlur}
                   ref={mRef}
+                  data-testid="test-date-input-month"
                 />
               </div>
 
@@ -148,6 +150,7 @@ export default function DateInput({
                   value={y}
                   onBlur={onBlur}
                   ref={yRef}
+                  data-testid="test-date-input-year"
                 />
               </div>
             </div>

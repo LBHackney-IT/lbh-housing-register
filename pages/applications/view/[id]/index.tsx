@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
@@ -48,6 +48,8 @@ import {
 } from '../../../../lib/utils/googleAuth';
 import { getPersonName } from '../../../../lib/utils/person';
 import Custom404 from '../../../404';
+import { scrollToError } from 'lib/utils/scroll';
+import ErrorSummary from 'components/errors/error-summary';
 
 export interface PageProps {
   user: HackneyGoogleUserWithPermissions;
@@ -64,6 +66,7 @@ export default function ApplicationPage({
   const tab = router.query.tab ?? 'overview';
   const userCanEditApplication = canEditApplications(user, data);
   const userHasReadOnlyPermissionOnly = hasReadOnlyPermissionOnly(user);
+  const [userError, setUserError] = useState<string | undefined>(undefined);
 
   const handleTabChange = (newValue: string) => {
     router.push({
@@ -81,9 +84,14 @@ export default function ApplicationPage({
       otherMembers: newHouseholdMembers,
     };
 
-    updateApplication(request).then(() => {
-      router.reload();
-    });
+    updateApplication(request)
+      .then(() => {
+        router.reload();
+      })
+      .catch(() => {
+        setUserError('Unable to delete household member');
+        scrollToError();
+      });
   };
 
   return (
@@ -94,6 +102,11 @@ export default function ApplicationPage({
             pageName="View application"
             dataTestId="test-view-application-page"
           >
+            {userError && (
+              <ErrorSummary dataTestId="test-view-application-page-error-summary">
+                {userError}
+              </ErrorSummary>
+            )}
             {data.sensitiveData &&
             data.assignedTo &&
             !canViewSensitiveApplication(data.assignedTo, user) ? (
@@ -207,6 +220,7 @@ export default function ApplicationPage({
                             applicationId={data.id}
                             canEdit={userCanEditApplication}
                             handleDelete={handleDelete}
+                            userError={userError}
                           />
                         ) : (
                           <HeadingThree content="Other household members" />

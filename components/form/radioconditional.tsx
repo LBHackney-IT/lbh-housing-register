@@ -58,7 +58,10 @@ export function Radio({
   }
 
   return (
-    <div className="govuk-radios__item">
+    <div
+      className="govuk-radios__item"
+      data-testid={`test-radio-conditional-${name}-${index}`}
+    >
       <Field
         className="govuk-radios__input"
         type="radio"

@@ -26,6 +26,12 @@ import { isOver18 } from '../../../lib/utils/dateOfBirth';
 import { FormID } from '../../../lib/utils/form-data';
 import { checkEligible } from '../../../lib/utils/form';
 import withApplication from '../../../lib/hoc/withApplication';
+import {
+  ApiCallStatusCode,
+  selectSaveApplicationStatus,
+} from 'lib/store/apiCallsStatus';
+import { useEffect, useState } from 'react';
+import Loading from 'components/loading';
 
 const ResidentIndex = (): JSX.Element => {
   const router = useRouter();
@@ -38,18 +44,79 @@ const ResidentIndex = (): JSX.Element => {
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
   const application = useAppSelector((store) => store.application);
 
+  const saveApplicationStatus = useAppSelector(selectSaveApplicationStatus);
+  const [userHasSaved, setUserHasSaved] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+
+  const returnHref = '/apply/overview';
+  let isEligible = true;
+
+  //use effect to stop router.push firing multiple times
+  useEffect(() => {
+    if (!isEligible && currentResident === mainResident) {
+      router.push(checkAnswers);
+    }
+  }, [isEligible]);
+
+  useEffect(() => {
+    if (userHasSaved) {
+      setIsSaving(true);
+      dispatch(removeApplicant(currentResident.person.id));
+      setUserHasSaved(false);
+    }
+
+    if (isSaving) {
+      if (saveApplicationStatus?.callStatus === ApiCallStatusCode.FULFILLED) {
+        router.push(returnHref);
+      }
+
+      if (saveApplicationStatus?.callStatus === ApiCallStatusCode.REJECTED) {
+        router.push(
+          {
+            pathname: returnHref,
+            query: {
+              error: 'Unable to delete household member. Please try again.',
+            },
+          },
+          returnHref
+        );
+      }
+    }
+  }, [saveApplicationStatus?.callStatus, userHasSaved]);
+
+  //render simple layout without loading application when saving
+  if (isSaving) {
+    return (
+      <Layout pageName="Person overview" pageLoadsApplication={false}>
+        <Loading text="Saving..." />
+      </Layout>
+    );
+  }
+  //redirect when applicant details missing and not saving
   if (!currentResident || !mainResident) {
     return <Custom404 />;
   }
 
-  const baseHref = `/apply/${currentResident.person?.id}`;
-  const returnHref = '/apply/overview';
+  const baseHref = !isSaving ? `/apply/${currentResident.person?.id}` : '';
+
+  const breadcrumbs = !isSaving
+    ? [
+        {
+          id: 'apply-overview',
+          href: returnHref,
+          name: 'Application',
+        },
+        {
+          id: 'apply-resident',
+          href: baseHref,
+          name: currentResident.person?.firstName || '',
+        },
+      ]
+    : [];
+
   const checkAnswers = `${baseHref}/summary`;
 
-  const [isEligible] = checkEligible(application);
-  if (!isEligible && currentResident === mainResident) {
-    router.push(checkAnswers);
-  }
+  [isEligible] = checkEligible(application);
 
   const steps = getApplicationSectionsForResident(
     currentResident === mainResident,
@@ -69,23 +136,8 @@ const ResidentIndex = (): JSX.Element => {
     });
   });
 
-  const breadcrumbs = [
-    {
-      id: 'apply-overview',
-      href: returnHref,
-      name: 'Application',
-    },
-    {
-      id: 'apply-resident',
-      href: baseHref,
-      name: currentResident.person?.firstName || '',
-    },
-  ];
-
   const onDelete = () => {
-    dispatch(removeApplicant(currentResident.person.id));
-
-    router.push(returnHref);
+    setUserHasSaved(true);
   };
 
   const goBack = () => {
@@ -119,18 +171,21 @@ const ResidentIndex = (): JSX.Element => {
   };
 
   return (
-    <Layout pageName="Person overview" breadcrumbs={breadcrumbs}>
+    <Layout
+      pageName="Person overview"
+      breadcrumbs={breadcrumbs}
+      dataTestId="test-apply-resident-index-page"
+    >
       <h1 className="lbh-heading-h1" style={{ marginBottom: '40px' }}>
         <span className="govuk-hint lbh-hint">Complete information for:</span>
         {`${currentResident.person?.firstName} ${currentResident.person?.surname}`}
       </h1>
-
       {steps.map((step, index) => (
         <div key={index}>
           <HeadingTwo content={step.heading} />
           <SummaryList>
-            {step.sections.map((formStep) => (
-              <SummaryListRow key={formStep.id}>
+            {step.sections.map((formStep, index) => (
+              <SummaryListRow key={index}>
                 <SummaryListValue>
                   {isSectionActive(formStep.id) ? (
                     <Link href={`${baseHref}/${formStep.id}`}>
@@ -158,7 +213,10 @@ const ResidentIndex = (): JSX.Element => {
         </div>
       ))}
       {tasks.remaining == 0 && (
-        <ButtonLink href={`/apply/${currentResident.person?.id}/summary/`}>
+        <ButtonLink
+          href={`/apply/${currentResident.person?.id}/summary/`}
+          dataTestId="test-apply-resident-index-check-answers-button"
+        >
           Check answers
         </ButtonLink>
       )}
@@ -171,6 +229,8 @@ const ResidentIndex = (): JSX.Element => {
           content="Delete this information"
           details="This information will be permanently deleted."
           onDelete={onDelete}
+          mainButtonTestId="test-apply-resident-index-delete-this-information-button"
+          dialogConfirmButtonTestId="test-apply-resident-index-delete-this-information-confirm-button"
         />
       )}
     </Layout>

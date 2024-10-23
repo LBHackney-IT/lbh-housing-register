@@ -25,6 +25,7 @@ export function ConditionalInput({
   return (
     <div
       className={'govuk-checkboxes__conditional' + (display ? '' : '--hidden')}
+      data-testid={`test-checkbox-conditional-container-${containerId}`}
       id={containerId}
     >
       {as === 'textarea' ? (
@@ -66,7 +67,10 @@ export function Checkbox({
   }
 
   return (
-    <div className="govuk-checkboxes__item">
+    <div
+      className="govuk-checkboxes__item"
+      data-testid={`test-checkbox-conditional-${id}`}
+    >
       <Field
         className="govuk-checkboxes__input"
         type="checkbox"

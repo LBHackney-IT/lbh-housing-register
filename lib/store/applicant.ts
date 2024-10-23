@@ -1,12 +1,28 @@
-import { createAction } from '@reduxjs/toolkit';
+import { createAction, createSelector } from '@reduxjs/toolkit';
 import { FormikValues } from 'formik';
 import { Store } from '.';
 import { Applicant, Question } from '../../domain/HousingApi';
 import { FormID } from '../utils/form-data';
+import { RootState } from '.';
 
 export type ApplicantWithPersonID = Applicant & {
   person: Applicant['person'] & { id: string };
 };
+
+export const selectMainApplicant = (state: RootState) =>
+  state.application.mainApplicant;
+
+const selectOtherMembers = (state: RootState) => state.application.otherMembers;
+
+// use createSelector to memoise the result of the selector
+export const selectApplicantsMemorised = createSelector(
+  [selectMainApplicant, selectOtherMembers],
+  (mainApplicant, otherMembers) => {
+    return [mainApplicant, otherMembers]
+      .filter((v): v is Applicant | Applicant[] => v !== undefined)
+      .flat();
+  }
+);
 
 export function applicantHasId(
   applicant: Applicant | undefined = {}

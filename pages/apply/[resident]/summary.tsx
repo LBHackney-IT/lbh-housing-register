@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import Custom404 from '../../404';
 import DeleteLink from '../../../components/delete-link';
 import PersonalDetailsSummary from '../../../components/summary/PersonalDetails';
-import React from 'react';
+import React, { useState } from 'react';
 import { AddressHistorySummary } from '../../../components/summary/AddressHistory';
 import { CurrentAccommodationSummary } from '../../../components/summary/CurrentAccommodation';
 import { EmploymentSummary } from '../../../components/summary/Employment';
@@ -30,6 +30,11 @@ import {
   sendDisqualifyEmail,
 } from '../../../lib/store/application';
 import { Applicant } from '../../../domain/HousingApi';
+import { scrollToError } from 'lib/utils/scroll';
+import Loading from 'components/loading';
+import ErrorSummary from 'components/errors/error-summary';
+import { selectSaveApplicationStatus } from 'lib/store/apiCallsStatus';
+import useApiCallStatus from 'lib/hooks/useApiCallStatus';
 
 const UserSummary = (): JSX.Element => {
   const router = useRouter();
@@ -46,12 +51,35 @@ const UserSummary = (): JSX.Element => {
 
   const application = useAppSelector((store) => store.application);
 
+  const [userError, setUserError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const saveApplicationStatus = useAppSelector(selectSaveApplicationStatus);
+  const [
+    hasDeletedHouseholdMember,
+    setHasDeletedHouseholdMember,
+  ] = useState<boolean>(false);
+
+  const returnHref = '/apply/overview';
+
+  useApiCallStatus({
+    selector: saveApplicationStatus,
+    userActionCompleted: hasDeletedHouseholdMember,
+    setUserError,
+    scrollToError,
+    pathToPush: returnHref,
+  });
+
+  if (isSaving) {
+    return (
+      <Layout pageName="Application summary" pageLoadsApplication={false}>
+        <Loading text="Saving..." />
+      </Layout>
+    );
+  }
+
   if (!currentResident || !mainResident) {
     return <Custom404 />;
   }
-
-  const baseHref = `/apply/${currentResident.person?.id}`;
-  const returnHref = '/apply/overview';
 
   const onConfirmData = () => {
     const [isEligible, reasons] = checkEligible(application);
@@ -60,18 +88,35 @@ const UserSummary = (): JSX.Element => {
         getDisqualificationReasonOption(reason)
       );
       const reason = reasonStrings.join(',');
+
+      //sends an email, no need to handle save. TODO: add error handling
       dispatch(sendDisqualifyEmail({ application, reason }));
-      dispatch(disqualifyApplication(application.id!));
-      router.push('/apply/not-eligible');
+
+      setIsSaving(true);
+
+      dispatch(disqualifyApplication(application.id!))
+        .unwrap()
+        .then(() => {
+          router.push('/apply/not-eligible');
+        })
+        .catch(() => {
+          setIsSaving(false);
+          setUserError('Unable to update application');
+          scrollToError();
+        });
     } else {
+      //not saving data, OK as is
       router.push('/apply/overview');
     }
   };
 
   const onDelete = () => {
+    setHasDeletedHouseholdMember(true);
+    setIsSaving(true);
     dispatch(removeApplicant(currentResident.person!.id!));
-    router.push(returnHref);
   };
+
+  const baseHref = `/apply/${currentResident.person?.id}`;
 
   const breadcrumbs = [
     {
@@ -112,62 +157,86 @@ const UserSummary = (): JSX.Element => {
   const medicalNeedsCompleted = isSectionComplete(FormID.MEDICAL_NEEDS);
 
   return (
-    <Layout pageName="Application summary" breadcrumbs={breadcrumbs}>
+    <Layout
+      pageName="Application summary"
+      breadcrumbs={breadcrumbs}
+      dataTestId="test-apply-resident-summary-page"
+    >
       <h1 className="lbh-heading-h1">
         <span className="govuk-hint lbh-hint">Check answers for:</span>
         {currentResident.person?.firstName} {currentResident.person?.surname}
       </h1>
-      {pesonalDetailsCompleted && (
-        <PersonalDetailsSummary currentResident={currentResident} />
+      {userError && (
+        <ErrorSummary dataTestId="test-agree-terms-error-summary">
+          {userError}
+        </ErrorSummary>
       )}
-
-      {immigrationStatusCompleted && (
-        <ImmigrationStatusSummary currentResident={currentResident} />
-      )}
-
-      {isMainApplicant && (
+      {isSaving ? (
+        <Loading text="Saving..." />
+      ) : (
         <>
-          {residentialStatusCompleted && (
-            <ResidentialStatusSummary currentResident={currentResident} />
+          {pesonalDetailsCompleted && (
+            <PersonalDetailsSummary currentResident={currentResident} />
+          )}
+
+          {immigrationStatusCompleted && (
+            <ImmigrationStatusSummary currentResident={currentResident} />
+          )}
+
+          {isMainApplicant && (
+            <>
+              {residentialStatusCompleted && (
+                <ResidentialStatusSummary currentResident={currentResident} />
+              )}
+            </>
+          )}
+          {addressHistoryCompleted && (
+            <AddressHistorySummary currentResident={currentResident} />
+          )}
+
+          {isMainApplicant && (
+            <>
+              {currentAccommodationCompleted && (
+                <CurrentAccommodationSummary
+                  currentResident={currentResident}
+                />
+              )}
+              {yourSituationCompleted && (
+                <YourSituationSummary currentResident={currentResident} />
+              )}
+            </>
+          )}
+
+          {isOver18(currentResident) && (
+            <>
+              {incomeSavingsCompleted && (
+                <IncomeSavingsSummary currentResident={currentResident} />
+              )}
+              {employmentCompleted && (
+                <EmploymentSummary currentResident={currentResident} />
+              )}
+            </>
+          )}
+          {medicalNeedsCompleted && (
+            <MedicalNeedsSummary currentResident={currentResident} />
+          )}
+
+          <Button
+            onClick={onConfirmData}
+            dataTestId="test-apply-resident-summary-confirm-details-button"
+          >
+            I confirm this is correct
+          </Button>
+          {currentResident !== mainResident && (
+            <DeleteLink
+              content="Delete this information"
+              details="This information will be permanently deleted."
+              onDelete={onDelete}
+              mainButtonTestId="test-apply-resident-summary-delete-this-information-button"
+              dialogConfirmButtonTestId="test-apply-resident-summary-yes-delete-this-information-button"
+            />
           )}
         </>
-      )}
-      {addressHistoryCompleted && (
-        <AddressHistorySummary currentResident={currentResident} />
-      )}
-
-      {isMainApplicant && (
-        <>
-          {currentAccommodationCompleted && (
-            <CurrentAccommodationSummary currentResident={currentResident} />
-          )}
-          {yourSituationCompleted && (
-            <YourSituationSummary currentResident={currentResident} />
-          )}
-        </>
-      )}
-
-      {isOver18(currentResident) && (
-        <>
-          {incomeSavingsCompleted && (
-            <IncomeSavingsSummary currentResident={currentResident} />
-          )}
-          {employmentCompleted && (
-            <EmploymentSummary currentResident={currentResident} />
-          )}
-        </>
-      )}
-      {medicalNeedsCompleted && (
-        <MedicalNeedsSummary currentResident={currentResident} />
-      )}
-
-      <Button onClick={onConfirmData}>I confirm this is correct</Button>
-      {currentResident !== mainResident && (
-        <DeleteLink
-          content="Delete this information"
-          details="This information will be permanently deleted."
-          onDelete={onDelete}
-        />
       )}
     </Layout>
   );

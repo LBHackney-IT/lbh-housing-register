@@ -14,10 +14,12 @@ export const updateApplication = async (application: Application) => {
     method: 'PATCH',
     body: JSON.stringify(application),
   });
-  if (res.status == 400) {
-    throw (await res.json()).message;
+
+  if (res.ok) {
+    return (await res.json()) as Application;
+  } else {
+    throw Error(`Unable to update application (${res.status})`);
   }
-  return (await res.json()) as Application;
 };
 
 export const createApplication = async (application: Application) => {
@@ -25,7 +27,12 @@ export const createApplication = async (application: Application) => {
     method: 'POST',
     body: JSON.stringify(application),
   });
-  return (await res.json()) as Application;
+
+  if (res.ok) {
+    return (await res.json()) as Application;
+  } else {
+    throw Error(`Unable to create application (${res.status})`);
+  }
 };
 
 export const completeApplication = async (application: Application) => {
@@ -33,7 +40,11 @@ export const completeApplication = async (application: Application) => {
     method: 'PATCH',
     body: JSON.stringify(application),
   });
-  return (await res.json()) as Application;
+  if (res.ok) {
+    return (await res.json()) as Application;
+  } else {
+    throw Error(`Unable to complete application (${res.status})`);
+  }
 };
 
 export const generateNovaletExport = async () => {

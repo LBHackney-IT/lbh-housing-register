@@ -120,7 +120,8 @@ Cypress.Commands.add(
     applicationId: string,
     body?: Application,
     delay: number = 0,
-    statusCode: number = StatusCodes.OK
+    statusCode: number = StatusCodes.OK,
+    persist?: boolean
   ) => {
     cy.task('nock', {
       hostname: Cypress.env('HOUSING_REGISTER_API'),
@@ -128,6 +129,7 @@ Cypress.Commands.add(
       path: `/applications/${applicationId}`,
       statusCode,
       body,
+      persist,
       delay,
     });
   }
@@ -369,3 +371,28 @@ Cypress.Commands.add(
     });
   }
 );
+
+Cypress.Commands.add('mockAddressAPISearchByPostcode', (postcode: string) => {
+  cy.task('nock', {
+    hostname: Cypress.env('LOOKUP_API_URL'),
+    method: 'GET',
+    path: `/?postcode=${postcode}`,
+    body: {
+      data: {
+        address: [
+          {
+            line1: 'Address Line 1',
+            line2: 'Address Line 2',
+            line3: 'Address Line 3',
+            line4: 'Address Line 4',
+            town: 'Test Town',
+            postcode,
+            UPRN: 12345678901,
+          },
+        ],
+        page_count: 1,
+        total_count: 1,
+      },
+    },
+  });
+});

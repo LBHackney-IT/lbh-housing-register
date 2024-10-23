@@ -13,14 +13,28 @@ import { selectApplicantsMemorised } from '../../lib/store/applicant';
 import { useAppSelector } from '../../lib/store/hooks';
 import { applicationSteps } from '../../lib/utils/resident';
 import withApplication from '../../lib/hoc/withApplication';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { scrollToError } from 'lib/utils/scroll';
+import ErrorSummary from 'components/errors/error-summary';
 
 const ApplicationPersonsOverview = (): JSX.Element => {
+  const [userError, setUserError] = useState<string | null>(null);
   const breadcrumbs = [
     {
       href: '/apply/overview',
       name: 'Application',
     },
   ];
+
+  const { query } = useRouter();
+
+  useEffect(() => {
+    if (query.error) {
+      setUserError(query.error as string);
+      scrollToError();
+    }
+  }, [query]);
 
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
   const application = useAppSelector((store) => store.application);
@@ -36,13 +50,21 @@ const ApplicationPersonsOverview = (): JSX.Element => {
 
   return (
     <>
-      <Layout pageName="Application overview" breadcrumbs={breadcrumbs}>
+      <Layout
+        pageName="Application overview"
+        breadcrumbs={breadcrumbs}
+        dataTestId="test-apply-resident-overview-page"
+      >
         <HeadingOne content="Provide information about your household" />
         <p className="lbh-body lbh-body-l lbh-body--grey">
           You've completed information for {applicantsCompletedCount} of{' '}
           {applicants.length} people.
         </p>
-
+        {userError && (
+          <ErrorSummary dataTestId="test-apply-overciw-error-summary">
+            {userError}
+          </ErrorSummary>
+        )}
         <SummaryListSpaced>
           {applicants.map((applicant, index) => {
             const tasks = applicationSteps(
@@ -63,6 +85,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
                     }
                     applicantNumber={index + 1}
                     tasks={tasks}
+                    applicantLinkTestId={applicant.person?.id}
                   />
                 </Key>
                 {/* <Actions>

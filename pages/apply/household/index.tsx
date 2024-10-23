@@ -78,7 +78,12 @@ const ApplicationHouseholdOverview = (): JSX.Element => {
         </strong>{' '}
         in this application.
       </Paragraph>
-      <ButtonLink href="/apply/expect">Continue to next step</ButtonLink>
+      <ButtonLink
+        href="/apply/expect"
+        dataTestId="test-apply-household-index-continue-to-next-step-button"
+      >
+        Continue to next step
+      </ButtonLink>
       <DeleteLink
         content="Cancel this application"
         details="This application will be permanently deleted."

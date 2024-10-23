@@ -53,3 +53,78 @@ export const generateApplication = (
     importedFromLegacyDatabase: false,
   };
 };
+
+export const completedApplicationFormSections = [
+  {
+    answer: 'true',
+    id: 'personal-details/sectionCompleted',
+  },
+  {
+    answer: 'true',
+    id: 'immigration-status/sectionCompleted',
+  },
+  {
+    answer: 'true',
+    id: 'medical-needs/sectionCompleted',
+  },
+  {
+    answer: 'true',
+    id: 'residential-status/sectionCompleted',
+  },
+  {
+    answer: 'true',
+    id: 'address-history/sectionCompleted',
+  },
+  {
+    answer: 'true',
+    id: 'current-accommodation/sectionCompleted',
+  },
+  {
+    answer: 'true',
+    id: 'current-accommodation-landlord-details/sectionCompleted',
+  },
+  {
+    answer: 'true',
+    id: 'situation-armed-forces/sectionCompleted',
+  },
+  {
+    answer: 'true',
+    id: 'homelessness/sectionCompleted',
+  },
+  {
+    answer: 'true',
+    id: 'property-ownership/sectionCompleted',
+  },
+  {
+    answer: 'true',
+    id: 'sold-property/sectionCompleted',
+  },
+  {
+    answer: 'true',
+    id: 'arrears/sectionCompleted',
+  },
+  {
+    answer: 'true',
+    id: 'breach-of-tenancy/sectionCompleted',
+  },
+  {
+    answer: 'true',
+    id: 'legal-restrictions/sectionCompleted',
+  },
+  {
+    answer: 'true',
+    id: 'unspent-convictions/sectionCompleted',
+  },
+  {
+    answer: 'true',
+    id: 'your-situation/sectionCompleted',
+  },
+  {
+    answer: 'true',
+    id: 'employment/sectionCompleted',
+  },
+  {
+    answer: 'true',
+    id: 'income-savings/sectionCompleted',
+  },
+];

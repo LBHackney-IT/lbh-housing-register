@@ -33,7 +33,8 @@ declare global {
         applicationId: string,
         body?: Application,
         delay?: number,
-        statusCode?: number
+        statusCode?: number,
+        persist?: boolean
       ): Chainable<void>;
       mockHousingRegisterApiCompleteApplication(
         applicationId: string,
@@ -56,7 +57,7 @@ declare global {
         delay?: number,
         statusCode?: number
       ): Chainable<void>;
-
+      mockAddressAPISearchByPostcode(postcode: string);
       mount: typeof mount;
       mockHousingRegisterApiPostEvidenceRequest(
         applicationId: string,

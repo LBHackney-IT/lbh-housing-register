@@ -83,7 +83,8 @@ export default defineConfig({
           return null;
         },
       });
-      if (config.video && config.browser.name === 'chrome') {
+      if (config.video && config.browser.name === 'Chrome 130') {
+        console.log('browsername:', config.browser.name);
         // delete video if test failed
         on('after:spec', (spec, results) => {
           if (results.video) {

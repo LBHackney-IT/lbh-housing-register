@@ -97,7 +97,7 @@ jobs:
       - cypress/run-tests:
           cypress-command: |
             if [ "<< parameters.browser >>" = "chrome" ]; then
-              npx cypress run --browser=<< parameters.browser >> --config viewportHeight=<< parameters.height >>,viewportWidth=<< parameters.width >> --reporter junit --reporter-options "mochaFile=test_results/cypress-e2e-[hash].xml" --record
+              npx cypress run --browser=<< parameters.browser >> --config viewportHeight=<< parameters.height >>,viewportWidth=<< parameters.width >> --reporter junit --reporter-options "mochaFile=test_results/cypress-e2e-[hash].xml" --video=true
             else
               npx cypress run --browser=<< parameters.browser >> --config viewportHeight=<< parameters.height >>,viewportWidth=<< parameters.width >> --reporter junit --reporter-options "mochaFile=test_results/cypress-e2e-[hash].xml"
             fi

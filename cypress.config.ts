@@ -103,12 +103,10 @@ export default defineConfig({
     },
     baseUrl,
     experimentalWebKitSupport: true,
-    video: true,
     screenshotOnRunFailure: true,
     defaultCommandTimeout: 10000,
     videoCompression: true,
   },
-
   component: {
     devServer: {
       framework: 'next',

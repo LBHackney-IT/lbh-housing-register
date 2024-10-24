@@ -83,7 +83,7 @@ export default defineConfig({
           return null;
         },
       });
-      if (config.video) {
+      if (config.video && config.browser.name === 'chrome') {
         // delete video if test failed
         on('after:spec', (spec, results) => {
           if (results.video) {

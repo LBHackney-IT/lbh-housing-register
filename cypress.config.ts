@@ -83,8 +83,7 @@ export default defineConfig({
           return null;
         },
       });
-      if (config.video && config.browser.name === 'Chrome 130') {
-        console.log('browsername:', config.browser.name);
+      if (config.video) {
         // delete video if test failed
         on('after:spec', (spec, results) => {
           if (results.video) {
@@ -106,7 +105,8 @@ export default defineConfig({
     experimentalWebKitSupport: true,
     screenshotOnRunFailure: true,
     defaultCommandTimeout: 10000,
-    videoCompression: true,
+    // video: true,
+    // videoCompression: true,
   },
   component: {
     devServer: {

@@ -238,7 +238,7 @@ workflows:
                 width: 320
           filters:
             branches:
-              only: bugfix/cypress-video-config
+              only: development
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:

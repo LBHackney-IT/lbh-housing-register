@@ -95,7 +95,7 @@ jobs:
           install-command: npm install
           post-install: npm run build
       - cypress/run-tests:
-          cypress-command: npx cypress run --browser=<< parameters.browser >> --config viewportHeight=<< parameters.height >>,viewportWidth=<< parameters.width >> --reporter junit --reporter-options "mochaFile=test_results/cypress-e2e-[hash].xml --spec "!.cypress/e2e/local/**/*"
+          cypress-command: npx cypress run --browser=<< parameters.browser >> --config viewportHeight=<< parameters.height >>,viewportWidth=<< parameters.width >> --reporter junit --reporter-options "mochaFile=test_results/cypress-e2e-[hash].xml" --spec "!.cypress/e2e/local/**/*"
       - store_test_results:
           path: test_results
 

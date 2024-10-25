@@ -91,8 +91,8 @@ jobs:
         default: 1366
     steps:
       - browser-tools/install-browser-tools:
-          chrome-version: 85.0.4183.102
-          firefox-version: 80.0.1
+          chrome-version: 114.0.5735.198
+          firefox-version: 114.0.2
       - cypress/install:
           package-manager: npm
           install-browsers: true

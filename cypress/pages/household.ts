@@ -12,6 +12,11 @@ class ApplyHouseholdPage {
     const testId = 'test-apply-household-index-continue-to-next-step-button';
     return cy.get(`[data-testid="${testId}"]`);
   }
+
+  static getAddHouseholdMemberButton() {
+    const testId = 'test-apply-household-add-a-person-button';
+    return cy.get(`[data-testid="${testId}"]`);
+  }
 }
 
 export default ApplyHouseholdPage;

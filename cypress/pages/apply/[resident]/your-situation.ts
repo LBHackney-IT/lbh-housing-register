@@ -3,8 +3,8 @@ class ApplyResidentYourSituationPage {
     cy.visit(`/apply/${personId}/your-situation`);
   }
 
-  static getServedInArmedForcesRadioButton() {
-    const testId = 'test-radio-situation-armed-forces.1';
+  static getServedInArmedForcesRadioButton(index: number) {
+    const testId = `test-radio-situation-armed-forces.${index}`;
     return cy.get(`[data-testid="${testId}"]`);
   }
 

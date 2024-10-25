@@ -38,7 +38,6 @@
     ]
   },
   "dependencies": {
-    "@next/bundle-analyzer": "^14.2.13",
     "@reduxjs/toolkit": "^1.9.7",
     "@sentry/nextjs": "^7.119.0",
     "axios": "^0.21.1",

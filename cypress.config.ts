@@ -95,7 +95,6 @@ export default defineConfig({
           }
         });
       }
-
       config.env = {
         ...process.env,
       };
@@ -105,10 +104,12 @@ export default defineConfig({
     experimentalWebKitSupport: true,
     screenshotOnRunFailure: true,
     defaultCommandTimeout: 10000,
+    excludeSpecPattern: process.env.PIPELINE ? ['.cypress/e2e/local/**/*'] : [],
     // video: true,
     // videoCompression: true,
   },
   component: {
+    experimentalJustInTimeCompile: true,
     devServer: {
       framework: 'next',
       bundler: 'webpack',

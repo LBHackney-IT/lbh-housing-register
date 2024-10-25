@@ -237,7 +237,7 @@ workflows:
                 width: 320
           filters:
             branches:
-              only: TS-1756-HR-pipeline-is-broken-due-to-nock-config-errors
+              only: development
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:

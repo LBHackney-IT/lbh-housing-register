@@ -46,7 +46,6 @@ const useApiCallStatus = ({
       selector?.callStatus === ApiCallStatusCode.FULFILLED &&
       userActionCompleted
     ) {
-      console.log('save complete in the hook, pushing');
       router.push({
         pathname: pathToPush,
         query,

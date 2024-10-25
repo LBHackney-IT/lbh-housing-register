@@ -8,6 +8,7 @@ import {
 import { faker } from '@faker-js/faker/locale/en_GB';
 import AgreeTermsPage from '../../../pages/agreeTerms';
 import { StatusCodes } from 'http-status-codes';
+import Components from '../../../pages/components';
 
 const applicationId = faker.string.uuid();
 const personId = faker.string.uuid();
@@ -123,7 +124,10 @@ describe('Application', () => {
     fillInTheSignUpForm();
     StartPage.getSubmitButton().click();
 
+    Components.getLoadingSpinner().should('exist');
+    cy.contains('Saving...');
     StartPage.getErrorSummary().should('be.visible');
     cy.contains(expectedErrorMessage);
+    Components.getLoadingSpinner().should('not.exist');
   });
 });

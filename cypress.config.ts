@@ -101,12 +101,12 @@ export default defineConfig({
       return config;
     },
     baseUrl,
+    excludeSpecPattern: process.env.PIPELINE ? ['cypress/e2e/local/**/*'] : [],
     experimentalWebKitSupport: true,
     screenshotOnRunFailure: true,
     defaultCommandTimeout: 10000,
-    excludeSpecPattern: process.env.PIPELINE ? ['cypress/e2e/local/**/*'] : [],
-    // video: true,
-    // videoCompression: true,
+    video: true,
+    videoCompression: true,
   },
   component: {
     devServer: {

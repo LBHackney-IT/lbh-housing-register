@@ -15,7 +15,7 @@ executors:
       - image: cimg/python:3.7
   cypress-e2e-executor:
     docker:
-      - image: cimg/node:20.17-browsers
+      - image: cimg/node:20.17
 
 references:
   workspace_root: &workspace_root '~'
@@ -91,6 +91,7 @@ jobs:
     steps:
       - cypress/install:
           package-manager: npm
+          install-browsers: true
           install-command: npm install
           post-install: npm run build
       - cypress/run-tests:

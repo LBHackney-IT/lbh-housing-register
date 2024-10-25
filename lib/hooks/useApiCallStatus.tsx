@@ -13,6 +13,7 @@ interface UseApiCallStatusProps {
   setUserError: (error: string) => void;
   scrollToError: () => void;
   pendingStatusStateDelay?: number;
+  clearPendingStatus?: boolean;
 }
 
 const useApiCallStatus = ({
@@ -23,6 +24,7 @@ const useApiCallStatus = ({
   pathToPush,
   query,
   pendingStatusStateDelay = 0,
+  clearPendingStatus = false,
 }: UseApiCallStatusProps) => {
   const router = useRouter();
   const [pendingStatus, setPendingStatus] = useState<boolean>(false);
@@ -34,7 +36,9 @@ const useApiCallStatus = ({
         setPendingStatus(true);
       }, pendingStatusStateDelay);
     } else {
-      setPendingStatus(false);
+      if (clearPendingStatus) {
+        setPendingStatus(false);
+      }
       clearTimeout(timer);
     }
 
@@ -47,6 +51,7 @@ const useApiCallStatus = ({
         query,
       });
     } else if (selector?.callStatus === ApiCallStatusCode.REJECTED) {
+      setPendingStatus(false);
       setUserError(selector.error ?? 'API error');
       scrollToError();
     }

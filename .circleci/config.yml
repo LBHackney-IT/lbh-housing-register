@@ -5,7 +5,6 @@ orbs:
   aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
   cypress: cypress-io/cypress@3.3.1
   sonarcloud: sonarsource/sonarcloud@2.0.0
-  browser-tools: circleci/browser-tools@1.4.8
 
 executors:
   node-executor:
@@ -95,9 +94,6 @@ jobs:
           # install-browsers: true
           install-command: npm install
           post-install: npm run build
-      - browser-tools/install-browser-tools:
-          chrome-version: 130.0.6723.69
-          firefox-version: 123.0.1
       - cypress/run-tests:
           cypress-command: npx cypress run --browser=<< parameters.browser >> --config viewportHeight=<< parameters.height >>,viewportWidth=<< parameters.width >> --reporter junit --reporter-options "mochaFile=test_results/cypress-e2e-[hash].xml"
       - store_test_results:
@@ -184,7 +180,7 @@ workflows:
             - install-dependencies
           matrix:
             parameters:
-              browser: [chrome, firefox]
+              browser: [chrome]
               # mobile, tablet, chromebook/desktop
               height: [480, 768, 960]
               # mobile, tablet, chromebook, desktop

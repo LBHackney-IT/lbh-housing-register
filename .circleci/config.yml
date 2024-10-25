@@ -10,13 +10,13 @@ orbs:
 executors:
   node-executor:
     docker:
-      - image: cimg/node:20.17-browsers
+      - image: cimg/node:20.17
   docker-python:
     docker:
       - image: cimg/python:3.7
   cypress-e2e-executor:
     docker:
-      - image: cimg/node:20.17-browsers
+      - image: cimg/node:20.17
 
 references:
   workspace_root: &workspace_root '~'
@@ -92,7 +92,7 @@ jobs:
     steps:
       - browser-tools/install-browser-tools:
           chrome-version: 130.0.6723.69
-          firefox-version: 114.0.2
+          firefox-version: 123.0.1
       - cypress/install:
           package-manager: npm
           install-browsers: true

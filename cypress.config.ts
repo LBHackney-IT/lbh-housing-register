@@ -1,6 +1,5 @@
 import http from 'http';
 
-import { devServer } from '@cypress/webpack-dev-server';
 import { defineConfig } from 'cypress';
 import 'dotenv/config';
 import { sign } from 'jsonwebtoken';
@@ -110,19 +109,9 @@ export default defineConfig({
     // videoCompression: true,
   },
   component: {
-    experimentalJustInTimeCompile: true,
-    devServer: (devServerConfig) => {
-      return devServer({
-        ...devServerConfig,
-        framework: 'next',
-        // bundler: 'webpack',
-      });
+    devServer: {
+      framework: 'next',
+      bundler: 'webpack',
     },
   },
-  // component: {
-  //   devServer: devServer({
-  //     framework: 'next',
-  //     bundler: 'webpack',
-  //   }),
-  // },
 });

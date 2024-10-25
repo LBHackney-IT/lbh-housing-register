@@ -10,13 +10,13 @@ orbs:
 executors:
   node-executor:
     docker:
-      - image: cimg/node:20.17
+      - image: cimg/node:20.17-browsers
   docker-python:
     docker:
       - image: cimg/python:3.7
   cypress-e2e-executor:
     docker:
-      - image: cimg/node:20.17
+      - image: cimg/node:20.17-browsers
 
 references:
   workspace_root: &workspace_root '~'
@@ -90,14 +90,14 @@ jobs:
         type: integer
         default: 1366
     steps:
-      - browser-tools/install-browser-tools:
-          chrome-version: 130.0.6723.69
-          firefox-version: 123.0.1
       - cypress/install:
           package-manager: npm
           # install-browsers: true
           install-command: npm install
           post-install: npm run build
+      - browser-tools/install-browser-tools:
+          chrome-version: 130.0.6723.69
+          firefox-version: 123.0.1
       - cypress/run-tests:
           cypress-command: npx cypress run --browser=<< parameters.browser >> --config viewportHeight=<< parameters.height >>,viewportWidth=<< parameters.width >> --reporter junit --reporter-options "mochaFile=test_results/cypress-e2e-[hash].xml"
       - store_test_results:

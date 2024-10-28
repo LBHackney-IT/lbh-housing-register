@@ -1,11 +1,7 @@
 import { faker } from '@faker-js/faker/locale/en_GB';
-import HomePage from '../../pages/home';
-import SignInPage from '../../pages/signIn';
-import VerifyPage from '../../pages/verify';
 import StartPage from '../../pages/start';
 import {
   generateEmailAddress,
-  getRandomGender,
   TitleEnum,
 } from '../../../testUtils/personHelper';
 import AgreeTermsPage from '../../pages/agreeTerms';
@@ -16,13 +12,26 @@ import ApplyResidentPersonalDetailsPage from '../../pages/apply/[resident]/perso
 import ApplyResidentSectionPage from '../../pages/apply/[resident]/[section]';
 import ApplyResidentAddressHistoryPage from '../../pages/apply/[resident]/address-history';
 import ApplyResidentCurrentAccommodationPage from '../../pages/apply/[resident]/current-accommodation';
-import ApplyResidentYourSituationPage from '../../pages/apply/[resident]/your-situation';
 import ApplyResidentSummaryPage from '../../pages/apply/[resident]/summary';
 import DeclarationPage from '../../pages/declaration';
 import AddPersonPage from '../../pages/addPerson';
+import { interceptAddressSearchAPI } from '../../support/intercepts';
+import {
+  addressSearchAPIResponse,
+  answerYourSituationSectionWithNoToAll,
+  fillInHouseholdMemberForm,
+  fillInTheSignUpForm,
+  HouseholdMemberDetails,
+  SignUpFormDetails,
+  visitHomepageSignInAndVerify,
+} from '../../support/locale2eTestsHelper';
 
 //ensure eligibility: both over 55
-const birthDate = faker.date.birthdate({ mode: 'age', min: 56, max: 90 });
+const mainApplicantBirthDate = faker.date.birthdate({
+  mode: 'age',
+  min: 56,
+  max: 90,
+});
 const householdMemberBirthDate = faker.date.birthdate({
   mode: 'age',
   min: 56,
@@ -36,95 +45,40 @@ const mainApplicantLastName = faker.person.lastName();
 const postcode = 'A1 2BC';
 const email = generateEmailAddress();
 const applicationId = faker.string.uuid();
-const verificationCode = faker.number
-  .int({ min: 100000, max: 999999 })
-  .toString();
 
 const householdMemberFirstName = faker.person.firstName();
 const householdMemberLastName = faker.person.lastName();
 
-const fillInTheSignUpForm = () => {
-  StartPage.getTitleDropdown().select(title);
-  StartPage.getFirstNameInput().type(mainApplicantFirstName);
-  StartPage.getLastNameInput().type(mainApplicantLastName);
-  StartPage.getDoBDayInput().type(birthDate.getDate().toString());
-  StartPage.getDoBMonthInput().type((birthDate.getMonth() + 1).toString());
-  StartPage.getDoBYearInput().type(birthDate.getFullYear().toString());
-  StartPage.getGenderOptions().check(getRandomGender());
-  StartPage.getNationalInsuranceNumberInput().type(
-    faker.string.alphanumeric(9)
-  );
-  StartPage.getPhoneNumberInput().type(phoneNumber);
+const signUpDetails: SignUpFormDetails = {
+  title,
+  firstName: mainApplicantFirstName,
+  lastName: mainApplicantLastName,
+  birthDate: mainApplicantBirthDate,
+  gender: 'M',
+  nationalInsuranceNumber: faker.string.alphanumeric(9),
+  phoneNumber,
 };
 
-const fillInHouseholdMemberForm = (
-  firstName: string,
-  lastName: string,
-  relationship: string,
-  memberBirthday: Date
-) => {
-  AddPersonPage.getTitleDropdown().select(faker.helpers.enumValue(TitleEnum));
-  AddPersonPage.getFirstNameInput().type(firstName);
-  AddPersonPage.getLastNameInput().type(lastName);
-  AddPersonPage.getRelationshipDropdown().select(relationship);
-  AddPersonPage.getDoBDayInput().type(memberBirthday.getDate().toString());
-  AddPersonPage.getDoBMonthInput().type(
-    (memberBirthday.getMonth() + 1).toString()
-  );
-  AddPersonPage.getDoBYearInput().type(memberBirthday.getFullYear().toString());
-  AddPersonPage.getGenderDropdown().check('M');
-};
-
-const addressSearchAPIResponse = {
-  body: {
-    address: [
-      {
-        line1: 'TEST ADDRESS',
-        line2: '1 STREET',
-        line3: 'LOCAL',
-        line4: '',
-        town: 'CITY',
-        postcode: `${postcode}`,
-        UPRN: 11111111111,
-      },
-    ],
-    page_count: 1,
-    total_count: 1,
-  },
+const householdMemberDetails: HouseholdMemberDetails = {
+  title: faker.helpers.enumValue(TitleEnum),
+  firstName: householdMemberFirstName,
+  lastName: householdMemberLastName,
+  relationship: 'partner',
+  birthday: householdMemberBirthDate,
+  gender: 'M',
 };
 
 describe('Applicant and household member both over 55', () => {
   beforeEach(() => {
     cy.clearAllCookies();
+    interceptAddressSearchAPI(addressSearchAPIResponse(postcode));
+    //need to login like this since Cypress doesn't seem to be handling the cookie set by the app
+    cy.loginAsResident(applicationId, false, false);
   });
 
   it(`makes application eligible when both main applicant and household member are over 55`, () => {
-    cy.intercept(
-      {
-        method: 'GET',
-        path: '/api/address/*',
-      },
-      addressSearchAPIResponse
-    ).as('addressSearchMock');
-
-    HomePage.visit(applicationId);
-    HomePage.getCookiesButton().click();
-
-    HomePage.getStartApplicationButton().scrollIntoView().click();
-
-    SignInPage.getEmailInput().scrollIntoView().type(`${email}`, { delay: 0 });
-
-    SignInPage.getSubmitButton().click();
-
-    cy.loginAsResident(applicationId, true, true);
-
-    VerifyPage.getVerifyCodePage().should('be.visible');
-    VerifyPage.getVerifyCodeInput()
-      .scrollIntoView()
-      .type(verificationCode, { delay: 0 });
-    VerifyPage.getVerifySubmitButton().scrollIntoView().click();
-
-    fillInTheSignUpForm();
+    visitHomepageSignInAndVerify(applicationId, email);
+    fillInTheSignUpForm(signUpDetails);
     StartPage.getSubmitButton().click();
 
     //agree terms
@@ -136,12 +90,7 @@ describe('Applicant and household member both over 55', () => {
 
     //add household member (partner)
     ApplyHouseholdPage.getAddHouseholdMemberButton().click();
-    fillInHouseholdMemberForm(
-      householdMemberFirstName,
-      householdMemberLastName,
-      'partner',
-      householdMemberBirthDate
-    );
+    fillInHouseholdMemberForm(householdMemberDetails);
     AddPersonPage.getSubmitButton().click();
 
     cy.contains('Person 1: Me');
@@ -244,25 +193,7 @@ describe('Applicant and household member both over 55', () => {
     ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
 
     ApplyResidentIndexPage.getYourSituationSectionLink().click();
-    ApplyResidentYourSituationPage.getSubmitButton().click();
-    ApplyResidentYourSituationPage.getServedInArmedForcesRadioButton(1).check();
-    ApplyResidentYourSituationPage.getSubmitButton().click();
-    ApplyResidentYourSituationPage.getIntentionallyHomelessRadioButton(
-      1
-    ).check();
-    ApplyResidentYourSituationPage.getSubmitButton().click();
-    ApplyResidentYourSituationPage.getOwnPropertyRadioButton(1).check();
-    ApplyResidentYourSituationPage.getSubmitButton().click();
-    ApplyResidentYourSituationPage.getSoldPropertyRadioButton(1).check();
-    ApplyResidentYourSituationPage.getSubmitButton().click();
-    ApplyResidentYourSituationPage.getRentArrearsRadioButton(1).check();
-    ApplyResidentYourSituationPage.getSubmitButton().click();
-    ApplyResidentYourSituationPage.getBreachOfTenancyRadioButton(1).check();
-    ApplyResidentYourSituationPage.getSubmitButton().click();
-    ApplyResidentYourSituationPage.getLegalRestrictionsRadioButton(1).check();
-    ApplyResidentYourSituationPage.getSubmitButton().click();
-    ApplyResidentYourSituationPage.getUnspentConvictionsRadioButton(1).check();
-    ApplyResidentYourSituationPage.getSubmitButton().click();
+    answerYourSituationSectionWithNoToAll();
 
     //employment
     cy.get('.lbh-link').contains('Employment').click();

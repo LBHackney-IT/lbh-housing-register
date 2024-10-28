@@ -81,7 +81,7 @@ Cypress._.times(1, () => {
         addressSearchAPIResponse
       ).as('addressSearchMock');
 
-      cy.viewport(1000, 1000);
+      cy.viewport(1280, 720);
 
       HomePage.visit(applicationId);
       HomePage.getCookiesButton().click();

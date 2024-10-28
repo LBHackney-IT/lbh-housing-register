@@ -81,7 +81,7 @@ Cypress._.times(1, () => {
         addressSearchAPIResponse
       ).as('addressSearchMock');
 
-      cy.viewport(1000, 1000);
+      cy.viewport(1280, 720);
 
       HomePage.visit(applicationId);
       HomePage.getCookiesButton().click();
@@ -110,17 +110,24 @@ Cypress._.times(1, () => {
       AgreeTermsPage.getAgreeCheckbox().check();
       AgreeTermsPage.getAgreeButton().click();
 
+      cy.contains(`${mainApplicantFirstName} ${mainApplicantLastName}`);
+      cy.contains('There is 1 person in this application.');
+
       //household index
       ApplyHouseholdPage.getContinueToNextStepLink().click();
+      cy.contains('apply for a 1 bedroom property');
 
       //expect
       ApplyExpectPage.getContinueToNextStepButton().click();
+      cy.contains("You've completed information for 0 of 1 people.");
 
       //apply overview/ fill in main applicant details
       //we have no means of retrieving the person id in these tests at the moment, so have to use their name to get the correct link
       cy.get('.lbh-applicant-summary__name')
         .contains(`${mainApplicantFirstName} ${mainApplicantLastName}`)
         .click();
+
+      cy.contains(`${mainApplicantFirstName} ${mainApplicantLastName}`);
 
       //main applicant details
       ApplyResidentIndexPage.getPersonalDetailsSectionLink().click();
@@ -243,14 +250,15 @@ Cypress._.times(1, () => {
       //confirm details
       ApplyResidentIndexPage.getCheckAnswersButton().click();
       ApplyResidentSummaryPage.getConfirmDetailsButton().click();
+      cy.contains("You've completed information for 1 of 1 people.");
       cy.get('.lbh-button').contains('Save and continue').click();
       cy.get('.lbh-button').contains('Save and continue').click();
 
       cy.get(`[data-testid="test-radio-ethnicity-main-category.0"]`).check();
       ApplyResidentSectionPage.getSubmitButton().click();
-
       cy.get(`[data-testid="test-checkbox-declaration-0"]`).check();
       DeclarationPage.getSubmitButton().click();
+      cy.contains('Application complete');
     });
   });
 });

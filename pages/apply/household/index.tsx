@@ -69,7 +69,11 @@ const ApplicationHouseholdOverview = (): JSX.Element => {
         })}
       </SummaryList>
 
-      <ButtonLink href="/apply/household/add-person" secondary={true}>
+      <ButtonLink
+        href="/apply/household/add-person"
+        secondary={true}
+        dataTestId="test-apply-household-add-a-person-button"
+      >
         Add a person
       </ButtonLink>
       <Paragraph>

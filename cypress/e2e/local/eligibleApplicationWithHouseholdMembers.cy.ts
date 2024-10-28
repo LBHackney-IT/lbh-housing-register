@@ -19,9 +19,11 @@ import ApplyResidentCurrentAccommodationPage from '../../pages/apply/[resident]/
 import ApplyResidentYourSituationPage from '../../pages/apply/[resident]/your-situation';
 import ApplyResidentSummaryPage from '../../pages/apply/[resident]/summary';
 import DeclarationPage from '../../pages/declaration';
+import AddPersonPage from '../../pages/addPerson';
 
 //ensure eligibility: over 55 and alone
 const birthDate = faker.date.birthdate({ mode: 'age', min: 56, max: 90 });
+const childBirthDate = faker.date.birthdate({ mode: 'age', min: 1, max: 17 });
 const title = faker.helpers.enumValue(TitleEnum);
 const phoneNumber = faker.phone.number();
 const mainApplicantFirstName = faker.person.firstName();
@@ -32,6 +34,11 @@ const applicationId = faker.string.uuid();
 const verificationCode = faker.number
   .int({ min: 100000, max: 999999 })
   .toString();
+
+const householdMemberOneFirstName = faker.person.firstName();
+const householdMemberOneLastName = faker.person.lastName();
+const householdMemberTwoFirstName = faker.person.firstName();
+const householdMemberTwoLastName = faker.person.lastName();
 
 const fillInTheSignUpForm = () => {
   StartPage.getTitleDropdown().select(title);
@@ -45,6 +52,24 @@ const fillInTheSignUpForm = () => {
     faker.string.alphanumeric(9)
   );
   StartPage.getPhoneNumberInput().type(phoneNumber);
+};
+
+const fillInHouseholdMemberForm = (
+  firstName: string,
+  lastName: string,
+  relationship: string,
+  memberBirthday: Date
+) => {
+  AddPersonPage.getTitleDropdown().select(faker.helpers.enumValue(TitleEnum));
+  AddPersonPage.getFirstNameInput().type(firstName);
+  AddPersonPage.getLastNameInput().type(lastName);
+  AddPersonPage.getRelationshipDropdown().select(relationship);
+  AddPersonPage.getDoBDayInput().type(memberBirthday.getDate().toString());
+  AddPersonPage.getDoBMonthInput().type(
+    (memberBirthday.getMonth() + 1).toString()
+  );
+  AddPersonPage.getDoBYearInput().type(memberBirthday.getFullYear().toString());
+  AddPersonPage.getGenderDropdown().check('M');
 };
 
 const addressSearchAPIResponse = {
@@ -66,12 +91,12 @@ const addressSearchAPIResponse = {
 };
 
 Cypress._.times(1, () => {
-  describe('Single main applicant, over 55', () => {
+  describe('Add and remove household members', () => {
     beforeEach(() => {
       cy.clearAllCookies();
     });
 
-    it(`allows eligible applicant to fill in and submit the application`, () => {
+    it(`allows user to add and remove household members`, () => {
       //intercept address API since address is not relevant in this test
       cy.intercept(
         {
@@ -110,11 +135,56 @@ Cypress._.times(1, () => {
       AgreeTermsPage.getAgreeCheckbox().check();
       AgreeTermsPage.getAgreeButton().click();
 
+      cy.contains(`${mainApplicantFirstName} ${mainApplicantLastName}`);
+      cy.contains('There is 1 person in this application.');
+
+      //add household member (partner)
+      ApplyHouseholdPage.getAddHouseholdMemberButton().click();
+      fillInHouseholdMemberForm(
+        householdMemberOneFirstName,
+        householdMemberOneLastName,
+        'partner',
+        birthDate
+      );
+      AddPersonPage.getSubmitButton().click();
+
+      cy.contains('Person 1: Me');
+      cy.contains(`${mainApplicantFirstName} ${mainApplicantLastName}`);
+      cy.contains('Person 2: My partner');
+      cy.contains(
+        `${householdMemberOneFirstName} ${householdMemberOneLastName}`
+      );
+      cy.contains('There are 2 people in this application.');
+
+      //add household member (child)
+      ApplyHouseholdPage.getAddHouseholdMemberButton().click();
+      fillInHouseholdMemberForm(
+        householdMemberTwoFirstName,
+        householdMemberTwoLastName,
+        'child',
+        childBirthDate
+      );
+      AddPersonPage.getSubmitButton().click();
+
+      cy.contains('Person 1: Me');
+      cy.contains(`${mainApplicantFirstName} ${mainApplicantLastName}`);
+      cy.contains('Person 2: My partner');
+      cy.contains(
+        `${householdMemberOneFirstName} ${householdMemberOneLastName}`
+      );
+      cy.contains('Person 3: My child');
+      cy.contains(
+        `${householdMemberTwoFirstName} ${householdMemberTwoLastName}`
+      );
+      cy.contains('There are 3 people in this application.');
+
       //household index
       ApplyHouseholdPage.getContinueToNextStepLink().click();
+      cy.contains('apply for a 2 bedroom property');
 
       //expect
       ApplyExpectPage.getContinueToNextStepButton().click();
+      cy.contains("You've completed information for 0 of 3 people.");
 
       //apply overview/ fill in main applicant details
       //we have no means of retrieving the person id in these tests at the moment, so have to use their name to get the correct link
@@ -122,7 +192,9 @@ Cypress._.times(1, () => {
         .contains(`${mainApplicantFirstName} ${mainApplicantLastName}`)
         .click();
 
-      //main applicant details
+      cy.contains(`${mainApplicantFirstName} ${mainApplicantLastName}`);
+
+      ////main applicant details
       ApplyResidentIndexPage.getPersonalDetailsSectionLink().click();
       ApplyResidentPersonalDetailsPage.getPhoneNumberInput().type(phoneNumber);
       ApplyResidentPersonalDetailsPage.getSubmitButton()
@@ -243,14 +315,111 @@ Cypress._.times(1, () => {
       //confirm details
       ApplyResidentIndexPage.getCheckAnswersButton().click();
       ApplyResidentSummaryPage.getConfirmDetailsButton().click();
+      cy.contains("You've completed information for 1 of 3 people.");
+
+      ////partner
+      cy.get('.lbh-applicant-summary__name')
+        .contains(
+          `${householdMemberOneFirstName} ${householdMemberOneLastName}`
+        )
+        .click();
+
+      cy.contains(
+        `${householdMemberOneFirstName} ${householdMemberOneLastName}`
+      );
+
+      ApplyResidentIndexPage.getPersonalDetailsSectionLink().click();
+      ApplyResidentPersonalDetailsPage.getNINumberInput().type(
+        faker.string.alphanumeric(9)
+      );
+      ApplyResidentPersonalDetailsPage.getSubmitButton()
+        .scrollIntoView()
+        .click();
+
+      ApplyResidentIndexPage.getImmigrationStatusSectionLink().click();
+      ApplyResidentSectionPage.getImmigrationStatusRadioButton(0).check();
+      ApplyResidentSectionPage.getSubmitButton().click();
+
+      //medical needs
+      cy.get('.lbh-link').contains('Medical needs').click();
+      cy.get(`[data-testid="test-radio-medical-needs.1"]`).check();
+      ApplyResidentSectionPage.getSubmitButton().click();
+
+      //address history
+      ApplyResidentIndexPage.getAddressHistorySectionLink().click();
+      ApplyResidentAddressHistoryPage.getPostcodeInputField().type(postcode, {
+        delay: 0,
+      });
+      ApplyResidentAddressHistoryPage.getFindAddressButton().click();
+      ApplyResidentAddressHistoryPage.getMovingDateMonth().type('1', {
+        delay: 0,
+      });
+      ApplyResidentAddressHistoryPage.getMovingDateYear().type('2000', {
+        delay: 0,
+      });
+      ApplyResidentAddressHistoryPage.getGetSaveAndContinueButton().click();
+      ApplyResidentAddressHistoryPage.getGetSaveAndContinueButton().click();
+
+      //employment
+      cy.get('.lbh-link').contains('Employment').click();
+      //unemployed
+      cy.get(`[data-testid="test-radio-employment.3"]`).check();
+      ApplyResidentSectionPage.getSubmitButton().click();
+
+      //confirm details
+      ApplyResidentIndexPage.getCheckAnswersButton().click();
+      ApplyResidentSummaryPage.getConfirmDetailsButton().click();
+      cy.contains("You've completed information for 2 of 3 people.");
+
+      ////child
+      cy.get('.lbh-applicant-summary__name')
+        .contains(
+          `${householdMemberTwoFirstName} ${householdMemberTwoLastName}`
+        )
+        .click();
+
+      cy.contains(
+        `${householdMemberTwoFirstName} ${householdMemberTwoLastName}`
+      );
+
+      ApplyResidentIndexPage.getPersonalDetailsSectionLink().click();
+      ApplyResidentPersonalDetailsPage.getSubmitButton()
+        .scrollIntoView()
+        .click();
+
+      //medical needs
+      cy.get('.lbh-link').contains('Medical needs').click();
+      cy.get(`[data-testid="test-radio-medical-needs.1"]`).check();
+      ApplyResidentSectionPage.getSubmitButton().click();
+
+      //address history
+      ApplyResidentIndexPage.getAddressHistorySectionLink().click();
+      ApplyResidentAddressHistoryPage.getPostcodeInputField().type(postcode, {
+        delay: 0,
+      });
+      ApplyResidentAddressHistoryPage.getFindAddressButton().click();
+      ApplyResidentAddressHistoryPage.getMovingDateMonth().type('1', {
+        delay: 0,
+      });
+      ApplyResidentAddressHistoryPage.getMovingDateYear().type('2000', {
+        delay: 0,
+      });
+      ApplyResidentAddressHistoryPage.getGetSaveAndContinueButton().click();
+      ApplyResidentAddressHistoryPage.getGetSaveAndContinueButton().click();
+
+      //confirm details
+      ApplyResidentIndexPage.getCheckAnswersButton().click();
+      ApplyResidentSummaryPage.getConfirmDetailsButton().click();
+      cy.contains("You've completed information for 3 of 3 people.");
+
       cy.get('.lbh-button').contains('Save and continue').click();
       cy.get('.lbh-button').contains('Save and continue').click();
 
       cy.get(`[data-testid="test-radio-ethnicity-main-category.0"]`).check();
       ApplyResidentSectionPage.getSubmitButton().click();
-
       cy.get(`[data-testid="test-checkbox-declaration-0"]`).check();
       DeclarationPage.getSubmitButton().click();
+      cy.contains('Application complete');
     });
   });
 });

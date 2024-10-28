@@ -73,7 +73,7 @@ describe('Apply resident your situation page', () => {
     ApplyExpectPage.getContinueToNextStepButton().click();
     ApplyOverviewPage.getApplicantButton(personId).click();
     ApplyResidentIndexPage.getYourSituationSectionLink().click();
-    ApplyResidentYourSituationPage.getServedInArmedForcesRadioButton().check();
+    ApplyResidentYourSituationPage.getServedInArmedForcesRadioButton(1).check();
     ApplyResidentYourSituationPage.getSubmitButton().click();
     cy.contains('Saving...');
   });
@@ -94,7 +94,7 @@ describe('Apply resident your situation page', () => {
     ApplyOverviewPage.getApplicantButton(personId).click();
     ApplyResidentIndexPage.getYourSituationSectionLink().click();
 
-    ApplyResidentYourSituationPage.getServedInArmedForcesRadioButton().check();
+    ApplyResidentYourSituationPage.getServedInArmedForcesRadioButton(1).check();
     ApplyResidentYourSituationPage.getSubmitButton().click();
     ApplyResidentYourSituationPage.getIntentionallyHomelessRadioButton(
       1

@@ -46,38 +46,13 @@ const fillInTheSignUpForm = (birthDate: Date) => {
   StartPage.getPhoneNumberInput().type(phoneNumber);
 };
 
-const addressSearchAPIResponse = {
-  body: {
-    address: [
-      {
-        line1: 'TEST ADDRESS',
-        line2: '1 STREET',
-        line3: 'LOCAL',
-        line4: '',
-        town: 'CITY',
-        postcode: `${postcode}`,
-        UPRN: 11111111111,
-      },
-    ],
-    page_count: 1,
-    total_count: 1,
-  },
-};
-
 describe('Ineligible main applicant', () => {
   beforeEach(() => {
     cy.clearAllCookies();
   });
   it(`rejects an applicant who is defined as not lacking rooms`, () => {
     const birthDate = faker.date.birthdate({ mode: 'age', min: 18, max: 54 });
-
-    cy.intercept(
-      {
-        method: 'GET',
-        path: '/api/address/*',
-      },
-      addressSearchAPIResponse
-    ).as('addressSearchMock');
+    cy.mockAddressAPISearchByPostcode(postcode);
 
     cy.viewport(1000, 1000);
 

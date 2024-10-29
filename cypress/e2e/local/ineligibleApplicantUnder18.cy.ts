@@ -43,82 +43,54 @@ const fillInTheSignUpForm = () => {
   StartPage.getPhoneNumberInput().type(phoneNumber);
 };
 
-const addressSearchAPIResponse = {
-  body: {
-    address: [
-      {
-        line1: 'TEST ADDRESS',
-        line2: '1 STREET',
-        line3: 'LOCAL',
-        line4: '',
-        town: 'CITY',
-        postcode: `${postcode}`,
-        UPRN: 11111111111,
-      },
-    ],
-    page_count: 1,
-    total_count: 1,
-  },
-};
+describe('Ineligible main applicant', () => {
+  beforeEach(() => {
+    cy.clearAllCookies();
+  });
 
-Cypress._.times(1, () => {
-  describe('Ineligible main applicant', () => {
-    beforeEach(() => {
-      cy.clearAllCookies();
-    });
+  it(`rejects an applicant under the age of 18`, () => {
+    cy.mockAddressAPISearchByPostcode(postcode);
 
-    it(`rejects an applicant under the age of 18`, () => {
-      cy.intercept(
-        {
-          method: 'GET',
-          path: '/api/address/*',
-        },
-        addressSearchAPIResponse
-      ).as('addressSearchMock');
+    cy.viewport(1000, 1000);
 
-      cy.viewport(1000, 1000);
+    HomePage.visit(applicationId);
+    HomePage.getCookiesButton().click();
 
-      HomePage.visit(applicationId);
-      HomePage.getCookiesButton().click();
+    HomePage.getStartApplicationButton().scrollIntoView().click();
 
-      HomePage.getStartApplicationButton().scrollIntoView().click();
+    SignInPage.getEmailInput().scrollIntoView().type(`${email}`, { delay: 0 });
 
-      SignInPage.getEmailInput()
-        .scrollIntoView()
-        .type(`${email}`, { delay: 0 });
+    SignInPage.getSubmitButton().click();
 
-      SignInPage.getSubmitButton().click();
+    cy.loginAsResident(applicationId, true, true);
 
-      cy.loginAsResident(applicationId, true, true);
+    VerifyPage.getVerifyCodePage().should('be.visible');
+    VerifyPage.getVerifyCodeInput()
+      .scrollIntoView()
+      .type(verificationCode, { delay: 0 });
+    VerifyPage.getVerifySubmitButton().scrollIntoView().click();
 
-      VerifyPage.getVerifyCodePage().should('be.visible');
-      VerifyPage.getVerifyCodeInput()
-        .scrollIntoView()
-        .type(verificationCode, { delay: 0 });
-      VerifyPage.getVerifySubmitButton().scrollIntoView().click();
+    fillInTheSignUpForm();
+    StartPage.getSubmitButton().click();
 
-      fillInTheSignUpForm();
-      StartPage.getSubmitButton().click();
+    AgreeTermsPage.getAgreeCheckbox().check();
+    AgreeTermsPage.getAgreeButton().click();
 
-      AgreeTermsPage.getAgreeCheckbox().check();
-      AgreeTermsPage.getAgreeButton().click();
+    ApplyHouseholdPage.getContinueToNextStepLink().click();
 
-      ApplyHouseholdPage.getContinueToNextStepLink().click();
+    ApplyExpectPage.getContinueToNextStepButton().click();
 
-      ApplyExpectPage.getContinueToNextStepButton().click();
+    cy.get('.lbh-applicant-summary__name')
+      .contains(`${mainApplicantFirstName} ${mainApplicantLastName}`)
+      .click();
 
-      cy.get('.lbh-applicant-summary__name')
-        .contains(`${mainApplicantFirstName} ${mainApplicantLastName}`)
-        .click();
+    ApplyResidentSummaryPage.getConfirmDetailsButton().click();
 
-      ApplyResidentSummaryPage.getConfirmDetailsButton().click();
+    RejectionPage.getRejectionPage().should('be.visible');
 
-      RejectionPage.getRejectionPage().should('be.visible');
-
-      RejectionPage.getRejectionReason().should(
-        'contain.text',
-        getDisqualificationReasonOption('under18YearsOld')
-      );
-    });
+    RejectionPage.getRejectionReason().should(
+      'contain.text',
+      getDisqualificationReasonOption('under18YearsOld')
+    );
   });
 });

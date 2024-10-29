@@ -11,6 +11,7 @@ import { StatusCodes } from 'http-status-codes';
 import ApplyResidentSummaryPage from '../../../../pages/apply/[resident]/summary';
 import { Application, Person } from '../../../../../domain/HousingApi';
 import { generatePerson } from '../../../../../testUtils/personHelper';
+import RejectionPage from '../../../../pages/rejection';
 
 const applicationId = faker.string.uuid();
 const personId = faker.string.uuid();
@@ -50,11 +51,39 @@ describe('Apply resident summary page', () => {
   beforeEach(() => {
     cy.loginAsResident(applicationId, true);
     cy.task('clearNock');
-    cy.mockNotifyEmailResponse();
+  });
+
+  it('succesfully disqualifies application if is not eligible to apply and disqualify email notify action fails', () => {
+    //Application object does not reflect the correct state after patch, but it doesn't matter for this test
+    cy.mockHousingRegisterApiPatchApplication(
+      applicationId,
+      ineligibleApplicationWithCompletedMainApplicantSections,
+      1000,
+      StatusCodes.OK,
+      false
+    );
+
+    cy.mockHousingRegisterApiGetApplications(
+      applicationId,
+      ineligibleApplicationWithCompletedMainApplicantSections,
+      true
+    );
+
+    cy.mockNotifyEmailResponse(StatusCodes.INTERNAL_SERVER_ERROR);
+
+    ApplyHouseholdPage.visit();
+    ApplyHouseholdPage.getContinueToNextStepLink().scrollIntoView().click();
+    ApplyExpectPage.getContinueToNextStepButton().click();
+    ApplyOverviewPage.getApplicantButton(personId).click();
+    ApplyResidentSummaryPage.getConfirmDetailsButton().click();
+
+    RejectionPage.getRejectionPage().should('be.visible');
   });
 
   it('shows saving message when user confirms the resident details and is not eligible to apply', () => {
     //Application object does not reflect the correct state after patch, but it doesn't matter for this test
+    cy.mockNotifyEmailResponse();
+
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,
       ineligibleApplicationWithCompletedMainApplicantSections,
@@ -79,6 +108,7 @@ describe('Apply resident summary page', () => {
   });
 
   it('shows an error message when application save fails and user is not eligible to apply', () => {
+    cy.mockNotifyEmailResponse();
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,
       ineligibleApplicationWithCompletedMainApplicantSections,
@@ -105,6 +135,7 @@ describe('Apply resident summary page', () => {
   });
 
   it('redirects eligible user to person overview page after they confirm their details', () => {
+    cy.mockNotifyEmailResponse();
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,
       eligibleApplicationWithCompletedMainApplicantSections,
@@ -130,6 +161,7 @@ describe('Apply resident summary page', () => {
 
   it('shows saving message when user deletes a household member from the application', () => {
     //complete household member sections, so summary page is available
+    cy.mockNotifyEmailResponse();
     const householdMember: Person = generatePerson(personId + 1);
 
     const eligibleApplicationWithHouseholdMemberCompleted: Application = {

@@ -74,4 +74,3 @@ describe('Ineligible main applicant', () => {
       );
     });
   });
-});

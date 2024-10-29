@@ -367,6 +367,7 @@ Cypress.Commands.add(
       method: 'POST',
       path: '/v2/notifications/email',
       statusCode,
+      body: statusCode == StatusCodes.OK ? 'email sent' : 'email failed',
       persist: true,
     });
   }

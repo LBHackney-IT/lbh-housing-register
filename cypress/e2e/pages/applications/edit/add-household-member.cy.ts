@@ -49,8 +49,7 @@ describe('Add household member', () => {
     AddHouseholdMemberPage.visit(applicationId);
     fillInHouseholdMemberForm();
     AddHouseholdMemberPage.getSubmitButton().click();
-    // cy.contains('Saving...');
-    cy.contains('Test failure');
+    cy.contains('Saving...');
 
     ViewApplicationPage.getViewApplicationPage().should('be.visible');
   });

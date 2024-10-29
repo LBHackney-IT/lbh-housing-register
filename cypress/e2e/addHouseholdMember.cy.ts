@@ -7,6 +7,7 @@ describe('Add household member', () => {
     cy.clearAllCookies();
     cy.loginAsUser('readOnly');
     cy.visit(`applications/edit/${applicationId}/add-household-member`);
-    cy.contains('Access denied');
+    // cy.contains('Access denied');
+    cy.contains('flk;jasdf;lkdsj;lfkdaj;fldks');
   });
 });

@@ -83,6 +83,9 @@ export default defineConfig({
           return null;
         },
       });
+
+      config.video = config.browser?.displayName !== 'firefox';
+
       if (config.video) {
         // delete video if test failed
         on('after:spec', (spec, results) => {
@@ -95,6 +98,7 @@ export default defineConfig({
           }
         });
       }
+
       config.env = {
         ...process.env,
       };

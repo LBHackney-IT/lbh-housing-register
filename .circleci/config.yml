@@ -93,7 +93,9 @@ jobs:
           package-manager: npm
           install-browsers: true
           install-command: npm install
-          post-install: npm run build
+          post-install: |
+            npx playwright install-deps webkit
+            npm run build
       - cypress/run-tests:
           cypress-command: npx cypress run --browser=<< parameters.browser >> --config viewportHeight=<< parameters.height >>,viewportWidth=<< parameters.width >> --reporter junit --reporter-options "mochaFile=test_results/cypress-e2e-[hash].xml"
       - store_test_results:
@@ -180,7 +182,7 @@ workflows:
             - install-dependencies
           matrix:
             parameters:
-              browser: [chrome]
+              browser: [chrome, webkit, firefox]
               # mobile, tablet, chromebook/desktop
               height: [480, 768, 960]
               # mobile, tablet, chromebook, desktop
@@ -205,6 +207,15 @@ workflows:
               - browser: firefox
                 height: 480
                 width: 1024
+              - browser: webkit
+                height: 480
+                width: 1536
+              - browser: webkit
+                height: 480
+                width: 1366
+              - browser: webkit
+                height: 480
+                width: 1024
               - browser: chrome
                 height: 768
                 width: 1536
@@ -223,6 +234,15 @@ workflows:
               - browser: firefox
                 height: 768
                 width: 320
+              - browser: webkit
+                height: 768
+                width: 1536
+              - browser: webkit
+                height: 768
+                width: 1366
+              - browser: webkit
+                height: 768
+                width: 320
               - browser: chrome
                 height: 960
                 width: 1024
@@ -233,6 +253,12 @@ workflows:
                 height: 960
                 width: 1024
               - browser: firefox
+                height: 960
+                width: 320
+              - browser: webkit
+                height: 960
+                width: 1024
+              - browser: webkit
                 height: 960
                 width: 320
           filters:

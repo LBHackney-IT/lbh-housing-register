@@ -45,11 +45,26 @@ const ResidentIndex = (): JSX.Element => {
   const application = useAppSelector((store) => store.application);
 
   const saveApplicationStatus = useAppSelector(selectSaveApplicationStatus);
+  const returnHref = '/apply/overview';
   const [userHasSaved, setUserHasSaved] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [isEligible, setIsEligible] = useState<boolean>(true);
+  const roomNeedsCompleted = getQuestionValue(
+    application.mainApplicant?.questions,
+    FormID.CURRENT_ACCOMMODATION,
+    'sectionCompleted'
+  );
 
-  const returnHref = '/apply/overview';
-  let isEligible = true;
+  // Only check eligibility when the room needs completed or the resident is under 18
+  useEffect(() => {
+    if (roomNeedsCompleted || !isOver18(currentResident)) {
+      const [eligibilityStatus] = checkEligible(application);
+      setIsEligible(eligibilityStatus);
+    }
+  }, [
+    application.mainApplicant?.questions,
+    application.mainApplicant?.person?.dateOfBirth,
+  ]);
 
   //use effect to stop router.push firing multiple times
   useEffect(() => {
@@ -115,8 +130,6 @@ const ResidentIndex = (): JSX.Element => {
     : [];
 
   const checkAnswers = `${baseHref}/summary`;
-
-  [isEligible] = checkEligible(application);
 
   const steps = getApplicationSectionsForResident(
     currentResident === mainResident,

@@ -362,7 +362,6 @@ Cypress.Commands.add(
 Cypress.Commands.add(
   'mockNotifyEmailResponse',
   (statusCode: number = StatusCodes.OK) => {
-    console.log('status code:', statusCode);
     cy.task('nock', {
       hostname: 'https://api.notifications.service.gov.uk',
       method: 'POST',

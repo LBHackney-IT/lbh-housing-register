@@ -84,9 +84,10 @@ export default defineConfig({
         },
       });
 
-      if (config.video && !config.browser?.displayName?.includes('Firefox')) {
+      if (config.video) {
         // delete video if test failed
         on('after:spec', (spec, results) => {
+          console.log('results: %o', results);
           if (results.video) {
             if (results.stats.failures || results.stats.skipped) {
               console.log('keeping the video %s', results.video);

@@ -50,7 +50,9 @@ const NotEligible = (): JSX.Element => {
           <HeadingTwo content="Why is this?" />
           {reasons?.map((reason, index) => (
             <InsetText key={index}>
-              <Paragraph>{getDisqualificationReasonOption(reason)}</Paragraph>
+              <Paragraph dataTestId="test-disqualification-reason">
+                {getDisqualificationReasonOption(reason)}
+              </Paragraph>
             </InsetText>
           ))}
         </>

@@ -81,7 +81,7 @@ const UserSummary = (): JSX.Element => {
     return <Custom404 />;
   }
 
-  const onConfirmData = () => {
+  const onConfirmData = async () => {
     const [isEligible, reasons] = checkEligible(application);
     if (!isEligible) {
       const reasonStrings = reasons.map((reason) =>
@@ -89,23 +89,18 @@ const UserSummary = (): JSX.Element => {
       );
       const reason = reasonStrings.join(',');
 
-      //sends an email, no need to handle save. TODO: add error handling
-      dispatch(sendDisqualifyEmail({ application, reason }));
-
-      setIsSaving(true);
-
-      dispatch(disqualifyApplication(application.id!))
-        .unwrap()
-        .then(() => {
-          router.push('/apply/not-eligible');
-        })
-        .catch(() => {
-          setIsSaving(false);
-          setUserError('Unable to update application');
-          scrollToError();
-        });
+      try {
+        setIsSaving(true);
+        await dispatch(sendDisqualifyEmail({ application, reason }));
+        await dispatch(disqualifyApplication(application.id!)).unwrap();
+        router.push('/apply/not-eligible');
+      } catch (error) {
+        setUserError('Unable to update application');
+        scrollToError();
+      } finally {
+        setIsSaving(false);
+      }
     } else {
-      //not saving data, OK as is
       router.push('/apply/overview');
     }
   };

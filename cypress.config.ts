@@ -116,6 +116,7 @@ export default defineConfig({
     videoCompression: true,
   },
   component: {
+    experimentalJustInTimeCompile: true,
     devServer: {
       framework: 'next',
       bundler: 'webpack',

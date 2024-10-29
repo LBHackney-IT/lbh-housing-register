@@ -6,7 +6,7 @@ import { sign } from 'jsonwebtoken';
 import next from 'next';
 import nock from 'nock';
 
-import { unlinkSync } from 'fs';
+import { existsSync, unlinkSync } from 'fs';
 
 const baseUrl = 'http://localhost:3000';
 
@@ -87,10 +87,8 @@ export default defineConfig({
       on(
         'after:spec',
         (spec: Cypress.Spec, results: CypressCommandLine.RunResult) => {
-          // Do we have failures?
           if (results && results.video && results.stats.failures === 0) {
-            // delete the video if the spec passed
-            unlinkSync(results.video);
+            if (existsSync(results.video)) unlinkSync(results.video);
           }
         }
       );

@@ -20,8 +20,6 @@ import { interceptAddressSearchAPI } from '../../support/intercepts';
 const title = faker.helpers.enumValue(TitleEnum);
 const phoneNumber = faker.phone.number();
 const postcode = 'A1 2BC';
-const email = generateEmailAddress();
-const applicationId = faker.string.uuid();
 
 const mainApplicantBirthDate = faker.date.birthdate({
   mode: 'age',
@@ -90,62 +88,68 @@ const childTwoDetails: HouseholdMemberDetails = {
 
 describe('Add and remove household members', () => {
   beforeEach(() => {
-    cy.clearAllCookies();
     interceptAddressSearchAPI(addressSearchAPIResponse(postcode));
-    //need to login like this since Cypress doesn't seem to be handling the cookie set by the app
-    cy.loginAsResident(applicationId, false, false);
+    cy.clearAllCookies();
   });
 
-  it(`allows user to add and remove household members`, () => {
-    visitHomepageSignInAndVerify(applicationId, email);
-    fillInTheSignUpForm(signUpDetails);
-    StartPage.getSubmitButton().click();
+  Cypress._.times(1, () => {
+    it(`allows user to add and remove household members`, () => {
+      const applicationId = faker.string.uuid();
+      cy.loginAsResident(applicationId, false, false);
+      const email = generateEmailAddress();
 
-    //agree terms
-    AgreeTermsPage.getAgreeCheckbox().check();
-    AgreeTermsPage.getAgreeButton().click();
+      visitHomepageSignInAndVerify(applicationId, email);
+      fillInTheSignUpForm(signUpDetails);
+      StartPage.getSubmitButton().click();
 
-    cy.contains(`${mainApplicantFirstName} ${mainApplicantLastName}`);
-    cy.contains('There is 1 person in this application.');
+      //agree terms
+      AgreeTermsPage.getAgreeCheckbox().check();
+      AgreeTermsPage.getAgreeButton().click();
 
-    //add partner
-    ApplyHouseholdPage.getAddHouseholdMemberButton().click();
+      cy.contains(`${mainApplicantFirstName} ${mainApplicantLastName}`);
+      cy.contains('There is 1 person in this application.');
 
-    fillInHouseholdMemberForm(partnerDetails);
-    AddPersonPage.getSubmitButton().click();
+      //add partner
+      ApplyHouseholdPage.getAddHouseholdMemberButton().click();
 
-    cy.contains('Person 1: Me');
-    cy.contains(`${mainApplicantFirstName} ${mainApplicantLastName}`);
-    cy.contains('Person 2: My partner');
-    cy.contains(`${partnerFirstName} ${partnerLastName}`);
-    cy.contains('There are 2 people in this application.');
+      fillInHouseholdMemberForm(partnerDetails);
+      AddPersonPage.getSubmitButton().click();
 
-    //add first child
-    ApplyHouseholdPage.getAddHouseholdMemberButton().click();
-    fillInHouseholdMemberForm(childOneDetails);
-    AddPersonPage.getSubmitButton().click();
+      cy.contains('Person 1: Me');
+      cy.contains(`${mainApplicantFirstName} ${mainApplicantLastName}`);
+      cy.contains('Person 2: My partner');
+      cy.contains(`${partnerFirstName} ${partnerLastName}`);
+      cy.contains('There are 2 people in this application.');
 
-    cy.contains('Person 1: Me');
-    cy.contains(`${mainApplicantFirstName} ${mainApplicantLastName}`);
-    cy.contains('Person 2: My partner');
-    cy.contains(`${partnerFirstName} ${partnerLastName}`);
-    cy.contains('Person 3: My child');
-    cy.contains(`${childOneFirstName} ${childOneLastName}`);
-    cy.contains('There are 3 people in this application.');
+      //add first child
+      ApplyHouseholdPage.getAddHouseholdMemberButton().click();
+      fillInHouseholdMemberForm(childOneDetails);
+      AddPersonPage.getSubmitButton().click();
 
-    //add second child
-    ApplyHouseholdPage.getAddHouseholdMemberButton().click();
-    fillInHouseholdMemberForm(childTwoDetails);
-    AddPersonPage.getSubmitButton().click();
+      cy.contains('Person 1: Me');
+      cy.contains(`${mainApplicantFirstName} ${mainApplicantLastName}`);
+      cy.contains('Person 2: My partner');
+      cy.contains(`${partnerFirstName} ${partnerLastName}`);
+      cy.contains('Person 3: My child');
+      cy.contains(`${childOneFirstName} ${childOneLastName}`);
+      cy.contains('There are 3 people in this application.');
 
-    cy.contains('Person 1: Me');
-    cy.contains(`${mainApplicantFirstName} ${mainApplicantLastName}`);
-    cy.contains('Person 2: My partner');
-    cy.contains(`${partnerFirstName} ${partnerLastName}`);
-    cy.contains('Person 3: My child');
-    cy.contains(`${childOneFirstName} ${childOneLastName}`);
-    cy.contains('Person 4: My child');
-    cy.contains(`${childTwoFirstName} ${childTwoLastName}`);
-    cy.contains('There are 4 people in this application.');
+      //add second child
+      ApplyHouseholdPage.getAddHouseholdMemberButton().click();
+      fillInHouseholdMemberForm(childTwoDetails);
+      AddPersonPage.getSubmitButton().click();
+
+      cy.contains('Person 1: Me');
+      cy.contains(`${mainApplicantFirstName} ${mainApplicantLastName}`);
+      cy.contains('Person 2: My partner');
+      cy.contains(`${partnerFirstName} ${partnerLastName}`);
+      cy.contains('Person 3: My child');
+      cy.contains(`${childOneFirstName} ${childOneLastName}`);
+      cy.contains('Person 4: My child');
+      cy.contains(`${childTwoFirstName} ${childTwoLastName}`);
+      cy.contains('There are 4 people in this application.');
+
+      cy.contains('Sign out').click();
+    });
   });
 });

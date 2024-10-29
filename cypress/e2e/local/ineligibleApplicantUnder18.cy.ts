@@ -43,24 +43,6 @@ const fillInTheSignUpForm = () => {
   StartPage.getPhoneNumberInput().type(phoneNumber);
 };
 
-const addressSearchAPIResponse = {
-  body: {
-    address: [
-      {
-        line1: 'TEST ADDRESS',
-        line2: '1 STREET',
-        line3: 'LOCAL',
-        line4: '',
-        town: 'CITY',
-        postcode: `${postcode}`,
-        UPRN: 11111111111,
-      },
-    ],
-    page_count: 1,
-    total_count: 1,
-  },
-};
-
 Cypress._.times(1, () => {
   describe('Ineligible main applicant', () => {
     beforeEach(() => {
@@ -68,13 +50,7 @@ Cypress._.times(1, () => {
     });
 
     it(`rejects an applicant under the age of 18`, () => {
-      cy.intercept(
-        {
-          method: 'GET',
-          path: '/api/address/*',
-        },
-        addressSearchAPIResponse
-      ).as('addressSearchMock');
+      cy.mockAddressAPISearchByPostcode(postcode);
 
       cy.viewport(1000, 1000);
 

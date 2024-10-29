@@ -91,7 +91,9 @@ jobs:
     steps:
       - run:
           name: Install Playwright Dependancies
-          command: npx playwright install-deps webkit
+          command: |
+            npx playwright install webkit
+            npx playwright install-deps webkit
       - cypress/install:
           package-manager: npm
           install-browsers: true

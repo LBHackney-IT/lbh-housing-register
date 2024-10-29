@@ -84,19 +84,29 @@ export default defineConfig({
         },
       });
 
-      if (config.video) {
-        // delete video if test failed
-        on('after:spec', (spec, results) => {
-          console.log('results: %o', results);
-          if (results.video) {
-            if (results.stats.failures || results.stats.skipped) {
-              console.log('keeping the video %s', results.video);
-            } else {
-              unlinkSync(results.video);
-            }
+      on(
+        'after:spec',
+        (spec: Cypress.Spec, results: CypressCommandLine.RunResult) => {
+          // Do we have failures?
+          if (results && results.video && results.stats.failures === 0) {
+            // delete the video if the spec passed
+            unlinkSync(results.video);
           }
-        });
-      }
+        }
+      );
+
+      // if (config.video) {
+      //   // delete video if test failed
+      //   on('after:spec', (spec, results) => {
+      //     if (results.video) {
+      //       if (results.stats.failures || results.stats.skipped) {
+      //         console.log('keeping the video %s', results.video);
+      //       } else {
+      //         unlinkSync(results.video);
+      //       }
+      //     }
+      //   });
+      // }
 
       config.env = {
         ...process.env,

@@ -8,5 +8,6 @@ describe('Add household member', () => {
     cy.loginAsUser('readOnly');
     cy.visit(`applications/edit/${applicationId}/add-household-member`);
     cy.contains('Access denied');
+    cy.contains('fkjsdklfjasd');
   });
 });

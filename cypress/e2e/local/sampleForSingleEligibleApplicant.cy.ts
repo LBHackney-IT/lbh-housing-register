@@ -1,11 +1,7 @@
 import { faker } from '@faker-js/faker/locale/en_GB';
-import HomePage from '../../pages/home';
-import SignInPage from '../../pages/signIn';
-import VerifyPage from '../../pages/verify';
 import StartPage from '../../pages/start';
 import {
   generateEmailAddress,
-  getRandomGender,
   TitleEnum,
 } from '../../../testUtils/personHelper';
 import AgreeTermsPage from '../../pages/agreeTerms';
@@ -19,6 +15,13 @@ import ApplyResidentCurrentAccommodationPage from '../../pages/apply/[resident]/
 import ApplyResidentYourSituationPage from '../../pages/apply/[resident]/your-situation';
 import ApplyResidentSummaryPage from '../../pages/apply/[resident]/summary';
 import DeclarationPage from '../../pages/declaration';
+import {
+  addressSearchAPIResponse,
+  fillInTheSignUpForm,
+  SignUpFormDetails,
+  visitHomepageSignInAndVerify,
+} from '../../support/locale2eTestsHelper';
+import { interceptAddressSearchAPI } from '../../support/intercepts';
 
 //ensure eligibility: over 55 and alone
 const birthDate = faker.date.birthdate({ mode: 'age', min: 56, max: 90 });
@@ -27,83 +30,31 @@ const phoneNumber = faker.phone.number();
 const mainApplicantFirstName = faker.person.firstName();
 const mainApplicantLastName = faker.person.lastName();
 const postcode = 'A1 2BC';
-const email = generateEmailAddress();
-const applicationId = faker.string.uuid();
-const verificationCode = faker.number
-  .int({ min: 100000, max: 999999 })
-  .toString();
 
-const fillInTheSignUpForm = () => {
-  StartPage.getTitleDropdown().select(title);
-  StartPage.getFirstNameInput().type(mainApplicantFirstName);
-  StartPage.getLastNameInput().type(mainApplicantLastName);
-  StartPage.getDoBDayInput().type(birthDate.getDate().toString());
-  StartPage.getDoBMonthInput().type((birthDate.getMonth() + 1).toString());
-  StartPage.getDoBYearInput().type(birthDate.getFullYear().toString());
-  StartPage.getGenderOptions().check(getRandomGender());
-  StartPage.getNationalInsuranceNumberInput().type(
-    faker.string.alphanumeric(9)
-  );
-  StartPage.getPhoneNumberInput().type(phoneNumber);
+const signUpDetails: SignUpFormDetails = {
+  title,
+  firstName: mainApplicantFirstName,
+  lastName: mainApplicantLastName,
+  birthDate,
+  gender: 'M',
+  nationalInsuranceNumber: faker.string.alphanumeric(9),
+  phoneNumber,
 };
 
-const addressSearchAPIResponse = {
-  body: {
-    address: [
-      {
-        line1: 'TEST ADDRESS',
-        line2: '1 STREET',
-        line3: 'LOCAL',
-        line4: '',
-        town: 'CITY',
-        postcode: `${postcode}`,
-        UPRN: 11111111111,
-      },
-    ],
-    page_count: 1,
-    total_count: 1,
-  },
-};
+describe('Single main applicant, over 55', () => {
+  beforeEach(() => {
+    interceptAddressSearchAPI(addressSearchAPIResponse(postcode));
+    cy.clearAllCookies();
+  });
 
-Cypress._.times(1, () => {
-  describe('Single main applicant, over 55', () => {
-    beforeEach(() => {
-      cy.clearAllCookies();
-    });
-
+  Cypress._.times(1, () => {
     it(`allows eligible applicant to fill in and submit the application`, () => {
-      //intercept address API since address is not relevant in this test
-      cy.intercept(
-        {
-          method: 'GET',
-          path: '/api/address/*',
-        },
-        addressSearchAPIResponse
-      ).as('addressSearchMock');
+      const applicationId = faker.string.uuid();
+      cy.loginAsResident(applicationId, false, false);
+      const email = generateEmailAddress();
 
-      cy.viewport(1000, 1000);
-
-      HomePage.visit(applicationId);
-      HomePage.getCookiesButton().click();
-
-      HomePage.getStartApplicationButton().scrollIntoView().click();
-
-      SignInPage.getEmailInput()
-        .scrollIntoView()
-        .type(`${email}`, { delay: 0 });
-
-      SignInPage.getSubmitButton().click();
-
-      //need to login like this since Cypress doesn't seem to be handling the cookie set by the app
-      cy.loginAsResident(applicationId, true, true);
-
-      VerifyPage.getVerifyCodePage().should('be.visible');
-      VerifyPage.getVerifyCodeInput()
-        .scrollIntoView()
-        .type(verificationCode, { delay: 0 });
-      VerifyPage.getVerifySubmitButton().scrollIntoView().click();
-
-      fillInTheSignUpForm();
+      visitHomepageSignInAndVerify(applicationId, email);
+      fillInTheSignUpForm(signUpDetails);
       StartPage.getSubmitButton().click();
 
       //agree terms

@@ -84,9 +84,12 @@ export default defineConfig({
         },
       });
 
-      config.video = config.browser?.displayName !== 'firefox';
-
-      if (config.video) {
+      if (config.video && config.browser?.name !== 'firefox') {
+        console.log('video recording is enabled in:', config.browser?.name);
+        console.log(
+          'video recording is enabled in DISPLAY:',
+          config.browser?.displayName
+        );
         // delete video if test failed
         on('after:spec', (spec, results) => {
           if (results.video) {

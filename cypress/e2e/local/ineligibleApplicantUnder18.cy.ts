@@ -14,6 +14,7 @@ import ApplyExpectPage from '../../pages/apply/expect';
 import RejectionPage from '../../pages/rejection';
 
 import ApplyResidentSummaryPage from '../../pages/apply/[resident]/summary';
+import { getDisqualificationReasonOption } from '../../../lib/utils/disqualificationReasonOptions';
 
 // user is under 18
 const birthDate = faker.date.birthdate({ mode: 'age', min: 15, max: 17 });
@@ -113,6 +114,11 @@ Cypress._.times(1, () => {
       ApplyResidentSummaryPage.getConfirmDetailsButton().click();
 
       RejectionPage.getRejectionPage().should('be.visible');
+
+      RejectionPage.getRejectionReason().should(
+        'contain.text',
+        getDisqualificationReasonOption('under18YearsOld')
+      );
     });
   });
 });

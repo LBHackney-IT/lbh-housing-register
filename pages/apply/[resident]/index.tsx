@@ -57,7 +57,10 @@ const ResidentIndex = (): JSX.Element => {
 
   // Only check eligibility when the room needs completed or the resident is under 18
   useEffect(() => {
-    if (roomNeedsCompleted || !isOver18(currentResident)) {
+    if (
+      roomNeedsCompleted ||
+      (application.mainApplicant && !isOver18(application.mainApplicant))
+    ) {
       const [eligibilityStatus] = checkEligible(application);
       setIsEligible(eligibilityStatus);
     }

@@ -1,11 +1,11 @@
 import { faker } from '@faker-js/faker';
 import HouseholdPage from '../../../../pages/household';
 import { generateApplication } from '../../../../../testUtils/applicationHelper';
-import AddPersonPage from '../../../../pages/addPerson';
 import Components from '../../../../pages/components';
 import { generatePerson } from '../../../../../testUtils/personHelper';
 
 import { StatusCodes } from 'http-status-codes';
+import AddPersonPage from '../../../../pages/addPerson';
 
 const personId = faker.string.uuid();
 const applicationId = faker.string.uuid();
@@ -45,7 +45,8 @@ describe('Add person to household ', () => {
     HouseholdPage.visit();
     HouseholdPage.getHouseholdPage().should('be.visible');
 
-    AddPersonPage.visit();
+    HouseholdPage.getAddHouseholdMemberButton().click();
+
     AddPersonPage.getAddPersonPage().should('be.visible');
 
     Components.getSelect('title').select(1);
@@ -84,7 +85,8 @@ describe('Add person to household ', () => {
     HouseholdPage.visit();
     HouseholdPage.getHouseholdPage().should('be.visible');
 
-    AddPersonPage.visit();
+    HouseholdPage.getAddHouseholdMemberButton().click();
+
     AddPersonPage.getAddPersonPage().should('be.visible');
 
     Components.getSelect('title').select(1);

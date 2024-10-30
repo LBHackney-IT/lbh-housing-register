@@ -180,7 +180,7 @@ workflows:
             - install-dependencies
           matrix:
             parameters:
-              browser: [chrome]
+              browser: [chrome, firefox]
               # mobile, tablet, chromebook/desktop
               height: [480, 768, 960]
               # mobile, tablet, chromebook, desktop

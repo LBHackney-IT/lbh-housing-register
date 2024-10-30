@@ -6,7 +6,7 @@ import { sign } from 'jsonwebtoken';
 import next from 'next';
 import nock from 'nock';
 
-import { unlinkSync } from 'fs';
+import { existsSync, unlinkSync } from 'fs';
 
 const baseUrl = 'http://localhost:3000';
 
@@ -72,6 +72,7 @@ export default defineConfig({
           //   body,
           //   delay
           // );
+
           method = method.toLowerCase();
 
           nock(hostname)
@@ -83,18 +84,18 @@ export default defineConfig({
           return null;
         },
       });
-      if (config.video) {
-        // delete video if test failed
-        on('after:spec', (spec, results) => {
-          if (results.video) {
-            if (results.stats.failures || results.stats.skipped) {
-              console.log('keeping the video %s', results.video);
-            } else {
-              unlinkSync(results.video);
-            }
+
+      on(
+        'after:spec',
+        // after the test has run, only save the video exists and if the test failed.
+        // https://docs.cypress.io/api/node-events/after-spec-api
+        (spec: Cypress.Spec, results: CypressCommandLine.RunResult) => {
+          if (results && results.video && results.stats.failures === 0) {
+            if (existsSync(results.video)) unlinkSync(results.video);
           }
-        });
-      }
+        }
+      );
+
       config.env = {
         ...process.env,
       };

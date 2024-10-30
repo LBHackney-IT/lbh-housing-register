@@ -87,6 +87,8 @@ export default defineConfig({
 
       on(
         'after:spec',
+        // after the test has run, only save the video exists and if the test failed.
+        // https://docs.cypress.io/api/node-events/after-spec-api
         (spec: Cypress.Spec, results: CypressCommandLine.RunResult) => {
           if (results && results.video && results.stats.failures === 0) {
             if (existsSync(results.video)) unlinkSync(results.video);

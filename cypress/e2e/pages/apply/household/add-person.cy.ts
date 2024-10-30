@@ -5,6 +5,7 @@ import Components from '../../../../pages/components';
 import { generatePerson } from '../../../../../testUtils/personHelper';
 
 import { StatusCodes } from 'http-status-codes';
+import AddPersonPage from '../../../../pages/addPerson';
 
 const personId = faker.string.uuid();
 const applicationId = faker.string.uuid();
@@ -46,6 +47,8 @@ describe('Add person to household ', () => {
 
     HouseholdPage.getAddHouseholdMemberButton().click();
 
+    AddPersonPage.getAddPersonPage().should('be.visible');
+
     Components.getSelect('title').select(1);
     Components.getInput('firstName').type(faker.person.firstName());
     Components.getInput('surname').type(faker.person.lastName());
@@ -83,6 +86,8 @@ describe('Add person to household ', () => {
     HouseholdPage.getHouseholdPage().should('be.visible');
 
     HouseholdPage.getAddHouseholdMemberButton().click();
+
+    AddPersonPage.getAddPersonPage().should('be.visible');
 
     Components.getSelect('title').select(1);
     Components.getInput('firstName').type(faker.person.firstName());

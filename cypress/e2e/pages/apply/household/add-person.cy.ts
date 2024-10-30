@@ -1,7 +1,6 @@
 import { faker } from '@faker-js/faker';
 import HouseholdPage from '../../../../pages/household';
 import { generateApplication } from '../../../../../testUtils/applicationHelper';
-import AddPersonPage from '../../../../pages/addPerson';
 import Components from '../../../../pages/components';
 import { generatePerson } from '../../../../../testUtils/personHelper';
 
@@ -45,8 +44,7 @@ describe('Add person to household ', () => {
     HouseholdPage.visit();
     HouseholdPage.getHouseholdPage().should('be.visible');
 
-    AddPersonPage.visit();
-    AddPersonPage.getAddPersonPage().should('be.visible');
+    HouseholdPage.getAddHouseholdMemberButton().click();
 
     Components.getSelect('title').select(1);
     Components.getInput('firstName').type(faker.person.firstName());
@@ -84,8 +82,7 @@ describe('Add person to household ', () => {
     HouseholdPage.visit();
     HouseholdPage.getHouseholdPage().should('be.visible');
 
-    AddPersonPage.visit();
-    AddPersonPage.getAddPersonPage().should('be.visible');
+    HouseholdPage.getAddHouseholdMemberButton().click();
 
     Components.getSelect('title').select(1);
     Components.getInput('firstName').type(faker.person.firstName());

@@ -72,6 +72,7 @@ export default defineConfig({
           //   body,
           //   delay
           // );
+
           method = method.toLowerCase();
 
           nock(hostname)
@@ -93,19 +94,6 @@ export default defineConfig({
         }
       );
 
-      // if (config.video) {
-      //   // delete video if test failed
-      //   on('after:spec', (spec, results) => {
-      //     if (results.video) {
-      //       if (results.stats.failures || results.stats.skipped) {
-      //         console.log('keeping the video %s', results.video);
-      //       } else {
-      //         unlinkSync(results.video);
-      //       }
-      //     }
-      //   });
-      // }
-
       config.env = {
         ...process.env,
       };
@@ -120,7 +108,6 @@ export default defineConfig({
     videoCompression: true,
   },
   component: {
-    experimentalJustInTimeCompile: true,
     devServer: {
       framework: 'next',
       bundler: 'webpack',

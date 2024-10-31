@@ -20,6 +20,7 @@ import {
 } from '../../lib/utils/adminHelpers';
 import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 import { scrollToError, scrollToTop } from '../../lib/utils/scroll';
+import { checkError } from 'lib/utils/errorHelper';
 
 interface PageProps {
   user: HackneyGoogleUser;
@@ -48,9 +49,8 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
       router.push(`/applications/view/${setToManualDraft.id}`);
     } catch (err) {
       setIsSaving(false);
-
-      if (err instanceof Error) {
-        setUserError(err.message);
+      if (checkError(err)) {
+        setUserError((err as Error).message);
       } else {
         setUserError('Unable to create application');
       }

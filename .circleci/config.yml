@@ -244,7 +244,6 @@ workflows:
               only:
                 - main
                 - development
-                - TS-1791-HR-Investigate-Safari-test-failures
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:

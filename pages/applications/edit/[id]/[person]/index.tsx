@@ -20,6 +20,7 @@ import {
 import { getRedirect, getSession } from '../../../../../lib/utils/googleAuth';
 import { scrollToError, scrollToTop } from '../../../../../lib/utils/scroll';
 import Custom404 from '../../../../404';
+import { checkError } from 'lib/utils/errorHelper';
 
 interface PageProps {
   user: HackneyGoogleUser;
@@ -97,7 +98,7 @@ export default function EditApplicant({ user, data }: PageProps): JSX.Element {
       .catch((err) => {
         setIsSaving(false);
 
-        if (err instanceof Error) {
+        if (checkError(err)) {
           setUserError(err.message);
         } else {
           setUserError('Unable to update application');

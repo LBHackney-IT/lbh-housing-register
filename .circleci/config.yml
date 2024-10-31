@@ -23,9 +23,62 @@ references:
     attach_workspace:
       at: *workspace_root
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Commands ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Anchor ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Jobs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+exclude_combinations:
+  &exclude_combinations # exclude screen combinations that don't make sense for testing outside of the defined matrix.
+  - browser: chrome
+    height: 480
+    width: 1536
+  - browser: chrome
+    height: 480
+    width: 1366
+  - browser: chrome
+    height: 480
+    width: 1024
+  - browser: firefox
+    height: 480
+    width: 1536
+  - browser: firefox
+    height: 480
+    width: 1366
+  - browser: firefox
+    height: 480
+    width: 1024
+  - browser: chrome
+    height: 768
+    width: 1536
+  - browser: chrome
+    height: 768
+    width: 1366
+  - browser: chrome
+    height: 768
+    width: 320
+  - browser: firefox
+    height: 768
+    width: 1536
+  - browser: firefox
+    height: 768
+    width: 1366
+  - browser: firefox
+    height: 768
+    width: 320
+  - browser: chrome
+    height: 960
+    width: 1024
+  - browser: chrome
+    height: 960
+    width: 320
+  - browser: firefox
+    height: 960
+    width: 1024
+  - browser: firefox
+    height: 960
+    width: 320
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Commands ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Jobs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 jobs:
   install-dependencies:
     executor: node-executor
@@ -185,59 +238,10 @@ workflows:
               height: [480, 768, 960]
               # mobile, tablet, chromebook, desktop
               width: [320, 1024, 1366, 1536]
-            exclude:
-              # exclude screen combinations that don't make sense
-              - browser: chrome
-                height: 480
-                width: 1536
-              - browser: chrome
-                height: 480
-                width: 1366
-              - browser: chrome
-                height: 480
-                width: 1024
-              - browser: firefox
-                height: 480
-                width: 1536
-              - browser: firefox
-                height: 480
-                width: 1366
-              - browser: firefox
-                height: 480
-                width: 1024
-              - browser: chrome
-                height: 768
-                width: 1536
-              - browser: chrome
-                height: 768
-                width: 1366
-              - browser: chrome
-                height: 768
-                width: 320
-              - browser: firefox
-                height: 768
-                width: 1536
-              - browser: firefox
-                height: 768
-                width: 1366
-              - browser: firefox
-                height: 768
-                width: 320
-              - browser: chrome
-                height: 960
-                width: 1024
-              - browser: chrome
-                height: 960
-                width: 320
-              - browser: firefox
-                height: 960
-                width: 1024
-              - browser: firefox
-                height: 960
-                width: 320
+            exclude: *exclude_combinations
           filters:
             branches:
-              only: development
+              only: TS-1791-HR-Investigate-Safari-test-failures
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:

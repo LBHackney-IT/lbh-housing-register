@@ -170,13 +170,15 @@ jobs:
           package-manager: npm
           install-browsers: true
           install-command: npm install
-          # post-install: npm run build
+          # post-install: |
+          #   npx playwright install-deps webkit
+          #   npm run build
       - run:
           name: Install Playwright Dependencies for WebKit
           command: npx playwright install-deps webkit
       - run:
-          name: build
-          command: npm run build
+          name: Set GST_PLUGIN_SCANNER Environment Variable
+          command: export GST_PLUGIN_SCANNER=/usr/libexec/gstreamer-1.0/gst-plugin-scanner
       - cypress/run-tests:
           cypress-command: npx cypress run --browser=<< parameters.browser >> --config viewportHeight=<< parameters.height >>,viewportWidth=<< parameters.width >> --reporter junit --reporter-options "mochaFile=test_results/cypress-e2e-[hash].xml"
       - store_test_results:

@@ -23,7 +23,7 @@ references:
     attach_workspace:
       at: *workspace_root
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Anchor ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Anchors ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
 exclude_combinations:
   &exclude_combinations # exclude screen combinations that don't make sense for testing outside of the defined matrix.
@@ -45,6 +45,15 @@ exclude_combinations:
   - browser: firefox
     height: 480
     width: 1024
+  - browser: webkit
+    height: 480
+    width: 1536
+  - browser: webkit
+    height: 480
+    width: 1366
+  - browser: webkit
+    height: 480
+    width: 1024
   - browser: chrome
     height: 768
     width: 1536
@@ -63,6 +72,15 @@ exclude_combinations:
   - browser: firefox
     height: 768
     width: 320
+  - browser: webkit
+    height: 768
+    width: 1536
+  - browser: webkit
+    height: 768
+    width: 1366
+  - browser: webkit
+    height: 768
+    width: 320
   - browser: chrome
     height: 960
     width: 1024
@@ -73,6 +91,12 @@ exclude_combinations:
     height: 960
     width: 1024
   - browser: firefox
+    height: 960
+    width: 320
+  - browser: webkit
+    height: 960
+    width: 1024
+  - browser: webkit
     height: 960
     width: 320
 
@@ -146,7 +170,13 @@ jobs:
           package-manager: npm
           install-browsers: true
           install-command: npm install
-          post-install: npm run build
+          # post-install: npm run build
+      - run:
+          name: Install Playwright Dependencies for WebKit
+          command: npx playwright install-deps webkit
+      - run:
+          name: build
+          command: npm run build
       - cypress/run-tests:
           cypress-command: npx cypress run --browser=<< parameters.browser >> --config viewportHeight=<< parameters.height >>,viewportWidth=<< parameters.width >> --reporter junit --reporter-options "mochaFile=test_results/cypress-e2e-[hash].xml"
       - store_test_results:
@@ -233,7 +263,7 @@ workflows:
             - install-dependencies
           matrix:
             parameters:
-              browser: [chrome, firefox]
+              browser: [chrome, firefox, webkit]
               # mobile, tablet, chromebook/desktop
               height: [480, 768, 960]
               # mobile, tablet, chromebook, desktop
@@ -241,7 +271,10 @@ workflows:
             exclude: *exclude_combinations
           filters:
             branches:
-              only: TS-1791-HR-Investigate-Safari-test-failures
+              only:
+                - main
+                - development
+                - TS-1791-HR-Investigate-Safari-test-failures
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:

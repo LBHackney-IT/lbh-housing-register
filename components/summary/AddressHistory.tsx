@@ -38,24 +38,23 @@ export function AddressHistorySummary({
           <Paragraph>Not provided yet</Paragraph>
         </SummaryAnswer>
       )}
-      {addressHistory &&
-        addressHistory.map((address: AddressHistoryEntry, index: number) => {
-          return (
-            <SummaryAnswer key={index}>
-              <Paragraph>
-                <Hint
-                  content={index === 0 ? 'Current address' : 'Previous address'}
-                />
-                <strong>
-                  {address.address.line1}, {address.address.town},{' '}
-                  {address.postcode}
-                  <br />
-                  {durations[index].label}
-                </strong>
-              </Paragraph>
-            </SummaryAnswer>
-          );
-        })}
+      {addressHistory?.map((address: AddressHistoryEntry, index: number) => {
+        return (
+          <SummaryAnswer key={index}>
+            <Paragraph>
+              <Hint
+                content={index === 0 ? 'Current address' : 'Previous address'}
+              />
+              <strong>
+                {address.address.line1}, {address.address.town},{' '}
+                {address.postcode}
+                <br />
+                {durations[index].label}
+              </strong>
+            </Paragraph>
+          </SummaryAnswer>
+        );
+      })}
     </SummarySection>
   );
 }

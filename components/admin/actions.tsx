@@ -38,8 +38,9 @@ export default function Actions({ data }: PageProps): JSX.Element {
   const firstReason = disqualificationReasons[0];
   const formRef = useRef<FormikProps<FormikValues>>(null);
 
-  const [reservedBiddingNumberError, setReservedBiddingNumberError] =
-    useState(null);
+  const [reservedBiddingNumberError, setReservedBiddingNumberError] = useState(
+    null
+  );
 
   const schema = Yup.object({
     status: Yup.string()

@@ -14,7 +14,7 @@ import {
   generateQuestionArray,
 } from '../../../../lib/utils/adminHelpers';
 import { getRedirect, getSession } from '../../../../lib/utils/googleAuth';
-import { scrollToTop } from '../../../../lib/utils/scroll';
+import { scrollToError, scrollToTop } from '../../../../lib/utils/scroll';
 import Custom404 from '../../../404';
 
 interface PageProps {
@@ -29,6 +29,8 @@ export default function AddHouseholdMember({
   const router = useRouter();
   const [addresses, setAddresses] = useState([] as Address[]);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [userError, setUserError] = useState<string | undefined>(undefined);
 
   const onSubmit = (values: FormikValues) => {
     const questionValues = generateQuestionArray(values, addresses);
@@ -63,11 +65,26 @@ export default function AddHouseholdMember({
       otherMembers: data.otherMembers,
     };
 
-    updateApplication(request).then(() => {
-      router.push({
-        pathname: `/applications/view/${data.id}`,
+    setIsSaving(true);
+
+    updateApplication(request)
+      .then(() => {
+        setIsSaving(false);
+        router.push({
+          pathname: `/applications/view/${data.id}`,
+        });
+      })
+      .catch((err) => {
+        setIsSaving(false);
+
+        if (err instanceof Error) {
+          setUserError(err.message);
+        } else {
+          setUserError('Unable to update application');
+        }
+
+        scrollToError();
       });
-    });
   };
   /*  eslint-disable @typescript-eslint/no-explicit-any */
   const handleSaveApplication = (isValid: any, touched: any) => {
@@ -78,7 +95,7 @@ export default function AddHouseholdMember({
 
     setIsSubmitted(true);
   };
-  /*  eslint-disable react/jsx-no-useless-fragment */
+
   return (
     <>
       {data.id ? (
@@ -90,6 +107,9 @@ export default function AddHouseholdMember({
           addresses={addresses}
           setAddresses={setAddresses}
           handleSaveApplication={handleSaveApplication}
+          dataTestId="test-application-add-household-member-page"
+          isSaving={isSaving}
+          userError={userError}
         />
       ) : (
         <Custom404 />

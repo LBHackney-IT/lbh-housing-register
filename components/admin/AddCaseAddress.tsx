@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+
 import {
   SummaryListNoBorder,
   SummaryListActions,
@@ -218,6 +219,7 @@ export default function AddCaseAddress({
                     : 'govuk-secondary lbh-button--secondary'
                 }`}
                 onClick={addNewAddress}
+                data-testid="test-add-case-address-button"
               >
                 Add address
               </button>
@@ -373,7 +375,12 @@ export default function AddCaseAddress({
             />
           </div>
 
-          <Button onClick={saveAddress}>Save address</Button>
+          <Button
+            dataTestId="test-save-case-address-button"
+            onClick={saveAddress}
+          >
+            Save address
+          </Button>
         </>
       </Dialog>
     </>

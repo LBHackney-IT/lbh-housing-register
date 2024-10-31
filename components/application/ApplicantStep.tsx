@@ -10,30 +10,39 @@ function ApplicantStep({
   formID,
   applicant,
   stepName,
+  dataTestId,
 }: {
   children: ReactNode;
   formID: FormID;
   stepName: string;
   applicant: Applicant;
+  dataTestId?: string;
 }): ReactElement {
   const formData = getFormData(formID);
   const breadcrumbs = [
     {
+      id: 'application-overview',
       href: '/apply/overview',
       name: 'Application',
     },
     {
+      id: 'applicant-apply-id',
       href: `/apply/${applicant.person?.id}`,
       name: applicant.person?.firstName || '',
     },
     {
+      id: 'applicant-apply-form',
       href: `/apply/${applicant.person?.id}/${formID}`,
       name: stepName,
     },
   ];
 
   return (
-    <Layout pageName={stepName} breadcrumbs={breadcrumbs}>
+    <Layout
+      pageName={stepName}
+      breadcrumbs={breadcrumbs}
+      dataTestId={dataTestId}
+    >
       {formData.heading && <HeadingOne content={formData.heading} />}
       {formData.copy && (
         <Paragraph>

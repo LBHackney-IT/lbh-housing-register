@@ -1,7 +1,11 @@
-class ApplyPage {
+class VerifyPage {
   static getVerifyCodePage() {
     const testId = 'test-verify-code-page';
     return cy.get(`[data-testid="${testId}"]`);
+  }
+
+  static visit(email?: string) {
+    cy.visit(`/apply/verify?email=${email}`);
   }
 
   static getVerifyCodeInput() {
@@ -12,4 +16,4 @@ class ApplyPage {
     return this.getVerifyCodePage().find('button[type="submit"]');
   }
 }
-export default ApplyPage;
+export default VerifyPage;

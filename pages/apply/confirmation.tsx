@@ -24,7 +24,7 @@ const ApplicationConfirmation = (): JSX.Element => {
   };
 
   return (
-    <Layout pageName="Confirmation">
+    <Layout pageName="Confirmation" dataTestId="test-apply-confirmation-page">
       <Panel heading="Application complete">
         <>
           {`Your reference number: ${application.reference?.toUpperCase()}`}

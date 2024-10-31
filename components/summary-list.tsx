@@ -56,7 +56,14 @@ interface SummaryListValueProps {
 export function SummaryListValue({
   children,
 }: SummaryListValueProps): JSX.Element {
-  return <dd className="govuk-summary-list__value">{children}</dd>;
+  return (
+    <dd
+      className="govuk-summary-list__value"
+      data-testid="test-activity-history"
+    >
+      {children}
+    </dd>
+  );
 }
 
 interface SummaryListActionsProps {

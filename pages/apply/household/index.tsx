@@ -9,27 +9,24 @@ import SummaryList, {
   SummaryListKey as Key,
   SummaryListRow as Row,
 } from '../../../components/summary-list';
-import { Applicant } from '../../../domain/HousingApi';
 import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import withApplication from '../../../lib/hoc/withApplication';
 import { exit } from '../../../lib/store/auth';
+import {
+  selectApplicantsMemorised,
+  selectMainApplicant,
+} from 'lib/store/applicant';
 
 const ApplicationHouseholdOverview = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const applicants = useAppSelector((store) =>
-    [store.application.mainApplicant, store.application.otherMembers]
-      .filter((v): v is Applicant | Applicant[] => v !== undefined)
-      .flat()
-  );
-
-  const mainApplicant = useAppSelector(
-    (store) => store.application.mainApplicant
-  );
+  const applicants = useAppSelector(selectApplicantsMemorised);
+  const mainApplicant = useAppSelector(selectMainApplicant);
 
   const breadcrumbs = [
     {
+      id: 'application-overview',
       href: '/apply/overview',
       name: 'Application',
     },
@@ -42,7 +39,11 @@ const ApplicationHouseholdOverview = (): JSX.Element => {
   };
 
   return (
-    <Layout pageName="My household" breadcrumbs={breadcrumbs}>
+    <Layout
+      pageName="My household"
+      breadcrumbs={breadcrumbs}
+      dataTestId="test-apply-household-page"
+    >
       <HeadingOne content="Who are you applying with?" />
       <Paragraph>Include all the people you would like to move with.</Paragraph>
 
@@ -68,7 +69,11 @@ const ApplicationHouseholdOverview = (): JSX.Element => {
         })}
       </SummaryList>
 
-      <ButtonLink href="/apply/household/add-person" secondary={true}>
+      <ButtonLink
+        href="/apply/household/add-person"
+        secondary={true}
+        dataTestId="test-apply-household-add-a-person-button"
+      >
         Add a person
       </ButtonLink>
       <Paragraph>
@@ -78,7 +83,12 @@ const ApplicationHouseholdOverview = (): JSX.Element => {
         </strong>{' '}
         in this application.
       </Paragraph>
-      <ButtonLink href="/apply/expect">Continue to next step</ButtonLink>
+      <ButtonLink
+        href="/apply/expect"
+        dataTestId="test-apply-household-index-continue-to-next-step-button"
+      >
+        Continue to next step
+      </ButtonLink>
       <DeleteLink
         content="Cancel this application"
         details="This application will be permanently deleted."

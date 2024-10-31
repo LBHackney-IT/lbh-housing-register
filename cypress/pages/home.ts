@@ -1,6 +1,7 @@
 class HomePage {
-  static visit() {
-    cy.visit('/');
+  static visit(applicationId?: string) {
+    const url = applicationId ? `/?applicationId=${applicationId}` : '/';
+    cy.visit(url);
   }
 
   static getStartApplicationButton() {

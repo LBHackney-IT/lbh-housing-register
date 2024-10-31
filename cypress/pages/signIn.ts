@@ -1,4 +1,8 @@
 class SignInPage {
+  static visit() {
+    cy.visit('/apply/sign-in');
+  }
+
   static getSignInPage() {
     const testId = 'test-sign-in-page';
     return cy.get(`[data-testid="${testId}"]`);

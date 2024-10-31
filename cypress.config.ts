@@ -6,6 +6,8 @@ import { sign } from 'jsonwebtoken';
 import next from 'next';
 import nock from 'nock';
 
+import { existsSync, unlinkSync } from 'fs';
+
 const baseUrl = 'http://localhost:3000';
 
 export default defineConfig({
@@ -46,7 +48,15 @@ export default defineConfig({
         },
       });
       on('task', {
-        nock: async ({ hostname, method, path, statusCode, body, persist }) => {
+        nock: async ({
+          hostname,
+          method,
+          path,
+          statusCode,
+          body,
+          persist,
+          delay,
+        }) => {
           if (!nock.isActive()) {
             nock.activate();
           }
@@ -59,28 +69,46 @@ export default defineConfig({
           //   path,
           //   persist,
           //   statusCode,
-          //   body
+          //   body,
+          //   delay
           // );
+
           method = method.toLowerCase();
+
           nock(hostname)
             [method](path)
+            .delay(delay ?? 0)
             .reply(statusCode, body)
             .persist(!!persist);
 
           return null;
         },
       });
+
+      on(
+        'after:spec',
+        // after the test has run, only save the video exists and if the test failed.
+        // https://docs.cypress.io/api/node-events/after-spec-api
+        (spec: Cypress.Spec, results: CypressCommandLine.RunResult) => {
+          if (results && results.video && results.stats.failures === 0) {
+            if (existsSync(results.video)) unlinkSync(results.video);
+          }
+        }
+      );
+
       config.env = {
         ...process.env,
       };
       return config;
     },
     baseUrl,
+    excludeSpecPattern: process.env.PIPELINE ? ['cypress/e2e/local/**/*'] : [],
     experimentalWebKitSupport: true,
-    video: true,
     screenshotOnRunFailure: true,
+    defaultCommandTimeout: 10000,
+    video: true,
+    videoCompression: true,
   },
-
   component: {
     devServer: {
       framework: 'next',

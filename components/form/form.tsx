@@ -13,13 +13,15 @@ import Button from '../button';
 import { HeadingTwo } from '../content/headings';
 import Paragraph from '../content/paragraph';
 import DynamicField from './dynamic-field';
+import Loading from 'components/loading';
 interface FormProps {
   buttonText?: string;
   formData: MultiStepForm;
   onSave?: (values: FormData) => void;
-  onSubmit?: (values: FormData, bag: any) => void;
+  onSubmit?: (values: FormData, bag: FormikHelpers<FormData>) => void;
   initialValues?: FormikValues;
   activeStep?: string;
+  isSavingToDatabase?: boolean;
 }
 
 export default function Form({
@@ -28,7 +30,7 @@ export default function Form({
   onSave,
   onSubmit,
   initialValues,
-  activeStep,
+  isSavingToDatabase = false,
 }: FormProps): JSX.Element {
   const [stepNumber, setStepNumber] = useState(0);
 
@@ -95,34 +97,44 @@ export default function Form({
       >
         {({ isSubmitting, values }) => (
           <FormikForm>
-            {step.heading && <HeadingTwo content={step.heading} />}
-            {step.copy && <Paragraph>{step.copy}</Paragraph>}
-            {step.fields.map(
-              (field, index) =>
-                getDisplayStateOfField(field, values) && (
-                  <DynamicField key={index} field={field} />
-                )
-            )}
+            {isSavingToDatabase ? (
+              <Loading text="Saving..." />
+            ) : (
+              <>
+                {step.heading && <HeadingTwo content={step.heading} />}
+                {step.copy && <Paragraph>{step.copy}</Paragraph>}
+                {step.fields.map(
+                  (field, index) =>
+                    getDisplayStateOfField(field, values) && (
+                      <DynamicField key={index} field={field} />
+                    )
+                )}
 
-            <div className="c-flex lbh-simple-pagination">
-              {stepNumber > 0 && (
-                <div className="c-flex__1">
-                  <Button
-                    onClick={() => previous()}
-                    secondary={true}
-                    type="button"
-                  >
-                    Previous step
-                  </Button>
+                <div className="c-flex lbh-simple-pagination">
+                  {stepNumber > 0 && (
+                    <div className="c-flex__1">
+                      <Button
+                        onClick={() => previous()}
+                        secondary={true}
+                        type="button"
+                      >
+                        Previous step
+                      </Button>
+                    </div>
+                  )}
+
+                  <div className="c-flex__1 text-right">
+                    <Button
+                      disabled={isSubmitting}
+                      type="submit"
+                      dataTestId={`test-submit-form-button`}
+                    >
+                      {buttonText ? buttonText : 'Save'}
+                    </Button>
+                  </div>
                 </div>
-              )}
-
-              <div className="c-flex__1 text-right">
-                <Button disabled={isSubmitting} type="submit">
-                  {buttonText ? buttonText : 'Save'}
-                </Button>
-              </div>
-            </div>
+              </>
+            )}
           </FormikForm>
         )}
       </Formik>

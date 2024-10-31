@@ -13,12 +13,16 @@ import { Errors } from '../../lib/types/errors';
 import { FormData } from '../../lib/types/form';
 import { FormID, getFormData } from '../../lib/utils/form-data';
 import { scrollToError } from '../../lib/utils/scroll';
+import Loading from 'components/loading';
 
 const ApplicationSignInPage = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const isLoggedIn = useAppSelector((store) => store.application.id);
   const router = useRouter();
   const [userError, setUserError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const { query } = router;
+  const applicationId = query.applicationId as string;
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -28,12 +32,26 @@ const ApplicationSignInPage = (): JSX.Element => {
 
   const onSubmit = async (values: FormData) => {
     try {
-      dispatch(createVerifyCode(values.emailAddress));
-
-      router.push({
-        pathname: '/apply/verify',
-        query: { email: values.emailAddress },
-      });
+      setIsSaving(true);
+      dispatch(
+        createVerifyCode({
+          emailAddress: values.emailAddress,
+          applicationId: applicationId,
+        })
+      )
+        .unwrap()
+        .then(() => {
+          setIsSaving(false);
+          router.push({
+            pathname: '/apply/verify',
+            query: { email: values.emailAddress, applicationId: applicationId },
+          });
+        })
+        .catch((err) => {
+          setIsSaving(false);
+          setUserError(err);
+          scrollToError();
+        });
     } catch (e) {
       console.error(e);
       setUserError(Errors.SIGNIN_ERROR);
@@ -52,11 +70,15 @@ const ApplicationSignInPage = (): JSX.Element => {
       <Paragraph>
         We’ll send you a verification code to continue your application
       </Paragraph>
-      <Form
-        formData={getFormData(FormID.SIGN_IN)}
-        buttonText="Continue"
-        onSubmit={onSubmit}
-      />
+      {isSaving ? (
+        <Loading text="Saving..." />
+      ) : (
+        <Form
+          formData={getFormData(FormID.SIGN_IN)}
+          buttonText="Continue"
+          onSubmit={onSubmit}
+        />
+      )}
     </Layout>
   );
 };

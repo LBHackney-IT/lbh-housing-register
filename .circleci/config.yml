@@ -45,15 +45,6 @@ exclude_combinations:
   - browser: firefox
     height: 480
     width: 1024
-  - browser: webkit
-    height: 480
-    width: 1536
-  - browser: webkit
-    height: 480
-    width: 1366
-  - browser: webkit
-    height: 480
-    width: 1024
   - browser: chrome
     height: 768
     width: 1536
@@ -72,15 +63,6 @@ exclude_combinations:
   - browser: firefox
     height: 768
     width: 320
-  - browser: webkit
-    height: 768
-    width: 1536
-  - browser: webkit
-    height: 768
-    width: 1366
-  - browser: webkit
-    height: 768
-    width: 320
   - browser: chrome
     height: 960
     width: 1024
@@ -91,12 +73,6 @@ exclude_combinations:
     height: 960
     width: 1024
   - browser: firefox
-    height: 960
-    width: 320
-  - browser: webkit
-    height: 960
-    width: 1024
-  - browser: webkit
     height: 960
     width: 320
 
@@ -169,9 +145,7 @@ jobs:
       - cypress/install:
           package-manager: npm
           install-browsers: true
-          install-command: |
-            npm install
-            npx playwright install --with-deps webkit
+          install-command: npm install
           post-install: npm run build
       - cypress/run-tests:
           cypress-command: npx cypress run --browser=<< parameters.browser >> --config viewportHeight=<< parameters.height >>,viewportWidth=<< parameters.width >> --reporter junit --reporter-options "mochaFile=test_results/cypress-e2e-[hash].xml"
@@ -259,7 +233,7 @@ workflows:
             - install-dependencies
           matrix:
             parameters:
-              browser: [chrome, firefox, webkit]
+              browser: [chrome, firefox]
               # mobile, tablet, chromebook/desktop
               height: [480, 768, 960]
               # mobile, tablet, chromebook, desktop

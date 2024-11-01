@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  aws-cli: circleci/aws-cli@1.0.0
+  aws-cli: circleci/aws-cli@3.2.0
   aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
   cypress: cypress-io/cypress@3.3.1
   sonarcloud: sonarsource/sonarcloud@2.0.0
@@ -12,7 +12,7 @@ executors:
       - image: cimg/node:20.17-browsers
   docker-python:
     docker:
-      - image: circleci/python:3.7
+      - image: cimg/python:3.7
   cypress-e2e-executor:
     docker:
       - image: cimg/node:20.17-browsers
@@ -23,9 +23,62 @@ references:
     attach_workspace:
       at: *workspace_root
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Commands ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Anchors ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Jobs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+exclude_combinations:
+  &exclude_combinations # exclude screen combinations that don't make sense for testing outside of the defined matrix.
+  - browser: chrome
+    height: 480
+    width: 1536
+  - browser: chrome
+    height: 480
+    width: 1366
+  - browser: chrome
+    height: 480
+    width: 1024
+  - browser: firefox
+    height: 480
+    width: 1536
+  - browser: firefox
+    height: 480
+    width: 1366
+  - browser: firefox
+    height: 480
+    width: 1024
+  - browser: chrome
+    height: 768
+    width: 1536
+  - browser: chrome
+    height: 768
+    width: 1366
+  - browser: chrome
+    height: 768
+    width: 320
+  - browser: firefox
+    height: 768
+    width: 1536
+  - browser: firefox
+    height: 768
+    width: 1366
+  - browser: firefox
+    height: 768
+    width: 320
+  - browser: chrome
+    height: 960
+    width: 1024
+  - browser: chrome
+    height: 960
+    width: 320
+  - browser: firefox
+    height: 960
+    width: 1024
+  - browser: firefox
+    height: 960
+    width: 320
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Commands ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Jobs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 jobs:
   install-dependencies:
     executor: node-executor
@@ -185,59 +238,12 @@ workflows:
               height: [480, 768, 960]
               # mobile, tablet, chromebook, desktop
               width: [320, 1024, 1366, 1536]
-            exclude:
-              # exclude screen combinations that don't make sense
-              - browser: chrome
-                height: 480
-                width: 1536
-              - browser: chrome
-                height: 480
-                width: 1366
-              - browser: chrome
-                height: 480
-                width: 1024
-              - browser: firefox
-                height: 480
-                width: 1536
-              - browser: firefox
-                height: 480
-                width: 1366
-              - browser: firefox
-                height: 480
-                width: 1024
-              - browser: chrome
-                height: 768
-                width: 1536
-              - browser: chrome
-                height: 768
-                width: 1366
-              - browser: chrome
-                height: 768
-                width: 320
-              - browser: firefox
-                height: 768
-                width: 1536
-              - browser: firefox
-                height: 768
-                width: 1366
-              - browser: firefox
-                height: 768
-                width: 320
-              - browser: chrome
-                height: 960
-                width: 1024
-              - browser: chrome
-                height: 960
-                width: 320
-              - browser: firefox
-                height: 960
-                width: 1024
-              - browser: firefox
-                height: 960
-                width: 320
+            exclude: *exclude_combinations
           filters:
             branches:
-              only: development
+              only:
+                - main
+                - development
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:

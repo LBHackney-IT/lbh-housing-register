@@ -32,6 +32,14 @@ import {
 } from '../../../lib/utils/addressHistory';
 import { FormID } from '../../../lib/utils/form-data';
 import Custom404 from '../../404';
+import useApiCallStatus from 'lib/hooks/useApiCallStatus';
+import {
+  ApiCallStatusCode,
+  selectSaveApplicationStatus,
+} from 'lib/store/apiCallsStatus';
+import { scrollToError } from 'lib/utils/scroll';
+import Loading from 'components/loading';
+import ErrorSummary from 'components/errors/error-summary';
 
 type State = 'postcode-entry' | 'manual-entry' | 'choose-address' | 'review';
 
@@ -215,6 +223,18 @@ const ApplicationStep = (): JSX.Element => {
     applicant === application.mainApplicant ||
     applicant?.person?.relationshipType === 'partner';
 
+  const [hasSaved, setHasSaved] = useState<boolean>(false);
+  const saveApplicationStatus = useAppSelector(selectSaveApplicationStatus);
+  const [userError, setUserError] = useState<string | null>(null);
+
+  useApiCallStatus({
+    selector: saveApplicationStatus,
+    userActionCompleted: hasSaved,
+    setUserError,
+    scrollToError,
+    pathToPush: `/apply/${resident}`,
+  });
+
   const requiredYears = isMainResidentOrPartner ? 5 : 0;
 
   const initialValues = {
@@ -272,20 +292,19 @@ const ApplicationStep = (): JSX.Element => {
 
     switch (state) {
       case 'postcode-entry':
-        {
-          try {
-            const r = await lookUpAddress(values.postcode);
-            setPostcodeResults(r.address);
-            formikHelpers.setValues({
-              ...values,
-              uprn: r.address[0]?.UPRN.toString(),
-            });
-            setState('choose-address');
-          } catch (e) {
-            console.error(e);
-            setState('manual-entry');
-          }
+        try {
+          const r = await lookUpAddress(values.postcode);
+          setPostcodeResults(r.address);
+          formikHelpers.setValues({
+            ...values,
+            uprn: r.address[0]?.UPRN.toString(),
+          });
+          setState('choose-address');
+        } catch (e) {
+          console.error(e);
+          setState('manual-entry');
         }
+
         break;
 
       case 'manual-entry': {
@@ -312,6 +331,7 @@ const ApplicationStep = (): JSX.Element => {
 
       case 'review': {
         const [currentAddress] = addressHistory;
+        setHasSaved(true);
         dispatch(
           updateApplicant({
             person: { id: applicant.person?.id || '' },
@@ -334,7 +354,6 @@ const ApplicationStep = (): JSX.Element => {
             markAsComplete: true,
           })
         );
-        router.push(`/apply/${resident}`);
         break;
       }
     }
@@ -348,140 +367,164 @@ const ApplicationStep = (): JSX.Element => {
           stepName="Address History"
           formID={FormID.ADDRESS_HISTORY}
         >
-          {isMainResidentOrPartner ? (
-            <>
-              <HeadingOne content="Address history" />
-              <Paragraph>
-                <strong>
-                  Tell us where you have been living for the last five years.
-                </strong>
-              </Paragraph>
-            </>
-          ) : (
-            <HeadingOne content="Address" />
+          {userError && (
+            <ErrorSummary dataTestId="test-agree-terms-error-summary">
+              {userError}
+            </ErrorSummary>
           )}
-          <h2 className="lbh-heading-h2">Current address</h2>
-          <Details summary="Help with your address">
-            If you have no fixed abode or if you are sofa surfing, use the
-            address where you sleep for the majority of the week. If you are
-            living on the street, contact a{' '}
-            <a
-              className="lbh-link lbh-link--no-visited-state"
-              href="https://hackney.gov.uk/housing-options"
-            >
-              housing officer
-            </a>
-          </Details>
+          {saveApplicationStatus?.callStatus === ApiCallStatusCode.PENDING ? (
+            <Loading text="Saving..." />
+          ) : (
+            <>
+              {isMainResidentOrPartner ? (
+                <>
+                  <HeadingOne content="Address history" />
+                  <Paragraph>
+                    <strong>
+                      Tell us where you have been living for the last five
+                      years.
+                    </strong>
+                  </Paragraph>
+                </>
+              ) : (
+                <HeadingOne content="Address" />
+              )}
+              <h2 className="lbh-heading-h2">Current address</h2>
+              <Details summary="Help with your address">
+                If you have no fixed abode or if you are sofa surfing, use the
+                address where you sleep for the majority of the week. If you are
+                living on the street, contact a{' '}
+                <a
+                  className="lbh-link lbh-link--no-visited-state"
+                  href="https://hackney.gov.uk/housing-options"
+                >
+                  housing officer
+                </a>
+              </Details>
 
-          <Summary addressHistory={addressHistory} />
-          <Formik
-            initialValues={initialValues}
-            onSubmit={onSubmit}
-            validationSchema={generateValidationSchema(state, addressHistory)}
-          >
-            {({ isSubmitting, values }) => (
-              <Form>
-                {state === 'postcode-entry' && (
-                  <>
-                    {addressHistory.length > 0 && (
-                      <h2 className="lbh-heading-h2">Previous address</h2>
-                    )}
-                    <Input
-                      name="postcode"
-                      label="Postcode"
-                      autoComplete="postal-code"
-                    />
-                    <Button type="submit">Find address</Button>
-                  </>
+              <Summary addressHistory={addressHistory} />
+              <Formik
+                initialValues={initialValues}
+                onSubmit={onSubmit}
+                validationSchema={generateValidationSchema(
+                  state,
+                  addressHistory
                 )}
-
-                {state === 'manual-entry' && (
-                  <InsetText>
-                    <ManualEntry />
-                    <DateInput
-                      name={'date'}
-                      label={'When did you move to this address?'}
-                      showDay={false}
-                    />
-                    {addressHistory.length > 0 && (
-                      <DateInput
-                        name={'dateTo'}
-                        label={'When did you leave this address?'}
-                        showDay={false}
-                      />
+              >
+                {({ isSubmitting, values }) => (
+                  <Form>
+                    {state === 'postcode-entry' && (
+                      <>
+                        {addressHistory.length > 0 && (
+                          <h2 className="lbh-heading-h2">Previous address</h2>
+                        )}
+                        <Input
+                          name="postcode"
+                          label="Postcode"
+                          autoComplete="postal-code"
+                        />
+                        <Button
+                          type="submit"
+                          dataTestId="test-apply-resident-address-history-find-address-button"
+                        >
+                          Find address
+                        </Button>
+                      </>
                     )}
-                  </InsetText>
-                )}
 
-                {state === 'choose-address' && (
-                  <InsetText>
-                    <Label content={'Postcode'} strong />
+                    {state === 'manual-entry' && (
+                      <InsetText>
+                        <ManualEntry />
+                        <DateInput
+                          name={'date'}
+                          label={'When did you move to this address?'}
+                          showDay={false}
+                        />
+                        {addressHistory.length > 0 && (
+                          <DateInput
+                            name={'dateTo'}
+                            label={'When did you leave this address?'}
+                            showDay={false}
+                          />
+                        )}
+                      </InsetText>
+                    )}
 
-                    <div>
-                      {values.postcode}
-                      &nbsp;&nbsp;&nbsp;
-                      <a
-                        role="button"
-                        href="#"
-                        className="lbh-link lbh-link--no-visited-state"
-                        onClick={() => {
-                          setState('postcode-entry');
-                        }}
-                      >
-                        Change
-                      </a>
+                    {state === 'choose-address' && (
+                      <InsetText>
+                        <Label content={'Postcode'} strong />
+
+                        <div>
+                          {values.postcode}
+                          &nbsp;&nbsp;&nbsp;
+                          <a
+                            role="button"
+                            href="#"
+                            className="lbh-link lbh-link--no-visited-state"
+                            onClick={() => {
+                              setState('postcode-entry');
+                            }}
+                          >
+                            Change
+                          </a>
+                        </div>
+
+                        <Select
+                          label={'Select an address'}
+                          name={'uprn'}
+                          options={postcodeResults.map((address) => ({
+                            label: address.line1 + ', ' + address.town,
+                            value: address.UPRN.toString(),
+                          }))}
+                        />
+
+                        <a
+                          role="button"
+                          href="#"
+                          className="lbh-link lbh-link--no-visited-state"
+                          onClick={() => setState('manual-entry')}
+                        >
+                          I can't find my address in the list
+                        </a>
+                        <DateInput
+                          name={'date'}
+                          label={'When did you move to this address?'}
+                          showDay={false}
+                        />
+                        {addressHistory.length > 0 && (
+                          <DateInput
+                            name={'dateTo'}
+                            label={'When did you leave this address?'}
+                            showDay={false}
+                          />
+                        )}
+                      </InsetText>
+                    )}
+
+                    <div className="c-flex lbh-simple-pagination">
+                      {state === 'review' && (
+                        <div className="c-flex__1">
+                          <Button onClick={restart} secondary={true}>
+                            Update address
+                          </Button>
+                        </div>
+                      )}
+
+                      <div className="c-flex__1 text-right">
+                        <Button
+                          disabled={isSubmitting}
+                          type="submit"
+                          dataTestId="test-apply-resident-address-history-save-and-continue-button"
+                        >
+                          Save and continue
+                        </Button>
+                      </div>
                     </div>
-
-                    <Select
-                      label={'Select an address'}
-                      name={'uprn'}
-                      options={postcodeResults.map((address) => ({
-                        label: address.line1 + ', ' + address.town,
-                        value: address.UPRN.toString(),
-                      }))}
-                    />
-
-                    <a
-                      role="button"
-                      href="#"
-                      className="lbh-link lbh-link--no-visited-state"
-                      onClick={() => setState('manual-entry')}
-                    >
-                      I can't find my address in the list
-                    </a>
-                    <DateInput
-                      name={'date'}
-                      label={'When did you move to this address?'}
-                      showDay={false}
-                    />
-                    {addressHistory.length > 0 && (
-                      <DateInput
-                        name={'dateTo'}
-                        label={'When did you leave this address?'}
-                        showDay={false}
-                      />
-                    )}
-                  </InsetText>
+                  </Form>
                 )}
-
-                <div className="c-flex lbh-simple-pagination">
-                  {state === 'review' && (
-                    <div className="c-flex__1">
-                      <Button onClick={restart} secondary={true}>
-                        Update address
-                      </Button>
-                    </div>
-                  )}
-
-                  <div className="c-flex__1 text-right">
-                    <Button disabled={isSubmitting} type="submit">
-                      Save and continue
-                    </Button>
-                  </div>
-                </div>
-              </Form>
-            )}
-          </Formik>
+              </Formik>
+            </>
+          )}
         </ApplicantStep>
       ) : (
         <Custom404 />

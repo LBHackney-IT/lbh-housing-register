@@ -3,13 +3,16 @@ import { createWrapper } from 'next-redux-wrapper';
 import { combineReducers } from 'redux';
 import { Application } from '../../domain/HousingApi';
 import application, { autoSaveMiddleware } from './application';
+import { hrApiCallsStatus, HRApiCallsStatusState } from './apiCallsStatus';
 
 export interface Store {
   application: Application;
+  hrApiCallsStatus: HRApiCallsStatusState;
 }
 
 const reducer = combineReducers<Store>({
   application: application.reducer,
+  hrApiCallsStatus: hrApiCallsStatus.reducer,
 });
 
 const makeStore = () =>

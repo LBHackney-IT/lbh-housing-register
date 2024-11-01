@@ -6,6 +6,7 @@ interface ApplicantSummaryProps {
   mainApplicantCompleted: boolean;
   applicantNumber: number;
   tasks: { total: number; remaining: number };
+  applicantLinkTestId?: string;
 }
 
 export default function ApplicantSummary({
@@ -14,6 +15,7 @@ export default function ApplicantSummary({
   mainApplicantCompleted,
   applicantNumber,
   tasks,
+  applicantLinkTestId,
 }: ApplicantSummaryProps): JSX.Element {
   return (
     <>
@@ -28,7 +30,10 @@ export default function ApplicantSummary({
           </div>
           <span className="lbh-!-margin-top-0">
             <Link href={`/apply/${applicant.person?.id}`}>
-              <a className="lbh-applicant-summary__name lbh-link lbh-link--no-visited-state lbh-body-l lbh-!-font-weight-bold lbh-!-margin-top-0">
+              <a
+                data-testid={`test-application-applicant-summary-section-button-${applicantLinkTestId}`}
+                className="lbh-applicant-summary__name lbh-link lbh-link--no-visited-state lbh-body-l lbh-!-font-weight-bold lbh-!-margin-top-0"
+              >
                 {`${applicant.person?.firstName} ${applicant.person?.surname}`}
                 {tasks.remaining !== 0 ? (
                   <div className="lbh-applicant-summary__action">

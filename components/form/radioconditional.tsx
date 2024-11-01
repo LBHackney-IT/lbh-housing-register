@@ -21,21 +21,19 @@ export function ConditionalInput({
   display,
 }: ConditionalFormFieldOptionInput) {
   return (
-    <>
-      <div
-        className={'govuk-radios__conditional' + (display ? '' : '--hidden')}
-        id={containerId}
-      >
-        <Label content={label} htmlFor={fieldId} />
-        <Field
-          className="govuk-input govuk-!-width-one-third"
-          type={as}
-          id={fieldId}
-          name={fieldName}
-          data-aria-controls={containerId}
-        />
-      </div>
-    </>
+    <div
+      className={'govuk-radios__conditional' + (display ? '' : '--hidden')}
+      id={containerId}
+    >
+      <Label content={label} htmlFor={fieldId} />
+      <Field
+        className="govuk-input govuk-!-width-one-third"
+        type={as}
+        id={fieldId}
+        name={fieldName}
+        data-aria-controls={containerId}
+      />
+    </div>
   );
 }
 
@@ -60,7 +58,10 @@ export function Radio({
   }
 
   return (
-    <div className="govuk-radios__item">
+    <div
+      className="govuk-radios__item"
+      data-testid={`test-radio-conditional-${name}-${index}`}
+    >
       <Field
         className="govuk-radios__input"
         type="radio"

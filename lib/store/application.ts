@@ -21,50 +21,72 @@ import { ApplicationStatus } from '../types/application-status';
 
 export const loadApplication = createAsyncThunk(
   'application/load',
-  async () => {
+  async (_: void, { rejectWithValue }) => {
     const res = await fetch(`/api/applications`);
-    const application = (await res.json()) as Application;
-    return application.id ? application : null;
+
+    if (res.ok) {
+      const application = (await res.json()) as Application;
+      return application.id ? application : null;
+    } else {
+      return rejectWithValue(`Unable to load application (${res.status})`);
+    }
   }
 );
 
 export const updateApplication = createAsyncThunk(
   'application/update',
-  async (application: Application) => {
+  async (application: Application, { rejectWithValue }) => {
     const res = await fetch(`/api/applications/${application.id}`, {
       method: 'PATCH',
       body: JSON.stringify(application),
     });
-    return (await res.json()) as Application;
+
+    if (res.ok) {
+      return (await res.json()) as Application;
+    } else {
+      return rejectWithValue(`Unable to update application (${res.status})`);
+    }
   }
 );
 
 export const disqualifyApplication = createAsyncThunk(
   'application/disqualify',
-  async (id: string) => {
+  async (id: string, { rejectWithValue }) => {
     const request: Application = {
       id: id,
       status: ApplicationStatus.DISQUALIFIED,
     };
-    await fetch(`/api/applications/${id}`, {
+    const res = await fetch(`/api/applications/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(request),
     });
+    if (res.ok) {
+      return (await res.json()) as EvidenceRequestResponse;
+    } else {
+      return rejectWithValue(`Unable to complete application (${res.status})`);
+    }
   }
 );
 
-export const completeApplication = createAsyncThunk(
+export const completeApplication = createAsyncThunk<
+  void,
+  Application,
+  { rejectValue: string }
+>(
   'application/complete',
-  async (application: Application) => {
-    await fetch(`/api/applications/${application.id}/complete`, {
+  async (application: Application, { rejectWithValue }) => {
+    const res = await fetch(`/api/applications/${application.id}/complete`, {
       method: 'PATCH',
     });
+    if (!res.ok) {
+      return rejectWithValue(`Unable to complete application (${res.status})`);
+    }
   }
 );
 
 export const createEvidenceRequest = createAsyncThunk(
   'application/evidence',
-  async (application: Application) => {
+  async (application: Application, { rejectWithValue }) => {
     const request: CreateEvidenceRequest = {
       documentTypes: getRequiredDocumentsForApplication(
         application.mainApplicant!
@@ -74,7 +96,11 @@ export const createEvidenceRequest = createAsyncThunk(
       method: 'POST',
       body: JSON.stringify(request),
     });
-    return (await res.json()) as EvidenceRequestResponse;
+    if (res.ok) {
+      return (await res.json()) as EvidenceRequestResponse;
+    } else {
+      return rejectWithValue(`Unable to complete application (${res.status})`);
+    }
   }
 );
 
@@ -175,7 +201,7 @@ const slice = createSlice({
         (state, action) => action.payload
       )
       .addCase(completeApplication.fulfilled, (state, action) => action.payload)
-      .addCase(exit.fulfilled, (state, action) => ({}))
+      .addCase(exit.fulfilled, (state, action) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
 
       .addDefaultCase((state, action) => {
         state.mainApplicant = mainApplicant.reducer(
@@ -188,7 +214,7 @@ const slice = createSlice({
 });
 
 export const autoSaveMiddleware: Middleware<
-  {},
+  {}, // eslint-disable-line @typescript-eslint/ban-types
   Store,
   ThunkDispatch<Store, null, AnyAction>
 > = (storeAPI) => {
@@ -197,6 +223,7 @@ export const autoSaveMiddleware: Middleware<
   // for that we'd also need to cancel existing fetch requests before issuing new ones.
 
   const throttledDispatch = throttle(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (action: any) => {
       storeAPI.dispatch(action);
     },

@@ -44,7 +44,12 @@ const WhatToExpect = (): JSX.Element => {
         qualify to join the housing register.
       </Paragraph>
 
-      <ButtonLink href="/apply/overview">Save and continue</ButtonLink>
+      <ButtonLink
+        href="/apply/overview"
+        dataTestId="test-apply-expect-save-and-continue-button"
+      >
+        Save and continue
+      </ButtonLink>
       <DeleteLink content="Cancel this application" onDelete={onCancel} />
     </Layout>
   );

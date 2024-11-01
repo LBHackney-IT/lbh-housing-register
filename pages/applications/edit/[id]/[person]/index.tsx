@@ -18,10 +18,10 @@ import {
   generateQuestionArray,
 } from '../../../../../lib/utils/adminHelpers';
 import { getRedirect, getSession } from '../../../../../lib/utils/googleAuth';
-import { scrollToTop } from '../../../../../lib/utils/scroll';
+import { scrollToError, scrollToTop } from '../../../../../lib/utils/scroll';
 import Custom404 from '../../../../404';
+import { isAssignableToError } from 'lib/utils/errorHelper';
 
-/* eslint-disable react/no-unused-prop-types */
 interface PageProps {
   user: HackneyGoogleUser;
   data: Application;
@@ -48,6 +48,9 @@ export default function EditApplicant({ user, data }: PageProps): JSX.Element {
     JSON.parse(savedAddresses) as Address[]
   );
   const [ethnicity, setEthnicity] = useState(JSON.parse(savedEthnicity));
+
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [userError, setUserError] = useState<string | undefined>(undefined);
 
   const onSubmit = (values: FormikValues) => {
     const questionValues = generateQuestionArray(
@@ -83,11 +86,26 @@ export default function EditApplicant({ user, data }: PageProps): JSX.Element {
       },
     };
 
-    updateApplication(request).then(() => {
-      router.push({
-        pathname: `/applications/view/${data.id}`,
+    setIsSaving(true);
+
+    updateApplication(request)
+      .then(() => {
+        setIsSaving(false);
+        router.push({
+          pathname: `/applications/view/${data.id}`,
+        });
+      })
+      .catch((err) => {
+        setIsSaving(false);
+
+        if (isAssignableToError(err)) {
+          setUserError(err.message);
+        } else {
+          setUserError('Unable to update application');
+        }
+
+        scrollToError();
       });
-    });
   };
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const handleSaveApplication = (isValid: any, touched: any) => {
@@ -98,7 +116,6 @@ export default function EditApplicant({ user, data }: PageProps): JSX.Element {
 
     setIsSubmitted(true);
   };
-  /* eslint-disable react/jsx-no-useless-fragment */
   return (
     <>
       {data.id ? (
@@ -113,6 +130,9 @@ export default function EditApplicant({ user, data }: PageProps): JSX.Element {
           ethnicity={ethnicity}
           setEthnicity={setEthnicity}
           data={data}
+          dataTestId="test-application-edit-person-page"
+          isSaving={isSaving}
+          userError={userError}
         />
       ) : (
         <Custom404 />

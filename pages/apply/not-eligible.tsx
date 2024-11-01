@@ -40,7 +40,7 @@ const NotEligible = (): JSX.Element => {
   };
 
   return (
-    <Layout>
+    <Layout dataTestId="test-apply-rejection-page">
       <Panel heading="You don't qualify to join the housing register">
         Your reference number: {application.reference?.toUpperCase()}
       </Panel>
@@ -50,7 +50,9 @@ const NotEligible = (): JSX.Element => {
           <HeadingTwo content="Why is this?" />
           {reasons?.map((reason, index) => (
             <InsetText key={index}>
-              <Paragraph>{getDisqualificationReasonOption(reason)}</Paragraph>
+              <Paragraph dataTestId="test-disqualification-reason">
+                {getDisqualificationReasonOption(reason)}
+              </Paragraph>
             </InsetText>
           ))}
         </>

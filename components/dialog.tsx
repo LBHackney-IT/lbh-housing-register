@@ -12,6 +12,7 @@ interface DialogProps {
   onConfirmationText?: string;
   onCancel?: () => void;
   onConfirmation?: () => void;
+  confirmationButtonTestId?: string;
 }
 
 export default function Dialog({
@@ -22,6 +23,7 @@ export default function Dialog({
   onConfirmationText,
   onCancel,
   onConfirmation,
+  confirmationButtonTestId,
 }: DialogProps) {
   return (
     <ReachDialog
@@ -35,7 +37,10 @@ export default function Dialog({
 
       <div className="lbh-dialog__actions">
         {onConfirmation && (
-          <Button onClick={onConfirmation}>
+          <Button
+            onClick={onConfirmation}
+            dataTestId={confirmationButtonTestId}
+          >
             {onConfirmationText === undefined ? 'Yes' : onConfirmationText}
           </Button>
         )}

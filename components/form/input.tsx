@@ -24,6 +24,12 @@ export default function Input({
   hideLabel,
   ...additionalInputProps
 }: InputProps): JSX.Element {
+  const { conditionalDisplay, ...otherValues } = additionalInputProps;
+  const additionalInputPropsWithConditionalDisplay = {
+    ...otherValues,
+    conditionaldisplay: conditionalDisplay,
+  };
+
   return (
     <div>
       <Field name={name}>
@@ -54,7 +60,7 @@ export default function Input({
             )}
             <input
               // Lowest priority to prevent accidental override of component defined props
-              {...additionalInputProps}
+              {...additionalInputPropsWithConditionalDisplay}
               className={`govuk-input lbh-input ${className ? className : ''} ${
                 meta.touched && meta.error ? 'govuk-input--error' : ''
               }`}
@@ -63,6 +69,8 @@ export default function Input({
               type={type ? type : 'text'}
               {...field}
               maxLength={500}
+              data-testid={`test-input-${name}`}
+              value={field.value ?? ''}
             />
           </FormGroup>
         )}

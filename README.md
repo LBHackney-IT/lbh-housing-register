@@ -1,4 +1,4 @@
-# Hackney: Housing register
+# Hackney: Housing register.
 
 **A new tool for Hackney residents to check if they qualify to be on the housing register, and if certain criteria is met, they may continue through the process to submit a housing application form.**
 

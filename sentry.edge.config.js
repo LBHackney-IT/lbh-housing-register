@@ -20,6 +20,9 @@ Sentry.init({
     if (event.request?.cookies['hackneyToken']) {
       event.request.cookies['hackneyToken'] = '[FilteredBeforeSend]';
     }
+    if (event.request?.cookies['housing_user']) {
+      event.request.cookies['housing_user'] = '[FilteredBeforeSend]';
+    }
     return event;
   },
 });

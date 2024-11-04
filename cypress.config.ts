@@ -1,7 +1,7 @@
 import http from 'http';
 
 import { defineConfig } from 'cypress';
-import 'dotenv/config';
+// import 'dotenv/config';
 import { sign } from 'jsonwebtoken';
 import next from 'next';
 import nock from 'nock';

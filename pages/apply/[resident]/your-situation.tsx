@@ -36,6 +36,7 @@ const YourSituation = (): JSX.Element => {
     false
   );
   const saveApplicationStatus = useAppSelector(selectSaveApplicationStatus);
+  const baseHref = `/apply/${applicant?.person?.id}`;
 
   useEffect(() => {
     if (saveApplicationStatus?.callStatus === ApiCallStatusCode.FULFILLED) {
@@ -54,8 +55,6 @@ const YourSituation = (): JSX.Element => {
   if (!applicant) {
     return <Custom404 />;
   }
-
-  const baseHref = `/apply/${applicant.person?.id}`;
 
   // If JSON has routeSelect set to true we can pass multiple possible values to activeStepID.
   // See if statement at end of nextStep() below

@@ -53,9 +53,6 @@ export const hrApiCallsStatus = createSlice({
           callStatus: ApiCallStatusCode.REJECTED,
           error: action.payload as string,
         };
-      })
-      .addDefaultCase(() => {
-        initialState;
       });
   },
 });

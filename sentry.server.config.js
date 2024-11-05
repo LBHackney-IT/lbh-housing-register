@@ -4,12 +4,10 @@
 
 import * as Sentry from '@sentry/nextjs';
 
-const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 const ENVIRONMENT = process.env.NEXT_PUBLIC_ENV;
 
 Sentry.init({
   dsn:
-    SENTRY_DSN ||
     'https://6fb0dd07e0fc4a75b0ab84b8e1f36460@o183917.ingest.sentry.io/6292602',
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1.0,
@@ -19,7 +17,7 @@ Sentry.init({
   // that it will also get attached to your source maps
 
   environment: process.env.NEXT_PUBLIC_ENV,
-  integrations: [Sentry.captureConsoleIntegration({ levels: ['error'] })],
+  integrations: [Sentry.captureConsoleIntegration()],
   enabled:
     ENVIRONMENT === 'production' ||
     ENVIRONMENT === 'staging' ||

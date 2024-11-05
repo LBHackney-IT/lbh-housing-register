@@ -12,7 +12,7 @@ export default class AppDocument extends Document {
           <NextScript />
           <noscript
             dangerouslySetInnerHTML={{
-              __html: `<iframe src="https://www.googletagmanager.com/ns.html?id=G-M10SKRLKF0" height="0" width="0" style="display: none; visibility: hidden;" />`,
+              __html: `<iframe src="https://www.googletagmanager.com/ns.html?id=${process.env.NEXT_PUBLIC_GTM_ID}" height="0" width="0" style="display: none; visibility: hidden;" />`,
             }}
           />
         </body>

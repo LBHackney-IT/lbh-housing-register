@@ -38,25 +38,23 @@ const nextConfig = {
     // for staged files only as we clear the linting errors as we work.
     ignoreDuringBuilds: true,
   },
-
-  webpack: (config, { webpack }) => {
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        __SENTRY_DEBUG__: false,
-      })
-    );
-    return config;
-  },
-};
-
-// Note the sentry/nextjs uses webpack under the hood.
-const sentryWebpackPluginOptions = {
-  silent: true, // Suppresses all logs
-  hideSourceMaps: true, // Will make sourcemaps invisible to the browser.
-  // For all available options, see:
-  // https://github.com/getsentry/sentry-webpack-plugin#options.
+  // ensure sentry debug is false during build process
+  // webpack: (config, { webpack }) => {
+  //   config.plugins.push(
+  //     new webpack.DefinePlugin({
+  //       __SENTRY_DEBUG__: false,
+  //     })
+  //   );
+  //   return config;
+  // },
 };
 
 // Make sure adding Sentry options is the last code to run before exporting, to
 // ensure that your source maps include changes from all other Webpack plugins
-module.exports = withSentryConfig(nextConfig, sentryWebpackPluginOptions);
+module.exports = withSentryConfig(nextConfig, {
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  silent: true, // Suppresses all logs
+  hideSourceMaps: true, // Will make sourcemaps invisible to the browser.
+});

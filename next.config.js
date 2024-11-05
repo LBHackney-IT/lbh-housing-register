@@ -57,4 +57,5 @@ module.exports = withSentryConfig(nextConfig, {
   project: process.env.SENTRY_PROJECT,
   silent: true, // Suppresses all logs
   hideSourceMaps: true, // Will make sourcemaps invisible to the browser.
+  debug: true, // Will display some useful console logs.
 });

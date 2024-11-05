@@ -20,7 +20,10 @@ Sentry.init({
 
   environment: process.env.NEXT_PUBLIC_ENV,
   integrations: [Sentry.captureConsoleIntegration({ levels: ['error'] })],
-  enabled: ENVIRONMENT === 'production' || ENVIRONMENT === 'staging',
+  enabled:
+    ENVIRONMENT === 'production' ||
+    ENVIRONMENT === 'staging' ||
+    ENVIRONMENT === 'development',
   beforeSend(event) {
     if (event.request?.cookies['hackneyToken']) {
       event.request.cookies['hackneyToken'] = '[FilteredBeforeSend]';

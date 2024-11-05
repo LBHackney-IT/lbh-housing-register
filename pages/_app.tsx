@@ -6,6 +6,8 @@ import { wrapper } from '../lib/store';
 import '../styles/global.scss';
 
 function App({ Component, pageProps }: AppProps): ReactElement {
+  const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
+
   return (
     <>
       <Head>
@@ -17,7 +19,7 @@ function App({ Component, pageProps }: AppProps): ReactElement {
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','${process.env.GTM_ID}');
+        })(window,document,'script','dataLayer','${gtmId}');
       `}
       </Script>
       <Component {...pageProps} />

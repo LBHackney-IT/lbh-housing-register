@@ -248,6 +248,8 @@ workflows:
           context: api-assume-role-housing-development-context
           # requires:
           #   - run-cypress-e2e
+          requires:
+            - install-dependencies
           filters:
             branches:
               only: TS-1788-HR-staging-check-Sentry-for-new-errors-after-testing

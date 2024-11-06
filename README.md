@@ -126,9 +126,9 @@ Repository has a husky configuration to prevent staged files commits that fail l
 
 A suite of e2e tests have been written with cypress. Check the env vars are set correctly for AUTHORISED\_\* groups before running tests.
 
-Standard e2e tests use nock to intercept network requests and mock responses. The configuration will start the application from within the cypress.config.ts to allow nock to work within the next environment sucessfully.
+Standard e2e tests use nock to intercept network requests and mock responses. The configuration will start the application from within the cypress.config.ts to allow nock to work within the next environment sucessfully. These will also run in the pipeline and record video of failed tests.
 
-The tests in the local folder require all nock configuration to be commented out in cypress.config.ts, a local backend to be running and the PIPELINE env var to be empty.
+Local e2e tests in the local folder require all nock configuration to be commented out in cypress.config.ts, a local backend to be running and the LOCAL_E2E to be set to true.
 
 ## Concepts
 

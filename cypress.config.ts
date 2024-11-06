@@ -95,19 +95,21 @@ export default defineConfig({
         }
       );
 
-      config.env = {
-        ...process.env,
-      };
+      (config.excludeSpecPattern =
+        process.env.LOCAL_E2E === 'true' ? [] : ['cypress/e2e/local/**/*']),
+        (config.env = {
+          ...process.env,
+        });
       return config;
     },
     baseUrl,
-    excludeSpecPattern: process.env.PIPELINE ? ['cypress/e2e/local/**/*'] : [],
     experimentalWebKitSupport: true,
     screenshotOnRunFailure: true,
     defaultCommandTimeout: 10000,
     video: true,
     videoCompression: true,
   },
+
   component: {
     devServer: {
       framework: 'next',

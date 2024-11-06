@@ -246,20 +246,18 @@ workflows:
                 - development
       - assume-role-development:
           context: api-assume-role-housing-development-context
-          # requires:
-          #   - run-cypress-e2e
           requires:
-            - install-dependencies
+            - run-cypress-e2e
           filters:
             branches:
-              only: TS-1788-HR-staging-check-Sentry-for-new-errors-after-testing
+              only: development
       - build-deploy-development:
           context: housing-register-fe-build-context
           requires:
             - assume-role-development
           filters:
             branches:
-              only: TS-1788-HR-staging-check-Sentry-for-new-errors-after-testing
+              only: development
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:

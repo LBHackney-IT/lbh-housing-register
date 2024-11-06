@@ -13,10 +13,7 @@ Sentry.init({
   tracesSampleRate: 1.0,
   environment: ENVIRONMENT,
   integrations: [Sentry.captureConsoleIntegration()],
-  enabled:
-    ENVIRONMENT === 'production' ||
-    ENVIRONMENT === 'staging' ||
-    ENVIRONMENT === 'development',
+  enabled: ENVIRONMENT === 'production' || ENVIRONMENT === 'staging',
 
   // remove cookies from the event before sending
   beforeSend(event) {

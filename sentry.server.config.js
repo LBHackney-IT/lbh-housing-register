@@ -8,7 +8,7 @@ const ENVIRONMENT = process.env.NEXT_PUBLIC_ENV;
 
 Sentry.init({
   dsn:
-    'https://6fb0dd07e0fc4a75b0ab84b8e1f36460@o183917.ingest.sentry.io/6292602',
+    'https://6fb0dd07e0fc4a75b0ab84b8e1f36460@o183917.ingest.us.sentry.io/6292602',
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1.0,
   // ...
@@ -16,18 +16,20 @@ Sentry.init({
   // `release` value here - use the environment variable `SENTRY_RELEASE`, so
   // that it will also get attached to your source maps
 
-  environment: process.env.NEXT_PUBLIC_ENV,
+  environment: ENVIRONMENT,
   integrations: [Sentry.captureConsoleIntegration()],
   enabled:
     ENVIRONMENT === 'production' ||
     ENVIRONMENT === 'staging' ||
     ENVIRONMENT === 'development',
+
+  // remove cookies from the event before sending
   beforeSend(event) {
     if (event.request?.cookies['hackneyToken']) {
-      event.request.cookies['hackneyToken'] = '[FilteredBeforeSend]';
+      delete event.request.cookies['hackneyToken'];
     }
     if (event.request?.cookies['housing_user']) {
-      event.request.cookies['housing_user'] = '[FilteredBeforeSend]';
+      delete event.request.cookies['housing_user'];
     }
     return event;
   },

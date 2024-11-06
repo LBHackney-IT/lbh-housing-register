@@ -17,7 +17,10 @@ Sentry.init({
   // that it will also get attached to your source maps
 
   environment: ENVIRONMENT,
-  integrations: [Sentry.captureConsoleIntegration()],
+  integrations: [
+    Sentry.browserTracingIntegration(),
+    Sentry.captureConsoleIntegration(),
+  ],
   enabled:
     ENVIRONMENT === 'production' ||
     ENVIRONMENT === 'staging' ||

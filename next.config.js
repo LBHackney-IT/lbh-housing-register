@@ -52,10 +52,7 @@ const nextConfig = {
 // Make sure adding Sentry options is the last code to run before exporting, to
 // ensure that your source maps include changes from all other Webpack plugins
 module.exports = withSentryConfig(nextConfig, {
-  authToken: process.env.SENTRY_AUTH_TOKEN,
-  org: process.env.SENTRY_ORG,
-  project: process.env.SENTRY_PROJECT,
+  // Senty token, project, and org are all set in the build proceess.
   silent: true, // Suppresses all logs
   hideSourceMaps: true, // Will make sourcemaps invisible to the browser.
-  debug: true, // Will display some useful console logs.
 });

@@ -124,7 +124,7 @@ Repository has a husky configuration to prevent staged files commits that fail l
 
 ### E2E tests
 
-A suite of e2e tests have been written with cypress.
+A suite of e2e tests have been written with cypress. Check the env vars are set correctly for AUTHORISED\_\* groups before running tests.
 
 Standard e2e tests use nock to intercept network requests and mock responses. The configuration will start the application from within the cypress.config.ts to allow nock to work within the next environment sucessfully.
 

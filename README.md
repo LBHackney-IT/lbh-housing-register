@@ -70,7 +70,13 @@ The React components are built using the [TypeScript](https://www.typescriptlang
 
 ## 💻 Getting started
 
-As a prerequisite to run this app you will need to install [Node.js](https://nodejs.org/en/download)(version 16.20.2 is currently used in local development and in the pipeline) and [npm](https://docs.npmjs.com/cli/v7/commands/npm-install):
+As a prerequisite to run this app you will need to install [Node.js](https://nodejs.org/en/download)(version 20.17.0 is currently used in local development and in the pipeline) and [npm](https://docs.npmjs.com/cli/v10/commands/npm-install):
+
+If you have Node Version manager you can set node to the correct version using the nvm command.
+
+```
+nvm use
+```
 
 ### Running locally
 
@@ -80,6 +86,8 @@ npm run dev
 ```
 
 The app will attempt to start on port `3000` and should be available on localhost: [http://localhost:3000](http://localhost:3000)
+
+To run the backend, please refer to [Housing Register Local Backend](https://github.com/LBHackney-IT/housing-register-local-backend). This repository is designed to help development and testing of Housing Register application by removing the dependencies to AWS environment.
 
 ### Logging in
 
@@ -106,12 +114,21 @@ These are as follows:
 - AUTHORISED_ADMIN_GROUP: can do any required action
 - AUTHORISED_MANAGER_GROUP: same as officers, plus can assign applications to officers for assessment and see sensitive data
 - AUTHORISED_OFFICER_GROUP: can view applications and perform assessments on assigned applications
+- AUTHORISED_READONLY_GROUP: can view applications
 
 The scope and expectations around permissions have been kept fairly limited at this stage, but is an area for future enhancements.
 
 ### Pre-commit hooks
 
-Repository has pre-commit hooks configuration to prevent direct commits to main branches and for scanning secrets. Please ensure you have [pre-commit framework](https://pre-commit.com/) installed before starting development work.
+Repository has a husky configuration to prevent staged files commits that fail linting, test suites and for scanning secrets. On commit it will run linting on staged files, jest and cypress components tests. Pre-push it will run cypress e2e tests.
+
+### E2E tests
+
+A suite of e2e tests have been written with cypress.
+
+Standard e2e tests use nock to intercept network requests and mock responses. The configuration will start the application from within the cypress.config.ts to allow nock to work within the next environment sucessfully.
+
+The tests in the local folder require all nock configuration to be commented out in cypress.config.ts, a local backend to be running and the PIPELINE env var to be empty.
 
 ## Concepts
 

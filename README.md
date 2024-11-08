@@ -80,6 +80,18 @@ nvm use
 
 ### Running locally
 
+Copy the .env sample to the root of your application and get the variables from AWS params store or the password manager.
+
+Next, you need to tell your computer to run the app from a hackney.gov.uk domain. Add this line to your hosts file (Windows: `C:\Windows\System32\drivers\etc\hosts`, Mac: `/etc/hosts`):
+
+```
+127.0.0.1   localdev.hackney.gov.uk
+```
+
+If necassary update the `APP_URL` variable in the `.env` file to match. When you next launch the app, it should be on `http://localdev.hackney.gov.uk:3000`.
+
+If you have the right configuration setup within the `.env` file, you should be able to access the staff dashboard.
+
 ```
 npm install
 npm run dev
@@ -94,16 +106,6 @@ To run the backend, please refer to [Housing Register Local Backend](https://git
 The staff dashboard is using [LBH Google Auth](https://github.com/LBHackney-IT/LBH-Google-auth) for authentication. Permissions to what a user is authorised to do, is managed by mapping Google groups.
 
 You need a **@hackney.gov.uk** Google account to sign in. Speak to Hackney IT if you don't have this.
-
-Next, you need to tell your computer to run the app from a hackney.gov.uk domain. Add this line to your hosts file (Windows: `C:\Windows\System32\drivers\etc\hosts`, Mac: `/etc/hosts`):
-
-```
-127.0.0.1   localdev.hackney.gov.uk
-```
-
-Update the `APP_URL` variable in the `.env` file to match. When you next launch the app, it should be on `http://localdev.hackney.gov.uk:3000`.
-
-If you have the right configuration setup within the `.env` file, you should be able to access the staff dashboard.
 
 #### Permissions
 

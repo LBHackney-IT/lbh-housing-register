@@ -22,6 +22,7 @@ import {
   visitHomepageSignInAndVerify,
 } from '../../support/locale2eTestsHelper';
 import { interceptAddressSearchAPI } from '../../support/intercepts';
+import Components from '../../pages/components';
 
 //ensure age doesn't automatically make applicant eligible
 const birthDate = faker.date.birthdate({ mode: 'age', min: 18, max: 40 });
@@ -186,7 +187,19 @@ describe('Applicant with medical condition', () => {
       cy.get('.lbh-button').contains('Save and continue').click();
       cy.get('.lbh-button').contains('Save and continue').click();
 
-      cy.get(`[data-testid="test-radio-ethnicity-main-category.0"]`).check();
+      // get the first ethnicity radio button.
+      Components.getRadioButtons().then((radioButtons) => {
+        const randomIndex = Math.floor(Math.random() * radioButtons.length);
+        radioButtons[randomIndex].click();
+      });
+
+      ApplyResidentSectionPage.getSubmitButton().click();
+
+      // get the second ethnicity radio button.
+      Components.getRadioButtons().then((radioButtons) => {
+        const randomIndex = Math.floor(Math.random() * radioButtons.length);
+        radioButtons[randomIndex].click();
+      });
       ApplyResidentSectionPage.getSubmitButton().click();
       cy.get(`[data-testid="test-checkbox-declaration-0"]`).check();
       DeclarationPage.getSubmitButton().click();

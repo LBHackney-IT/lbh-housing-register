@@ -97,8 +97,6 @@ npm install
 npm run dev
 ```
 
-The app will attempt to start on port `3000` and should be available on localhost: [http://localhost:3000](http://localhost:3000)
-
 To run the backend, please refer to [Housing Register Local Backend](https://github.com/LBHackney-IT/housing-register-local-backend). This repository is designed to help development and testing of Housing Register application by removing the dependencies to AWS environment.
 
 ### Logging in
@@ -130,13 +128,19 @@ A suite of e2e tests have been written with cypress. Check the env vars are set 
 
 Standard e2e tests use nock to intercept network requests and mock responses. The configuration will start the application from within the cypress.config.ts to allow nock to work within the next environment sucessfully. These will also run in the pipeline and record video of failed tests.
 
-Local e2e tests in the local folder require all nock configuration to be commented out in cypress.config.ts, a local backend to be running and the LOCAL_E2E to be set to true.
+Local e2e tests in the cypress/e2e/local folder require all nock configuration to be commented out in cypress.config.ts, a [local backend](https://github.com/LBHackney-IT/housing-register-local-backend) to be running and the LOCAL_E2E to be set to true. These tests are designed to run against a product build of the application, to build and start the application run these commands.
+
+```
+npm build
+npm start
+```
 
 ## Concepts
 
 ### APIs
 
 We've defined a couple of gateways to interact with our API. These are set up as follows:
+ms
 
 - **`internal-api.ts`**
 

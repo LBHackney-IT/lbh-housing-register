@@ -63,6 +63,13 @@ describe('Ethnicity questions', () => {
       apiResponseDelay
     );
 
+    // nested form second patch
+    cy.mockHousingRegisterApiPatchApplication(
+      applicationId,
+      applicationWithMainApplicant,
+      apiResponseDelay
+    );
+
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithMainApplicant
@@ -71,7 +78,17 @@ describe('Ethnicity questions', () => {
     EthnicityPage.visit();
     EthnicityPage.getEthnicityPage().should('be.visible');
 
-    Components.getRadioButtons().first().click();
+    Components.getRadioButtons().then((radioButtons) => {
+      const randomIndex = Math.floor(Math.random() * radioButtons.length);
+      radioButtons[randomIndex].click();
+    });
+
+    Components.getSaveButton().click();
+
+    Components.getRadioButtons().then((radioButtons) => {
+      const randomIndex = Math.floor(Math.random() * radioButtons.length);
+      radioButtons[randomIndex].click();
+    });
 
     Components.getSaveButton().click();
 

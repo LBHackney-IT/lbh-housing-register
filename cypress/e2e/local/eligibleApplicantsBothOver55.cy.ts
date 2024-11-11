@@ -25,6 +25,7 @@ import {
   SignUpFormDetails,
   visitHomepageSignInAndVerify,
 } from '../../support/locale2eTestsHelper';
+import Components from '../../pages/components';
 
 //ensure eligibility: both over 55
 const mainApplicantBirthDate = faker.date.birthdate({
@@ -267,7 +268,20 @@ describe('Applicant and household member both over 55', () => {
       cy.get('.lbh-button').contains('Save and continue').click();
       cy.get('.lbh-button').contains('Save and continue').click();
 
-      cy.get(`[data-testid="test-radio-ethnicity-main-category.0"]`).check();
+      // get the first ethnicity radio button.
+      Components.getRadioButtons().then((radioButtons) => {
+        const randomIndex = Math.floor(Math.random() * radioButtons.length);
+        radioButtons[randomIndex].click();
+      });
+
+      ApplyResidentSectionPage.getSubmitButton().click();
+
+      // get the second ethnicity radio button.
+      Components.getRadioButtons().then((radioButtons) => {
+        const randomIndex = Math.floor(Math.random() * radioButtons.length);
+        radioButtons[randomIndex].click();
+      });
+
       ApplyResidentSectionPage.getSubmitButton().click();
       cy.get(`[data-testid="test-checkbox-declaration-0"]`).check();
       DeclarationPage.getSubmitButton().click();

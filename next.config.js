@@ -38,39 +38,12 @@ const nextConfig = {
     // for staged files only as we clear the linting errors as we work.
     ignoreDuringBuilds: true,
   },
-
-  webpack: (config, { webpack }) => {
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        __SENTRY_DEBUG__: false,
-      })
-    );
-    return config;
-  },
-};
-
-// const withBundleAnalyzer = require('@next/bundle-analyzer')({
-//   enabled: process.env.NEXT_PUBLIC_ENV === 'localdev',
-//   openAnalyzer: false,
-// });
-
-const sentryWebpackPluginOptions = {
-  // Additional config options for the Sentry Webpack plugin. Keep in mind that
-  // the following options are set automatically, and overriding them is not
-  // recommended:
-  //   release, url, org, project, authToken, configFile, stripPrefix,
-  //   urlPrefix, include, ignore
-
-  silent: true, // Suppresses all logs
-  dryRun: process.env.NEXT_PUBLIC_ENV !== 'production',
-  hideSourceMaps: true, // Sentry CLI will not upload the source maps
-  // For all available options, see:
-  // https://github.com/getsentry/sentry-webpack-plugin#options.
 };
 
 // Make sure adding Sentry options is the last code to run before exporting, to
 // ensure that your source maps include changes from all other Webpack plugins
-module.exports = withSentryConfig(nextConfig, sentryWebpackPluginOptions);
-// withBundleAnalyzer(nextConfig),
-// sentryWebpackPluginOptions
-// );
+module.exports = withSentryConfig(nextConfig, {
+  // Senty token, project, and org are all set in the build proceess and are not necassary to be set here.
+  silent: true, // Suppresses all logs
+  hideSourceMaps: true, // Will make sourcemaps invisible to the browser.
+});

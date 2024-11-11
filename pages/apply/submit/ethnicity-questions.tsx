@@ -25,6 +25,7 @@ const EthnicityQuestions = (): JSX.Element => {
   const [formId, setFormId] = useState('ethnicity-questions');
   const [hasSaved, setHasSaved] = useState<boolean>(false);
   const [userError, setUserError] = useState<string | null>(null);
+  const [path, setPath] = useState<string | null>(null);
   const saveApplicationStatus = useAppSelector(selectSaveApplicationStatus);
   const [activeStepID, setActiveStepId] = useState(() => {
     switch (formId) {
@@ -53,7 +54,7 @@ const EthnicityQuestions = (): JSX.Element => {
     selector: saveApplicationStatus,
     userActionCompleted: hasSaved,
     setUserError,
-    pathToPush: '/apply/submit/declaration',
+    pathToPush: path,
     scrollToError,
   });
 
@@ -76,6 +77,7 @@ const EthnicityQuestions = (): JSX.Element => {
             markAsComplete: true,
           })
         );
+        setPath('/apply/submit/declaration');
         setHasSaved(true);
       } catch (error) {
         console.error('Error saving agreement:', error);
@@ -118,7 +120,7 @@ const EthnicityQuestions = (): JSX.Element => {
           {userError}
         </ErrorSummary>
       )}
-      {pendingStatus ? (
+      {pendingStatus && path ? (
         <Loading text="Saving..." />
       ) : (
         <Form

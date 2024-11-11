@@ -5,15 +5,27 @@
 
 import * as Sentry from '@sentry/nextjs';
 
-const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 const ENVIRONMENT = process.env.NEXT_PUBLIC_ENV;
 
 Sentry.init({
   dsn:
-    SENTRY_DSN ||
-    'https://6fb0dd07e0fc4a75b0ab84b8e1f36460@o183917.ingest.sentry.io/6292602',
+    'https://6fb0dd07e0fc4a75b0ab84b8e1f36460@o183917.ingest.us.sentry.io/6292602',
   tracesSampleRate: 1.0,
-  environment: process.env.NEXT_PUBLIC_ENV,
-  integrations: [Sentry.captureConsoleIntegration({ levels: ['error'] })],
-  enabled: ENVIRONMENT === 'production' || ENVIRONMENT === 'staging',
+  environment: ENVIRONMENT,
+  integrations: [Sentry.captureConsoleIntegration()],
+  enabled:
+    ENVIRONMENT === 'production' ||
+    ENVIRONMENT === 'staging' ||
+    ENVIRONMENT === 'development',
+
+  // remove cookies from the event before sending
+  beforeSend(event) {
+    if (event.request?.cookies['hackneyToken']) {
+      delete event.request.cookies['hackneyToken'];
+    }
+    if (event.request?.cookies['housing_user']) {
+      delete event.request.cookies['housing_user'];
+    }
+    return event;
+  },
 });

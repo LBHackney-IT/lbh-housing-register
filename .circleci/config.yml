@@ -247,6 +247,8 @@ workflows:
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:
+            - run-tests
+            - sonar-scan
             - run-cypress-e2e
           filters:
             branches:
@@ -262,6 +264,8 @@ workflows:
           context: api-assume-role-housing-staging-context
           requires:
             - run-tests
+            - sonar-scan
+            - run-cypress-e2e
           filters:
             branches:
               only: main

@@ -227,7 +227,7 @@ workflows:
       - sonar-scan:
           context: SonarCloud
           requires:
-            - run-tests
+            - install-dependencies
       - run-cypress-e2e:
           requires:
             - install-dependencies

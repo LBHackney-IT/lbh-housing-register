@@ -72,7 +72,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
   };
 
   const resendCode = async () => {
-    dispatch(createVerifyCode({ emailAddress: email }));
+    dispatch(createVerifyCode(email));
     setCodeSent(true);
   };
 

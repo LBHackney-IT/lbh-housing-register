@@ -12,9 +12,7 @@ import endpoint from '../../../../pages/api/auth/generate';
 import { ApiRequest, ApiResponse } from '../../../../testUtils/types';
 import { createMocks, RequestMethod, RequestOptions } from 'node-mocks-http';
 import { StatusCodes } from 'http-status-codes';
-import { faker } from '@faker-js/faker';
 
-const applicationId = faker.string.uuid();
 const email = generateEmailAddress();
 const invalidRequestMethods = [
   'CONNECT',
@@ -29,7 +27,6 @@ const invalidRequestMethods = [
 
 const mockCreateAuthRequest: CreateAuthRequest = {
   email: email,
-  applicationId: applicationId,
 };
 
 const mockCreateAuthResponse: CreateAuthResponse = { success: true };

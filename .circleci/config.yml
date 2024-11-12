@@ -224,10 +224,6 @@ workflows:
       - run-tests:
           requires:
             - install-dependencies
-      - sonar-scan:
-          context: SonarCloud
-          requires:
-            - run-tests
       - run-cypress-e2e:
           requires:
             - install-dependencies
@@ -244,9 +240,14 @@ workflows:
               only:
                 - main
                 - development
+      - sonar-scan:
+          context: SonarCloud
+          requires:
+            - run-tests
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:
+            - run-tests
             - run-cypress-e2e
           filters:
             branches:
@@ -262,6 +263,7 @@ workflows:
           context: api-assume-role-housing-staging-context
           requires:
             - run-tests
+            - run-cypress-e2e
           filters:
             branches:
               only: main

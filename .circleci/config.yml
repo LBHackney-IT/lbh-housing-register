@@ -236,11 +236,6 @@ workflows:
               # mobile, tablet, chromebook, desktop
               width: [320, 1024, 1366, 1536]
             exclude: *exclude_combinations
-          filters:
-            branches:
-              only:
-                - main
-                - development
       - sonar-scan:
           context: SonarCloud
           requires:

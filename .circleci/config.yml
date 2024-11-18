@@ -4,6 +4,7 @@ orbs:
   aws-cli: circleci/aws-cli@3.2.0
   aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
   cypress: cypress-io/cypress@3.3.1
+  node: circleci/node@6.3.0
   sonarcloud: sonarsource/sonarcloud@2.0.0
 
 executors:
@@ -80,29 +81,11 @@ exclude_combinations:
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Jobs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 jobs:
-  install-dependencies:
-    executor: node-executor
-    steps:
-      - *attach_workspace
-      - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-      - run:
-          name: Install Dependencies
-          command: npm install
-      - save_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-          paths:
-            - ./node_modules
-            - ./.next/cache
-            - ./.cache/Cypress
-      - persist_to_workspace:
-          root: *workspace_root
-          paths: .
-
   run-tests:
     executor: node-executor
     steps:
+      - checkout
+      - node/install-packages
       - cypress/install:
           package-manager: npm
           install-command: npm install
@@ -126,7 +109,8 @@ jobs:
   sonar-scan:
     executor: node-executor
     steps:
-      - *attach_workspace
+      - checkout
+      - node/install-packages
       - sonarcloud/scan
 
   run-cypress-e2e:
@@ -142,6 +126,8 @@ jobs:
         type: integer
         default: 1366
     steps:
+      - checkout
+      - node/install-packages
       - cypress/install:
           package-manager: npm
           install-browsers: true
@@ -155,7 +141,8 @@ jobs:
   build-deploy-development:
     executor: aws-cli/default
     steps:
-      - *attach_workspace
+      - checkout
+      - node/install-packages
       - run:
           name: deploy
           command: npm run build && sudo npm i -g serverless@^3 && sls deploy --stage development
@@ -163,7 +150,8 @@ jobs:
   build-deploy-staging:
     executor: aws-cli/default
     steps:
-      - *attach_workspace
+      - checkout
+      - node/install-packages
       - run:
           name: deploy
           command: npm run build && sudo npm i -g serverless@^3 && sls deploy --stage staging
@@ -171,7 +159,8 @@ jobs:
   build-deploy-production:
     executor: aws-cli/default
     steps:
-      - *attach_workspace
+      - checkout
+      - node/install-packages
       - run:
           name: deploy
           command: npm run build && sudo npm i -g serverless@^3 && sls deploy --stage production
@@ -220,13 +209,8 @@ workflows:
   version: 2
   continuous-delivery:
     jobs:
-      - install-dependencies
-      - run-tests:
-          requires:
-            - install-dependencies
+      - run-tests
       - run-cypress-e2e:
-          requires:
-            - install-dependencies
           matrix:
             parameters:
               browser: [chrome, firefox]

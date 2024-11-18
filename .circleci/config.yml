@@ -115,6 +115,7 @@ jobs:
 
   run-cypress-e2e:
     executor: cypress-e2e-executor
+    parallelism: 8
     parameters:
       browser:
         type: string
@@ -133,10 +134,26 @@ jobs:
           install-browsers: true
           install-command: npm install
           post-install: npm run build
+      - run:
+          name: Split E2E tests for parallel run
+          command: |
+            find cypress/e2e -type f -name "*.[jt]s" | sort | uniq > circleci_test_files.txt
+            # Use time-based splitting for maximum efficiency. Cypress expects files to be separated with commas
+            circleci tests split --split-by=timings circleci_test_files.txt | perl -pe 'chomp if eof' | tr '\n' ',' > circleci_test_slice.txt
+            cat circleci_test_slice.txt
       - cypress/run-tests:
-          cypress-command: npx cypress run --browser=<< parameters.browser >> --config viewportHeight=<< parameters.height >>,viewportWidth=<< parameters.width >> --reporter junit --reporter-options "mochaFile=test_results/cypress-e2e-[hash].xml"
+          cypress-command: npx cypress run --browser=<< parameters.browser >> --config viewportHeight=<< parameters.height >>,viewportWidth=<< parameters.width >> --reporter junit --reporter-options "mochaFile=cypress/results/results-[hash].xml" --spec "$(cat circleci_test_slice.txt)"
+      - run:
+          name: Fix up JUnit output
+          command: node scripts/fix-junit-xml.js
+
+      # Store the test results so CircleCI can provide insights and do parallel test splitting
       - store_test_results:
-          path: test_results
+          path: cypress/results
+
+      # We also store the test results as an artefact so we can download/access them when we need
+      - store_artifacts:
+          path: cypress/results
 
   build-deploy-development:
     executor: aws-cli/default

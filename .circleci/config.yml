@@ -78,8 +78,7 @@ jobs:
   run-tests:
     executor: node-executor
     steps:
-      - cypress/install:
-          install-command: npm install
+      - cypress/install
       - cypress/run-tests:
           cypress-command: npx cypress run --component --reporter junit
       - run:
@@ -97,16 +96,14 @@ jobs:
     executor: node-executor
     steps:
       - checkout
-      - node/install-packages:
-          override-ci-command: npm install
+      - node/install-packages
       - sonarcloud/scan
 
   build:
     executor: node-executor
     steps:
       - checkout
-      - node/install-packages:
-          override-ci-command: npm install
+      - node/install-packages
       - run:
           name: Build Next application
           command: npm run build
@@ -131,7 +128,6 @@ jobs:
     steps:
       # cypress/install checks out the code, installs dependencies (including NPM), etc. It uses optimal caching strategies for NPM with npm ci.
       - cypress/install:
-          install-command: npm install
           install-browsers: true
       - run:
           name: Split E2E tests for parallel run

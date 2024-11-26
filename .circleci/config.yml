@@ -11,12 +11,6 @@ executors:
   node-executor:
     docker:
       - image: cimg/node:20.17-browsers
-  docker-python:
-    docker:
-      - image: cimg/python:3.7
-  cypress-e2e-executor:
-    docker:
-      - image: cimg/node:20.17-browsers
 
 references:
   workspace_root: &workspace_root '~'
@@ -114,7 +108,7 @@ jobs:
       - sonarcloud/scan
 
   run-cypress-e2e:
-    executor: cypress-e2e-executor
+    executor: node-executor
     parallelism: 8
     parameters:
       browser:

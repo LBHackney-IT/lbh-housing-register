@@ -78,11 +78,7 @@ jobs:
   run-tests:
     executor: node-executor
     steps:
-      - checkout
-      - node/install-packages
-      - cypress/install:
-          package-manager: npm
-          install-command: npm install
+      - cypress/install
       - cypress/run-tests:
           cypress-command: npx cypress run --component --reporter junit
       - run:

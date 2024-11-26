@@ -13,7 +13,7 @@ executors:
       - image: cimg/node:20.17-browsers
 
 references:
-  workspace_root: &workspace_root '~'
+  workspace_root: &workspace_root '.'
   attach_workspace: &attach_workspace
     attach_workspace:
       at: *workspace_root
@@ -107,6 +107,19 @@ jobs:
       - node/install-packages
       - sonarcloud/scan
 
+  build:
+    executor: node-executor
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          name: Build Next application
+          command: npm run build
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - build
+
   run-cypress-e2e:
     executor: node-executor
     parallelism: 8
@@ -121,13 +134,9 @@ jobs:
         type: integer
         default: 1366
     steps:
-      - checkout
-      - node/install-packages
+      # cypress/install checks out the code, installs dependencies (including NPM), etc. It uses optimal caching strategies for NPM with npm ci.
       - cypress/install:
-          package-manager: npm
           install-browsers: true
-          install-command: npm install
-          post-install: npm run build
       - run:
           name: Split E2E tests for parallel run
           command: |
@@ -149,44 +158,47 @@ jobs:
       - store_artifacts:
           path: cypress/results
 
-  build-deploy-development:
+  deploy-development:
     executor: aws-cli/default
     steps:
       - checkout
+      - attach_workspace:
+          at: *workspace_root
       - aws_assume_role/assume_role:
           account: $AWS_ACCOUNT_DEVELOPMENT
           profile_name: default
           role: 'LBH_Circle_CI_Deployment_Role'
-      - node/install-packages
       - run:
           name: deploy
-          command: npm run build && sudo npm i -g serverless@^3 && sls deploy --stage development
+          command: npx --yes serverless@^3 deploy --stage development
 
-  build-deploy-staging:
+  deploy-staging:
     executor: aws-cli/default
     steps:
       - checkout
+      - attach_workspace:
+          at: *workspace_root
       - aws_assume_role/assume_role:
           account: $AWS_ACCOUNT_STAGING
           profile_name: default
           role: 'LBH_Circle_CI_Deployment_Role'
-      - node/install-packages
       - run:
           name: deploy
-          command: npm run build && sudo npm i -g serverless@^3 && sls deploy --stage staging
+          command: npx --yes serverless@^3 deploy --stage staging
 
-  build-deploy-production:
+  deploy-production:
     executor: aws-cli/default
     steps:
       - checkout
+      - attach_workspace:
+          at: *workspace_root
       - aws_assume_role/assume_role:
           account: $AWS_ACCOUNT_PRODUCTION
           profile_name: default
           role: 'LBH_Circle_CI_Deployment_Role'
-      - node/install-packages
       - run:
           name: deploy
-          command: npm run build && sudo npm i -g serverless@^3 && sls deploy --stage production
+          command: npx --yes serverless@^3 deploy --stage production
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Workflows ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 workflows:
@@ -194,6 +206,7 @@ workflows:
   continuous-delivery:
     jobs:
       - run-tests
+      - build
 
       - run-cypress-e2e:
           matrix:
@@ -204,13 +217,15 @@ workflows:
               # mobile, tablet, chromebook, desktop
               width: [320, 1024, 1366, 1536]
             exclude: *exclude_combinations
+          requires:
+            - build
 
       - sonar-scan:
           context: SonarCloud
           requires:
             - run-tests
 
-      - build-deploy-development:
+      - deploy-development:
           context:
             - api-assume-role-housing-development-context
             - housing-register-fe-build-context
@@ -221,7 +236,7 @@ workflows:
             branches:
               only: development
 
-      - build-deploy-staging:
+      - deploy-staging:
           context:
             - api-assume-role-housing-staging-context
             - housing-register-fe-build-context
@@ -235,12 +250,12 @@ workflows:
       - permit-deploy-production:
           type: approval
           requires:
-            - build-deploy-staging
+            - deploy-staging
           filters:
             branches:
               only: main
 
-      - build-deploy-production:
+      - deploy-production:
           context:
             - api-assume-role-housing-production-context
             - housing-register-fe-build-context

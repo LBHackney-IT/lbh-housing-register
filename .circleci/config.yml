@@ -114,6 +114,7 @@ jobs:
 
   run-cypress-e2e:
     executor: node-executor
+    resource_class: medium+
     parallelism: 8
     parameters:
       browser:

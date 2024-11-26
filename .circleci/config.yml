@@ -95,10 +95,6 @@ jobs:
           path: test_results
       - store_artifacts:
           path: coverage
-      - persist_to_workspace:
-          root: *workspace_root
-          paths:
-            - .
 
   sonar-scan:
     executor: node-executor

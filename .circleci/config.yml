@@ -159,6 +159,10 @@ jobs:
     executor: aws-cli/default
     steps:
       - checkout
+      - aws_assume_role/assume_role:
+          account: $AWS_ACCOUNT_DEVELOPMENT
+          profile_name: default
+          role: 'LBH_Circle_CI_Deployment_Role'
       - node/install-packages
       - run:
           name: deploy
@@ -168,6 +172,10 @@ jobs:
     executor: aws-cli/default
     steps:
       - checkout
+      - aws_assume_role/assume_role:
+          account: $AWS_ACCOUNT_STAGING
+          profile_name: default
+          role: 'LBH_Circle_CI_Deployment_Role'
       - node/install-packages
       - run:
           name: deploy
@@ -177,49 +185,14 @@ jobs:
     executor: aws-cli/default
     steps:
       - checkout
-      - node/install-packages
-      - run:
-          name: deploy
-          command: npm run build && sudo npm i -g serverless@^3 && sls deploy --stage production
-
-  assume-role-development:
-    executor: docker-python
-    steps:
-      - checkout
-      - aws_assume_role/assume_role:
-          account: $AWS_ACCOUNT_DEVELOPMENT
-          profile_name: default
-          role: 'LBH_Circle_CI_Deployment_Role'
-      - persist_to_workspace:
-          root: *workspace_root
-          paths:
-            - .aws
-
-  assume-role-staging:
-    executor: docker-python
-    steps:
-      - checkout
-      - aws_assume_role/assume_role:
-          account: $AWS_ACCOUNT_STAGING
-          profile_name: default
-          role: 'LBH_Circle_CI_Deployment_Role'
-      - persist_to_workspace:
-          root: *workspace_root
-          paths:
-            - .aws
-
-  assume-role-production:
-    executor: docker-python
-    steps:
-      - checkout
       - aws_assume_role/assume_role:
           account: $AWS_ACCOUNT_PRODUCTION
           profile_name: default
           role: 'LBH_Circle_CI_Deployment_Role'
-      - persist_to_workspace:
-          root: *workspace_root
-          paths:
-            - .aws
+      - node/install-packages
+      - run:
+          name: deploy
+          command: npm run build && sudo npm i -g serverless@^3 && sls deploy --stage production
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Workflows ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 workflows:
@@ -227,6 +200,7 @@ workflows:
   continuous-delivery:
     jobs:
       - run-tests
+
       - run-cypress-e2e:
           matrix:
             parameters:
@@ -236,40 +210,34 @@ workflows:
               # mobile, tablet, chromebook, desktop
               width: [320, 1024, 1366, 1536]
             exclude: *exclude_combinations
+
       - sonar-scan:
           context: SonarCloud
           requires:
             - run-tests
-      - assume-role-development:
-          context: api-assume-role-housing-development-context
-          requires:
-            - run-tests
-            - run-cypress-e2e
-          filters:
-            branches:
-              only: development
+
       - build-deploy-development:
-          context: housing-register-fe-build-context
+          context:
+            - api-assume-role-housing-development-context
+            - housing-register-fe-build-context
           requires:
-            - assume-role-development
+            - run-tests
+            - run-cypress-e2e
           filters:
             branches:
               only: development
-      - assume-role-staging:
-          context: api-assume-role-housing-staging-context
+
+      - build-deploy-staging:
+          context:
+            - api-assume-role-housing-staging-context
+            - housing-register-fe-build-context
           requires:
             - run-tests
             - run-cypress-e2e
           filters:
             branches:
               only: main
-      - build-deploy-staging:
-          context: housing-register-fe-build-context
-          requires:
-            - assume-role-staging
-          filters:
-            branches:
-              only: main
+
       - permit-deploy-production:
           type: approval
           requires:
@@ -277,17 +245,13 @@ workflows:
           filters:
             branches:
               only: main
-      - assume-role-production:
-          context: api-assume-role-housing-production-context
+
+      - build-deploy-production:
+          context:
+            - api-assume-role-housing-production-context
+            - housing-register-fe-build-context
           requires:
             - permit-deploy-production
-          filters:
-            branches:
-              only: main
-      - build-deploy-production:
-          context: housing-register-fe-build-context
-          requires:
-            - assume-role-production
           filters:
             branches:
               only: main

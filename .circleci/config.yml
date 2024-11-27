@@ -96,7 +96,6 @@ jobs:
     executor: node-executor
     steps:
       - checkout
-      - node/install-packages
       - sonarcloud/scan
 
   build:

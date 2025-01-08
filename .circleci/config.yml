@@ -4,21 +4,16 @@ orbs:
   aws-cli: circleci/aws-cli@3.2.0
   aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
   cypress: cypress-io/cypress@3.3.1
+  node: circleci/node@6.3.0
   sonarcloud: sonarsource/sonarcloud@2.0.0
 
 executors:
   node-executor:
     docker:
       - image: cimg/node:20.17-browsers
-  docker-python:
-    docker:
-      - image: cimg/python:3.7
-  cypress-e2e-executor:
-    docker:
-      - image: cimg/node:20.17-browsers
 
 references:
-  workspace_root: &workspace_root '~'
+  workspace_root: &workspace_root '.'
   attach_workspace: &attach_workspace
     attach_workspace:
       at: *workspace_root
@@ -80,32 +75,10 @@ exclude_combinations:
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Jobs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 jobs:
-  install-dependencies:
-    executor: node-executor
-    steps:
-      - *attach_workspace
-      - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-      - run:
-          name: Install Dependencies
-          command: npm install
-      - save_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-          paths:
-            - ./node_modules
-            - ./.next/cache
-            - ./.cache/Cypress
-      - persist_to_workspace:
-          root: *workspace_root
-          paths: .
-
   run-tests:
     executor: node-executor
     steps:
-      - cypress/install:
-          package-manager: npm
-          install-command: npm install
+      - cypress/install
       - cypress/run-tests:
           cypress-command: npx cypress run --component --reporter junit
       - run:
@@ -118,19 +91,30 @@ jobs:
           path: test_results
       - store_artifacts:
           path: coverage
-      - persist_to_workspace:
-          root: *workspace_root
-          paths:
-            - .
 
   sonar-scan:
     executor: node-executor
     steps:
-      - *attach_workspace
+      - checkout
       - sonarcloud/scan
 
+  build:
+    executor: node-executor
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          name: Build Next application
+          command: npm run build
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - build
+
   run-cypress-e2e:
-    executor: cypress-e2e-executor
+    executor: node-executor
+    resource_class: medium+
+    parallelism: 8
     parameters:
       browser:
         type: string
@@ -142,91 +126,81 @@ jobs:
         type: integer
         default: 1366
     steps:
+      # cypress/install checks out the code, installs dependencies (including NPM), etc. It uses optimal caching strategies for NPM with npm ci.
       - cypress/install:
-          package-manager: npm
           install-browsers: true
-          install-command: npm install
-          post-install: npm run build
+      - run:
+          name: Split E2E tests for parallel run
+          command: |
+            find cypress/e2e -type f -name "*.[jt]s" | sort | uniq > circleci_test_files.txt
+            # Use time-based splitting for maximum efficiency. Cypress expects files to be separated with commas
+            circleci tests split --split-by=timings circleci_test_files.txt | perl -pe 'chomp if eof' | tr '\n' ',' > circleci_test_slice.txt
+            cat circleci_test_slice.txt
       - cypress/run-tests:
-          cypress-command: npx cypress run --browser=<< parameters.browser >> --config viewportHeight=<< parameters.height >>,viewportWidth=<< parameters.width >> --reporter junit --reporter-options "mochaFile=test_results/cypress-e2e-[hash].xml"
+          cypress-command: npx cypress run --browser=<< parameters.browser >> --config viewportHeight=<< parameters.height >>,viewportWidth=<< parameters.width >> --reporter junit --reporter-options "mochaFile=cypress/results/results-[hash].xml" --spec "$(cat circleci_test_slice.txt)"
+      - run:
+          name: Fix up JUnit output
+          command: node scripts/fix-junit-xml.js
+
+      # Store the test results so CircleCI can provide insights and do parallel test splitting
       - store_test_results:
-          path: test_results
+          path: cypress/results
 
-  build-deploy-development:
+      # We also store the test results as an artefact so we can download/access them when we need
+      - store_artifacts:
+          path: cypress/results
+
+  deploy-development:
     executor: aws-cli/default
-    steps:
-      - *attach_workspace
-      - run:
-          name: deploy
-          command: npm run build && sudo npm i -g serverless@^3 && sls deploy --stage development
-
-  build-deploy-staging:
-    executor: aws-cli/default
-    steps:
-      - *attach_workspace
-      - run:
-          name: deploy
-          command: npm run build && sudo npm i -g serverless@^3 && sls deploy --stage staging
-
-  build-deploy-production:
-    executor: aws-cli/default
-    steps:
-      - *attach_workspace
-      - run:
-          name: deploy
-          command: npm run build && sudo npm i -g serverless@^3 && sls deploy --stage production
-
-  assume-role-development:
-    executor: docker-python
     steps:
       - checkout
+      - attach_workspace:
+          at: *workspace_root
       - aws_assume_role/assume_role:
           account: $AWS_ACCOUNT_DEVELOPMENT
           profile_name: default
           role: 'LBH_Circle_CI_Deployment_Role'
-      - persist_to_workspace:
-          root: *workspace_root
-          paths:
-            - .aws
+      - run:
+          name: deploy
+          command: npx --yes serverless@^3 deploy --stage development
 
-  assume-role-staging:
-    executor: docker-python
+  deploy-staging:
+    executor: aws-cli/default
     steps:
       - checkout
+      - attach_workspace:
+          at: *workspace_root
       - aws_assume_role/assume_role:
           account: $AWS_ACCOUNT_STAGING
           profile_name: default
           role: 'LBH_Circle_CI_Deployment_Role'
-      - persist_to_workspace:
-          root: *workspace_root
-          paths:
-            - .aws
+      - run:
+          name: deploy
+          command: npx --yes serverless@^3 deploy --stage staging
 
-  assume-role-production:
-    executor: docker-python
+  deploy-production:
+    executor: aws-cli/default
     steps:
       - checkout
+      - attach_workspace:
+          at: *workspace_root
       - aws_assume_role/assume_role:
           account: $AWS_ACCOUNT_PRODUCTION
           profile_name: default
           role: 'LBH_Circle_CI_Deployment_Role'
-      - persist_to_workspace:
-          root: *workspace_root
-          paths:
-            - .aws
+      - run:
+          name: deploy
+          command: npx --yes serverless@^3 deploy --stage production
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Workflows ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 workflows:
   version: 2
   continuous-delivery:
     jobs:
-      - install-dependencies
-      - run-tests:
-          requires:
-            - install-dependencies
+      - run-tests
+      - build
+
       - run-cypress-e2e:
-          requires:
-            - install-dependencies
           matrix:
             parameters:
               browser: [chrome, firefox]
@@ -235,63 +209,50 @@ workflows:
               # mobile, tablet, chromebook, desktop
               width: [320, 1024, 1366, 1536]
             exclude: *exclude_combinations
-          filters:
-            branches:
-              only:
-                - main
-                - development
+          requires:
+            - build
+
       - sonar-scan:
           context: SonarCloud
           requires:
             - run-tests
-      - assume-role-development:
-          context: api-assume-role-housing-development-context
+
+      - deploy-development:
+          context:
+            - api-assume-role-housing-development-context
+            - housing-register-fe-build-context
           requires:
             - run-tests
             - run-cypress-e2e
           filters:
             branches:
               only: development
-      - build-deploy-development:
-          context: housing-register-fe-build-context
-          requires:
-            - assume-role-development
-          filters:
-            branches:
-              only: development
-      - assume-role-staging:
-          context: api-assume-role-housing-staging-context
+
+      - deploy-staging:
+          context:
+            - api-assume-role-housing-staging-context
+            - housing-register-fe-build-context
           requires:
             - run-tests
             - run-cypress-e2e
           filters:
             branches:
               only: main
-      - build-deploy-staging:
-          context: housing-register-fe-build-context
-          requires:
-            - assume-role-staging
-          filters:
-            branches:
-              only: main
+
       - permit-deploy-production:
           type: approval
           requires:
-            - build-deploy-staging
+            - deploy-staging
           filters:
             branches:
               only: main
-      - assume-role-production:
-          context: api-assume-role-housing-production-context
+
+      - deploy-production:
+          context:
+            - api-assume-role-housing-production-context
+            - housing-register-fe-build-context
           requires:
             - permit-deploy-production
-          filters:
-            branches:
-              only: main
-      - build-deploy-production:
-          context: housing-register-fe-build-context
-          requires:
-            - assume-role-production
           filters:
             branches:
               only: main

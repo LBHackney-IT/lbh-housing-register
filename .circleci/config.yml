@@ -160,6 +160,20 @@ jobs:
           account: $AWS_ACCOUNT_DEVELOPMENT
           profile_name: default
           role: 'LBH_Circle_CI_Deployment_Role'
+
+      # aws_assume_role/assume_role stores credentials in ~/.aws/credentials, however
+      # environment variables take precence. These are set to do the initial config, so
+      # the role isn't actually assumed. We need to remove the environment variables in
+      # order for the aws_assume_role/assume_role output to be picked up.
+      #
+      # I think the lbh-hackit orb setup here could be replaced with direct use of the aws-cli/setup and
+      # aws-cli/role_arn_setup, which would remove the need for this cleanup.
+      - run:
+          name: Clean up AWS credentials
+          command: |
+              unset AWS_ACCESS_KEY_ID
+              unset AWS_SECRET_ACCESS_KEY
+
       - run:
           name: deploy
           command: npx --yes serverless@^3 deploy --stage development
@@ -174,6 +188,19 @@ jobs:
           account: $AWS_ACCOUNT_STAGING
           profile_name: default
           role: 'LBH_Circle_CI_Deployment_Role'
+
+      # aws_assume_role/assume_role stores credentials in ~/.aws/credentials, however
+      # environment variables take precence. These are set to do the initial config, so
+      # the role isn't actually assumed. We need to remove the environment variables in
+      # order for the aws_assume_role/assume_role output to be picked up.
+      #
+      # I think the lbh-hackit orb setup here could be replaced with direct use of the aws-cli/setup and
+      # aws-cli/role_arn_setup, which would remove the need for this cleanup.
+      - run:
+          name: Clean up AWS credentials
+          command: |
+              unset AWS_ACCESS_KEY_ID
+              unset AWS_SECRET_ACCESS_KEY
       - run:
           name: deploy
           command: npx --yes serverless@^3 deploy --stage staging
@@ -188,6 +215,20 @@ jobs:
           account: $AWS_ACCOUNT_PRODUCTION
           profile_name: default
           role: 'LBH_Circle_CI_Deployment_Role'
+
+      # aws_assume_role/assume_role stores credentials in ~/.aws/credentials, however
+      # environment variables take precence. These are set to do the initial config, so
+      # the role isn't actually assumed. We need to remove the environment variables in
+      # order for the aws_assume_role/assume_role output to be picked up.
+      #
+      # I think the lbh-hackit orb setup here could be replaced with direct use of the aws-cli/setup and
+      # aws-cli/role_arn_setup, which would remove the need for this cleanup.
+      - run:
+          name: Clean up AWS credentials
+          command: |
+              unset AWS_ACCESS_KEY_ID
+              unset AWS_SECRET_ACCESS_KEY
+
       - run:
           name: deploy
           command: npx --yes serverless@^3 deploy --stage production

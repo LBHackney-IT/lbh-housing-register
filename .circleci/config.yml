@@ -110,6 +110,7 @@ jobs:
           root: *workspace_root
           paths:
             - build
+            - node_modules
 
   run-cypress-e2e:
     executor: node-executor

@@ -8,7 +8,7 @@ import { ParsedUrlQueryInput } from 'querystring';
 interface UseApiCallStatusProps {
   selector: ApiCallStatus | undefined;
   userActionCompleted: boolean;
-  pathToPush: string;
+  pathToPush: string | null;
   query?: ParsedUrlQueryInput;
   setUserError: (error: string) => void;
   scrollToError: () => void;
@@ -44,7 +44,8 @@ const useApiCallStatus = ({
 
     if (
       selector?.callStatus === ApiCallStatusCode.FULFILLED &&
-      userActionCompleted
+      userActionCompleted &&
+      pathToPush
     ) {
       router.push({
         pathname: pathToPush,

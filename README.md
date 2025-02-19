@@ -70,22 +70,17 @@ The React components are built using the [TypeScript](https://www.typescriptlang
 
 ## 💻 Getting started
 
-As a prerequisite to run this app you will need to install [Node.js](https://nodejs.org/en/download)(version 16.20.2 is currently used in local development and in the pipeline) and [npm](https://docs.npmjs.com/cli/v7/commands/npm-install):
+As a prerequisite to run this app you will need to install [Node.js](https://nodejs.org/en/download)(version 20.17.0 is currently used in local development and in the pipeline) and [npm](https://docs.npmjs.com/cli/v10/commands/npm-install):
+
+If you have Node Version manager you can set node to the correct version using the nvm command.
+
+```
+nvm use
+```
 
 ### Running locally
 
-```
-npm install
-npm run dev
-```
-
-The app will attempt to start on port `3000` and should be available on localhost: [http://localhost:3000](http://localhost:3000)
-
-### Logging in
-
-The staff dashboard is using [LBH Google Auth](https://github.com/LBHackney-IT/LBH-Google-auth) for authentication. Permissions to what a user is authorised to do, is managed by mapping Google groups.
-
-You need a **@hackney.gov.uk** Google account to sign in. Speak to Hackney IT if you don't have this.
+Copy the .env sample to the root of your application and get the variables from AWS params store or the password manager.
 
 Next, you need to tell your computer to run the app from a hackney.gov.uk domain. Add this line to your hosts file (Windows: `C:\Windows\System32\drivers\etc\hosts`, Mac: `/etc/hosts`):
 
@@ -93,9 +88,22 @@ Next, you need to tell your computer to run the app from a hackney.gov.uk domain
 127.0.0.1   localdev.hackney.gov.uk
 ```
 
-Update the `APP_URL` variable in the `.env` file to match. When you next launch the app, it should be on `http://localdev.hackney.gov.uk:3000`.
+If necassary update the `APP_URL` variable in the `.env` file to match. When you next launch the app, it should be on `http://localdev.hackney.gov.uk:3000`.
 
 If you have the right configuration setup within the `.env` file, you should be able to access the staff dashboard.
+
+```
+npm install
+npm run dev
+```
+
+To run the backend, please refer to [Housing Register Local Backend](https://github.com/LBHackney-IT/housing-register-local-backend). This repository is designed to help development and testing of Housing Register application by removing the dependencies to AWS environment.
+
+### Logging in
+
+The staff dashboard is using [LBH Google Auth](https://github.com/LBHackney-IT/LBH-Google-auth) for authentication. Permissions to what a user is authorised to do, is managed by mapping Google groups.
+
+You need a **@hackney.gov.uk** Google account to sign in. Speak to Hackney IT if you don't have this.
 
 #### Permissions
 
@@ -106,18 +114,33 @@ These are as follows:
 - AUTHORISED_ADMIN_GROUP: can do any required action
 - AUTHORISED_MANAGER_GROUP: same as officers, plus can assign applications to officers for assessment and see sensitive data
 - AUTHORISED_OFFICER_GROUP: can view applications and perform assessments on assigned applications
+- AUTHORISED_READONLY_GROUP: can view applications
 
 The scope and expectations around permissions have been kept fairly limited at this stage, but is an area for future enhancements.
 
 ### Pre-commit hooks
 
-Repository has pre-commit hooks configuration to prevent direct commits to main branches and for scanning secrets. Please ensure you have [pre-commit framework](https://pre-commit.com/) installed before starting development work.
+Repository has a husky configuration to prevent staged files commits that fail linting, test suites and for scanning secrets. On commit it will run linting on staged files, jest and cypress components tests. Pre-push it will run cypress e2e tests.
+
+### E2E tests
+
+A suite of e2e tests have been written with cypress. Check the env vars are set correctly for AUTHORISED\_\* groups before running tests.
+
+Standard e2e tests use nock to intercept network requests and mock responses. The configuration will start the application from within the cypress.config.ts to allow nock to work within the next environment sucessfully. These will also run in the pipeline and record video of failed tests.
+
+Local e2e tests in the cypress/e2e/local folder require all nock configuration to be commented out in cypress.config.ts, a [local backend](https://github.com/LBHackney-IT/housing-register-local-backend) to be running and the LOCAL_E2E to be set to true. These tests are designed to run against a production build of the application. To build and start the application run these commands.
+
+```
+npm run build
+npm run start
+```
 
 ## Concepts
 
 ### APIs
 
 We've defined a couple of gateways to interact with our API. These are set up as follows:
+ms
 
 - **`internal-api.ts`**
 

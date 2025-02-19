@@ -7,14 +7,23 @@ const endpoint: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
+  let request;
+
   switch (req.method) {
     case 'POST':
       try {
-        const request = JSON.parse(req.body);
+        request = JSON.parse(req.body);
+      } catch {
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ message: 'Unable to parse request' });
+        break;
+      }
+
+      try {
         const data = await createVerifyCode(request);
         res.status(StatusCodes.OK).json(data);
-      } catch (error) {
-        console.error(error);
+      } catch {
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
           .json({ message: 'Unable to create verify code' });

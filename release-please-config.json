@@ -3,5 +3,14 @@
   "packages": {
     ".": {}
   },
-  "branches": ["main", "hotfix"]
+  "branches": [
+    {
+      "name": "main"
+    },
+    {
+      "name": "hotfix",
+      "prerelease": true,
+      "prerelease-label": "hotfix"
+    }
+  ]
 }

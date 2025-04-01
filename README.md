@@ -124,7 +124,7 @@ Repository has a husky configuration to prevent staged files commits that fail l
 
 ### Conventional commits
 
-Repository has forced [Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) by using [Commitizen](https://commitizen-tools.github.io/commitizen/). When you create a commit message you will run through a process to decide the nature of the commit (feat/fix etx) and other key details. This helps support the automated versioned release strategy.
+Repository has forced [Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) by using [Commitizen](https://commitizen-tools.github.io/commitizen/). When you create a commit message, you will run through a process to decide the nature of the commit (feat/fix etc) and other key details. This helps support the automated versioned release strategy.
 
 ### E2E tests
 

@@ -3,5 +3,5 @@
   "packages": {
     ".": {}
   },
-  "release-branches": ["main", "hotfix"]
+  "branches": ["main", "hotfix"]
 }

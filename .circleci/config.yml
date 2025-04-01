@@ -270,23 +270,29 @@ workflows:
             - run-tests
             - run-cypress-e2e
           filters:
+            tags:
+              only: /^autorelease:tagged$/
             branches:
-              only: main
+              ignore: /.*/
 
       - permit-deploy-production:
           type: approval
           requires:
             - deploy-staging
           filters:
+            tags:
+              only: /^autorelease:tagged$/
             branches:
-              only: main
+              ignore: /.*/
 
-      - deploy-production:
-          context:
-            - api-assume-role-housing-production-context
-            - housing-register-fe-build-context
-          requires:
-            - permit-deploy-production
-          filters:
-            branches:
-              only: main
+      # - deploy-production:
+      #     context:
+      #       - api-assume-role-housing-production-context
+      #       - housing-register-fe-build-context
+      #     requires:
+      #       - permit-deploy-production
+      #     filters:
+      #       tags:
+      #         only: /^autorelease:tagged$/
+      #       branches:
+      #         ignore: /.*/

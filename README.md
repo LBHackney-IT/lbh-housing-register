@@ -122,6 +122,10 @@ The scope and expectations around permissions have been kept fairly limited at t
 
 Repository has a husky configuration to prevent staged files commits that fail linting, test suites and for scanning secrets. On commit it will run linting on staged files, jest and cypress components tests. Pre-push it will run cypress e2e tests.
 
+### Conventional commits
+
+Repository has forced [Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) by using [Commitizen](https://commitizen-tools.github.io/commitizen/). When you create a commit message you will run through a process to decide the nature of the commit (feat/fix etx) and other key details. This helps support the automated versioned release strategy.
+
 ### E2E tests
 
 A suite of e2e tests have been written with cypress. Check the env vars are set correctly for AUTHORISED\_\* groups before running tests.
@@ -134,6 +138,12 @@ Local e2e tests in the cypress/e2e/local folder require all nock configuration t
 npm run build
 npm run start
 ```
+
+## 🚀 Deployment
+
+### Release Please
+
+On merging a branch into main, [Release Please](https://github.com/googleapis/release-please) will build a release PR. This PR will continue to update with release notes for every merge until the point you wish to trigger a release. On merging the Release Please PR a new version will be set. The CI will pickup the tag from this PR and a build will be triggered.
 
 ## Concepts
 

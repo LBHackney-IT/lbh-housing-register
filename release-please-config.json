@@ -2,5 +2,6 @@
   "release-type": "node",
   "packages": {
     ".": {}
-  }
+  },
+  "release-branches": ["main", "hotfix"]
 }

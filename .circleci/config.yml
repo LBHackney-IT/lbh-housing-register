@@ -285,14 +285,14 @@ workflows:
             branches:
               ignore: /.*/
 
-      - deploy-production:
-          context:
-            - api-assume-role-housing-production-context
-            - housing-register-fe-build-context
-          requires:
-            - permit-deploy-production
-          filters:
-            tags:
-              only: /^autorelease:tagged$/
-            branches:
-              ignore: /.*/
+      # - deploy-production:
+      #     context:
+      #       - api-assume-role-housing-production-context
+      #       - housing-register-fe-build-context
+      #     requires:
+      #       - permit-deploy-production
+      #     filters:
+      #       tags:
+      #         only: /^autorelease:tagged$/
+      #       branches:
+      #         ignore: /.*/

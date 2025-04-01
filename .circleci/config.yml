@@ -270,16 +270,20 @@ workflows:
             - run-tests
             - run-cypress-e2e
           filters:
+            tags:
+              only: /^autorelease:tagged$/
             branches:
-              only: main
+              ignore: /.*/
 
       - permit-deploy-production:
           type: approval
           requires:
             - deploy-staging
           filters:
+            tags:
+              only: /^autorelease:tagged$/
             branches:
-              only: main
+              ignore: /.*/
 
       - deploy-production:
           context:
@@ -288,5 +292,7 @@ workflows:
           requires:
             - permit-deploy-production
           filters:
+            tags:
+              only: /^autorelease:tagged$/
             branches:
-              only: main
+              ignore: /.*/

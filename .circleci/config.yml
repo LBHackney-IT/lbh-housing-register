@@ -260,7 +260,7 @@ workflows:
             - run-cypress-e2e
           filters:
             branches:
-              only: development
+              only: main
 
       - deploy-staging:
           context:

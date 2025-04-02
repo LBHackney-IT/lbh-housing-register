@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.2](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.1.1...hackney-housing-register-v2.1.2) (2025-04-02)
+
+
+### Bug Fixes
+
+* **circle config:** filter tag only ([8098aa9](https://github.com/LBHackney-IT/lbh-housing-register/commit/8098aa942b893642416b26db7862f94ee7dfcb7e))
+* **circle config:** filter tag only ([c2434bf](https://github.com/LBHackney-IT/lbh-housing-register/commit/c2434bf5187342a65330244818ce9166ed4342e0))
+
 ## [2.1.1](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.1.0...hackney-housing-register-v2.1.1) (2025-04-02)
 
 

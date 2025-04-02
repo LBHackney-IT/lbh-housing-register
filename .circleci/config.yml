@@ -4,7 +4,7 @@ orbs:
   aws-cli: circleci/aws-cli@3.2.0
   aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
   cypress: cypress-io/cypress@3
-  node: circleci/node@6.3.0
+  node: circleci/node@7.1.0
   sonarcloud: sonarsource/sonarcloud@2.0.0
 
 executors:
@@ -231,10 +231,19 @@ workflows:
   version: 2
   continuous-delivery:
     jobs:
-      - run-tests
-      - build
+      - run-tests:
+          filters:
+            tags:
+              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
+      - build:
+          filters:
+            tags:
+              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
 
       - run-cypress-e2e:
+          filters:
+            tags:
+              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
           matrix:
             parameters:
               browser: [chrome, firefox]
@@ -250,6 +259,9 @@ workflows:
           context: SonarCloud
           requires:
             - run-tests
+          filters:
+            tags:
+              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
 
       - deploy-development:
           context:
@@ -271,7 +283,7 @@ workflows:
             - run-cypress-e2e
           filters:
             tags:
-              only: /^autorelease:tagged$/
+              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
               ignore: /.*/
 
@@ -281,18 +293,18 @@ workflows:
             - deploy-staging
           filters:
             tags:
-              only: /^autorelease:tagged$/
+              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
               ignore: /.*/
 
-      # - deploy-production:
-      #     context:
-      #       - api-assume-role-housing-production-context
-      #       - housing-register-fe-build-context
-      #     requires:
-      #       - permit-deploy-production
-      #     filters:
-      #       tags:
-      #         only: /^autorelease:tagged$/
-      #       branches:
-      #         ignore: /.*/
+      - deploy-production:
+          context:
+            - api-assume-role-housing-production-context
+            - housing-register-fe-build-context
+          requires:
+            - permit-deploy-production
+          filters:
+            tags:
+              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
+            branches:
+              ignore: /.*/

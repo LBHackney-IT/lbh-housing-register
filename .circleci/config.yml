@@ -231,10 +231,19 @@ workflows:
   version: 2
   continuous-delivery:
     jobs:
-      - run-tests
-      - build
+      - run-tests:
+          filters:
+            tags:
+              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
+      - build:
+          filters:
+            tags:
+              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
 
       - run-cypress-e2e:
+          filters:
+            tags:
+              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
           matrix:
             parameters:
               browser: [chrome, firefox]
@@ -250,6 +259,9 @@ workflows:
           context: SonarCloud
           requires:
             - run-tests
+          filters:
+            tags:
+              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
 
       - deploy-development:
           context:
@@ -259,10 +271,10 @@ workflows:
             - run-tests
             - run-cypress-e2e
           filters:
+            tags:
+              ignore: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
               only: main
-            tags:
-              ignore: /^.*v[0-9]+(\.[0-9]+)*$/
 
       - deploy-staging:
           context:
@@ -273,9 +285,9 @@ workflows:
             - run-cypress-e2e
           filters:
             tags:
-              only: /^.*v[0-9]+(\.[0-9]+)*$/
-            # branches:
-            #   ignore: /.*/
+              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
+            branches:
+              ignore: /.*/
 
       - permit-deploy-production:
           type: approval
@@ -283,9 +295,9 @@ workflows:
             - deploy-staging
           filters:
             tags:
-              only: /^.*v[0-9]+(\.[0-9]+)*$/
-            # branches:
-            #   ignore: /.*/
+              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
+            branches:
+              ignore: /.*/
 
       # - deploy-production:
       #     context:

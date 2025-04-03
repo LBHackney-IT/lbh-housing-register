@@ -299,14 +299,14 @@ workflows:
             branches:
               ignore: /.*/
 
-      # - deploy-production:
-      #     context:
-      #       - api-assume-role-housing-production-context
-      #       - housing-register-fe-build-context
-      #     requires:
-      #       - permit-deploy-production
-      #     filters:
-      #       tags:
-      #         only: /^.*v[0-9]+(\.[0-9]+)*$/
-      #       branches:
-      #         ignore: /.*/
+      - deploy-production:
+          context:
+            - api-assume-role-housing-production-context
+            - housing-register-fe-build-context
+          requires:
+            - permit-deploy-production
+          filters:
+            tags:
+              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
+            branches:
+              ignore: /.*/

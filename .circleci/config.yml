@@ -274,7 +274,7 @@ workflows:
             tags:
               ignore: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
-              only: development
+              only: main
 
       - deploy-staging:
           context:

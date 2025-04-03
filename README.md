@@ -145,7 +145,7 @@ Pushes to the development branch will be automatically build and deploy to our d
 
 ### Release-Please
 
-It's important to use squash merge to support Release-please. On squash merging development into main, [Release-Please](https://github.com/googleapis/release-please) will build a release PR. This PR will continue to automatically update with release notes for every merge until the point you wish to trigger a release. On merging the Release-Please PR a new version will be set. The CI will pickup the tag from this PR and a build will be automatically triggered to the staging enviroment with the option to deploy to production.
+On merging development into main, [Release-Please](https://github.com/googleapis/release-please) will build a release PR. This PR will continue to automatically update with release notes for every merge until the point you wish to trigger a release. On merging the Release-Please PR a new version will be set. The CI will pickup the tag from this PR and a deployment will be automatically triggered to the staging enviroment with the option to deploy to production.
 
 ## Concepts
 

@@ -240,6 +240,7 @@ workflows:
               only:
                 - main
                 - development
+                - okta-poc
       - sonar-scan:
           context: SonarCloud
           requires:
@@ -251,47 +252,51 @@ workflows:
             - run-cypress-e2e
           filters:
             branches:
-              only: development
+              only:
+                - development
+                - okta-poc
       - build-deploy-development:
           context: housing-register-fe-build-context
           requires:
             - assume-role-development
           filters:
             branches:
-              only: development
-      - assume-role-staging:
-          context: api-assume-role-housing-staging-context
-          requires:
-            - run-tests
-            - run-cypress-e2e
-          filters:
-            branches:
-              only: main
-      - build-deploy-staging:
-          context: housing-register-fe-build-context
-          requires:
-            - assume-role-staging
-          filters:
-            branches:
-              only: main
-      - permit-deploy-production:
-          type: approval
-          requires:
-            - build-deploy-staging
-          filters:
-            branches:
-              only: main
-      - assume-role-production:
-          context: api-assume-role-housing-production-context
-          requires:
-            - permit-deploy-production
-          filters:
-            branches:
-              only: main
-      - build-deploy-production:
-          context: housing-register-fe-build-context
-          requires:
-            - assume-role-production
-          filters:
-            branches:
-              only: main
+              only:
+                - development
+                - okta-poc
+      # - assume-role-staging:
+      #     context: api-assume-role-housing-staging-context
+      #     requires:
+      #       - run-tests
+      #       - run-cypress-e2e
+      #     filters:
+      #       branches:
+      #         only: main
+      # - build-deploy-staging:
+      #     context: housing-register-fe-build-context
+      #     requires:
+      #       - assume-role-staging
+      #     filters:
+      #       branches:
+      #         only: main
+      # - permit-deploy-production:
+      #     type: approval
+      #     requires:
+      #       - build-deploy-staging
+      #     filters:
+      #       branches:
+      #         only: main
+      # - assume-role-production:
+      #     context: api-assume-role-housing-production-context
+      #     requires:
+      #       - permit-deploy-production
+      #     filters:
+      #       branches:
+      #         only: main
+      # - build-deploy-production:
+      #     context: housing-register-fe-build-context
+      #     requires:
+      #       - assume-role-production
+      #     filters:
+      #       branches:
+      #         only: main

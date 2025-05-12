@@ -50,6 +50,7 @@
     "lodash.throttle": "^4.1.1",
     "nested-object-diff": "^1.1.0",
     "next": "12.3.4",
+    "next-auth": "^3.29.0",
     "next-redux-wrapper": "^6.0.2",
     "notifications-node-client": "^8.2.1",
     "react": "^17.0.2",

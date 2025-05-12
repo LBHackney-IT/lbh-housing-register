@@ -5,9 +5,17 @@ import React, { ReactElement } from 'react';
 import { wrapper } from '../lib/store';
 import '../styles/global.scss';
 
-function App({ Component, pageProps }: AppProps): ReactElement {
+import { Provider } from 'next-auth/client';
+import { Session } from 'next-auth';
+
+function App({
+  Component,
+  pageProps,
+}: AppProps<{
+  session: Session;
+}>): ReactElement {
   return (
-    <>
+    <Provider session={pageProps.session}>
       <Head>
         <title>Housing Register | Hackney Council</title>
       </Head>
@@ -21,7 +29,7 @@ function App({ Component, pageProps }: AppProps): ReactElement {
       `}
       </Script>
       <Component {...pageProps} />
-    </>
+    </Provider>
   );
 }
 

@@ -51,6 +51,10 @@ functions:
       NOTIFY_TEMPLATE_DISQUALIFY: ${ssm:/housing-register/${self:provider.stage}/notify-template-disqualify}
       NOTIFY_TEMPLATE_MEDICAL_NEED: ${ssm:/housing-register/${self:provider.stage}/notify-template-medical-need}
       SKIP_VERIFY_TOKEN: false
+      OKTA_CLIENTID: ${ssm:/housing-register/${self:provider.stage}/okta-client-id}
+      OKTA_CLIENTSECRET: ${ssm:/housing-register/${self:provider.stage}/okta-client-secret}
+      OKTA_DOMAIN: ${ssm:/housing-register/${self:provider.stage}/okta-client-domain}
+      NEXTAUTH_URL: ${ssm:/housing-register/${self:provider.stage}/okta-client-auth-url}
 
 resources:
   Resources:

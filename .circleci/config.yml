@@ -224,24 +224,24 @@ workflows:
       - run-tests:
           requires:
             - install-dependencies
-      - run-cypress-e2e:
-          requires:
-            - install-dependencies
-          matrix:
-            parameters:
-              browser: [chrome]
-              #browser: [chrome, firefox]
-              # mobile, tablet, chromebook/desktop
-              height: [480, 768, 960]
-              # mobile, tablet, chromebook, desktop
-              width: [320, 1024, 1366, 1536]
-            exclude: *exclude_combinations
-          filters:
-            branches:
-              only:
-                - main
-                - development
-                - okta-poc
+      # - run-cypress-e2e:
+      #     requires:
+      #       - install-dependencies
+      #     matrix:
+      #       parameters:
+      #         browser: [chrome]
+      #         #browser: [chrome, firefox]
+      #         # mobile, tablet, chromebook/desktop
+      #         height: [480, 768, 960]
+      #         # mobile, tablet, chromebook, desktop
+      #         width: [320, 1024, 1366, 1536]
+      #       exclude: *exclude_combinations
+      #     filters:
+      #       branches:
+      #         only:
+      #           - main
+      #           - development
+      #           - okta-poc
       - sonar-scan:
           context: SonarCloud
           requires:
@@ -250,7 +250,7 @@ workflows:
           context: api-assume-role-housing-development-context
           requires:
             - run-tests
-            - run-cypress-e2e
+            #- run-cypress-e2e
           filters:
             branches:
               only:

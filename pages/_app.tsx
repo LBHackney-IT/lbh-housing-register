@@ -4,18 +4,18 @@ import Script from 'next/script';
 import React, { ReactElement } from 'react';
 import { wrapper } from '../lib/store';
 import '../styles/global.scss';
+import { SessionProvider } from 'next-auth/react';
 
-import { Provider } from 'next-auth/client';
 import { Session } from 'next-auth';
 
 function App({
   Component,
-  pageProps,
+  pageProps: { session, ...pageProps },
 }: AppProps<{
   session: Session;
 }>): ReactElement {
   return (
-    <Provider session={pageProps.session}>
+    <SessionProvider session={session}>
       <Head>
         <title>Housing Register | Hackney Council</title>
       </Head>
@@ -29,7 +29,7 @@ function App({
       `}
       </Script>
       <Component {...pageProps} />
-    </Provider>
+    </SessionProvider>
   );
 }
 

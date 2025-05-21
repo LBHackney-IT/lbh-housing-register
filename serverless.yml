@@ -56,7 +56,7 @@ functions:
       OKTA_OAUTH2_CLIENT_SECRET: ${ssm:/housing-register/${self:provider.stage}/okta-client-secret}
       OKTA_OAUTH2_ISSUER: ${ssm:/housing-register/${self:provider.stage}/okta-client-domain}
       NEXTAUTH_URL: ${ssm:/housing-register/${self:provider.stage}/okta-client-auth-url}
-      SECRET: ${ssm:/housing-register/${self:provider.stage}/okta-token-secret}
+      NEXTAUTH_SECRET: ${ssm:/housing-register/${self:provider.stage}/okta-token-secret}
 resources:
   Resources:
     CloudFrontDistribution:
@@ -71,6 +71,9 @@ resources:
             MinimumProtocolVersion: TLSv1.2_2018
             SslSupportMethod: sni-only
           DefaultCacheBehavior:
+            ResponseHeadersPolicyId: eaab4381-ed33-4a86-88ca-d9558dc6cd63
+            OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac
+            CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad
             TargetOriginId: ${self:service}-${self:provider.stage}-custom-origin
             ViewerProtocolPolicy: 'redirect-to-https'
             AllowedMethods:

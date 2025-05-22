@@ -17,14 +17,14 @@ import Table, {
 import Layout from '../components/layout/resident-layout';
 import ContactUsDialog from '../components/content/ContactUsDialog';
 import List, { ListItem } from '../components/content/list';
-import { signOut, useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/client';
 import OktaLogin from './okta-login';
 
 export default function ApplicationHomePage(): JSX.Element {
   const [contactUsDialogOpen, setContactUsDialogOpen] = useState(false);
   const signInLink = '/apply/sign-in';
 
-  const { data: session } = useSession();
+  const [session] = useSession();
 
   if (session) {
     return (

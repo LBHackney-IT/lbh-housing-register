@@ -1,15 +1,16 @@
 import NextAuth from 'next-auth';
-import Okta from 'next-auth/providers/okta';
+import { NextApiRequest, NextApiResponse } from 'next-auth/internals/utils';
+import Providers from 'next-auth/providers';
 
-export const authOptions = {
+const options = {
   providers: [
-    Okta({
-      clientId: process.env.OKTA_OAUTH2_CLIENT_ID as string,
-      clientSecret: process.env.OKTA_OAUTH2_CLIENT_SECRET as string,
-      issuer: process.env.OKTA_OAUTH2_ISSUER as string,
+    Providers.Okta({
+      clientId: process.env.OKTA_CLIENTID,
+      clientSecret: process.env.OKTA_CLIENTSECRET,
+      domain: process.env.OKTA_DOMAIN,
     }),
   ],
-  secret: process.env.SECRET as string,
 };
 
-export default NextAuth(authOptions);
+export default (req: NextApiRequest, res: NextApiResponse) =>
+  NextAuth(req, res, options);

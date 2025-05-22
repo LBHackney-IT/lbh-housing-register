@@ -1,4 +1,4 @@
-import { signIn } from 'next-auth/react';
+import { signIn } from 'next-auth/client';
 import Layout from '../components/layout/staff-layout';
 import { HeadingOne } from 'components/content/headings';
 import Button from 'components/button';

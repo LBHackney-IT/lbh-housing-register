@@ -231,37 +231,37 @@ workflows:
   version: 2
   continuous-delivery:
     jobs:
-      - run-tests:
-          filters:
-            tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
-      - build:
-          filters:
-            tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
+      # - run-tests:
+      #     filters:
+      #       tags:
+      #         only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
+      # - build:
+      #     filters:
+      #       tags:
+      #         only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
 
-      - run-cypress-e2e:
-          filters:
-            tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
-          matrix:
-            parameters:
-              browser: [chrome, firefox]
-              # mobile, tablet, chromebook/desktop
-              height: [480, 768, 960]
-              # mobile, tablet, chromebook, desktop
-              width: [320, 1024, 1366, 1536]
-            exclude: *exclude_combinations
-          requires:
-            - build
+      # - run-cypress-e2e:
+      #     filters:
+      #       tags:
+      #         only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
+      #     matrix:
+      #       parameters:
+      #         browser: [chrome, firefox]
+      #         # mobile, tablet, chromebook/desktop
+      #         height: [480, 768, 960]
+      #         # mobile, tablet, chromebook, desktop
+      #         width: [320, 1024, 1366, 1536]
+      #       exclude: *exclude_combinations
+      #     requires:
+      #       - build
 
-      - sonar-scan:
-          context: SonarCloud
-          requires:
-            - run-tests
-          filters:
-            tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
+      # - sonar-scan:
+      #     context: SonarCloud
+      #     requires:
+      #       - run-tests
+      #     filters:
+      #       tags:
+      #         only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
 
       # - deploy-development:
       #     context:

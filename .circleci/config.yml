@@ -235,10 +235,10 @@ workflows:
       #     filters:
       #       tags:
       #         only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
-      # - build:
-      #     filters:
-      #       tags:
-      #         only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
+      - build:
+          filters:
+            tags:
+              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
 
       # - run-cypress-e2e:
       #     filters:

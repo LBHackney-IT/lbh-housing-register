@@ -115,7 +115,7 @@ custom:
     staging:
       - sg-01f034186031943c1
     production:
-      - sg-0326e27e3d605c143
+      - sg-08b1acb08bf85654b
   subnets:
     development:
       - subnet-0140d06fb84fdb547
@@ -124,5 +124,5 @@ custom:
       - subnet-0ea0020a44b98a2ca
       - subnet-0743d86e9b362fa38
     production:
-      - subnet-0beb266003a56ca82
-      - subnet-06a697d86a9b6ed01
+      - subnet-05e595c59b7d6c8df
+      - subnet-0e6bc9b4ac24493cc

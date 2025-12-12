@@ -208,7 +208,7 @@ jobs:
       - attach_workspace:
           at: *workspace_root
       - aws_assume_role/assume_role:
-          account: $AWS_ACCOUNT_PRODUCTION
+          account: $AWS_ACCOUNT_DISASTER_RECOVERY
           profile_name: default
           role: 'LBH_Circle_CI_Deployment_Role'
       - run:
@@ -263,50 +263,56 @@ workflows:
             tags:
               only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
 
-      - deploy-development:
-          context:
-            - api-assume-role-housing-development-context
-            - housing-register-fe-build-context
-          requires:
-            - run-tests
-            - run-cypress-e2e
-          filters:
-            tags:
-              ignore: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
-            branches:
-              only: development
+      # - deploy-development:
+      #     context:
+      #       - api-assume-role-housing-development-context
+      #       - housing-register-fe-build-context
+      #     requires:
+      #       - run-tests
+      #       - run-cypress-e2e
+      #     filters:
+      #       tags:
+      #         ignore: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
+      #       branches:
+      #         only: development
 
-      - deploy-staging:
-          context:
-            - api-assume-role-housing-staging-context
-            - housing-register-fe-build-context
-          requires:
-            - run-tests
-            - run-cypress-e2e
-          filters:
-            tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
-            branches:
-              ignore: /.*/
+      # - deploy-staging:
+      #     context:
+      #       - api-assume-role-housing-staging-context
+      #       - housing-register-fe-build-context
+      #     requires:
+      #       - run-tests
+      #       - run-cypress-e2e
+      #     filters:
+      #       tags:
+      #         only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
+      #       branches:
+      #         ignore: /.*/
+
+      # - permit-deploy-production:
+      #     type: approval
+      #     requires:
+      #       - deploy-staging
+      #     filters:
+      #       tags:
+      #         only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
+      #       branches:
+      #         ignore: /.*/
 
       - permit-deploy-production:
           type: approval
           requires:
-            - deploy-staging
+            - build
           filters:
-            tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
-              ignore: /.*/
+              only: dr-testing
 
       - deploy-production:
           context:
-            - api-assume-role-housing-production-context
+            - api-assume-role-disaster-recovery-context
             - housing-register-fe-build-context
           requires:
             - permit-deploy-production
           filters:
-            tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
-              ignore: /.*/
+              only: dr-testing

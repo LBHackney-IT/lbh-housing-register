@@ -212,7 +212,7 @@ jobs:
           profile_name: default
           role: 'LBH_Circle_CI_Deployment_Role'
       - run:
-          name: deploy
+          name: remove
           command: |
             # aws_assume_role/assume_role stores credentials in ~/.aws/credentials, however
             # environment variables take precence. These are set to do the initial config, so
@@ -224,7 +224,7 @@ jobs:
             unset AWS_ACCESS_KEY_ID
             unset AWS_SECRET_ACCESS_KEY
 
-            npx --yes serverless@^3 deploy --stage production
+            npx --yes serverless@^3 remove --stage production
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Workflows ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 workflows:

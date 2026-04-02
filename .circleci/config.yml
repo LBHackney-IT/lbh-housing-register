@@ -127,10 +127,15 @@ jobs:
       width:
         type: integer
         default: 1366
-    # Next.js must expose /api/e2e/* for app-process Nock; inherit API URLs from your Circle contexts.
+    # Next.js must expose /api/e2e/* for app-process Nock. This job has no Circle context for API URLs,
+    # so set server env here — must match what Cypress registers via /api/e2e/nock (see .env.sample).
     environment:
       E2E_HTTP_MOCKS: 'true'
       PORT: '3000'
+      HOUSING_REGISTER_API: 'http://localhost:3910/api/v1/'
+      HOUSING_REGISTER_KEY: 'testing'
+      ACTIVITY_HISTORY_API: 'http://localhost:3600/api/v1'
+      LOOKUP_API_URL: 'http://localhost:3920'
     steps:
       # cypress/install checks out the code, installs dependencies (including NPM), etc. It uses optimal caching strategies for NPM with npm ci.
       - cypress/install:

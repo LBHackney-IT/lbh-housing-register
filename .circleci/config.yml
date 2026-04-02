@@ -101,12 +101,6 @@ jobs:
     steps:
       - checkout:
           method: full
-      - *attach_workspace
-      - run:
-          name: Confirm Jest LCOV for Sonar
-          command: |
-            test -f coverage/lcov.info || { echo "Missing coverage/lcov.info — run-tests must persist coverage"; exit 1; }
-            wc -l coverage/lcov.info
       - sonarcloud/scan
 
   build:

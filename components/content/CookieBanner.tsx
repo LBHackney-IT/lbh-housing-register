@@ -6,14 +6,25 @@ const CookieBanner: React.FC = (): JSX.Element => {
   const ref = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
+    let cancelled = false;
+
     const loadCookieBanner = async () => {
-      if (typeof window !== 'undefined') {
-        const { CookieBanner: LbhCookieBanner } = await import('lbh-frontend');
-        new LbhCookieBanner(ref.current as HTMLElement).init();
-      }
+      if (typeof window === 'undefined') return;
+
+      const { CookieBanner: LbhCookieBanner } = await import('lbh-frontend');
+      if (cancelled) return;
+
+      const root = ref.current;
+      if (!root) return;
+
+      new LbhCookieBanner(root).init();
     };
 
-    loadCookieBanner();
+    void loadCookieBanner();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (

@@ -101,6 +101,7 @@ jobs:
     steps:
       - checkout:
           method: full
+      - *attach_workspace
       - sonarcloud/scan
 
   build:

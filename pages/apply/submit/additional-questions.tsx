@@ -22,7 +22,7 @@ import ErrorSummary from 'components/errors/error-summary';
 const AdditonalQuestions = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const applicant = useAppSelector(
-    (store) => store.application.mainApplicant
+    (store) => store.application.mainApplicant,
   ) as Applicant;
   const [hasSaved, setHasSaved] = useState<boolean>(false);
   const [userError, setUserError] = useState<string | null>(null);
@@ -53,7 +53,7 @@ const AdditonalQuestions = (): JSX.Element => {
           personID: applicant.person!.id!,
           values,
           markAsComplete: true,
-        })
+        }),
       );
       setHasSaved(true);
     } catch (error) {

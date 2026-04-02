@@ -30,35 +30,32 @@ const applicationWithHouseholdMemberRemoved: Application = {
   otherMembers: [],
 };
 
+const householdMemberPersonId =
+  applicationWithCompletedMainApplicantSections.otherMembers[0]!.person!.id;
+
+/**
+ * Each resident page mount runs `loadApplication()`; React Strict Mode in dev runs
+ * effects twice per mount. One-shot GET mocks must not place a "next response"
+ * (e.g. removed household) before navigation finishes, or the overview loads
+ * the wrong application and applicant buttons are missing.
+ */
+function mockGetApplicationsCompletedMany(times: number) {
+  Cypress._.times(times, () => {
+    cy.mockHousingRegisterApiGetApplications(
+      applicationId,
+      applicationWithCompletedMainApplicantSections,
+      false,
+    );
+  });
+}
+
 describe('Apply resident index page', () => {
   beforeEach(() => {
     cy.clearAllCookies();
     cy.loginAsResident(applicationId, true);
-    cy.task('clearNock');
+    cy.clearE2eNock();
 
-    //cover the initial page load GET calls
-    cy.mockHousingRegisterApiGetApplications(
-      applicationId,
-      applicationWithCompletedMainApplicantSections,
-      false
-    );
-
-    cy.mockHousingRegisterApiGetApplications(
-      applicationId,
-      applicationWithCompletedMainApplicantSections,
-      false
-    );
-    cy.mockHousingRegisterApiGetApplications(
-      applicationId,
-      applicationWithCompletedMainApplicantSections,
-      false
-    );
-
-    cy.mockHousingRegisterApiGetApplications(
-      applicationId,
-      applicationWithCompletedMainApplicantSections,
-      false
-    );
+    mockGetApplicationsCompletedMany(14);
   });
 
   it('shows a saving message while application is being updated', () => {
@@ -69,20 +66,25 @@ describe('Apply resident index page', () => {
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,
       applicationWithHouseholdMemberRemoved,
-      1000
+      1000,
     );
 
-    //mock the GET after removing household member
+    // GET after delete / return to overview (Strict Mode may fetch twice per mount)
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithHouseholdMemberRemoved,
-      false
+      false,
+    );
+    cy.mockHousingRegisterApiGetApplications(
+      applicationId,
+      applicationWithHouseholdMemberRemoved,
+      false,
     );
 
     ApplyHouseholdPage.visit();
     ApplyHouseholdPage.getContinueToNextStepLink().scrollIntoView().click();
     ApplyExpectPage.getContinueToNextStepButton().click();
-    ApplyOverviewPage.getApplicantButton(personId + 1).click();
+    ApplyOverviewPage.getApplicantButton(householdMemberPersonId).click();
     ApplyResidentIndexPage.getDeleteThisInformationButton().click();
     ApplyResidentIndexPage.getYesDeleteButton().click();
 
@@ -94,19 +96,19 @@ describe('Apply resident index page', () => {
       applicationId,
       applicationWithCompletedMainApplicantSections,
       1000,
-      StatusCodes.CONFLICT
+      StatusCodes.CONFLICT,
     );
 
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithCompletedMainApplicantSections,
-      false
+      false,
     );
 
     ApplyHouseholdPage.visit();
     ApplyHouseholdPage.getContinueToNextStepLink().scrollIntoView().click();
     ApplyExpectPage.getContinueToNextStepButton().click();
-    ApplyOverviewPage.getApplicantButton(personId + 1).click();
+    ApplyOverviewPage.getApplicantButton(householdMemberPersonId).click();
     ApplyResidentIndexPage.getDeleteThisInformationButton().click();
     ApplyResidentIndexPage.getYesDeleteButton().click();
 
@@ -121,7 +123,7 @@ describe('Apply resident index page', () => {
   });
 
   it('redirects to summary page when applicant is not eligible to apply', () => {
-    cy.task('clearNock');
+    cy.clearE2eNock();
     const dateOfBirth = faker.date
       .birthdate({ mode: 'age', min: 1, max: 10 })
       .toISOString();
@@ -140,7 +142,7 @@ describe('Apply resident index page', () => {
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithNonEligibleApplicant,
-      true
+      true,
     );
 
     ApplyHouseholdPage.visit();

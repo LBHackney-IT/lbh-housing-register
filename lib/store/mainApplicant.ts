@@ -45,7 +45,7 @@ const slice = createSlice({
           return applyQuestions(
             state,
             action.payload.formID,
-            action.payload.values
+            action.payload.values,
           );
         }
         return state;
@@ -56,7 +56,7 @@ const slice = createSlice({
 export function selectHasAgreed(store: Store) {
   return (
     store.application?.mainApplicant?.questions?.find(
-      (q) => q.id === `${FormID.AGREEMENT}/agree`
+      (q) => q.id === `${FormID.AGREEMENT}/agree`,
     )?.answer === 'true'
   );
 }

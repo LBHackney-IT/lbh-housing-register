@@ -95,7 +95,7 @@ export default function Reports({
 }
 
 export const getServerSideProps: GetServerSideProps = async (
-  context
+  context,
 ): Promise<GetServerSidePropsResult<ReportsProps>> => {
   const user = getSession(context.req);
 
@@ -105,7 +105,7 @@ export const getServerSideProps: GetServerSideProps = async (
     return { redirect: auth.redirect };
   }
 
-  const reportNames = await listNovaletExports(30);
+  const reportNames = (await listNovaletExports(30)) as Report[];
 
   return {
     props: { user: auth.user, reportsData: reportNames },

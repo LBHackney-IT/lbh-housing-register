@@ -8,7 +8,7 @@ import { AxiosResponse } from 'axios';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
   switch (req.method) {
     case 'POST':
@@ -17,7 +17,7 @@ const endpoint: NextApiHandler = async (
 
         const auth = getAuth(
           process.env.AUTHORISED_MANAGER_GROUP as string,
-          user
+          user,
         );
 
         if (!('user' in auth)) {
@@ -48,7 +48,7 @@ const endpoint: NextApiHandler = async (
 
           fileResponse = (await downloadInternalReport(
             reportData,
-            req
+            req,
           )) as AxiosResponse;
 
           if (fileResponse) {
@@ -56,7 +56,7 @@ const endpoint: NextApiHandler = async (
             res.setHeader('Content-Type', fileResponse.headers['content-type']);
             res.setHeader(
               'Content-Disposition',
-              fileResponse.headers['content-disposition']
+              fileResponse.headers['content-disposition'],
             );
             res.send(fileResponse.data);
           } else {
@@ -84,5 +84,5 @@ const endpoint: NextApiHandler = async (
 
 export default wrapApiHandlerWithSentry(
   endpoint,
-  '/api/reports/internal/download'
+  '/api/reports/internal/download',
 );

@@ -124,7 +124,7 @@ Repository has a husky configuration to prevent staged files commits that fail l
 
 ### Conventional commits
 
-Repository has forced [Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) by using [Commitizen](https://commitizen-tools.github.io/commitizen/). When you create a commit message, you will run through a process to decide the nature of the commit (feat/fix etc) and other key details. This helps support the automated versioned release strategy.
+Repository enforces [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) using [cz-git](https://cz-git.qbb.sh/) via the [czg](https://www.npmjs.com/package/czg) CLI (`npm run commit`, or the `prepare-commit-msg` hook when you run `git commit`). [Commitlint](https://commitlint.js.org/) validates messages on commit.
 
 ### E2E tests
 
@@ -155,7 +155,6 @@ We've defined a couple of gateways to interact with our API. These are set up as
 ms
 
 - **`internal-api.ts`**
-
   - This acts as a means of routing client side requests, for example form submissions, to a proxy endpoint on the Next.js server.
   - Requests are sent via [API routes](https://nextjs.org/docs/api-routes/introduction) which run server side
 

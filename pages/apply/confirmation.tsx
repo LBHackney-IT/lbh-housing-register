@@ -15,7 +15,8 @@ const ApplicationConfirmation = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const application = useAppSelector((store) => store.application);
   const residentEmail = useAppSelector(
-    (store) => store.application.mainApplicant?.contactInformation?.emailAddress
+    (store) =>
+      store.application.mainApplicant?.contactInformation?.emailAddress,
   );
 
   const signOut = () => {
@@ -52,7 +53,7 @@ const ApplicationConfirmation = (): JSX.Element => {
             your documents and, if required, a medical form.
           </Paragraph>
         </TimelineEvent>
-        <TimelineEvent heading="Application review">{}</TimelineEvent>
+        <TimelineEvent heading="Application review" />
         <TimelineEvent heading="Decision">
           <Paragraph>
             We aim to contact you with a decision by email within 20 working

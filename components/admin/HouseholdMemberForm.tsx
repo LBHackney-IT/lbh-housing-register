@@ -1,4 +1,4 @@
-import { Form, Formik, FormikValues } from 'formik';
+import { Form, Formik, FormikTouched, FormikValues } from 'formik';
 import { UserContext } from '../../lib/contexts/user-context';
 import Button from '../../components/button';
 import ErrorSummary from '../../components/errors/error-summary';
@@ -30,7 +30,10 @@ interface PageProps {
   isSubmitted: boolean;
   addresses: any; // eslint-disable-line @typescript-eslint/no-explicit-any
   setAddresses: (addresses: any) => void; // eslint-disable-line @typescript-eslint/no-explicit-any
-  handleSaveApplication: (isValid: boolean, touched: {}) => void; // eslint-disable-line @typescript-eslint/ban-types
+  handleSaveApplication: (
+    isValid: boolean,
+    touched: FormikTouched<FormikValues>,
+  ) => void;
   personData?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
   dataTestId?: string;
   isSaving?: boolean;
@@ -94,9 +97,15 @@ export default function HouseholdMemberForm({
                         {Object.entries(errors).map(
                           ([inputName, errorTitle]) => (
                             <li key={inputName}>
-                              <a href={`#${inputName}`}>{errorTitle}</a>
+                              <a href={`#${inputName}`}>
+                                {typeof errorTitle === 'string'
+                                  ? errorTitle
+                                  : Array.isArray(errorTitle)
+                                    ? errorTitle.join(', ')
+                                    : 'Error'}
+                              </a>
                             </li>
-                          )
+                          ),
                         )}
                       </ul>
                     </ErrorSummary>

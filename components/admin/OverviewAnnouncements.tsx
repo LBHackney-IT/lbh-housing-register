@@ -72,18 +72,18 @@ export default function OverviewAnnouncements({
     .map(
       (additionalQuestion) =>
         applicant.questions?.filter((question) =>
-          question.id?.includes(additionalQuestion.questionId)
-        )[0]
+          question.id?.includes(additionalQuestion.questionId),
+        )[0],
     )
     .filter((question) => question?.answer === '["yes"]');
 
   const announcementInfo = questionsAnsweredYes.map((questionAnsweredYes) => {
     const detailsQuestion = applicant.questions?.filter((question) =>
-      question.id?.includes(`${questionAnsweredYes?.id}-details`)
+      question.id?.includes(`${questionAnsweredYes?.id}-details`),
     );
 
     const title = additionalQuestionsArray.filter(
-      (question) => question.questionId === questionAnsweredYes?.id
+      (question) => question.questionId === questionAnsweredYes?.id,
     )[0]?.title;
 
     const description = detailsQuestion?.map((detail) => detail.answer);

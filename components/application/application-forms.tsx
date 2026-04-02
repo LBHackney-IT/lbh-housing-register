@@ -41,7 +41,7 @@ export default function ApplicationForms({
   const formData = getFormData(activeStepId);
   const initialValues: FormikValues = getQuestionsForFormAsValues(
     activeStepId,
-    applicant
+    applicant,
   );
 
   const dispatch = useAppDispatch();
@@ -54,7 +54,7 @@ export default function ApplicationForms({
           personID: applicant.person.id,
           values,
           markAsComplete: true,
-        })
+        }),
       );
     }
   };

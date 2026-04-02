@@ -21,17 +21,17 @@ export const selectApplicantsMemorised = createSelector(
     return [mainApplicant, otherMembers]
       .filter((v): v is Applicant | Applicant[] => v !== undefined)
       .flat();
-  }
+  },
 );
 
 export function applicantHasId(
-  applicant: Applicant | undefined = {}
+  applicant: Applicant | undefined = {},
 ): applicant is ApplicantWithPersonID {
   return !!applicant.person?.id;
 }
 
 export const updateApplicant = createAction<ApplicantWithPersonID>(
-  'applicant/updateApplicant'
+  'applicant/updateApplicant',
 );
 
 export const updateWithFormValues = createAction<{
@@ -44,13 +44,13 @@ export const updateWithFormValues = createAction<{
 export function applyQuestions(
   state: Applicant | undefined = {},
   activeStepId: string,
-  values: FormikValues
+  values: FormikValues,
 ): Applicant {
   return {
     ...state,
     questions: [
       ...(state?.questions?.filter(
-        (question) => !question.id?.startsWith(`${activeStepId}/`)
+        (question) => !question.id?.startsWith(`${activeStepId}/`),
       ) || []),
       ...Object.entries(values).map(([id, answer]) => ({
         id: `${activeStepId}/${id}`,
@@ -62,7 +62,7 @@ export function applyQuestions(
 
 export function updateApplicantReducer(
   state: Applicant | undefined,
-  payload: Applicant
+  payload: Applicant,
 ) {
   return {
     ...state,
@@ -81,31 +81,31 @@ export function updateApplicantReducer(
   };
 }
 
-export const selectApplicant = (applicantPersonId: string) => (
-  store: Store
-): ApplicantWithPersonID | undefined => {
-  if (
-    applicantHasId(store.application.mainApplicant) &&
-    store.application.mainApplicant?.person?.id === applicantPersonId
-  ) {
-    return store.application.mainApplicant;
-  }
-  return store.application.otherMembers?.find(
-    (a): a is ApplicantWithPersonID =>
-      applicantHasId(a) && a.person?.id === applicantPersonId
-  );
-};
+export const selectApplicant =
+  (applicantPersonId: string) =>
+  (store: Store): ApplicantWithPersonID | undefined => {
+    if (
+      applicantHasId(store.application.mainApplicant) &&
+      store.application.mainApplicant?.person?.id === applicantPersonId
+    ) {
+      return store.application.mainApplicant;
+    }
+    return store.application.otherMembers?.find(
+      (a): a is ApplicantWithPersonID =>
+        applicantHasId(a) && a.person?.id === applicantPersonId,
+    );
+  };
 
-export const findQuestion = (formID: FormID, questionName: string) => (
-  question: Question
-) => question.id === `${formID}/${questionName}`;
+export const findQuestion =
+  (formID: FormID, questionName: string) => (question: Question) =>
+    question.id === `${formID}/${questionName}`;
 
 export function getQuestionValue(
   questions: Question[] | undefined,
   formID: FormID,
   questionName: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fallbackValue: any = undefined
+  fallbackValue: any = undefined,
 ) {
   const a = questions?.find(findQuestion(formID, questionName))?.answer;
   return a ? JSON.parse(a) : fallbackValue;
@@ -113,7 +113,7 @@ export function getQuestionValue(
 
 export function getQuestionsForFormAsValues(
   formID: FormID,
-  applicant: Applicant
+  applicant: Applicant,
 ): FormikValues {
   return Object.fromEntries(
     (applicant.questions ?? [])
@@ -121,6 +121,6 @@ export function getQuestionsForFormAsValues(
       .map((question) => [
         (question.id || '').slice(`${formID}/`.length),
         JSON.parse(question.answer || 'null'),
-      ])
+      ]),
   );
 }

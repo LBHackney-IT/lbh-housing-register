@@ -22,7 +22,7 @@ export function AddressHistorySummary({
   const addressHistory = getQuestionValue(
     currentResident.questions,
     FormID.ADDRESS_HISTORY,
-    'addressHistory'
+    'addressHistory',
   );
   const durations = calculateDurations(addressHistory);
 

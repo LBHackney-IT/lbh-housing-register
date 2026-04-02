@@ -76,7 +76,7 @@ export default function ApplicationPage({
 
   const handleDelete = (applicant: Applicant) => {
     const newHouseholdMembers = data.otherMembers?.filter(
-      (member) => member.person?.id !== applicant.person?.id
+      (member) => member.person?.id !== applicant.person?.id,
     );
 
     const request: Application = {
@@ -278,7 +278,7 @@ export default function ApplicationPage({
                           <CaseDetailsItem
                             itemHeading="Application date"
                             itemValue={formatDate(
-                              data.assessment?.effectiveDate
+                              data.assessment?.effectiveDate,
                             )}
                             buttonText={
                               !userHasReadOnlyPermissionOnly

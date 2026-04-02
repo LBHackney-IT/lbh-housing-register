@@ -13,7 +13,10 @@ import { checkEligible } from '../../lib/utils/form';
 import { exit } from '../../lib/store/auth';
 import withApplication from '../../lib/hoc/withApplication';
 import { ApplicationStatus } from '../../lib/types/application-status';
-import { getDisqualificationReasonOption } from '../../lib/utils/disqualificationReasonOptions';
+import {
+  getDisqualificationReasonOption,
+  type DisqualificationReason,
+} from '../../lib/utils/disqualificationReasonOptions';
 import WarningText from '../../components/content/WarningText';
 
 const NotEligible = (): JSX.Element => {
@@ -22,12 +25,12 @@ const NotEligible = (): JSX.Element => {
   const [contactUsDialogOpen, setContactUsDialogOpen] = useState(false);
   const application = useAppSelector((store) => store.application);
   const mainApplicant = useAppSelector(
-    (store) => store.application.mainApplicant
+    (store) => store.application.mainApplicant,
   );
 
   const [isEligible, reasons] = useMemo(
     () => (mainApplicant && checkEligible(application)) ?? [],
-    [mainApplicant]
+    [mainApplicant],
   );
 
   if (isEligible && application.status !== ApplicationStatus.DISQUALIFIED) {
@@ -48,10 +51,12 @@ const NotEligible = (): JSX.Element => {
       {reasons && reasons.length > 0 && (
         <>
           <HeadingTwo content="Why is this?" />
-          {reasons?.map((reason, index) => (
+          {reasons?.map((reason: string, index: number) => (
             <InsetText key={index}>
               <Paragraph dataTestId="test-disqualification-reason">
-                {getDisqualificationReasonOption(reason)}
+                {getDisqualificationReasonOption(
+                  reason as DisqualificationReason,
+                )}
               </Paragraph>
             </InsetText>
           ))}

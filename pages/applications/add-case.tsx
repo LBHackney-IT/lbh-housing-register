@@ -62,7 +62,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
     const questionValues = generateQuestionArray(
       values,
       addressHistory,
-      ethnicity
+      ethnicity,
     );
 
     const firstAddressHistoryItem =

@@ -15,8 +15,8 @@ export function NoVisitedLink({
     ? 'lbh-link lbh-link--no-visited-state lbh-!-font-weight-bold'
     : 'lbh-link lbh-link--no-visited-state';
   return (
-    <Link href={href}>
-      <a className={cssClasses}>{children}</a>
+    <Link href={href} className={cssClasses}>
+      {children}
     </Link>
   );
 }

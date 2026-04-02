@@ -65,7 +65,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
           setUserError(err);
           scrollToError();
         });
-    } catch (e) {
+    } catch {
       setUserError(Errors.VERIFY_ERROR);
       scrollToError();
     }

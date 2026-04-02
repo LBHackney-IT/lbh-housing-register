@@ -27,7 +27,7 @@ export default function AssignUser({
   const handleAssigneeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (
       !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
-        event.target.value
+        event.target.value,
       ) &&
       event.target.value !== ''
     ) {

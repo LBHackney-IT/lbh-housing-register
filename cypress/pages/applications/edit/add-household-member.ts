@@ -27,19 +27,19 @@ class AddHouseholdMemberPage {
 
   static getDoBDayInput() {
     return this.getAddHouseholdMemberPage().find(
-      '#personalDetails_dateOfBirth-day'
+      '#personalDetails_dateOfBirth-day',
     );
   }
 
   static getDoBMonthInput() {
     return this.getAddHouseholdMemberPage().find(
-      '#personalDetails_dateOfBirth-month'
+      '#personalDetails_dateOfBirth-month',
     );
   }
 
   static getDoBYearInput() {
     return this.getAddHouseholdMemberPage().find(
-      '#personalDetails_dateOfBirth-year'
+      '#personalDetails_dateOfBirth-year',
     );
   }
 

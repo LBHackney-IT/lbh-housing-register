@@ -50,10 +50,11 @@ export default function StaffLayout({
         <div className="lbh-container">
           <nav>
             <strong className="lbh-heading-h5">
-              <Link href="/applications/">
-                <a className="lbh-link lbh-link--no-visited-state">
-                  Back to dashboard
-                </a>
+              <Link
+                href="/applications/"
+                className="lbh-link lbh-link--no-visited-state"
+              >
+                Back to dashboard
               </Link>
             </strong>
           </nav>
@@ -63,8 +64,8 @@ export default function StaffLayout({
         <div className="lbh-container">
           <nav>
             <strong className="lbh-heading-h5">
-              <Link href={`/applications/view/${id}`}>
-                <a className="lbh-link">Back to household overview</a>
+              <Link href={`/applications/view/${id}`} className="lbh-link">
+                Back to household overview
               </Link>
             </strong>
           </nav>

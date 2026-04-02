@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 
 interface CollapsibleProps {
   heading: string;
-  children: any;
+  children: ReactNode;
 }
 
 export default function Collapsible({

@@ -6,7 +6,7 @@ import { canUpdateApplication } from '../../../../lib/utils/requestAuth';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
   switch (req.method) {
     case 'POST':
@@ -39,5 +39,5 @@ const endpoint: NextApiHandler = async (
 
 export default wrapApiHandlerWithSentry(
   endpoint,
-  '/api/applications/[id]/note'
+  '/api/applications/[id]/note',
 );

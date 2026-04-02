@@ -10,7 +10,7 @@ export const generateApplication = (
   addMainApplicant: boolean = true,
   addOtherMembers: boolean = true,
   addAssessment?: boolean,
-  submittedAt?: string
+  submittedAt?: string,
 ): Application => {
   return {
     id: applicationId,

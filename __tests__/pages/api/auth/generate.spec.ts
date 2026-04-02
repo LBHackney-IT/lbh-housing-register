@@ -54,9 +54,8 @@ describe('POST', () => {
 
     createVerifyCodeMock.mockReturnValueOnce(mockCreateAuthResponse);
 
-    const { req, res }: { req: ApiRequest; res: ApiResponse } = createMocks(
-      requestOptions
-    );
+    const { req, res }: { req: ApiRequest; res: ApiResponse } =
+      createMocks(requestOptions);
 
     await endpoint(req, res);
 
@@ -76,9 +75,8 @@ describe('POST', () => {
 
     const expectedErrorMessage = { message: 'Unable to parse request' };
 
-    const { req, res }: { req: ApiRequest; res: ApiResponse } = createMocks(
-      requestOptions
-    );
+    const { req, res }: { req: ApiRequest; res: ApiResponse } =
+      createMocks(requestOptions);
 
     await endpoint(req, res);
 
@@ -101,9 +99,8 @@ describe('POST', () => {
       body: mockCreateAuthRequest,
     };
 
-    const { req, res }: { req: ApiRequest; res: ApiResponse } = createMocks(
-      reqOptions
-    );
+    const { req, res }: { req: ApiRequest; res: ApiResponse } =
+      createMocks(reqOptions);
 
     endpoint(req, res);
 
@@ -124,13 +121,12 @@ describe('POST', () => {
         body: mockCreateAuthRequest,
       };
 
-      const { req, res }: { req: ApiRequest; res: ApiResponse } = createMocks(
-        reqOptions
-      );
+      const { req, res }: { req: ApiRequest; res: ApiResponse } =
+        createMocks(reqOptions);
 
       endpoint(req, res);
       expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
       expect(res._getJSONData()).toEqual({ message: 'Invalid request method' });
-    }
+    },
   );
 });

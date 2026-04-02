@@ -6,6 +6,6 @@ export const interceptAddressSearchAPI = (response: AddressApiResponse) => {
       method: 'GET',
       path: '/api/address/*',
     },
-    response
+    response,
   ).as('addressSearchMock');
 };

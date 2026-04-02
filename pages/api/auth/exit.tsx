@@ -5,7 +5,7 @@ import { removeAuthCookie } from '../../../lib/utils/users';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
   switch (req.method) {
     case 'POST':

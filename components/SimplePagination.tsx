@@ -15,7 +15,7 @@ const SimplePagination = ({
   const [initialPaginationIsFirstPage, setInitialPaginationIsFirstPage] =
     useState(() => initialPaginationToken === undefined);
   const [paginationTokens, setPaginationTokens] = useState(
-    initialPaginationToken !== undefined ? [initialPaginationToken] : []
+    initialPaginationToken !== undefined ? [initialPaginationToken] : [],
   );
 
   const handleNextClick = () => {

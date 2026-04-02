@@ -4,12 +4,12 @@ import { getQuestionValue } from '../store/applicant';
 import { FormID } from './form-data';
 
 export const getRequiredDocumentsForApplication = (
-  applicant: Applicant
+  applicant: Applicant,
 ): string[] => {
   const employment = getQuestionValue(
     applicant.questions,
     FormID.EMPLOYMENT,
-    'employment'
+    'employment',
   );
 
   return [

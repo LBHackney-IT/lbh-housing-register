@@ -50,7 +50,7 @@ const eligibleApplicationWithCompletedMainApplicantSections: Application = {
 describe('Apply resident summary page', () => {
   beforeEach(() => {
     cy.loginAsResident(applicationId, true);
-    cy.task('clearNock');
+    cy.clearE2eNock();
   });
 
   it('succesfully disqualifies application if is not eligible to apply and disqualify email notify action fails', () => {
@@ -60,13 +60,13 @@ describe('Apply resident summary page', () => {
       ineligibleApplicationWithCompletedMainApplicantSections,
       1000,
       StatusCodes.OK,
-      false
+      false,
     );
 
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       ineligibleApplicationWithCompletedMainApplicantSections,
-      true
+      true,
     );
 
     cy.mockNotifyEmailResponse(StatusCodes.INTERNAL_SERVER_ERROR);
@@ -89,13 +89,13 @@ describe('Apply resident summary page', () => {
       ineligibleApplicationWithCompletedMainApplicantSections,
       1000,
       StatusCodes.OK,
-      false
+      false,
     );
 
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       ineligibleApplicationWithCompletedMainApplicantSections,
-      true
+      true,
     );
 
     ApplyHouseholdPage.visit();
@@ -114,13 +114,13 @@ describe('Apply resident summary page', () => {
       ineligibleApplicationWithCompletedMainApplicantSections,
       0,
       StatusCodes.CONFLICT,
-      false
+      false,
     );
 
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       ineligibleApplicationWithCompletedMainApplicantSections,
-      true
+      true,
     );
 
     cy.mockNotifyEmailResponse();
@@ -141,13 +141,13 @@ describe('Apply resident summary page', () => {
       eligibleApplicationWithCompletedMainApplicantSections,
       0,
       StatusCodes.OK,
-      false
+      false,
     );
 
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       eligibleApplicationWithCompletedMainApplicantSections,
-      true
+      true,
     );
 
     ApplyHouseholdPage.visit();
@@ -205,13 +205,13 @@ describe('Apply resident summary page', () => {
       eligibleApplicationWithHouseholdMemberCompleted,
       1000,
       StatusCodes.OK,
-      false
+      false,
     );
 
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       eligibleApplicationWithHouseholdMemberCompleted,
-      true
+      true,
     );
 
     ApplyHouseholdPage.visit();

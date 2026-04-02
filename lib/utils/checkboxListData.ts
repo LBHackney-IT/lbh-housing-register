@@ -133,7 +133,7 @@ const ethnicityExtendedCategoryString = (applicant?: Applicant) => {
 
   const ethnicityExtendedCategoryQuestion = applicant?.questions?.filter(
     (question) =>
-      question.id?.includes(`ethnicity-extended-category-${ethnicityCategory}`)
+      question.id?.includes(`ethnicity-extended-category-${ethnicityCategory}`),
   )[0];
 
   if (!ethnicityExtendedCategoryQuestion) {
@@ -141,18 +141,18 @@ const ethnicityExtendedCategoryString = (applicant?: Applicant) => {
   }
 
   const ethnicityExtendedCategory = JSON.parse(
-    ethnicityExtendedCategoryQuestion.answer!
+    ethnicityExtendedCategoryQuestion.answer!,
   );
 
   if (ethnicityExtendedCategory) {
     return ethnicityCategoryOptions.filter(
-      (option) => option.value === ethnicityExtendedCategory
+      (option) => option.value === ethnicityExtendedCategory,
     )[0].label;
   }
 };
 
 export const personalDetailsCheckboxList = (
-  applicant?: Applicant
+  applicant?: Applicant,
 ): CheckBoxListPageProps => {
   const nationalInsurance = applicant?.person?.nationalInsuranceNumber || '';
   const phonNumber = applicant?.contactInformation?.phoneNumber || '';
@@ -203,36 +203,36 @@ export const personalDetailsCheckboxList = (
 };
 
 export const immigrationStatusCheckboxList = (
-  applicant?: Applicant
+  applicant?: Applicant,
 ): CheckBoxListPageProps => {
   const citizenship = getQuestionValue(QuestionKey.CITIZENSHIP, applicant);
   const citizenshipText =
     citizenship === 'European'
       ? 'EEA citizen'
       : citizenship === 'Other'
-      ? 'Non-EEA citizen'
-      : citizenship;
+        ? 'Non-EEA citizen'
+        : citizenship;
 
   // EEA citizen
   const studyStatus = getQuestionValue(QuestionKey.UK_STUDYING, applicant);
   const settledStatus = getQuestionValue(
     QuestionKey.IMMIGRATION_SETTLED_STATUS,
-    applicant
+    applicant,
   );
 
   // Non-EEA citizen
   const visaStatus = getQuestionValue(QuestionKey.IMMIGRATION_VISA, applicant);
   const eeaNational = getQuestionValue(
     QuestionKey.IMMIGRATION_EA_NATIONAL,
-    applicant
+    applicant,
   );
   const sponsership = getQuestionValue(
     QuestionKey.IMMIGRATION_SPONSERSHIP,
-    applicant
+    applicant,
   );
   const legalStatus = getQuestionValue(
     QuestionKey.IMMIGRATION_STATUS,
-    applicant
+    applicant,
   );
 
   const immigrationStatusSection: CheckBoxListPageProps =
@@ -248,65 +248,65 @@ export const immigrationStatusCheckboxList = (
           ],
         }
       : citizenship === 'European'
-      ? {
-          title: 'Immigration status',
-          data: [
-            {
-              title: 'Citizenship',
-              value: `${citizenshipText}`,
-              isChecked: false,
-            },
-            {
-              title: 'In the UK to study',
-              value: `${studyStatus}`,
-              isChecked: false,
-            },
-            {
-              title: 'Settled or pre-settled status',
-              value: `${settledStatus}`,
-              isChecked: false,
-            },
-          ],
-        }
-      : {
-          title: 'Immigration status',
-          data: [
-            {
-              title: 'Citizenship',
-              value: `${citizenshipText}`,
-              isChecked: false,
-            },
-            {
-              title: 'In the UK on work or study visa',
-              value: `${visaStatus}`,
-              isChecked: false,
-            },
-            {
-              title: 'Family member of EEA national',
-              value: `${eeaNational}`,
-              isChecked: false,
-            },
-            {
-              title: 'Receiving sponsorship to stay in UK',
-              value: `${sponsership}`,
-              isChecked: false,
-            },
-            {
-              title: 'Legal status',
-              value: `${legalStatusText(legalStatus)}`,
-              isChecked: false,
-            },
-          ],
-        };
+        ? {
+            title: 'Immigration status',
+            data: [
+              {
+                title: 'Citizenship',
+                value: `${citizenshipText}`,
+                isChecked: false,
+              },
+              {
+                title: 'In the UK to study',
+                value: `${studyStatus}`,
+                isChecked: false,
+              },
+              {
+                title: 'Settled or pre-settled status',
+                value: `${settledStatus}`,
+                isChecked: false,
+              },
+            ],
+          }
+        : {
+            title: 'Immigration status',
+            data: [
+              {
+                title: 'Citizenship',
+                value: `${citizenshipText}`,
+                isChecked: false,
+              },
+              {
+                title: 'In the UK on work or study visa',
+                value: `${visaStatus}`,
+                isChecked: false,
+              },
+              {
+                title: 'Family member of EEA national',
+                value: `${eeaNational}`,
+                isChecked: false,
+              },
+              {
+                title: 'Receiving sponsorship to stay in UK',
+                value: `${sponsership}`,
+                isChecked: false,
+              },
+              {
+                title: 'Legal status',
+                value: `${legalStatusText(legalStatus)}`,
+                isChecked: false,
+              },
+            ],
+          };
 
   return immigrationStatusSection;
 };
 
 export const residentialStatusCheckboxList = (
-  applicant?: Applicant
+  applicant?: Applicant,
 ): CheckBoxListPageProps => {
   const institutions = questionLookup(
-    QuestionKey.RESIDENTIAL_STATUS_INSTITUTIONS
+    QuestionKey.RESIDENTIAL_STATUS_INSTITUTIONS,
   );
 
   let institutionsText = '';
@@ -321,51 +321,51 @@ export const residentialStatusCheckboxList = (
 
   const residentialStatus = getQuestionValue(
     QuestionKey.RESIDENTIAL_STATUS_RESIDENTIAL_STATUS,
-    applicant
+    applicant,
   );
   const movedBorough = getQuestionValue(
     QuestionKey.RESIDENTIAL_STATUS_MOVED_BOROUGH,
-    applicant
+    applicant,
   );
   const homeless = getQuestionValue(
     QuestionKey.RESIDENTIAL_STATUS_HOMELESS,
-    applicant
+    applicant,
   );
   const asboBehaviour = getQuestionValue(
     QuestionKey.RESIDENTIAL_STATUS_ASBO_BEHAVIOUR,
-    applicant
+    applicant,
   );
   const armedForces = getQuestionValue(
     QuestionKey.RESIDENTIAL_STATUS_ARMED_FORCES,
-    applicant
+    applicant,
   );
   const mobilityScheme = getQuestionValue(
     QuestionKey.RESIDENTIAL_STATUS_MOBILITY_SCHEME,
-    applicant
+    applicant,
   );
   const homelessnessAccepted = getQuestionValue(
     QuestionKey.RESIDENTIAL_STATUS_HOMELESSNESS_ACCEPTED,
-    applicant
+    applicant,
   );
   const socialHousing = getQuestionValue(
     QuestionKey.RESIDENTIAL_STATUS_SOCIAL_HOUSING,
-    applicant
+    applicant,
   );
   const workInHackney = getQuestionValue(
     QuestionKey.RESIDENTIAL_STATUS_WORK_IN_HACKNEY,
-    applicant
+    applicant,
   );
   const providingCare = getQuestionValue(
     QuestionKey.RESIDENTIAL_STATUS_PROVIDING_CARE,
-    applicant
+    applicant,
   );
   const domesticViolence = getQuestionValue(
     QuestionKey.RESIDENTIAL_STATUS_DOMESTIC_VIOLENCE,
-    applicant
+    applicant,
   );
   const studyingOutsideHackney = getQuestionValue(
     QuestionKey.RESIDENTIAL_STATUS_STUDYING_OUTSIDE_BOROUGH,
-    applicant
+    applicant,
   );
 
   const residentialStatusSection: CheckBoxListPageProps = {
@@ -449,7 +449,7 @@ export const residentialStatusCheckboxList = (
 };
 
 export const addressHistoryCheckboxList = (
-  applicant?: Applicant
+  applicant?: Applicant,
 ): CheckBoxListPageProps => {
   const addressHistory = questionLookup(QuestionKey.ADDRESS_HISTORY, applicant);
 
@@ -487,7 +487,7 @@ export const addressHistoryCheckboxList = (
           value: `${addressHistoryText} - ${durations[index].label}`,
           isChecked: false,
         };
-      }
+      },
     );
 
     addressHistorySection.data = history;
@@ -497,63 +497,63 @@ export const addressHistoryCheckboxList = (
 };
 
 export const currentAccomodationCheckboxList = (
-  applicant?: Applicant
+  applicant?: Applicant,
 ): CheckBoxListPageProps => {
   const accommodation = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_LIVING_SITUATION,
-    applicant
+    applicant,
   );
   const home = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOME,
-    applicant
+    applicant,
   );
   const floor = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOME_FLOOR,
-    applicant
+    applicant,
   );
   const sharedWith = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_PEOPLE_SHARE,
-    applicant
+    applicant,
   );
   const numberOfBedrooms = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_BEDROOMS,
-    applicant
+    applicant,
   );
   const livingrooms = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_LIVINGROOMS,
-    applicant
+    applicant,
   );
   const diningRoom = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_DININGROOMS,
-    applicant
+    applicant,
   );
   const bathrooms = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_BATHROOMS,
-    applicant
+    applicant,
   );
   const kitchens = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_KITCHENS,
-    applicant
+    applicant,
   );
   const otherRooms = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOME_HOW_MANY_OTHER_ROOMS,
-    applicant
+    applicant,
   );
   const whyUnsuitable = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_WHY_HOME_UNSUITABLE,
-    applicant
+    applicant,
   );
   const hostName = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOST_PERSON_NAME,
-    applicant
+    applicant,
   );
   const hostNumber = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_HOST_PERSON_NUMBER,
-    applicant
+    applicant,
   );
   const landlordName = getQuestionValue(
     QuestionKey.CURRENT_ACCOMMODATION_LANDLORD_PERSON_NAME,
-    applicant
+    applicant,
   );
 
   const currentAccomodationSection: CheckBoxListPageProps = {
@@ -636,80 +636,80 @@ export const currentAccomodationCheckboxList = (
 };
 
 export const situationCheckboxList = (
-  applicant?: Applicant
+  applicant?: Applicant,
 ): CheckBoxListPageProps => {
   const armedForces = getQuestionValue(
     QuestionKey.YOUR_SITUATION_ARMED_FORCES,
-    applicant
+    applicant,
   );
   const courtOrder = getQuestionValue(
     QuestionKey.YOUR_SITUATION_COURT_ORDER,
-    applicant
+    applicant,
   );
   const socialTenant = getQuestionValue(
     QuestionKey.YOUR_SITUATION_SOCIAL_TENANT,
-    applicant
+    applicant,
   );
   const domesticViolence = getQuestionValue(
     QuestionKey.YOUR_SITUATION_DOMESTIC_VIOLENCE,
-    applicant
+    applicant,
   );
   const subletting = getQuestionValue(
     QuestionKey.YOUR_SITUATION_SUBLETTING,
-    applicant
+    applicant,
   );
   const homeless = getQuestionValue(
     QuestionKey.YOUR_SITUATION_HOMELESSNESS,
-    applicant
+    applicant,
   );
   const propertyOwner = getQuestionValue(
     QuestionKey.YOUR_SITUATION_PROPERTY_OWNERSHIP,
-    applicant
+    applicant,
   );
   const soldProperty = getQuestionValue(
     QuestionKey.YOUR_SITUATION_SOLD_PROPERTY,
-    applicant
+    applicant,
   );
   const buyProperty = getQuestionValue(
     QuestionKey.YOUR_SITUATION_BUY_PROPERTY,
-    applicant
+    applicant,
   );
   const arrears = getQuestionValue(
     QuestionKey.YOUR_SITUATION_ARREARS,
-    applicant
+    applicant,
   );
   const underOccupying = getQuestionValue(
     QuestionKey.YOUR_SITUATION_UNDER_OCCUPYING,
-    applicant
+    applicant,
   );
   const landlordAgreement = getQuestionValue(
     QuestionKey.YOUR_SITUATION_LANDLORD_AGREEMENT,
-    applicant
+    applicant,
   );
   const breachOfTenancy = getQuestionValue(
     QuestionKey.YOUR_SITUATION_BREACH_OF_TENANCY,
-    applicant
+    applicant,
   );
   const breachOfTenancyDetails = getQuestionValue(
     QuestionKey.YOUR_SITUATION_BREACH_OF_TENANCY_DETAILS,
-    applicant
+    applicant,
   );
   const legalRestrictions = getQuestionValue(
     QuestionKey.YOUR_SITUATION_LEGAL_RESTRICTIONS,
-    applicant
+    applicant,
   );
   const legalRestrictionsDetails = getQuestionValue(
     QuestionKey.YOUR_SITUATION_LEGAL_RESTRICTIONS_DETAILS,
-    applicant
+    applicant,
   );
 
   const unspentConvictions = getQuestionValue(
     QuestionKey.YOUR_SITUATION_UNSPENT_CONVICTIONS,
-    applicant
+    applicant,
   );
   const onAnotherHousingRegister = getQuestionValue(
     QuestionKey.YOUR_SITUATION_OTHER_HOUSING_REGISTER,
-    applicant
+    applicant,
   );
 
   const yourSituationSection: CheckBoxListPageProps = {
@@ -818,11 +818,11 @@ export const situationCheckboxList = (
 };
 
 export const employmentCheckboxList = (
-  applicant?: Applicant
+  applicant?: Applicant,
 ): CheckBoxListPageProps => {
   const employmentStatusValue = getQuestionValue(
     QuestionKey.EMPLOYMENT_EMPLOYMENT_STATUS,
-    applicant
+    applicant,
   );
 
   let employmentStatusText = 'N/A';
@@ -832,11 +832,11 @@ export const employmentCheckboxList = (
 
   const addressFinder = getQuestionValue(
     QuestionKey.EMPLOYMENT_ADDRESS_FINDER,
-    applicant
+    applicant,
   );
   const courseCompletionDate = getQuestionValue(
     QuestionKey.EMPLOYMENT_COURSE_COMPLETION_DATE,
-    applicant
+    applicant,
   );
 
   let courseCompletionDateText = 'N/A';
@@ -881,7 +881,7 @@ export const employmentCheckboxList = (
 };
 
 export const incomeAndSavingsCheckboxList = (
-  applicant?: Applicant
+  applicant?: Applicant,
 ): CheckBoxListPageProps => {
   const income = getQuestionValue(QuestionKey.MONEY_INCOME, applicant);
   const savings = getQuestionValue(QuestionKey.MONEY_SAVINGS, applicant);

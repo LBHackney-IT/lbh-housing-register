@@ -48,5 +48,36 @@ $lbh-font-weight-light: 400;
 @import 'objects/flex';
 @import 'objects/text-alignment';
 
+// Resident layout: footer sits at bottom of viewport when content is short
+.lbh-resident-layout-shell {
+  display: flex;
+  min-height: 100vh;
+  min-height: 100dvh;
+  flex-direction: column;
+}
+
+.lbh-resident-layout-shell__main {
+  flex: 1 1 auto;
+}
+
+// Radix dialog positioning (replaces @reach/dialog layout)
+.lbh-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(11, 12, 12, 0.5);
+}
+
+.lbh-dialog.lbh-dialog--radix {
+  position: fixed;
+  left: 50%;
+  top: 7vh;
+  z-index: 1001;
+  margin: 0;
+  transform: translateX(-50%);
+  max-height: calc(100vh - 14vh);
+  overflow-y: auto;
+}
+
 // Overrides
 @import 'generic/overrides';

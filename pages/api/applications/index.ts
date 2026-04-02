@@ -15,7 +15,7 @@ import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
   switch (req.method) {
     case 'GET': {
@@ -53,7 +53,7 @@ const endpoint: NextApiHandler = async (
           const data = await addApplication(application);
           res.status(StatusCodes.OK).json(data);
         }
-      } catch (error) {
+      } catch {
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
           .json({ message: 'Unable to add application' });

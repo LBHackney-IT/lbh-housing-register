@@ -99,7 +99,7 @@ export enum FormID {
  * @returns {EligibilityCriteria}
  */
 export function getEligibilityCriteria(
-  formId: FormID
+  formId: FormID,
 ): EligibilityCriteria[] | undefined {
   const formData = getFormData(formId);
   return formData?.eligibility;

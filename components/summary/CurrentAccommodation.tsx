@@ -17,25 +17,25 @@ export function CurrentAccommodationSummary({
   const livingSituation = getQuestionValue(
     currentResident.questions,
     FormID.CURRENT_ACCOMMODATION,
-    'living-situation'
+    'living-situation',
   );
   const homeSituation = getQuestionValue(
     currentResident.questions,
     FormID.CURRENT_ACCOMMODATION,
-    'home'
+    'home',
   );
 
   const unsuitable = getQuestionValue(
     currentResident.questions,
     FormID.CURRENT_ACCOMMODATION,
-    'why-home-unsuitable'
+    'why-home-unsuitable',
   );
 
   function lookupAnswer(question: string) {
     return getQuestionValue(
       currentResident.questions,
       FormID.CURRENT_ACCOMMODATION,
-      question
+      question,
     );
   }
 

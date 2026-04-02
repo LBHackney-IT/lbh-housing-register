@@ -1,8 +1,8 @@
-import { ReactNodeArray } from 'react';
+import type { ReactNode } from 'react';
 
 interface FormGroupProps {
-  children: ReactNodeArray;
-  error?: any;
+  children: ReactNode;
+  error?: unknown;
 }
 
 export default function FormGroup({

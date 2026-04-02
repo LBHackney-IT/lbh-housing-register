@@ -1,6 +1,6 @@
 import Input from '../form/input';
 import Textarea from '../form/textarea';
-import DateInput, { INVALID_DATE } from '../form/dateinput';
+import DateInput from '../form/dateinput';
 import Select from '../form/select';
 import {
   SummaryListNoBorder,
@@ -10,15 +10,19 @@ import {
   SummaryListValue,
 } from '../summary-list';
 import { Checkbox } from '../form/checkboxes';
-import { FormField, FormFieldOption } from '../../lib/types/form';
-import { generateUniqueFieldName } from '../../lib/utils/adminHelpers';
+import { FormFieldOption } from '../../lib/types/form';
+import {
+  generateUniqueFieldName,
+  type SectionData,
+} from '../../lib/utils/adminHelpers';
 
 interface PageProps {
-  section: any;
+  section: SectionData;
 }
 
 export default function AddCaseSection({ section }: PageProps): JSX.Element {
-  // Currently using "any" as multiple form types are used.
+  // Field shapes vary by `as`; runtime branches narrow behaviour, not types.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const markup = section.fields.map((field: any, index: number) => {
     // Do not show student accomodation fields
     if (
@@ -33,7 +37,7 @@ export default function AddCaseSection({ section }: PageProps): JSX.Element {
     // This ensures all inputs have unique names
     const generatedInputName = generateUniqueFieldName(
       section.sectionId,
-      field.name
+      field.name,
     );
 
     let inputField: JSX.Element = <></>;
@@ -94,8 +98,9 @@ export default function AddCaseSection({ section }: PageProps): JSX.Element {
         field.options.unshift({ label: 'Select an option', value: '' });
       }
 
-      const withConditional = field.options.filter((option: any) =>
-        option.hasOwnProperty('conditionalFieldInput')
+      const withConditional = field.options.filter(
+        (option: FormFieldOption & { conditionalFieldInput?: unknown }) =>
+          Object.prototype.hasOwnProperty.call(option, 'conditionalFieldInput'),
       );
       const {
         as: conditionalInputType,
@@ -105,7 +110,7 @@ export default function AddCaseSection({ section }: PageProps): JSX.Element {
 
       const uniqueConditionalFieldName = generateUniqueFieldName(
         section.sectionId,
-        conditionalFieldName
+        conditionalFieldName,
       );
 
       inputField = (
@@ -141,7 +146,7 @@ export default function AddCaseSection({ section }: PageProps): JSX.Element {
       section.sectionId !== 'current-accommodation-host-details' &&
       section.sectionId !== 'current-accommodation-landlord-details'
     ) {
-      title = section.sectionHeading;
+      title = section.sectionHeading ?? '';
     } else {
       title = '';
     }

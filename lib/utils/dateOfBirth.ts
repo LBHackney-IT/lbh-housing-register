@@ -1,8 +1,11 @@
 import { Applicant } from '../../domain/HousingApi';
 
+/** Fixed locale so SSR (Node) and browser match — 'default' differs (e.g. en-US vs en-GB) and breaks hydration. */
+const DATE_LOCALE = 'en-GB';
+
 export function formatDate(date: string | undefined) {
   if (!date) return '';
-  return `${new Date(date).toLocaleString('default', {
+  return `${new Date(date).toLocaleString(DATE_LOCALE, {
     timeZone: 'UTC',
     day: 'numeric',
     month: 'short',
@@ -11,7 +14,7 @@ export function formatDate(date: string | undefined) {
 }
 
 export function formatDob(date: Date) {
-  return `${date.toLocaleString('default', {
+  return `${date.toLocaleString(DATE_LOCALE, {
     timeZone: 'UTC',
     day: 'numeric',
     month: 'short',
@@ -55,7 +58,7 @@ export const getAgeInYearsFromDate = (birthDate: Date): number => {
 
 const applicantEqualToOrOlderThanAge = (
   applicant: Applicant,
-  age: number
+  age: number,
 ): boolean => {
   return getAgeInYears(applicant) >= age;
 };

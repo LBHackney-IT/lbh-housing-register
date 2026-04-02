@@ -32,7 +32,7 @@ const fillInTheCaseForm = () => {
 describe('Add case', () => {
   beforeEach(() => {
     cy.clearAllCookies();
-    cy.task('clearNock');
+    cy.clearE2eNock();
     cy.loginAsUser('manager');
     cy.mockActivityHistoryApiEmptyResponse(applicationId);
     cy.mockHousingRegisterApiGetApplications(applicationId, application);
@@ -52,7 +52,7 @@ describe('Add case', () => {
     cy.mockHousingRegisterApiCompleteApplication(
       applicationId,
       application,
-      1000
+      1000,
     );
     cy.mockHousingRegisterApiPatchApplication(applicationId, application, 1000);
 
@@ -79,7 +79,7 @@ describe('Add case', () => {
       applicationId,
       application,
       0,
-      errorCode
+      errorCode,
     );
 
     AddCasePage.visit();
@@ -96,7 +96,7 @@ describe('Add case', () => {
       applicationId,
       application,
       0,
-      errorCode
+      errorCode,
     );
 
     AddCasePage.visit();

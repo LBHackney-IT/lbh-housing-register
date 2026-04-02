@@ -13,13 +13,13 @@ const application = generateApplication(
   true,
   false,
   false,
-  submittedAt
+  submittedAt,
 );
 
 describe('Edit person in application', () => {
   beforeEach(() => {
     cy.clearAllCookies();
-    cy.task('clearNock');
+    cy.clearE2eNock();
     cy.loginAsUser('manager');
   });
 
@@ -30,12 +30,12 @@ describe('Edit person in application', () => {
 
     ApplicationEditPersonPage.visit(applicationId, personId);
     ApplicationEditPersonPage.getApplicationEditPersonPage().should(
-      'be.visible'
+      'be.visible',
     );
 
     //update living situation
     ApplicationEditPersonPage.getLivingSituationDropdown().select(
-      'private-rental'
+      'private-rental',
     );
 
     //update citizenship status
@@ -55,15 +55,15 @@ describe('Edit person in application', () => {
       applicationId,
       application,
       0,
-      errorCode
+      errorCode,
     );
     cy.mockActivityHistoryApiEmptyResponse(applicationId);
     ApplicationEditPersonPage.visit(applicationId, personId);
     ApplicationEditPersonPage.getApplicationEditPersonPage().should(
-      'be.visible'
+      'be.visible',
     );
     ApplicationEditPersonPage.getLivingSituationDropdown().select(
-      'private-rental'
+      'private-rental',
     );
     ApplicationEditPersonPage.getCitizenshipDropdown().select('british');
     ApplicationEditPersonPage.getSubmitMainApplicantDetailsButton().click();

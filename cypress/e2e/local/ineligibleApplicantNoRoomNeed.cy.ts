@@ -109,7 +109,7 @@ describe('Ineligible main applicant', () => {
       //current accommodation
       cy.get('.lbh-link').contains('Current accommodation').click();
       ApplyResidentCurrentAccommodationPage.getRadioButton().check(
-        'private-rental'
+        'private-rental',
       );
       ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
       ApplyResidentCurrentAccommodationPage.getRadioButton().check('flat');
@@ -143,12 +143,12 @@ describe('Ineligible main applicant', () => {
       ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
       ApplyResidentCurrentAccommodationPage.getUnsuitableHomeReasonInput().type(
         faker.lorem.paragraph(),
-        { delay: 0 }
+        { delay: 0 },
       );
       ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
       ApplyResidentCurrentAccommodationPage.getLandlordNameInput().type(
         faker.person.fullName(),
-        { delay: 0 }
+        { delay: 0 },
       );
       ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
 
@@ -158,7 +158,7 @@ describe('Ineligible main applicant', () => {
 
       RejectionPage.getRejectionReason().should(
         'contain.text',
-        getDisqualificationReasonOption('notLackingRooms')
+        getDisqualificationReasonOption('notLackingRooms'),
       );
     });
   });

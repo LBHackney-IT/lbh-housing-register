@@ -17,36 +17,36 @@ export function ImmigrationStatusSummary({
   const citizenship = getQuestionValue(
     currentResident.questions,
     FormID.IMMIGRATION_STATUS,
-    'citizenship'
+    'citizenship',
   );
   const ukStudying = getQuestionValue(
     currentResident.questions,
     FormID.IMMIGRATION_STATUS,
-    'uk-studying'
+    'uk-studying',
   );
 
   const settledStatus = getQuestionValue(
     currentResident.questions,
     FormID.IMMIGRATION_STATUS,
-    'settled-status'
+    'settled-status',
   );
 
   const workOrStudyVisa = getQuestionValue(
     currentResident.questions,
     FormID.IMMIGRATION_STATUS,
-    'work-or-study-visa'
+    'work-or-study-visa',
   );
 
   const receivingSponsorship = getQuestionValue(
     currentResident.questions,
     FormID.IMMIGRATION_STATUS,
-    'receiving-sponsorship'
+    'receiving-sponsorship',
   );
 
   const legalStatus = getQuestionValue(
     currentResident.questions,
     FormID.IMMIGRATION_STATUS,
-    'legal-status'
+    'legal-status',
   );
 
   function getUkStudying(answer: string) {

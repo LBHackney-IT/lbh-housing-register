@@ -10,7 +10,7 @@ orbs:
 executors:
   node-executor:
     docker:
-      - image: cimg/node:20.17-browsers
+      - image: cimg/node:24.14-browsers
 
 references:
   workspace_root: &workspace_root '.'
@@ -95,7 +95,8 @@ jobs:
   sonar-scan:
     executor: node-executor
     steps:
-      - checkout
+      - checkout:
+          method: full
       - sonarcloud/scan
 
   build:
@@ -126,10 +127,36 @@ jobs:
       width:
         type: integer
         default: 1366
+    # Next.js must expose /api/e2e/* for app-process Nock; inherit API URLs from your Circle contexts.
+    environment:
+      E2E_HTTP_MOCKS: 'true'
+      PORT: '3000'
     steps:
       # cypress/install checks out the code, installs dependencies (including NPM), etc. It uses optimal caching strategies for NPM with npm ci.
       - cypress/install:
           install-browsers: true
+      # Production bundle + node_modules from the build job (required for `next start`).
+      - *attach_workspace
+      - run:
+          name: Start Next.js for E2E
+          background: true
+          command: |
+            export E2E_HTTP_MOCKS=true
+            export PORT="${PORT:-3000}"
+            npm run start
+      - run:
+          name: Wait for Next.js on port 3000
+          command: |
+            for i in $(seq 1 60); do
+              if curl -sf -o /dev/null "http://127.0.0.1:3000/"; then
+                echo "Next.js is ready"
+                exit 0
+              fi
+              echo "Waiting for Next.js ($i/60)..."
+              sleep 2
+            done
+            echo "Timed out waiting for http://127.0.0.1:3000"
+            exit 1
       - run:
           name: Split E2E tests for parallel run
           command: |
@@ -174,7 +201,7 @@ jobs:
             unset AWS_ACCESS_KEY_ID
             unset AWS_SECRET_ACCESS_KEY
 
-            npx --yes serverless@^3 deploy --stage development
+            npx --yes serverless@^4 deploy --stage development
 
   deploy-staging:
     executor: aws-cli/default
@@ -199,7 +226,7 @@ jobs:
             unset AWS_ACCESS_KEY_ID
             unset AWS_SECRET_ACCESS_KEY
 
-            npx --yes serverless@^3 deploy --stage staging
+            npx --yes serverless@^4 deploy --stage staging
 
   deploy-production:
     executor: aws-cli/default
@@ -224,7 +251,7 @@ jobs:
             unset AWS_ACCESS_KEY_ID
             unset AWS_SECRET_ACCESS_KEY
 
-            npx --yes serverless@^3 deploy --stage production
+            npx --yes serverless@^4 deploy --stage production
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Workflows ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 workflows:
@@ -267,6 +294,7 @@ workflows:
           context:
             - api-assume-role-housing-development-context
             - housing-register-fe-build-context
+            - Serverless Framework
           requires:
             - run-tests
             - run-cypress-e2e
@@ -280,6 +308,7 @@ workflows:
           context:
             - api-assume-role-housing-staging-context
             - housing-register-fe-build-context
+            - Serverless Framework
           requires:
             - run-tests
             - run-cypress-e2e
@@ -303,6 +332,7 @@ workflows:
           context:
             - api-assume-role-housing-production-context
             - housing-register-fe-build-context
+            - Serverless Framework
           requires:
             - permit-deploy-production
           filters:

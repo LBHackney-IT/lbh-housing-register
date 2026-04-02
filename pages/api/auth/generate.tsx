@@ -5,7 +5,7 @@ import { createVerifyCode } from '../../../lib/gateways/applications-api';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
   let request;
 

@@ -1,7 +1,7 @@
-import { ReactNode, ReactNodeArray } from 'react';
+import { ReactNode } from 'react';
 
 interface ParagraphProps {
-  children: ReactNode | ReactNodeArray | string;
+  children: ReactNode | string;
   bold?: boolean;
   dataTestId?: string;
 }

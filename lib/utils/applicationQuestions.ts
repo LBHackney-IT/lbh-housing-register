@@ -3,7 +3,7 @@ import capitalize from './capitalize';
 
 export const questionLookup = (
   questionId: string,
-  applicant?: Applicant
+  applicant?: Applicant,
 ): string | undefined => {
   if (applicant === undefined) {
     return undefined;
@@ -26,7 +26,7 @@ export const jsonParse = (parseItem: string): string => {
 
 export const getQuestionValue = (
   questionId: string,
-  applicant?: Applicant
+  applicant?: Applicant,
 ): string => {
   const questionValue = questionLookup(questionId, applicant);
   return questionValue

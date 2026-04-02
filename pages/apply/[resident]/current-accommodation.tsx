@@ -29,15 +29,14 @@ const CurrentAccommodation = (): JSX.Element => {
 
   const applicant = useAppSelector(selectApplicant(resident)) as Applicant;
   const [activeStepID, setActiveStepId] = useState(
-    FormID.CURRENT_ACCOMMODATION
+    FormID.CURRENT_ACCOMMODATION,
   );
 
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [userError, setUserError] = useState<string | null>(null);
   const saveApplicationStatus = useAppSelector(selectSaveApplicationStatus);
-  const [isLastFormPageSubmit, setIsLastFormPageSubmit] = useState<boolean>(
-    false
-  );
+  const [isLastFormPageSubmit, setIsLastFormPageSubmit] =
+    useState<boolean>(false);
 
   useEffect(() => {
     if (saveApplicationStatus?.callStatus === ApiCallStatusCode.FULFILLED) {
@@ -59,7 +58,7 @@ const CurrentAccommodation = (): JSX.Element => {
 
   const initialValues: FormikValues = getQuestionsForFormAsValues(
     activeStepID,
-    applicant
+    applicant,
   );
 
   const formData = getFormData(activeStepID);
@@ -87,7 +86,7 @@ const CurrentAccommodation = (): JSX.Element => {
 
   const nextStep = (values: FormikValues) => {
     const { nextFormId } = formData.conditionals?.find(
-      (element) => getIn(values, element.fieldId) === element.value
+      (element) => getIn(values, element.fieldId) === element.value,
     ) ?? { nextFormId: 'exit' };
 
     if (nextFormId === 'exit') {
@@ -106,7 +105,7 @@ const CurrentAccommodation = (): JSX.Element => {
         personID: applicant.person!.id!,
         values,
         markAsComplete: true,
-      })
+      }),
     );
   };
 

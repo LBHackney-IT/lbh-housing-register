@@ -6,15 +6,15 @@ import { FormID } from './form-data';
 
 export const applicationSteps = (
   applicant: Applicant,
-  isMainApplicant: boolean
+  isMainApplicant: boolean,
 ): { total: number; remaining: number } => {
   const steps = getFormIdsFromApplicationSections(
-    getApplicationSectionsForResident(isMainApplicant, isOver18(applicant))
+    getApplicationSectionsForResident(isMainApplicant, isOver18(applicant)),
   );
   let completeSteps = 0;
 
   steps.forEach((step) =>
-    hasResidentAnsweredForm(applicant, step) ? completeSteps++ : null
+    hasResidentAnsweredForm(applicant, step) ? completeSteps++ : null,
   );
 
   return {
@@ -40,7 +40,7 @@ export const generateSlug = (input: string): string => {
 export const getApplicationSectionsForResident = (
   isMainApplicant: boolean,
   isOver18?: boolean,
-  isPartner?: boolean
+  isPartner?: boolean,
 ): ApplicationSectionGroup[] => {
   if (isMainApplicant) {
     return getMainApplicantQuestions();
@@ -57,7 +57,7 @@ export const getApplicationSectionsForResident = (
  */
 export const hasResidentAnsweredForm = (
   applicant: Applicant,
-  formID: FormID
+  formID: FormID,
 ): boolean => {
   return (
     applicant.questions?.find((q) => q.id?.startsWith(formID)) !== undefined
@@ -208,12 +208,12 @@ const nonPartnerQuestions = [
 ];
 
 const under18Questions = nonPartnerQuestions.filter(
-  (category) => category.heading !== 'Money'
+  (category) => category.heading !== 'Money',
 );
 
 export const getOtherMemberQuestions = (
   isPartner?: boolean,
-  isOver18?: boolean
+  isOver18?: boolean,
 ): ApplicationSectionGroup[] => {
   if (isPartner) {
     return partnerQuestions;

@@ -6,7 +6,7 @@ import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
   switch (req.method) {
     case 'PATCH':
@@ -38,5 +38,5 @@ const endpoint: NextApiHandler = async (
 
 export default wrapApiHandlerWithSentry(
   endpoint,
-  '/api/applications/[id]/complete'
+  '/api/applications/[id]/complete',
 );

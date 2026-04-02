@@ -35,7 +35,6 @@ export default function ApplicationListPage({
 }: PageProps): JSX.Element {
   return (
     // noting here the possibility of unecessary re-renders that will need some investigation.
-    // eslint-disable-next-line react/jsx-no-constructed-context-values
     <UserContext.Provider value={{ user }}>
       <Layout pageName="My worktray">
         <SearchBox
@@ -46,7 +45,7 @@ export default function ApplicationListPage({
         />
         <div className="govuk-grid-row">
           {!hasReadOnlyPermissionOnly(
-            user as HackneyGoogleUserWithPermissions
+            user as HackneyGoogleUserWithPermissions,
           ) && (
             <div className="govuk-grid-column-one-quarter">
               <Sidebar />
@@ -84,7 +83,7 @@ export default function ApplicationListPage({
 }
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async (
-  context
+  context,
 ) => {
   const user = getSession(context.req);
   const redirect = getRedirect(user);
@@ -97,7 +96,11 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
     };
   }
 
-  const { searchString = '', page = '', pageSize = '' } = context.query as {
+  const {
+    searchString = '',
+    page = '',
+    pageSize = '',
+  } = context.query as {
     searchString: string;
     page: string;
     pageSize: string;
@@ -106,7 +109,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
   const applications = await searchAllApplications(
     searchString,
     page,
-    pageSize
+    pageSize,
   );
 
   return {

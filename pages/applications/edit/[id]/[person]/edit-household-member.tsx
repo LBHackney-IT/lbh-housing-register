@@ -36,12 +36,12 @@ export default function EditApplicant({
 
   const savedAddresses =
     personData?.questions?.filter(
-      (question) => question.id === 'address-history/addressHistory'
+      (question) => question.id === 'address-history/addressHistory',
     )[0]?.answer || '[]';
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [addresses, setAddresses] = useState(
-    JSON.parse(savedAddresses) as Address[]
+    JSON.parse(savedAddresses) as Address[],
   );
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [userError, setUserError] = useState<string | undefined>(undefined);
@@ -117,7 +117,7 @@ export default function EditApplicant({
     <>
       {data.id ? (
         <HouseholdMemberForm
-          isEditing={true} /* eslint-disable-line */
+          isEditing={true}
           user={user}
           onSubmit={onSubmit}
           isSubmitted={isSubmitted}

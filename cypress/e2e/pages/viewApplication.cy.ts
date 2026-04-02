@@ -30,7 +30,7 @@ const response = {
 
 describe('View a resident application', () => {
   beforeEach(() => {
-    cy.task('clearNock');
+    cy.clearE2eNock();
     cy.clearAllCookies();
   });
 
@@ -57,7 +57,7 @@ describe('View a resident application', () => {
       true,
       true,
       true,
-      submittedAt
+      submittedAt,
     );
 
     cy.loginAsUser('manager');
@@ -66,14 +66,14 @@ describe('View a resident application', () => {
       application,
       true,
       0,
-      StatusCodes.OK
+      StatusCodes.OK,
     );
     cy.mockActivityHistoryApiEmptyResponse(applicationId, true);
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,
       application,
       0,
-      errorCode
+      errorCode,
     );
 
     ViewApplicationPage.visit(applicationId);
@@ -81,10 +81,10 @@ describe('View a resident application', () => {
     ViewApplicationPage.getRemoveHouseHoldMemberButton(personId + 1).click();
     cy.contains('Confirm delete');
     ViewApplicationPage.getRemoveHouseHoldMemberConfirmationButton(
-      personId + 1
+      personId + 1,
     ).should('be.visible');
     ViewApplicationPage.getRemoveHouseHoldMemberConfirmationButton(
-      personId + 1
+      personId + 1,
     ).click();
     ViewApplicationPage.getErrorSummary().should('be.visible');
     cy.contains(`Unable to delete household member`);
@@ -150,11 +150,11 @@ describe('View a resident application', () => {
     ViewApplicationPage.visit(applicationId);
     cy.get('[data-testid="test-applicant-name"]').should(
       'contain',
-      application.mainApplicant.person.firstName
+      application.mainApplicant.person.firstName,
     );
     cy.get('[data-testid="test-applicant-email"]').should(
       'contain',
-      application.mainApplicant.contactInformation.emailAddress
+      application.mainApplicant.contactInformation.emailAddress,
     );
     cy.get('[data-testid="test-sensitive-data-button"]').should('not.exist');
   });

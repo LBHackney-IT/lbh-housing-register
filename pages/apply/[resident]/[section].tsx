@@ -45,7 +45,7 @@ const ApplicationSection = (): JSX.Element => {
     ? getApplicationSectionsForResident(
         applicant === mainResident,
         isOver18(applicant),
-        applicant.person?.relationshipType === 'partner'
+        applicant.person?.relationshipType === 'partner',
       )
     : [];
 

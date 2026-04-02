@@ -87,7 +87,7 @@ export default function ApplicationPersonPage({
     return encodeURIComponent(string.trim());
   };
   const fullName = `${cleanUpParams(
-    applicant?.person?.firstName ?? ''
+    applicant?.person?.firstName ?? '',
   )}%20${cleanUpParams(applicant?.person?.surname ?? '')}`;
 
   return (
@@ -124,11 +124,11 @@ export default function ApplicationPersonPage({
                   >
                     <a
                       href={`${evidenceLink}/deeplink?searchTerm=${fullName}&groupId=${cleanUpParams(
-                        applicant?.person?.id ?? ''
+                        applicant?.person?.id ?? '',
                       )}&name=${fullName}&phone=${cleanUpParams(
-                        applicant?.contactInformation?.phoneNumber ?? ''
+                        applicant?.contactInformation?.phoneNumber ?? '',
                       )}&email=${cleanUpParams(
-                        applicant?.contactInformation?.emailAddress ?? ''
+                        applicant?.contactInformation?.emailAddress ?? '',
                       )}`}
                       target="_blank"
                       rel="noreferrer"

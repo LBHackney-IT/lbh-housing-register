@@ -4,7 +4,7 @@ interface HeaderProps {
   serviceName: string;
   signOutText?: string;
   onSignOut?: () => void;
-  signOutRef?: React.RefObject<HTMLAnchorElement>;
+  signOutRef?: React.RefObject<HTMLAnchorElement | null>;
 }
 
 export default function Header({

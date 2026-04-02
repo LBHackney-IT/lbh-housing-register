@@ -30,11 +30,11 @@ const applicationWithCompletedMainApplicantSections = {
 describe('Apply resident [section] page', () => {
   beforeEach(() => {
     cy.loginAsResident(applicationId, true);
-    cy.task('clearNock');
+    cy.clearE2eNock();
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithCompletedMainApplicantSections,
-      true
+      true,
     );
   });
 
@@ -46,7 +46,7 @@ describe('Apply resident [section] page', () => {
       application,
       3000,
       StatusCodes.OK,
-      false
+      false,
     );
 
     ApplyHouseholdPage.visit();
@@ -69,7 +69,7 @@ describe('Apply resident [section] page', () => {
       application,
       0,
       errorCode,
-      false
+      false,
     );
 
     ApplyHouseholdPage.visit();

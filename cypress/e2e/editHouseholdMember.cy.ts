@@ -8,7 +8,7 @@ describe('Edit household member', () => {
     cy.clearAllCookies();
     cy.loginAsUser('readOnly');
     cy.visit(
-      `applications/edit/${applicationId}/${personId}/edit-household-member`
+      `applications/edit/${applicationId}/${personId}/edit-household-member`,
     );
     cy.contains('Access denied');
   });

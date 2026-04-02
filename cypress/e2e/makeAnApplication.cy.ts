@@ -21,7 +21,7 @@ describe('Housing application', () => {
       personId,
       false,
       false,
-      false
+      false,
     );
 
     cy.clearCookies();

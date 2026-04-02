@@ -16,12 +16,12 @@ const initialValues: FormValues = {
   startDate: new Date(
     runDate.getFullYear(),
     runDate.getMonth(),
-    1
+    1,
   ).toDateString(),
   endDate: new Date(
     runDate.getFullYear(),
     runDate.getMonth() + 1,
-    0
+    0,
   ).toDateString(),
 };
 
@@ -37,7 +37,11 @@ export default function InternalReports(): JSX.Element {
     }
   };
 
-  const HiddenFormToSubmit = ({ submittedFormData }: any) => {
+  const HiddenFormToSubmit = ({
+    submittedFormData,
+  }: {
+    submittedFormData: FormValues;
+  }) => {
     const { reportType, startDate, endDate } = submittedFormData;
     const payloadStartDate = new Date(startDate).toISOString().split('T')[0];
     const payloadEndDate = new Date(endDate).toISOString().split('T')[0];

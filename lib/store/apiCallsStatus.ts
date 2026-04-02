@@ -26,7 +26,7 @@ const initialState: HRApiCallsStatusState = {
 };
 
 export const selectSaveApplicationStatus = (
-  state: RootState
+  state: RootState,
 ): ApiCallStatus | undefined => state.hrApiCallsStatus.updateApplication;
 
 export const hrApiCallsStatus = createSlice({

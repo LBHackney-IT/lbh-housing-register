@@ -1,4 +1,4 @@
-import { Form, Formik, FormikValues } from 'formik';
+import { Form, Formik, FormikTouched, FormikValues } from 'formik';
 import { UserContext } from '../../lib/contexts/user-context';
 import Button from '../../components/button';
 import ErrorSummary from '../../components/errors/error-summary';
@@ -34,13 +34,13 @@ const immigrationStatusSection = getSectionData(FormID.IMMIGRATION_STATUS);
 const medicalNeedsSection = getSectionData(FormID.MEDICAL_NEEDS);
 const residentialStatusSection = getSectionData(FormID.RESIDENTIAL_STATUS);
 const currentAccommodationSection = getSectionData(
-  FormID.CURRENT_ACCOMMODATION
+  FormID.CURRENT_ACCOMMODATION,
 );
 const currentAccommodationHostSection = getSectionData(
-  FormID.CURRENT_ACCOMMODATION_HOST_DETAILS
+  FormID.CURRENT_ACCOMMODATION_HOST_DETAILS,
 );
 const currentAccommodationLandlordSection = getSectionData(
-  FormID.CURRENT_ACCOMMODATION_LANDLORD_DETAILS
+  FormID.CURRENT_ACCOMMODATION_LANDLORD_DETAILS,
 );
 const armedForcesSection = getSectionData(FormID.SITUATION_ARMED_FORCES);
 const courtOrderSection = getSectionData(FormID.COURT_ORDER);
@@ -55,7 +55,7 @@ const purchasingPropertySection = getSectionData(FormID.PURCHASING_PROPERTY);
 const arrearsSection = getSectionData(FormID.ARREARS);
 const underOccupyingSection = getSectionData(FormID.UNDER_OCCUPYING);
 const otherHousingRegisterSection = getSectionData(
-  FormID.OTHER_HOUSING_REGISTER
+  FormID.OTHER_HOUSING_REGISTER,
 );
 const breachOfTenancySection = getSectionData(FormID.BREACH_OF_TENANCY);
 const legalRestrictionsSection = getSectionData(FormID.LEGAL_RESTRICTIONS);
@@ -66,17 +66,17 @@ const incomeSavingsSection = getSectionData(FormID.INCOME_SAVINGS);
 
 const ethnicitySection = getSectionData(FormID.ETHNICITY_QUESTIONS);
 const ethnicityAsianSection = getSectionData(
-  FormID.ETHNICITY_CATEGORY_ASIAN_ASIAN_BRITISH
+  FormID.ETHNICITY_CATEGORY_ASIAN_ASIAN_BRITISH,
 );
 const ethnicityBlackSection = getSectionData(
-  FormID.ETHNICITY_CATEGORY_BLACK_BLACK_BRITISH
+  FormID.ETHNICITY_CATEGORY_BLACK_BLACK_BRITISH,
 );
 const ethnicityMixedSection = getSectionData(
-  FormID.ETHNICITY_CATEGORY_MIXED_MULTIPLE_BACKGROUND
+  FormID.ETHNICITY_CATEGORY_MIXED_MULTIPLE_BACKGROUND,
 );
 const ethnicityWhiteSection = getSectionData(FormID.ETHNICITY_CATEGORY_WHITE);
 const ethnicityOtherSection = getSectionData(
-  FormID.ETHNICITY_CATEGORY_OTHER_ETHNIC_GROUP
+  FormID.ETHNICITY_CATEGORY_OTHER_ETHNIC_GROUP,
 );
 const additionalQuestionsSection = getSectionData(FormID.ADDITIONAL_QUESTIONS);
 
@@ -87,7 +87,10 @@ interface PageProps {
   isSubmitted: boolean;
   addressHistory: any; // eslint-disable-line @typescript-eslint/no-explicit-any
   setAddressHistory: (addresses: any) => void; // eslint-disable-line @typescript-eslint/no-explicit-any
-  handleSaveApplication: (isValid: boolean, touched: {}) => void; // eslint-disable-line @typescript-eslint/ban-types
+  handleSaveApplication: (
+    isValid: boolean,
+    touched: FormikTouched<FormikValues>,
+  ) => void;
   ethnicity: string;
   setEthnicity: (ethnicity: string) => void;
   data?: Application;
@@ -146,9 +149,15 @@ export default function MainApplicantForm({
                         {Object.entries(errors).map(
                           ([inputName, errorTitle]) => (
                             <li key={inputName}>
-                              <a href={`#${inputName}`}>{errorTitle}</a>
+                              <a href={`#${inputName}`}>
+                                {typeof errorTitle === 'string'
+                                  ? errorTitle
+                                  : Array.isArray(errorTitle)
+                                    ? errorTitle.join(', ')
+                                    : 'Error'}
+                              </a>
                             </li>
-                          )
+                          ),
                         )}
                       </ul>
                     </ErrorSummary>

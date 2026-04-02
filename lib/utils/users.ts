@@ -1,4 +1,4 @@
-import cookie from 'cookie';
+import * as cookie from 'cookie';
 import jsonwebtoken from 'jsonwebtoken';
 import { HackneyResident } from '../../domain/HackneyResident';
 import { VerifyAuthResponse } from '../../domain/HousingApi';
@@ -12,9 +12,11 @@ export function getUser(req: any) {
     if (!parsedToken) return;
 
     const secret = process.env.HACKNEY_JWT_SECRET as string;
-    const user = (process.env.SKIP_VERIFY_TOKEN !== 'true'
-      ? jsonwebtoken.verify(parsedToken, secret)
-      : jsonwebtoken.decode(parsedToken)) as HackneyResident | undefined;
+    const user = (
+      process.env.SKIP_VERIFY_TOKEN !== 'true'
+        ? jsonwebtoken.verify(parsedToken, secret)
+        : jsonwebtoken.decode(parsedToken)
+    ) as HackneyResident | undefined;
 
     return user;
   } catch (err) {

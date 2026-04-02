@@ -1,7 +1,15 @@
+interface ShowAddressProps {
+  currentAddress: string;
+  duration: [
+    { years: number; months: number },
+    { years: number; months: number },
+  ];
+}
+
 export default function ShowAddress({
   currentAddress,
   duration,
-}: any): JSX.Element {
+}: ShowAddressProps): JSX.Element {
   const addressSplit = currentAddress.split(',');
   return (
     <div className="lbh-body-m">

@@ -90,8 +90,7 @@ export function Checkbox({
   );
 }
 
-export interface CheckboxesConditionalProps
-  extends CheckboxesConditionalFormField {
+export interface CheckboxesConditionalProps extends CheckboxesConditionalFormField {
   value: string;
   subheading?: string;
 }

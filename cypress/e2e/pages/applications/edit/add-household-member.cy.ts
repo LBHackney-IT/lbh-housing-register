@@ -24,10 +24,10 @@ const fillInHouseholdMemberForm = () => {
   AddHouseholdMemberPage.getLastNameInput().type(person.surname);
   AddHouseholdMemberPage.getDoBDayInput().type(birthDate.getDate().toString());
   AddHouseholdMemberPage.getDoBMonthInput().type(
-    (birthDate.getMonth() + 1).toString()
+    (birthDate.getMonth() + 1).toString(),
   );
   AddHouseholdMemberPage.getDoBYearInput().type(
-    birthDate.getFullYear().toString()
+    birthDate.getFullYear().toString(),
   );
   AddHouseholdMemberPage.getGenderDropdown().select(person.gender);
 };
@@ -35,7 +35,7 @@ const fillInHouseholdMemberForm = () => {
 describe('Add household member', () => {
   beforeEach(() => {
     cy.clearAllCookies();
-    cy.task('clearNock');
+    cy.clearE2eNock();
     cy.loginAsUser('manager');
   });
 
@@ -61,7 +61,7 @@ describe('Add household member', () => {
       applicationId,
       application,
       0,
-      errorCode
+      errorCode,
     );
 
     AddHouseholdMemberPage.visit(applicationId);

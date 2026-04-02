@@ -33,14 +33,23 @@ import {
 import { useEffect, useState } from 'react';
 import Loading from 'components/loading';
 
+function residentIdFromQuery(
+  query: ReturnType<typeof useRouter>['query'],
+): string {
+  const raw = query.resident;
+  if (typeof raw === 'string') return raw;
+  if (Array.isArray(raw) && raw[0]) return raw[0];
+  return '';
+}
+
 const ResidentIndex = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { resident } = router.query as { resident: string };
+  const residentId = residentIdFromQuery(router.query);
 
-  const currentResident = useAppSelector(
-    selectApplicant(resident)
-  ) as ApplicantWithPersonID;
+  const currentResident = useAppSelector(selectApplicant(residentId)) as
+    | ApplicantWithPersonID
+    | undefined;
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
   const application = useAppSelector((store) => store.application);
 
@@ -52,7 +61,7 @@ const ResidentIndex = (): JSX.Element => {
   const roomNeedsCompleted = getQuestionValue(
     application.mainApplicant?.questions,
     FormID.CURRENT_ACCOMMODATION,
-    'sectionCompleted'
+    'sectionCompleted',
   );
 
   // Only check eligibility when the room needs completed or the resident is under 18
@@ -69,15 +78,28 @@ const ResidentIndex = (): JSX.Element => {
     application.mainApplicant?.person?.dateOfBirth,
   ]);
 
-  //use effect to stop router.push firing multiple times
+  // useEffect to stop router.push firing multiple times (summary path inlined in effect)
   useEffect(() => {
-    if (!isEligible && currentResident === mainResident) {
-      router.push(checkAnswers);
+    if (!router.isReady || !residentId) return;
+    if (
+      !isEligible &&
+      currentResident &&
+      mainResident &&
+      currentResident === mainResident
+    ) {
+      router.push(`/apply/${currentResident.person.id}/summary`);
     }
-  }, [isEligible]);
+  }, [
+    isEligible,
+    router,
+    router.isReady,
+    residentId,
+    currentResident,
+    mainResident,
+  ]);
 
   useEffect(() => {
-    if (userHasSaved) {
+    if (userHasSaved && currentResident) {
       setIsSaving(true);
       dispatch(removeApplicant(currentResident.person.id));
       setUserHasSaved(false);
@@ -96,7 +118,7 @@ const ResidentIndex = (): JSX.Element => {
               error: 'Unable to delete household member. Please try again.',
             },
           },
-          returnHref
+          returnHref,
         );
       }
     }
@@ -109,6 +131,17 @@ const ResidentIndex = (): JSX.Element => {
         <Loading text="Saving..." />
       </Layout>
     );
+  }
+  // Client navigations can render once before `query` is populated — avoid false 404.
+  if (!router.isReady) {
+    return (
+      <Layout pageName="Person overview" pageLoadsApplication={false}>
+        <Loading text="Loading..." />
+      </Layout>
+    );
+  }
+  if (!residentId) {
+    return <Custom404 />;
   }
   //redirect when applicant details missing and not saving
   if (!currentResident || !mainResident) {
@@ -132,17 +165,15 @@ const ResidentIndex = (): JSX.Element => {
       ]
     : [];
 
-  const checkAnswers = `${baseHref}/summary`;
-
   const steps = getApplicationSectionsForResident(
     currentResident === mainResident,
     isOver18(currentResident),
-    currentResident.person.relationshipType === 'partner'
+    currentResident.person.relationshipType === 'partner',
   );
 
   const tasks = applicationSteps(
     currentResident,
-    currentResident === mainResident
+    currentResident === mainResident,
   );
 
   const sectionNames: FormID[] = [];
@@ -173,7 +204,7 @@ const ResidentIndex = (): JSX.Element => {
       currentResident.questions,
       sectionNames[indexOfSectionName - 1],
       'sectionCompleted',
-      false
+      false,
     );
   };
 
@@ -204,8 +235,11 @@ const ResidentIndex = (): JSX.Element => {
               <SummaryListRow key={index}>
                 <SummaryListValue>
                   {isSectionActive(formStep.id) ? (
-                    <Link href={`${baseHref}/${formStep.id}`}>
-                      <a className="lbh-link">{formStep.heading}</a>
+                    <Link
+                      href={`${baseHref}/${formStep.id}`}
+                      className="lbh-link"
+                    >
+                      {formStep.heading}
                     </Link>
                   ) : (
                     formStep.heading
@@ -216,7 +250,7 @@ const ResidentIndex = (): JSX.Element => {
                     currentResident.questions,
                     formStep.id,
                     'sectionCompleted',
-                    false
+                    false,
                   ) ? (
                     <Tag content="Completed" variant="green" />
                   ) : (

@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
 import Link from 'next/link';
+import type { ParsedUrlQuery } from 'querystring';
 import { useRouter } from 'next/router';
 
 import { PaginatedSearchResultsResponse } from '../../domain/HousingApi';
@@ -11,7 +11,7 @@ import { ButtonLink } from '../button';
 import Paragraph from '../content/paragraph';
 
 interface ResultsToShowLinkProps {
-  query: NextParsedUrlQuery;
+  query: ParsedUrlQuery;
   numberOfResults: number;
 }
 
@@ -24,8 +24,9 @@ const ResultsToShowLink = ({
       href={{
         query: { ...query, pageSize: numberOfResults },
       }}
+      className="lbh-link lbh-link--no-visited-state"
     >
-      <a className="lbh-link lbh-link--no-visited-state">{numberOfResults}</a>
+      {numberOfResults}
     </Link>
   ) : (
     <span>{numberOfResults}</span>
@@ -48,7 +49,7 @@ export default function ApplicationsTable({
   const firstResult = (parseInt(page, 10) - 1) * parseInt(pageSize, 10) + 1;
   const lastResult = Math.min(
     firstResult + parseInt(pageSize, 10) - 1,
-    applications?.totalResults || 0
+    applications?.totalResults || 0,
   );
 
   const applicationResultsTotalText = () => {

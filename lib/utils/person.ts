@@ -7,7 +7,7 @@ import { Application } from '../../domain/HousingApi';
  */
 export function getPersonName(application: Application | undefined): string {
   if (!application?.mainApplicant?.person) return '';
-  let person = application?.mainApplicant?.person;
+  const person = application?.mainApplicant?.person;
   let name = `${person.title ? person.title : ''} ${person.firstName} ${
     person.surname
   }`;

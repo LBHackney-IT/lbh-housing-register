@@ -8,7 +8,7 @@ const email = generateEmailAddress();
 describe('Sign in page, user not logged in', () => {
   beforeEach(() => {
     cy.clearAllCookies();
-    cy.task('clearNock');
+    cy.clearE2eNock();
   });
 
   it('shows saving message before navigating to verify page when user submits their email address', () => {
@@ -26,7 +26,7 @@ describe('Sign in page, user not logged in', () => {
     cy.mockHousingRegisterApiPostGenerateToken(
       0,
       false,
-      StatusCodes.BAD_REQUEST
+      StatusCodes.BAD_REQUEST,
     );
 
     SignInPage.visit();

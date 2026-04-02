@@ -5,12 +5,44 @@ import { defineConfig } from 'cypress';
 
 const baseUrl = 'http://localhost:3000';
 
+// Populate process.env from .env when Cypress loads this file (e2e and component).
+loadEnvConfig(process.cwd());
+
+/**
+ * Values read via Cypress.expose() / `exposed()` in support/commands.ts.
+ * Authorised group names are only used in tests; defaults match README (“value is not important”).
+ */
+function buildCypressExpose(): Record<string, string | undefined> {
+  return {
+    ACTIVITY_HISTORY_API: process.env.ACTIVITY_HISTORY_API,
+    HOUSING_REGISTER_API: process.env.HOUSING_REGISTER_API,
+    LOOKUP_API_URL: process.env.LOOKUP_API_URL,
+    AUTHORISED_ADMIN_GROUP:
+      process.env.AUTHORISED_ADMIN_GROUP?.trim() ||
+      'cypress-authorised-admin-group',
+    AUTHORISED_MANAGER_GROUP:
+      process.env.AUTHORISED_MANAGER_GROUP?.trim() ||
+      'cypress-authorised-manager-group',
+    AUTHORISED_OFFICER_GROUP:
+      process.env.AUTHORISED_OFFICER_GROUP?.trim() ||
+      'cypress-authorised-officer-group',
+    AUTHORISED_READONLY_GROUP:
+      process.env.AUTHORISED_READONLY_GROUP?.trim() ||
+      'cypress-authorised-readonly-group',
+  };
+}
+
+function mergeExpose(config: Cypress.PluginConfigOptions): void {
+  config.expose = {
+    ...config.expose,
+    ...buildCypressExpose(),
+  };
+}
+
 export default defineConfig({
   e2e: {
     allowCypressEnv: false,
     setupNodeEvents(on, config) {
-      loadEnvConfig(process.cwd());
-
       on(
         'after:spec',
         (_spec: Cypress.Spec, results: CypressCommandLine.RunResult) => {
@@ -31,17 +63,7 @@ export default defineConfig({
         HOUSING_REGISTER_KEY: process.env.HOUSING_REGISTER_KEY,
       };
 
-      // Public URLs and test group ids — read with Cypress.expose() in support (not Cypress.env)
-      config.expose = {
-        ...config.expose,
-        ACTIVITY_HISTORY_API: process.env.ACTIVITY_HISTORY_API,
-        HOUSING_REGISTER_API: process.env.HOUSING_REGISTER_API,
-        LOOKUP_API_URL: process.env.LOOKUP_API_URL,
-        AUTHORISED_ADMIN_GROUP: process.env.AUTHORISED_ADMIN_GROUP,
-        AUTHORISED_MANAGER_GROUP: process.env.AUTHORISED_MANAGER_GROUP,
-        AUTHORISED_OFFICER_GROUP: process.env.AUTHORISED_OFFICER_GROUP,
-        AUTHORISED_READONLY_GROUP: process.env.AUTHORISED_READONLY_GROUP,
-      };
+      mergeExpose(config);
 
       return config;
     },
@@ -55,6 +77,10 @@ export default defineConfig({
 
   component: {
     allowCypressEnv: false,
+    setupNodeEvents(_on, config) {
+      mergeExpose(config);
+      return config;
+    },
     devServer: {
       framework: 'next',
       bundler: 'webpack',

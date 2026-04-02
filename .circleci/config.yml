@@ -101,6 +101,12 @@ jobs:
 
   build:
     executor: node-executor
+    environment:
+      # Same mock API bases as run-cypress-e2e (127.0.0.1) so CI matches Nock / Cypress.expose.
+      HOUSING_REGISTER_API: 'http://127.0.0.1:3910/api/v1/'
+      HOUSING_REGISTER_KEY: 'testing'
+      ACTIVITY_HISTORY_API: 'http://127.0.0.1:3600/api/v1'
+      LOOKUP_API_URL: 'http://127.0.0.1:3920'
     steps:
       - checkout
       - node/install-packages
@@ -132,10 +138,11 @@ jobs:
     environment:
       E2E_HTTP_MOCKS: 'true'
       PORT: '3000'
-      HOUSING_REGISTER_API: 'http://localhost:3910/api/v1/'
+      # 127.0.0.1 avoids IPv6 localhost (::1) vs nock/axios scope mismatches in Docker.
+      HOUSING_REGISTER_API: 'http://127.0.0.1:3910/api/v1/'
       HOUSING_REGISTER_KEY: 'testing'
-      ACTIVITY_HISTORY_API: 'http://localhost:3600/api/v1'
-      LOOKUP_API_URL: 'http://localhost:3920'
+      ACTIVITY_HISTORY_API: 'http://127.0.0.1:3600/api/v1'
+      LOOKUP_API_URL: 'http://127.0.0.1:3920'
     steps:
       # cypress/install checks out the code, installs dependencies (including NPM), etc. It uses optimal caching strategies for NPM with npm ci.
       - cypress/install:
@@ -145,10 +152,14 @@ jobs:
       - run:
           name: Start Next.js for E2E
           background: true
-          command: |
-            export E2E_HTTP_MOCKS=true
-            export PORT="${PORT:-3000}"
-            npm run start
+          environment:
+            E2E_HTTP_MOCKS: 'true'
+            PORT: '3000'
+            HOUSING_REGISTER_API: 'http://127.0.0.1:3910/api/v1/'
+            HOUSING_REGISTER_KEY: 'testing'
+            ACTIVITY_HISTORY_API: 'http://127.0.0.1:3600/api/v1'
+            LOOKUP_API_URL: 'http://127.0.0.1:3920'
+          command: npm run start
       - run:
           name: Wait for Next.js on port 3000
           command: |

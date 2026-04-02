@@ -14,9 +14,14 @@ loadEnvConfig(process.cwd());
  */
 function buildCypressExpose(): Record<string, string | undefined> {
   return {
-    ACTIVITY_HISTORY_API: process.env.ACTIVITY_HISTORY_API,
-    HOUSING_REGISTER_API: process.env.HOUSING_REGISTER_API,
-    LOOKUP_API_URL: process.env.LOOKUP_API_URL,
+    ACTIVITY_HISTORY_API:
+      process.env.ACTIVITY_HISTORY_API?.trim() ||
+      'http://127.0.0.1:3600/api/v1',
+    HOUSING_REGISTER_API:
+      process.env.HOUSING_REGISTER_API?.trim() ||
+      'http://127.0.0.1:3910/api/v1/',
+    LOOKUP_API_URL:
+      process.env.LOOKUP_API_URL?.trim() || 'http://127.0.0.1:3920',
     AUTHORISED_ADMIN_GROUP:
       process.env.AUTHORISED_ADMIN_GROUP?.trim() ||
       'cypress-authorised-admin-group',
@@ -60,7 +65,7 @@ export default defineConfig({
         ...config.env,
         LOCAL_E2E: process.env.LOCAL_E2E,
         E2E_HTTP_MOCKS: process.env.E2E_HTTP_MOCKS,
-        HOUSING_REGISTER_KEY: process.env.HOUSING_REGISTER_KEY,
+        HOUSING_REGISTER_KEY: process.env.HOUSING_REGISTER_KEY || 'testing',
       };
 
       mergeExpose(config);

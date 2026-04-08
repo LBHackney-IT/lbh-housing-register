@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  aws-cli: circleci/aws-cli@3.2.0
+  aws-cli: circleci/aws-cli@4.0.0
   aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
   cypress: cypress-io/cypress@3
   node: circleci/node@7.1.0
@@ -73,6 +73,14 @@ exclude_combinations:
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Commands ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 commands:
+  install-python3:
+    description: 'pip install for aws-cli'
+    steps:
+      - run:
+          name: Install python3.12-venv
+          command: |
+            sudo apt-get update
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y python3.12-venv
   assume-role-and-persist-workspace:
     description: 'Assumes deployment role and persists credentials across jobs'
     parameters:
@@ -80,6 +88,7 @@ commands:
         type: string
     steps:
       - checkout
+      - install-python3
       - aws_assume_role/assume_role:
           account: <<parameters.aws-account>>
           profile_name: default

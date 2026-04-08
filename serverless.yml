@@ -36,8 +36,8 @@ functions:
       NEXT_PUBLIC_ENV: ${opt:stage}
       SKIP_VERIFY_TOKEN: false
       ACTIVITY_HISTORY_API: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/mtfh-housing-${self:provider.stage}/mtfh-housing/activity-history-api-url}
-      LOOKUP_API_URL: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/mtfh-housing-${self:provider.stage}/mtfh-housing/lookup-api-url}
-      APP_URL: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/app-url}
+      # LOOKUP_API_URL: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/mtfh-housing-${self:provider.stage}/mtfh-housing/lookup-api-url}
+      # APP_URL: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/app-url}
       # AUTHORISED_ADMIN_GROUP: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/authorised-admin-group}
       # AUTHORISED_MANAGER_GROUP: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/authorised-manager-group}
       # AUTHORISED_OFFICER_GROUP: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/authorised-officer-group}

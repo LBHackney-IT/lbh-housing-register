@@ -116,6 +116,7 @@ commands:
       - checkout
       - *attach_workspace
       - install-python3
+      - aws-cli/install
       - aws_assume_role/assume_role:
           account: <<parameters.aws-account>>
           profile_name: default
@@ -343,19 +344,19 @@ jobs:
       - assume-role-and-persist-workspace:
           aws-account: $AWS_ACCOUNT_PRODUCTION
   deploy-to-development:
-    executor: aws-cli/default
+    executor: node-executor
     steps:
       - deploy-lambda:
           stage: 'development'
           aws-account: $AWS_ACCOUNT_DEVELOPMENT
   deploy-to-staging:
-    executor: aws-cli/default
+    executor: node-executor
     steps:
       - deploy-lambda:
           stage: 'staging'
           aws-account: $AWS_ACCOUNT_STAGING
   deploy-to-production:
-    executor: aws-cli/default
+    executor: node-executor
     steps:
       - deploy-lambda:
           stage: 'production'

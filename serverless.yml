@@ -35,7 +35,8 @@ functions:
     environment:
       NEXT_PUBLIC_ENV: ${opt:stage}
       SKIP_VERIFY_TOKEN: false
-      ACTIVITY_HISTORY_API: ${arn:aws:ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/mtfh-housing-${self:provider.stage}/mtfh-housing/activity-history-api-url}
+      # ACTIVITY_HISTORY_API: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/mtfh-housing-${self:provider.stage}/mtfh-housing/activity-history-api-url}
+      ACTIVITY_HISTORY_API: ${ssm:eu-west-2:115283375626:parameter/housing-development/mtfh-housing-development/mtfh-housing/activity-history-api-url}
 
       # LOOKUP_API_URL: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/mtfh-housing-${self:provider.stage}/mtfh-housing/lookup-api-url}
       # APP_URL: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/app-url}

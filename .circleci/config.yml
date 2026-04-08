@@ -115,6 +115,7 @@ commands:
     steps:
       - checkout
       - *attach_workspace
+      - install-python3
       - aws_assume_role/assume_role:
           account: <<parameters.aws-account>>
           profile_name: default
@@ -412,7 +413,7 @@ workflows:
 
       - deploy-to-development:
           context:
-            # - api-assume-role-development-context
+            - api-assume-role-development-context
             - housing-register-fe-build-context
             - Serverless Framework
           # requires:

@@ -122,7 +122,9 @@ commands:
           role: 'LBH_Circle_CI_Deployment_Role'
       - run:
           name: Build and deploy lambda
-          command: npx --yes serverless@4 deploy
+          command: |
+            set -e
+            npx --yes serverless@4 deploy --stage <<parameters.stage>> --conceal
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Jobs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 jobs:
@@ -346,21 +348,18 @@ jobs:
       - deploy-lambda:
           stage: 'development'
           aws-account: $AWS_ACCOUNT_DEVELOPMENT
-          # aws-central-parameter-account: 'AWS_ACCOUNT_DEVELOPMENT'
   deploy-to-staging:
     executor: aws-cli/default
     steps:
       - deploy-lambda:
           stage: 'staging'
           aws-account: $AWS_ACCOUNT_STAGING
-          # aws-central-parameter-account: 'AWS_ACCOUNT_STAGING'
   deploy-to-production:
     executor: aws-cli/default
     steps:
       - deploy-lambda:
           stage: 'production'
           aws-account: $AWS_ACCOUNT_PRODUCTION
-          # aws-central-parameter-account: 'AWS_ACCOUNT_PRODUCTION'
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Workflows ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 workflows:

@@ -99,7 +99,7 @@ commands:
     steps:
       - checkout
       - *attach_workspace
-      # - install-python3
+      - install-python3
       # - aws-cli/install
       - aws_assume_role/assume_role:
           account: <<parameters.aws-account>>

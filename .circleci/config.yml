@@ -115,6 +115,7 @@ commands:
     steps:
       - *attach_workspace
       - checkout
+      - aws-cli/install
       - run:
           name: Fetch SSM parameters from central account
           command: |

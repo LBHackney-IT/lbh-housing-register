@@ -35,6 +35,10 @@ functions:
     environment:
       NEXT_PUBLIC_ENV: ${opt:stage}
       SKIP_VERIFY_TOKEN: false
+      HOUSING_REGISTER_KEY: ${ssm:/housing-register/${self:provider.stage}/housing-register-api-key~true}
+      HACKNEY_JWT_SECRET: ${ssm:/housing-register/${self:provider.stage}/hackney-jwt-secret~true}
+      LOOKUP_API_TOKEN: ${ssm:/housing-register/${self:provider.stage}/lookup-api-key~true}
+      NOTIFY_API_KEY: ${ssm:/housing-register/${self:provider.stage}/notify-api-key~true}
       ACTIVITY_HISTORY_API: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/mtfh-housing-${self:provider.stage}/mtfh-housing/activity-history-api-url}
       LOOKUP_API_URL: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/mtfh-housing-${self:provider.stage}/mtfh-housing/lookup-api-url}
       APP_URL: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/app-url}
@@ -48,10 +52,6 @@ functions:
       NOTIFY_TEMPLATE_MEDICAL_NEED: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/notify-template-medical-need}
       NEXT_PUBLIC_EVIDENCE_STORE: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/evidence-store-url}
       NEXT_PUBLIC_GTM_ID: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/gtm-id}
-      HOUSING_REGISTER_KEY: ${ssm:${self:custom.baseAccountPaths.housingRegisterKey}~true}
-      HACKNEY_JWT_SECRET: ${ssm:${self:custom.baseAccountPaths.hackneyJwtSecret}~true}
-      LOOKUP_API_TOKEN: ${ssm:${self:custom.baseAccountPaths.lookupApiToken}~true}
-      NOTIFY_API_KEY: ${ssm:${self:custom.baseAccountPaths.notifyApiKey}~true}
 
 resources:
   Resources:
@@ -114,11 +114,6 @@ custom:
     development: 115283375626
     staging: 469511945406
     production: 918025132036
-  baseAccountPaths:
-    housingRegisterKey: /housing-register/${self:provider.stage}/housing-register-api-key
-    hackneyJwtSecret: /housing-register/${self:provider.stage}/hackney-jwt-secret
-    lookupApiToken: /housing-register/${self:provider.stage}/lookup-api-key
-    notifyApiKey: /housing-register/${self:provider.stage}/notify-api-key
   securityGroups:
     development:
       - sg-0de8a8ee9797b9e47

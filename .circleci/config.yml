@@ -124,8 +124,6 @@ commands:
       - aws-cli/install
       - run:
           name: Fetch SSM parameters from central account
-          environment:
-            AWS_DEFAULT_REGION: eu-west-2
           command: |
             CENTRAL_ACCOUNT=${<<parameters.aws-central-parameter-account>>}
 
@@ -507,6 +505,7 @@ workflows:
 
       - deploy-to-development:
           context:
+            - api-assume-role-development-context
             - housing-register-fe-build-context
             - Serverless Framework
           requires:
@@ -530,7 +529,7 @@ workflows:
 
       - deploy-to-staging:
           context:
-            - api-assume-role-housing-staging-context
+            - api-assume-role-staging-context
             - housing-register-fe-build-context
             - Serverless Framework
           requires:
@@ -563,7 +562,7 @@ workflows:
 
       - deploy-to-production:
           context:
-            - api-assume-role-housing-production-context
+            - api-assume-role-production-context
             - housing-register-fe-build-context
             - Serverless Framework
           requires:

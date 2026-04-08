@@ -127,8 +127,12 @@ commands:
           command: |
             CENTRAL_ACCOUNT=${<<parameters.aws-central-parameter-account>>}
 
+            # export ACTIVITY_HISTORY_API=$(aws ssm get-parameter \
+            #   --name arn:aws:ssm:eu-west-2:${CENTRAL_ACCOUNT}:parameter/housing-<<parameters.stage>>/mtfh-housing-<<parameters.stage>>/mtfh-housing/activity-history-api-url \
+            #   --query Parameter.Value \
+            #   --output text)
             export ACTIVITY_HISTORY_API=$(aws ssm get-parameter \
-              --name arn:aws:ssm:eu-west-2:${CENTRAL_ACCOUNT}:parameter/housing-<<parameters.stage>>/mtfh-housing-<<parameters.stage>>/mtfh-housing/activity-history-api-url \
+              --name arn:aws:ssm:eu-west-2:115283375626:parameter/housing-development/mtfh-housing-development/mtfh-housing/activity-history-api-url \
               --query Parameter.Value \
               --output text)
             export LOOKUP_API_URL=$(aws ssm get-parameter \

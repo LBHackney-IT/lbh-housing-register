@@ -124,6 +124,8 @@ commands:
       - aws-cli/install
       - run:
           name: Fetch SSM parameters from central account
+          environment:
+            AWS_DEFAULT_REGION: eu-west-2
           command: |
             CENTRAL_ACCOUNT=${<<parameters.aws-central-parameter-account>>}
 

@@ -79,30 +79,14 @@ exclude_combinations:
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Commands ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 commands:
-  install-python3:
-    description: 'pip install for aws-cli'
-    steps:
-      - run:
-          name: Install python3.12-venv
-          command: |
-            sudo apt-get update
-            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y python3.12-venv
-  assume-role-and-persist-workspace:
-    description: 'Assumes deployment role and persists credentials across jobs'
-    parameters:
-      aws-account:
-        type: string
-    steps:
-      - checkout
-      - install-python3
-      - aws_assume_role/assume_role:
-          account: <<parameters.aws-account>>
-          profile_name: default
-          role: 'LBH_Circle_CI_Deployment_Role'
-      - persist_to_workspace:
-          root: *home_dir
-          paths:
-            - .aws
+  # install-python3:
+  #   description: 'pip install for aws-cli'
+  #   steps:
+  #     - run:
+  #         name: Install python3.12-venv
+  #         command: |
+  #           sudo apt-get update
+  #           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y python3.12-venv
 
   deploy-lambda:
     description: 'Deploys lambda via Serverless'
@@ -115,7 +99,7 @@ commands:
     steps:
       - checkout
       - *attach_workspace
-      - install-python3
+      # - install-python3
       - aws-cli/install
       - aws_assume_role/assume_role:
           account: <<parameters.aws-account>>
@@ -424,24 +408,24 @@ workflows:
             branches:
               only: feature/upgrade-next
 
-      - assume-role-staging:
-          context: api-assume-role-staging-context
-          requires:
-            - run-tests
-            - run-cypress-e2e
-          filters:
-            tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
-            branches:
-              ignore: /.*/
+      # - assume-role-staging:
+      #     context: api-assume-role-staging-context
+      #     requires:
+      #       - run-tests
+      #       - run-cypress-e2e
+      #     filters:
+      #       tags:
+      #         only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
+      #       branches:
+      #         ignore: /.*/
 
       - deploy-to-staging:
           context:
             - api-assume-role-staging-context
             - housing-register-fe-build-context
             - Serverless Framework
-          requires:
-            - assume-role-staging
+          # requires:
+          #   - assume-role-staging
           filters:
             tags:
               only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
@@ -458,15 +442,15 @@ workflows:
             branches:
               ignore: /.*/
 
-      - assume-role-production:
-          context: api-assume-role-production-context
-          requires:
-            - permit-deploy-production
-          filters:
-            tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
-            branches:
-              ignore: /.*/
+      # - assume-role-production:
+      #     context: api-assume-role-production-context
+      #     requires:
+      #       - permit-deploy-production
+      #     filters:
+      #       tags:
+      #         only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
+      #       branches:
+      #         ignore: /.*/
 
       - deploy-to-production:
           context:
@@ -474,7 +458,7 @@ workflows:
             - housing-register-fe-build-context
             - Serverless Framework
           requires:
-            - assume-role-production
+            - permit-deploy-production
           filters:
             tags:
               only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/

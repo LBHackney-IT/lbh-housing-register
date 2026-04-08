@@ -20,9 +20,9 @@ references:
       at: *workspace_root
   # assume_role write to ~/.aws, not under the repository
   home_dir: &home_dir /home/circleci
-  attach_aws_workspace: &attach_aws_workspace
-    attach_workspace:
-      at: *home_dir
+  # attach_aws_workspace: &attach_aws_workspace
+  #   attach_workspace:
+  #     at: *home_dir
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Anchors ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -119,7 +119,7 @@ commands:
             'AWS_ACCOUNT_PRODUCTION',
           ]
     steps:
-      - *attach_aws_workspace
+      # - *attach_aws_workspace
       - checkout
       - aws-cli/install
       - run:
@@ -127,14 +127,14 @@ commands:
           command: |
             CENTRAL_ACCOUNT=${<<parameters.aws-central-parameter-account>>}
 
-            # export ACTIVITY_HISTORY_API=$(aws ssm get-parameter \
-            #   --name arn:aws:ssm:eu-west-2:${CENTRAL_ACCOUNT}:parameter/housing-<<parameters.stage>>/mtfh-housing-<<parameters.stage>>/mtfh-housing/activity-history-api-url \
-            #   --query Parameter.Value \
-            #   --output text)
             export ACTIVITY_HISTORY_API=$(aws ssm get-parameter \
-              --name arn:aws:ssm:eu-west-2:115283375626:parameter/housing-development/mtfh-housing-development/mtfh-housing/activity-history-api-url \
+              --name arn:aws:ssm:eu-west-2:${CENTRAL_ACCOUNT}:parameter/housing-<<parameters.stage>>/mtfh-housing-<<parameters.stage>>/mtfh-housing/activity-history-api-url \
               --query Parameter.Value \
               --output text)
+            # export ACTIVITY_HISTORY_API=$(aws ssm get-parameter \
+            #   --name arn:aws:ssm:eu-west-2:115283375626:parameter/housing-development/mtfh-housing-development/mtfh-housing/activity-history-api-url \
+            #   --query Parameter.Value \
+            #   --output text)
             export LOOKUP_API_URL=$(aws ssm get-parameter \
               --name arn:aws:ssm:eu-west-2:${CENTRAL_ACCOUNT}:parameter/housing-<<parameters.stage>>/mtfh-housing-<<parameters.stage>>/mtfh-housing/lookup-api-url \
               --query Parameter.Value \

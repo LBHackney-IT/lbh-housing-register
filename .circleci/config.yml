@@ -13,7 +13,7 @@ executors:
       - image: cimg/node:24.14-browsers
 
 references:
-  workspace_root: &workspace_root '.'
+  workspace_root: &workspace_root '~'
   attach_workspace: &attach_workspace
     attach_workspace:
       at: *workspace_root

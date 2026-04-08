@@ -13,10 +13,16 @@ executors:
       - image: cimg/node:24.14-browsers
 
 references:
-  workspace_root: &workspace_root '~'
+  # repo-relative paths
+  workspace_root: &workspace_root '.'
   attach_workspace: &attach_workspace
     attach_workspace:
       at: *workspace_root
+  # assume_role write to ~/.aws, not under the repository
+  home_dir: &home_dir /home/circleci
+  attach_aws_workspace: &attach_aws_workspace
+    attach_workspace:
+      at: *home_dir
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Anchors ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -94,7 +100,7 @@ commands:
           profile_name: default
           role: 'LBH_Circle_CI_Deployment_Role'
       - persist_to_workspace:
-          root: *workspace_root
+          root: *home_dir
           paths:
             - .aws
 
@@ -113,7 +119,7 @@ commands:
             'AWS_ACCOUNT_PRODUCTION',
           ]
     steps:
-      - *attach_workspace
+      - *attach_aws_workspace
       - checkout
       - aws-cli/install
       - run:

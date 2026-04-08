@@ -108,6 +108,9 @@ commands:
       - run:
           name: Build and deploy lambda
           command: |
+            unset AWS_ACCESS_KEY_ID
+            unset AWS_SECRET_ACCESS_KEY
+
             set -e
             npx --yes serverless@4 deploy --stage <<parameters.stage>> --conceal
 

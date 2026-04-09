@@ -131,10 +131,14 @@ commands:
           name: Fetch SSM parameters from central account
           command: |
             CENTRAL_ACCOUNT=${<<parameters.aws-central-parameter-account>>}
+            export COGNITO_DOMAIN=$(aws ssm get-parameter --name arn:aws:ssm:eu-west-2:115283375626:parameter/housing-<<parameters.stage>>/mtfh-housing-<<parameters.stage>>/housing-tl/cognito-auth-domain --query Parameter.Value --output text)
             export APP_URL=$(aws ssm get-parameter \
               --name arn:aws:ssm:eu-west-2:115283375626:parameter/housing-development/housing-register-development/housing-register/app-url \
               --query Parameter.Value \
               --output text)
+
+
+
             # export APP_URL=$(aws ssm get-parameter \
             #   --name arn:aws:ssm:eu-west-2:${CENTRAL_ACCOUNT}:parameter/housing-<<parameters.stage>>/housing-register-<<parameters.stage>>/housing-register/app-url \
             #   --query Parameter.Value \

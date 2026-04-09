@@ -35,27 +35,24 @@ functions:
     environment:
       NEXT_PUBLIC_ENV: ${opt:stage}
       SKIP_VERIFY_TOKEN: false
-      # ACTIVITY_HISTORY_API: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/mtfh-housing-${self:provider.stage}/mtfh-housing/activity-history-api-url}
-      ACTIVITY_HISTORY_API: ${ssm:eu-west-2:115283375626:parameter/housing-development/mtfh-housing-development/mtfh-housing/activity-history-api-url}
+      ACTIVITY_HISTORY_API: ${param:activityHistoryApiUrl}
+      LOOKUP_API_URL: ${param:lookupApiUrl}
+      APP_URL: ${param:appUrl}
+      AUTHORISED_ADMIN_GROUP: ${param:authorisedAdminGroup}
+      AUTHORISED_MANAGER_GROUP: ${param:authorisedManagerGroup}
+      AUTHORISED_OFFICER_GROUP: ${param:authorisedOfficerGroup}
+      AUTHORISED_READONLY_GROUP: ${param:authorisedReadonlyGroup}
+      HOUSING_REGISTER_API: ${param:housingRegisterApi}
+      NOTIFY_TEMPLATE_NEW_APPLICATION: ${param:notifyTemplateNewApplication}
+      NOTIFY_TEMPLATE_DISQUALIFY: ${param:notifyTemplateDisqualify}
+      NOTIFY_TEMPLATE_MEDICAL_NEED: ${param:notifyTemplateMedicalNeed}
+      NEXT_PUBLIC_EVIDENCE_STORE: ${param:evidenceStoreUrl}
+      NEXT_PUBLIC_GTM_ID: ${param:gtmId}
+      HOUSING_REGISTER_KEY: ${ssm:/housing-register/${self:provider.stage}/housing-register-api-key}
+      HACKNEY_JWT_SECRET: ${ssm:/housing-register/${self:provider.stage}/hackney-jwt-secret}
+      LOOKUP_API_TOKEN: ${ssm:/housing-register/${self:provider.stage}/lookup-api-key}
+      NOTIFY_API_KEY: ${ssm:/housing-register/${self:provider.stage}/notify-api-key}
 
-      # LOOKUP_API_URL: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/mtfh-housing-${self:provider.stage}/mtfh-housing/lookup-api-url}
-      # APP_URL: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/app-url}
-      # AUTHORISED_ADMIN_GROUP: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/authorised-admin-group}
-      # AUTHORISED_MANAGER_GROUP: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/authorised-manager-group}
-      # AUTHORISED_OFFICER_GROUP: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/authorised-officer-group}
-      # AUTHORISED_READONLY_GROUP: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/authorised-readonly-group}
-      # HOUSING_REGISTER_API: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/api-url}
-      # NOTIFY_TEMPLATE_NEW_APPLICATION: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/notify-template-new-application}
-      # NOTIFY_TEMPLATE_DISQUALIFY: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/notify-template-disqualify}
-      # NOTIFY_TEMPLATE_MEDICAL_NEED: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/notify-template-medical-need}
-
-      # NEXT_PUBLIC_EVIDENCE_STORE: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/evidence-store-url}
-
-      # NEXT_PUBLIC_GTM_ID: ${ssm:${self:provider.region}:${self:custom.parameterStoreAccountId.${self:provider.stage}}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/gtm-id}
-      # HOUSING_REGISTER_KEY: ${ssm:/housing-register/${self:provider.stage}/housing-register-api-key}
-      # HACKNEY_JWT_SECRET: ${ssm:/housing-register/${self:provider.stage}/hackney-jwt-secret}
-      # LOOKUP_API_TOKEN: ${ssm:/housing-register/${self:provider.stage}/lookup-api-key}
-      # NOTIFY_API_KEY: ${ssm:eu-west-2:364864573329:parameter/housing-register/development/notify-api-key~true}
 resources:
   Resources:
     CloudFrontDistribution:
@@ -113,10 +110,6 @@ custom:
     development: arn:aws:acm:us-east-1:364864573329:certificate/955e7d76-1147-4102-9179-8880641875eb
     staging: arn:aws:acm:us-east-1:087586271961:certificate/5a0d62b9-688d-4a24-8cfe-fbb45b893fb5
     production: arn:aws:acm:us-east-1:282997303675:certificate/e0a3cc0b-024c-4009-bc2e-69c36d918d61
-  parameterStoreAccountId:
-    development: 115283375626
-    staging: 469511945406
-    production: 918025132036
   securityGroups:
     development:
       - sg-0de8a8ee9797b9e47

@@ -35,7 +35,7 @@ functions:
     environment:
       NEXT_PUBLIC_ENV: ${opt:stage}
       SKIP_VERIFY_TOKEN: false
-      ACTIVITY_HISTORY_API: ${param:activityHistoryApiUrl}
+      ACTIVITY_HISTORY_API: ${param:activityHistoryApi}
       LOOKUP_API_URL: ${param:lookupApiUrl}
       APP_URL: ${param:appUrl}
       AUTHORISED_ADMIN_GROUP: ${param:authorisedAdminGroup}

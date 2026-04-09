@@ -121,6 +121,7 @@ commands:
     steps:
       - *attach_aws_workspace
       - checkout
+      - *attach_workspace
       - aws-cli/install
       # - run:
       #     name: Install AWS CLI
@@ -254,10 +255,10 @@ jobs:
     executor: node-executor
     environment:
       # Same mock API bases as run-cypress-e2e (127.0.0.1) so CI matches Nock / Cypress.expose.
-      HOUSING_REGISTER_API: 'http://127.0.0.1:3910/api/v1/'
-      HOUSING_REGISTER_KEY: 'testing'
-      ACTIVITY_HISTORY_API: 'http://127.0.0.1:3600/api/v1'
-      LOOKUP_API_URL: 'http://127.0.0.1:3920'
+      # HOUSING_REGISTER_API: 'http://127.0.0.1:3910/api/v1/'
+      # HOUSING_REGISTER_KEY: 'testing'
+      # ACTIVITY_HISTORY_API: 'http://127.0.0.1:3600/api/v1'
+      # LOOKUP_API_URL: 'http://127.0.0.1:3920'
     steps:
       - checkout
       - node/install-packages
@@ -510,6 +511,7 @@ workflows:
             - Serverless Framework
           requires:
             - assume-role-development
+            - build
           filters:
             tags:
               ignore: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
@@ -535,6 +537,7 @@ workflows:
             - Serverless Framework
           requires:
             - assume-role-staging
+            - build
           filters:
             tags:
               only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
@@ -569,6 +572,7 @@ workflows:
             - Serverless Framework
           requires:
             - assume-role-production
+            - build
           filters:
             tags:
               only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/

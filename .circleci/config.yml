@@ -506,7 +506,7 @@ workflows:
               only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
 
       - assume-role-development:
-          context: api-assume-role-development-context
+          context: api-assume-role-housing-development-context
           # requires:
           #   - run-tests
           #   - run-cypress-e2e
@@ -531,7 +531,7 @@ workflows:
               only: feature/upgrade-next
 
       - assume-role-staging:
-          context: api-assume-role-staging-context
+          context: api-assume-role-housing-staging-context
           requires:
             - run-tests
             - run-cypress-e2e
@@ -543,7 +543,8 @@ workflows:
 
       - deploy-to-staging:
           context:
-            - api-assume-role-staging-context
+            # - api-assume-role-staging-context
+            - central-parameter-store-context
             - housing-register-fe-build-context
             - Serverless Framework
           requires:
@@ -565,7 +566,7 @@ workflows:
               ignore: /.*/
 
       - assume-role-production:
-          context: api-assume-role-production-context
+          context: api-assume-role-housing-production-context
           requires:
             - permit-deploy-production
           filters:
@@ -576,7 +577,8 @@ workflows:
 
       - deploy-to-production:
           context:
-            - api-assume-role-production-context
+            # - api-assume-role-production-context
+            - central-parameter-store-context
             - housing-register-fe-build-context
             - Serverless Framework
           requires:

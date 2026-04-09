@@ -519,7 +519,7 @@ workflows:
 
       - deploy-to-development:
           context:
-            - central-parameter-store-context
+            # - central-parameter-store-context
             - housing-register-fe-build-context
             - Serverless Framework
           requires:

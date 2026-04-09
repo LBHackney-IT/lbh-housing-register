@@ -139,10 +139,6 @@ commands:
               --name arn:aws:ssm:eu-west-2:${CENTRAL_ACCOUNT}:parameter/housing-<<parameters.stage>>/mtfh-housing-<<parameters.stage>>/mtfh-housing/activity-history-api-url \
               --query Parameter.Value \
               --output text)
-            export ACTIVITY_HISTORY_API=$(aws ssm get-parameter \
-              --name arn:aws:ssm:eu-west-2:115283375626:parameter/housing-development/mtfh-housing-development/mtfh-housing/activity-history-api-url \
-              --query Parameter.Value \
-              --output text)
             export LOOKUP_API_URL=$(aws ssm get-parameter \
               --name arn:aws:ssm:eu-west-2:${CENTRAL_ACCOUNT}:parameter/housing-<<parameters.stage>>/mtfh-housing-<<parameters.stage>>/mtfh-housing/lookup-api-url \
               --query Parameter.Value \
@@ -219,7 +215,7 @@ commands:
               --param="notifyTemplateNewApplication=${NOTIFY_TEMPLATE_NEW_APPLICATION}" \
               --param="notifyTemplateDisqualify=${NOTIFY_TEMPLATE_DISQUALIFY}" \
               --param="notifyTemplateMedicalNeed=${NOTIFY_TEMPLATE_MEDICAL_NEED}" \
-              --param="evidenceStore=${NEXT_PUBLIC_EVIDENCE_STORE}" \
+              --param="evidenceStoreUrl=${NEXT_PUBLIC_EVIDENCE_STORE}" \
               --param="gtmId=${NEXT_PUBLIC_GTM_ID}" \
               --conceal
 

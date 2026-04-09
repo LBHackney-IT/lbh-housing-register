@@ -11,6 +11,10 @@ const nextConfig = {
   distDir: 'build/_next',
   // Trace production deps into build/_next/standalone so the Lambda zip stays under 250MB unzipped.
   output: 'standalone',
+  // Reduce what gets traced into standalone (esp. dev-only trees if referenced accidentally).
+  outputFileTracingExcludes: {
+    '*': ['**/node_modules/cypress/**', '**/node_modules/@types/**'],
+  },
   poweredByHeader: false,
   reactStrictMode: true,
   async headers() {

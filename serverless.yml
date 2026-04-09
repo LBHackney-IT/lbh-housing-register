@@ -16,16 +16,14 @@ functions:
   housing-register-frontend:
     name: ${self:service}-${self:provider.stage}
     handler: lambda.handler
-    timeout: 30
+    # API Gateway REST integration limit is 29s; stay below to avoid confusing timeouts.
+    timeout: 29
     package:
       patterns:
         - lambda.js
-        - next.config.js
-        - pages/**
-        - public/**
-        - build/_next/**
-        - '!build/_next/cache/**'
-        - node_modules/**
+        # Standalone trace + postbuild deps only (not full node_modules — exceeds 250MB unzipped).
+        - build/_next/standalone/**
+        - '!build/_next/standalone/**/*.map'
     events:
       - http: ANY /
       - http: ANY /{proxy+}

@@ -9,6 +9,8 @@ const { withSentryConfig } = require('@sentry/nextjs');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   distDir: 'build/_next',
+  // Trace production deps into build/_next/standalone so the Lambda zip stays under 250MB unzipped.
+  output: 'standalone',
   poweredByHeader: false,
   reactStrictMode: true,
   async headers() {

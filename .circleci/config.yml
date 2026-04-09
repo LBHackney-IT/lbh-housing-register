@@ -121,12 +121,12 @@ commands:
     steps:
       - *attach_aws_workspace
       - checkout
-      # - aws-cli/install
-      - run:
-          name: Install AWS CLI
-          command: |
-            sudo apt-get update
-            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y awscli
+      - aws-cli/install
+      # - run:
+      #     name: Install AWS CLI
+      #     command: |
+      #       apt-get update
+      #       apt-get install -y awscli
       - run:
           name: Fetch SSM parameters from central account
           command: |

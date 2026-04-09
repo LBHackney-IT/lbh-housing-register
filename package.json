@@ -7,7 +7,6 @@
   },
   "scripts": {
     "build": "next build --webpack",
-    "postbuild": "node scripts/prepare-lambda-standalone.cjs",
     "dev": "next dev --webpack --hostname=localdev.hackney.gov.uk",
     "start": "next start",
     "lint": "eslint .",

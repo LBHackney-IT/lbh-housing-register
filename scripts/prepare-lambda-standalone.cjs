@@ -217,11 +217,14 @@ function copyPkgIfMissing(name) {
 }
 
 /**
- * Next/npm may leave symlinks under standalone → ../../node_modules/... . Archivers often dereference
- * those and pack the *entire* repo node_modules, far over Lambda's unzipped limit. Replace with copies.
+ * Replace EVERY symlink under standaloneRoot with a real copy of its target.
+ *
+ * Serverless uses fast-glob (followSymbolicLinks: true by default) to build the zip.
+ * Any symlink — internal or external — can cause the same file tree to appear multiple
+ * times in the archive, pushing the unzipped size past Lambda's 262 144 000 byte limit.
+ * A full seal makes the zip content match exactly what `du` reports.
  */
-function materializeExternalSymlinks(standaloneRoot) {
-  const stand = fs.realpathSync(standaloneRoot);
+function sealAllSymlinks(standaloneRoot) {
   let fixed = 0;
   function walk(p) {
     let entries;
@@ -237,40 +240,45 @@ function materializeExternalSymlinks(standaloneRoot) {
         try {
           real = fs.realpathSync(full);
         } catch {
-          continue;
-        }
-        const internal = real === stand || real.startsWith(stand + path.sep);
-        if (!internal) {
+          // broken symlink — remove it so the zip doesn't error
           try {
             fs.unlinkSync(full);
-            fs.cpSync(real, full, { recursive: true, dereference: true });
-            fixed += 1;
-          } catch (e) {
-            console.warn(
-              '[prepare-lambda-standalone] could not materialize symlink',
-              full,
-              e.message,
-            );
+          } catch {
+            /* ignore */
           }
+          continue;
+        }
+        try {
+          const stat = fs.statSync(real);
+          fs.unlinkSync(full);
+          if (stat.isDirectory()) {
+            fs.cpSync(real, full, { recursive: true, dereference: true });
+          } else {
+            fs.copyFileSync(real, full);
+          }
+          fixed += 1;
+        } catch (e) {
+          console.warn(
+            '[prepare-lambda-standalone] could not seal symlink',
+            full,
+            '→',
+            e.message,
+          );
         }
       } else if (ent.isDirectory()) {
         walk(full);
       }
     }
   }
-  walk(stand);
-  if (fixed > 0) {
-    console.log(
-      `[prepare-lambda-standalone] materialized ${fixed} symlink(s) pointing outside standalone (prevents huge deploy zip on Linux CI)`,
-    );
-  }
+  walk(standaloneRoot);
+  console.log(
+    `[prepare-lambda-standalone] sealed ${fixed} symlink(s) → real copies (zip will match du size)`,
+  );
 }
 
 for (const name of ['restana', 'serverless-http', 'serve-static']) {
   copyPkgIfMissing(name);
 }
-
-materializeExternalSymlinks(standalone);
 
 if (!fs.existsSync(path.join(standaloneModules, 'restana', 'package.json'))) {
   console.error(
@@ -288,6 +296,11 @@ pruneEsbuildVariants(standalone);
 pruneSharpPrebuilds(standalone);
 prunePackageDevTrees(standalone);
 prunePackageDocumentationFiles(standalone);
+
+// Seal after pruning: any remaining symlinks (internal or external) would be followed
+// by fast-glob when serverless builds the zip, causing the unzipped size to exceed the
+// Lambda limit even though `du` looks fine locally.
+sealAllSymlinks(standalone);
 
 logSize(standalone);
 logPayloadBytes(standalone);

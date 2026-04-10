@@ -15,10 +15,6 @@ const nextConfig = {
   outputFileTracingExcludes: {
     '*': ['**/node_modules/cypress/**', '**/node_modules/@types/**'],
   },
-  // Disable server-side gzip: API Gateway/Lambda can't reliably base64-encode a binary
-  // gzip body, so static assets end up corrupted in transit (NS_ERROR_CORRUPTED_CONTENT /
-  // MIME-type mismatch).  CloudFront compresses at the edge so end-users still get gzip.
-  compress: false,
   poweredByHeader: false,
   reactStrictMode: true,
   async headers() {

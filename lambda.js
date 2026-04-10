@@ -24,7 +24,13 @@ process.env.NODE_ENV = 'production';
   const start = serverJs.indexOf(PREFIX) + PREFIX.length;
   const end = serverJs.indexOf(SUFFIX);
   if (start > PREFIX.length - 1 && end > start) {
-    process.env.__NEXT_PRIVATE_STANDALONE_CONFIG = serverJs.slice(start, end);
+    // Parse so we can override compress: withSentryConfig does not forward the compress
+    // key from next.config.js, so the embedded config always has compress: true.
+    // Gzip bodies passed through API Gateway cause NS_ERROR_CORRUPTED_CONTENT; CloudFront
+    // compresses at the edge instead.
+    const config = JSON.parse(serverJs.slice(start, end));
+    config.compress = false;
+    process.env.__NEXT_PRIVATE_STANDALONE_CONFIG = JSON.stringify(config);
   } else {
     console.error(
       '[lambda] WARNING: could not extract nextConfig from server.js — server may fail to locate the build',

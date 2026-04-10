@@ -37,13 +37,17 @@ function pruneSourceMaps(root) {
   });
 }
 
-/** AWS Lambda Node.js on x86 uses glibc Linux; drop other @next/swc platform binaries (~100MB+). */
+/**
+ * Remove ALL @next/swc-* platform binaries.
+ * swc is the Rust compiler used during `next build` — the pre-built standalone output
+ * does not recompile anything at runtime, so the binary (~100 MB on Linux) is not needed.
+ * Keeping swc-linux-x64-gnu alone was still pushing CI over Lambda's 262 MB unzipped limit.
+ */
 function pruneNextSwc(standaloneRoot) {
   const nextDir = path.join(standaloneRoot, 'node_modules', '@next');
   if (!fs.existsSync(nextDir)) return;
-  const keep = /^swc-linux-x64-gnu$/;
   for (const name of fs.readdirSync(nextDir)) {
-    if (name.startsWith('swc-') && !keep.test(name)) {
+    if (name.startsWith('swc-')) {
       rmRecursive(path.join(nextDir, name));
     }
   }
@@ -144,6 +148,48 @@ function logSize(standaloneRoot) {
     console.log('[prepare-lambda-standalone] size after prune:', out.trim());
   } catch {
     /* du unavailable */
+  }
+}
+
+/** Log the 15 largest packages in node_modules to help diagnose future size regressions. */
+function logTopPackages(standaloneRoot) {
+  const nm = path.join(standaloneRoot, 'node_modules');
+  if (!fs.existsSync(nm)) return;
+  const sizes = [];
+  for (const ent of fs.readdirSync(nm, { withFileTypes: true })) {
+    const p = path.join(nm, ent.name);
+    if (ent.name.startsWith('@') && ent.isDirectory()) {
+      for (const sub of fs.readdirSync(p, { withFileTypes: true })) {
+        if (sub.isDirectory()) {
+          let bytes = 0;
+          walkFiles(path.join(p, sub.name), (f) => {
+            try {
+              bytes += fs.statSync(f).size;
+            } catch {
+              /* ignore */
+            }
+          });
+          sizes.push({ name: `${ent.name}/${sub.name}`, bytes });
+        }
+      }
+    } else if (ent.isDirectory()) {
+      let bytes = 0;
+      walkFiles(p, (f) => {
+        try {
+          bytes += fs.statSync(f).size;
+        } catch {
+          /* ignore */
+        }
+      });
+      sizes.push({ name: ent.name, bytes });
+    }
+  }
+  sizes.sort((a, b) => b.bytes - a.bytes);
+  console.log('[prepare-lambda-standalone] top 15 packages by size:');
+  for (const { name, bytes } of sizes.slice(0, 15)) {
+    console.log(
+      `  ${(bytes / 1024 / 1024).toFixed(1).padStart(7)} MB  ${name}`,
+    );
   }
 }
 
@@ -304,4 +350,5 @@ prunePackageDevTrees(standalone);
 prunePackageDocumentationFiles(standalone);
 
 logSize(standalone);
+logTopPackages(standalone);
 logPayloadBytes(standalone);

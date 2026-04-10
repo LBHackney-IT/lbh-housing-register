@@ -21,9 +21,13 @@ functions:
     package:
       patterns:
         - lambda.js
-        # Standalone trace + postbuild deps only (not full node_modules — exceeds 250MB unzipped).
+        # Standalone trace + postbuild deps (server runtime).
         - build/_next/standalone/**
         - '!build/_next/standalone/**/*.map'
+        # Client-side static assets — standalone output does NOT include these; they live
+        # at the distDir root and must be packaged separately so /_next/static/** resolves.
+        - build/_next/static/**
+        - '!build/_next/static/**/*.map'
     events:
       - http: ANY /
       - http: ANY /{proxy+}

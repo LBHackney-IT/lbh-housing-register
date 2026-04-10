@@ -100,6 +100,38 @@ execSync(
   },
 );
 
+const repoRoot = path.join(__dirname, '..');
+const rootModules = path.join(repoRoot, 'node_modules');
+const standaloneModules = path.join(standalone, 'node_modules');
+
+function copyPkgIfMissing(name) {
+  const dest = path.join(standaloneModules, name);
+  if (fs.existsSync(dest)) return;
+  const src = path.join(rootModules, name);
+  if (!fs.existsSync(src)) {
+    console.error(
+      `[prepare-lambda-standalone] missing ${name} under standalone and repo node_modules`,
+    );
+    process.exit(1);
+  }
+  fs.mkdirSync(standaloneModules, { recursive: true });
+  fs.cpSync(src, dest, { recursive: true });
+  console.log(
+    `[prepare-lambda-standalone] copied ${name} from repo node_modules (standalone install did not place it)`,
+  );
+}
+
+for (const name of ['restana', 'serverless-http', 'serve-static']) {
+  copyPkgIfMissing(name);
+}
+
+if (!fs.existsSync(path.join(standaloneModules, 'restana', 'package.json'))) {
+  console.error(
+    '[prepare-lambda-standalone] restana still missing after install + copy',
+  );
+  process.exit(1);
+}
+
 console.log(
   '[prepare-lambda-standalone] pruning maps + non-linux optional binaries…',
 );

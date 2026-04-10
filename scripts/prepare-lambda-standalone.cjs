@@ -70,6 +70,71 @@ function pruneSharpPrebuilds(standaloneRoot) {
   }
 }
 
+/**
+ * Remove test/docs/example trees at top level of each package (runtime never needs them).
+ * Saves a lot across many deps.
+ */
+function prunePackageDevTrees(standaloneRoot) {
+  const nm = path.join(standaloneRoot, 'node_modules');
+  if (!fs.existsSync(nm)) return;
+  const junkDirs = new Set([
+    'test',
+    'tests',
+    '__tests__',
+    'example',
+    'examples',
+    'docs',
+    'doc',
+    'coverage',
+    '.github',
+  ]);
+  const pruneAt = (packageRoot) => {
+    for (const j of junkDirs) {
+      rmRecursive(path.join(packageRoot, j));
+    }
+  };
+  for (const ent of fs.readdirSync(nm, { withFileTypes: true })) {
+    if (!ent.isDirectory()) continue;
+    const p = path.join(nm, ent.name);
+    if (ent.name.startsWith('@')) {
+      for (const sub of fs.readdirSync(p, { withFileTypes: true })) {
+        if (sub.isDirectory()) pruneAt(path.join(p, sub.name));
+      }
+    } else {
+      pruneAt(p);
+    }
+  }
+}
+
+/** LICENSE / README / *.md in node_modules — not needed at runtime (often 10–40MB total). */
+function prunePackageDocumentationFiles(standaloneRoot) {
+  const nm = path.join(standaloneRoot, 'node_modules');
+  if (!fs.existsSync(nm)) return;
+  const baseNames = new Set([
+    'README',
+    'README.md',
+    'readme.md',
+    'CHANGELOG',
+    'CHANGELOG.md',
+    'History.md',
+    'LICENSE',
+    'LICENSE.md',
+    'LICENCE',
+    'AUTHORS',
+    'CONTRIBUTORS',
+  ]);
+  walkFiles(nm, (file) => {
+    const base = path.basename(file);
+    if (baseNames.has(base) || base.endsWith('.md')) {
+      try {
+        fs.unlinkSync(file);
+      } catch {
+        /* ignore */
+      }
+    }
+  });
+}
+
 function logSize(standaloneRoot) {
   try {
     const out = execSync(`du -sh "${standaloneRoot}" 2>/dev/null`, {
@@ -139,5 +204,7 @@ pruneSourceMaps(standalone);
 pruneNextSwc(standalone);
 pruneEsbuildVariants(standalone);
 pruneSharpPrebuilds(standalone);
+prunePackageDevTrees(standalone);
+prunePackageDocumentationFiles(standalone);
 
 logSize(standalone);

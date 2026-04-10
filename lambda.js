@@ -14,7 +14,13 @@ const server = requireStandalone('restana')();
 const next = requireStandalone('next');
 const files = requireStandalone('serve-static');
 
-const app = next({ dev: false, dir: standaloneDir });
+// distDir must match next.config.js — Next won't always load next.config.js from
+// standaloneDir reliably, so we pass it explicitly to avoid the default '.next' fallback.
+const app = next({
+  dev: false,
+  dir: standaloneDir,
+  conf: { distDir: 'build/_next' },
+});
 const nextRequestHandler = app.getRequestHandler();
 
 server.use(files(path.join(standaloneDir, 'public')));

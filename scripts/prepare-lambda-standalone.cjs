@@ -287,6 +287,12 @@ if (!fs.existsSync(path.join(standaloneModules, 'restana', 'package.json'))) {
   process.exit(1);
 }
 
+// Seal BEFORE pruning so that symlink targets (e.g. platform-specific swc/esbuild/sharp
+// binaries from CI node_modules) are replaced with real files and then pruned away.
+// Sealing after pruning caused CI to balloon ~127 MB because those materialized dirs
+// were never cleaned up.
+sealAllSymlinks(standalone);
+
 console.log(
   '[prepare-lambda-standalone] pruning maps + non-linux optional binaries…',
 );
@@ -296,11 +302,6 @@ pruneEsbuildVariants(standalone);
 pruneSharpPrebuilds(standalone);
 prunePackageDevTrees(standalone);
 prunePackageDocumentationFiles(standalone);
-
-// Seal after pruning: any remaining symlinks (internal or external) would be followed
-// by fast-glob when serverless builds the zip, causing the unzipped size to exceed the
-// Lambda limit even though `du` looks fine locally.
-sealAllSymlinks(standalone);
 
 logSize(standalone);
 logPayloadBytes(standalone);

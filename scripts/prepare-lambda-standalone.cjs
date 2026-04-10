@@ -1,6 +1,6 @@
 /**
  * After `next build` (output: 'standalone'):
- * 1) Install restana / serverless-http / serve-static into the traced bundle.
+ * 1) Install serverless-http into the traced bundle.
  * 2) Prune paths that inflate the zip but are not needed on AWS Lambda linux x64.
  *
  * Lambda hard limit: unzipped deployment package < 262144000 bytes (~250 MB).
@@ -264,9 +264,10 @@ if (!fs.existsSync(standalone)) {
   process.exit(1);
 }
 
-const deps = ['restana@4.9.9', 'serverless-http@4.0.0', 'serve-static@1.16.3'];
+// Only serverless-http is needed at runtime; restana and serve-static are no longer used
+// (Next.js's own request handler serves public/ files and /_next/static/ directly).
 execSync(
-  `npm install ${deps.join(' ')} --omit=dev --no-package-lock --ignore-scripts`,
+  'npm install serverless-http@4.0.0 --omit=dev --no-package-lock --ignore-scripts',
   {
     cwd: standalone,
     stdio: 'inherit',
@@ -291,13 +292,15 @@ function copyPkgIfMissing(name) {
   );
 }
 
-for (const name of ['restana', 'serverless-http', 'serve-static']) {
-  copyPkgIfMissing(name);
-}
+copyPkgIfMissing('serverless-http');
 
-if (!fs.existsSync(path.join(standaloneModules, 'restana', 'package.json'))) {
+if (
+  !fs.existsSync(
+    path.join(standaloneModules, 'serverless-http', 'package.json'),
+  )
+) {
   console.error(
-    '[prepare-lambda-standalone] restana still missing after install + copy',
+    '[prepare-lambda-standalone] serverless-http missing after install + copy',
   );
   process.exit(1);
 }

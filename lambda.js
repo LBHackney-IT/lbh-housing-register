@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const { createRequire } = require('module');
 
-// Next standalone output (see next.config.js: output: 'standalone', distDir: 'build/_next')
+// Next standalone output (next.config.js: output: 'standalone', distDir: 'build/_next')
 const standaloneDir = path.join(__dirname, 'build', '_next', 'standalone');
 const requireStandalone = createRequire(
   path.join(standaloneDir, 'package.json'),
@@ -11,12 +11,9 @@ const requireStandalone = createRequire(
 
 process.env.NODE_ENV = 'production';
 
-// The generated standalone/server.js embeds the full compiled nextConfig and sets
-// process.env.__NEXT_PRIVATE_STANDALONE_CONFIG before booting.  All Next internals —
-// including the router-server worker that calls setupFsCheck / filesystem.js — read
-// their config from this env var.  Without it, loadConfig falls back to loading
-// next.config.js from disk, which may fail silently in the standalone environment,
-// and distDir defaults to '.next' (causing the "production build not found" error).
+// Mirror what standalone/server.js does: set __NEXT_PRIVATE_STANDALONE_CONFIG so that
+// all Next internals (including the router-server worker / filesystem.js setupFsCheck)
+// load the correct distDir and config rather than falling back to the '.next' default.
 (function setStandaloneConfig() {
   const serverJs = fs.readFileSync(
     path.join(standaloneDir, 'server.js'),
@@ -30,8 +27,7 @@ process.env.NODE_ENV = 'production';
     process.env.__NEXT_PRIVATE_STANDALONE_CONFIG = serverJs.slice(start, end);
   } else {
     console.error(
-      '[lambda] WARNING: could not extract nextConfig from standalone/server.js — ' +
-        'server may fail to locate the production build',
+      '[lambda] WARNING: could not extract nextConfig from server.js — server may fail to locate the build',
     );
   }
 })();
@@ -39,25 +35,21 @@ process.env.NODE_ENV = 'production';
 process.chdir(standaloneDir);
 
 const next = requireStandalone('next');
-const restana = requireStandalone('restana');
-const serveStatic = requireStandalone('serve-static');
-const serverless = requireStandalone('serverless-http');
+const serverlessHttp = requireStandalone('serverless-http');
 
+// Pass requests directly from serverless-http → Next.js request handler.
+// Avoid adding an extra framework (restana) between them: the intermediate response
+// wrapper loses Content-Type headers set by Next's static file serving, causing
+// every /_next/static/* asset to be served as text/plain.
 const app = next({ dev: false, dir: standaloneDir });
-const nextRequestHandler = app.getRequestHandler();
 
-const server = restana();
-server.use(serveStatic(path.join(standaloneDir, 'public')));
-server.all('*', (req, res) => nextRequestHandler(req, res));
-
-let prepared = false;
 let handler;
 
 module.exports.handler = async (event, context) => {
-  if (!prepared) {
+  if (!handler) {
     await app.prepare();
-    handler = serverless(server);
-    prepared = true;
+    const requestHandler = app.getRequestHandler();
+    handler = serverlessHttp((req, res) => requestHandler(req, res));
   }
   return handler(event, context);
 };

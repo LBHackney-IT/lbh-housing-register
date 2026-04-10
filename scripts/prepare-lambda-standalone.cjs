@@ -9,7 +9,8 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const standalone = path.join(__dirname, '..', 'build', '_next', 'standalone');
+const repoRoot = path.join(__dirname, '..');
+const standalone = path.join(repoRoot, 'build', '_next', 'standalone');
 
 function rmRecursive(p) {
   if (fs.existsSync(p)) fs.rmSync(p, { recursive: true, force: true });
@@ -146,6 +147,35 @@ function logSize(standaloneRoot) {
   }
 }
 
+/** Sum file bytes (approximate Serverless zip unzipped payload for patterns we ship). */
+function logPayloadBytes(standaloneRoot) {
+  let total = 0;
+  walkFiles(standaloneRoot, (f) => {
+    try {
+      total += fs.statSync(f).size;
+    } catch {
+      /* ignore */
+    }
+  });
+  const lambdaJs = path.join(repoRoot, 'lambda.js');
+  if (fs.existsSync(lambdaJs)) {
+    try {
+      total += fs.statSync(lambdaJs).size;
+    } catch {
+      /* ignore */
+    }
+  }
+  const limit = 262144000;
+  console.log(
+    `[prepare-lambda-standalone] bytes (standalone + lambda.js) ~${total} (Lambda unzipped limit ${limit})`,
+  );
+  if (total > limit) {
+    console.error(
+      '[prepare-lambda-standalone] WARNING: raw file sum exceeds Lambda limit — deploy may still fail (zip differs slightly)',
+    );
+  }
+}
+
 if (!fs.existsSync(standalone)) {
   console.error(
     'Expected',
@@ -165,7 +195,6 @@ execSync(
   },
 );
 
-const repoRoot = path.join(__dirname, '..');
 const rootModules = path.join(repoRoot, 'node_modules');
 const standaloneModules = path.join(standalone, 'node_modules');
 
@@ -180,15 +209,68 @@ function copyPkgIfMissing(name) {
     process.exit(1);
   }
   fs.mkdirSync(standaloneModules, { recursive: true });
-  fs.cpSync(src, dest, { recursive: true });
+  // Copy real files — do not leave symlinks into repo root (zip would follow them and balloon past 250MB).
+  fs.cpSync(src, dest, { recursive: true, dereference: true });
   console.log(
     `[prepare-lambda-standalone] copied ${name} from repo node_modules (standalone install did not place it)`,
   );
 }
 
+/**
+ * Next/npm may leave symlinks under standalone → ../../node_modules/... . Archivers often dereference
+ * those and pack the *entire* repo node_modules, far over Lambda's unzipped limit. Replace with copies.
+ */
+function materializeExternalSymlinks(standaloneRoot) {
+  const stand = fs.realpathSync(standaloneRoot);
+  let fixed = 0;
+  function walk(p) {
+    let entries;
+    try {
+      entries = fs.readdirSync(p, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const ent of entries) {
+      const full = path.join(p, ent.name);
+      if (ent.isSymbolicLink()) {
+        let real;
+        try {
+          real = fs.realpathSync(full);
+        } catch {
+          continue;
+        }
+        const internal = real === stand || real.startsWith(stand + path.sep);
+        if (!internal) {
+          try {
+            fs.unlinkSync(full);
+            fs.cpSync(real, full, { recursive: true, dereference: true });
+            fixed += 1;
+          } catch (e) {
+            console.warn(
+              '[prepare-lambda-standalone] could not materialize symlink',
+              full,
+              e.message,
+            );
+          }
+        }
+      } else if (ent.isDirectory()) {
+        walk(full);
+      }
+    }
+  }
+  walk(stand);
+  if (fixed > 0) {
+    console.log(
+      `[prepare-lambda-standalone] materialized ${fixed} symlink(s) pointing outside standalone (prevents huge deploy zip on Linux CI)`,
+    );
+  }
+}
+
 for (const name of ['restana', 'serverless-http', 'serve-static']) {
   copyPkgIfMissing(name);
 }
+
+materializeExternalSymlinks(standalone);
 
 if (!fs.existsSync(path.join(standaloneModules, 'restana', 'package.json'))) {
   console.error(
@@ -208,3 +290,4 @@ prunePackageDevTrees(standalone);
 prunePackageDocumentationFiles(standalone);
 
 logSize(standalone);
+logPayloadBytes(standalone);

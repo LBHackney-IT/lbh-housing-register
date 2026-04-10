@@ -12,9 +12,9 @@ executors:
     docker:
       - image: cimg/node:24.14-browsers
     # Avoid broken DISPLAY=:99 from cimg before Xvfb is up (cypress verify vs cypress run). Cypress uses :100.
-    # environment:
-    #   DISPLAY: ''
-    #   XVFB_TIMEOUT: 60
+    environment:
+      DISPLAY: ''
+      XVFB_TIMEOUT: 60
 
 references:
   # repo-relative paths

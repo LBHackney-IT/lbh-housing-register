@@ -55,13 +55,11 @@ module.exports.handler = async (event, context) => {
   if (!handler) {
     await app.prepare();
     const requestHandler = app.getRequestHandler();
-    // binary: true — all response bodies are base64-encoded in the Lambda JSON envelope
-    // and API Gateway decodes them before forwarding to CloudFront/browser.  Without this,
-    // any binary response body (gzip, images, fonts) is corrupted by JSON.stringify when
-    // serverless-http builds the Lambda response object (NS_ERROR_CORRUPTED_CONTENT).
-    handler = serverlessHttp((req, res) => requestHandler(req, res), {
-      binary: true,
-    });
+    // No binary:true — REST API (v1) only base64-decodes responses whose Content-Type
+    // matches a configured binary media type in API Gateway, which is not set here.
+    // With compress:false (set above in __NEXT_PRIVATE_STANDALONE_CONFIG) all responses
+    // are plain text so serverless-http can pass them as strings without corruption.
+    handler = serverlessHttp((req, res) => requestHandler(req, res));
   }
   return handler(event, context);
 };

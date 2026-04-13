@@ -287,12 +287,12 @@ jobs:
       # cypress/install checks out the code, installs dependencies (including NPM), etc. It uses optimal caching strategies for NPM with npm ci.
       - cypress/install:
           install-browsers: true
-      # Production bundle + node_modules from the build job (required for `next start`).
+      # Production bundle from the build job (required for standalone server.js).
       - *attach_workspace
       - run:
           name: Start Next.js for E2E
           background: true
-          command: npm run start
+          command: npm run start:standalone
       - run:
           name: Wait for Next.js on port 3000
           command: |

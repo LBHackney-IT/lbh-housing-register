@@ -10,6 +10,7 @@
     "postbuild": "node scripts/prepare-lambda-standalone.cjs",
     "dev": "next dev --webpack --hostname=localdev.hackney.gov.uk",
     "start": "next start",
+    "start:standalone": "node build/_next/standalone/server.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prettier:test": "npx prettier -c .",

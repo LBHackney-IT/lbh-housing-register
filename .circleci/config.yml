@@ -278,6 +278,9 @@ jobs:
     environment:
       E2E_HTTP_MOCKS: 'true'
       PORT: '3000'
+      # Force standalone server.js to bind on all interfaces so 127.0.0.1 is reachable.
+      # CircleCI sets HOSTNAME to the container name which would restrict binding otherwise.
+      HOSTNAME: '0.0.0.0'
       # 127.0.0.1 avoids IPv6 localhost (::1) vs nock/axios scope mismatches in Docker.
       HOUSING_REGISTER_API: 'http://127.0.0.1:3910/api/v1/'
       HOUSING_REGISTER_KEY: 'testing'

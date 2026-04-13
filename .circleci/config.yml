@@ -11,13 +11,12 @@ executors:
   node-executor:
     docker:
       - image: cimg/node:24.14-browsers
-    # Avoid broken DISPLAY=:99 from cimg before Xvfb is up (cypress verify vs cypress run). Cypress uses :100.
     environment:
+      # Avoid broken DISPLAY=:99 from cimg. Cypress can fail on verify step (after tests pass) intermittenlly without it.
       DISPLAY: ''
       XVFB_TIMEOUT: 60
 
 references:
-  # repo-relative paths
   workspace_root: &workspace_root '.'
   attach_workspace: &attach_workspace
     attach_workspace:
@@ -107,7 +106,6 @@ commands:
           root: *home_dir
           paths:
             - .aws
-
   deploy-lambda:
     description: 'Deploys lambda via Serverless'
     parameters:
@@ -127,13 +125,8 @@ commands:
       - checkout
       - *attach_workspace
       - aws-cli/install
-      # - run:
-      #     name: Install AWS CLI
-      #     command: |
-      #       apt-get update
-      #       apt-get install -y awscli
       - run:
-          name: Fetch SSM parameters from central account
+          name: Fetch SSM parameters from central account for serverless deployment
           command: |
             CENTRAL_ACCOUNT=${<<parameters.aws-central-parameter-account>>}
             export APP_URL=$(aws ssm get-parameter \
@@ -246,7 +239,6 @@ jobs:
           root: *workspace_root
           paths:
             - coverage
-
   sonar-scan:
     executor: node-executor
     steps:
@@ -254,15 +246,8 @@ jobs:
           method: full
       - *attach_workspace
       - sonarcloud/scan
-
   build:
     executor: node-executor
-    environment:
-      # Same mock API bases as run-cypress-e2e (127.0.0.1) so CI matches Nock / Cypress.expose.
-      # HOUSING_REGISTER_API: 'http://127.0.0.1:3910/api/v1/'
-      # HOUSING_REGISTER_KEY: 'testing'
-      # ACTIVITY_HISTORY_API: 'http://127.0.0.1:3600/api/v1'
-      # LOOKUP_API_URL: 'http://127.0.0.1:3920'
     steps:
       - checkout
       - node/install-packages
@@ -274,7 +259,6 @@ jobs:
           paths:
             - build
             - node_modules
-
   run-cypress-e2e:
     executor: node-executor
     resource_class: medium+
@@ -308,13 +292,6 @@ jobs:
       - run:
           name: Start Next.js for E2E
           background: true
-          environment:
-            E2E_HTTP_MOCKS: 'true'
-            PORT: '3000'
-            HOUSING_REGISTER_API: 'http://127.0.0.1:3910/api/v1/'
-            HOUSING_REGISTER_KEY: 'testing'
-            ACTIVITY_HISTORY_API: 'http://127.0.0.1:3600/api/v1'
-            LOOKUP_API_URL: 'http://127.0.0.1:3920'
           command: npm run start
       - run:
           name: Wait for Next.js on port 3000
@@ -341,90 +318,12 @@ jobs:
       - run:
           name: Fix up JUnit output
           command: node scripts/fix-junit-xml.js
-
       # Store the test results so CircleCI can provide insights and do parallel test splitting
       - store_test_results:
           path: cypress/results
-
       # We also store the test results as an artefact so we can download/access them when we need
       - store_artifacts:
           path: cypress/results
-
-  # deploy-development:
-  #   executor: aws-cli/default
-  #   steps:
-  #     - checkout
-  #     - attach_workspace:
-  #         at: *workspace_root
-  #     - aws_assume_role/assume_role:
-  #         account: $AWS_ACCOUNT_DEVELOPMENT
-  #         profile_name: default
-  #         role: 'LBH_Circle_CI_Deployment_Role'
-  #     - run:
-  #         name: deploy
-  #         command: |
-  #           # aws_assume_role/assume_role stores credentials in ~/.aws/credentials, however
-  #           # environment variables take precence. These are set to do the initial config, so
-  #           # the role isn't actually assumed. We need to remove the environment variables in
-  #           # order for the aws_assume_role/assume_role output to be picked up.
-  #           #
-  #           # I think the lbh-hackit orb setup here could be replaced with direct use of the aws-cli/setup and
-  #           # aws-cli/role_arn_setup, which would remove the need for this cleanup.
-  #           unset AWS_ACCESS_KEY_ID
-  #           unset AWS_SECRET_ACCESS_KEY
-
-  #           npx --yes serverless@^4 deploy --stage development
-
-  # deploy-staging:
-  #   executor: aws-cli/default
-  #   steps:
-  #     - checkout
-  #     - attach_workspace:
-  #         at: *workspace_root
-  #     - aws_assume_role/assume_role:
-  #         account: $AWS_ACCOUNT_STAGING
-  #         profile_name: default
-  #         role: 'LBH_Circle_CI_Deployment_Role'
-  #     - run:
-  #         name: deploy
-  #         command: |
-  #           # aws_assume_role/assume_role stores credentials in ~/.aws/credentials, however
-  #           # environment variables take precence. These are set to do the initial config, so
-  #           # the role isn't actually assumed. We need to remove the environment variables in
-  #           # order for the aws_assume_role/assume_role output to be picked up.
-  #           #
-  #           # I think the lbh-hackit orb setup here could be replaced with direct use of the aws-cli/setup and
-  #           # aws-cli/role_arn_setup, which would remove the need for this cleanup.
-  #           unset AWS_ACCESS_KEY_ID
-  #           unset AWS_SECRET_ACCESS_KEY
-
-  #           npx --yes serverless@^4 deploy --stage staging
-
-  # deploy-production:
-  #   executor: aws-cli/default
-  #   steps:
-  #     - checkout
-  #     - attach_workspace:
-  #         at: *workspace_root
-  #     - aws_assume_role/assume_role:
-  #         account: $AWS_ACCOUNT_PRODUCTION
-  #         profile_name: default
-  #         role: 'LBH_Circle_CI_Deployment_Role'
-  #     - run:
-  #         name: deploy
-  #         command: |
-  #           # aws_assume_role/assume_role stores credentials in ~/.aws/credentials, however
-  #           # environment variables take precence. These are set to do the initial config, so
-  #           # the role isn't actually assumed. We need to remove the environment variables in
-  #           # order for the aws_assume_role/assume_role output to be picked up.
-  #           #
-  #           # I think the lbh-hackit orb setup here could be replaced with direct use of the aws-cli/setup and
-  #           # aws-cli/role_arn_setup, which would remove the need for this cleanup.
-  #           unset AWS_ACCESS_KEY_ID
-  #           unset AWS_SECRET_ACCESS_KEY
-
-  #           npx --yes serverless@^4 deploy --stage production
-
   assume-role-development:
     executor: node-executor
     steps:
@@ -472,7 +371,6 @@ workflows:
           filters:
             tags:
               only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
-
       - run-cypress-e2e:
           filters:
             tags:
@@ -487,7 +385,6 @@ workflows:
             exclude: *exclude_combinations
           requires:
             - build
-
       - sonar-scan:
           context: SonarCloud
           requires:
@@ -495,7 +392,6 @@ workflows:
           filters:
             tags:
               only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
-
       - assume-role-development:
           context: api-assume-role-housing-development-context
           # requires:
@@ -507,7 +403,6 @@ workflows:
             branches:
               # only: development
               only: feature/upgrade-next
-
       - deploy-to-development:
           context:
             - central-parameter-store-context
@@ -521,7 +416,6 @@ workflows:
               ignore: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
               only: feature/upgrade-next
-
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:
@@ -532,7 +426,6 @@ workflows:
               only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
               ignore: /.*/
-
       - deploy-to-staging:
           context:
             # - api-assume-role-staging-context
@@ -547,7 +440,6 @@ workflows:
               only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
               ignore: /.*/
-
       - permit-deploy-production:
           type: approval
           requires:
@@ -557,7 +449,6 @@ workflows:
               only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
               ignore: /.*/
-
       - assume-role-production:
           context: api-assume-role-housing-production-context
           requires:
@@ -567,7 +458,6 @@ workflows:
               only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
               ignore: /.*/
-
       - deploy-to-production:
           context:
             # - api-assume-role-production-context

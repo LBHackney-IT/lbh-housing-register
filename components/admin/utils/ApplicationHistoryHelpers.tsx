@@ -296,8 +296,8 @@ export function renderBody(item: ActivityHistoryResponse) {
                 lhs = JSON.stringify(lhs, undefined, 2);
                 rhs = JSON.stringify(rhs, undefined, 2);
 
-                lhs = lhs ? lhs.replaceAll('\\"', '') : '';
-                rhs = rhs ? rhs.replaceAll('\\"', '') : '';
+                lhs = lhs ? lhs.replaceAll(String.raw`\"`, '') : '';
+                rhs = rhs ? rhs.replaceAll(String.raw`\"`, '') : '';
               }
               if (path !== 'person.id') {
                 return (

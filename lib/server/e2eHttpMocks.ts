@@ -15,7 +15,7 @@ export type E2eNockRegisterPayload = {
 function normalizeHostname(hostname: string): string {
   const trimmed = hostname.trim().replaceAll(/^['"]|['"]$/g, '');
   if (!trimmed) {
-    throw new Error('E2E nock: hostname is required');
+    throw new TypeError('E2E nock: hostname is required');
   }
   return trimmed;
 }
@@ -48,7 +48,7 @@ export function registerE2eNockMock(input: E2eNockRegisterPayload): void {
   if (
     typeof (scope as unknown as Record<string, unknown>)[verb] !== 'function'
   ) {
-    throw new Error(`E2E nock: unsupported method "${method}"`);
+    throw new TypeError(`E2E nock: unsupported method "${method}"`);
   }
 
   const interceptor = (

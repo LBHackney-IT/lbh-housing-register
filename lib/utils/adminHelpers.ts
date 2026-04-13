@@ -77,7 +77,7 @@ export const allFormSections = (keysToIgnore: string[]) => {
 
   const sectionData = sections.map((section) => {
     const stepsInSection = section.steps.flat();
-    const fieldsInSection = stepsInSection.map((step) => step.fields).flat();
+    const fieldsInSection = stepsInSection.flatMap((step) => step.fields);
 
     return {
       sectionHeading: section.heading || '',
@@ -92,7 +92,7 @@ export const allFormSections = (keysToIgnore: string[]) => {
 export const getSectionData = (sectionId: FormID) => {
   const section = getFormData(sectionId);
   const stepsInSection = section.steps.flat();
-  const fieldsInSection = stepsInSection.map((step) => step.fields).flat();
+  const fieldsInSection = stepsInSection.flatMap((step) => step.fields);
 
   return {
     sectionHeading: section.heading || '',

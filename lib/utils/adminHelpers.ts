@@ -124,7 +124,7 @@ export const generateEditInitialValues = (
           );
 
           const answer = current.answer
-            ? current.answer.replaceAll(/[[\]"]+/, '')
+            ? current.answer.replaceAll(/[[\]"]+/g, '')
             : '';
 
           return {

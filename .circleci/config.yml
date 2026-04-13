@@ -278,9 +278,6 @@ jobs:
     environment:
       E2E_HTTP_MOCKS: 'true'
       PORT: '3000'
-      # Force standalone server.js to bind on all interfaces so 127.0.0.1 is reachable.
-      # CircleCI sets HOSTNAME to the container name which would restrict binding otherwise.
-      HOSTNAME: '0.0.0.0'
       # 127.0.0.1 avoids IPv6 localhost (::1) vs nock/axios scope mismatches in Docker.
       HOUSING_REGISTER_API: 'http://127.0.0.1:3910/api/v1/'
       HOUSING_REGISTER_KEY: 'testing'
@@ -290,12 +287,12 @@ jobs:
       # cypress/install checks out the code, installs dependencies (including NPM), etc. It uses optimal caching strategies for NPM with npm ci.
       - cypress/install:
           install-browsers: true
-      # Production bundle from the build job (required for standalone server.js).
+      # Production bundle + node_modules from the build job (required for `next start`).
       - *attach_workspace
       - run:
           name: Start Next.js for E2E
           background: true
-          command: npm run start:standalone
+          command: npm run start
       - run:
           name: Wait for Next.js on port 3000
           command: |

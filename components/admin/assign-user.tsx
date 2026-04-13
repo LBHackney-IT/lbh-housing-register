@@ -92,7 +92,7 @@ export default function AssignUser({
       {showControls && (
         <>
           <ErrorMessage
-            message={!isValidEmail ? 'Please enter a valid email address' : ''}
+            message={isValidEmail ? '' : 'Please enter a valid email address'}
           />
           <input
             className="govuk-input lbh-input lbh-!-margin-top-1"

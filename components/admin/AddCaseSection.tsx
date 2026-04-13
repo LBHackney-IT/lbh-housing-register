@@ -98,15 +98,15 @@ export default function AddCaseSection({ section }: PageProps): JSX.Element {
         field.options.unshift({ label: 'Select an option', value: '' });
       }
 
-      const withConditional = field.options.filter(
+      const withConditional = field.options.find(
         (option: FormFieldOption & { conditionalFieldInput?: unknown }) =>
-          Object.prototype.hasOwnProperty.call(option, 'conditionalFieldInput'),
+          Object.hasOwn(option, 'conditionalFieldInput'),
       );
       const {
         as: conditionalInputType,
         fieldName: conditionalFieldName,
         label: conditionalLabel,
-      } = withConditional[0].conditionalFieldInput;
+      } = withConditional.conditionalFieldInput;
 
       const uniqueConditionalFieldName = generateUniqueFieldName(
         section.sectionId,

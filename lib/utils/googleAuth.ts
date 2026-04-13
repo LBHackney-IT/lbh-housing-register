@@ -58,9 +58,9 @@ export function getSession(
 
     const secret = process.env.HACKNEY_JWT_SECRET as string;
     const user = (
-      process.env.SKIP_VERIFY_TOKEN !== 'true'
-        ? jsonwebtoken.verify(parsedToken, secret)
-        : jsonwebtoken.decode(parsedToken)
+      process.env.SKIP_VERIFY_TOKEN === 'true'
+        ? jsonwebtoken.decode(parsedToken)
+        : jsonwebtoken.verify(parsedToken, secret)
     ) as HackneyGoogleUser | undefined;
 
     if (user) {
@@ -119,19 +119,13 @@ export const canViewSensitiveApplication = (
 export const hasReadOnlyPermissionOnly = (
   user: HackneyGoogleUserWithPermissions,
 ): boolean => {
-  if (!user) {
-    return false;
-  }
-  // is not part of the read only group
-  if (
+  if (!user) return false;
+  return (
     user.hasReadOnlyPermissions &&
     !user.hasAdminPermissions &&
     !user.hasManagerPermissions &&
     !user.hasOfficerPermissions
-  ) {
-    return true;
-  }
-  return false;
+  );
 };
 
 export const getRedirect = (

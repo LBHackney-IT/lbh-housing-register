@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Link from 'next/link';
-import type { ParsedUrlQuery } from 'querystring';
+import type { ParsedUrlQuery } from 'node:querystring';
 import { useRouter } from 'next/router';
 
 import { PaginatedSearchResultsResponse } from '../../domain/HousingApi';

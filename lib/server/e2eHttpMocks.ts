@@ -13,7 +13,7 @@ export type E2eNockRegisterPayload = {
 };
 
 function normalizeHostname(hostname: string): string {
-  const trimmed = hostname.trim().replace(/^['"]|['"]$/g, '');
+  const trimmed = hostname.trim().replaceAll(/^['"]|['"]$/g, '');
   if (!trimmed) {
     throw new Error('E2E nock: hostname is required');
   }

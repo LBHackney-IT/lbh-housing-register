@@ -14,5 +14,5 @@ export function scrollToError(selector?: string) {
 }
 
 export function scrollToTop() {
-  window.scroll({ top: 0, behavior: 'smooth' });
+  globalThis.window?.scroll({ top: 0, behavior: 'smooth' });
 }

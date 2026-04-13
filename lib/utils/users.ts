@@ -13,9 +13,9 @@ export function getUser(req: any) {
 
     const secret = process.env.HACKNEY_JWT_SECRET as string;
     const user = (
-      process.env.SKIP_VERIFY_TOKEN !== 'true'
-        ? jsonwebtoken.verify(parsedToken, secret)
-        : jsonwebtoken.decode(parsedToken)
+      process.env.SKIP_VERIFY_TOKEN === 'true'
+        ? jsonwebtoken.decode(parsedToken)
+        : jsonwebtoken.verify(parsedToken, secret)
     ) as HackneyResident | undefined;
 
     return user;

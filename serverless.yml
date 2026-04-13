@@ -28,6 +28,8 @@ functions:
         # at the distDir root and must be packaged separately so /_next/static/** resolves.
         - build/_next/static/**
         - '!build/_next/static/**/*.map'
+        # Public directory (favicon, images) — served directly by lambda.js.
+        - public/**
     events:
       - http: ANY /
       - http: ANY /{proxy+}

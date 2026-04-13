@@ -1,6 +1,5 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
-import { combineReducers } from '@reduxjs/toolkit';
 import { Application } from '../../domain/HousingApi';
 import application, { autoSaveMiddleware } from './application';
 import { hrApiCallsStatus, HRApiCallsStatusState } from './apiCallsStatus';

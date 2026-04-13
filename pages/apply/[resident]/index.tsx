@@ -148,7 +148,7 @@ const ResidentIndex = (): JSX.Element => {
     return <Custom404 />;
   }
 
-  const baseHref = !isSaving ? `/apply/${currentResident.person?.id}` : '';
+  const baseHref = isSaving ? '' : `/apply/${currentResident.person?.id}`;
 
   const breadcrumbs = !isSaving
     ? [

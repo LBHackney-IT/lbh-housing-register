@@ -82,9 +82,14 @@ export const completeApplication = createAsyncThunk<
 export const createEvidenceRequest = createAsyncThunk(
   'application/evidence',
   async (application: Application, { rejectWithValue }) => {
+    if (!application.mainApplicant) {
+      return rejectWithValue(
+        'Unable to create evidence request: no main applicant',
+      );
+    }
     const request: CreateEvidenceRequest = {
       documentTypes: getRequiredDocumentsForApplication(
-        application.mainApplicant!,
+        application.mainApplicant,
       ),
     };
     const res = await fetch(`/api/applications/${application.id}/evidence`, {

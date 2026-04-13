@@ -118,13 +118,13 @@ export const generateEditInitialValues = (
           acc: { [key: string]: string },
           current: { [key: string]: string },
         ) => {
-          const questionFieldName = kebabToCamelCase(current.id).replace(
+          const questionFieldName = kebabToCamelCase(current.id).replaceAll(
             '/',
             '_',
           );
 
           const answer = current.answer
-            ? current.answer.replace(/[[\]"]+/g, '')
+            ? current.answer.replaceAll(/[[\]"]+/, '')
             : '';
 
           return {
@@ -186,7 +186,7 @@ export const generateQuestionArray = (
   const questionArray = [];
   for (const [key, value] of Object.entries(values)) {
     // Return question Ids to correct syntax for API
-    const questionId = camelCaseToKebab(key).replace('_', '/');
+    const questionId = camelCaseToKebab(key).replaceAll('_', '/');
 
     // Don't include personal details
     if (questionId.startsWith('personal-details/')) continue;

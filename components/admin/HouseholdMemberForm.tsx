@@ -89,6 +89,13 @@ export default function HouseholdMemberForm({
           >
             {({ touched, isSubmitting, errors, isValid }) => {
               const isTouched = Object.keys(touched).length !== 0;
+              const formatErrorTitle = (
+                errorTitle: string | string[] | object | undefined,
+              ): string => {
+                if (typeof errorTitle === 'string') return errorTitle;
+                if (Array.isArray(errorTitle)) return errorTitle.join(', ');
+                return 'Error';
+              };
               return (
                 <>
                   {!isValid && isTouched && isSubmitted ? (
@@ -98,11 +105,7 @@ export default function HouseholdMemberForm({
                           ([inputName, errorTitle]) => (
                             <li key={inputName}>
                               <a href={`#${inputName}`}>
-                                {typeof errorTitle === 'string'
-                                  ? errorTitle
-                                  : Array.isArray(errorTitle)
-                                    ? errorTitle.join(', ')
-                                    : 'Error'}
+                                {formatErrorTitle(errorTitle)}
                               </a>
                             </li>
                           ),

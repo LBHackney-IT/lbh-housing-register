@@ -1,8 +1,8 @@
 interface ShowAddressProps {
-  currentAddress: string;
-  duration: [
-    { years: number; months: number },
-    { years: number; months: number },
+  readonly currentAddress: string;
+  readonly duration: readonly [
+    { readonly years: number; readonly months: number },
+    { readonly years: number; readonly months: number },
   ];
 }
 

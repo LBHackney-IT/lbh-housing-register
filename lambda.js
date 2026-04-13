@@ -86,12 +86,9 @@ const BINARY_EXTS = new Set([
 ]);
 
 const staticDir = path.join(__dirname, 'build', '_next', 'static');
+const publicDir = path.join(__dirname, 'public');
 
-function serveNextStatic(reqPath) {
-  if (!reqPath || !reqPath.startsWith('/_next/static/')) return null;
-  const rel = reqPath.slice('/_next/static/'.length);
-  if (rel.includes('..')) return null; // path traversal guard
-  const file = path.join(staticDir, rel);
+function serveFile(file) {
   let content;
   try {
     content = fs.readFileSync(file);
@@ -113,6 +110,19 @@ function serveNextStatic(reqPath) {
   };
 }
 
+function serveNextStatic(reqPath) {
+  if (!reqPath || !reqPath.startsWith('/_next/static/')) return null;
+  const rel = reqPath.slice('/_next/static/'.length);
+  if (rel.includes('..')) return null; // path traversal guard
+  return serveFile(path.join(staticDir, rel));
+}
+
+function servePublic(reqPath) {
+  if (!reqPath || reqPath.startsWith('/_next/')) return null;
+  if (reqPath.includes('..')) return null; // path traversal guard
+  return serveFile(path.join(publicDir, reqPath));
+}
+
 // ─── dynamic handler ──────────────────────────────────────────────────────────
 
 const next = requireStandalone('next');
@@ -122,7 +132,7 @@ const app = next({ dev: false, dir: standaloneDir });
 let handler;
 
 module.exports.handler = async (event, context) => {
-  const staticRes = serveNextStatic(event.path);
+  const staticRes = serveNextStatic(event.path) || servePublic(event.path);
   if (staticRes) return staticRes;
 
   if (!handler) {

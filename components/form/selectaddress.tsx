@@ -1,15 +1,15 @@
 import type { ChangeEventHandler } from 'react';
 
 interface AddressOption {
-  line1: string;
-  town: string;
-  postcode: string;
-  UPRN: string;
+  readonly line1: string;
+  readonly town: string;
+  readonly postcode: string;
+  readonly UPRN: string;
 }
 
 interface AddressSelectorProps {
-  addresses: AddressOption[];
-  addressSelectorHandler: ChangeEventHandler<HTMLSelectElement>;
+  readonly addresses: readonly AddressOption[];
+  readonly addressSelectorHandler: ChangeEventHandler<HTMLSelectElement>;
 }
 
 export default function AddressSelector({

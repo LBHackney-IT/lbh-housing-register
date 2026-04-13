@@ -9,7 +9,7 @@ const CookieBanner: React.FC = (): JSX.Element => {
     let cancelled = false;
 
     const loadCookieBanner = async () => {
-      if (typeof window === 'undefined') return;
+      if (typeof globalThis.window === 'undefined') return;
 
       const { CookieBanner: LbhCookieBanner } = await import('lbh-frontend');
       if (cancelled) return;

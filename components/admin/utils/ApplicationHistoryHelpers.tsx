@@ -242,16 +242,16 @@ export function renderHeading(item: ActivityHistoryResponse) {
 }
 
 export function renderBody(item: ActivityHistoryResponse) {
+  const rawActivityType = (item.newData as Record<string, unknown>)
+    ._activityType;
+  const activityType =
+    typeof rawActivityType === 'string' ? rawActivityType : '';
   const skipActivityType = [
     'Created',
     'SensitivityChangedByUser',
     'StatusChangedByUser',
     'SubmittedByResident',
-  ].includes(
-    capitalizeFirstLetter(
-      String((item.newData as Record<string, unknown>)._activityType ?? ''),
-    ),
-  );
+  ].includes(capitalizeFirstLetter(activityType));
 
   if (skipActivityType) return;
 
@@ -296,8 +296,8 @@ export function renderBody(item: ActivityHistoryResponse) {
                 lhs = JSON.stringify(lhs, undefined, 2);
                 rhs = JSON.stringify(rhs, undefined, 2);
 
-                lhs = lhs ? lhs.replace(/\\"/g, '') : '';
-                rhs = rhs ? rhs.replace(/\\"/g, '') : '';
+                lhs = lhs ? lhs.replaceAll(/\\"/g, '') : '';
+                rhs = rhs ? rhs.replaceAll(/\\"/g, '') : '';
               }
               if (path !== 'person.id') {
                 return (

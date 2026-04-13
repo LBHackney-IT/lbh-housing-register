@@ -155,17 +155,11 @@ export const generateEditInitialValues = (
 };
 
 export const generateInitialValues = (sections: SectionData[]) => {
-  const allFieldNames = sections
-    .map((section) =>
-      section.fields.map((field: FormField) => {
-        const updatedFieldName = generateUniqueFieldName(
-          section.sectionId,
-          field.name,
-        );
-        return updatedFieldName;
-      }),
-    )
-    .flat();
+  const allFieldNames = sections.flatMap((section) =>
+    section.fields.map((field: FormField) =>
+      generateUniqueFieldName(section.sectionId, field.name),
+    ),
+  );
 
   const initialValuesObject = allFieldNames.reduce(
     (acc: { [key: string]: string }, current) => ((acc[current] = ''), acc),

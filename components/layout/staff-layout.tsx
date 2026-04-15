@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 
 import { useUser } from '../../lib/contexts/user-context';
 import { hasPhaseBanner } from '../../lib/utils/phase-banner';
@@ -23,14 +23,12 @@ export default function StaffLayout({
 }: StaffLayoutProps): JSX.Element {
   const { user } = useUser();
   const router = useRouter();
-  const { id, person } = router.query as {
-    id: string;
-    person: string;
-  };
+  const id = router?.query.id as string | undefined;
+  const person = router?.query.person as string | undefined;
 
   const signOut = async () => {
     await fetch(`/api/admin/logout`);
-    router.reload();
+    router?.reload();
   };
 
   return (

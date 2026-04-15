@@ -59,7 +59,7 @@
     "lodash": "^4.17.21",
     "nested-object-diff": "^1.1.0",
     "next": "^16.2.3",
-    "next-redux-wrapper": "^8.1.0",
+    "next-redux-wrapper": "8.0.0",
     "notifications-node-client": "^8.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

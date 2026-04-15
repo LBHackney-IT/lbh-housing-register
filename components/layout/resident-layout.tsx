@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 
-import { useRouter } from 'next/compat/router';
+import { useRouter } from 'next/router';
 
 import { loadApplication } from '../../lib/store/application';
 import { exit } from '../../lib/store/auth';
@@ -58,7 +58,7 @@ export default function ResidentLayout({
   }, []);
 
   const onSignOut = async () => {
-    router?.push('/');
+    router.push('/');
     dispatch(exit());
   };
 
@@ -87,7 +87,7 @@ export default function ResidentLayout({
   };
 
   const handleStayLoggedIn = () => {
-    router?.reload();
+    router.reload(); // reset timer
   };
 
   useEffect(() => {

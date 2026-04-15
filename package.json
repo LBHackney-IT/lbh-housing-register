@@ -23,7 +23,7 @@
     "cypress:open": "E2E_HTTP_MOCKS=true cypress open --browser chrome",
     "cypress:open:local": "LOCAL_E2E=true cypress open --browser chrome",
     "e2e:run": "E2E_HTTP_MOCKS=true cypress run --e2e --browser electron",
-    "e2e:run:local": "LOCAL_E2E=true cypress run --e2e --browser electron --spec 'cypress/e2e/local/**/*.cy.ts'",
+    "e2e:run:local": "LOCAL_E2E=true cypress run --e2e --browser electron",
     "component:run": "cypress run --component --browser electron"
   },
   "lint-staged": {

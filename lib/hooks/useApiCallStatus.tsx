@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/compat/router';
+import { useRouter } from 'next/router';
 import { ApiCallStatus, ApiCallStatusCode } from '../store/apiCallsStatus';
 import type { ParsedUrlQueryInput } from 'node:querystring';
 
@@ -47,7 +47,7 @@ const useApiCallStatus = ({
       userActionCompleted &&
       pathToPush
     ) {
-      router?.push({
+      router.push({
         pathname: pathToPush,
         query,
       });

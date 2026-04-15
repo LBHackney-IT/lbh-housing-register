@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 
 import { HeadingOne } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
@@ -24,7 +24,7 @@ const ApplicationSignInPage = (): JSX.Element => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      router.push('/apply/overview');
+      router?.push('/apply/overview');
     }
   }, [isLoggedIn]);
 
@@ -35,7 +35,7 @@ const ApplicationSignInPage = (): JSX.Element => {
         .unwrap()
         .then(() => {
           setIsSaving(false);
-          router.push({
+          router?.push({
             pathname: '/apply/verify',
             query: { email: values.emailAddress },
           });

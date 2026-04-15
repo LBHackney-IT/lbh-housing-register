@@ -1,5 +1,5 @@
 import { Form, Formik, FormikHelpers } from 'formik';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 import React, { useState } from 'react';
 import * as Yup from 'yup';
 import ApplicantStep from '../../../components/application/ApplicantStep';
@@ -214,8 +214,8 @@ function Summary({
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter();
-  const { resident } = router.query as { resident: string };
-  const applicant = useAppSelector(selectApplicant(resident)) as Applicant;
+  const { resident } = (router?.query ?? {}) as { resident?: string };
+  const applicant = useAppSelector(selectApplicant(resident ?? '')) as Applicant;
   const dispatch = useAppDispatch();
 
   const application = useAppSelector((store) => store.application);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 
 import Announcement from '../../components/announcement';
 import { HeadingOne } from '../../components/content/headings';
@@ -24,30 +24,30 @@ const ApplicationVerifyPage = (): JSX.Element => {
   const [userError, setUserError] = useState<string | null>(null);
   const [codeSent, setCodeSent] = useState(false);
 
-  const email = router.query.email as string;
+  const email = router?.query.email as string;
 
   const application = useAppSelector((store) => store.application);
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!router.isReady) {
+    if (!router?.isReady) {
       return;
     }
 
     if (application.mainApplicant?.person) {
-      router.push('/apply/overview');
+      router?.push('/apply/overview');
       return;
     }
 
     if (application.id) {
-      router.push('/apply/start');
+      router?.push('/apply/start');
       return;
     }
 
     if (!email) {
-      router.push('/apply/sign-in');
+      router?.push('/apply/sign-in');
     }
-  }, [application, email, router, router.isReady]);
+  }, [application, email, router, router?.isReady]);
 
   const confirmSignUp = async (values: FormData) => {
     try {
@@ -80,7 +80,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
     setCodeSent(true);
   };
 
-  if (!router.isReady) {
+  if (!router?.isReady) {
     return (
       <Layout
         pageName="Verify your account"

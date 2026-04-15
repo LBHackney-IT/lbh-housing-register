@@ -13,7 +13,7 @@ import { selectApplicantsMemorised } from '../../lib/store/applicant';
 import { useAppSelector } from '../../lib/store/hooks';
 import { applicationSteps } from '../../lib/utils/resident';
 import withApplication from '../../lib/hoc/withApplication';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 import { useEffect, useState } from 'react';
 import { scrollToError } from 'lib/utils/scroll';
 import ErrorSummary from 'components/errors/error-summary';
@@ -28,7 +28,8 @@ const ApplicationPersonsOverview = (): JSX.Element => {
     },
   ];
 
-  const { query } = useRouter();
+  const router = useRouter();
+  const query = router?.query ?? {};
 
   useEffect(() => {
     if (query.error) {

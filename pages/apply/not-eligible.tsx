@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 import Layout from '../../components/layout/resident-layout';
 import { HeadingTwo, HeadingThree } from '../../components/content/headings';
 import Button from '../../components/button';
@@ -34,11 +34,11 @@ const NotEligible = (): JSX.Element => {
   );
 
   if (isEligible && application.status !== ApplicationStatus.DISQUALIFIED) {
-    router.push('/apply/overview');
+    router?.push('/apply/overview');
   }
 
   const signOut = () => {
-    router.push('/');
+    router?.push('/');
     dispatch(exit());
   };
 

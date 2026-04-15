@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 import { HeadingTwo } from '../../../components/content/headings';
 import DeleteLink from '../../../components/delete-link';
 import Layout from '../../../components/layout/resident-layout';
@@ -31,12 +31,11 @@ import {
   selectSaveApplicationStatus,
 } from 'lib/store/apiCallsStatus';
 import { useEffect, useState } from 'react';
+import type { ParsedUrlQuery } from 'node:querystring';
 import Loading from 'components/loading';
 
-function residentIdFromQuery(
-  query: ReturnType<typeof useRouter>['query'],
-): string {
-  const raw = query.resident;
+function residentIdFromQuery(query: ParsedUrlQuery | undefined): string {
+  const raw = query?.resident;
   if (typeof raw === 'string') return raw;
   if (Array.isArray(raw) && raw[0]) return raw[0];
   return '';
@@ -45,7 +44,7 @@ function residentIdFromQuery(
 const ResidentIndex = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const residentId = residentIdFromQuery(router.query);
+  const residentId = residentIdFromQuery(router?.query);
 
   const currentResident = useAppSelector(selectApplicant(residentId)) as
     | ApplicantWithPersonID
@@ -78,21 +77,21 @@ const ResidentIndex = (): JSX.Element => {
     application.mainApplicant?.person?.dateOfBirth,
   ]);
 
-  // useEffect to stop router.push firing multiple times (summary path inlined in effect)
+  // useEffect to stop router?.push firing multiple times (summary path inlined in effect)
   useEffect(() => {
-    if (!router.isReady || !residentId) return;
+    if (!router?.isReady || !residentId) return;
     if (
       !isEligible &&
       currentResident &&
       mainResident &&
       currentResident === mainResident
     ) {
-      router.push(`/apply/${currentResident.person.id}/summary`);
+      router?.push(`/apply/${currentResident.person.id}/summary`);
     }
   }, [
     isEligible,
     router,
-    router.isReady,
+    router?.isReady,
     residentId,
     currentResident,
     mainResident,
@@ -107,11 +106,11 @@ const ResidentIndex = (): JSX.Element => {
 
     if (isSaving) {
       if (saveApplicationStatus?.callStatus === ApiCallStatusCode.FULFILLED) {
-        router.push(returnHref);
+        router?.push(returnHref);
       }
 
       if (saveApplicationStatus?.callStatus === ApiCallStatusCode.REJECTED) {
-        router.push(
+        router?.push(
           {
             pathname: returnHref,
             query: {
@@ -133,7 +132,7 @@ const ResidentIndex = (): JSX.Element => {
     );
   }
   // Client navigations can render once before `query` is populated — avoid false 404.
-  if (!router.isReady) {
+  if (!router?.isReady) {
     return (
       <Layout pageName="Person overview" pageLoadsApplication={false}>
         <Loading text="Loading..." />
@@ -188,7 +187,7 @@ const ResidentIndex = (): JSX.Element => {
   };
 
   const goBack = () => {
-    router.push('/apply/overview');
+    router?.push('/apply/overview');
   };
 
   const isSectionActive = (formId: FormID) => {

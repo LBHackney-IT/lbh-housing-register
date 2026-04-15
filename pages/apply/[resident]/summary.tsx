@@ -5,7 +5,7 @@ import {
   getQuestionValue,
 } from '../../../lib/store/applicant';
 import { useAppSelector, useAppDispatch } from '../../../lib/store/hooks';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 import Custom404 from '../../404';
 import DeleteLink from '../../../components/delete-link';
 import PersonalDetailsSummary from '../../../components/summary/PersonalDetails';
@@ -39,10 +39,10 @@ import useApiCallStatus from 'lib/hooks/useApiCallStatus';
 const UserSummary = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { resident } = router.query as { resident: string };
+  const { resident } = (router?.query ?? {}) as { resident?: string };
 
   const currentResident = useAppSelector(
-    selectApplicant(resident),
+    selectApplicant(resident ?? ''),
   ) as ApplicantWithPersonID;
   const mainResident = useAppSelector(
     (s) => s.application.mainApplicant,
@@ -91,7 +91,7 @@ const UserSummary = (): JSX.Element => {
         setIsSaving(true);
         await dispatch(sendDisqualifyEmail({ application, reason }));
         await dispatch(disqualifyApplication(application.id!)).unwrap();
-        router.push('/apply/not-eligible');
+        router?.push('/apply/not-eligible');
       } catch {
         setUserError('Unable to update application');
         scrollToError();
@@ -99,7 +99,7 @@ const UserSummary = (): JSX.Element => {
         setIsSaving(false);
       }
     } else {
-      router.push('/apply/overview');
+      router?.push('/apply/overview');
     }
   };
 

@@ -1,4 +1,4 @@
-import router from 'next/router';
+import { useRouter } from 'next/compat/router';
 import { useState } from 'react';
 import * as Yup from 'yup';
 import { Formik, Form, FormikValues, FormikProps } from 'formik';
@@ -32,6 +32,7 @@ interface PageProps {
 }
 
 export default function Actions({ data }: PageProps): JSX.Element {
+  const router = useRouter();
   const isEligible = checkEligible(data);
   const wasDisqualified = isEligible[0] === false;
   const disqualificationReasons = wasDisqualified ? isEligible[1] : [];
@@ -143,7 +144,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
 
     updateApplication(request)
       .then(() => {
-        router.reload();
+        router?.reload();
       })
       .catch((err) => {
         setReservedBiddingNumberError(err);

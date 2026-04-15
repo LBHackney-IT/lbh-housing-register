@@ -1,5 +1,5 @@
 import { FormikValues } from 'formik';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 import React, { useState } from 'react';
 import ApplicantStep from '../../../components/application/ApplicantStep';
 import withApplication from '../../../lib/hoc/withApplication';
@@ -25,12 +25,12 @@ import ErrorSummary from 'components/errors/error-summary';
 
 const ApplicationStep = (): JSX.Element => {
   const router = useRouter();
-  const { resident } = router.query as { resident: string };
+  const { resident } = (router?.query ?? {}) as { resident?: string };
   const dispatch = useAppDispatch();
 
   const [isOver16State, setIsOver16State] = useState(true);
 
-  const applicant = useAppSelector(selectApplicant(resident)) as Applicant;
+  const applicant = useAppSelector(selectApplicant(resident ?? '')) as Applicant;
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
   const saveApplicationStatus = useAppSelector(selectSaveApplicationStatus);
   const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);

@@ -11,7 +11,7 @@ import {
   HorizontalNav,
   HorizontalNavItem,
 } from '../../../components/admin/HorizontalNav';
-import router from 'next/router';
+import { useRouter } from 'next/compat/router';
 import NovaletReports from '../../../components/admin/NovaletReports';
 import InternalReports from '../../../components/admin/InternalReports';
 import SearchBox from '../../../components/admin/SearchBox';
@@ -37,6 +37,7 @@ export default function Reports({
   user,
   reportsData,
 }: ReportsProps): JSX.Element {
+  const router = useRouter();
   const [activeNavItem, setActiveNavItem] = useState('Novalet');
 
   const handleSelectNavItem = async (event: SyntheticEvent) => {
@@ -44,7 +45,7 @@ export default function Reports({
 
     const { name } = event.target as HTMLButtonElement;
 
-    router.push({
+    router?.push({
       query: { status: name },
     });
 

@@ -1,5 +1,5 @@
 import { FormikValues, getIn } from 'formik';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 import { useEffect, useState } from 'react';
 import { HeadingOne } from '../../../components/content/headings';
 import Form from '../../../components/form/form';
@@ -25,9 +25,9 @@ import ErrorSummary from 'components/errors/error-summary';
 const CurrentAccommodation = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { resident } = router.query as { resident: string };
+  const { resident } = (router?.query ?? {}) as { resident?: string };
 
-  const applicant = useAppSelector(selectApplicant(resident)) as Applicant;
+  const applicant = useAppSelector(selectApplicant(resident ?? '')) as Applicant;
   const [activeStepID, setActiveStepId] = useState(
     FormID.CURRENT_ACCOMMODATION,
   );
@@ -42,7 +42,7 @@ const CurrentAccommodation = (): JSX.Element => {
     if (saveApplicationStatus?.callStatus === ApiCallStatusCode.FULFILLED) {
       setIsSaving(false);
       if (isLastFormPageSubmit) {
-        router.push(baseHref);
+        router?.push(baseHref);
       }
     }
     if (saveApplicationStatus?.callStatus === ApiCallStatusCode.REJECTED) {

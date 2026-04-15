@@ -1,7 +1,7 @@
 import React, { SyntheticEvent, useEffect, useState } from 'react';
 
 import { GetServerSideProps } from 'next';
-import { useRouter } from 'next/compat/router';
+import { useRouter } from 'next/router';
 
 import ApplicationsTable from '../../components/admin/ApplicationsTable';
 import {
@@ -41,8 +41,8 @@ export default function ApplicationListPage({
   const [activeNavItem, setActiveNavItem] = useState('Submitted');
 
   useEffect(() => {
-    router?.push({
-      query: { ...router?.query, status: activeNavItem, page, pageSize },
+    router.push({
+      query: { ...router.query, status: activeNavItem, page, pageSize },
     });
   }, [activeNavItem]);
 

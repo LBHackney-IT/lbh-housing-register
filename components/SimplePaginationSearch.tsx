@@ -1,4 +1,4 @@
-import { useRouter } from 'next/compat/router';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 interface SimplePaginationSearchProps {
@@ -12,8 +12,7 @@ const SimplePaginationSearch = ({
   page,
   numberOfItemsPerPage,
 }: SimplePaginationSearchProps) => {
-  const router = useRouter();
-  const query = router?.query ?? {};
+  const { query } = useRouter();
   const numberOfPages = Math.ceil(totalItems / numberOfItemsPerPage);
   const previousPage = page > 1 ? page - 1 : 1;
   const nextPage = page < numberOfPages ? page + 1 : numberOfPages - 1;

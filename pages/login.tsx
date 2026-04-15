@@ -1,14 +1,23 @@
 import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
+import { useMemo } from 'react';
 import { ButtonLink } from '../components/button';
 import { HeadingOne } from '../components/content/headings';
 import Paragraph from '../components/content/paragraph';
 import Layout from '../components/layout/staff-layout';
 
 interface LoginProps {
-  loginUrl: string;
+  appUrl: string;
 }
 
-export default function LoginPage({ loginUrl }: LoginProps): JSX.Element {
+export default function LoginPage({ appUrl }: LoginProps): JSX.Element {
+  const router = useRouter();
+  const loginUrl = useMemo(() => {
+    let { redirect } = router.query as { redirect?: string };
+    if (!redirect || redirect == '/') redirect = '/applications';
+    return `https://auth.hackney.gov.uk/auth?redirect_uri=${appUrl}${redirect}`;
+  }, [router, appUrl]);
+
   return (
     <Layout pageName="Staff login">
       <HeadingOne content="Staff login" />
@@ -20,17 +29,9 @@ export default function LoginPage({ loginUrl }: LoginProps): JSX.Element {
     </Layout>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const appUrl = process.env.APP_URL;
   if (!appUrl) throw new Error('Missing APP_URL');
 
-  let redirect = context.query.redirect as string | undefined;
-  if (!redirect || redirect === '/') redirect = '/applications';
-
-  return {
-    props: {
-      loginUrl: `https://auth.hackney.gov.uk/auth?redirect_uri=${appUrl}${redirect}`,
-    },
-  };
+  return { props: { appUrl } };
 };

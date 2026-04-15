@@ -1,4 +1,4 @@
-import { useRouter } from 'next/compat/router';
+import { useRouter } from 'next/router';
 import ApplicationForms from '../../../components/application/application-forms';
 import Layout from '../../../components/layout/resident-layout';
 import withApplication from '../../../lib/hoc/withApplication';
@@ -17,12 +17,12 @@ import ErrorSummary from 'components/errors/error-summary';
 
 const ApplicationSection = (): JSX.Element => {
   const router = useRouter();
-  const { resident, section } = (router?.query ?? {}) as {
-    resident?: string;
-    section?: string;
+  const { resident, section } = router.query as {
+    resident: string;
+    section: string;
   };
 
-  const applicant = useAppSelector(selectApplicant(resident ?? '')) as Applicant;
+  const applicant = useAppSelector(selectApplicant(resident)) as Applicant;
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
 
   const baseHref = `/apply/${applicant?.person?.id}`;
@@ -50,7 +50,7 @@ const ApplicationSection = (): JSX.Element => {
     : [];
 
   const sectionName =
-    getApplicationSectionFromId(section ?? '', sectionGroups)?.heading || '';
+    getApplicationSectionFromId(section, sectionGroups)?.heading || '';
 
   const breadcrumbs = [
     {

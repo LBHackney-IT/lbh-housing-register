@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Form, Formik, FormikValues } from 'formik';
-import { useRouter } from 'next/compat/router';
+import router from 'next/router';
 import * as Yup from 'yup';
 
 import { ActivityHistoryPagedResult } from '../../domain/ActivityHistoryApi';
@@ -32,7 +32,6 @@ export default function ApplicationHistory({
   id,
   showDetails,
 }: ActivityHistoryPageProps): JSX.Element | null {
-  const router = useRouter();
   const initialValues: FormikValues = {
     note: '',
   };
@@ -68,7 +67,7 @@ export default function ApplicationHistory({
 
   const onSubmit = (values: FormikValues) => {
     addNoteToHistory(id, { Note: values.note }).then(() => {
-      router?.reload();
+      router.reload();
     });
   };
 

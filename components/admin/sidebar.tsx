@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Link from 'next/link';
-import { useRouter } from 'next/compat/router';
+import { useRouter } from 'next/router';
 
 export default function Sidebar(): JSX.Element {
   const router = useRouter();
@@ -32,7 +32,7 @@ export default function Sidebar(): JSX.Element {
             <Link
               href={path}
               className={`lbh-link lbh-link--no-visited-state lbh-!-font-weight-bold lbh-body-m ${
-                router?.pathname === path ? 'active' : ''
+                router.pathname === path ? 'active' : ''
               }`}
             >
               {name}

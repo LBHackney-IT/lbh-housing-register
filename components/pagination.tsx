@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { useRouter } from 'next/compat/router';
+import { useRouter } from 'next/router';
 
 interface PaginationItemProps {
   page: number;
@@ -36,9 +36,7 @@ const Pagination = ({
   page,
   numberOfItemsPerPage,
 }: PaginationProps) => {
-  const router = useRouter();
-  const query = router?.query ?? {};
-  const pathname = router?.pathname ?? '';
+  const { query, pathname } = useRouter();
   const numberOfPages = Math.ceil(totalItems / numberOfItemsPerPage);
 
   const paginationItems = [];

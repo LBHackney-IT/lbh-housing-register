@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { FormikValues } from 'formik';
 import { GetServerSideProps } from 'next';
-import { useRouter } from 'next/compat/router';
+import { useRouter } from 'next/router';
 
 import MainApplicantForm from '../../../../../components/admin/MainApplicantForm';
 import { HackneyGoogleUser } from '../../../../../domain/HackneyGoogleUser';
@@ -91,7 +91,7 @@ export default function EditApplicant({ user, data }: PageProps): JSX.Element {
     updateApplication(request)
       .then(() => {
         setIsSaving(false);
-        router?.push({
+        router.push({
           pathname: `/applications/view/${data.id}`,
         });
       })

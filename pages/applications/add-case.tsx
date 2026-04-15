@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { FormikValues } from 'formik';
 import { GetServerSideProps } from 'next';
-import { useRouter } from 'next/compat/router';
+import { useRouter } from 'next/router';
 
 import MainApplicantForm from '../../components/admin/MainApplicantForm';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
@@ -46,7 +46,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
       });
 
       setIsSaving(false);
-      router?.push(`/applications/view/${setToManualDraft.id}`);
+      router.push(`/applications/view/${setToManualDraft.id}`);
     } catch (err) {
       setIsSaving(false);
       if (isAssignableToError(err)) {

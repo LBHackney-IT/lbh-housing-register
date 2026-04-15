@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { GetServerSideProps } from 'next';
-import { useRouter } from 'next/compat/router';
+import { useRouter } from 'next/router';
 
 import Actions from '../../../../components/admin/actions';
 import ApplicationHistory from '../../../../components/admin/ApplicationHistory';
@@ -63,14 +63,14 @@ export default function ApplicationPage({
   history,
 }: PageProps): JSX.Element | null {
   const router = useRouter();
-  const tab = router?.query.tab ?? 'overview';
+  const tab = router.query.tab ?? 'overview';
   const userCanEditApplication = canEditApplications(user, data);
   const userHasReadOnlyPermissionOnly = hasReadOnlyPermissionOnly(user);
   const [userError, setUserError] = useState<string | undefined>(undefined);
 
   const handleTabChange = (newValue: string) => {
-    router?.push({
-      query: { ...router?.query, tab: newValue },
+    router.push({
+      query: { ...router.query, tab: newValue },
     });
   };
 
@@ -86,7 +86,7 @@ export default function ApplicationPage({
 
     updateApplication(request)
       .then(() => {
-        router?.reload();
+        router.reload();
       })
       .catch(() => {
         setUserError('Unable to delete household member');

@@ -17,9 +17,7 @@ Sentry.init({
     return 1.0; // development / local
   },
   environment: ENVIRONMENT,
-  // Avoid duplicating server errors in logs: Next already reports failures, and
-  // captureConsoleIntegration re-captures the same console.error as separate events.
-  integrations: [],
+  integrations: [Sentry.captureConsoleIntegration()],
   enabled:
     ENVIRONMENT === 'production' ||
     ENVIRONMENT === 'staging' ||

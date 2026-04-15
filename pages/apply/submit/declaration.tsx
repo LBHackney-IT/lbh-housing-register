@@ -1,4 +1,4 @@
-import { useRouter } from 'next/compat/router';
+import { useRouter } from 'next/router';
 import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import {
   sendConfirmation,
@@ -48,7 +48,7 @@ const Declaration = (): JSX.Element => {
       try {
         setLoading(true);
         await dispatch(disqualifyApplication(application.id!)).unwrap();
-        router?.push('/apply/not-eligible');
+        router.push('/apply/not-eligible');
       } catch (error) {
         setUserError(error as string);
         console.error('Error completing the application:', error);
@@ -67,7 +67,7 @@ const Declaration = (): JSX.Element => {
         setLoading(true);
         await dispatch(completeApplication(application)).unwrap();
         await dispatch(createEvidenceRequest(application)).unwrap();
-        router?.push('/apply/confirmation');
+        router.push('/apply/confirmation');
       } catch (error) {
         setUserError(error as string);
         console.error('Error completing the application:', error);

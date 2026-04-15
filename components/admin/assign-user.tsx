@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { useRouter } from 'next/compat/router';
+import { useRouter } from 'next/router';
 
 import { APPLICATION_UNNASIGNED, Application } from '../../domain/HousingApi';
 import { updateApplication } from '../../lib/gateways/internal-api';
@@ -50,7 +50,7 @@ export default function AssignUser({
       assignedTo: updateTo,
     };
     await updateApplication(request).then(() => {
-      router?.reload();
+      router.reload();
     });
   };
 

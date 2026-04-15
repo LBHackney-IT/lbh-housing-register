@@ -1,5 +1,5 @@
 import { FormikValues, getIn } from 'formik';
-import { useRouter } from 'next/compat/router';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { HeadingOne } from '../../../components/content/headings';
 import Form from '../../../components/form/form';
@@ -28,8 +28,8 @@ const YourSituation = (): JSX.Element => {
     FormID.SITUATION_ARMED_FORCES,
   );
 
-  const { resident } = (router?.query ?? {}) as { resident?: string };
-  const applicant = useAppSelector(selectApplicant(resident ?? '')) as Applicant;
+  const { resident } = router.query as { resident: string };
+  const applicant = useAppSelector(selectApplicant(resident)) as Applicant;
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [userError, setUserError] = useState<string | null>(null);
   const [isLastFormPageSubmit, setIsLastFormPageSubmit] =
@@ -41,7 +41,7 @@ const YourSituation = (): JSX.Element => {
     if (saveApplicationStatus?.callStatus === ApiCallStatusCode.FULFILLED) {
       setIsSaving(false);
       if (isLastFormPageSubmit) {
-        router?.push(baseHref);
+        router.push(baseHref);
       }
     }
     if (saveApplicationStatus?.callStatus === ApiCallStatusCode.REJECTED) {

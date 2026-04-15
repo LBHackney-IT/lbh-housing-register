@@ -1,4 +1,4 @@
-import { useRouter } from 'next/compat/router';
+import { useRouter } from 'next/router';
 import * as Yup from 'yup';
 import { Form, Formik, FormikValues } from 'formik';
 import { Application } from '../../domain/HousingApi';
@@ -213,7 +213,7 @@ export default function MedicalDetail({
         updateApplication(request);
       }
 
-      setTimeout(() => router?.reload(), 500);
+      setTimeout(() => router.reload(), 500);
     }
   }
 

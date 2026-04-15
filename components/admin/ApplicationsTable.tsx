@@ -2,7 +2,7 @@ import React from 'react';
 
 import Link from 'next/link';
 import type { ParsedUrlQuery } from 'node:querystring';
-import { useRouter } from 'next/compat/router';
+import { useRouter } from 'next/router';
 
 import { PaginatedSearchResultsResponse } from '../../domain/HousingApi';
 import { lookupStatus } from '../../lib/types/application-status';
@@ -45,8 +45,7 @@ export default function ApplicationsTable({
   page,
   pageSize,
 }: ApplicationsTableProps): JSX.Element {
-  const router = useRouter();
-  const query = router?.query ?? {};
+  const { query } = useRouter();
   const firstResult = (parseInt(page, 10) - 1) * parseInt(pageSize, 10) + 1;
   const lastResult = Math.min(
     firstResult + parseInt(pageSize, 10) - 1,

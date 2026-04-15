@@ -1,4 +1,4 @@
-import { useRouter } from 'next/compat/router';
+import { useRouter } from 'next/router';
 import Button from '../../components/button';
 import { HeadingTwo } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
@@ -20,7 +20,7 @@ const ApplicationConfirmation = (): JSX.Element => {
   );
 
   const signOut = () => {
-    router?.push('/');
+    router.push('/');
     dispatch(exit());
   };
 

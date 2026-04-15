@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
-import { useRouter } from 'next/compat/router';
+import { useRouter } from 'next/router';
 import { ButtonLink } from '../../components/button';
 import { HeadingOne } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
@@ -16,7 +16,7 @@ const WhatToExpect = (): JSX.Element => {
 
   const onCancel = () => {
     // TODO: delete application
-    router?.push('/');
+    router.push('/');
     dispatch(exit());
   };
 

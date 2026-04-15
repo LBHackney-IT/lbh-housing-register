@@ -1,7 +1,7 @@
 import { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 
 import { GetServerSideProps } from 'next';
-import { useRouter } from 'next/compat/router';
+import { useRouter } from 'next/router';
 
 import ApplicationsTable from '../../components/admin/ApplicationsTable';
 import SearchBox from '../../components/admin/SearchBox';
@@ -44,13 +44,13 @@ export default function ViewAllApplicationsPage({
   const [selectedFilter, setSelectedFilter] = useState('');
 
   useEffect(() => {
-    router?.push({
-      query: { ...router?.query, status: selectedFilter, page: 1, pageSize },
+    router.push({
+      query: { ...router.query, status: selectedFilter, page: 1, pageSize },
     });
   }, [selectedFilter]);
 
   const addCase = async () => {
-    router?.push({
+    router.push({
       pathname: '/applications/add-case',
     });
   };

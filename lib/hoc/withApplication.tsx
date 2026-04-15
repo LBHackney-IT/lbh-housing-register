@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 
-import type { NextRouter } from 'next/router';
-import { useRouter } from 'next/compat/router';
+import { NextRouter, useRouter } from 'next/router';
 
 import { Application } from 'domain/HousingApi';
 import { AppDispatch } from 'lib/store';
@@ -15,22 +14,22 @@ function useApplicationRedirect(application: Application) {
 
   useEffect(() => {
     if (application.status === ApplicationStatus.DISQUALIFIED) {
-      router?.push('/apply/not-eligible');
+      router.push('/apply/not-eligible');
     }
 
     if (application.status === ApplicationStatus.SUBMITTED) {
-      router?.push('/apply/confirmation');
+      router.push('/apply/confirmation');
     }
   }, [application.status]);
 }
 
 function handleNoApplication(
   application: Application,
-  router: NextRouter | null,
+  router: NextRouter,
   dispatch: AppDispatch,
 ) {
   if (!application) {
-    router?.push('/');
+    router.push('/');
     dispatch(exit());
   }
 }

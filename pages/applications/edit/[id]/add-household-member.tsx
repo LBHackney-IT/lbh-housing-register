@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { FormikValues } from 'formik';
 import { GetServerSideProps } from 'next';
-import { useRouter } from 'next/compat/router';
+import { useRouter } from 'next/router';
 
 import HouseholdMemberForm from '../../../../components/admin/HouseholdMemberForm';
 import { HackneyGoogleUser } from '../../../../domain/HackneyGoogleUser';
@@ -71,7 +71,7 @@ export default function AddHouseholdMember({
     updateApplication(request)
       .then(() => {
         setIsSaving(false);
-        router?.push({
+        router.push({
           pathname: `/applications/view/${data.id}`,
         });
       })

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 
 interface SearchBoxProps {
   title: string;
@@ -28,7 +28,7 @@ export default function SearchBox({
   const onSearchSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    router.push({
+    router?.push({
       pathname: '/applications/search-results',
       query: { searchString: searchInputValue, page: '1', pageSize: '10' },
     });

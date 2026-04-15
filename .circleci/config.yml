@@ -401,7 +401,7 @@ workflows:
             tags:
               ignore: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
-              only: development
+              only: feature/upgrade-next
       - deploy-to-development:
           context:
             - central-parameter-store-context
@@ -414,7 +414,7 @@ workflows:
             tags:
               ignore: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
-              only: development
+              only: feature/upgrade-next
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:

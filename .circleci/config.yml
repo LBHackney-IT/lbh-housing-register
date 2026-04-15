@@ -394,8 +394,8 @@ workflows:
               only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
       - assume-role-development:
           context: api-assume-role-housing-development-context
-          # requires:
-          #   - run-tests
+          requires:
+            - run-tests
           #   - run-cypress-e2e
           filters:
             tags:

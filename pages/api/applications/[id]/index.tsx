@@ -40,16 +40,23 @@ const endpoint: NextApiHandler = async (
       } catch (error: any | AxiosError) {
         if (axios.isAxiosError(error)) {
           if (error.response) {
-            // Request made and server responded
             res.status(error.response.status).json(error.response.data);
-          } else if (error.request) {
-            // The request was made but no response was received
-            console.log(error.request);
           } else {
-            // Something happened in setting up the request that triggered an Error
-            console.log('Error', error.message);
+            // No HTTP response (timeout, connection reset, etc.). Must still end
+            // the Lambda response or API Gateway often returns an opaque 500.
+            const detail =
+              error instanceof Error ? error.message : String(error);
+            console.error(
+              'updateApplication axios error (no response)',
+              detail,
+            );
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+              message: 'Unable to update application',
+            });
           }
         } else {
+          const detail = error instanceof Error ? error.message : String(error);
+          console.error('updateApplication error', detail);
           res
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
             .json({ message: 'Unable to update application' });

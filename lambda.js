@@ -88,6 +88,20 @@ const BINARY_EXTS = new Set([
 const staticDir = path.join(__dirname, 'build', '_next', 'static');
 const publicDir = path.join(__dirname, 'public');
 
+/**
+ * API Gateway + CloudFront (OriginPath: /{stage}) send paths like
+ * /development/_next/static/... while files on disk live under /_next/static/...
+ * Strip the stage segment so static serving and Next see app-root paths.
+ */
+function normalizeRequestPath(event) {
+  let p = event.path || '/';
+  const stage = event.requestContext && event.requestContext.stage;
+  if (stage && typeof p === 'string' && p.startsWith(`/${stage}/`)) {
+    p = p.slice(`/${stage}`.length) || '/';
+  }
+  return p;
+}
+
 function serveFile(file) {
   let content;
   try {
@@ -112,15 +126,27 @@ function serveFile(file) {
 
 function serveNextStatic(reqPath) {
   if (!reqPath || !reqPath.startsWith('/_next/static/')) return null;
-  const rel = reqPath.slice('/_next/static/'.length);
+  let rel = reqPath.slice('/_next/static/'.length);
   if (rel.includes('..')) return null; // path traversal guard
+  try {
+    rel = decodeURIComponent(rel);
+  } catch {
+    /* use raw segment */
+  }
   return serveFile(path.join(staticDir, rel));
 }
 
 function servePublic(reqPath) {
   if (!reqPath || reqPath.startsWith('/_next/')) return null;
   if (reqPath.includes('..')) return null; // path traversal guard
-  return serveFile(path.join(publicDir, reqPath));
+  let safePath = reqPath;
+  try {
+    safePath = decodeURIComponent(reqPath);
+  } catch {
+    /* use raw */
+  }
+  const relPublic = safePath.replace(/^\//, '');
+  return serveFile(path.join(publicDir, relPublic));
 }
 
 // ─── dynamic handler ──────────────────────────────────────────────────────────
@@ -132,7 +158,8 @@ const app = next({ dev: false, dir: standaloneDir });
 let handler;
 
 module.exports.handler = async (event, context) => {
-  const staticRes = serveNextStatic(event.path) || servePublic(event.path);
+  const reqPath = normalizeRequestPath(event);
+  const staticRes = serveNextStatic(reqPath) || servePublic(reqPath);
   if (staticRes) return staticRes;
 
   if (!handler) {
@@ -140,5 +167,7 @@ module.exports.handler = async (event, context) => {
     const requestHandler = app.getRequestHandler();
     handler = serverlessHttp((req, res) => requestHandler(req, res));
   }
-  return handler(event, context);
+  const forwardEvent =
+    reqPath === (event.path || '') ? event : { ...event, path: reqPath };
+  return handler(forwardEvent, context);
 };

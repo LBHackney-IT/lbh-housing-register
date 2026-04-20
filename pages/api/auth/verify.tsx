@@ -1,7 +1,9 @@
 import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import type { VerifyAuthRequest } from '../../../domain/HousingApi';
 import { confirmVerifyCode } from '../../../lib/gateways/applications-api';
+import { parseApiJsonBody } from '../../../lib/utils/parseApiJsonBody';
 import { setAuthCookie } from '../../../lib/utils/users';
 
 const endpoint: NextApiHandler = async (
@@ -11,7 +13,7 @@ const endpoint: NextApiHandler = async (
   switch (req.method) {
     case 'POST':
       try {
-        const request = JSON.parse(req.body);
+        const request = parseApiJsonBody<VerifyAuthRequest>(req);
         const data = await confirmVerifyCode(request);
 
         // set cookie with access token (JWT)

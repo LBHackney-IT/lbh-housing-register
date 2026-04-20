@@ -1,7 +1,6 @@
 import { AddressLookupResult } from '../../domain/addressLookup';
 import { AddNoteToHistoryRequest, Application } from '../../domain/HousingApi';
-
-const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' };
+import { JSON_REQUEST_HEADERS } from '../utils/jsonRequestHeaders';
 
 export const lookUpAddress = async (postCode: string) => {
   const res = await fetch(`/api/address/${postCode}`, {
@@ -14,7 +13,7 @@ export const lookUpAddress = async (postCode: string) => {
 export const updateApplication = async (application: Application) => {
   const res = await fetch(`/api/applications/${application.id}`, {
     method: 'PATCH',
-    headers: JSON_HEADERS,
+    headers: JSON_REQUEST_HEADERS,
     body: JSON.stringify(application),
   });
 
@@ -28,7 +27,7 @@ export const updateApplication = async (application: Application) => {
 export const createApplication = async (application: Application) => {
   const res = await fetch(`/api/applications`, {
     method: 'POST',
-    headers: JSON_HEADERS,
+    headers: JSON_REQUEST_HEADERS,
     body: JSON.stringify(application),
   });
 
@@ -42,7 +41,7 @@ export const createApplication = async (application: Application) => {
 export const completeApplication = async (application: Application) => {
   const res = await fetch(`/api/applications/${application.id}/complete`, {
     method: 'PATCH',
-    headers: JSON_HEADERS,
+    headers: JSON_REQUEST_HEADERS,
     body: JSON.stringify(application),
   });
   if (res.ok) {
@@ -75,7 +74,7 @@ export const addNoteToHistory = async (
 ) => {
   const res = await fetch(`/api/applications/${applicationId}/note`, {
     method: 'POST',
-    headers: JSON_HEADERS,
+    headers: JSON_REQUEST_HEADERS,
     body: JSON.stringify(request),
   });
   return await res.json();

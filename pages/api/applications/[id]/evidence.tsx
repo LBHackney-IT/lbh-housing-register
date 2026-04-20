@@ -1,6 +1,8 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import type { CreateEvidenceRequest } from '../../../../domain/HousingApi';
 import { createEvidenceRequest } from '../../../../lib/gateways/applications-api';
+import { parseApiJsonBody } from '../../../../lib/utils/parseApiJsonBody';
 import { canUpdateApplication } from '../../../../lib/utils/requestAuth';
 import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 
@@ -11,7 +13,7 @@ const endpoint: NextApiHandler = async (
   switch (req.method) {
     case 'POST':
       try {
-        const request = JSON.parse(req.body);
+        const request = parseApiJsonBody<CreateEvidenceRequest>(req);
         const id = req.query.id as string;
 
         if (canUpdateApplication(req, id)) {

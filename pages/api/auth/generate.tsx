@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { CreateAuthRequest } from '../../../domain/HousingApi';
 import { createVerifyCode } from '../../../lib/gateways/applications-api';
+import { parseApiJsonBody } from '../../../lib/utils/parseApiJsonBody';
 
 /** Verbose API errors for mocked e2e / CI — not during Jest (avoids noise and spy interference). */
 function logE2eGenerateError(payload: Record<string, unknown>): void {
@@ -27,7 +28,7 @@ const endpoint: NextApiHandler = async (
 
   let request: CreateAuthRequest;
   try {
-    request = JSON.parse(req.body) as CreateAuthRequest;
+    request = parseApiJsonBody<CreateAuthRequest>(req);
   } catch (parseErr) {
     logE2eGenerateError({
       phase: 'body parse failed',

@@ -6,7 +6,7 @@ import { getAuth, getSession } from '../../../../../lib/utils/googleAuth';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
   switch (req.method) {
     case 'GET':
@@ -15,7 +15,7 @@ const endpoint: NextApiHandler = async (
 
         const auth = getAuth(
           process.env.AUTHORISED_MANAGER_GROUP as string,
-          user
+          user,
         );
 
         if (!('user' in auth)) {
@@ -32,7 +32,7 @@ const endpoint: NextApiHandler = async (
             res.setHeader('Content-Type', file.headers['content-type']);
             res.setHeader(
               'Content-Disposition',
-              file.headers['content-disposition']
+              file.headers['content-disposition'],
             );
             res.send(file.data);
           } else {
@@ -41,7 +41,7 @@ const endpoint: NextApiHandler = async (
               message: 'Unable to download report',
             });
           }
-        } catch (error) {
+        } catch {
           res
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
             .json({ message: 'Unable to download report' });
@@ -58,5 +58,5 @@ const endpoint: NextApiHandler = async (
 
 export default wrapApiHandlerWithSentry(
   endpoint,
-  '/api/reports/novalet/download/[fileName]'
+  '/api/reports/novalet/download/[fileName]',
 );

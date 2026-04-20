@@ -9,6 +9,12 @@ const { withSentryConfig } = require('@sentry/nextjs');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   distDir: 'build/_next',
+  // Trace production deps into build/_next/standalone so the Lambda zip stays under 250MB unzipped.
+  output: 'standalone',
+  // Reduce what gets traced into standalone (esp. dev-only trees if referenced accidentally).
+  outputFileTracingExcludes: {
+    '*': ['**/node_modules/cypress/**', '**/node_modules/@types/**'],
+  },
   poweredByHeader: false,
   reactStrictMode: true,
   async headers() {
@@ -31,12 +37,6 @@ const nextConfig = {
         ],
       },
     ];
-  },
-  eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors. This is due to the current ESLint setup
-    // for staged files only as we clear the linting errors as we work.
-    ignoreDuringBuilds: true,
   },
 };
 

@@ -9,7 +9,7 @@ describe('User searches for an application', () => {
     const applicationId = faker.string.uuid();
     const application = generateApplication(applicationId, personId);
 
-    cy.task('clearNock');
+    cy.clearE2eNock();
     cy.clearCookies();
     cy.loginAsUser('readOnly').then((user) => {
       cy.mockHousingRegisterApiGetApplicationsByStatusAndAssignedTo(user);
@@ -19,7 +19,7 @@ describe('User searches for an application', () => {
       ApplicationsPage.getWorktray().should('not.exist');
       ApplicationsPage.getWorktraySidebar().should('not.exist');
       ApplicationsPage.getSearchInput().type(
-        application.mainApplicant.person.firstName
+        application.mainApplicant.person.firstName,
       );
       cy.mockHousingRegisterApiPostSearchResults(application);
 
@@ -33,7 +33,7 @@ describe('User searches for an application', () => {
     const personId = faker.string.uuid();
     const applicationId = faker.string.uuid();
     const application = generateApplication(applicationId, personId);
-    cy.task('clearNock');
+    cy.clearE2eNock();
     cy.clearCookies();
     cy.loginAsUser('officer').then((user) => {
       cy.mockHousingRegisterApiGetApplicationsByStatusAndAssignedTo(user);
@@ -44,7 +44,7 @@ describe('User searches for an application', () => {
       ApplicationsPage.getWorktray().should('be.visible');
       ApplicationsPage.getWorktraySidebar().should('be.visible');
       ApplicationsPage.getSearchInput().type(
-        application.mainApplicant.person.firstName
+        application.mainApplicant.person.firstName,
       );
       cy.mockHousingRegisterApiPostSearchResults(application);
       ApplicationsPage.getSearchSubmitButton().click();

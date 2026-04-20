@@ -1,7 +1,6 @@
 import { getFormData, FormID } from '../utils/form-data';
 import { FormField } from '../../lib/types/form';
 import { kebabToCamelCase, camelCaseToKebab } from '../../lib/utils/capitalize';
-import { Address as ApiAddress } from '../../domain/HousingApi';
 import { FormikValues } from 'formik';
 import * as Yup from 'yup';
 import { INVALID_DATE } from '../../components/form/dateinput';
@@ -17,7 +16,7 @@ export interface Address {
   dateTo: string;
 }
 
-interface SectionData {
+export interface SectionData {
   fields: FormField[];
   sectionId: string;
   sectionHeading: string | undefined;
@@ -66,7 +65,7 @@ const additionalValidationForMainApplicant = Yup.object({
 });
 
 export const mainApplicantSchema = addCaseSchema.concat(
-  additionalValidationForMainApplicant
+  additionalValidationForMainApplicant,
 );
 
 export const allFormSections = (keysToIgnore: string[]) => {
@@ -78,7 +77,7 @@ export const allFormSections = (keysToIgnore: string[]) => {
 
   const sectionData = sections.map((section) => {
     const stepsInSection = section.steps.flat();
-    const fieldsInSection = stepsInSection.map((step) => step.fields).flat();
+    const fieldsInSection = stepsInSection.flatMap((step) => step.fields);
 
     return {
       sectionHeading: section.heading || '',
@@ -93,7 +92,7 @@ export const allFormSections = (keysToIgnore: string[]) => {
 export const getSectionData = (sectionId: FormID) => {
   const section = getFormData(sectionId);
   const stepsInSection = section.steps.flat();
-  const fieldsInSection = stepsInSection.map((step) => step.fields).flat();
+  const fieldsInSection = stepsInSection.flatMap((step) => step.fields);
 
   return {
     sectionHeading: section.heading || '',
@@ -103,8 +102,9 @@ export const getSectionData = (sectionId: FormID) => {
 };
 
 export const generateEditInitialValues = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- legacy admin edit payload shape
   data: any,
-  isMainApplicant: boolean
+  isMainApplicant: boolean,
 ) => {
   const questionData = isMainApplicant
     ? data.mainApplicant.questions
@@ -116,15 +116,15 @@ export const generateEditInitialValues = (
     ? questionData.reduce(
         (
           acc: { [key: string]: string },
-          current: { [key: string]: string }
+          current: { [key: string]: string },
         ) => {
-          const questionFieldName = kebabToCamelCase(current.id).replace(
+          const questionFieldName = kebabToCamelCase(current.id).replaceAll(
             '/',
-            '_'
+            '_',
           );
 
           const answer = current.answer
-            ? current.answer.replace(/[\[\]"]+/g, '')
+            ? current.answer.replaceAll(/[[\]"]+/g, '')
             : '';
 
           return {
@@ -132,7 +132,7 @@ export const generateEditInitialValues = (
             [questionFieldName]: answer,
           };
         },
-        {}
+        {},
       )
     : {};
 
@@ -155,21 +155,15 @@ export const generateEditInitialValues = (
 };
 
 export const generateInitialValues = (sections: SectionData[]) => {
-  const allFieldNames = sections
-    .map((section) =>
-      section.fields.map((field: FormField) => {
-        const updatedFieldName = generateUniqueFieldName(
-          section.sectionId,
-          field.name
-        );
-        return updatedFieldName;
-      })
-    )
-    .flat();
+  const allFieldNames = sections.flatMap((section) =>
+    section.fields.map((field: FormField) =>
+      generateUniqueFieldName(section.sectionId, field.name),
+    ),
+  );
 
   const initialValuesObject = allFieldNames.reduce(
     (acc: { [key: string]: string }, current) => ((acc[current] = ''), acc),
-    {}
+    {},
   );
 
   return initialValuesObject;
@@ -181,12 +175,12 @@ export const generateUniqueFieldName = (sectionId: string, fieldName: string) =>
 export const generateQuestionArray = (
   values: FormikValues,
   addresses: Address[],
-  ethnicity?: string
+  ethnicity?: string,
 ) => {
   const questionArray = [];
   for (const [key, value] of Object.entries(values)) {
     // Return question Ids to correct syntax for API
-    const questionId = camelCaseToKebab(key).replace('_', '/');
+    const questionId = camelCaseToKebab(key).replaceAll('_', '/');
 
     // Don't include personal details
     if (questionId.startsWith('personal-details/')) continue;

@@ -45,11 +45,11 @@ type State = 'postcode-entry' | 'manual-entry' | 'choose-address' | 'review';
 
 function generateValidationSchema(
   state: State,
-  addressHistory: AddressHistoryEntry[]
+  addressHistory: AddressHistoryEntry[],
 ) {
   const min = Math.min(
     +new Date(),
-    ...addressHistory.map((e) => +new Date(e.date))
+    ...addressHistory.map((e) => +new Date(e.date)),
   );
 
   const schema = Yup.object({
@@ -66,7 +66,7 @@ function generateValidationSchema(
           }
           const d = +new Date(value);
           return d <= min;
-        }
+        },
       ),
     dateTo: Yup.string()
       .notOneOf([INVALID_DATE], 'Invalid date')
@@ -81,7 +81,7 @@ function generateValidationSchema(
           }
           const d = +new Date(value);
           return d <= min;
-        }
+        },
       ),
     postcode: Yup.string().label('Postcode').required(),
     uprn: Yup.string().label('Address').required(),
@@ -255,11 +255,11 @@ const ApplicationStep = (): JSX.Element => {
     ? getQuestionValue(
         applicant.questions,
         FormID.ADDRESS_HISTORY,
-        'addressHistory'
+        'addressHistory',
       )
     : undefined;
   const [state, setState] = useState<State>(
-    savedAddressHistory ? 'review' : 'postcode-entry'
+    savedAddressHistory ? 'review' : 'postcode-entry',
   );
 
   const [postcodeResults, setPostcodeResults] = useState<
@@ -267,7 +267,7 @@ const ApplicationStep = (): JSX.Element => {
   >([]);
 
   const [addressHistory, setAddressHistory] = useState<AddressHistoryEntry[]>(
-    savedAddressHistory ?? []
+    savedAddressHistory ?? [],
   );
 
   const restart = () => {
@@ -277,7 +277,7 @@ const ApplicationStep = (): JSX.Element => {
 
   const onSubmit = async (
     values: Values,
-    formikHelpers: FormikHelpers<Values>
+    formikHelpers: FormikHelpers<Values>,
   ) => {
     function appendAddress(address: AddressHistoryEntry) {
       const newHistory = [...addressHistory, address];
@@ -323,7 +323,7 @@ const ApplicationStep = (): JSX.Element => {
           date: values.date,
           dateTo: values.dateTo,
           address: postcodeResults.find(
-            (r) => r.UPRN.toString() === values.uprn
+            (r) => r.UPRN.toString() === values.uprn,
           )!,
         });
         break;
@@ -344,7 +344,7 @@ const ApplicationStep = (): JSX.Element => {
                 currentAddress.address.postcode ?? currentAddress.postcode,
               addressType: AddressType.MainAddress,
             },
-          })
+          }),
         );
         dispatch(
           updateWithFormValues({
@@ -352,7 +352,7 @@ const ApplicationStep = (): JSX.Element => {
             personID: applicant.person!.id!,
             values: { addressHistory },
             markAsComplete: true,
-          })
+          }),
         );
         break;
       }
@@ -408,7 +408,7 @@ const ApplicationStep = (): JSX.Element => {
                 onSubmit={onSubmit}
                 validationSchema={generateValidationSchema(
                   state,
-                  addressHistory
+                  addressHistory,
                 )}
               >
                 {({ isSubmitting, values }) => (

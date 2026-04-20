@@ -47,7 +47,7 @@ const applicationWithNoNeed = {
 describe('Declaration', () => {
   beforeEach(() => {
     cy.clearAllCookies();
-    cy.task('clearNock');
+    cy.clearE2eNock();
     cy.mockNotifyEmailResponse(200);
   });
 
@@ -57,7 +57,7 @@ describe('Declaration', () => {
       applicationId,
       application,
       false,
-      apiResponseDelay
+      apiResponseDelay,
     );
 
     DeclarationPage.visit();
@@ -71,23 +71,23 @@ describe('Declaration', () => {
 
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
-      applicationWithMainApplicant
+      applicationWithMainApplicant,
     );
 
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,
       applicationWithMainApplicant,
-      apiResponseDelay
+      apiResponseDelay,
     );
 
     cy.mockHousingRegisterApiPostEvidenceRequest(
       applicationId,
-      apiResponseDelay
+      apiResponseDelay,
     );
 
     cy.mockHousingRegisterApiPatchCompleteApplication(
       applicationId,
-      apiResponseDelay
+      apiResponseDelay,
     );
 
     DeclarationPage.visit();
@@ -99,7 +99,7 @@ describe('Declaration', () => {
 
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
-      applicationWithMainApplicant
+      applicationWithMainApplicant,
     );
 
     cy.contains('Saving...');
@@ -113,12 +113,12 @@ describe('Declaration', () => {
 
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
-      applicationWithNoNeed
+      applicationWithNoNeed,
     );
 
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,
-      applicationWithNoNeed
+      applicationWithNoNeed,
     );
 
     DeclarationPage.visit();
@@ -128,7 +128,7 @@ describe('Declaration', () => {
 
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
-      applicationWithNoNeed
+      applicationWithNoNeed,
     );
 
     Components.getSaveButton().click();
@@ -142,7 +142,7 @@ describe('Declaration', () => {
     cy.loginAsResident(applicationId, true);
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
-      applicationWithMainApplicant
+      applicationWithMainApplicant,
     );
 
     const errorStatusCode = StatusCodes.INTERNAL_SERVER_ERROR;
@@ -151,30 +151,30 @@ describe('Declaration', () => {
 
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
-      applicationWithMainApplicant
+      applicationWithMainApplicant,
     );
 
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,
       applicationWithMainApplicant,
-      apiResponseDelay
+      apiResponseDelay,
     );
 
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
-      applicationWithMainApplicant
+      applicationWithMainApplicant,
     );
 
     cy.mockHousingRegisterApiPostEvidenceRequest(
       applicationId,
       apiResponseDelay,
-      errorStatusCode
+      errorStatusCode,
     );
 
     cy.mockHousingRegisterApiPatchCompleteApplication(
       applicationId,
       apiResponseDelay,
-      errorStatusCode
+      errorStatusCode,
     );
 
     DeclarationPage.visit();
@@ -191,7 +191,7 @@ describe('Declaration', () => {
     cy.loginAsResident(applicationId, true);
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
-      applicationWithNoNeed
+      applicationWithNoNeed,
     );
 
     const errorStatusCode = StatusCodes.INTERNAL_SERVER_ERROR;
@@ -200,14 +200,14 @@ describe('Declaration', () => {
 
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
-      applicationWithNoNeed
+      applicationWithNoNeed,
     );
 
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,
       applicationWithNoNeed,
       apiResponseDelay,
-      errorStatusCode
+      errorStatusCode,
     );
 
     DeclarationPage.visit();

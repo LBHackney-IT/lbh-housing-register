@@ -13,7 +13,7 @@ const application = generateApplication(
   personId,
   false,
   false,
-  false
+  false,
 );
 const email = generateEmailAddress();
 const verifyCode = '123456';
@@ -21,7 +21,7 @@ const verifyCode = '123456';
 describe('verify code page', () => {
   beforeEach(() => {
     cy.clearAllCookies();
-    cy.task('clearNock');
+    cy.clearE2eNock();
     cy.mockHousingRegisterApiPostGenerateToken();
   });
 
@@ -47,7 +47,7 @@ describe('verify code page', () => {
     cy.mockHousingRegisterApiPostVerifyToken(
       applicationId,
       0,
-      StatusCodes.INTERNAL_SERVER_ERROR
+      StatusCodes.INTERNAL_SERVER_ERROR,
     );
     cy.mockHousingRegisterApiGetApplications(applicationId, application, true);
     cy.loginAsResident(applicationId, true);
@@ -72,7 +72,7 @@ describe('verify code page', () => {
       application,
       true,
       0,
-      StatusCodes.INTERNAL_SERVER_ERROR
+      StatusCodes.INTERNAL_SERVER_ERROR,
     );
     cy.loginAsResident(applicationId, true);
 

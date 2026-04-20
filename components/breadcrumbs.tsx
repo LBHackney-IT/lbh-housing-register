@@ -20,8 +20,8 @@ export default function Breadcrumbs({
             {array.length - 1 === index ? (
               item.name
             ) : (
-              <Link href={item.href}>
-                <a className="govuk-breadcrumbs__link">{item.name}</a>
+              <Link href={item.href} className="govuk-breadcrumbs__link">
+                {item.name}
               </Link>
             )}
           </li>

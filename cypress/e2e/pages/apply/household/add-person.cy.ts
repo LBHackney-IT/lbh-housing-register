@@ -30,7 +30,7 @@ const applicationWithMainApplicant = {
 describe('Add person to household ', () => {
   beforeEach(() => {
     cy.clearAllCookies();
-    cy.task('clearNock');
+    cy.clearE2eNock();
     cy.loginAsResident(applicationId, true);
   });
   it('shows a saving message while application is being updated', () => {
@@ -39,7 +39,7 @@ describe('Add person to household ', () => {
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,
       applicationWithMainApplicant,
-      apiResponseDelay
+      apiResponseDelay,
     );
 
     HouseholdPage.visit();
@@ -53,13 +53,13 @@ describe('Add person to household ', () => {
     Components.getInput('firstName').type(faker.person.firstName());
     Components.getInput('surname').type(faker.person.lastName());
     Components.getDateInput('day').type(
-      faker.number.int({ max: 28, min: 1 }).toString()
+      faker.number.int({ max: 28, min: 1 }).toString(),
     );
     Components.getDateInput('month').type(
-      faker.number.int({ max: 12, min: 1 }).toString()
+      faker.number.int({ max: 12, min: 1 }).toString(),
     );
     Components.getDateInput('year').type(
-      faker.number.int({ max: 2004, min: 1912 }).toString()
+      faker.number.int({ max: 2004, min: 1912 }).toString(),
     );
     Components.getSelect('relationshipType').select(1);
 
@@ -79,7 +79,7 @@ describe('Add person to household ', () => {
       applicationId,
       applicationWithMainApplicant,
       apiResponseDelay,
-      errorCode
+      errorCode,
     );
 
     HouseholdPage.visit();
@@ -93,13 +93,13 @@ describe('Add person to household ', () => {
     Components.getInput('firstName').type(faker.person.firstName());
     Components.getInput('surname').type(faker.person.lastName());
     Components.getDateInput('day').type(
-      faker.number.int({ max: 28, min: 1 }).toString()
+      faker.number.int({ max: 28, min: 1 }).toString(),
     );
     Components.getDateInput('month').type(
-      faker.number.int({ max: 12, min: 1 }).toString()
+      faker.number.int({ max: 12, min: 1 }).toString(),
     );
     Components.getDateInput('year').type(
-      faker.number.int({ max: 2004, min: 1912 }).toString()
+      faker.number.int({ max: 2004, min: 1912 }).toString(),
     );
     Components.getSelect('relationshipType').select(1);
 

@@ -37,7 +37,7 @@ export default function NovaletReports({
 
   // Make sure we're not confusing our "WITH-URL" file with the applicant feed
   const applicantFeeds = reports.filter(
-    (report: Report) => !report.fileName.includes('WITH-URL')
+    (report: Report) => !report.fileName.includes('WITH-URL'),
   );
 
   const newestToOldestReports = applicantFeeds.sort((a, b) => {
@@ -113,7 +113,7 @@ export default function NovaletReports({
                       <a
                         className="lbh-link"
                         href={`/api/reports/novalet/download/${encodeURIComponent(
-                          mostRecentReport.applicationLinksFileName
+                          mostRecentReport.applicationLinksFileName,
                         )}`}
                       >
                         Download CSV with application links
@@ -126,7 +126,7 @@ export default function NovaletReports({
                     additionalCssClasses="lbh-!-margin-top-0 lbh-!-no-wrap"
                     secondary={true}
                     href={`/api/reports/novalet/download/${encodeURIComponent(
-                      mostRecentReport.fileName
+                      mostRecentReport.fileName,
                     )}`}
                   >
                     Download CSV
@@ -156,7 +156,7 @@ export default function NovaletReports({
               <a
                 className="lbh-link"
                 href={`/api/reports/novalet/download/${encodeURIComponent(
-                  mostRecentReport.fileName
+                  mostRecentReport.fileName,
                 )}`}
               >
                 {mostRecentReport.fileName}
@@ -225,7 +225,7 @@ export default function NovaletReports({
                         <a
                           className="lbh-link"
                           href={`/api/reports/novalet/download/${encodeURIComponent(
-                            report.applicationLinksFileName
+                            report.applicationLinksFileName,
                           )}`}
                         >
                           Download CSV with application links
@@ -238,7 +238,7 @@ export default function NovaletReports({
                       additionalCssClasses="lbh-!-margin-top-0 lbh-!-no-wrap"
                       secondary={true}
                       href={`/api/reports/novalet/download/${encodeURIComponent(
-                        report.fileName
+                        report.fileName,
                       )}`}
                     >
                       Download CSV

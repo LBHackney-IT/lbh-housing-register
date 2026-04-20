@@ -21,10 +21,11 @@ describe('Housing application', () => {
       personId,
       false,
       false,
-      false
+      false,
     );
 
     cy.clearCookies();
+    cy.clearE2eNock();
 
     cy.mockHousingRegisterApiPostGenerateToken(0, true);
     cy.mockHousingRegisterApiPostVerifyToken(applicationId);
@@ -36,7 +37,6 @@ describe('Housing application', () => {
 
     SignInPage.getEmailInput().scrollIntoView().type(generateEmailAddress);
     SignInPage.getSubmitButton().scrollIntoView().click();
-    cy.get('button[type="submit"]').click();
 
     VerifyPage.getVerifyCodePage().should('be.visible');
     VerifyPage.getVerifyCodeInput().scrollIntoView().type(generateCode);

@@ -44,7 +44,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
   const applicantsCompletedCount = applicants.filter((applicant) => {
     const tasks = applicationSteps(
       applicant,
-      applicant === application.mainApplicant
+      applicant === application.mainApplicant,
     );
     return tasks.remaining === 0;
   }).length;
@@ -69,7 +69,7 @@ const ApplicationPersonsOverview = (): JSX.Element => {
         {applicants.map((applicant, index) => {
           const tasks = applicationSteps(
             applicant,
-            applicant === application.mainApplicant
+            applicant === application.mainApplicant,
           );
 
           return (
@@ -105,17 +105,18 @@ const ApplicationPersonsOverview = (): JSX.Element => {
       </SummaryListSpaced>
 
       <Paragraph>
-        <Link href="/apply/household">
-          <a className="lbh-body-s lbh-link lbh-link--no-visited-state ">
-            Edit my household
-          </a>
+        <Link
+          href="/apply/household"
+          className="lbh-body-s lbh-link lbh-link--no-visited-state "
+        >
+          Edit my household
         </Link>
       </Paragraph>
 
       {applicants.every(
         (applicant) =>
           applicationSteps(applicant, applicant === application.mainApplicant)
-            .remaining == 0
+            .remaining == 0,
       ) && (
         <>
           <Paragraph>

@@ -70,7 +70,7 @@ describe('Ineligible main applicant', () => {
 
       RejectionPage.getRejectionReason().should(
         'contain.text',
-        getDisqualificationReasonOption('under18YearsOld')
+        getDisqualificationReasonOption('under18YearsOld'),
       );
     });
   });

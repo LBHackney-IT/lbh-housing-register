@@ -6,7 +6,7 @@ class ApplicationEditHouseholdMember {
 
   static visit(applicationId: string, personId: string) {
     return cy.visit(
-      `/applications/edit/${applicationId}/${personId}/edit-household-member`
+      `/applications/edit/${applicationId}/${personId}/edit-household-member`,
     );
   }
 
@@ -17,7 +17,7 @@ class ApplicationEditHouseholdMember {
   static getErrorSummary() {
     const testId = 'test-edit-household-member-error-summary';
     return this.getApplicationUpdateHouseHoldMemberPage().find(
-      `[data-testId="${testId}"]`
+      `[data-testId="${testId}"]`,
     );
   }
 }

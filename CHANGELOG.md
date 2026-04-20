@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.4](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.1.3...hackney-housing-register-v2.1.4) (2025-04-03)
+
+
+### Bug Fixes
+
+* **config circle:** updates the development trigger branch ([#519](https://github.com/LBHackney-IT/lbh-housing-register/issues/519)) ([0a25831](https://github.com/LBHackney-IT/lbh-housing-register/commit/0a25831a68089a753d9599c1cd61ab4c3a5502ef))
+* **config circle:** updates the development trigger branch ([#519](https://github.com/LBHackney-IT/lbh-housing-register/issues/519)) ([#520](https://github.com/LBHackney-IT/lbh-housing-register/issues/520)) ([beba36f](https://github.com/LBHackney-IT/lbh-housing-register/commit/beba36f36033717129ade96167f1d0d2d0bb52a3))
+
 ## [2.1.3](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.1.2...hackney-housing-register-v2.1.3) (2025-04-02)
 
 ### Bug Fixes

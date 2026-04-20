@@ -46,11 +46,11 @@ const applicationWithCompletedMainApplicantSections = {
 describe('Apply resident current accommodation page', () => {
   beforeEach(() => {
     cy.loginAsResident(applicationId, true);
-    cy.task('clearNock');
+    cy.clearE2eNock();
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithCompletedMainApplicantSections,
-      true
+      true,
     );
   });
 
@@ -61,7 +61,7 @@ describe('Apply resident current accommodation page', () => {
       application,
       1000,
       StatusCodes.OK,
-      true
+      true,
     );
 
     ApplyHouseholdPage.visit();
@@ -70,7 +70,7 @@ describe('Apply resident current accommodation page', () => {
     ApplyOverviewPage.getApplicantButton(personId).click();
     ApplyResidentIndexPage.getCurrentAccommodationSectionLink().click();
     ApplyResidentCurrentAccommodationPage.getRadioButton().check(
-      'private-rental'
+      'private-rental',
     );
     ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
     cy.contains('Saving...');
@@ -83,7 +83,7 @@ describe('Apply resident current accommodation page', () => {
       application,
       1000,
       StatusCodes.OK,
-      true
+      true,
     );
 
     ApplyHouseholdPage.visit();
@@ -92,7 +92,7 @@ describe('Apply resident current accommodation page', () => {
     ApplyOverviewPage.getApplicantButton(personId).click();
     ApplyResidentIndexPage.getCurrentAccommodationSectionLink().click();
     ApplyResidentCurrentAccommodationPage.getRadioButton().check(
-      'private-rental'
+      'private-rental',
     );
 
     ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
@@ -108,11 +108,11 @@ describe('Apply resident current accommodation page', () => {
     ApplyResidentCurrentAccommodationPage.getOtherRoomsInput().type('none');
     ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
     ApplyResidentCurrentAccommodationPage.getUnsuitableHomeReasonInput().type(
-      faker.lorem.paragraph()
+      faker.lorem.paragraph(),
     );
     ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
     ApplyResidentCurrentAccommodationPage.getLandlordNameInput().type(
-      faker.person.fullName()
+      faker.person.fullName(),
     );
     ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
     cy.contains('Saving...');

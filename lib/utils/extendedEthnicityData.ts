@@ -387,13 +387,13 @@ function makeEthnicityForm(category: string) {
 }
 
 export const ethnicCategoryAsianAsianBritishForm = makeEthnicityForm(
-  'asian-asian-british'
+  'asian-asian-british',
 );
 export const ethnicCategoryBlackBlackBritishForm = makeEthnicityForm(
-  'black-black-british'
+  'black-black-british',
 );
 export const ethnicCategoryMixedMultipleBackgroundForm = makeEthnicityForm(
-  'mixed-multiple-background'
+  'mixed-multiple-background',
 );
 export const ethnicCategoryWhiteForm = makeEthnicityForm('white');
 export const ethnicCategoryOtherEthnicGroupForm =

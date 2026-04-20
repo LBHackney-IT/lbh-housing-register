@@ -12,7 +12,7 @@ describe('Review applicant details', () => {
   beforeEach(() => {
     cy.clearAllCookies();
     cy.loginAsUser('readOnly');
-    cy.task('clearNock');
+    cy.clearE2eNock();
     cy.mockHousingRegisterApiGetApplications(applicationId, application);
   });
 

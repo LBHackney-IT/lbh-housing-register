@@ -7,5 +7,5 @@ const endpoint: NextApiHandler = async () => {
 
 export default wrapApiHandlerWithSentry(
   endpoint,
-  '/api/applications/throw-error'
+  '/api/applications/throw-error',
 );

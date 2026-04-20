@@ -1,7 +1,5 @@
-/* eslint-disable import/no-duplicates */
-import cookie from 'cookie';
+import * as cookie from 'cookie';
 import jwt from 'jsonwebtoken';
-import jsonwebtoken from 'jsonwebtoken';
 import { createRequest, createResponse } from 'node-mocks-http';
 
 import { envVarsFixture } from '../../testUtils/envVarsHelper';
@@ -138,8 +136,8 @@ describe('googleAuth', () => {
       it('verifies token when SKIP_VERIFY_TOKEN is not set', () => {
         skipTokenVerifyFixture.delete();
 
-        const verifySpy = jest.spyOn(jsonwebtoken, verifyFunctionName);
-        const decodeSpy = jest.spyOn(jsonwebtoken, decodeFunctionName);
+        const verifySpy = jest.spyOn(jwt, verifyFunctionName);
+        const decodeSpy = jest.spyOn(jwt, decodeFunctionName);
 
         getSession(newReq);
 
@@ -151,8 +149,8 @@ describe('googleAuth', () => {
       it('verifies token when SKIP_VERIFY_TOKEN is set to false', () => {
         skipTokenVerifyFixture.mock('false');
 
-        const verifySpy = jest.spyOn(jsonwebtoken, verifyFunctionName);
-        const decodeSpy = jest.spyOn(jsonwebtoken, decodeFunctionName);
+        const verifySpy = jest.spyOn(jwt, verifyFunctionName);
+        const decodeSpy = jest.spyOn(jwt, decodeFunctionName);
 
         getSession(newReq);
 
@@ -164,8 +162,8 @@ describe('googleAuth', () => {
       it('does not verify token when SKIP_VERIFY_TOKEN is set to true', () => {
         skipTokenVerifyFixture.mock('true');
 
-        const verifySpy = jest.spyOn(jsonwebtoken, verifyFunctionName);
-        const decodeSpy = jest.spyOn(jsonwebtoken, decodeFunctionName);
+        const verifySpy = jest.spyOn(jwt, verifyFunctionName);
+        const decodeSpy = jest.spyOn(jwt, decodeFunctionName);
 
         getSession(newReq);
 
@@ -227,7 +225,7 @@ describe('googleAuth', () => {
 
       it('returns matching authorization groups for admin claims', () => {
         const { signedToken, tokenData } = generateSignedTokenByRole(
-          UserRole.Admin
+          UserRole.Admin,
         );
 
         const newReq = {
@@ -249,7 +247,7 @@ describe('googleAuth', () => {
 
       it('returns matching authorization groups for manager claims', () => {
         const { signedToken, tokenData } = generateSignedTokenByRole(
-          UserRole.Manager
+          UserRole.Manager,
         );
 
         const newReq = {
@@ -271,7 +269,7 @@ describe('googleAuth', () => {
 
       it('returns matching authorization groups for officer claims', () => {
         const { signedToken, tokenData } = generateSignedTokenByRole(
-          UserRole.Officer
+          UserRole.Officer,
         );
 
         const newReq = {
@@ -342,7 +340,7 @@ describe('googleAuth', () => {
       const groupToCheck = AUTHORISED_ADMIN_GROUP_TEST;
       const user = generateJWTTokenTestData(
         [AUTHORISED_ADMIN_GROUP_TEST],
-        issuedAt
+        issuedAt,
       );
       expect(hasUserGroup(groupToCheck, user)).toBeTruthy();
     });
@@ -403,37 +401,32 @@ describe('googleAuth', () => {
 
   describe('canViewSensitiveApplication', () => {
     it('returns true when user has admin permissions', () => {
-      const user: HackneyGoogleUserWithPermissions = generateHRUserWithPermissions(
-        UserRole.Admin
-      );
+      const user: HackneyGoogleUserWithPermissions =
+        generateHRUserWithPermissions(UserRole.Admin);
       expect(canViewSensitiveApplication('', user)).toBeTruthy();
     });
 
     it('returns true when user has manager permissions', () => {
-      const user: HackneyGoogleUserWithPermissions = generateHRUserWithPermissions(
-        UserRole.Manager
-      );
+      const user: HackneyGoogleUserWithPermissions =
+        generateHRUserWithPermissions(UserRole.Manager);
       expect(canViewSensitiveApplication('', user)).toBeTruthy();
     });
 
     it('returns false when user has officer permissions', () => {
-      const user: HackneyGoogleUserWithPermissions = generateHRUserWithPermissions(
-        UserRole.Officer
-      );
+      const user: HackneyGoogleUserWithPermissions =
+        generateHRUserWithPermissions(UserRole.Officer);
       expect(canViewSensitiveApplication('', user)).toBeFalsy();
     });
 
     it('returns false when user has read only permissions', () => {
-      const user: HackneyGoogleUserWithPermissions = generateHRUserWithPermissions(
-        UserRole.ReadOnly
-      );
+      const user: HackneyGoogleUserWithPermissions =
+        generateHRUserWithPermissions(UserRole.ReadOnly);
       expect(canViewSensitiveApplication('', user)).toBeFalsy();
     });
 
     it('returns true when user has officer permissions and the application is assigned to them', () => {
-      const user: HackneyGoogleUserWithPermissions = generateHRUserWithPermissions(
-        UserRole.Officer
-      );
+      const user: HackneyGoogleUserWithPermissions =
+        generateHRUserWithPermissions(UserRole.Officer);
       expect(canViewSensitiveApplication(user.email, user)).toBeTruthy();
     });
   });
@@ -445,24 +438,23 @@ describe('googleAuth', () => {
     });
 
     it("returns /access-denied when user is provided but they don't have any HR permissions", () => {
-      const user: HackneyGoogleUserWithPermissions = generateHRUserWithPermissions();
+      const user: HackneyGoogleUserWithPermissions =
+        generateHRUserWithPermissions();
 
       const expectedResponse = '/access-denied';
       expect(getRedirect(user)).toBe(expectedResponse);
     });
 
     it('returns /access-denied when user is provided but they only have read only HR permissions', () => {
-      const user: HackneyGoogleUserWithPermissions = generateHRUserWithPermissions(
-        UserRole.ReadOnly
-      );
+      const user: HackneyGoogleUserWithPermissions =
+        generateHRUserWithPermissions(UserRole.ReadOnly);
       const expectedResponse = '/access-denied';
       expect(getRedirect(user, true)).toBe(expectedResponse);
     });
 
     it('returns undefined when user is provided and has HR permissions', () => {
-      const officer: HackneyGoogleUserWithPermissions = generateHRUserWithPermissions(
-        UserRole.Officer
-      );
+      const officer: HackneyGoogleUserWithPermissions =
+        generateHRUserWithPermissions(UserRole.Officer);
       expect(getRedirect(officer)).toBeUndefined();
     });
   });
@@ -489,7 +481,7 @@ describe('googleAuth', () => {
       const tokenData = generateJWTTokenTestData(['user-group']);
 
       expect(getAuth('required-group', tokenData)).toStrictEqual(
-        expectedResponse
+        expectedResponse,
       );
     });
 

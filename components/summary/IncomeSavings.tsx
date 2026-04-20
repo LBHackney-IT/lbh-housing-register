@@ -39,12 +39,12 @@ export function IncomeSavingsSummary({
   const income = getQuestionValue(
     currentResident.questions,
     FormID.INCOME_SAVINGS,
-    'income'
+    'income',
   );
   const savings = getQuestionValue(
     currentResident.questions,
     FormID.INCOME_SAVINGS,
-    'savings'
+    'savings',
   );
 
   function getIncome(answer: string) {

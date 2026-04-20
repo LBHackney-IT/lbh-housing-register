@@ -40,7 +40,7 @@ const Declaration = (): JSX.Element => {
 
     if (!isEligible) {
       const reasonStrings = reasons.map((reason) =>
-        getDisqualificationReasonOption(reason)
+        getDisqualificationReasonOption(reason),
       );
       const reason = reasonStrings.join(',');
       await dispatch(sendDisqualifyEmail({ application, reason }));
@@ -137,10 +137,11 @@ const Declaration = (): JSX.Element => {
           />
 
           <div className="c-flex__1 text-right">
-            <Link href="/apply/overview">
-              <a className="lbh-body lbh-link lbh-link--no-visited-state ">
-                Return to application overview
-              </a>
+            <Link
+              href="/apply/overview"
+              className="lbh-body lbh-link lbh-link--no-visited-state "
+            >
+              Return to application overview
             </Link>
           </div>
         </>

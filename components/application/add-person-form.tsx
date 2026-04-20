@@ -212,7 +212,7 @@ const AddPersonForm = ({
             }
 
             return true;
-          }
+          },
         )
         .test(
           'isOver16',
@@ -236,7 +236,7 @@ const AddPersonForm = ({
 
             setIsOver16State(false);
             return true;
-          }
+          },
         ),
       gender: Yup.string().label('Gender').required(),
       relationshipType: Yup.string().label('Relationship to you').required(),

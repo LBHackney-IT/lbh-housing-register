@@ -181,7 +181,7 @@ describe('Manager actions', () => {
       //current accommodation
       cy.get('.lbh-link').contains('Current accommodation').click();
       ApplyResidentCurrentAccommodationPage.getRadioButton().check(
-        'private-rental'
+        'private-rental',
       );
       ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
       ApplyResidentCurrentAccommodationPage.getRadioButton().check('flat');
@@ -213,12 +213,12 @@ describe('Manager actions', () => {
       ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
       ApplyResidentCurrentAccommodationPage.getUnsuitableHomeReasonInput().type(
         faker.lorem.paragraph(),
-        { delay: 0 }
+        { delay: 0 },
       );
       ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
       ApplyResidentCurrentAccommodationPage.getLandlordNameInput().type(
         faker.person.fullName(),
-        { delay: 0 }
+        { delay: 0 },
       );
       ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
 
@@ -251,7 +251,7 @@ describe('Manager actions', () => {
 
       ApplyResidentIndexPage.getPersonalDetailsSectionLink().click();
       ApplyResidentPersonalDetailsPage.getNINumberInput().type(
-        faker.string.alphanumeric(9)
+        faker.string.alphanumeric(9),
       );
       ApplyResidentPersonalDetailsPage.getSubmitButton()
         .scrollIntoView()
@@ -358,7 +358,7 @@ describe('Manager actions', () => {
 
       //check household
       cy.contains(
-        `${mainApplicantTitle} ${mainApplicantFirstName} ${mainApplicantLastName} (+2)`
+        `${mainApplicantTitle} ${mainApplicantFirstName} ${mainApplicantLastName} (+2)`,
       );
       cy.contains(`${mainApplicantTitle} ${mainApplicantFirstName}`);
       cy.contains(`${partnerFirstName} ${partnerLastName}`);
@@ -369,7 +369,7 @@ describe('Manager actions', () => {
       cy.contains('Yes').click({ force: true });
 
       cy.contains(
-        `${mainApplicantTitle} ${mainApplicantFirstName} ${mainApplicantLastName} (+1)`
+        `${mainApplicantTitle} ${mainApplicantFirstName} ${mainApplicantLastName} (+1)`,
       );
       cy.contains(`${mainApplicantTitle} ${mainApplicantFirstName}`);
       cy.contains(`${partnerFirstName} ${partnerLastName}`).should('not.exist');
@@ -386,27 +386,27 @@ describe('Manager actions', () => {
       });
 
       AddHouseholdMemberPage.getTitleDropdown().select(
-        faker.helpers.enumValue(TitleEnum)
+        faker.helpers.enumValue(TitleEnum),
       );
       AddHouseholdMemberPage.getFirstNameInput().type(newPartnerFirstName);
       AddHouseholdMemberPage.getLastNameInput().type(newPartnerLastName);
       AddHouseholdMemberPage.getDoBDayInput().type(
-        newPartnerBirthDate.getDate().toString()
+        newPartnerBirthDate.getDate().toString(),
       );
       AddHouseholdMemberPage.getDoBMonthInput().type(
-        (newPartnerBirthDate.getMonth() + 1).toString()
+        (newPartnerBirthDate.getMonth() + 1).toString(),
       );
       AddHouseholdMemberPage.getDoBYearInput().type(
-        newPartnerBirthDate.getFullYear().toString()
+        newPartnerBirthDate.getFullYear().toString(),
       );
       AddHouseholdMemberPage.getGenderDropdown().select(`F`);
       cy.get(
-        `[data-testid="test-select-personalDetails_relationshipType"]`
+        `[data-testid="test-select-personalDetails_relationshipType"]`,
       ).select('My partner');
       cy.get(`[data-testid="test-submit-household-member"]`).click();
 
       cy.contains(
-        `${mainApplicantTitle} ${mainApplicantFirstName} ${mainApplicantLastName} (+2)`
+        `${mainApplicantTitle} ${mainApplicantFirstName} ${mainApplicantLastName} (+2)`,
       );
       cy.contains(`${mainApplicantTitle} ${mainApplicantFirstName}`);
       cy.contains(`${newPartnerFirstName} ${newPartnerLastName}`);

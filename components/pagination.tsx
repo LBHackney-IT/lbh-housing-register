@@ -10,16 +10,15 @@ interface PaginationItemProps {
 const PaginationItem = ({ page, pageUrl, isCurrent }: PaginationItemProps) => {
   return (
     <li className="lbh-pagination__item">
-      <Link href={pageUrl}>
-        <a
-          className={`lbh-pagination__link lbh-pagination__link${
-            isCurrent ? '--current' : ''
-          }`}
-          aria-current={isCurrent}
-          aria-label={`Page ${page}, ${isCurrent ? 'current page' : ''}`}
-        >
-          {page + 1}
-        </a>
+      <Link
+        href={pageUrl}
+        className={`lbh-pagination__link lbh-pagination__link${
+          isCurrent ? '--current' : ''
+        }`}
+        aria-current={isCurrent}
+        aria-label={`Page ${page}, ${isCurrent ? 'current page' : ''}`}
+      >
+        {page + 1}
       </Link>
     </li>
   );
@@ -51,7 +50,7 @@ const Pagination = ({
         page={i}
         isCurrent={i == page}
         pageUrl={newRelativePathQuery}
-      />
+      />,
     );
   }
 

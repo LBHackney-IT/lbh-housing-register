@@ -14,16 +14,20 @@ export interface ActivityHistoryResponse {
   id: string;
   targetId: string;
   createdAt: string;
-  oldData: any;
-  newData: any;
+  oldData: unknown;
+  newData: unknown;
   authorDetails: ActivityHistoryAuthor;
 }
+
+/** Activity payloads include dotted keys and ad hoc fields (e.g. activityData) not on Application. */
+export type ActivityHistoryData = Partial<Application> &
+  Record<string, unknown>;
 
 export interface IActivityEntity {
   id: string;
   createdAt: string;
-  oldData: Partial<Application>;
-  newData: Partial<Application>;
+  oldData: ActivityHistoryData;
+  newData: ActivityHistoryData;
   authorDetails: ActivityHistoryAuthor;
 }
 
@@ -65,8 +69,8 @@ export enum ApplicationActivityData {
 export class ActivityEntity implements IActivityEntity {
   id: string;
   createdAt: string;
-  oldData: Partial<Application>;
-  newData: any;
+  oldData: ActivityHistoryData;
+  newData: ActivityHistoryData;
   authorDetails: ActivityHistoryAuthor;
   activityType: ApplicationActivityType;
 
@@ -75,36 +79,49 @@ export class ActivityEntity implements IActivityEntity {
     this.createdAt = source.createdAt;
     this.authorDetails = source.authorDetails;
 
-    this.oldData = this.mapDotNotationToObject(source.oldData);
-    this.newData = this.mapDotNotationToObject(source.newData);
+    this.oldData = this.mapDotNotationToObject(
+      source.oldData,
+    ) as ActivityHistoryData;
+    this.newData = this.mapDotNotationToObject(
+      source.newData,
+    ) as ActivityHistoryData;
 
-    this.activityType = source.newData._activityType as ApplicationActivityType;
+    this.activityType = (source.newData as { _activityType?: string })
+      ._activityType as ApplicationActivityType;
   }
 
-  mapDotNotationToObject(source: any): Partial<Application> {
-    if (source == null) {
+  mapDotNotationToObject(source: unknown): ActivityHistoryData {
+    if (source == null || typeof source !== 'object') {
       return {};
     }
 
-    let application: any = {};
+    const application: Record<string, unknown> = {};
 
-    for (const [key, value] of Object.entries(source)) {
+    for (const [key, value] of Object.entries(
+      source as Record<string, unknown>,
+    )) {
       this.stringToObj(key, value, application);
     }
 
-    return application;
+    return application as ActivityHistoryData;
   }
 
-  stringToObj(path: string, value: any, obj: any) {
+  stringToObj(path: string, value: unknown, obj: Record<string, unknown>) {
     const parts = path.split('.');
     const last = parts.pop();
 
-    let part;
+    let current: Record<string, unknown> = obj;
+    let part: string | undefined;
     while ((part = parts.shift())) {
-      if (typeof obj[part] != 'object') obj[part] = {};
-      obj = obj[part]; // update "pointer"
+      const next = current[part];
+      if (typeof next !== 'object' || next === null) {
+        current[part] = {};
+      }
+      current = current[part] as Record<string, unknown>;
     }
 
-    obj[last!] = value;
+    if (last !== undefined) {
+      current[last] = value;
+    }
   }
 }

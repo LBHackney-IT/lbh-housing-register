@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import cookie from 'cookie';
+import * as cookie from 'cookie';
 import { IncomingMessage } from 'http';
 import asssertServerOnly from './assertServerOnly';
 
@@ -19,7 +19,7 @@ export function housingAxios() {
 }
 
 export function authenticatedHousingAxios(
-  httpRequest: IncomingMessage
+  httpRequest: IncomingMessage,
 ): AxiosInstance {
   const client = housingAxios();
 

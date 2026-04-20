@@ -10,18 +10,40 @@ interface FormValues {
   endDate: string;
 }
 
+interface HiddenFormToSubmitProps {
+  readonly submittedFormData: FormValues;
+  readonly formRef: React.RefObject<HTMLFormElement | null>;
+}
+
+function HiddenFormToSubmit({
+  submittedFormData,
+  formRef,
+}: HiddenFormToSubmitProps): JSX.Element {
+  const { reportType, startDate, endDate } = submittedFormData;
+  const payloadStartDate = new Date(startDate).toISOString().split('T')[0];
+  const payloadEndDate = new Date(endDate).toISOString().split('T')[0];
+
+  return (
+    <form action="/api/reports/internal/download" method="POST" ref={formRef}>
+      <input type="hidden" name="ReportType" value={reportType} />
+      <input type="hidden" name="StartDate" value={payloadStartDate} />
+      <input type="hidden" name="EndDate" value={payloadEndDate} />
+    </form>
+  );
+}
+
 const runDate = new Date();
 const initialValues: FormValues = {
   reportType: '0',
   startDate: new Date(
     runDate.getFullYear(),
     runDate.getMonth(),
-    1
+    1,
   ).toDateString(),
   endDate: new Date(
     runDate.getFullYear(),
     runDate.getMonth() + 1,
-    0
+    0,
   ).toDateString(),
 };
 
@@ -35,24 +57,6 @@ export default function InternalReports(): JSX.Element {
     if (internalReportForm.current) {
       internalReportForm.current.submit();
     }
-  };
-
-  const HiddenFormToSubmit = ({ submittedFormData }: any) => {
-    const { reportType, startDate, endDate } = submittedFormData;
-    const payloadStartDate = new Date(startDate).toISOString().split('T')[0];
-    const payloadEndDate = new Date(endDate).toISOString().split('T')[0];
-
-    return (
-      <form
-        action="/api/reports/internal/download"
-        method="POST"
-        ref={internalReportForm}
-      >
-        <input type="hidden" name="ReportType" value={reportType} />
-        <input type="hidden" name="StartDate" value={payloadStartDate} />
-        <input type="hidden" name="EndDate" value={payloadEndDate} />
-      </form>
-    );
   };
 
   return (
@@ -77,7 +81,10 @@ export default function InternalReports(): JSX.Element {
 
             <Button type="submit">Download .csv file</Button>
           </Form>
-          <HiddenFormToSubmit submittedFormData={valuesToSubmit} />
+          <HiddenFormToSubmit
+            submittedFormData={valuesToSubmit}
+            formRef={internalReportForm}
+          />
         </>
       )}
     </Formik>

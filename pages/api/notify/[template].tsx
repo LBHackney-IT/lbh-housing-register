@@ -9,7 +9,7 @@ import {
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
   switch (req.method) {
     case 'POST':
@@ -19,23 +19,20 @@ const endpoint: NextApiHandler = async (
 
         switch (template) {
           case 'new-application': {
-            const sendNewApplicationData = await sendNewApplicationEmail(
-              notification
-            );
+            const sendNewApplicationData =
+              await sendNewApplicationEmail(notification);
             res.status(StatusCodes.OK).json(sendNewApplicationData);
             break;
           }
           case 'medical': {
-            const sendMedicalEmailData = await sendMedicalNeedEmail(
-              notification
-            );
+            const sendMedicalEmailData =
+              await sendMedicalNeedEmail(notification);
             res.status(StatusCodes.OK).json(sendMedicalEmailData);
             break;
           }
           case 'disqualify': {
-            const sendDisqualifyEmailData = await sendDisqualifyEmail(
-              notification
-            );
+            const sendDisqualifyEmailData =
+              await sendDisqualifyEmail(notification);
             res.status(StatusCodes.OK).json(sendDisqualifyEmailData);
             break;
           }

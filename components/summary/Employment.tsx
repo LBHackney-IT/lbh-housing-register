@@ -15,7 +15,7 @@ export function EmploymentSummary({ currentResident }: EmploymentSummaryProps) {
   const employment = getQuestionValue(
     currentResident.questions,
     FormID.EMPLOYMENT,
-    'employment'
+    'employment',
   );
 
   function getEmploymentType(answer: string) {

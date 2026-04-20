@@ -16,9 +16,9 @@ export const removeApplicant = createAsyncThunk(
   async (id: string, { getState }) => {
     const store: Store = getState() as Store;
     return store.application.otherMembers?.filter(
-      (resident) => resident.person?.id !== id
+      (resident) => resident.person?.id !== id,
     );
-  }
+  },
 );
 
 const slice = createSlice({
@@ -31,7 +31,7 @@ const slice = createSlice({
      */
     addApplicant: (
       state = [],
-      action: PayloadAction<Applicant>
+      action: PayloadAction<Applicant>,
     ): Applicant[] => {
       return [...state, action.payload];
     },
@@ -41,7 +41,7 @@ const slice = createSlice({
      */
     addResidentFromFormData: (
       state = [],
-      action: PayloadAction<FormikValues>
+      action: PayloadAction<FormikValues>,
     ) => {
       const applicant: Applicant = {
         person: {
@@ -68,7 +68,7 @@ const slice = createSlice({
      */
     deleteApplicant: (state = [], action: PayloadAction<Applicant>) =>
       state.filter(
-        (resident) => resident.person?.id !== action.payload.person?.id
+        (resident) => resident.person?.id !== action.payload.person?.id,
       ),
   },
   extraReducers: (builder) => {
@@ -76,19 +76,19 @@ const slice = createSlice({
       .addCase(removeApplicant.fulfilled, (state, action) => action.payload)
       .addCase(updateApplicant, (state = [], action) => {
         const applicant = state.findIndex(
-          (p) => p.person?.id && p.person.id === action.payload.person.id
+          (p) => p.person?.id && p.person.id === action.payload.person.id,
         );
         if (applicant > -1) {
           state[applicant] = updateApplicantReducer(
             state[applicant],
-            action.payload
+            action.payload,
           );
         }
         return state;
       })
       .addCase(updateWithFormValues, (state = [], action) => {
         const applicant = state.findIndex(
-          (p) => p.person?.id && p.person.id === action.payload.personID
+          (p) => p.person?.id && p.person.id === action.payload.personID,
         );
         if (applicant > -1) {
           if (action.payload.markAsComplete) {
@@ -97,7 +97,7 @@ const slice = createSlice({
           state[applicant] = applyQuestions(
             state[applicant],
             action.payload.formID,
-            action.payload.values
+            action.payload.values,
           );
         }
         return state;

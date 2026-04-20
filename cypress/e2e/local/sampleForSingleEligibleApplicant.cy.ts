@@ -114,7 +114,7 @@ describe('Single main applicant, over 55', () => {
       //current accommodation
       cy.get('.lbh-link').contains('Current accommodation').click();
       ApplyResidentCurrentAccommodationPage.getRadioButton().check(
-        'private-rental'
+        'private-rental',
       );
       ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
       ApplyResidentCurrentAccommodationPage.getRadioButton().check('flat');
@@ -146,23 +146,23 @@ describe('Single main applicant, over 55', () => {
       ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
       ApplyResidentCurrentAccommodationPage.getUnsuitableHomeReasonInput().type(
         faker.lorem.paragraph(),
-        { delay: 0 }
+        { delay: 0 },
       );
       ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
       ApplyResidentCurrentAccommodationPage.getLandlordNameInput().type(
         faker.person.fullName(),
-        { delay: 0 }
+        { delay: 0 },
       );
       ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
 
       ApplyResidentIndexPage.getYourSituationSectionLink().click();
       ApplyResidentYourSituationPage.getSubmitButton().click();
       ApplyResidentYourSituationPage.getServedInArmedForcesRadioButton(
-        1
+        1,
       ).check();
       ApplyResidentYourSituationPage.getSubmitButton().click();
       ApplyResidentYourSituationPage.getIntentionallyHomelessRadioButton(
-        1
+        1,
       ).check();
       ApplyResidentYourSituationPage.getSubmitButton().click();
       ApplyResidentYourSituationPage.getOwnPropertyRadioButton(1).check();
@@ -176,7 +176,7 @@ describe('Single main applicant, over 55', () => {
       ApplyResidentYourSituationPage.getLegalRestrictionsRadioButton(1).check();
       ApplyResidentYourSituationPage.getSubmitButton().click();
       ApplyResidentYourSituationPage.getUnspentConvictionsRadioButton(
-        1
+        1,
       ).check();
       ApplyResidentYourSituationPage.getSubmitButton().click();
 

@@ -30,6 +30,10 @@ const ApplicationVerifyPage = (): JSX.Element => {
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
   useEffect(() => {
+    if (!router.isReady) {
+      return;
+    }
+
     if (application.mainApplicant?.person) {
       router.push('/apply/overview');
       return;
@@ -43,7 +47,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
     if (!email) {
       router.push('/apply/sign-in');
     }
-  }, [application, router]);
+  }, [application, email, router, router.isReady]);
 
   const confirmSignUp = async (values: FormData) => {
     try {
@@ -65,7 +69,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
           setUserError(err);
           scrollToError();
         });
-    } catch (e) {
+    } catch {
       setUserError(Errors.VERIFY_ERROR);
       scrollToError();
     }
@@ -75,6 +79,18 @@ const ApplicationVerifyPage = (): JSX.Element => {
     dispatch(createVerifyCode(email));
     setCodeSent(true);
   };
+
+  if (!router.isReady) {
+    return (
+      <Layout
+        pageName="Verify your account"
+        pageLoadsApplication={false}
+        dataTestId="test-verify-code-page"
+      >
+        <Loading text="Loading..." />
+      </Layout>
+    );
+  }
 
   return (
     <Layout

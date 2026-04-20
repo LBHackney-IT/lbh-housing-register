@@ -33,6 +33,8 @@ export default function StaffLayout({
     router.reload();
   };
 
+  const applicationId = Array.isArray(id) ? id[0] : id;
+
   return (
     <>
       {pageName && <Seo title={pageName} />}
@@ -50,10 +52,17 @@ export default function StaffLayout({
         <div className="lbh-container">
           <nav>
             <strong className="lbh-heading-h5">
-              <Link href="/applications/">
-                <a className="lbh-link lbh-link--no-visited-state">
-                  Back to dashboard
-                </a>
+              <Link
+                href="/applications/"
+                prefetch={false}
+                className="lbh-link lbh-link--no-visited-state"
+                onClick={(e) => {
+                  e.preventDefault();
+                  // Full navigation so /applications getServerSideProps runs again;
+                  globalThis.location.assign('/applications/');
+                }}
+              >
+                Back to dashboard
               </Link>
             </strong>
           </nav>
@@ -63,8 +72,18 @@ export default function StaffLayout({
         <div className="lbh-container">
           <nav>
             <strong className="lbh-heading-h5">
-              <Link href={`/applications/view/${id}`}>
-                <a className="lbh-link">Back to household overview</a>
+              <Link
+                href={`/applications/view/${applicationId}`}
+                prefetch={false}
+                className="lbh-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  globalThis.location.assign(
+                    `/applications/view/${applicationId}`,
+                  );
+                }}
+              >
+                Back to household overview
               </Link>
             </strong>
           </nav>

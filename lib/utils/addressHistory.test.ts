@@ -15,7 +15,7 @@ const partialEntry = {
 };
 
 describe('checkAddressHistory', () => {
-  test('checkAddressHistory calculates correctly ', () => {
+  test('checkAddressHistory calculates correctly', () => {
     expect(
       checkAddressHistory(
         [
@@ -25,8 +25,8 @@ describe('checkAddressHistory', () => {
             dateTo: '',
           },
         ],
-        1
-      )
+        1,
+      ),
     ).toBe(true);
     expect(
       checkAddressHistory(
@@ -42,8 +42,8 @@ describe('checkAddressHistory', () => {
             dateTo: '2020-01-01',
           },
         ],
-        1
-      )
+        1,
+      ),
     ).toBe(true);
   });
   test('checkAddressHistory only checks the last date', () => {
@@ -61,8 +61,8 @@ describe('checkAddressHistory', () => {
             dateTo: '',
           },
         ],
-        1
-      )
+        1,
+      ),
     ).toBe(false);
   });
 });
@@ -84,6 +84,6 @@ test('calculateDurations calculates accurately', () => {
         date: '2019-06-01',
         dateTo: '2020-01-01',
       },
-    ])
+    ]),
   ).toMatchSnapshot();
 });

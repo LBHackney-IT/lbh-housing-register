@@ -12,7 +12,7 @@ import { FormID } from './form-data';
  */
 export const getApplicationSectionFromId = (
   id: string,
-  sectionGroups: ApplicationSectionGroup[]
+  sectionGroups: ApplicationSectionGroup[],
 ): ApplicationSection | undefined =>
   sectionGroups.flatMap((sg) => sg.sections).find((s) => s.id === id);
 
@@ -22,5 +22,5 @@ export const getApplicationSectionFromId = (
  * @returns {string[]} Workable form ids
  */
 export const getFormIdsFromApplicationSections = (
-  sectionGroups: ApplicationSectionGroup[]
+  sectionGroups: ApplicationSectionGroup[],
 ): FormID[] => sectionGroups.flatMap((sg) => sg.sections.map((s) => s.id));

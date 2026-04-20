@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import { useRouter } from 'next/router';
+
 import { Application } from '../../domain/HousingApi';
 import { updateApplication } from '../../lib/gateways/internal-api';
 import { HackneyGoogleUserWithPermissions } from '../../lib/utils/googleAuth';
@@ -16,32 +18,42 @@ export default function SensitiveData({
   isSensitive,
   user,
 }: SensitiveDataPageProps): JSX.Element {
-  const [sensitive, setSensitive] = useState<boolean>(isSensitive);
+  const router = useRouter();
+  const [pending, setPending] = useState(false);
 
   const updateSensitiveDataStatus = async (markAs: boolean) => {
-    setSensitive(markAs);
     const request: Application = {
       id,
       sensitiveData: markAs,
     };
-    updateApplication(request);
+
+    setPending(true);
+    try {
+      await updateApplication(request);
+      // Full reload so getServerSideProps runs and `data` matches the API.
+      router.reload();
+    } catch {
+      setPending(false);
+    }
   };
 
   return (
     <>
       <HeadingFour content="Sensitive data" />
-      {sensitive && (
+      {isSensitive && (
         <p className="lbh-body-m lbh-!-margin-top-1">
           This application has been marked as sensitive.
         </p>
       )}
       {(user.hasAdminPermissions || user.hasManagerPermissions) && (
         <button
-          onClick={() => updateSensitiveDataStatus(!sensitive)}
+          type="button"
+          onClick={() => updateSensitiveDataStatus(!isSensitive)}
           className="govuk-button lbh-button lbh-button--secondary lbh-!-margin-top-1"
           data-testid="test-sensitive-data-button"
+          disabled={pending}
         >
-          Mark as {sensitive ? 'not' : ''} sensitive
+          Mark as {isSensitive ? 'not' : ''} sensitive
         </button>
       )}
     </>

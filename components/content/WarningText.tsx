@@ -1,7 +1,7 @@
-import { ReactNode, ReactNodeArray } from 'react';
+import { ReactNode } from 'react';
 
 interface WarningTextProps {
-  children: ReactNode | ReactNodeArray | string;
+  children: ReactNode | string;
 }
 
 export default function WarningText({

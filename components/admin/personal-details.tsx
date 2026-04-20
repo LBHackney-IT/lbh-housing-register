@@ -54,13 +54,10 @@ export default function PersonalDetails({
                   {applicant.contactInformation?.emailAddress && (
                     <Link
                       href={`mailto:${applicant.contactInformation.emailAddress}`}
+                      className="lbh-link"
+                      data-testid="test-applicant-email"
                     >
-                      <a
-                        className="lbh-link"
-                        data-testid={'test-applicant-email'}
-                      >
-                        {applicant.contactInformation.emailAddress}
-                      </a>
+                      {applicant.contactInformation.emailAddress}
                     </Link>
                   )}
                 </li>

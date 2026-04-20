@@ -31,7 +31,7 @@ const applicationWithMainApplicant = {
 describe('Additional questions', () => {
   beforeEach(() => {
     cy.clearAllCookies();
-    cy.task('clearNock');
+    cy.clearE2eNock();
   });
 
   it('shows the loading spinner while application data is being fetched on the background', () => {
@@ -40,7 +40,7 @@ describe('Additional questions', () => {
       applicationId,
       application,
       false,
-      apiResponseDelay
+      apiResponseDelay,
     );
 
     AdditionalQuestionsPage.visit();
@@ -54,18 +54,18 @@ describe('Additional questions', () => {
 
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
-      applicationWithMainApplicant
+      applicationWithMainApplicant,
     );
 
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,
       applicationWithMainApplicant,
-      apiResponseDelay
+      apiResponseDelay,
     );
 
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
-      applicationWithMainApplicant
+      applicationWithMainApplicant,
     );
 
     AdditionalQuestionsPage.visit();
@@ -91,7 +91,7 @@ describe('Additional questions', () => {
 
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
-      applicationWithMainApplicant
+      applicationWithMainApplicant,
     );
 
     const errorStatusCode = StatusCodes.BAD_REQUEST;
@@ -113,7 +113,7 @@ describe('Additional questions', () => {
       applicationId,
       applicationWithMainApplicant,
       apiResponseDelay,
-      errorStatusCode
+      errorStatusCode,
     );
 
     Components.getSaveButton().click();
@@ -131,7 +131,7 @@ describe('Additional questions', () => {
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,
       applicationWithMainApplicant,
-      apiResponseDelay
+      apiResponseDelay,
     );
 
     AdditionalQuestionsPage.visit();

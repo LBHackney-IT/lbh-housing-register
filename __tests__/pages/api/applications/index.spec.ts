@@ -51,17 +51,17 @@ const addApplicationSpy = jest
 describe('POST', () => {
   const parseSpy = jest.spyOn(JSON, 'parse');
   const isStaffActionMock = (isStaffAction as jest.Mock).mockReturnValue(true);
-  const hasStaffPermissionsMock = (hasStaffPermissions as jest.Mock).mockReturnValue(
-    true
-  );
-  const hasReadOnlyStaffPermissionsMock = (hasReadOnlyStaffPermissions as jest.Mock).mockReturnValue(
-    false
-  );
+  const hasStaffPermissionsMock = (
+    hasStaffPermissions as jest.Mock
+  ).mockReturnValue(true);
+  const hasReadOnlyStaffPermissionsMock = (
+    hasReadOnlyStaffPermissions as jest.Mock
+  ).mockReturnValue(false);
 
   describe('authorization', () => {
     it('calls parse on JSON with request body', async () => {
       const { req, res } = generateMockRequestResponseWithHackneyToken(
-        mockRequestResponseParameters
+        mockRequestResponseParameters,
       );
 
       await endpoint(req, res);
@@ -72,7 +72,7 @@ describe('POST', () => {
 
     it('calls isStaffAction with application from request body, hasStaffPermissions and hasReadOnlyStaffPermissions with request when isStaffAction returns true', async () => {
       const { req, res } = generateMockRequestResponseWithHackneyToken(
-        mockRequestResponseParameters
+        mockRequestResponseParameters,
       );
       const expectedApplication = JSON.parse(req.body);
 
@@ -87,7 +87,7 @@ describe('POST', () => {
 
     it('sets response status code to 403 and adds an error message to the response when isStaffAction returns true and hasStaffPermissions returns false', async () => {
       const { req, res } = generateMockRequestResponseWithHackneyToken(
-        mockRequestResponseParameters
+        mockRequestResponseParameters,
       );
       const expectedErrorMessage = {
         message: 'Unable to add application with assessment',
@@ -104,7 +104,7 @@ describe('POST', () => {
 
     it('sets response status code to 403 and adds an error message to the response when isStaffAction returns true, hasStaffPermissions returns false and hasReadOnlyStaffPermissions returns true', async () => {
       const { req, res } = generateMockRequestResponseWithHackneyToken(
-        mockRequestResponseParameters
+        mockRequestResponseParameters,
       );
       const expectedErrorMessage = {
         message: 'Unable to add application with assessment',
@@ -122,7 +122,7 @@ describe('POST', () => {
 
     it('sets response status code to 403 and adds an error message to the response when isStaffAction returns true and hasReadOnlyStaffPermissions returns true', async () => {
       const { req, res } = generateMockRequestResponseWithHackneyToken(
-        mockRequestResponseParameters
+        mockRequestResponseParameters,
       );
       const expectedErrorMessage = {
         message: 'Unable to add application with assessment',
@@ -139,7 +139,7 @@ describe('POST', () => {
 
     it('calls addApplication with application from the request body when isStaffAction and hasStaffPermissions return true and hasReadOnlyStaffPermissions returns false', async () => {
       const { req, res } = generateMockRequestResponseWithHackneyToken(
-        mockRequestResponseParameters
+        mockRequestResponseParameters,
       );
       const expectedApplication = JSON.parse(req.body);
 
@@ -155,7 +155,7 @@ describe('POST', () => {
 
     it('sets response status code to 200 and returns application data when application was added successfully', async () => {
       const { req, res } = generateMockRequestResponseWithHackneyToken(
-        mockRequestResponseParameters
+        mockRequestResponseParameters,
       );
       const expectedApplication = JSON.parse(req.body);
 
@@ -170,7 +170,7 @@ describe('POST', () => {
 
     it('sets correct response status code (500) and error message when exception is thrown', async () => {
       const { req, res } = generateMockRequestResponseWithHackneyToken(
-        mockRequestResponseParameters
+        mockRequestResponseParameters,
       );
       const expectedErrorMessage = { message: 'Unable to add application' };
       const mockErrorMessage = 'parse error';

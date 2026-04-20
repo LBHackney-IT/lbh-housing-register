@@ -29,20 +29,19 @@ export default function ApplicantSummary({
             {applicantNumber}.
           </div>
           <span className="lbh-!-margin-top-0">
-            <Link href={`/apply/${applicant.person?.id}`}>
-              <a
-                data-testid={`test-application-applicant-summary-section-button-${applicantLinkTestId}`}
-                className="lbh-applicant-summary__name lbh-link lbh-link--no-visited-state lbh-body-l lbh-!-font-weight-bold lbh-!-margin-top-0"
-              >
-                {`${applicant.person?.firstName} ${applicant.person?.surname}`}
-                {tasks.remaining !== 0 ? (
-                  <div className="lbh-applicant-summary__action">
-                    {tasks.total === tasks.remaining
-                      ? 'Start section'
-                      : 'Resume section'}
-                  </div>
-                ) : null}
-              </a>
+            <Link
+              href={`/apply/${applicant.person?.id}`}
+              data-testid={`test-application-applicant-summary-section-button-${applicantLinkTestId}`}
+              className="lbh-applicant-summary__name lbh-link lbh-link--no-visited-state lbh-body-l lbh-!-font-weight-bold lbh-!-margin-top-0"
+            >
+              {`${applicant.person?.firstName} ${applicant.person?.surname}`}
+              {tasks.remaining !== 0 ? (
+                <div className="lbh-applicant-summary__action">
+                  {tasks.total === tasks.remaining
+                    ? 'Start section'
+                    : 'Resume section'}
+                </div>
+              ) : null}
             </Link>
             {tasks.remaining === 0 ? (
               <div className="lbh-applicant-summary__action lbh-applicant-summary__action--done">

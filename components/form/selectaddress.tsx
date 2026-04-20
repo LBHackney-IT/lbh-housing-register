@@ -1,7 +1,21 @@
+import type { ChangeEventHandler } from 'react';
+
+interface AddressOption {
+  readonly line1: string;
+  readonly town: string;
+  readonly postcode: string;
+  readonly UPRN: string;
+}
+
+interface AddressSelectorProps {
+  readonly addresses: readonly AddressOption[];
+  readonly addressSelectorHandler: ChangeEventHandler<HTMLSelectElement>;
+}
+
 export default function AddressSelector({
   addresses,
   addressSelectorHandler,
-}: any): JSX.Element {
+}: AddressSelectorProps): JSX.Element {
   return (
     <div className="govuk-form-group lbh-form-group">
       <label className="govuk-label lbh-label" htmlFor="select-1">
@@ -13,7 +27,7 @@ export default function AddressSelector({
         name="select-1"
         onChange={addressSelectorHandler}
       >
-        {addresses.map((address: any) => {
+        {addresses.map((address: AddressOption) => {
           return (
             <option
               value={[address.line1, address.town, address.postcode]}

@@ -22,8 +22,8 @@ export function SummaryTitle({
   return (
     <div className="lbh-summary-title">
       <HeadingThree content={content} />
-      <Link href={href}>
-        <a className="lbh-link">Edit</a>
+      <Link href={href} className="lbh-link">
+        Edit
       </Link>
     </div>
   );

@@ -30,7 +30,7 @@ describe('Apply resident address history page', () => {
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithCompletedMainApplicantSections,
-      true
+      true,
     );
     cy.mockAddressAPISearchByPostcode(postcode);
   });
@@ -62,7 +62,7 @@ describe('Apply resident address history page', () => {
       applicationId,
       application,
       0,
-      errorCode
+      errorCode,
     );
 
     ApplyHouseholdPage.visit();

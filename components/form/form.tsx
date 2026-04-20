@@ -42,7 +42,7 @@ export default function Form({
 
   const calculatedInitialValues = useMemo(
     () => initialValues || schema.getDefault(),
-    [initialValues, schema]
+    [initialValues, schema],
   );
 
   const next = () => {
@@ -59,7 +59,7 @@ export default function Form({
 
   const handleSubmit = async (
     values: FormData,
-    bag: FormikHelpers<FormData>
+    bag: FormikHelpers<FormData>,
   ) => {
     const filteredVisibleValues: FormData = Object.fromEntries(
       formData.steps
@@ -67,10 +67,10 @@ export default function Form({
           step.fields.map((field) =>
             getDisplayStateOfField(field, values)
               ? [field.name, values[field.name]]
-              : null
-          )
+              : null,
+          ),
         )
-        .filter((val): val is FormData[string] => val !== null)
+        .filter((val): val is FormData[string] => val !== null),
     );
 
     // TODO Do we really need two handlers for onSave and onSubmit?
@@ -107,7 +107,7 @@ export default function Form({
                   (field, index) =>
                     getDisplayStateOfField(field, values) && (
                       <DynamicField key={index} field={field} />
-                    )
+                    ),
                 )}
 
                 <div className="c-flex lbh-simple-pagination">

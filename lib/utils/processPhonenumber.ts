@@ -1,5 +1,5 @@
 export default function processPhonenumber(input: string): string {
-  const chars = input.match(/[\+0-9]/g);
+  const chars = input.match(/[+0-9]/g);
 
   if (!chars) {
     return '';

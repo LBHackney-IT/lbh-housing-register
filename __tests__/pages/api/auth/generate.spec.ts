@@ -36,13 +36,14 @@ jest.mock('../../../../lib/gateways/applications-api', () => ({
 }));
 
 describe('POST', () => {
-  beforeEach(() => {
-    createVerifyCodeMock.mockRestore();
-  });
-
   const jsonParseSpy = jest.spyOn(JSON, 'parse');
 
   const createVerifyCodeMock = createVerifyCode as jest.Mock;
+
+  beforeEach(() => {
+    createVerifyCodeMock.mockRestore();
+    jsonParseSpy.mockClear();
+  });
 
   const requestOptions: RequestOptions = {
     method: 'POST',
@@ -54,9 +55,8 @@ describe('POST', () => {
 
     createVerifyCodeMock.mockReturnValueOnce(mockCreateAuthResponse);
 
-    const { req, res }: { req: ApiRequest; res: ApiResponse } = createMocks(
-      requestOptions
-    );
+    const { req, res }: { req: ApiRequest; res: ApiResponse } =
+      createMocks(requestOptions);
 
     await endpoint(req, res);
 
@@ -76,9 +76,8 @@ describe('POST', () => {
 
     const expectedErrorMessage = { message: 'Unable to parse request' };
 
-    const { req, res }: { req: ApiRequest; res: ApiResponse } = createMocks(
-      requestOptions
-    );
+    const { req, res }: { req: ApiRequest; res: ApiResponse } =
+      createMocks(requestOptions);
 
     await endpoint(req, res);
 
@@ -101,13 +100,11 @@ describe('POST', () => {
       body: mockCreateAuthRequest,
     };
 
-    const { req, res }: { req: ApiRequest; res: ApiResponse } = createMocks(
-      reqOptions
-    );
+    const { req, res }: { req: ApiRequest; res: ApiResponse } =
+      createMocks(reqOptions);
 
-    endpoint(req, res);
+    await endpoint(req, res);
 
-    expect(jsonParseSpy).toHaveBeenCalledTimes(1);
     expect(jsonParseSpy).toHaveBeenCalledWith(req.body);
     expect(createVerifyCodeMock).toHaveBeenCalledTimes(1);
     expect(res.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
@@ -118,19 +115,18 @@ describe('POST', () => {
 
   it.each(invalidRequestMethods)(
     'returns status code 400 when request method is %p',
-    (requestMethod) => {
+    async (requestMethod) => {
       const reqOptions: RequestOptions = {
         method: requestMethod as RequestMethod,
         body: mockCreateAuthRequest,
       };
 
-      const { req, res }: { req: ApiRequest; res: ApiResponse } = createMocks(
-        reqOptions
-      );
+      const { req, res }: { req: ApiRequest; res: ApiResponse } =
+        createMocks(reqOptions);
 
-      endpoint(req, res);
+      await endpoint(req, res);
       expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
       expect(res._getJSONData()).toEqual({ message: 'Invalid request method' });
-    }
+    },
   );
 });

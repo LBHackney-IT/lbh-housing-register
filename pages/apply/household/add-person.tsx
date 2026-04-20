@@ -47,7 +47,7 @@ const AddPersonToApplication = (): JSX.Element => {
     try {
       dispatch(addResidentFromFormData(values));
       setSubmit(true);
-    } catch (error) {
+    } catch {
       setUserError(Errors.GENERIC_ERROR);
       scrollToError();
     }

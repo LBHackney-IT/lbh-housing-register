@@ -19,7 +19,7 @@ export default function SearchBox({
   const router = useRouter();
 
   const onTextChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ): React.ChangeEvent<HTMLInputElement> => {
     setsearchInputValue(event.target.value);
     return event;

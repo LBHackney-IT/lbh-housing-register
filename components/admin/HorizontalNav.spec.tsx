@@ -1,5 +1,5 @@
-import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { screen } from '@testing-library/dom';
 import { HorizontalNavItem } from './HorizontalNav';
 
 describe('HorizontalNavItem', () => {
@@ -9,7 +9,7 @@ describe('HorizontalNavItem', () => {
     render(
       <HorizontalNavItem itemName={'btn-name'} handleSelectNavItem={jest.fn()}>
         {expectedLabel}
-      </HorizontalNavItem>
+      </HorizontalNavItem>,
     );
 
     expect(screen.getByText(expectedLabel)).toBeInTheDocument();

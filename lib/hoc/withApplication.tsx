@@ -26,7 +26,7 @@ function useApplicationRedirect(application: Application) {
 function handleNoApplication(
   application: Application,
   router: NextRouter,
-  dispatch: AppDispatch
+  dispatch: AppDispatch,
 ) {
   if (!application) {
     router.push('/');
@@ -35,7 +35,7 @@ function handleNoApplication(
 }
 
 export default function withApplication<P>(
-  WrappedComponent: React.ComponentType<P>
+  WrappedComponent: React.ComponentType<P>,
 ) {
   const WithApplication = (props: P & { children?: React.ReactNode }) => {
     const router = useRouter();

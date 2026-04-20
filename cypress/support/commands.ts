@@ -35,6 +35,37 @@ import { ActivityHistoryResponse } from '../../domain/ActivityHistoryApi';
 
 const secret = 'aDummySecret';
 
+/** Public values from `cypress.config.ts` `expose` (avoids deprecated `Cypress.env`). */
+function exposed(key: string): string {
+  const value = Cypress.expose(key);
+  if (value == null || value === '') {
+    throw new Error(
+      `Missing Cypress expose "${key}". Set it in cypress.config.ts and your .env.`,
+    );
+  }
+  return String(value);
+}
+
+/** Registers Nock in the Next.js server process (requires E2E_HTTP_MOCKS=true on the app). */
+function e2eRegisterNock(payload: Record<string, unknown>) {
+  return cy.request({
+    method: 'POST',
+    url: '/api/e2e/nock',
+    body: payload,
+    failOnStatusCode: true,
+  });
+}
+
+Cypress.Commands.add('clearE2eNock', () => {
+  return cy
+    .request({
+      method: 'POST',
+      url: '/api/e2e/clear-nock',
+      failOnStatusCode: true,
+    })
+    .then(() => undefined);
+});
+
 Cypress.Commands.add('mount', mount);
 
 Cypress.Commands.add('generateEmptyApplication', () => {
@@ -68,29 +99,29 @@ Cypress.Commands.add('generateEmptyApplication', () => {
 Cypress.Commands.add(
   'mockActivityHistoryApiEmptyResponse',
   (targetId: string, results?: ActivityHistoryResponse, persist?: boolean) => {
-    cy.task('nock', {
-      hostname: Cypress.env('ACTIVITY_HISTORY_API'),
+    e2eRegisterNock({
+      hostname: exposed('ACTIVITY_HISTORY_API'),
       method: 'GET',
       path: `/activityhistory?targetId=${targetId}&pageSize=100`,
       status: 200,
       body: { results: [results], paginationDetails: { nextToken: null } },
       persist,
     });
-  }
+  },
 );
 
 Cypress.Commands.add(
   'mockHousingRegisterApiGetApplicationsByStatusAndAssignedTo',
   (user: HackneyGoogleUserWithPermissions) => {
-    cy.task('nock', {
-      hostname: Cypress.env('HOUSING_REGISTER_API'),
+    e2eRegisterNock({
+      hostname: exposed('HOUSING_REGISTER_API'),
       method: 'GET',
       path: `/applications/ListApplicationsByAssignedTo?status=Submitted&assignedTo=${user.email}&Page=1&PageSize=10`,
       persist: true,
       status: 200,
       body: { user, results: [], totalResults: 0, page: 1, pageSize: 10 },
     });
-  }
+  },
 );
 
 Cypress.Commands.add(
@@ -100,10 +131,10 @@ Cypress.Commands.add(
     application: Application,
     persist: boolean,
     delay: number = 0,
-    statusCode: number = StatusCodes.OK
+    statusCode: number = StatusCodes.OK,
   ) => {
-    cy.task('nock', {
-      hostname: Cypress.env('HOUSING_REGISTER_API'),
+    e2eRegisterNock({
+      hostname: exposed('HOUSING_REGISTER_API'),
       method: 'GET',
       path: `/applications/${applicationId}`,
       statusCode,
@@ -111,7 +142,7 @@ Cypress.Commands.add(
       persist,
       delay,
     });
-  }
+  },
 );
 
 Cypress.Commands.add(
@@ -121,10 +152,10 @@ Cypress.Commands.add(
     body?: Application,
     delay: number = 0,
     statusCode: number = StatusCodes.OK,
-    persist?: boolean
+    persist?: boolean,
   ) => {
-    cy.task('nock', {
-      hostname: Cypress.env('HOUSING_REGISTER_API'),
+    e2eRegisterNock({
+      hostname: exposed('HOUSING_REGISTER_API'),
       method: 'PATCH',
       path: `/applications/${applicationId}`,
       statusCode,
@@ -132,7 +163,7 @@ Cypress.Commands.add(
       persist,
       delay,
     });
-  }
+  },
 );
 
 Cypress.Commands.add(
@@ -141,17 +172,17 @@ Cypress.Commands.add(
     applicationId: string,
     body?: Application,
     delay: number = 0,
-    statusCode: number = StatusCodes.OK
+    statusCode: number = StatusCodes.OK,
   ) => {
-    cy.task('nock', {
-      hostname: Cypress.env('HOUSING_REGISTER_API'),
+    e2eRegisterNock({
+      hostname: exposed('HOUSING_REGISTER_API'),
       method: 'PATCH',
       path: `/applications/${applicationId}/complete`,
       statusCode,
       body,
       delay,
     });
-  }
+  },
 );
 
 Cypress.Commands.add(
@@ -159,24 +190,24 @@ Cypress.Commands.add(
   (
     body?: Application,
     delay: number = 0,
-    statusCode: number = StatusCodes.OK
+    statusCode: number = StatusCodes.OK,
   ) => {
-    cy.task('nock', {
-      hostname: Cypress.env('HOUSING_REGISTER_API'),
+    e2eRegisterNock({
+      hostname: exposed('HOUSING_REGISTER_API'),
       method: 'POST',
       path: `/applications`,
       statusCode,
       body,
       delay,
     });
-  }
+  },
 );
 
 Cypress.Commands.add(
   'mockHousingRegisterApiPostSearchResults',
   (application: Application) => {
-    cy.task('nock', {
-      hostname: Cypress.env('HOUSING_REGISTER_API'),
+    e2eRegisterNock({
+      hostname: exposed('HOUSING_REGISTER_API'),
       method: 'POST',
       path: `/applications/search`,
       statusCode: 200,
@@ -207,7 +238,7 @@ Cypress.Commands.add(
         pageSize: 10,
       },
     });
-  }
+  },
 );
 
 const issuedAtInMilliseconds = new Date().getMilliseconds();
@@ -215,7 +246,7 @@ const issuedAtInMilliseconds = new Date().getMilliseconds();
 const generateUser = (groupEnv: string) => ({
   email: faker.internet.email({ provider: 'hackneyTEST.gov.uk' }),
   name: faker.person.fullName(),
-  groups: [Cypress.env(groupEnv)],
+  groups: [exposed(groupEnv)],
   sub: faker.number.int().toString(),
   iss: 'TestIssuer',
   iat: issuedAtInMilliseconds,
@@ -235,10 +266,16 @@ Cypress.Commands.add('loginAsUser', (userType: string) => {
     throw new Error(`No user data found for user type "${userType}"`);
   }
 
-  cy.task('generateToken', { user, secret }).then((token) => {
+  cy.request({
+    method: 'POST',
+    url: '/api/e2e/generate-token',
+    body: { user, secret },
+    failOnStatusCode: true,
+  }).then((res) => {
+    const token = (res.body as { token: string }).token;
     const cookieName = 'hackneyToken';
     cy.getCookies().should('be.empty');
-    cy.setCookie(cookieName, token as string);
+    cy.setCookie(cookieName, token);
     cy.getCookie(cookieName).should('have.property', 'value', token);
     cy.wrap(user).as('currentUser');
   });
@@ -249,13 +286,19 @@ Cypress.Commands.add(
   (
     applicationId: string,
     setSeenCookieMessage?: boolean,
-    seenCookieMessageAlreadySet?: boolean
+    seenCookieMessageAlreadySet?: boolean,
   ) => {
     const user = {
       application_id: applicationId,
     };
 
-    cy.task('generateToken', { user, secret }).then((token) => {
+    cy.request({
+      method: 'POST',
+      url: '/api/e2e/generate-token',
+      body: { user, secret },
+      failOnStatusCode: true,
+    }).then((res) => {
+      const token = (res.body as { token: string }).token;
       const authCookieName = 'housing_user';
       const cookieMessageCookieName = 'seen_cookie_message';
 
@@ -263,7 +306,7 @@ Cypress.Commands.add(
         cy.getCookies().should('be.empty');
       }
 
-      cy.setCookie(authCookieName, token as string);
+      cy.setCookie(authCookieName, token);
       cy.getCookie(authCookieName).should('have.property', 'value', token);
 
       if (setSeenCookieMessage) {
@@ -271,13 +314,13 @@ Cypress.Commands.add(
         cy.getCookie(cookieMessageCookieName).should(
           'have.a.property',
           'value',
-          'true'
+          'true',
         );
       }
 
       cy.wrap(user).as('currentUser');
     });
-  }
+  },
 );
 
 Cypress.Commands.add(
@@ -285,10 +328,10 @@ Cypress.Commands.add(
   (
     delay: number = 0,
     persist: boolean = false,
-    statusCode: number = StatusCodes.OK
+    statusCode: number = StatusCodes.OK,
   ) => {
-    cy.task('nock', {
-      hostname: Cypress.env('HOUSING_REGISTER_API'),
+    e2eRegisterNock({
+      hostname: exposed('HOUSING_REGISTER_API'),
       method: 'POST',
       path: `/auth/generate`,
       statusCode,
@@ -298,7 +341,7 @@ Cypress.Commands.add(
       delay,
       persist,
     });
-  }
+  },
 );
 
 Cypress.Commands.add(
@@ -306,15 +349,21 @@ Cypress.Commands.add(
   (
     applicationId: string,
     delay: number = 0,
-    statusCode: number = StatusCodes.OK
+    statusCode: number = StatusCodes.OK,
   ) => {
     const user = {
       application_id: applicationId,
     };
 
-    cy.task('generateToken', { user, secret }).then((token) => {
-      cy.task('nock', {
-        hostname: Cypress.env('HOUSING_REGISTER_API'),
+    cy.request({
+      method: 'POST',
+      url: '/api/e2e/generate-token',
+      body: { user, secret },
+      failOnStatusCode: true,
+    }).then((res) => {
+      const token = (res.body as { token: string }).token;
+      e2eRegisterNock({
+        hostname: exposed('HOUSING_REGISTER_API'),
         method: 'POST',
         path: `/auth/verify`,
         statusCode,
@@ -324,7 +373,7 @@ Cypress.Commands.add(
         delay,
       });
     });
-  }
+  },
 );
 
 Cypress.Commands.add(
@@ -332,37 +381,37 @@ Cypress.Commands.add(
   (
     applicationId: string,
     delay: number = 0,
-    statusCode: number = StatusCodes.OK
+    statusCode: number = StatusCodes.OK,
   ) => {
-    cy.task('nock', {
-      hostname: Cypress.env('HOUSING_REGISTER_API'),
+    e2eRegisterNock({
+      hostname: exposed('HOUSING_REGISTER_API'),
       method: 'POST',
       path: `/applications/${applicationId}/evidence`,
       statusCode,
       delay,
     });
-  }
+  },
 );
 Cypress.Commands.add(
   'mockHousingRegisterApiPatchCompleteApplication',
   (
     applicationId: string,
     delay: number = 0,
-    statusCode: number = StatusCodes.OK
+    statusCode: number = StatusCodes.OK,
   ) => {
-    cy.task('nock', {
-      hostname: Cypress.env('HOUSING_REGISTER_API'),
+    e2eRegisterNock({
+      hostname: exposed('HOUSING_REGISTER_API'),
       method: 'PATCH',
       path: `/applications/${applicationId}/complete`,
       statusCode,
       delay,
     });
-  }
+  },
 );
 Cypress.Commands.add(
   'mockNotifyEmailResponse',
   (statusCode: number = StatusCodes.OK) => {
-    cy.task('nock', {
+    e2eRegisterNock({
       hostname: 'https://api.notifications.service.gov.uk',
       method: 'POST',
       path: '/v2/notifications/email',
@@ -370,12 +419,12 @@ Cypress.Commands.add(
       body: statusCode == StatusCodes.OK ? 'email sent' : 'email failed',
       persist: true,
     });
-  }
+  },
 );
 
 Cypress.Commands.add('mockAddressAPISearchByPostcode', (postcode: string) => {
-  cy.task('nock', {
-    hostname: Cypress.env('LOOKUP_API_URL'),
+  e2eRegisterNock({
+    hostname: exposed('LOOKUP_API_URL'),
     method: 'GET',
     path: `/?postcode=${postcode}`,
     body: {

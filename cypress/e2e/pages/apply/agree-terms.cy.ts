@@ -41,7 +41,7 @@ const applicationWithMainApplicantAndAgreedTerms = {
 describe('Agree terms', () => {
   beforeEach(() => {
     cy.clearAllCookies();
-    cy.task('clearNock');
+    cy.clearE2eNock();
   });
 
   it('shows the loading spinner while application data is being fetched on the background', () => {
@@ -50,7 +50,7 @@ describe('Agree terms', () => {
       applicationId,
       application,
       false,
-      apiResponseDelay
+      apiResponseDelay,
     );
 
     AgreeTermsPage.visit();
@@ -64,18 +64,18 @@ describe('Agree terms', () => {
 
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
-      applicationWithMainApplicant
+      applicationWithMainApplicant,
     );
 
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,
       applicationWithMainApplicantAndAgreedTerms,
-      apiResponseDelay
+      apiResponseDelay,
     );
 
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
-      applicationWithMainApplicantAndAgreedTerms
+      applicationWithMainApplicantAndAgreedTerms,
     );
 
     AgreeTermsPage.visit();
@@ -93,7 +93,7 @@ describe('Agree terms', () => {
     cy.mockHousingRegisterApiGetApplications(applicationId, application);
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
-      applicationWithMainApplicant
+      applicationWithMainApplicant,
     );
 
     const errorStatusCode = StatusCodes.BAD_REQUEST;
@@ -104,7 +104,7 @@ describe('Agree terms', () => {
       applicationId,
       null,
       apiResponseDelay,
-      errorStatusCode
+      errorStatusCode,
     );
 
     AgreeTermsPage.visit();

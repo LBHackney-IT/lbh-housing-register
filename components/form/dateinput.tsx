@@ -27,7 +27,7 @@ export default function DateInput({
   const invalid = isNaN(+dateVal) ? '' : undefined;
 
   const [d, setD] = useState(
-    showDay ? invalid ?? dateVal.getDate().toString() : '1'
+    showDay ? (invalid ?? dateVal.getDate().toString()) : '1',
   );
   const [m, setM] = useState(invalid ?? (dateVal.getMonth() + 1).toString());
   const [y, setY] = useState(invalid ?? dateVal.getFullYear().toString());
@@ -50,7 +50,7 @@ export default function DateInput({
     }
 
     const newDate = new Date(
-      Date.UTC(Number(newY), Number(newM) - 1, Number(newD))
+      Date.UTC(Number(newY), Number(newM) - 1, Number(newD)),
     );
 
     if (

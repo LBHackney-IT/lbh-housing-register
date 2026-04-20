@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 interface ListProps {
   children: JSX.Element | JSX.Element[];
 }
@@ -7,7 +9,7 @@ export default function List({ children }: ListProps): JSX.Element {
 }
 
 interface ListItemProps {
-  children: any;
+  children: ReactNode;
   bold?: boolean;
 }
 

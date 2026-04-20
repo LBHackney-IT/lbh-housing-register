@@ -11,26 +11,26 @@ class ApplicationEditPersonPage {
   static getSubmitMainApplicantDetailsButton() {
     const testId = 'test-submit-main-applicant-button';
     return this.getApplicationEditPersonPage().find(
-      `[data-testid="${testId}"]`
+      `[data-testid="${testId}"]`,
     );
   }
 
   static getLivingSituationDropdown() {
     return this.getApplicationEditPersonPage().find(
-      '#currentAccommodation_livingSituation'
+      '#currentAccommodation_livingSituation',
     );
   }
 
   static getCitizenshipDropdown() {
     return this.getApplicationEditPersonPage().find(
-      '#immigrationStatus_citizenship'
+      '#immigrationStatus_citizenship',
     );
   }
 
   static getErrorSummary() {
     const testId = 'test-edit-main-applicant-error-summary';
     return this.getApplicationEditPersonPage().find(
-      `[data-testId="${testId}"]`
+      `[data-testId="${testId}"]`,
     );
   }
 }

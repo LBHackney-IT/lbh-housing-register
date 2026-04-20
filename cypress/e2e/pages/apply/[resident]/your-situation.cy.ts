@@ -50,11 +50,11 @@ const applicationWithCompletedMainApplicantSections = {
 describe('Apply resident your situation page', () => {
   beforeEach(() => {
     cy.loginAsResident(applicationId, true);
-    cy.task('clearNock');
+    cy.clearE2eNock();
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithCompletedMainApplicantSections,
-      true
+      true,
     );
   });
 
@@ -65,7 +65,7 @@ describe('Apply resident your situation page', () => {
       application,
       1000,
       StatusCodes.OK,
-      true
+      true,
     );
 
     ApplyHouseholdPage.visit();
@@ -85,7 +85,7 @@ describe('Apply resident your situation page', () => {
       application,
       1000,
       StatusCodes.OK,
-      true
+      true,
     );
 
     ApplyHouseholdPage.visit();
@@ -97,7 +97,7 @@ describe('Apply resident your situation page', () => {
     ApplyResidentYourSituationPage.getServedInArmedForcesRadioButton(1).check();
     ApplyResidentYourSituationPage.getSubmitButton().click();
     ApplyResidentYourSituationPage.getIntentionallyHomelessRadioButton(
-      1
+      1,
     ).check();
     ApplyResidentYourSituationPage.getSubmitButton().click();
     ApplyResidentYourSituationPage.getOwnPropertyRadioButton(1).check();

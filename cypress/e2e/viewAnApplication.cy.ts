@@ -9,7 +9,7 @@ describe('User views a resident application', () => {
     const applicationId = faker.string.uuid();
     const application = generateApplication(applicationId, personId);
 
-    cy.task('clearNock');
+    cy.clearE2eNock();
     cy.clearCookies();
 
     cy.loginAsUser('readOnly').then((user) => {
@@ -18,12 +18,20 @@ describe('User views a resident application', () => {
       ApplicationsPage.getSearchInput().should('be.visible');
 
       ApplicationsPage.getSearchInput().type(
-        application.mainApplicant.person.firstName
+        application.mainApplicant.person.firstName,
       );
       cy.mockHousingRegisterApiPostSearchResults(application);
 
       ApplicationsPage.getSearchSubmitButton().click();
       ApplicationsPage.getSearchResultsBox().should('be.visible');
+
+      // Must register before navigating: getServerSideProps fetches on first paint.
+      cy.mockHousingRegisterApiGetApplications(
+        applicationId,
+        application,
+        true,
+      );
+
       ApplicationsPage.getViewApplicationLink()
         .first()
         .invoke('attr', 'href')
@@ -32,8 +40,6 @@ describe('User views a resident application', () => {
           cy.mockActivityHistoryApiEmptyResponse(targetId);
           ApplicationsPage.getViewApplicationLink().first().click();
         });
-
-      cy.mockHousingRegisterApiGetApplications(applicationId, application);
 
       ApplicationsPage.getViewApplicationPage().should('be.visible');
       ApplicationsPage.getEditApplicantButton().should('not.exist');
@@ -54,10 +60,10 @@ describe('User views a resident application', () => {
       true,
       true,
       true,
-      faker.date.recent().toString()
+      faker.date.recent().toString(),
     );
 
-    cy.task('clearNock');
+    cy.clearE2eNock();
     cy.clearCookies();
 
     cy.loginAsUser('manager').then((user) => {
@@ -65,13 +71,19 @@ describe('User views a resident application', () => {
       ApplicationsPage.visit();
       ApplicationsPage.getSearchInput().should('be.visible');
       ApplicationsPage.getSearchInput().type(
-        application.mainApplicant.person.firstName
+        application.mainApplicant.person.firstName,
       );
 
       cy.mockHousingRegisterApiPostSearchResults(application);
 
       ApplicationsPage.getSearchSubmitButton().click();
       ApplicationsPage.getSearchResultsBox().should('be.visible');
+
+      cy.mockHousingRegisterApiGetApplications(
+        applicationId,
+        application,
+        true,
+      );
 
       ApplicationsPage.getViewApplicationLink()
         .first()
@@ -81,8 +93,6 @@ describe('User views a resident application', () => {
           cy.mockActivityHistoryApiEmptyResponse(targetId);
           ApplicationsPage.getViewApplicationLink().first().click();
         });
-
-      cy.mockHousingRegisterApiGetApplications(applicationId, application);
 
       ApplicationsPage.getViewApplicationPage().should('be.visible');
       ApplicationsPage.getEditApplicantButton().should('be.visible');

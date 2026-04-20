@@ -20,7 +20,8 @@ const endpoint: NextApiHandler = async (
   switch (req.method) {
     case 'PATCH':
       try {
-        const application = JSON.parse(req.body);
+        const application =
+          typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
         const id = req.query.id as string;
         if (
           canUpdateApplication(req, id) ||

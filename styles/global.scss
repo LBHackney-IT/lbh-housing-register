@@ -77,6 +77,9 @@ $lbh-font-weight-light: 400;
   transform: translateX(-50%);
   max-height: calc(100vh - 14vh);
   overflow-y: auto;
+  box-sizing: border-box;
+  padding: 1.5rem;
+  background-color: lbh-colour('lbh-white');
 }
 
 // Overrides

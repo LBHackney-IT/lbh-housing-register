@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useState } from 'react';
+import React, { MouseEvent, useState } from 'react';
 
 import { GetServerSideProps } from 'next';
 
@@ -67,9 +67,10 @@ export default function ApplicationPersonPage({
 
   const [activeNavItem, setActiveNavItem] = useState<ActiveNavItem>('identity');
 
-  const handleSelectNavItem = async (event: SyntheticEvent) => {
+  const handleSelectNavItem = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    const { name } = event.target as HTMLButtonElement;
+    // Using currentTarget so clicks on text still read the button's name
+    const { name } = event.currentTarget;
     setActiveNavItem(name as ActiveNavItem);
   };
 

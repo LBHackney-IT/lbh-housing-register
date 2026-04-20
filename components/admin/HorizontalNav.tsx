@@ -1,4 +1,4 @@
-import React, { SyntheticEvent } from 'react';
+import React, { MouseEvent } from 'react';
 
 interface HorizontalNavProps {
   spaced?: boolean;
@@ -21,7 +21,7 @@ interface HorizontalNavItemProps {
   isActive?: boolean;
   children: string;
 
-  handleSelectNavItem: (event: SyntheticEvent) => void;
+  handleSelectNavItem: (event: MouseEvent<HTMLButtonElement>) => void;
   dataTestId?: string;
 }
 
@@ -35,6 +35,7 @@ export function HorizontalNavItem({
   return (
     <li className="lbh-link-group__item" data-testid={dataTestId}>
       <button
+        type="button"
         name={itemName}
         onClick={handleSelectNavItem}
         data-testid={`test-nav-item-${itemName}`}

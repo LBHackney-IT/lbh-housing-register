@@ -1,5 +1,5 @@
 import { GetServerSideProps, GetServerSidePropsResult } from 'next';
-import React, { SyntheticEvent, useState } from 'react';
+import React, { MouseEvent, useState } from 'react';
 import { HackneyGoogleUser } from '../../../domain/HackneyGoogleUser';
 import { UserContext } from '../../../lib/contexts/user-context';
 import { getAuth, getSession } from '../../../lib/utils/googleAuth';
@@ -39,10 +39,10 @@ export default function Reports({
 }: ReportsProps): JSX.Element {
   const [activeNavItem, setActiveNavItem] = useState('Novalet');
 
-  const handleSelectNavItem = async (event: SyntheticEvent) => {
+  const handleSelectNavItem = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    const { name } = event.target as HTMLButtonElement;
+    const { name } = event.currentTarget;
 
     router.push({
       query: { status: name },

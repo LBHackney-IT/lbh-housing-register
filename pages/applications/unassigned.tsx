@@ -1,4 +1,4 @@
-import { SyntheticEvent, useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
@@ -44,9 +44,9 @@ export default function ApplicationListPage({
     });
   }, [activeNavItem]);
 
-  const handleSelectNavItem = async (event: SyntheticEvent) => {
+  const handleSelectNavItem = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    const { name } = event.target as HTMLButtonElement;
+    const { name } = event.currentTarget;
     setActiveNavItem(name);
   };
   return (

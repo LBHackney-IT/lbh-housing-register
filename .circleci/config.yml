@@ -396,12 +396,12 @@ workflows:
           context: api-assume-role-housing-development-context
           requires:
             - run-tests
-          #   - run-cypress-e2e
+            - run-cypress-e2e
           filters:
             tags:
               ignore: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
-              only: feature/upgrade-next
+              only: development
       - deploy-to-development:
           context:
             - central-parameter-store-context
@@ -414,7 +414,7 @@ workflows:
             tags:
               ignore: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
-              only: feature/upgrade-next
+              only: development
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:

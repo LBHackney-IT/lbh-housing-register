@@ -16,7 +16,7 @@ describe('Apply resident section page', () => {
   beforeEach(() => {
     cy.clearAllCookies();
     cy.loginAsResident(applicationId, true);
-    cy.task('clearNock');
+    cy.clearE2eNock();
   });
 
   it('shows saving message when user submits the section', () => {
@@ -29,7 +29,7 @@ describe('Apply resident section page', () => {
     ApplyOverviewPage.getApplicantButton(personId).click();
     ApplyResidentIndexPage.getPersonalDetailsSectionLink().click();
     ApplyResidentPersonalDetailsPage.getApplyResidentSectionPage().should(
-      'be.visible'
+      'be.visible',
     );
     cy.contains('Personal details');
 
@@ -45,7 +45,7 @@ describe('Apply resident section page', () => {
       applicationId,
       application,
       0,
-      errorCode
+      errorCode,
     );
 
     ApplyHouseholdPage.visit();
@@ -54,7 +54,7 @@ describe('Apply resident section page', () => {
     ApplyOverviewPage.getApplicantButton(personId).click();
     ApplyResidentIndexPage.getPersonalDetailsSectionLink().click();
     ApplyResidentPersonalDetailsPage.getApplyResidentSectionPage().should(
-      'be.visible'
+      'be.visible',
     );
     cy.contains('Personal details');
 

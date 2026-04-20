@@ -1,4 +1,4 @@
-import cookie from 'cookie';
+import * as cookie from 'cookie';
 import jsonwebtoken from 'jsonwebtoken';
 import { Redirect } from 'next';
 
@@ -17,7 +17,7 @@ export type HackneyGoogleUserWithPermissions = HackneyGoogleUser & Permissions;
 
 export const hasUserGroup = (
   group: string,
-  user: HackneyGoogleUser
+  user: HackneyGoogleUser,
 ): boolean => {
   return user.groups.includes(group);
 };
@@ -34,21 +34,21 @@ export const getPermissions = (user: HackneyGoogleUser): Permissions => {
     hasAdminPermissions: hasUserGroup(AUTHORISED_ADMIN_GROUP as string, user),
     hasManagerPermissions: hasUserGroup(
       AUTHORISED_MANAGER_GROUP as string,
-      user
+      user,
     ),
     hasOfficerPermissions: hasUserGroup(
       AUTHORISED_OFFICER_GROUP as string,
-      user
+      user,
     ),
     hasReadOnlyPermissions: hasUserGroup(
       AUTHORISED_READONLY_GROUP as string,
-      user
+      user,
     ),
   };
 };
 export function getSession(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  req: any
+  req: any,
 ): HackneyGoogleUserWithPermissions | undefined {
   try {
     const cookies = cookie.parse(req.headers.cookie ?? '');
@@ -57,9 +57,11 @@ export function getSession(
     if (!parsedToken) return;
 
     const secret = process.env.HACKNEY_JWT_SECRET as string;
-    const user = (process.env.SKIP_VERIFY_TOKEN !== 'true'
-      ? jsonwebtoken.verify(parsedToken, secret)
-      : jsonwebtoken.decode(parsedToken)) as HackneyGoogleUser | undefined;
+    const user = (
+      process.env.SKIP_VERIFY_TOKEN === 'true'
+        ? jsonwebtoken.decode(parsedToken)
+        : jsonwebtoken.verify(parsedToken, secret)
+    ) as HackneyGoogleUser | undefined;
 
     if (user) {
       return {
@@ -89,7 +91,7 @@ export const removeHackneyToken = (res: any): void => {
 };
 
 export const hasAnyPermissions = (
-  user: HackneyGoogleUserWithPermissions
+  user: HackneyGoogleUserWithPermissions,
 ): boolean => {
   if (!user) {
     return false;
@@ -104,7 +106,7 @@ export const hasAnyPermissions = (
 
 export const canViewSensitiveApplication = (
   assignedTo: string,
-  user: HackneyGoogleUserWithPermissions
+  user: HackneyGoogleUserWithPermissions,
 ): boolean => {
   if (user.hasAdminPermissions || user.hasManagerPermissions) {
     // can see everything
@@ -115,26 +117,20 @@ export const canViewSensitiveApplication = (
 };
 
 export const hasReadOnlyPermissionOnly = (
-  user: HackneyGoogleUserWithPermissions
+  user: HackneyGoogleUserWithPermissions,
 ): boolean => {
-  if (!user) {
-    return false;
-  }
-  // is not part of the read only group
-  if (
+  if (!user) return false;
+  return (
     user.hasReadOnlyPermissions &&
     !user.hasAdminPermissions &&
     !user.hasManagerPermissions &&
     !user.hasOfficerPermissions
-  ) {
-    return true;
-  }
-  return false;
+  );
 };
 
 export const getRedirect = (
   user?: HackneyGoogleUserWithPermissions,
-  writePermissionsRequired?: boolean
+  writePermissionsRequired?: boolean,
 ): string | undefined => {
   if (!user) {
     return '/login';
@@ -149,7 +145,7 @@ export const getRedirect = (
 
 export function getAuth(
   group: string,
-  user?: HackneyGoogleUser
+  user?: HackneyGoogleUser,
 ): { redirect: Redirect } | { user: HackneyGoogleUser } {
   if (!user) {
     return { redirect: { statusCode: 302, destination: '/login' } };
@@ -167,7 +163,7 @@ export function getAuth(
 // - it has a status of awaiting reassessment and current user is assigned to it
 export const canEditApplications = (
   user: HackneyGoogleUserWithPermissions,
-  data: Application
+  data: Application,
 ) => {
   if (!hasAnyPermissions(user)) return false;
   if (user.hasManagerPermissions) return true;

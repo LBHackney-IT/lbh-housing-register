@@ -6,7 +6,7 @@ const issuedAtInMilliseconds = new Date().getMilliseconds();
 
 export const generateJWTTokenTestData = (
   groups: string[] = [],
-  issuedAt: number = issuedAtInMilliseconds
+  issuedAt: number = issuedAtInMilliseconds,
 ): HackneyGoogleUser => {
   return {
     sub: faker.number.int().toString(),

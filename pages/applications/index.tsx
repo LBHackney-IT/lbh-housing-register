@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useEffect, useState } from 'react';
+import React, { MouseEvent, useEffect, useState } from 'react';
 
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
@@ -11,6 +11,7 @@ import {
 import SearchBox from '../../components/admin/SearchBox';
 import Sidebar from '../../components/admin/sidebar';
 import { HeadingOne } from '../../components/content/headings';
+import ErrorSummary from '../../components/errors/error-summary';
 import Layout from '../../components/layout/staff-layout';
 import SimplePaginationSearch from '../../components/SimplePaginationSearch';
 import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
@@ -29,6 +30,8 @@ interface PageProps {
   applications: PaginatedSearchResultsResponse | null;
   page: string;
   pageSize: string;
+  /** Set when the Housing Register API fails (e.g. 500) so the page still renders. */
+  worktrayLoadError?: string;
 }
 
 export default function ApplicationListPage({
@@ -36,6 +39,7 @@ export default function ApplicationListPage({
   applications,
   page,
   pageSize,
+  worktrayLoadError,
 }: PageProps): JSX.Element {
   const router = useRouter();
   const [activeNavItem, setActiveNavItem] = useState('Submitted');
@@ -46,15 +50,14 @@ export default function ApplicationListPage({
     });
   }, [activeNavItem]);
 
-  const handleSelectNavItem = async (event: SyntheticEvent) => {
+  const handleSelectNavItem = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    const { name } = event.target as HTMLButtonElement;
+    const { name } = event.currentTarget;
     setActiveNavItem(name);
   };
 
   return (
     // noting here the possibility of unecessary re-renders that will need some investigation.
-    // eslint-disable-next-line react/jsx-no-constructed-context-values
     <UserContext.Provider value={{ user }}>
       <Layout pageName="My worktray" dataTestId="test-applications-page">
         <SearchBox
@@ -63,7 +66,7 @@ export default function ApplicationListPage({
           watermark="Search all applications (name, reference, bidding number)"
         />
         {!hasReadOnlyPermissionOnly(
-          user as HackneyGoogleUserWithPermissions
+          user as HackneyGoogleUserWithPermissions,
         ) && (
           <div
             className="govuk-grid-row"
@@ -97,6 +100,11 @@ export default function ApplicationListPage({
                   Pending
                 </HorizontalNavItem>
               </HorizontalNav>
+              {worktrayLoadError ? (
+                <ErrorSummary dataTestId="test-worktray-load-error">
+                  {worktrayLoadError}
+                </ErrorSummary>
+              ) : null}
               {applications ? (
                 <>
                   <ApplicationsTable
@@ -122,7 +130,7 @@ export default function ApplicationListPage({
 }
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async (
-  context
+  context,
 ) => {
   const user = getSession(context.req);
   const redirect = getRedirect(user);
@@ -145,14 +153,32 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
     pageSize: string;
   };
 
-  const applications = await getApplicationsByStatusAndAssignedTo(
-    status,
-    user?.email ?? '',
-    page,
-    pageSize
-  );
+  let applications: PaginatedSearchResultsResponse | null = null;
+  let worktrayLoadError: string | undefined;
+
+  try {
+    applications = await getApplicationsByStatusAndAssignedTo(
+      status,
+      user?.email ?? '',
+      page,
+      pageSize,
+    );
+  } catch (err) {
+    console.error(
+      '[applications/index] getApplicationsByStatusAndAssignedTo failed',
+      err,
+    );
+    worktrayLoadError =
+      'Unable to load your worktray. The Housing Register API returned an error — check the service is running and HOUSING_REGISTER_API / key are correct.';
+  }
 
   return {
-    props: { user, applications, page, pageSize },
+    props: {
+      user,
+      applications,
+      page,
+      pageSize,
+      ...(worktrayLoadError !== undefined ? { worktrayLoadError } : {}),
+    },
   };
 };

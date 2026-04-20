@@ -11,13 +11,13 @@ const application: Application = generateApplication(
   applicationId,
   personId,
   true,
-  true
+  true,
 );
 
 describe('Edit household member', () => {
   beforeEach(() => {
     cy.clearAllCookies();
-    cy.task('clearNock');
+    cy.clearE2eNock();
     cy.loginAsUser('manager');
   });
 
@@ -29,7 +29,7 @@ describe('Edit household member', () => {
     //add +1 to the household member ID to follow the current helper logic
     ApplicationEditHouseholdMember.visit(applicationId, personId + 1);
     ApplicationEditHouseholdMember.getApplicationUpdateHouseHoldMemberPage().should(
-      'be.visible'
+      'be.visible',
     );
 
     ApplicationEditHouseholdMember.getSubmitButton().click();
@@ -46,7 +46,7 @@ describe('Edit household member', () => {
       applicationId,
       application,
       0,
-      errorCode
+      errorCode,
     );
 
     ApplicationEditHouseholdMember.visit(applicationId, personId + 1);

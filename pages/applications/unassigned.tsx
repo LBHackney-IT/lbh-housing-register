@@ -1,4 +1,4 @@
-import { SyntheticEvent, useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
@@ -44,12 +44,11 @@ export default function ApplicationListPage({
     });
   }, [activeNavItem]);
 
-  const handleSelectNavItem = async (event: SyntheticEvent) => {
+  const handleSelectNavItem = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    const { name } = event.target as HTMLButtonElement;
+    const { name } = event.currentTarget;
     setActiveNavItem(name);
   };
-  /*  eslint-disable react/jsx-no-constructed-context-values */
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="Group worktray">
@@ -85,7 +84,7 @@ export default function ApplicationListPage({
               <>
                 <ApplicationsTable
                   applications={applications}
-                  showStatus={true} /* eslint-disable-line */
+                  showStatus={true}
                   page={page}
                   pageSize={pageSize}
                 />
@@ -105,7 +104,7 @@ export default function ApplicationListPage({
 }
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async (
-  context
+  context,
 ) => {
   const user = getSession(context.req);
   const redirect = getRedirect(user, true);
@@ -132,7 +131,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
     status,
     APPLICATION_UNNASIGNED,
     page,
-    pageSize
+    pageSize,
   );
 
   return {

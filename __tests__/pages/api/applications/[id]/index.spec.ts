@@ -55,14 +55,14 @@ describe('PATCH', () => {
       .mockResolvedValue({ ...mockApplicationData });
 
     const isStaffActionMock = (isStaffAction as jest.Mock).mockReturnValue(
-      true
+      true,
     );
-    const hasStaffPermissionsMock = (hasStaffPermissions as jest.Mock).mockReturnValue(
-      true
-    );
-    const hasReadOnlyStaffPermissionsMock = (hasReadOnlyStaffPermissions as jest.Mock).mockReturnValue(
-      false
-    );
+    const hasStaffPermissionsMock = (
+      hasStaffPermissions as jest.Mock
+    ).mockReturnValue(true);
+    const hasReadOnlyStaffPermissionsMock = (
+      hasReadOnlyStaffPermissions as jest.Mock
+    ).mockReturnValue(false);
 
     it('calls parse on JSON with the request body', async () => {
       const { req, res } = generateMockRequestResponseWithHackneyToken({
@@ -222,7 +222,7 @@ describe('PATCH', () => {
       expect(jsonParseSpy).toHaveBeenCalledTimes(2);
       expect(jsonParseSpy).toHaveBeenCalledWith(req.body);
       expect(jsonParseSpy).toHaveBeenCalledWith(
-        JSON.stringify(axiosErrorMessage)
+        JSON.stringify(axiosErrorMessage),
       );
     });
 

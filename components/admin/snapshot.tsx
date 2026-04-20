@@ -41,12 +41,12 @@ export default function Snapshot({ data }: PageProps): JSX.Element {
 
   function livingSituation() {
     const livingSituation = questionLookup(
-      'current-accommodation/living-situation'
+      'current-accommodation/living-situation',
     );
     const home = questionLookup('current-accommodation/home');
     const floor = questionLookup('current-accommodation/home-floor');
     const numberSharing = questionLookup(
-      'current-accommodation/home-how-many-people-share'
+      'current-accommodation/home-how-many-people-share',
     );
 
     if (

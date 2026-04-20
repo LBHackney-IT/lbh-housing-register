@@ -27,7 +27,7 @@ export default function AssignUser({
   const handleAssigneeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (
       !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
-        event.target.value
+        event.target.value,
       ) &&
       event.target.value !== ''
     ) {
@@ -39,7 +39,13 @@ export default function AssignUser({
   };
 
   const updateAssignee = async (updateTo: string | undefined) => {
-    if (!isValidEmail || assignedTo === '') {
+    // Only validate the text field when submitting that field via the "Assign" button
+    // (updateTo === assignedTo). Quick actions ("assign to me", "unassign") must not
+    // be blocked by an empty input or invalid draft after "Assign to another officer".
+    const submittingManualEmail =
+      showControls && updateTo !== undefined && updateTo === assignedTo;
+
+    if (submittingManualEmail && (!isValidEmail || assignedTo === '')) {
       return;
     }
 
@@ -49,9 +55,13 @@ export default function AssignUser({
       id,
       assignedTo: updateTo,
     };
-    await updateApplication(request).then(() => {
+
+    try {
+      await updateApplication(request);
       router.reload();
-    });
+    } catch {
+      setDisableControls(false);
+    }
   };
 
   const handleClickAssignToAnother = (isOpen: boolean) => {
@@ -92,7 +102,7 @@ export default function AssignUser({
       {showControls && (
         <>
           <ErrorMessage
-            message={!isValidEmail ? 'Please enter a valid email address' : ''}
+            message={isValidEmail ? '' : 'Please enter a valid email address'}
           />
           <input
             className="govuk-input lbh-input lbh-!-margin-top-1"

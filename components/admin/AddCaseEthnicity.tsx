@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import {
   SummaryListNoBorder,
   SummaryListActions,
@@ -6,10 +5,12 @@ import {
   SummaryListKey,
   SummaryListValue,
 } from '../summary-list';
+import type { SelectFormField } from '../../lib/types/form';
 import { FormFieldOption } from '../../lib/types/form';
+import type { SectionData } from '../../lib/utils/adminHelpers';
 
 interface PageProps {
-  section: any;
+  section: SectionData;
   ethnicity: string;
   setEthnicity: (ethnicity: string) => void;
 }
@@ -20,7 +21,7 @@ export default function AddCaseEthnicity({
   setEthnicity,
 }: PageProps): JSX.Element {
   const handleEthnicityChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
+    event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     const { value } = event.target;
     setEthnicity(value);
@@ -46,11 +47,13 @@ export default function AddCaseEthnicity({
                 value={ethnicity}
               >
                 <option value="">Select an option</option>
-                {section.fields[0].options.map((option: FormFieldOption) => (
-                  <option value={option.value} key={option.value}>
-                    {option.label}
-                  </option>
-                ))}
+                {(section.fields[0] as SelectFormField).options.map(
+                  (option: FormFieldOption) => (
+                    <option value={option.value} key={option.value}>
+                      {option.label}
+                    </option>
+                  ),
+                )}
               </select>
             </>
           </SummaryListActions>

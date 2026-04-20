@@ -25,7 +25,7 @@ export interface AddressApiResponse {
 }
 
 export const addressSearchAPIResponse = (
-  postCode: string
+  postCode: string,
 ): AddressApiResponse => {
   return {
     body: {
@@ -48,7 +48,7 @@ export const addressSearchAPIResponse = (
 
 export const visitHomepageSignInAndVerify = (
   applicationId: string,
-  email: string
+  email: string,
 ) => {
   const verificationCode = faker.number
     .int({ min: 100000, max: 999999 })
@@ -86,12 +86,12 @@ export const fillInTheSignUpForm = (details: SignUpFormDetails) => {
   StartPage.getLastNameInput().type(details.lastName);
   StartPage.getDoBDayInput().type(details.birthDate.getDate().toString());
   StartPage.getDoBMonthInput().type(
-    (details.birthDate.getMonth() + 1).toString()
+    (details.birthDate.getMonth() + 1).toString(),
   );
   StartPage.getDoBYearInput().type(details.birthDate.getFullYear().toString());
   StartPage.getGenderOptions().check(details.gender);
   StartPage.getNationalInsuranceNumberInput().type(
-    details.nationalInsuranceNumber
+    details.nationalInsuranceNumber,
   );
   StartPage.getPhoneNumberInput().type(details.phoneNumber);
 };
@@ -112,10 +112,10 @@ export const fillInHouseholdMemberForm = (details: HouseholdMemberDetails) => {
   AddPersonPage.getRelationshipDropdown().select(details.relationship);
   AddPersonPage.getDoBDayInput().type(details.birthday.getDate().toString());
   AddPersonPage.getDoBMonthInput().type(
-    (details.birthday.getMonth() + 1).toString()
+    (details.birthday.getMonth() + 1).toString(),
   );
   AddPersonPage.getDoBYearInput().type(
-    details.birthday.getFullYear().toString()
+    details.birthday.getFullYear().toString(),
   );
   AddPersonPage.getGenderDropdown().check(details.gender);
 };

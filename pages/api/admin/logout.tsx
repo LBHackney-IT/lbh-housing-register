@@ -5,7 +5,7 @@ import { removeHackneyToken, getSession } from '../../../lib/utils/googleAuth';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
   const isAdminUser = !!getSession(req);
 

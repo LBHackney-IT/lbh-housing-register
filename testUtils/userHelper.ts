@@ -76,7 +76,7 @@ export const getClaimsByRole = (role?: UserRole): Permissions => {
 };
 
 export const generateHRUserWithPermissions = (
-  role?: UserRole
+  role?: UserRole,
 ): HackneyGoogleUserWithPermissions => {
   const userRole = role ? getGroupByRole(role) : '';
 
@@ -92,7 +92,7 @@ type SignedTokenWithDetails = {
 };
 
 export const generateSignedTokenByRole = (
-  role?: UserRole
+  role?: UserRole,
 ): SignedTokenWithDetails => {
   switch (role) {
     case UserRole.Admin:
@@ -101,7 +101,7 @@ export const generateSignedTokenByRole = (
     case UserRole.ReadOnly: {
       const tokenData = generateJWTTokenTestData(
         [getGroupByRole(role)],
-        issuedAtInMilliseconds
+        issuedAtInMilliseconds,
       );
       const signedToken = jwt.sign(tokenData, JWT_TEST_SECRET);
 
@@ -128,7 +128,7 @@ type SignedResidentTokenWithDetails = {
 };
 
 export const generateSignedResidentToken = (
-  applicationId?: string
+  applicationId?: string,
 ): SignedResidentTokenWithDetails => {
   const id = applicationId || faker.string.uuid();
   const tokenData: HackneyResident = {

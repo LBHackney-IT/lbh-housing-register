@@ -6,7 +6,7 @@ import { getUser } from './users';
 
 export const canUpdateApplication = (
   req: NextApiRequest,
-  id: string
+  id: string,
 ): boolean => {
   if (hasStaffPermissions(req) && !hasReadOnlyStaffPermissions(req))
     return true;

@@ -124,7 +124,7 @@ export default function AddCaseAddress({
 
   const formatIsoDate = (date: string) => {
     const dateObj = new Date(date);
-    return `${dateObj.toLocaleString('default', {
+    return `${dateObj.toLocaleString('en-GB', {
       month: 'long',
     })} ${dateObj.getFullYear()}`;
   };
@@ -185,7 +185,7 @@ export default function AddCaseAddress({
                     {addressItem.date && addressItem.dateTo && (
                       <p className="lbh-body-s lbh-!-margin-top-1">
                         {`${formatIsoDate(addressItem.date)} to ${formatIsoDate(
-                          addressItem.dateTo
+                          addressItem.dateTo,
                         )}`}
                       </p>
                     )}

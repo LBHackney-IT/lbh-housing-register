@@ -1,11 +1,6 @@
-import throttle from 'lodash.throttle';
-import {
-  AnyAction,
-  createAsyncThunk,
-  createSlice,
-  Middleware,
-  ThunkDispatch,
-} from '@reduxjs/toolkit';
+import throttle from 'lodash/throttle';
+import type { AnyAction, Middleware, ThunkDispatch } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Store } from '.';
 import {
   Application,
@@ -30,7 +25,7 @@ export const loadApplication = createAsyncThunk(
     } else {
       return rejectWithValue(`Unable to load application (${res.status})`);
     }
-  }
+  },
 );
 
 export const updateApplication = createAsyncThunk(
@@ -46,7 +41,7 @@ export const updateApplication = createAsyncThunk(
     } else {
       return rejectWithValue(`Unable to update application (${res.status})`);
     }
-  }
+  },
 );
 
 export const disqualifyApplication = createAsyncThunk(
@@ -65,7 +60,7 @@ export const disqualifyApplication = createAsyncThunk(
     } else {
       return rejectWithValue(`Unable to complete application (${res.status})`);
     }
-  }
+  },
 );
 
 export const completeApplication = createAsyncThunk<
@@ -81,15 +76,20 @@ export const completeApplication = createAsyncThunk<
     if (!res.ok) {
       return rejectWithValue(`Unable to complete application (${res.status})`);
     }
-  }
+  },
 );
 
 export const createEvidenceRequest = createAsyncThunk(
   'application/evidence',
   async (application: Application, { rejectWithValue }) => {
+    if (!application.mainApplicant) {
+      return rejectWithValue(
+        'Unable to create evidence request: no main applicant',
+      );
+    }
     const request: CreateEvidenceRequest = {
       documentTypes: getRequiredDocumentsForApplication(
-        application.mainApplicant!
+        application.mainApplicant,
       ),
     };
     const res = await fetch(`/api/applications/${application.id}/evidence`, {
@@ -101,7 +101,7 @@ export const createEvidenceRequest = createAsyncThunk(
     } else {
       return rejectWithValue(`Unable to complete application (${res.status})`);
     }
-  }
+  },
 );
 
 export const sendConfirmation = createAsyncThunk(
@@ -123,7 +123,7 @@ export const sendConfirmation = createAsyncThunk(
     });
 
     return (await res.json()) as NotifyResponse;
-  }
+  },
 );
 
 export const sendMedicalNeed = createAsyncThunk(
@@ -151,7 +151,7 @@ export const sendMedicalNeed = createAsyncThunk(
     });
 
     return (await res.json()) as NotifyResponse;
-  }
+  },
 );
 
 export const sendDisqualifyEmail = createAsyncThunk(
@@ -180,7 +180,7 @@ export const sendDisqualifyEmail = createAsyncThunk(
     });
 
     return (await res.json()) as NotifyResponse;
-  }
+  },
 );
 
 const slice = createSlice({
@@ -193,12 +193,12 @@ const slice = createSlice({
     builder
       .addCase(
         loadApplication.fulfilled,
-        (state, action) => action.payload ?? {}
+        (state, action) => action.payload ?? {},
       )
       .addCase(updateApplication.fulfilled, (state, action) => action.payload)
       .addCase(
         disqualifyApplication.fulfilled,
-        (state, action) => action.payload
+        (state, action) => action.payload,
       )
       .addCase(completeApplication.fulfilled, (state, action) => action.payload)
       .addCase(exit.fulfilled, (state, action) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -206,7 +206,7 @@ const slice = createSlice({
       .addDefaultCase((state, action) => {
         state.mainApplicant = mainApplicant.reducer(
           state.mainApplicant,
-          action
+          action,
         );
         state.otherMembers = otherMembers.reducer(state.otherMembers, action);
       });
@@ -214,7 +214,7 @@ const slice = createSlice({
 });
 
 export const autoSaveMiddleware: Middleware<
-  {}, // eslint-disable-line @typescript-eslint/ban-types
+  Record<string, never>,
   Store,
   ThunkDispatch<Store, null, AnyAction>
 > = (storeAPI) => {
@@ -230,12 +230,13 @@ export const autoSaveMiddleware: Middleware<
     100,
     {
       leading: false,
-    }
+    },
   );
-  return (next) => (action) => {
+  return (next) => (action: unknown) => {
     const previousApplication = storeAPI.getState().application;
     const newAction = next(action);
     const newApplication = storeAPI.getState().application;
+    const typedAction = action as AnyAction;
     function blacklist(type: string) {
       return (
         type.startsWith(loadApplication.typePrefix) ||
@@ -247,7 +248,7 @@ export const autoSaveMiddleware: Middleware<
     if (
       previousApplication !== newApplication &&
       newApplication.id &&
-      !blacklist(action.type)
+      !blacklist(typedAction.type)
     ) {
       throttledDispatch(updateApplication(newApplication));
     }

@@ -1,3 +1,5 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=LBHackney-IT_lbh-housing-register&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=LBHackney-IT_lbh-housing-register) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=LBHackney-IT_lbh-housing-register&metric=bugs)](https://sonarcloud.io/summary/new_code?id=LBHackney-IT_lbh-housing-register) [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=LBHackney-IT_lbh-housing-register&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=LBHackney-IT_lbh-housing-register) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=LBHackney-IT_lbh-housing-register&metric=coverage)](https://sonarcloud.io/summary/new_code?id=LBHackney-IT_lbh-housing-register) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=LBHackney-IT_lbh-housing-register&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=LBHackney-IT_lbh-housing-register) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=LBHackney-IT_lbh-housing-register&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=LBHackney-IT_lbh-housing-register) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=LBHackney-IT_lbh-housing-register&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=LBHackney-IT_lbh-housing-register) [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=LBHackney-IT_lbh-housing-register&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=LBHackney-IT_lbh-housing-register)
+
 # Hackney: Housing register.
 
 **A new tool for Hackney residents to check if they qualify to be on the housing register, and if certain criteria is met, they may continue through the process to submit a housing application form.**
@@ -124,7 +126,7 @@ Repository has a husky configuration to prevent staged files commits that fail l
 
 ### Conventional commits
 
-Repository has forced [Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) by using [Commitizen](https://commitizen-tools.github.io/commitizen/). When you create a commit message, you will run through a process to decide the nature of the commit (feat/fix etc) and other key details. This helps support the automated versioned release strategy.
+Repository enforces [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) using [cz-git](https://cz-git.qbb.sh/) via the [czg](https://www.npmjs.com/package/czg) CLI (`npm run commit`, or the `prepare-commit-msg` hook when you run `git commit`). [Commitlint](https://commitlint.js.org/) validates messages on commit.
 
 ### E2E tests
 
@@ -155,7 +157,6 @@ We've defined a couple of gateways to interact with our API. These are set up as
 ms
 
 - **`internal-api.ts`**
-
   - This acts as a means of routing client side requests, for example form submissions, to a proxy endpoint on the Next.js server.
   - Requests are sent via [API routes](https://nextjs.org/docs/api-routes/introduction) which run server side
 

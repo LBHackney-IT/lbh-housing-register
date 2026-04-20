@@ -2,7 +2,7 @@ import { NotifyRequest, NotifyResponse } from '../../domain/govukNotify';
 import { NotifyClient } from 'notifications-node-client';
 
 export const sendNewApplicationEmail = async (
-  request: NotifyRequest
+  request: NotifyRequest,
 ): Promise<NotifyResponse> => {
   const notifyClient = new NotifyClient(process.env.NOTIFY_API_KEY);
   const response = await notifyClient
@@ -12,7 +12,7 @@ export const sendNewApplicationEmail = async (
       {
         personalisation: request.personalisation,
         reference: request.reference,
-      }
+      },
     )
     .then((response: NotifyResponse) => console.log(response))
     .catch((err: NotifyResponse) => console.error(err));
@@ -21,7 +21,7 @@ export const sendNewApplicationEmail = async (
 };
 
 export const sendMedicalNeedEmail = async (
-  request: NotifyRequest
+  request: NotifyRequest,
 ): Promise<NotifyResponse> => {
   const notifyClient = new NotifyClient(process.env.NOTIFY_API_KEY);
   const response = await notifyClient
@@ -36,7 +36,7 @@ export const sendMedicalNeedEmail = async (
 };
 
 export const sendDisqualifyEmail = async (
-  request: NotifyRequest
+  request: NotifyRequest,
 ): Promise<NotifyResponse> => {
   const notifyClient = new NotifyClient(process.env.NOTIFY_API_KEY);
   const response = await notifyClient

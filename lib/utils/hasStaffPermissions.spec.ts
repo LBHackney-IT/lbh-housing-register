@@ -18,7 +18,8 @@ jest.mock('./googleAuth', () => ({
 }));
 
 describe('hasStaffPermissions', () => {
-  const user: HackneyGoogleUserWithPermissions = generateHRUserWithPermissions();
+  const user: HackneyGoogleUserWithPermissions =
+    generateHRUserWithPermissions();
 
   beforeEach(() => {
     jest.resetAllMocks();

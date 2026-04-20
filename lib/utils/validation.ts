@@ -15,7 +15,7 @@ export function buildValidationSchema(fields: FormField[]) {
       let fieldValidation: Yup.BaseSchema | undefined;
 
       switch (field.as) {
-        case 'checkbox':
+        case 'checkbox': {
           const oneOf = field.validation?.required ? [true] : [true, false];
           baseType = Yup.boolean().oneOf(oneOf, `${field.label} is required`);
 
@@ -24,9 +24,10 @@ export function buildValidationSchema(fields: FormField[]) {
             fieldValidation,
             field,
             baseType,
-            `${field.label} must be selected`
+            `${field.label} must be selected`,
           );
           break;
+        }
 
         case 'checkboxes':
           baseType = fieldValidation = Yup.array().of(Yup.string());
@@ -36,21 +37,21 @@ export function buildValidationSchema(fields: FormField[]) {
             fieldValidation,
             field,
             baseType,
-            'At least one option must be selected'
+            'At least one option must be selected',
           );
           fieldValidation = checkMinimumLength(
             fieldValidation,
             field,
             `No less than ${field.validation?.min} item${
-              field.validation?.min! > 1 ? 's' : ''
-            } can be selected`
+              Number(field.validation?.min) > 1 ? 's' : ''
+            } can be selected`,
           );
           fieldValidation = checkMaximumLength(
             fieldValidation,
             field,
             `No more than ${field.validation?.max} item${
-              field.validation?.max! > 1 ? 's' : ''
-            } can be selected`
+              Number(field.validation?.max) > 1 ? 's' : ''
+            } can be selected`,
           );
           break;
 
@@ -65,7 +66,7 @@ export function buildValidationSchema(fields: FormField[]) {
           switch (field.type) {
             case 'email':
               baseType = Yup.string().email(
-                `${field.label} must be a valid email`
+                `${field.label} must be a valid email`,
               );
 
               fieldValidation = baseType;
@@ -84,18 +85,18 @@ export function buildValidationSchema(fields: FormField[]) {
               fieldValidation = checkMinimumLength(
                 fieldValidation,
                 field,
-                `${field.label} must be no less than ${field.validation?.min}`
+                `${field.label} must be no less than ${field.validation?.min}`,
               );
               fieldValidation = checkMaximumLength(
                 fieldValidation,
                 field,
-                `${field.label} must be no more than ${field.validation?.max}`
+                `${field.label} must be no more than ${field.validation?.max}`,
               );
               break;
             case 'verifycode':
               baseType = Yup.string().matches(
                 /^\d{6}$/,
-                `${field.label} must be a 6 digit number`
+                `${field.label} must be a 6 digit number`,
               );
 
               fieldValidation = baseType;
@@ -122,7 +123,9 @@ export function buildValidationSchema(fields: FormField[]) {
     return acc;
   }, {});
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const walkSchema = (schema: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Object.entries(schema).forEach(([k, v]: [string, any]) => {
       if (
         typeof v === 'object' &&
@@ -150,15 +153,16 @@ export function buildValidationSchema(fields: FormField[]) {
  * @returns {Yup.BaseSchema} - The yup schema
  */
 function checkMaximumLength(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fieldValidationSchema: any,
   field: FormField,
-  errorMessage?: string
+  errorMessage?: string,
 ): Yup.BaseSchema {
   if (field.validation && field.validation.max) {
     errorMessage =
       errorMessage ||
       `${field.label} must be at most ${field.validation.max} character${
-        field.validation.max > 1 ? 's' : ''
+        Number(field.validation.max) > 1 ? 's' : ''
       }`;
     return fieldValidationSchema.max(field.validation.max, errorMessage);
   }
@@ -174,15 +178,16 @@ function checkMaximumLength(
  * @returns {Yup.BaseSchema} - The yup schema
  */
 function checkMinimumLength(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fieldValidationSchema: any,
   field: FormField,
-  errorMessage?: string
+  errorMessage?: string,
 ): Yup.BaseSchema {
   if (field.validation && field.validation.min) {
     errorMessage =
       errorMessage ||
       `${field.label} must be at least ${field.validation.min} character${
-        field.validation.min > 1 ? 's' : ''
+        Number(field.validation.min) > 1 ? 's' : ''
       }`;
     return fieldValidationSchema.min(field.validation.min, errorMessage);
   }
@@ -203,7 +208,7 @@ function checkRequired(
   fieldValidationSchema: Yup.BaseSchema,
   field: FormField,
   baseType: Yup.BaseSchema,
-  errorMessage?: string
+  errorMessage?: string,
 ): Yup.BaseSchema {
   errorMessage = errorMessage || `${field.label} is required`;
   if (!field.conditionalDisplay) {
@@ -213,10 +218,11 @@ function checkRequired(
   }
   if (field.conditionalDisplay && field.validation?.required) {
     const conditionalLogicFields: string[] = field.conditionalDisplay.map(
-      (condition) => condition.field
+      (condition) => condition.field,
     );
 
     fieldValidationSchema = baseType.when(conditionalLogicFields, {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       is: (...values: any[]) => {
         let isVisible = true;
         field.conditionalDisplay?.map((condition, index) => {

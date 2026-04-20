@@ -13,6 +13,7 @@ import {
   statusOptions,
   reasonOptions,
 } from '../../lib/utils/assessmentActionsData';
+import { formatFormikFieldError } from '../../lib/utils/formatFormikFieldError';
 
 import Button from '../button';
 import DateInput, { INVALID_DATE } from '../form/dateinput';
@@ -38,9 +39,8 @@ export default function Actions({ data }: PageProps): JSX.Element {
   const firstReason = disqualificationReasons[0];
   const formRef = useRef<FormikProps<FormikValues>>(null);
 
-  const [reservedBiddingNumberError, setReservedBiddingNumberError] = useState(
-    null
-  );
+  const [reservedBiddingNumberError, setReservedBiddingNumberError] =
+    useState(null);
 
   const schema = Yup.object({
     status: Yup.string()
@@ -80,13 +80,13 @@ export default function Actions({ data }: PageProps): JSX.Element {
             return false;
           }
           return true;
-        }
+        },
       ),
     band: Yup.string(),
     biddingNumberType: Yup.string().oneOf(['generate', 'manual']),
     biddingNumber: Yup.string().matches(
       /^\d{7}$/,
-      'Bidding number should be a 7 digit number'
+      'Bidding number should be a 7 digit number',
     ),
   });
 
@@ -194,7 +194,9 @@ export default function Actions({ data }: PageProps): JSX.Element {
                     <ul className="govuk-list govuk-error-summary__list">
                       {Object.entries(errors).map(([inputName, errorTitle]) => (
                         <li key={inputName}>
-                          <a href={`#${inputName}`}>{errorTitle}</a>
+                          <a href={`#${inputName}`}>
+                            {formatFormikFieldError(errorTitle)}
+                          </a>
                         </li>
                       ))}
                       {reservedBiddingNumberError ? (

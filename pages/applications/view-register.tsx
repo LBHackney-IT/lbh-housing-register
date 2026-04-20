@@ -65,7 +65,6 @@ export default function ViewAllApplicationsPage({
     event.preventDefault();
     setSelectedFilter('');
   };
-  /*  eslint-disable react/jsx-no-constructed-context-values */
   return (
     <UserContext.Provider value={{ user }}>
       <Layout pageName="All applications">
@@ -82,7 +81,6 @@ export default function ViewAllApplicationsPage({
           <div className="govuk-grid-column-three-quarters">
             <div className="lbh-flex-heading">
               <HeadingOne content="All applications" />
-              {/* eslint-disable-next-line */}
               <Button secondary={true} onClick={() => addCase()}>
                 + Add new case
               </Button>
@@ -131,7 +129,7 @@ export default function ViewAllApplicationsPage({
               <>
                 <ApplicationsTable
                   applications={applications}
-                  showStatus={true} /* eslint-disable-line */
+                  showStatus={true}
                   page={page}
                   pageSize={pageSize}
                 />
@@ -151,7 +149,7 @@ export default function ViewAllApplicationsPage({
 }
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async (
-  context
+  context,
 ) => {
   const user = getSession(context.req);
   const redirect = getRedirect(user, true);
@@ -164,7 +162,11 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
     };
   }
 
-  const { status = '', page = '1', pageSize = '10' } = context.query as {
+  const {
+    status = '',
+    page = '1',
+    pageSize = '10',
+  } = context.query as {
     status: string;
     page: string;
     pageSize: string;

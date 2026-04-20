@@ -63,20 +63,21 @@ export default function ApplicationPage({
   history,
 }: PageProps): JSX.Element | null {
   const router = useRouter();
-  const tab = router.query.tab ?? 'overview';
+  const tabParam = router.query.tab;
+  const tab = (Array.isArray(tabParam) ? tabParam[0] : tabParam) ?? 'overview';
   const userCanEditApplication = canEditApplications(user, data);
   const userHasReadOnlyPermissionOnly = hasReadOnlyPermissionOnly(user);
   const [userError, setUserError] = useState<string | undefined>(undefined);
 
   const handleTabChange = (newValue: string) => {
-    router.push({
-      query: { ...router.query, tab: newValue },
+    router.push({ query: { ...router.query, tab: newValue } }, undefined, {
+      shallow: true,
     });
   };
 
   const handleDelete = (applicant: Applicant) => {
     const newHouseholdMembers = data.otherMembers?.filter(
-      (member) => member.person?.id !== applicant.person?.id
+      (member) => member.person?.id !== applicant.person?.id,
     );
 
     const request: Application = {
@@ -278,7 +279,7 @@ export default function ApplicationPage({
                           <CaseDetailsItem
                             itemHeading="Application date"
                             itemValue={formatDate(
-                              data.assessment?.effectiveDate
+                              data.assessment?.effectiveDate,
                             )}
                             buttonText={
                               !userHasReadOnlyPermissionOnly

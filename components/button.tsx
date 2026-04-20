@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import Link from 'next/link';
 
 interface ButtonProps {
@@ -46,7 +47,7 @@ export default function Button({
 interface ButtonLinkProps extends ButtonProps {
   href: string;
   dataTestId?: string;
-  svg?: React.SVGProps<SVGSVGElement>;
+  svg?: ReactNode;
   additionalCssClasses?: string;
 }
 
@@ -69,17 +70,26 @@ export function ButtonLink({
     className += ' govuk-secondary lbh-button--secondary';
   }
 
-  return (
-    <Link href={href}>
-      <a
-        className={`${className} ${additionalCssClasses}`}
-        data-testid={dataTestId}
-        draggable="false"
-        {...(disabled && { disabled: true, 'aria-disabled': true })}
-      >
+  const mergedClass = `${className} ${additionalCssClasses ?? ''}`.trim();
+
+  if (disabled) {
+    return (
+      <span className={mergedClass} data-testid={dataTestId} aria-disabled>
         {children}
         {svg}
-      </a>
+      </span>
+    );
+  }
+
+  return (
+    <Link
+      href={href}
+      className={mergedClass}
+      data-testid={dataTestId}
+      draggable={false}
+    >
+      {children}
+      {svg}
     </Link>
   );
 }

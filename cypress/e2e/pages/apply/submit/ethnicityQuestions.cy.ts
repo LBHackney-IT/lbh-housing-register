@@ -31,7 +31,7 @@ const applicationWithMainApplicant = {
 describe('Ethnicity questions', () => {
   beforeEach(() => {
     cy.clearAllCookies();
-    cy.task('clearNock');
+    cy.clearE2eNock();
   });
 
   it('shows the loading spinner while application data is being fetched on the background', () => {
@@ -40,7 +40,7 @@ describe('Ethnicity questions', () => {
       applicationId,
       application,
       false,
-      apiResponseDelay
+      apiResponseDelay,
     );
 
     EthnicityPage.visit();
@@ -54,25 +54,25 @@ describe('Ethnicity questions', () => {
 
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
-      applicationWithMainApplicant
+      applicationWithMainApplicant,
     );
 
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,
       applicationWithMainApplicant,
-      apiResponseDelay
+      apiResponseDelay,
     );
 
     // nested form second patch
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,
       applicationWithMainApplicant,
-      apiResponseDelay
+      apiResponseDelay,
     );
 
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
-      applicationWithMainApplicant
+      applicationWithMainApplicant,
     );
 
     EthnicityPage.visit();
@@ -102,7 +102,7 @@ describe('Ethnicity questions', () => {
     cy.loginAsResident(applicationId, true);
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
-      applicationWithMainApplicant
+      applicationWithMainApplicant,
     );
 
     const errorStatusCode = StatusCodes.BAD_REQUEST;
@@ -113,7 +113,7 @@ describe('Ethnicity questions', () => {
       applicationId,
       applicationWithMainApplicant,
       apiResponseDelay,
-      errorStatusCode
+      errorStatusCode,
     );
 
     EthnicityPage.visit();
@@ -139,7 +139,7 @@ describe('Ethnicity questions', () => {
       applicationId,
       applicationWithMainApplicant,
       apiResponseDelay,
-      errorStatusCode
+      errorStatusCode,
     );
 
     EthnicityPage.visit();

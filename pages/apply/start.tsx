@@ -50,10 +50,10 @@ const ApplicationStartPage = (): JSX.Element => {
           contactInformation: {
             phoneNumber: phone,
           },
-        })
+        }),
       );
       setHasSignedUp(true);
-    } catch (error) {
+    } catch {
       setUserError(Errors.GENERIC_ERROR);
       scrollToError();
     }

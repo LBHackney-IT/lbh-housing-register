@@ -34,18 +34,18 @@ export default function EditApplicant({ user, data }: PageProps): JSX.Element {
 
   const savedAddresses =
     data.mainApplicant?.questions?.filter(
-      (question) => question.id === 'address-history/addressHistory'
+      (question) => question.id === 'address-history/addressHistory',
     )[0]?.answer || '[]';
 
   const savedEthnicity =
     data.mainApplicant?.questions?.filter(
       (question) =>
-        question.id === 'ethnicity-questions/ethnicity-main-category'
+        question.id === 'ethnicity-questions/ethnicity-main-category',
     )[0]?.answer || '""';
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [addressHistory, setAddressHistory] = useState(
-    JSON.parse(savedAddresses) as Address[]
+    JSON.parse(savedAddresses) as Address[],
   );
   const [ethnicity, setEthnicity] = useState(JSON.parse(savedEthnicity));
 
@@ -56,7 +56,7 @@ export default function EditApplicant({ user, data }: PageProps): JSX.Element {
     const questionValues = generateQuestionArray(
       values,
       addressHistory,
-      ethnicity
+      ethnicity,
     );
 
     const primaryAddress =
@@ -120,7 +120,7 @@ export default function EditApplicant({ user, data }: PageProps): JSX.Element {
     <>
       {data.id ? (
         <MainApplicantForm
-          isEditing={true} //eslint-disable-line
+          isEditing={true}
           user={user}
           onSubmit={onSubmit}
           isSubmitted={isSubmitted}

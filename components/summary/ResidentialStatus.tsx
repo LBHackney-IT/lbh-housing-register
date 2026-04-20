@@ -18,7 +18,7 @@ export function ResidentialStatusSummary({
     return getQuestionValue(
       currentResident.questions,
       FormID.RESIDENTIAL_STATUS,
-      question
+      question,
     );
   }
 

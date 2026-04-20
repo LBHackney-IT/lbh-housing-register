@@ -42,10 +42,10 @@ const UserSummary = (): JSX.Element => {
   const { resident } = router.query as { resident: string };
 
   const currentResident = useAppSelector(
-    selectApplicant(resident)
+    selectApplicant(resident),
   ) as ApplicantWithPersonID;
   const mainResident = useAppSelector(
-    (s) => s.application.mainApplicant
+    (s) => s.application.mainApplicant,
   ) as Applicant;
   const isMainApplicant = currentResident == mainResident;
 
@@ -54,10 +54,8 @@ const UserSummary = (): JSX.Element => {
   const [userError, setUserError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const saveApplicationStatus = useAppSelector(selectSaveApplicationStatus);
-  const [
-    hasDeletedHouseholdMember,
-    setHasDeletedHouseholdMember,
-  ] = useState<boolean>(false);
+  const [hasDeletedHouseholdMember, setHasDeletedHouseholdMember] =
+    useState<boolean>(false);
 
   const returnHref = '/apply/overview';
 
@@ -85,7 +83,7 @@ const UserSummary = (): JSX.Element => {
     const [isEligible, reasons] = checkEligible(application);
     if (!isEligible) {
       const reasonStrings = reasons.map((reason) =>
-        getDisqualificationReasonOption(reason)
+        getDisqualificationReasonOption(reason),
       );
       const reason = reasonStrings.join(',');
 
@@ -94,7 +92,7 @@ const UserSummary = (): JSX.Element => {
         await dispatch(sendDisqualifyEmail({ application, reason }));
         await dispatch(disqualifyApplication(application.id!)).unwrap();
         router.push('/apply/not-eligible');
-      } catch (error) {
+      } catch {
         setUserError('Unable to update application');
         scrollToError();
       } finally {
@@ -131,20 +129,20 @@ const UserSummary = (): JSX.Element => {
       currentResident?.questions,
       sectionName,
       'sectionCompleted',
-      false
+      false,
     );
   }
 
   const pesonalDetailsCompleted = isSectionComplete(FormID.PERSONAL_DETAILS);
   const immigrationStatusCompleted = isSectionComplete(
-    FormID.IMMIGRATION_STATUS
+    FormID.IMMIGRATION_STATUS,
   );
   const residentialStatusCompleted = isSectionComplete(
-    FormID.RESIDENTIAL_STATUS
+    FormID.RESIDENTIAL_STATUS,
   );
   const addressHistoryCompleted = isSectionComplete(FormID.ADDRESS_HISTORY);
   const currentAccommodationCompleted = isSectionComplete(
-    FormID.CURRENT_ACCOMMODATION
+    FormID.CURRENT_ACCOMMODATION,
   );
   const yourSituationCompleted = isSectionComplete(FormID.YOUR_SITUATION);
   const incomeSavingsCompleted = isSectionComplete(FormID.INCOME_SAVINGS);

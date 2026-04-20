@@ -2,7 +2,7 @@ service: housing-register-frontend
 
 provider:
   name: aws
-  runtime: nodejs20.x
+  runtime: nodejs24.x
   versionFunctions: false
   region: eu-west-2
   stage: ${opt:stage}
@@ -16,16 +16,20 @@ functions:
   housing-register-frontend:
     name: ${self:service}-${self:provider.stage}
     handler: lambda.handler
-    timeout: 30
+    # API Gateway REST integration limit is 29s; stay below to avoid confusing timeouts.
+    timeout: 29
     package:
       patterns:
         - lambda.js
-        - next.config.js
-        - pages/**
+        # Standalone trace + postbuild deps (server runtime).
+        - build/_next/standalone/**
+        - '!build/_next/standalone/**/*.map'
+        # Client-side static assets — standalone output does NOT include these; they live
+        # at the distDir root and must be packaged separately so /_next/static/** resolves.
+        - build/_next/static/**
+        - '!build/_next/static/**/*.map'
+        # Public directory (favicon, images) — served directly by lambda.js.
         - public/**
-        - build/_next/**
-        - '!build/_next/cache/**'
-        - node_modules/**
     events:
       - http: ANY /
       - http: ANY /{proxy+}
@@ -33,24 +37,25 @@ functions:
       securityGroupIds: ${self:custom.securityGroups.${self:provider.stage}}
       subnetIds: ${self:custom.subnets.${self:provider.stage}}
     environment:
-      ACTIVITY_HISTORY_API: ${ssm:/housing-register/${self:provider.stage}/activity-history-api-url}
-      APP_URL: ${ssm:/housing-register/${self:provider.stage}/app-url}
-      AUTHORISED_ADMIN_GROUP: ${ssm:/housing-register/${self:provider.stage}/authorised_admin_group}
-      AUTHORISED_MANAGER_GROUP: ${ssm:/housing-register/${self:provider.stage}/authorised_manager_group}
-      AUTHORISED_OFFICER_GROUP: ${ssm:/housing-register/${self:provider.stage}/authorised_officer_group}
-      AUTHORISED_READONLY_GROUP: ${ssm:/housing-register/${self:provider.stage}/authorised_readonly_group}
-      HACKNEY_JWT_SECRET: ${ssm:/housing-register/${self:provider.stage}/hackney-jwt-secret}
-      HOUSING_REGISTER_API: ${ssm:/housing-register/${self:provider.stage}/housing-register-api-url}
-      HOUSING_REGISTER_KEY: ${ssm:/housing-register/${self:provider.stage}/housing-register-api-key}
-      LOOKUP_API_URL: ${ssm:/housing-register/${self:provider.stage}/lookup-api-url}
-      LOOKUP_API_TOKEN: ${ssm:/housing-register/${self:provider.stage}/lookup-api-key}
       NEXT_PUBLIC_ENV: ${opt:stage}
-      NEXT_PUBLIC_EVIDENCE_STORE: ${ssm:/housing-register/${self:provider.stage}/evidence-store-url}
-      NOTIFY_API_KEY: ${ssm:/housing-register/${self:provider.stage}/notify-api-key}
-      NOTIFY_TEMPLATE_NEW_APPLICATION: ${ssm:/housing-register/${self:provider.stage}/notify-template-new-application}
-      NOTIFY_TEMPLATE_DISQUALIFY: ${ssm:/housing-register/${self:provider.stage}/notify-template-disqualify}
-      NOTIFY_TEMPLATE_MEDICAL_NEED: ${ssm:/housing-register/${self:provider.stage}/notify-template-medical-need}
       SKIP_VERIFY_TOKEN: false
+      ACTIVITY_HISTORY_API: ${param:activityHistoryApi}
+      LOOKUP_API_URL: ${param:lookupApiUrl}
+      APP_URL: ${param:appUrl}
+      AUTHORISED_ADMIN_GROUP: ${param:authorisedAdminGroup}
+      AUTHORISED_MANAGER_GROUP: ${param:authorisedManagerGroup}
+      AUTHORISED_OFFICER_GROUP: ${param:authorisedOfficerGroup}
+      AUTHORISED_READONLY_GROUP: ${param:authorisedReadonlyGroup}
+      HOUSING_REGISTER_API: ${param:housingRegisterApi}
+      NOTIFY_TEMPLATE_NEW_APPLICATION: ${param:notifyTemplateNewApplication}
+      NOTIFY_TEMPLATE_DISQUALIFY: ${param:notifyTemplateDisqualify}
+      NOTIFY_TEMPLATE_MEDICAL_NEED: ${param:notifyTemplateMedicalNeed}
+      NEXT_PUBLIC_EVIDENCE_STORE: ${param:evidenceStoreUrl}
+      NEXT_PUBLIC_GTM_ID: ${param:gtmId}
+      HOUSING_REGISTER_KEY: ${ssm:/housing-register/${self:provider.stage}/housing-register-api-key}
+      HACKNEY_JWT_SECRET: ${ssm:/housing-register/${self:provider.stage}/hackney-jwt-secret}
+      LOOKUP_API_TOKEN: ${ssm:/housing-register/${self:provider.stage}/lookup-api-key}
+      NOTIFY_API_KEY: ${ssm:/housing-register/${self:provider.stage}/notify-api-key}
 
 resources:
   Resources:

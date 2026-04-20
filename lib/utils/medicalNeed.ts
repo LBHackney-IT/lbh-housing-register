@@ -10,7 +10,7 @@ export const applicantHasMedicalNeed = (applicant?: Applicant): boolean => {
   const medicalNeeds = getQuestionValue(
     applicant.questions,
     FormID.MEDICAL_NEEDS,
-    'medical-needs'
+    'medical-needs',
   );
 
   return medicalNeeds === 'yes';
@@ -18,7 +18,7 @@ export const applicantHasMedicalNeed = (applicant?: Applicant): boolean => {
 
 export const applicantsWithMedicalNeed = (application: Application): number => {
   const mainApplicantHasMedicalNeed = applicantHasMedicalNeed(
-    application.mainApplicant
+    application.mainApplicant,
   );
   const otherApplicantsWithMedicalNeeds = application.otherMembers
     ?.map((applicant) => applicantHasMedicalNeed(applicant))

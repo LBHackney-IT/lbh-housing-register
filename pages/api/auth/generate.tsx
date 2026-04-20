@@ -1,39 +1,59 @@
 import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import { CreateAuthRequest } from '../../../domain/HousingApi';
 import { createVerifyCode } from '../../../lib/gateways/applications-api';
+
+/** Verbose API errors for mocked e2e / CI — not during Jest (avoids noise and spy interference). */
+function logE2eGenerateError(payload: Record<string, unknown>): void {
+  if (
+    process.env.E2E_HTTP_MOCKS === 'true' &&
+    process.env.JEST_WORKER_ID === undefined
+  ) {
+    console.error('[api/auth/generate]', payload);
+  }
+}
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
-  let request;
+  if (req.method !== 'POST') {
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: 'Invalid request method' });
+    return;
+  }
 
-  switch (req.method) {
-    case 'POST':
-      try {
-        request = JSON.parse(req.body);
-      } catch {
-        res
-          .status(StatusCodes.BAD_REQUEST)
-          .json({ message: 'Unable to parse request' });
-        break;
-      }
+  let request: CreateAuthRequest;
+  try {
+    request = JSON.parse(req.body) as CreateAuthRequest;
+  } catch (parseErr) {
+    logE2eGenerateError({
+      phase: 'body parse failed',
+      bodyType: typeof req.body,
+      message: parseErr instanceof Error ? parseErr.message : String(parseErr),
+    });
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: 'Unable to parse request' });
+    return;
+  }
 
-      try {
-        const data = await createVerifyCode(request);
-        res.status(StatusCodes.OK).json(data);
-      } catch {
-        res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Unable to create verify code' });
-      }
-      break;
-
-    default:
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: 'Invalid request method' });
+  try {
+    const data = await createVerifyCode(request);
+    res.status(StatusCodes.OK).json(data);
+  } catch (err) {
+    logE2eGenerateError({
+      phase: 'createVerifyCode failed',
+      message: err instanceof Error ? err.message : String(err),
+      stack: err instanceof Error ? err.stack : undefined,
+      housingRegisterApiSet: Boolean(process.env.HOUSING_REGISTER_API),
+      housingRegisterKeySet: Boolean(process.env.HOUSING_REGISTER_KEY),
+    });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: 'Unable to create verify code' });
   }
 };
 

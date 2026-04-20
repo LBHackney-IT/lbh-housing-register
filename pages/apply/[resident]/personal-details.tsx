@@ -87,7 +87,7 @@ const ApplicationStep = (): JSX.Element => {
           phoneNumber,
           emailAddress,
         },
-      })
+      }),
     );
     dispatch(
       updateWithFormValues({
@@ -95,7 +95,7 @@ const ApplicationStep = (): JSX.Element => {
         personID: applicant.person!.id!,
         values,
         markAsComplete: true,
-      })
+      }),
     );
   };
 

@@ -14,7 +14,7 @@ import { DisqualificationReason } from './disqualificationReasonOptions';
  */
 export function getDisplayStateOfField(
   field: FormField,
-  values: FormData
+  values: FormData,
 ): boolean {
   let display = true;
 
@@ -34,7 +34,7 @@ export function getDisplayStateOfField(
 }
 
 export function checkEligible(
-  application: Application
+  application: Application,
 ): [boolean, DisqualificationReason[]] {
   let isValid = true;
   const reasons: DisqualificationReason[] = [];
@@ -76,7 +76,7 @@ export function checkEligible(
   const requestedNumberOfBedrooms = getQuestionValue(
     mainApplicant.questions,
     FormID.CURRENT_ACCOMMODATION,
-    'home-how-many-bedrooms'
+    'home-how-many-bedrooms',
   );
 
   if (bedroomNeed <= requestedNumberOfBedrooms) {
@@ -93,7 +93,7 @@ export function checkEligible(
       const fieldValue = getQuestionValue(
         mainApplicant.questions,
         formID,
-        criteria.field
+        criteria.field,
       );
 
       if (Array.isArray(fieldValue) && fieldValue.indexOf(criteria.is) !== -1) {

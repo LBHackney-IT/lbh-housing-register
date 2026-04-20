@@ -28,7 +28,7 @@ interface Difference {
 
 const getReasonFromActivity = (reason: string | undefined) => {
   return reasonOptions.find(
-    (option: { value: string; label: string }) => option.value === reason
+    (option: { value: string; label: string }) => option.value === reason,
   )?.label;
 };
 
@@ -74,7 +74,7 @@ const created = (activity: IActivityEntity) => {
 
 export const getFormattedDate = (
   dateString: string | null,
-  excludeTime = false
+  excludeTime = false,
 ) => {
   if (dateString == null) {
     return '';
@@ -102,12 +102,12 @@ const effectiveDateChangedByUser = (activity: IActivityEntity) => {
       Application date changed from '
       {getFormattedDate(
         activity.oldData.assessment?.effectiveDate ?? null,
-        true
+        true,
       )}
       ' to '
       {getFormattedDate(
         activity.newData.assessment?.effectiveDate ?? null,
-        true
+        true,
       )}
       ' by {activity.authorDetails.fullName}
     </>
@@ -120,7 +120,7 @@ const householdApplicantChangedByUser = (activity: IActivityEntity) => {
 
 const householdApplicantRemovedByUser = (activity: IActivityEntity) => {
   const householdMember = Object.values(
-    activity.oldData
+    activity.oldData,
   )[0] as IHouseholdMember;
   return (
     <>
@@ -140,12 +140,12 @@ const informationReceivedDateChangedByUser = (activity: IActivityEntity) => {
       Information received date changed from '
       {getFormattedDate(
         activity.oldData.assessment?.informationReceivedDate ?? null,
-        true
+        true,
       )}
       ' to '
       {getFormattedDate(
         activity.newData.assessment?.informationReceivedDate ?? null,
-        true
+        true,
       )}
       ' by {activity.authorDetails.fullName}
     </>
@@ -203,23 +203,32 @@ export function renderHeading(item: ActivityHistoryResponse) {
   const historyItem = new ActivityEntity(item);
   const activityText: {
     [key in ApplicationActivityType]: (
-      activity: IActivityEntity
+      activity: IActivityEntity,
     ) => JSX.Element;
   } = {
     [ApplicationActivityType.AssignedToChangedByUser]: assignedToChangedByUser,
     [ApplicationActivityType.BandChangedByUser]: bandChangedByUser,
-    [ApplicationActivityType.BedroomNeedChangedByUser]: bedroomNeedChangedByUser,
-    [ApplicationActivityType.BiddingNumberChangedByUser]: biddingNumberChangedByUser,
+    [ApplicationActivityType.BedroomNeedChangedByUser]:
+      bedroomNeedChangedByUser,
+    [ApplicationActivityType.BiddingNumberChangedByUser]:
+      biddingNumberChangedByUser,
     [ApplicationActivityType.CaseViewedByUser]: caseViewedByUser,
     [ApplicationActivityType.Created]: created,
-    [ApplicationActivityType.EffectiveDateChangedByUser]: effectiveDateChangedByUser,
-    [ApplicationActivityType.HouseholdApplicantChangedByUser]: householdApplicantChangedByUser,
-    [ApplicationActivityType.HouseholdApplicantRemovedByUser]: householdApplicantRemovedByUser,
-    [ApplicationActivityType.ImportedFromLegacyDatabase]: importedFromLegacyDatabase,
-    [ApplicationActivityType.InformationReceivedDateChangedByUser]: informationReceivedDateChangedByUser,
-    [ApplicationActivityType.MainApplicantChangedByUser]: mainApplicantChangedByUser,
+    [ApplicationActivityType.EffectiveDateChangedByUser]:
+      effectiveDateChangedByUser,
+    [ApplicationActivityType.HouseholdApplicantChangedByUser]:
+      householdApplicantChangedByUser,
+    [ApplicationActivityType.HouseholdApplicantRemovedByUser]:
+      householdApplicantRemovedByUser,
+    [ApplicationActivityType.ImportedFromLegacyDatabase]:
+      importedFromLegacyDatabase,
+    [ApplicationActivityType.InformationReceivedDateChangedByUser]:
+      informationReceivedDateChangedByUser,
+    [ApplicationActivityType.MainApplicantChangedByUser]:
+      mainApplicantChangedByUser,
     [ApplicationActivityType.NoteAddedByUser]: noteAddedByUser,
-    [ApplicationActivityType.SensitivityChangedByUser]: sensitivityChangedByUser,
+    [ApplicationActivityType.SensitivityChangedByUser]:
+      sensitivityChangedByUser,
     [ApplicationActivityType.StatusChangedByUser]: statusChangedByUser,
     [ApplicationActivityType.SubmittedByResident]: submittedByResident,
   };
@@ -233,12 +242,16 @@ export function renderHeading(item: ActivityHistoryResponse) {
 }
 
 export function renderBody(item: ActivityHistoryResponse) {
+  const rawActivityType = (item.newData as Record<string, unknown>)
+    ._activityType;
+  const activityType =
+    typeof rawActivityType === 'string' ? rawActivityType : '';
   const skipActivityType = [
     'Created',
     'SensitivityChangedByUser',
     'StatusChangedByUser',
     'SubmittedByResident',
-  ].includes(capitalizeFirstLetter(item.newData._activityType));
+  ].includes(capitalizeFirstLetter(activityType));
 
   if (skipActivityType) return;
 
@@ -283,8 +296,8 @@ export function renderBody(item: ActivityHistoryResponse) {
                 lhs = JSON.stringify(lhs, undefined, 2);
                 rhs = JSON.stringify(rhs, undefined, 2);
 
-                lhs = lhs ? lhs.replace(/\\"/g, '') : '';
-                rhs = rhs ? rhs.replace(/\\"/g, '') : '';
+                lhs = lhs ? lhs.replaceAll(String.raw`\"`, '') : '';
+                rhs = rhs ? rhs.replaceAll(String.raw`\"`, '') : '';
               }
               if (path !== 'person.id') {
                 return (
@@ -310,6 +323,8 @@ export function renderBody(item: ActivityHistoryResponse) {
   if (!historyItem.newData.activityData) return false;
 
   return (
-    <Details summary="Show details">{historyItem.newData.activityData}</Details>
+    <Details summary="Show details">
+      {historyItem.newData.activityData as React.ReactNode}
+    </Details>
   );
 }

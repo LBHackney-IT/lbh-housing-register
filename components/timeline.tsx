@@ -1,7 +1,8 @@
+import type { ReactNode } from 'react';
 import { HeadingThree } from './content/headings';
 
 interface TimelineProps {
-  children: JSX.Element | JSX.Element[];
+  children: ReactNode;
 }
 
 export default function Timeline({ children }: TimelineProps): JSX.Element {
@@ -10,7 +11,7 @@ export default function Timeline({ children }: TimelineProps): JSX.Element {
 
 interface TimelineEventProps {
   heading: string;
-  children: JSX.Element | JSX.Element[];
+  children?: ReactNode;
   variant?: 'action-needed' | 'major' | 'minor';
 }
 

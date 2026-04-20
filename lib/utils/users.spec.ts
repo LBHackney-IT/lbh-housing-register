@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import cookie from 'cookie';
+import * as cookie from 'cookie';
 import jsonwebtoken from 'jsonwebtoken';
 import jwt from 'jsonwebtoken';
 import { createRequest, createResponse } from 'node-mocks-http';
@@ -211,7 +211,7 @@ describe('users', () => {
         {
           domain,
           path,
-        }
+        },
       );
     });
 
@@ -222,7 +222,7 @@ describe('users', () => {
         {
           domain: '.hackney.gov.uk',
           path: '/',
-        }
+        },
       );
       setAuthCookie(res, verifyAuthResponse);
       expect(res.getHeader('Set-Cookie')).toBe(expectedJWTToken);

@@ -66,7 +66,7 @@ export const approveNovaletExport = async (fileName: string) => {
 
 export const addNoteToHistory = async (
   applicationId: string,
-  request: AddNoteToHistoryRequest
+  request: AddNoteToHistoryRequest,
 ) => {
   const res = await fetch(`/api/applications/${applicationId}/note`, {
     method: 'POST',

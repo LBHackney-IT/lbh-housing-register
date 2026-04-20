@@ -24,7 +24,7 @@ export interface AddressHistoryDuration {
 
 export function checkAddressHistory(
   entries: AddressHistoryEntry[],
-  requiredYears: number
+  requiredYears: number,
 ) {
   const [last] = entries.slice(-1);
   const lastDate = new Date(last.date);
@@ -35,13 +35,13 @@ export function checkAddressHistory(
 }
 
 export function formatDate(date: Date) {
-  return `${date.toLocaleString('default', {
+  return `${date.toLocaleString('en-GB', {
     month: 'long',
   })} ${date.getFullYear()}`;
 }
 
 export function calculateDurations(
-  entries: AddressHistoryEntry[]
+  entries: AddressHistoryEntry[],
 ): AddressHistoryDuration[] {
   if (!entries) return [];
 

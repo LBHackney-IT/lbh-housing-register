@@ -15,7 +15,7 @@ context('Cookies', () => {
     cy.getCookie('seen_cookie_message').should(
       'have.property',
       'value',
-      'true'
+      'true',
     );
   });
 });

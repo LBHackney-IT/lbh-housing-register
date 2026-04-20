@@ -154,7 +154,7 @@ describe('Applicant and household member both over 55', () => {
       //current accommodation
       cy.get('.lbh-link').contains('Current accommodation').click();
       ApplyResidentCurrentAccommodationPage.getRadioButton().check(
-        'private-rental'
+        'private-rental',
       );
       ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
       ApplyResidentCurrentAccommodationPage.getRadioButton().check('flat');
@@ -186,12 +186,12 @@ describe('Applicant and household member both over 55', () => {
       ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
       ApplyResidentCurrentAccommodationPage.getUnsuitableHomeReasonInput().type(
         faker.lorem.paragraph(),
-        { delay: 0 }
+        { delay: 0 },
       );
       ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
       ApplyResidentCurrentAccommodationPage.getLandlordNameInput().type(
         faker.person.fullName(),
-        { delay: 0 }
+        { delay: 0 },
       );
       ApplyResidentCurrentAccommodationPage.getSaveAndContinueButton().click();
 
@@ -224,7 +224,7 @@ describe('Applicant and household member both over 55', () => {
 
       ApplyResidentIndexPage.getPersonalDetailsSectionLink().click();
       ApplyResidentPersonalDetailsPage.getNINumberInput().type(
-        faker.string.alphanumeric(9)
+        faker.string.alphanumeric(9),
       );
       ApplyResidentPersonalDetailsPage.getSubmitButton()
         .scrollIntoView()

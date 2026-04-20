@@ -29,14 +29,13 @@ export default function Sidebar(): JSX.Element {
       <ul>
         {sidebarNavRoutes.map(({ name, path }) => (
           <li key={path} className="lbh-link-group__item">
-            <Link href={path}>
-              <a
-                className={`lbh-link lbh-link--no-visited-state lbh-!-font-weight-bold lbh-body-m ${
-                  router.pathname === path ? 'active' : ''
-                }`}
-              >
-                {name}
-              </a>
+            <Link
+              href={path}
+              className={`lbh-link lbh-link--no-visited-state lbh-!-font-weight-bold lbh-body-m ${
+                router.pathname === path ? 'active' : ''
+              }`}
+            >
+              {name}
             </Link>
           </li>
         ))}

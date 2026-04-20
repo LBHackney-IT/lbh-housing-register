@@ -41,7 +41,7 @@ export default function ResidentLayout({
   const [loaded, setLoaded] = useState(false);
   const [showSignOutDialog, setShowSignOutDialog] = useState(false);
 
-  const signOutRef = useRef() as React.MutableRefObject<HTMLAnchorElement>;
+  const signOutRef = useRef<HTMLAnchorElement | null>(null);
   const application = useAppSelector((store) => store.application);
 
   useEffect(() => {
@@ -72,7 +72,7 @@ export default function ResidentLayout({
   const handleShowSignOutDialog = () => {
     const timeBeforeAutoSignOut = setTimeout(
       () => autoSignOut(),
-      TIME_TO_SHOW_DIALOG_BEFORE_SIGN_OUT
+      TIME_TO_SHOW_DIALOG_BEFORE_SIGN_OUT,
     );
     setShowSignOutDialog(true);
 
@@ -93,7 +93,7 @@ export default function ResidentLayout({
   useEffect(() => {
     const timeBeforeShowSignOutDialog = setTimeout(
       () => handleShowSignOutDialog(),
-      INACTIVITY_TIME_BEFORE_WARNING_DIALOG
+      INACTIVITY_TIME_BEFORE_WARNING_DIALOG,
     );
 
     if (!application.id) {
@@ -107,7 +107,7 @@ export default function ResidentLayout({
   }, [application.id]);
 
   return (
-    <>
+    <div className="lbh-resident-layout-shell">
       {pageName && <Seo title={pageName} />}
       <SkipLink />
       <Header
@@ -124,7 +124,10 @@ export default function ResidentLayout({
         <Breadcrumbs items={breadcrumbs} />
       )}
 
-      <main id="main-content" className="lbh-main-wrapper">
+      <main
+        id="main-content"
+        className="lbh-main-wrapper lbh-resident-layout-shell__main"
+      >
         <div className="lbh-container" data-testid={dataTestId}>
           {loaded ? children : <Loading text="Checking information…" />}
         </div>
@@ -145,6 +148,6 @@ export default function ResidentLayout({
           back in later.
         </Paragraph>
       </Dialog>
-    </>
+    </div>
   );
 }

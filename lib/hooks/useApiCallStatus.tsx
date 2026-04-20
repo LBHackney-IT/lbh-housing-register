@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { ApiCallStatus, ApiCallStatusCode } from '../store/apiCallsStatus';
-import { ParsedUrlQueryInput } from 'querystring';
+import type { ParsedUrlQueryInput } from 'node:querystring';
 
 // custom hook to manage the application status and ensure promises are fulfilled before moving to the next page.
 

@@ -17,7 +17,7 @@ export function MedicalNeedsSummary({
   const medicalNeeds = getQuestionValue(
     currentResident.questions,
     FormID.MEDICAL_NEEDS,
-    'medical-needs'
+    'medical-needs',
   );
 
   return (

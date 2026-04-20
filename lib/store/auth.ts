@@ -23,14 +23,14 @@ export const createVerifyCode = createAsyncThunk(
     } else {
       return rejectWithValue(`Unable to create verify code (${res.status})`);
     }
-  }
+  },
 );
 
 export const confirmVerifyCode = createAsyncThunk(
   'auth/confirm',
   async (
     { email, code }: { email: string; code: string },
-    { rejectWithValue }
+    { rejectWithValue },
   ) => {
     const request: VerifyAuthRequest = {
       email,
@@ -46,7 +46,7 @@ export const confirmVerifyCode = createAsyncThunk(
     } else {
       return rejectWithValue(`Unable to confirm verify code (${res.status})`);
     }
-  }
+  },
 );
 
 export const exit = createAsyncThunk('auth/exit', async () => {

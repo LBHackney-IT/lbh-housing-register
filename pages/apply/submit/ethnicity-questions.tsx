@@ -19,7 +19,7 @@ import { Errors } from 'lib/types/errors';
 const EthnicityQuestions = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const applicant = useAppSelector(
-    (store) => store.application.mainApplicant
+    (store) => store.application.mainApplicant,
   ) as Applicant;
 
   const [formId, setFormId] = useState('ethnicity-questions');
@@ -64,7 +64,7 @@ const EthnicityQuestions = (): JSX.Element => {
 
   const nextStep = (values: FormikValues) => {
     const { nextFormId } = formData.conditionals?.find(
-      (element) => getIn(values, element.fieldId) === element.value
+      (element) => getIn(values, element.fieldId) === element.value,
     ) ?? { nextFormId: 'exit' };
 
     if (nextFormId === 'exit') {
@@ -75,7 +75,7 @@ const EthnicityQuestions = (): JSX.Element => {
             personID: applicant.person!.id!,
             values,
             markAsComplete: true,
-          })
+          }),
         );
         setPath('/apply/submit/declaration');
         setHasSaved(true);
@@ -99,7 +99,7 @@ const EthnicityQuestions = (): JSX.Element => {
           personID: applicant.person!.id!,
           values,
           markAsComplete: true,
-        })
+        }),
       );
       setHasSaved(true);
     } catch (error) {

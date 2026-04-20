@@ -41,7 +41,7 @@ const fillInTheSignUpForm = () => {
   StartPage.getDoBYearInput().type(birthDate.getFullYear().toString());
   StartPage.getGenderOptions().check(getRandomGender());
   StartPage.getNationalInsuranceNumberInput().type(
-    faker.string.alphanumeric(9)
+    faker.string.alphanumeric(9),
   );
   StartPage.getPhoneNumberInput().type(phoneNumber);
 };
@@ -49,7 +49,7 @@ const fillInTheSignUpForm = () => {
 describe('Application', () => {
   beforeEach(() => {
     cy.clearAllCookies();
-    cy.task('clearNock');
+    cy.clearE2eNock();
   });
 
   it('shows the loading spinner while application data is being fetched on the background', () => {
@@ -58,7 +58,7 @@ describe('Application', () => {
       applicationId,
       application,
       false,
-      apiResponseDelay
+      apiResponseDelay,
     );
 
     StartPage.visit();
@@ -76,13 +76,13 @@ describe('Application', () => {
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,
       applicationWithMainApplicant,
-      apiResponseDelay
+      apiResponseDelay,
     );
 
     //second GET request for agree-terms page after the application has been patched
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
-      applicationWithMainApplicant
+      applicationWithMainApplicant,
     );
 
     StartPage.visit();
@@ -103,7 +103,7 @@ describe('Application', () => {
     cy.mockHousingRegisterApiGetApplications(applicationId, application);
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
-      applicationWithMainApplicant
+      applicationWithMainApplicant,
     );
 
     const errorStatusCode = StatusCodes.BAD_REQUEST;
@@ -115,7 +115,7 @@ describe('Application', () => {
       applicationId,
       null,
       apiResponseDelay,
-      errorStatusCode
+      errorStatusCode,
     );
 
     StartPage.visit();

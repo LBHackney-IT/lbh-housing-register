@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useState } from 'react';
+import React, { MouseEvent, useState } from 'react';
 
 import { GetServerSideProps } from 'next';
 
@@ -67,9 +67,10 @@ export default function ApplicationPersonPage({
 
   const [activeNavItem, setActiveNavItem] = useState<ActiveNavItem>('identity');
 
-  const handleSelectNavItem = async (event: SyntheticEvent) => {
+  const handleSelectNavItem = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    const { name } = event.target as HTMLButtonElement;
+    // Using currentTarget so clicks on text still read the button's name
+    const { name } = event.currentTarget;
     setActiveNavItem(name as ActiveNavItem);
   };
 
@@ -87,7 +88,7 @@ export default function ApplicationPersonPage({
     return encodeURIComponent(string.trim());
   };
   const fullName = `${cleanUpParams(
-    applicant?.person?.firstName ?? ''
+    applicant?.person?.firstName ?? '',
   )}%20${cleanUpParams(applicant?.person?.surname ?? '')}`;
 
   return (
@@ -124,11 +125,11 @@ export default function ApplicationPersonPage({
                   >
                     <a
                       href={`${evidenceLink}/deeplink?searchTerm=${fullName}&groupId=${cleanUpParams(
-                        applicant?.person?.id ?? ''
+                        applicant?.person?.id ?? '',
                       )}&name=${fullName}&phone=${cleanUpParams(
-                        applicant?.contactInformation?.phoneNumber ?? ''
+                        applicant?.contactInformation?.phoneNumber ?? '',
                       )}&email=${cleanUpParams(
-                        applicant?.contactInformation?.emailAddress ?? ''
+                        applicant?.contactInformation?.emailAddress ?? '',
                       )}`}
                       target="_blank"
                       rel="noreferrer"

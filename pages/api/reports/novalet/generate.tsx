@@ -6,7 +6,7 @@ import { getAuth, getSession } from '../../../../lib/utils/googleAuth';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
   switch (req.method) {
     case 'POST':
@@ -15,7 +15,7 @@ const endpoint: NextApiHandler = async (
 
         const auth = getAuth(
           process.env.AUTHORISED_MANAGER_GROUP as string,
-          user
+          user,
         );
 
         if (!('user' in auth)) {
@@ -49,5 +49,5 @@ const endpoint: NextApiHandler = async (
 
 export default wrapApiHandlerWithSentry(
   endpoint,
-  '/api/reports/novalet/generate'
+  '/api/reports/novalet/generate',
 );

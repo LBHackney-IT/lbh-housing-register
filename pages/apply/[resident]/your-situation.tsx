@@ -25,16 +25,15 @@ const YourSituation = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [activeStepID, setActiveStepId] = useState(
-    FormID.SITUATION_ARMED_FORCES
+    FormID.SITUATION_ARMED_FORCES,
   );
 
   const { resident } = router.query as { resident: string };
   const applicant = useAppSelector(selectApplicant(resident)) as Applicant;
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [userError, setUserError] = useState<string | null>(null);
-  const [isLastFormPageSubmit, setIsLastFormPageSubmit] = useState<boolean>(
-    false
-  );
+  const [isLastFormPageSubmit, setIsLastFormPageSubmit] =
+    useState<boolean>(false);
   const saveApplicationStatus = useAppSelector(selectSaveApplicationStatus);
   const baseHref = `/apply/${applicant?.person?.id}`;
 
@@ -62,7 +61,7 @@ const YourSituation = (): JSX.Element => {
     const livingSituation: string = getQuestionValue(
       applicant.questions,
       FormID.CURRENT_ACCOMMODATION,
-      'living-situation'
+      'living-situation',
     );
 
     switch (livingSituation) {
@@ -104,7 +103,7 @@ const YourSituation = (): JSX.Element => {
 
   const nextStep = (values: FormikValues) => {
     const { nextFormId, routeSelect } = formData.conditionals?.find(
-      (element) => getIn(values, element.fieldId) === element.value
+      (element) => getIn(values, element.fieldId) === element.value,
     ) ?? { nextFormId: 'exit', routeSelect: false };
 
     if (nextFormId === 'exit') {
@@ -116,7 +115,7 @@ const YourSituation = (): JSX.Element => {
           personID: applicant.person!.id!,
           values,
           markAsComplete: true,
-        })
+        }),
       );
       return;
     }
@@ -138,7 +137,7 @@ const YourSituation = (): JSX.Element => {
         personID: applicant.person!.id!,
         values,
         markAsComplete: true,
-      })
+      }),
     );
   };
 

@@ -36,7 +36,7 @@ const emptyActivityHistoryPagedResult: ActivityHistoryPagedResult =
 
 export const getApplications = async (
   page: string,
-  pageSize: string
+  pageSize: string,
 ): Promise<PaginatedSearchResultsResponse | null> => {
   return (
     await housingAxios().get('applications', {
@@ -48,7 +48,7 @@ export const getApplications = async (
 export const getApplicationsByStatus = async (
   status: string,
   page: string,
-  pageSize: string
+  pageSize: string,
 ): Promise<PaginatedSearchResultsResponse | null> => {
   return (
     await housingAxios().get('applications/ListApplicationsByStatus', {
@@ -67,7 +67,7 @@ export const getApplicationsByStatusAndAssignedTo = async (
   status: string,
   assignedTo: string,
   page: string,
-  pageSize: string
+  pageSize: string,
 ): Promise<PaginatedSearchResultsResponse | null> => {
   return (
     await housingAxios().get('applications/ListApplicationsByAssignedTo', {
@@ -83,7 +83,7 @@ export const getApplicationsByStatusAndAssignedTo = async (
 
 export const getApplicationsByReference = async (
   reference: string,
-  paginationToken?: string
+  paginationToken?: string,
 ): Promise<PaginatedApplicationListResponse | null> => {
   return (
     await housingAxios().get('applications/ListApplicationsByReference', {
@@ -98,7 +98,7 @@ export const getApplicationsByReference = async (
 export const searchAllApplications = async (
   searchString: string,
   page: string,
-  pageSize: string
+  pageSize: string,
 ): Promise<PaginatedSearchResultsResponse | null> => {
   return (
     await housingAxios().post('applications/search', {
@@ -112,7 +112,7 @@ export const searchAllApplications = async (
 // View and modify applications
 
 export const getApplication = async (
-  id: string
+  id: string,
 ): Promise<Application | null> => {
   const url = `applications/${id}`;
   const { data } = await housingAxios().get(url);
@@ -120,7 +120,7 @@ export const getApplication = async (
 };
 
 export const addApplication = async (
-  application: any
+  application: Partial<Application>,
 ): Promise<Application | null> => {
   const url = `applications`;
   const { data } = await housingAxios().post(url, application);
@@ -128,9 +128,9 @@ export const addApplication = async (
 };
 
 export const updateApplication = async (
-  application: any,
+  application: Partial<Application>,
   id: string,
-  req: IncomingMessage
+  req: IncomingMessage,
 ): Promise<Application | null> => {
   const url = `applications/${id}`;
   const { data } = await authenticatedHousingAxios(req).patch(url, application);
@@ -139,7 +139,7 @@ export const updateApplication = async (
 
 export const completeApplication = async (
   id: string,
-  req: IncomingMessage
+  req: IncomingMessage,
 ): Promise<Application | null> => {
   const url = `applications/${id}/complete`;
   const { data } = await authenticatedHousingAxios(req).patch(url, null);
@@ -150,7 +150,7 @@ export const completeApplication = async (
 
 export const createEvidenceRequest = async (
   id: string,
-  request: CreateEvidenceRequest
+  request: CreateEvidenceRequest,
 ): Promise<Array<EvidenceRequestResponse> | null> => {
   const url = `applications/${id}/evidence`;
   const { data } = await housingAxios().post(url, request);
@@ -158,7 +158,7 @@ export const createEvidenceRequest = async (
 };
 
 export const createVerifyCode = async (
-  request: CreateAuthRequest
+  request: CreateAuthRequest,
 ): Promise<CreateAuthResponse | null> => {
   const url = 'auth/generate';
   const { data } = await housingAxios().post(url, request);
@@ -166,7 +166,7 @@ export const createVerifyCode = async (
 };
 
 export const confirmVerifyCode = async (
-  request: VerifyAuthRequest
+  request: VerifyAuthRequest,
 ): Promise<VerifyAuthResponse | null> => {
   const url = 'auth/verify';
   const { data } = await housingAxios().post(url, request);
@@ -182,15 +182,15 @@ export const getStats = async (): Promise<Array<Stat> | null> => {
 // Novalet export
 
 export const listNovaletExports = async (
-  numberToReturn: number
-): Promise<any> => {
+  numberToReturn: number,
+): Promise<unknown> => {
   const url = `reporting/listnovaletfiles?numberToReturn=${numberToReturn}`;
   const { data } = await housingAxios().get(url);
   return data;
 };
 
 export const downloadNovaletExport = async (
-  filename: string
+  filename: string,
 ): Promise<AxiosResponse | null> => {
   const url = `reporting/novaletexport/${filename}`;
   return await housingAxios().get(url, {
@@ -205,7 +205,7 @@ export const generateNovaletExport = async (): Promise<AxiosResponse> => {
 
 export const downloadInternalReport = async (
   reportDetails: InternalReportRequest,
-  req: NextApiRequest
+  req: NextApiRequest,
 ): Promise<AxiosResponse | null> => {
   const url = `reporting/export`;
   const data = await authenticatedHousingAxios(req).post(url, reportDetails, {
@@ -218,7 +218,7 @@ export const downloadInternalReport = async (
 };
 
 export const approveNovaletExport = async (
-  filename: string
+  filename: string,
 ): Promise<AxiosResponse | null> => {
   const url = `reporting/approvenovaletexport/${filename}`;
   return await housingAxios().post(url, { filename });
@@ -228,7 +228,7 @@ export const approveNovaletExport = async (
 
 export const getApplicationHistory = async (
   id: string,
-  req: IncomingMessage
+  req: IncomingMessage,
 ): Promise<ActivityHistoryPagedResult | null> => {
   const url = `activityhistory?targetId=${id}&pageSize=100`;
   try {
@@ -247,7 +247,7 @@ export const getApplicationHistory = async (
 export const addNoteToHistory = async (
   id: string,
   note: AddNoteToHistoryRequest,
-  req: IncomingMessage
+  req: IncomingMessage,
 ): Promise<Array<AddNoteToHistoryRequest> | null> => {
   const url = `applications/${id}/note`;
   const { data } = await authenticatedHousingAxios(req).post(url, note);

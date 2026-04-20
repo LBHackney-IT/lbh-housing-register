@@ -18,82 +18,82 @@ export function YourSituationSummary({
   const armedForces = getQuestionValue(
     currentResident.questions,
     FormID.SITUATION_ARMED_FORCES,
-    'situation-armed-forces'
+    'situation-armed-forces',
   );
   const courtOrder = getQuestionValue(
     currentResident.questions,
     FormID.COURT_ORDER,
-    'court-order'
+    'court-order',
   );
   const accommodationType = getQuestionValue(
     currentResident.questions,
     FormID.ACCOMODATION_TYPE,
-    'accommodation-type'
+    'accommodation-type',
   );
   const subletting = getQuestionValue(
     currentResident.questions,
     FormID.SUBLETTING,
-    'subletting'
+    'subletting',
   );
   const domesticViolence = getQuestionValue(
     currentResident.questions,
     FormID.DOMESTIC_VIOLENCE,
-    'domestic-violence'
+    'domestic-violence',
   );
   const homelessness = getQuestionValue(
     currentResident.questions,
     FormID.HOMELESSNESS,
-    'homelessness'
+    'homelessness',
   );
   const propertyOwnership = getQuestionValue(
     currentResident.questions,
     FormID.PROPERTY_OWNERSHIP,
-    'property-ownership'
+    'property-ownership',
   );
   const soldProperty = getQuestionValue(
     currentResident.questions,
     FormID.SOLD_PROPERTY,
-    'sold-property'
+    'sold-property',
   );
   const buyProperty = getQuestionValue(
     currentResident.questions,
     FormID.PURCHASING_PROPERTY,
-    'purchasing-property'
+    'purchasing-property',
   );
   const arrears = getQuestionValue(
     currentResident.questions,
     FormID.ARREARS,
-    'arrears'
+    'arrears',
   );
   const underOccupying = getQuestionValue(
     currentResident.questions,
     FormID.UNDER_OCCUPYING,
-    'under-occupying'
+    'under-occupying',
   );
   const otherHousingRegister = getQuestionValue(
     currentResident.questions,
     FormID.OTHER_HOUSING_REGISTER,
-    'other-housing-register'
+    'other-housing-register',
   );
   const breachOfTenancy = getQuestionValue(
     currentResident.questions,
     FormID.BREACH_OF_TENANCY,
-    'breach-of-tenancy'
+    'breach-of-tenancy',
   );
   const breachOfTenancyDetails = getQuestionValue(
     currentResident.questions,
     FormID.BREACH_OF_TENANCY,
-    'details'
+    'details',
   );
   const legalRestrictions = getQuestionValue(
     currentResident.questions,
     FormID.LEGAL_RESTRICTIONS,
-    'legal-restrictions'
+    'legal-restrictions',
   );
   const unspentConvictions = getQuestionValue(
     currentResident.questions,
     FormID.UNSPENT_CONVICTIONS,
-    'unspent-convictions'
+    'unspent-convictions',
   );
 
   return (

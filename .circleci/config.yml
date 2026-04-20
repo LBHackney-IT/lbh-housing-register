@@ -83,13 +83,13 @@ exclude_combinations:
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Commands ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 commands:
   install-python3:
-    description: 'pip install for aws-cli'
+    description: 'Python venv for aws-cli'
     steps:
       - run:
           name: Install python
           command: |
             sudo apt-get update
-            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y python3.14-venv
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y python3-venv
   assume-role-and-persist-workspace:
     description: 'Assumes deployment role and persists credentials across jobs'
     parameters:

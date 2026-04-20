@@ -89,6 +89,24 @@ const staticDir = path.join(__dirname, 'build', '_next', 'static');
 const publicDir = path.join(__dirname, 'public');
 
 /**
+ * Resolve a path under rootDir and return an absolute path only if it stays inside
+ * rootDir (no path traversal). Satisfies static analysis for fs.readFileSync.
+ *
+ * @param {string} rootDir
+ * @param {string} unsafeRelativePath URL segment(s) after the mount, may include subdirs
+ * @returns {string | null}
+ */
+function resolvePathWithinRoot(rootDir, unsafeRelativePath) {
+  const normalizedRoot = path.resolve(rootDir);
+  const resolved = path.resolve(normalizedRoot, unsafeRelativePath);
+  const rel = path.relative(normalizedRoot, resolved);
+  if (rel.startsWith('..') || path.isAbsolute(rel)) {
+    return null;
+  }
+  return resolved;
+}
+
+/**
  * API Gateway + CloudFront (OriginPath: /{stage}) send paths like
  * /development/_next/static/... while files on disk live under /_next/static/...
  * Strip the stage segment so static serving and Next see app-root paths.
@@ -102,6 +120,9 @@ function normalizeRequestPath(event) {
   return p;
 }
 
+/**
+ * @param {string} file Absolute path already constrained by resolvePathWithinRoot
+ */
 function serveFile(file) {
   let content;
   try {
@@ -133,7 +154,9 @@ function serveNextStatic(reqPath) {
   } catch {
     /* use raw segment */
   }
-  return serveFile(path.join(staticDir, rel));
+  const filePath = resolvePathWithinRoot(staticDir, rel);
+  if (!filePath) return null;
+  return serveFile(filePath);
 }
 
 function servePublic(reqPath) {
@@ -146,7 +169,9 @@ function servePublic(reqPath) {
     /* use raw */
   }
   const relPublic = safePath.replace(/^\//, '');
-  return serveFile(path.join(publicDir, relPublic));
+  const filePath = resolvePathWithinRoot(publicDir, relPublic);
+  if (!filePath) return null;
+  return serveFile(filePath);
 }
 
 // ─── dynamic handler ──────────────────────────────────────────────────────────

@@ -12,6 +12,7 @@ import {
   generateEditInitialValues,
   mainApplicantSchema,
 } from '../../lib/utils/adminHelpers';
+import { formatFormikFieldError } from '../../lib/utils/formatFormikFieldError';
 import AddCaseSection from '../../components/admin/AddCaseSection';
 import AddCaseAddress from '../../components/admin/AddCaseAddress';
 import AddCaseEthnicity from '../../components/admin/AddCaseEthnicity';
@@ -141,13 +142,6 @@ export default function MainApplicantForm({
           >
             {({ touched, isSubmitting, errors, isValid }) => {
               const isTouched = Object.keys(touched).length !== 0;
-              const formatErrorTitle = (
-                errorTitle: string | string[] | object | undefined,
-              ): string => {
-                if (typeof errorTitle === 'string') return errorTitle;
-                if (Array.isArray(errorTitle)) return errorTitle.join(', ');
-                return 'Error';
-              };
               return (
                 <>
                   {!isValid && isTouched && isSubmitted ? (
@@ -157,7 +151,7 @@ export default function MainApplicantForm({
                           ([inputName, errorTitle]) => (
                             <li key={inputName}>
                               <a href={`#${inputName}`}>
-                                {formatErrorTitle(errorTitle)}
+                                {formatFormikFieldError(errorTitle)}
                               </a>
                             </li>
                           ),

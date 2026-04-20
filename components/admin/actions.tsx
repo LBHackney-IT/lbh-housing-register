@@ -13,6 +13,7 @@ import {
   statusOptions,
   reasonOptions,
 } from '../../lib/utils/assessmentActionsData';
+import { formatFormikFieldError } from '../../lib/utils/formatFormikFieldError';
 
 import Button from '../button';
 import DateInput, { INVALID_DATE } from '../form/dateinput';
@@ -185,13 +186,6 @@ export default function Actions({ data }: PageProps): JSX.Element {
         >
           {({ touched, isSubmitting, values, errors, isValid }) => {
             const isTouched = Object.keys(touched).length !== 0;
-            const formatErrorTitle = (
-              errorTitle: string | string[] | object | undefined,
-            ): string => {
-              if (typeof errorTitle === 'string') return errorTitle;
-              if (Array.isArray(errorTitle)) return errorTitle.join(', ');
-              return 'Error';
-            };
             return (
               <>
                 {(!isValid && isTouched && !isSubmitting) ||
@@ -201,7 +195,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
                       {Object.entries(errors).map(([inputName, errorTitle]) => (
                         <li key={inputName}>
                           <a href={`#${inputName}`}>
-                            {formatErrorTitle(errorTitle)}
+                            {formatFormikFieldError(errorTitle)}
                           </a>
                         </li>
                       ))}

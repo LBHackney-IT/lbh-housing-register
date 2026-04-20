@@ -1,9 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
-import type { AddNoteToHistoryRequest } from '../../../../domain/HousingApi';
 import { addNoteToHistory } from '../../../../lib/gateways/applications-api';
-import { parseApiJsonBody } from '../../../../lib/utils/parseApiJsonBody';
 import { canUpdateApplication } from '../../../../lib/utils/requestAuth';
 
 const endpoint: NextApiHandler = async (
@@ -13,7 +11,7 @@ const endpoint: NextApiHandler = async (
   switch (req.method) {
     case 'POST':
       try {
-        const request = parseApiJsonBody<AddNoteToHistoryRequest>(req);
+        const request = JSON.parse(req.body);
         const id = req.query.id as string;
 
         if (canUpdateApplication(req, id)) {

@@ -10,12 +10,7 @@ import { createVerifyCode } from '../../../../lib/gateways/applications-api';
 import { generateEmailAddress } from '../../../../testUtils/personHelper';
 import endpoint from '../../../../pages/api/auth/generate';
 import { ApiRequest, ApiResponse } from '../../../../testUtils/types';
-import {
-  type Body,
-  createMocks,
-  RequestMethod,
-  RequestOptions,
-} from 'node-mocks-http';
+import { createMocks, RequestMethod, RequestOptions } from 'node-mocks-http';
 import { StatusCodes } from 'http-status-codes';
 
 const email = generateEmailAddress();
@@ -52,7 +47,7 @@ describe('POST', () => {
 
   const requestOptions: RequestOptions = {
     method: 'POST',
-    body: JSON.stringify(mockCreateAuthRequest) as unknown as Body,
+    body: mockCreateAuthRequest,
   };
 
   it('returns status code 200 when JSON.parse succeeds and verify code is created successfully', async () => {
@@ -102,7 +97,7 @@ describe('POST', () => {
 
     const reqOptions: RequestOptions = {
       method: 'POST',
-      body: JSON.stringify(mockCreateAuthRequest) as unknown as Body,
+      body: mockCreateAuthRequest,
     };
 
     const { req, res }: { req: ApiRequest; res: ApiResponse } =

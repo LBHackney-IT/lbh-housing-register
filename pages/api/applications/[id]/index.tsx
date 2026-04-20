@@ -5,12 +5,10 @@ import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 import axios, { AxiosError } from 'axios';
 import { StatusCodes } from 'http-status-codes';
 
-import type { Application } from '../../../../domain/HousingApi';
 import { updateApplication } from '../../../../lib/gateways/applications-api';
 import { hasReadOnlyStaffPermissions } from '../../../../lib/utils/hasReadOnlyStaffPermissions';
 import { hasStaffPermissions } from '../../../../lib/utils/hasStaffPermissions';
 import { isStaffAction } from '../../../../lib/utils/isStaffAction';
-import { parseApiJsonBody } from '../../../../lib/utils/parseApiJsonBody';
 import { canUpdateApplication } from '../../../../lib/utils/requestAuth';
 
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
@@ -22,11 +20,11 @@ const endpoint: NextApiHandler = async (
   switch (req.method) {
     case 'PATCH':
       try {
-        const application = parseApiJsonBody<Partial<Application>>(req);
+        const application = JSON.parse(req.body);
         const id = req.query.id as string;
         if (
           canUpdateApplication(req, id) ||
-          (isStaffAction(application as Application) &&
+          (isStaffAction(application) &&
             hasStaffPermissions(req) &&
             !hasReadOnlyStaffPermissions(req))
         ) {
@@ -40,23 +38,16 @@ const endpoint: NextApiHandler = async (
       } catch (error: any | AxiosError) {
         if (axios.isAxiosError(error)) {
           if (error.response) {
+            // Request made and server responded
             res.status(error.response.status).json(error.response.data);
+          } else if (error.request) {
+            // The request was made but no response was received
+            console.log(error.request);
           } else {
-            // No HTTP response (timeout, connection reset, etc.). Must still end
-            // the Lambda response or API Gateway often returns an opaque 500.
-            const detail =
-              error instanceof Error ? error.message : String(error);
-            console.error(
-              'updateApplication axios error (no response)',
-              detail,
-            );
-            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-              message: 'Unable to update application',
-            });
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error', error.message);
           }
         } else {
-          const detail = error instanceof Error ? error.message : String(error);
-          console.error('updateApplication error', detail);
           res
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
             .json({ message: 'Unable to update application' });

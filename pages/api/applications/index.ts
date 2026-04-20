@@ -9,7 +9,6 @@ import {
 import { hasReadOnlyStaffPermissions } from '../../../lib/utils/hasReadOnlyStaffPermissions';
 import { hasStaffPermissions } from '../../../lib/utils/hasStaffPermissions';
 import { isStaffAction } from '../../../lib/utils/isStaffAction';
-import { parseApiJsonBody } from '../../../lib/utils/parseApiJsonBody';
 import { getUser } from '../../../lib/utils/users';
 
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
@@ -42,7 +41,7 @@ const endpoint: NextApiHandler = async (
     }
     case 'POST':
       try {
-        const application = parseApiJsonBody<Application>(req);
+        const application: Application = JSON.parse(req.body);
         if (
           isStaffAction(application) &&
           (!hasStaffPermissions(req) || hasReadOnlyStaffPermissions(req))

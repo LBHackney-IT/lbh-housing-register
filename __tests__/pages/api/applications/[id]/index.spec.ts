@@ -226,7 +226,7 @@ describe('PATCH', () => {
       );
     });
 
-    it('returns 500 when axios has no HTTP response (e.g. network / timeout)', async () => {
+    it('logs the error when axios request error is thrown', async () => {
       const axiosErrorMessage = 'request error from axios';
 
       const mockAxiosError = {
@@ -249,23 +249,17 @@ describe('PATCH', () => {
           throw mockAxiosError;
         });
 
-      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+      const consoleLogSpy = jest.spyOn(console, 'log');
 
       mockAxiosInstance.isAxiosError.mockReturnValueOnce(true);
 
       await endpoint(req, res);
 
-      expect(res.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
-      expect(res._getJSONData()).toStrictEqual({
-        message: 'Unable to update application',
-      });
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'updateApplication axios error (no response)',
-        expect.any(String),
-      );
+      expect(consoleLogSpy).toHaveBeenCalledTimes(1);
+      expect(consoleLogSpy).toHaveBeenCalledWith(mockAxiosError.request);
     });
 
-    it('returns 500 when axios error has neither response nor usable request detail', async () => {
+    it('logs the error when axios error other than request or resposne is thrown', async () => {
       const mockAxiosError = {
         message: 'error code from axios',
       } as AxiosError;
@@ -284,20 +278,17 @@ describe('PATCH', () => {
           throw mockAxiosError;
         });
 
-      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+      const consoleLogSpy = jest.spyOn(console, 'log');
 
       mockAxiosInstance.isAxiosError.mockReturnValueOnce(true);
 
       await endpoint(req, res);
 
-      expect(res.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
-      expect(res._getJSONData()).toStrictEqual({
-        message: 'Unable to update application',
-      });
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'updateApplication axios error (no response)',
-        expect.any(String),
-      );
+      //doing assertions this way to avoid issues with escape characters in expected values
+      expect(consoleLogSpy).toHaveBeenCalledTimes(1);
+      const consoleLogSpyCall = consoleLogSpy.mock.calls.pop();
+      expect(consoleLogSpyCall?.[0]).toBe('Error');
+      expect(consoleLogSpyCall?.[1]).toBe(mockAxiosError.message);
     });
 
     it('sets response status to 400 and returns correct error message when wrong request method is used', async () => {

@@ -5,7 +5,6 @@ import {
   VerifyAuthRequest,
   VerifyAuthResponse,
 } from '../../domain/HousingApi';
-import { JSON_REQUEST_HEADERS } from '../utils/jsonRequestHeaders';
 
 export const createVerifyCode = createAsyncThunk(
   'auth/create',
@@ -16,7 +15,6 @@ export const createVerifyCode = createAsyncThunk(
 
     const res = await fetch(`/api/auth/generate`, {
       method: 'POST',
-      headers: JSON_REQUEST_HEADERS,
       body: JSON.stringify(request),
     });
 
@@ -40,7 +38,6 @@ export const confirmVerifyCode = createAsyncThunk(
     };
     const res = await fetch(`/api/auth/verify`, {
       method: 'POST',
-      headers: JSON_REQUEST_HEADERS,
       body: JSON.stringify(request),
     });
 

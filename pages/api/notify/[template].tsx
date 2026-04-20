@@ -1,13 +1,11 @@
 import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import type { NotifyRequest } from '../../../domain/govukNotify';
 import {
   sendNewApplicationEmail,
   sendDisqualifyEmail,
   sendMedicalNeedEmail,
 } from '../../../lib/gateways/notify-api';
-import { parseApiJsonBody } from '../../../lib/utils/parseApiJsonBody';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -16,7 +14,7 @@ const endpoint: NextApiHandler = async (
   switch (req.method) {
     case 'POST':
       try {
-        const notification = parseApiJsonBody<NotifyRequest>(req);
+        const notification = JSON.parse(req.body);
         const template = req.query.template as string;
 
         switch (template) {

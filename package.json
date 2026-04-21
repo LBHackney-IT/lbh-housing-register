@@ -1,6 +1,6 @@
 {
   "name": "hackney-housing-register",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "private": true,
   "engines": {
     "node": ">=24"

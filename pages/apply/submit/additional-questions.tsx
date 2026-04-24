@@ -84,6 +84,7 @@ const AdditonalQuestions = (): JSX.Element => {
           buttonText="Save and continue"
           formData={getFormData(FormID.ADDITIONAL_QUESTIONS)}
           onSubmit={onSubmit}
+          submitButtonDataTestId="test-additional-questions-save-and-continue"
         />
       )}
     </Layout>

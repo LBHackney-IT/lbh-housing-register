@@ -18,6 +18,17 @@ class ApplyOverviewPage {
       .should('be.visible')
       .click({ force: true });
   }
+
+  static getSaveAndContinueToAdditionalQuestionsLink() {
+    return cy.get('[data-testid="test-apply-overview-save-and-continue"]');
+  }
+
+  static clickSaveAndContinueToAdditionalQuestions() {
+    return ApplyOverviewPage.getSaveAndContinueToAdditionalQuestionsLink()
+      .scrollIntoView()
+      .should('be.visible')
+      .click();
+  }
 }
 
 export default ApplyOverviewPage;

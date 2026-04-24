@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { CreateAuthRequest } from '../../../domain/HousingApi';
 import { createVerifyCode } from '../../../lib/gateways/applications-api';
+import { getUser } from '../../../lib/utils/users';
 
 /** Verbose API errors for mocked e2e / CI — not during Jest (avoids noise and spy interference). */
 function logE2eGenerateError(payload: Record<string, unknown>): void {
@@ -27,7 +28,10 @@ const endpoint: NextApiHandler = async (
 
   let request: CreateAuthRequest;
   try {
-    request = JSON.parse(req.body) as CreateAuthRequest;
+    request =
+      typeof req.body === 'string'
+        ? (JSON.parse(req.body) as CreateAuthRequest)
+        : (req.body as CreateAuthRequest);
   } catch (parseErr) {
     logE2eGenerateError({
       phase: 'body parse failed',
@@ -41,7 +45,15 @@ const endpoint: NextApiHandler = async (
   }
 
   try {
-    const data = await createVerifyCode(request);
+    // In local Cypress we pre-seed a resident token cookie with application_id.
+    // Forward it so API can create/verify against the same application record.
+    const cookieApplicationId = getUser(req)?.application_id;
+    const requestWithApplicationId: CreateAuthRequest = {
+      ...request,
+      applicationId: request.applicationId ?? cookieApplicationId,
+    };
+
+    const data = await createVerifyCode(requestWithApplicationId);
     res.status(StatusCodes.OK).json(data);
   } catch (err) {
     logE2eGenerateError({

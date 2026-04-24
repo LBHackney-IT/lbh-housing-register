@@ -54,6 +54,8 @@ export const visitHomepageSignInAndVerify = (
     .int({ min: 100000, max: 999999 })
     .toString();
 
+  cy.intercept('POST', '**/api/auth/generate').as('localAuthGenerate');
+
   HomePage.visit(applicationId);
   HomePage.getCookiesButton().click();
 
@@ -62,6 +64,7 @@ export const visitHomepageSignInAndVerify = (
   SignInPage.getEmailInput().scrollIntoView().type(`${email}`, { delay: 0 });
 
   SignInPage.getSubmitButton().click();
+  cy.wait('@localAuthGenerate').its('response.statusCode').should('eq', 200);
 
   VerifyPage.getVerifyCodePage().should('be.visible');
   VerifyPage.getVerifyCodeInput()

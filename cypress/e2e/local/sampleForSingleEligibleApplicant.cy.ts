@@ -22,7 +22,9 @@ import {
   visitHomepageSignInAndVerify,
 } from '../../support/locale2eTestsHelper';
 import { interceptAddressSearchAPI } from '../../support/intercepts';
-import Components from '../../pages/components';
+import EthnicityPage from '../../pages/ethnicity';
+import AdditionalQuestionsPage from '../../pages/additionalQuestions';
+import ApplyOverviewPage from '../../pages/apply/overview';
 
 //ensure eligibility: over 55 and alone
 const birthDate = faker.date.birthdate({ mode: 'age', min: 56, max: 90 });
@@ -195,26 +197,22 @@ describe('Single main applicant, over 55', () => {
       //confirm details
       ApplyResidentIndexPage.getCheckAnswersButton().click();
       ApplyResidentSummaryPage.getConfirmDetailsButton().click();
-      cy.get('.lbh-button').contains('Save and continue').click();
-      cy.get('.lbh-button').contains('Save and continue').click();
 
-      // get the first ethnicity radio button.
-      Components.getRadioButtons().then((radioButtons) => {
-        const randomIndex = Math.floor(Math.random() * radioButtons.length);
-        radioButtons[randomIndex].click();
-      });
+      ApplyOverviewPage.clickSaveAndContinueToAdditionalQuestions();
+      AdditionalQuestionsPage.expectLoaded();
+      AdditionalQuestionsPage.clickSaveAndContinue();
+      EthnicityPage.expectLoaded();
 
+      EthnicityPage.clickRandomRadioOption();
       ApplyResidentSectionPage.getSubmitButton().click();
 
-      // get the second ethnicity radio button.
-      Components.getRadioButtons().then((radioButtons) => {
-        const randomIndex = Math.floor(Math.random() * radioButtons.length);
-        radioButtons[randomIndex].click();
-      });
+      // Second ethnicity radio button - two step process.
+      EthnicityPage.clickRandomRadioOption();
 
       ApplyResidentSectionPage.getSubmitButton().click();
 
       cy.get(`[data-testid="test-checkbox-declaration-0"]`).check();
+
       DeclarationPage.getSubmitButton().click();
     });
   });

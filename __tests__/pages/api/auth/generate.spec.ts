@@ -29,6 +29,9 @@ const mockCreateAuthRequest: CreateAuthRequest = {
   email: email,
 };
 
+/** String body so the handler takes the `JSON.parse(req.body)` branch (see generate.tsx). */
+const mockCreateAuthRequestBody = JSON.stringify(mockCreateAuthRequest);
+
 const mockCreateAuthResponse: CreateAuthResponse = { success: true };
 
 jest.mock('../../../../lib/gateways/applications-api', () => ({
@@ -47,7 +50,8 @@ describe('POST', () => {
 
   const requestOptions: RequestOptions = {
     method: 'POST',
-    body: mockCreateAuthRequest,
+    // createMocks accepts a JSON string body; `Body` typings omit `string`.
+    body: mockCreateAuthRequestBody as unknown as RequestOptions['body'],
   };
 
   it('returns status code 200 when JSON.parse succeeds and verify code is created successfully', async () => {
@@ -69,7 +73,7 @@ describe('POST', () => {
 
   it('returns status code 400 when JSON.parse fails', async () => {
     jsonParseSpy.mockImplementationOnce(() => {
-      throw SyntaxError('Unexpected token');
+      throw new SyntaxError('Unexpected token');
     });
 
     createVerifyCodeMock.mockReturnValueOnce(mockCreateAuthResponse);
@@ -97,7 +101,7 @@ describe('POST', () => {
 
     const reqOptions: RequestOptions = {
       method: 'POST',
-      body: mockCreateAuthRequest,
+      body: mockCreateAuthRequestBody as unknown as RequestOptions['body'],
     };
 
     const { req, res }: { req: ApiRequest; res: ApiResponse } =

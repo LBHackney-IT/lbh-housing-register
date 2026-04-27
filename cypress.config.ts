@@ -3,8 +3,8 @@ import { existsSync, unlinkSync } from 'fs';
 import { loadEnvConfig } from '@next/env';
 import { defineConfig } from 'cypress';
 
-// const baseUrl = 'http://localhost:3000';
-const baseUrl = 'http://localdev.hackney.gov.uk:3000';
+const baseUrl = 'http://localhost:3000';
+// const baseUrl = 'http://localdev.hackney.gov.uk:3000';
 
 // Populate process.env from .env when Cypress loads this file (e2e and component).
 loadEnvConfig(process.cwd());

@@ -28,6 +28,7 @@ const endpoint: NextApiHandler = async (
 
   let request: CreateAuthRequest;
   try {
+    // body is usually an object when Next JSON body parsing runs but it can be a string in some test paths. So make sure both shapes are parsed before request.
     request =
       typeof req.body === 'string'
         ? (JSON.parse(req.body) as CreateAuthRequest)

@@ -10,8 +10,7 @@ function parseVerifyBody(req: NextApiRequest): VerifyAuthRequest | null {
   try {
     if (typeof req.body === 'string') {
       return JSON.parse(req.body) as VerifyAuthRequest;
-    }
-    if (req.body && typeof req.body === 'object') {
+    } else if (req.body && typeof req.body === 'object') {
       return req.body as VerifyAuthRequest;
     }
     return null;

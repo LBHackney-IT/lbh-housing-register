@@ -54,7 +54,7 @@ export const visitHomepageSignInAndVerify = (
     .int({ min: 100000, max: 999999 })
     .toString();
 
-  cy.intercept('POST', '**/api/auth/generate').as('localAuthGenerate');
+  cy.intercept('POST', '**/api/auth/generate').as('localAuthGenerate'); // This intercept doens't actually mock anything. We capture the request so we can wait for sign-in backend completion before entering the verification code. This avoids breaking tests on first load.
 
   HomePage.visit(applicationId);
   HomePage.getCookiesButton().click();

@@ -29,7 +29,7 @@ const mockCreateAuthRequest: CreateAuthRequest = {
   email: email,
 };
 
-/** String body so the handler takes the `JSON.parse(req.body)` branch (see generate.tsx). */
+/** String body so the handler takes the `JSON.parse(req.body)` path. */
 const mockCreateAuthRequestBody = JSON.stringify(mockCreateAuthRequest);
 
 const mockCreateAuthResponse: CreateAuthResponse = { success: true };

@@ -9,7 +9,7 @@ const localE2eEvidenceResponseBody = [
 ];
 
 /**
- * Stubs the Next BFF evidence endpoint from the browser. Use for `LOCAL_E2E` when the
+ * Stubs the Next evidence endpoint from the browser. Use for `LOCAL_E2E` when the
  * Housing Register API has no Evidence service (e.g. localstack) — no `E2E_HTTP_MOCKS` required.
  */
 export const interceptLocalE2eApplicationEvidencePost = () => {

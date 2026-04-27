@@ -18,11 +18,9 @@ import './commands';
 import { interceptLocalE2eApplicationEvidencePost } from './intercepts';
 
 /**
- * Local e2e hits a real backend without Evidence API wiring. Stub the BFF evidence POST
- * in the browser so declaration submit can reach the confirmation page.
+ * e2e against localstack (local backend) hits a real backend without Evidence API wiring. Stub the evidence POST in the browser so declaration submit can reach the confirmation page.
  */
 beforeEach(() => {
-  // allowCypressEnv is false — use Cypress.expose (see cypress.config.ts buildCypressExpose).
   if (Cypress.expose('LOCAL_E2E') === 'true') {
     interceptLocalE2eApplicationEvidencePost();
   }

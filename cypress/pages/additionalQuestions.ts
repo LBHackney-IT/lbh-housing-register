@@ -7,7 +7,7 @@ class AdditionalQuestionsPage {
     cy.visit(`/apply/submit/additional-questions`);
   }
   static getSaveAndContinueButton() {
-    const testId = 'test-additional-questions-save-and-continue';
+    const testId = 'test-submit-form-button';
     return AdditionalQuestionsPage.getAdditionalQuestionsPage().find(
       `[data-testid="${testId}"]`,
     );

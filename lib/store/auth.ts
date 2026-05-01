@@ -5,6 +5,7 @@ import {
   VerifyAuthRequest,
   VerifyAuthResponse,
 } from '../../domain/HousingApi';
+import { Errors } from '../types/errors';
 
 export const createVerifyCode = createAsyncThunk(
   'auth/create',
@@ -43,9 +44,11 @@ export const confirmVerifyCode = createAsyncThunk(
 
     if (res.ok) {
       return (await res.json()) as VerifyAuthResponse;
-    } else {
-      return rejectWithValue(`Unable to confirm verify code (${res.status})`);
     }
+    if (res.status === 404) {
+      return rejectWithValue(Errors.VERIFY_CODE_NOT_CONFIRMED);
+    }
+    return rejectWithValue(`Unable to confirm verify code (${res.status})`);
   },
 );
 

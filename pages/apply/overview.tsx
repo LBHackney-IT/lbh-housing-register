@@ -122,7 +122,10 @@ const ApplicationPersonsOverview = (): JSX.Element => {
           <Paragraph>
             Please make sure you have checked your answers for each applicant.
           </Paragraph>
-          <ButtonLink href="/apply/submit/additional-questions">
+          <ButtonLink
+            href="/apply/submit/additional-questions"
+            dataTestId="test-apply-overview-save-and-continue"
+          >
             Save and continue
           </ButtonLink>
         </>

@@ -130,16 +130,22 @@ Repository enforces [Conventional Commits](https://www.conventionalcommits.org/e
 
 ### E2E tests
 
-A suite of e2e tests have been written with cypress. Check the env vars are set correctly for AUTHORISED\_\* groups before running tests.
+End-to-end tests use Cypress. Set env vars for **AUTHORISED\_\*** groups (and the rest of `.env`) before running; see `.env.sample`.
 
-Standard e2e tests use nock to intercept network requests and mock responses. The configuration will start the application from within the cypress.config.ts to allow nock to work within the next environment sucessfully. These will also run in the pipeline and record video of failed tests.
+**How it works**
 
-Local e2e tests in the cypress/e2e/local folder require all nock configuration to be commented out in cypress.config.ts, a [local backend](https://github.com/LBHackney-IT/housing-register-local-backend) to be running and the LOCAL_E2E to be set to true. These tests are designed to run against a production build of the application. To build and start the application run these commands.
+- Run Next with `npm run dev` or use `npm run build` / `npm run start` if you prefer a production build.
+- **Standard** specs live under `cypress/e2e/` (excluding `local/`). They rely on **server-side HTTP mocks**: Cypress registers mocks via `/api/e2e/nock`, and the Next server must run with **`E2E_HTTP_MOCKS=true`** so those routes and in-process nock are enabled. CI sets this in CircleCI; locally add it to `.env` or export it when starting Next.
+- **`npm run cypress:open`** / **`npm run e2e:run`** set `E2E_HTTP_MOCKS=true` for the Cypress process; your Next process still needs the same flag if tests register mocks.
 
-```
-npm run build
-npm run start
-```
+**Local e2e** (`cypress/e2e/local/`)
+
+- Set **`LOCAL_E2E=true`** so Cypress includes the `local` folder (see `cypress.config.ts` `excludeSpecPattern`). Use **`npm run cypress:open:local`** or **`npm run e2e:run:local`**.
+- Check your env vars for **AUTHORISED\_\*** groups, as these are largely testing public user behaviour - you'll need to have empty groups in your token.
+- Run a [local backend](https://github.com/LBHackney-IT/housing-register-local-backend) (Housing Register API, DynamoDB, LocalStack, etc.) and point `.env` at it (`HOUSING_REGISTER_API`). This will also need a modification as detailed in the README.md to avoid hitting GovUK Notify.
+- Local flows hit the real API for almost everything. For declaration submit, **`POST /api/applications/:id/evidence`** is **stubbed in the browser** (`cypress/support/e2e.ts` when running with `LOCAL_E2E=true`) so you do not need a real Evidence API or server-side nock for that call.
+
+Failed runs record video (see `cypress.config.ts`).
 
 ## 🚀 Deployment
 

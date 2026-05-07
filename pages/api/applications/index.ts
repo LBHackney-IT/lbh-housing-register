@@ -1,4 +1,5 @@
 import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
+import axios from 'axios';
 import { StatusCodes } from 'http-status-codes';
 
 import { Application } from '../../../domain/HousingApi';
@@ -31,6 +32,12 @@ const endpoint: NextApiHandler = async (
             .json({ message: 'Unable to get application' });
         }
       } catch (error) {
+        if (axios.isAxiosError(error) && error.response?.status) {
+          res
+            .status(error.response.status)
+            .json({ message: 'Unable to get application' });
+          return;
+        }
         console.error(error);
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)

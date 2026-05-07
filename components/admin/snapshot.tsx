@@ -1,6 +1,10 @@
+import Link from 'next/link';
 import { Application } from '../../domain/HousingApi';
 import Paragraph from '../content/paragraph';
-import { applicantsWithMedicalNeed } from '../../lib/utils/medicalNeed';
+import {
+  applicantHasMedicalNeed,
+  applicantsWithMedicalNeed,
+} from '../../lib/utils/medicalNeed';
 import { questionLookup } from '../../lib/utils/applicationQuestions';
 
 interface PageProps {
@@ -20,16 +24,59 @@ export default function Snapshot({ data }: PageProps): JSX.Element {
       : `There are ${totalInApplication} people in this application.`;
   }
 
-  function medicalNeedText() {
+  function medicalNeedText(): JSX.Element | string {
     const totalNumberOfPeopleWithMedicalNeeds = applicantsWithMedicalNeed(data);
+    const names = medicalNeedNames();
+
     switch (totalNumberOfPeopleWithMedicalNeeds) {
       case 0:
         return 'No one has stated a medical need.';
       case 1:
-        return '1 person has stated a medical need.';
+        return names ? (
+          <span>1 person, {names}, has stated a medical need.</span>
+        ) : (
+          '1 person has stated a medical need.'
+        );
       default:
+        return names ? (
+          <span>
+            {totalNumberOfPeopleWithMedicalNeeds} people, ( {names} ), have
+            stated a medical need.
+          </span>
+        ) : (
+          `${totalNumberOfPeopleWithMedicalNeeds} people have stated a medical need.`
+        );
     }
-    return `${totalNumberOfPeopleWithMedicalNeeds} people have stated a medical need.`;
+  }
+
+  function medicalNeedNames(): JSX.Element | null {
+    const applicantsWithNeeds = [
+      data.mainApplicant,
+      ...(data.otherMembers ?? []),
+    ].filter((a): a is NonNullable<typeof a> => applicantHasMedicalNeed(a));
+
+    if (applicantsWithNeeds.length === 0) return null;
+
+    return (
+      <span>
+        {applicantsWithNeeds.map((applicant, index) => {
+          const name =
+            `${applicant.person?.firstName ?? ''} ${applicant.person?.surname ?? ''}`.trim() ||
+            'Unknown';
+          return (
+            <span key={applicant.person?.id ?? index}>
+              {index > 0 && ', '}
+              <Link
+                href={`/applications/view/${data.id}/${applicant.person?.id}`}
+                className="lbh-link"
+              >
+                {name}
+              </Link>
+            </span>
+          );
+        })}
+      </span>
+    );
   }
 
   function bedroomNeedText() {
@@ -66,7 +113,7 @@ export default function Snapshot({ data }: PageProps): JSX.Element {
       {`${totalPeopleInApplication()} `}
       {`${livingSituation()} `}
       {`${bedroomNeedText()} `}
-      {`${medicalNeedText()}`}
+      {medicalNeedText()}
     </Paragraph>
   );
 }

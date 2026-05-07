@@ -15,6 +15,16 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands';
+import { interceptLocalE2eApplicationEvidencePost } from './intercepts';
+
+/**
+ * e2e against localstack (local backend) hits a real backend without Evidence API wiring. Stub the evidence POST in the browser so declaration submit can reach the confirmation page.
+ */
+beforeEach(() => {
+  if (Cypress.expose('LOCAL_E2E') === 'true') {
+    interceptLocalE2eApplicationEvidencePost();
+  }
+});
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

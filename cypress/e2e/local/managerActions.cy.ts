@@ -26,7 +26,9 @@ import {
 } from '../../support/locale2eTestsHelper';
 import { interceptAddressSearchAPI } from '../../support/intercepts';
 import AddHouseholdMemberPage from '../../pages/applications/edit/add-household-member';
-import Components from '../../pages/components';
+import EthnicityPage from '../../pages/ethnicity';
+import AdditionalQuestionsPage from '../../pages/additionalQuestions';
+import ApplyOverviewPage from '../../pages/apply/overview';
 
 const mainApplicantBirthDate = faker.date.birthdate({
   mode: 'age',
@@ -328,23 +330,16 @@ describe('Manager actions', () => {
       ApplyResidentIndexPage.getCheckAnswersButton().click();
       ApplyResidentSummaryPage.getConfirmDetailsButton().click();
       cy.contains("You've completed information for 3 of 3 people.");
+      ApplyOverviewPage.clickSaveAndContinueToAdditionalQuestions();
+      AdditionalQuestionsPage.expectLoaded();
+      AdditionalQuestionsPage.clickSaveAndContinue();
+      EthnicityPage.expectLoaded();
 
-      cy.get('.lbh-button').contains('Save and continue').click();
-      cy.get('.lbh-button').contains('Save and continue').click();
-
-      // get the first ethnicity radio button.
-      Components.getRadioButtons().then((radioButtons) => {
-        const randomIndex = Math.floor(Math.random() * radioButtons.length);
-        radioButtons[randomIndex].click();
-      });
-
+      EthnicityPage.clickRandomRadioOption();
       ApplyResidentSectionPage.getSubmitButton().click();
 
-      // get the second ethnicity radio button.
-      Components.getRadioButtons().then((radioButtons) => {
-        const randomIndex = Math.floor(Math.random() * radioButtons.length);
-        radioButtons[randomIndex].click();
-      });
+      // Second ethnicity radio button - two step process.
+      EthnicityPage.clickRandomRadioOption();
       ApplyResidentSectionPage.getSubmitButton().click();
       cy.get(`[data-testid="test-checkbox-declaration-0"]`).check();
       DeclarationPage.getSubmitButton().click();

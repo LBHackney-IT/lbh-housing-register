@@ -284,7 +284,7 @@ jobs:
             set -e
             mkdir -p build
             (cd .open-next/server-functions/default && zip -qr ../../../build/opennext-server.zip .)
-            ls -lh build/opennext-server.zip
+            ls -sh build/opennext-server.zip
       - persist_to_workspace:
           root: *workspace_root
           paths:

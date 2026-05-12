@@ -1,3 +1,29 @@
+# =============================================================================
+# OpenNext deployment for the Housing Register frontend.
+#
+# Build prerequisites (run before `serverless deploy --config serverless.yml`):
+#
+#   1. npm run build:opennext                # produces .open-next/
+#   2. mkdir -p build
+#   3. (cd .open-next/server-functions/default && zip -qr ../../../build/opennext-server.zip .)
+#   4. aws s3 sync .open-next/assets s3://<bucket-from-this-stack>/_assets \
+#        --cache-control "public,max-age=31536000,immutable"
+#
+# CI does all of the above — see `.circleci/config.yml` (`build` and
+# `deploy-lambda` commands).
+#
+# The handler entry inside the zip is `index.handler` (an ESM `.mjs` bundle that
+# OpenNext produces from the Next server adapter).
+#
+# Notes:
+#   - `package.artifact` points at a pre-built zip rather than using
+#     `package.patterns`, because the OpenNext output expects to be unpacked
+#     at the zip root (`index.mjs` next to `node_modules/`), and sls
+#     `patterns` can't easily strip a directory prefix.
+#   - Static assets are not packaged with the function — they live in S3 and
+#     are routed via CloudFront (two origins: API Gateway for SSR, S3 for
+#     `_next/static/*`, `BUILD_ID`, `favicon.ico`, `images/*`).
+# =============================================================================
 service: housing-register-frontend
 
 provider:
@@ -9,27 +35,19 @@ provider:
 
 package:
   individually: true
-  exclude:
-    - ./**
 
 functions:
   housing-register-frontend:
     name: ${self:service}-${self:provider.stage}
-    handler: lambda.handler
+    handler: index.handler
     # API Gateway REST integration limit is 29s; stay below to avoid confusing timeouts.
     timeout: 29
+    # OpenNext recommends 1024 MB+ for Next 13/14/15. Bump from default to avoid
+    # CPU-throttling on cold starts.
+    memorySize: 1024
     package:
-      patterns:
-        - lambda.js
-        # Standalone trace + postbuild deps (server runtime).
-        - build/_next/standalone/**
-        - '!build/_next/standalone/**/*.map'
-        # Client-side static assets — standalone output does NOT include these; they live
-        # at the distDir root and must be packaged separately so /_next/static/** resolves.
-        - build/_next/static/**
-        - '!build/_next/static/**/*.map'
-        # Public directory (favicon, images) — served directly by lambda.js.
-        - public/**
+      # See header — this zip is produced by the build pipeline before `sls deploy`.
+      artifact: build/opennext-server.zip
     events:
       - http: ANY /
       - http: ANY /{proxy+}
@@ -59,6 +77,71 @@ functions:
 
 resources:
   Resources:
+    # -------------------------------------------------------------------------
+    # Static assets bucket — one per stage. Holds:
+    #   /_assets/BUILD_ID
+    #   /_assets/_next/static/...     (immutable, hashed filenames)
+    #   /_assets/favicon.ico
+    #   /_assets/images/...           (formerly public/images)
+    # CloudFront reaches it via an Origin Access Control (OAC) — bucket stays
+    # private; no public-read ACL.
+    # -------------------------------------------------------------------------
+    AssetsBucket:
+      Type: AWS::S3::Bucket
+      # Keep the bucket around if the stack is deleted or a failed UPDATE
+      # rolls back
+      DeletionPolicy: Retain
+      UpdateReplacePolicy: Retain
+      Properties:
+        BucketName: ${self:service}-${self:provider.stage}-assets
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: true
+          BlockPublicPolicy: true
+          IgnorePublicAcls: true
+          RestrictPublicBuckets: true
+        OwnershipControls:
+          Rules:
+            - ObjectOwnership: BucketOwnerEnforced
+
+    AssetsBucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket:
+          Ref: AssetsBucket
+        PolicyDocument:
+          Statement:
+            - Sid: AllowSSLRequestsOnly
+              Effect: Deny
+              Principal:
+                AWS: '*'
+              Action: 's3:*'
+              Resource:
+                - Fn::GetAtt: [AssetsBucket, Arn]
+                - Fn::Sub: '${AssetsBucket.Arn}/*'
+              Condition:
+                Bool:
+                  aws:SecureTransport: 'false'
+            - Sid: AllowCloudFrontServicePrincipalReadOnly
+              Effect: Allow
+              Principal:
+                Service: cloudfront.amazonaws.com
+              Action: s3:GetObject
+              Resource:
+                Fn::Sub: '${AssetsBucket.Arn}/*'
+              Condition:
+                StringLike:
+                  AWS:SourceArn:
+                    Fn::Sub: 'arn:aws:cloudfront::${AWS::AccountId}:distribution/*'
+
+    AssetsOriginAccessControl:
+      Type: AWS::CloudFront::OriginAccessControl
+      Properties:
+        OriginAccessControlConfig:
+          Name: ${self:service}-${self:provider.stage}-assets-oac
+          OriginAccessControlOriginType: s3
+          SigningBehavior: always
+          SigningProtocol: sigv4
+
     CloudFrontDistribution:
       Type: AWS::CloudFront::Distribution
       Properties:
@@ -70,8 +153,12 @@ resources:
             AcmCertificateArn: ${self:custom.certificate-arn.${self:provider.stage}}
             MinimumProtocolVersion: TLSv1.2_2018
             SslSupportMethod: sni-only
+          Enabled: true
+
+          # Default = SSR (Lambda via API Gateway). Anything not matched by a
+          # CacheBehavior below falls here.
           DefaultCacheBehavior:
-            TargetOriginId: ${self:service}-${self:provider.stage}-custom-origin
+            TargetOriginId: api-gw-${self:provider.stage}
             ViewerProtocolPolicy: 'redirect-to-https'
             AllowedMethods:
               - GET
@@ -84,19 +171,105 @@ resources:
             DefaultTTL: 0
             MaxTTL: 0
             MinTTL: 0
+            # SSR needs query strings + cookies forwarded for auth + Next data.
             ForwardedValues:
               QueryString: true
               Cookies:
                 Forward: all
-          Enabled: true
+
+          # Static asset behaviors. Ordered most-specific first.
+          # NOTE: do NOT add `_next/*` here as a broad rule — `_next/data/*`
+          # must continue to fall through to the SSR default.
+          CacheBehaviors:
+            - PathPattern: '_next/static/*'
+              TargetOriginId: assets-${self:provider.stage}
+              ViewerProtocolPolicy: 'redirect-to-https'
+              AllowedMethods: [GET, HEAD]
+              CachedMethods: [GET, HEAD]
+              # Hashed filenames; safe to cache aggressively.
+              DefaultTTL: 31536000
+              MaxTTL: 31536000
+              MinTTL: 31536000
+              ForwardedValues:
+                QueryString: false
+                Cookies:
+                  Forward: none
+              Compress: true
+            # Next reads /BUILD_ID client-side to detect new deploys. Short TTL
+            # so a fresh deploy is reflected quickly.
+            - PathPattern: 'BUILD_ID'
+              TargetOriginId: assets-${self:provider.stage}
+              ViewerProtocolPolicy: 'redirect-to-https'
+              AllowedMethods: [GET, HEAD]
+              CachedMethods: [GET, HEAD]
+              DefaultTTL: 60
+              MaxTTL: 60
+              MinTTL: 0
+              ForwardedValues:
+                QueryString: false
+                Cookies:
+                  Forward: none
+              Compress: true
+            - PathPattern: 'favicon.ico'
+              TargetOriginId: assets-${self:provider.stage}
+              ViewerProtocolPolicy: 'redirect-to-https'
+              AllowedMethods: [GET, HEAD]
+              CachedMethods: [GET, HEAD]
+              DefaultTTL: 86400
+              MaxTTL: 86400
+              MinTTL: 86400
+              ForwardedValues:
+                QueryString: false
+                Cookies:
+                  Forward: none
+              Compress: true
+            - PathPattern: 'images/*'
+              TargetOriginId: assets-${self:provider.stage}
+              ViewerProtocolPolicy: 'redirect-to-https'
+              AllowedMethods: [GET, HEAD]
+              CachedMethods: [GET, HEAD]
+              DefaultTTL: 86400
+              MaxTTL: 86400
+              MinTTL: 86400
+              ForwardedValues:
+                QueryString: false
+                Cookies:
+                  Forward: none
+              Compress: true
+
           Origins:
-            - Id: ${self:service}-${self:provider.stage}-custom-origin
+            # SSR origin — API Gateway, stage-prefixed (unchanged from legacy stack).
+            - Id: api-gw-${self:provider.stage}
               DomainName: ${self:custom.domain-name}
               OriginPath: /${self:provider.stage}
               CustomOriginConfig:
                 HTTPPort: 80
                 HTTPSPort: 443
                 OriginProtocolPolicy: https-only
+            # Static origin — private S3 bucket, accessed via OAC.
+            # OriginPath '/_assets' matches the prefix the build script writes to.
+            - Id: assets-${self:provider.stage}
+              DomainName:
+                Fn::GetAtt: [AssetsBucket, RegionalDomainName]
+              OriginPath: /_assets
+              S3OriginConfig:
+                OriginAccessIdentity: ''
+              OriginAccessControlId:
+                Fn::GetAtt: [AssetsOriginAccessControl, Id]
+
+  Outputs:
+    AssetsBucketName:
+      Description: 'S3 bucket holding OpenNext static assets (sync `.open-next/assets/` here in CI).'
+      Value:
+        Ref: AssetsBucket
+      Export:
+        Name: ${self:service}-${self:provider.stage}-AssetsBucket
+    CloudFrontDistributionId:
+      Description: 'Use for `aws cloudfront create-invalidation` after deploys.'
+      Value:
+        Ref: CloudFrontDistribution
+      Export:
+        Name: ${self:service}-${self:provider.stage}-CloudFrontDistribution
 
 custom:
   domain-name:

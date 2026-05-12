@@ -29,10 +29,14 @@ const endpoint: NextApiHandler = async (
 
           if (file) {
             res.status(file.status);
-            res.setHeader('Content-Type', file.headers['content-type']);
+            res.setHeader(
+              'Content-Type',
+              (file.headers['content-type'] ??
+                'application/octet-stream') as string,
+            );
             res.setHeader(
               'Content-Disposition',
-              file.headers['content-disposition'],
+              (file.headers['content-disposition'] ?? 'attachment') as string,
             );
             res.send(file.data);
           } else {

@@ -107,7 +107,7 @@ commands:
           paths:
             - .aws
   deploy-lambda:
-    description: 'Deploys lambda via Serverless'
+    description: 'Deploys OpenNext-built Lambda + S3 assets + CloudFront via Serverless'
     parameters:
       stage:
         type: enum
@@ -197,10 +197,11 @@ commands:
             echo "export NEXT_PUBLIC_GTM_ID=${NEXT_PUBLIC_GTM_ID}" >> $BASH_ENV
 
       - run:
-          name: Build and deploy lambda
+          name: Deploy lambda + S3 bucket + CloudFront via Serverless
           command: |
             set -e
             npx --yes serverless@4 deploy \
+              --config serverless.yml \
               --stage <<parameters.stage>> \
               --param="appUrl=${APP_URL}" \
               --param="activityHistoryApi=${ACTIVITY_HISTORY_API}" \
@@ -216,6 +217,33 @@ commands:
               --param="evidenceStoreUrl=${NEXT_PUBLIC_EVIDENCE_STORE}" \
               --param="gtmId=${NEXT_PUBLIC_GTM_ID}" \
               --conceal
+      - run:
+          name: Sync static assets to S3 + invalidate CloudFront
+          # `aws s3 sync` runs WITHOUT --delete on purpose: keeps prior BUILD_IDs
+          # and hashed `_next/static/<id>/*` chunks around so in-flight clients
+          # that loaded the previous deploy don't 404 mid-session. A lifecycle
+          # rule on the bucket (TBD) will expire old objects.
+          command: |
+            set -e
+            STACK_NAME="housing-register-frontend-<<parameters.stage>>"
+            BUCKET=$(aws cloudformation describe-stacks \
+              --stack-name "$STACK_NAME" \
+              --query "Stacks[0].Outputs[?OutputKey=='AssetsBucketName'].OutputValue" \
+              --output text)
+            DIST=$(aws cloudformation describe-stacks \
+              --stack-name "$STACK_NAME" \
+              --query "Stacks[0].Outputs[?OutputKey=='CloudFrontDistributionId'].OutputValue" \
+              --output text)
+
+            aws s3 sync .open-next/assets "s3://$BUCKET/_assets" \
+              --cache-control "public,max-age=31536000,immutable" \
+              --no-progress
+
+            # Only invalidate paths that aren't already content-hashed.
+            # _next/static/* uses hashed filenames + 1y TTL — no invalidation needed.
+            aws cloudfront create-invalidation \
+              --distribution-id "$DIST" \
+              --paths "/BUILD_ID" "/favicon.ico" "/images/*"
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Jobs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 jobs:
@@ -252,13 +280,29 @@ jobs:
       - checkout
       - node/install-packages
       - run:
-          name: Build Next application
-          command: npm run build
+          # `npm run build:opennext` invokes `open-next build`, which in turn
+          # runs `next build --webpack` (see `buildCommand` in open-next.config.ts)
+          # and then produces `.open-next/` containing the Lambda function bundle
+          # and static assets. `.next/` is left in place too — needed by the
+          # cypress-e2e job's `next start`.
+          name: Build Next.js + OpenNext bundle
+          command: npm run build:opennext
+      - run:
+          # Lambda expects `index.handler` at the zip root, so we zip from
+          # *inside* the function dir rather than including the path prefix.
+          name: Package Lambda artifact
+          command: |
+            set -e
+            mkdir -p build
+            (cd .open-next/server-functions/default && zip -qr ../../../build/opennext-server.zip .)
+            ls -lh build/opennext-server.zip
       - persist_to_workspace:
           root: *workspace_root
           paths:
-            - build
-            - node_modules
+            - .next # used by run-cypress-e2e (next start)
+            - .open-next/assets # used by deploy (aws s3 sync)
+            - build/opennext-server.zip # used by deploy (serverless artifact)
+            - node_modules # used by run-cypress-e2e (next start)
   run-cypress-e2e:
     executor: node-executor
     resource_class: medium+

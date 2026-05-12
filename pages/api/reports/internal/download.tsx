@@ -53,10 +53,15 @@ const endpoint: NextApiHandler = async (
 
           if (fileResponse) {
             res.status(fileResponse.status);
-            res.setHeader('Content-Type', fileResponse.headers['content-type']);
+            res.setHeader(
+              'Content-Type',
+              (fileResponse.headers['content-type'] ??
+                'application/octet-stream') as string,
+            );
             res.setHeader(
               'Content-Disposition',
-              fileResponse.headers['content-disposition'],
+              (fileResponse.headers['content-disposition'] ??
+                'attachment') as string,
             );
             res.send(fileResponse.data);
           } else {

@@ -40,13 +40,10 @@ functions:
   housing-register-frontend:
     name: ${self:service}-${self:provider.stage}
     handler: index.handler
-    # API Gateway REST integration limit is 29s; stay below to avoid confusing timeouts.
     timeout: 29
-    # OpenNext recommends 1024 MB+ for Next 13/14/15. Bump from default to avoid
-    # CPU-throttling on cold starts.
+    # OpenNext recommends 1024 MB+ for Next 13/14/15. Bump from default.
     memorySize: 1024
     package:
-      # See header — this zip is produced by the build pipeline before `sls deploy`.
       artifact: build/opennext-server.zip
     events:
       - http: ANY /
@@ -78,18 +75,16 @@ functions:
 resources:
   Resources:
     # -------------------------------------------------------------------------
-    # Static assets bucket — one per stage. Holds:
+    # Static assets bucket holds:
     #   /_assets/BUILD_ID
-    #   /_assets/_next/static/...     (immutable, hashed filenames)
+    #   /_assets/_next/static/...
     #   /_assets/favicon.ico
-    #   /_assets/images/...           (formerly public/images)
-    # CloudFront reaches it via an Origin Access Control (OAC) — bucket stays
-    # private; no public-read ACL.
+    #   /_assets/images/...           (formerly from public/images)
+    # CloudFront reaches it via an Origin Access Control (OAC)
     # -------------------------------------------------------------------------
     AssetsBucket:
       Type: AWS::S3::Bucket
-      # Keep the bucket around if the stack is deleted or a failed UPDATE
-      # rolls back
+      # Keep the bucket around if the stack is deleted or a failed update
       DeletionPolicy: Retain
       UpdateReplacePolicy: Retain
       Properties:
@@ -104,9 +99,8 @@ resources:
             - ObjectOwnership: BucketOwnerEnforced
         LifecycleConfiguration:
           Rules:
-            # `aws s3 sync` runs without --delete so in-flight clients don't 404
-            # after a deploy. This rule expires the accumulated old chunks after
-            # 30 days — long enough for any active session to complete.
+            # This rule expires the accumulated old chunks after 30 days.
+            # This is long enough for any active session to complete.
             - Id: expire-old-next-static-chunks
               Status: Enabled
               Prefix: '_assets/_next/static/'
@@ -164,8 +158,7 @@ resources:
             SslSupportMethod: sni-only
           Enabled: true
 
-          # Default = SSR (Lambda via API Gateway). Anything not matched by a
-          # CacheBehavior below falls here.
+          # Default = SSR (Lambda via API Gateway).
           DefaultCacheBehavior:
             TargetOriginId: api-gw-${self:provider.stage}
             ViewerProtocolPolicy: 'redirect-to-https'
@@ -187,15 +180,13 @@ resources:
                 Forward: all
 
           # Static asset behaviors. Ordered most-specific first.
-          # NOTE: do NOT add `_next/*` here as a broad rule — `_next/data/*`
-          # must continue to fall through to the SSR default.
           CacheBehaviors:
             - PathPattern: '_next/static/*'
               TargetOriginId: assets-${self:provider.stage}
               ViewerProtocolPolicy: 'redirect-to-https'
               AllowedMethods: [GET, HEAD]
               CachedMethods: [GET, HEAD]
-              # Hashed filenames; safe to cache aggressively.
+              # Hashed filenames; safe to cache.
               DefaultTTL: 31536000
               MaxTTL: 31536000
               MinTTL: 31536000

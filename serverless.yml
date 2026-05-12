@@ -102,6 +102,15 @@ resources:
         OwnershipControls:
           Rules:
             - ObjectOwnership: BucketOwnerEnforced
+        LifecycleConfiguration:
+          Rules:
+            # `aws s3 sync` runs without --delete so in-flight clients don't 404
+            # after a deploy. This rule expires the accumulated old chunks after
+            # 30 days — long enough for any active session to complete.
+            - Id: expire-old-next-static-chunks
+              Status: Enabled
+              Prefix: '_assets/_next/static/'
+              ExpirationInDays: 30
 
     AssetsBucketPolicy:
       Type: AWS::S3::BucketPolicy

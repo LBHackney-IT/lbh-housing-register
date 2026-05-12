@@ -219,10 +219,6 @@ commands:
               --conceal
       - run:
           name: Sync static assets to S3 + invalidate CloudFront
-          # `aws s3 sync` runs WITHOUT --delete on purpose: keeps prior BUILD_IDs
-          # and hashed `_next/static/<id>/*` chunks around so in-flight clients
-          # that loaded the previous deploy don't 404 mid-session. A lifecycle
-          # rule on the bucket (TBD) will expire old objects.
           command: |
             set -e
             STACK_NAME="housing-register-frontend-<<parameters.stage>>"
@@ -239,8 +235,6 @@ commands:
               --cache-control "public,max-age=31536000,immutable" \
               --no-progress
 
-            # Only invalidate paths that aren't already content-hashed.
-            # _next/static/* uses hashed filenames + 1y TTL — no invalidation needed.
             aws cloudfront create-invalidation \
               --distribution-id "$DIST" \
               --paths "/BUILD_ID" "/favicon.ico" "/images/*"
@@ -280,16 +274,11 @@ jobs:
       - checkout
       - node/install-packages
       - run:
-          # `npm run build:opennext` invokes `open-next build`, which in turn
-          # runs `next build --webpack` (see `buildCommand` in open-next.config.ts)
-          # and then produces `.open-next/` containing the Lambda function bundle
-          # and static assets. `.next/` is left in place too — needed by the
-          # cypress-e2e job's `next start`.
           name: Build Next.js + OpenNext bundle
           command: npm run build:opennext
       - run:
           # Lambda expects `index.handler` at the zip root, so we zip from
-          # *inside* the function dir rather than including the path prefix.
+          # *inside* the directory rather than including the path prefix.
           name: Package Lambda artifact
           command: |
             set -e

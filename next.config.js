@@ -8,9 +8,8 @@ const { withSentryConfig } = require('@sentry/nextjs');
 // @ts-check
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Disable gzip compression at the Next/Node level.
-  // API Gateway passes compressed bodies through as-is, causing NS_ERROR_CORRUPTED_CONTENT.
-  // CloudFront handles compression at the edge instead.
+  // Disable compression at the Next level to avoid NS_ERROR_CORRUPTED_CONTENT.
+  // CloudFront handles compression.
   compress: false,
   poweredByHeader: false,
   reactStrictMode: true,

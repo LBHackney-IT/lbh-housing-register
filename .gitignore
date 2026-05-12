@@ -10,7 +10,7 @@
 # production
 /build
 
-# OpenNext (alternative Lambda packaging)
+# OpenNext
 /.open-next/
 
 # misc

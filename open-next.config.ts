@@ -14,10 +14,9 @@
  * Notes:
  *  - OpenNext v4 always emits image-opt, warmer, and revalidation bundles —
  *    there is no toggle to skip them. We simply don't deploy them.
- *  - We override `imageOptimization.install` to a falsy value so OpenNext's
+ *  - We override `imageOptimization.install` so OpenNext's
  *    `installDependencies` short-circuits and skips the `npm install sharp`
- *    step that runs by default. The image-opt bundle still exists on disk,
- *    just without `sharp`; harmless because we never invoke it.
+ *    step that runs by default.
  *  - `dangerous.disableIncrementalCache` and `disableTagCache` strip the S3 /
  *    DynamoDB cache wiring from the server bundle. This app has no ISR /
  *    revalidateTag usage, so neither is needed and skipping them avoids
@@ -29,25 +28,19 @@ import type {
 } from '@opennextjs/aws/types/open-next';
 
 const config: OpenNextConfig = {
-  // Override OpenNext's default of `npm run build`. The legacy `npm run build`
-  // also fires a postbuild hook (now a no-op) and would force `next build` to
-  // run twice if we also invoked it from the npm script — wasted CI minutes.
   // Run only the webpack-flavoured Next build here.
   buildCommand: 'next build --webpack',
 
   default: {
     override: {
       // AWS API Gateway v1 (REST API) is what the existing Serverless Framework
-      // setup uses. Switch to 'aws-apigw-v2' if you migrate to HTTP APIs.
+      // setup uses.
       converter: 'aws-apigw-v1',
       wrapper: 'aws-lambda',
     },
   },
   imageOptimization: {
-    // `installDependencies(outputPath, opts)` early-returns when `opts` is falsy
-    // (see node_modules/@opennextjs/aws/dist/build/installDeps.js). The TS type
-    // is `InstallOptions | undefined`, but `??` only falls back on null/undefined,
-    // so we need a falsy non-undefined value to bypass the default `sharp` install.
+    // we need a falsy non-undefined value to bypass the default `sharp` install.
     // Cast via `unknown` to keep `no-explicit-any` happy while preserving the
     // runtime falsy value.
     install: false as unknown as InstallOptions,

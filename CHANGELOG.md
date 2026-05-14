@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.1.5...hackney-housing-register-v2.2.0) (2026-05-14)
+
+
+### Features
+
+* show user with medical need in household ([733a728](https://github.com/LBHackney-IT/lbh-housing-register/commit/733a728f9d5008788449fb446c318da2dcbf7771))
+
 ## [2.1.5](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.1.4...hackney-housing-register-v2.1.5) (2026-04-21)
 
 

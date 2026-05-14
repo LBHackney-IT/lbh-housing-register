@@ -594,6 +594,7 @@ export interface PaginatedApplicationListResponse {
 
 export interface CreateAuthRequest {
   email: string;
+  applicationId?: string;
 }
 export interface CreateAuthResponse {
   success: boolean;

@@ -14,6 +14,7 @@ loadEnvConfig(process.cwd());
  */
 function buildCypressExpose(): Record<string, string | undefined> {
   return {
+    LOCAL_E2E: process.env.LOCAL_E2E?.trim() === 'true' ? 'true' : undefined,
     ACTIVITY_HISTORY_API:
       process.env.ACTIVITY_HISTORY_API?.trim() ||
       'http://127.0.0.1:3600/api/v1',

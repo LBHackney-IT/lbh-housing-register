@@ -22,6 +22,7 @@ interface FormProps {
   initialValues?: FormikValues;
   activeStep?: string;
   isSavingToDatabase?: boolean;
+  submitButtonDataTestId?: string;
 }
 
 export default function Form({
@@ -31,6 +32,7 @@ export default function Form({
   onSubmit,
   initialValues,
   isSavingToDatabase = false,
+  submitButtonDataTestId = 'test-submit-form-button',
 }: FormProps): JSX.Element {
   const [stepNumber, setStepNumber] = useState(0);
 
@@ -127,7 +129,7 @@ export default function Form({
                     <Button
                       disabled={isSubmitting}
                       type="submit"
-                      dataTestId={`test-submit-form-button`}
+                      dataTestId={submitButtonDataTestId}
                     >
                       {buttonText ? buttonText : 'Save'}
                     </Button>

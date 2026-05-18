@@ -34,6 +34,20 @@ const endpoint: NextApiHandler = async (
           return;
         }
 
+        // Fail fast on missing fields so we don't trigger a backend 500 for what
+        // is a client error (and so Sentry stays quiet for these).
+        if (
+          typeof request.email !== 'string' ||
+          request.email.trim() === '' ||
+          typeof request.code !== 'string' ||
+          request.code.trim() === ''
+        ) {
+          res
+            .status(StatusCodes.BAD_REQUEST)
+            .json({ message: 'Email and code are required' });
+          return;
+        }
+
         const data = await confirmVerifyCode(request);
 
         // set cookie with access token (JWT)

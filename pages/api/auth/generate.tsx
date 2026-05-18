@@ -45,6 +45,23 @@ const endpoint: NextApiHandler = async (
     return;
   }
 
+  // Backend treats a null email as an unhandled exception (ArgumentNullException
+  // in SHA256Helper) and returns a 500. Fail fast here so we don't unnecessarily
+  // hit the API and so Sentry doesn't get noisy 500s for what is a client error.
+  if (
+    !request ||
+    typeof request.email !== 'string' ||
+    request.email.trim() === ''
+  ) {
+    logE2eGenerateError({
+      phase: 'validation failed',
+      reason: 'missing or invalid email',
+      bodyType: typeof req.body,
+    });
+    res.status(StatusCodes.BAD_REQUEST).json({ message: 'Email is required' });
+    return;
+  }
+
   try {
     // In local Cypress we pre-seed a resident token cookie with application_id.
     // Forward it so API can create/verify against the same application record.

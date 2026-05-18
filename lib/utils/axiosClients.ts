@@ -41,7 +41,9 @@ export function activityAxios(httpRequest: IncomingMessage): AxiosInstance {
 
   const cookies = cookie.parse(httpRequest.headers.cookie ?? '');
   const parsedToken = cookies['hackneyToken'];
-  client.defaults.headers.common['Authorization'] = 'Bearer ' + parsedToken;
+  if (parsedToken) {
+    client.defaults.headers.common['Authorization'] = 'Bearer ' + parsedToken;
+  }
 
   return client;
 }

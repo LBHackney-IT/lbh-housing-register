@@ -421,9 +421,9 @@ workflows:
             - run-tests
           filters:
             tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
-            branches:
               ignore: /.*/
+            branches:
+              only: main
       - deploy-to-staging:
           context:
             - central-parameter-store-context
@@ -434,22 +434,14 @@ workflows:
             - build
           filters:
             tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
-            branches:
               ignore: /.*/
-      - permit-deploy-production:
-          type: approval
-          requires:
-            - deploy-to-staging
-          filters:
-            tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
-              ignore: /.*/
+              only: main
       - assume-role-production:
           context: api-assume-role-housing-production-context
           requires:
-            - permit-deploy-production
+            - run-tests
+            - build
           filters:
             tags:
               only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/

@@ -34,8 +34,7 @@ const endpoint: NextApiHandler = async (
           return;
         }
 
-        // Fail fast on missing fields so we don't trigger a backend 500 for what
-        // is a client error (and so Sentry stays quiet for these).
+        // Fail here on missing fields so we don't trigger a backend 500
         if (
           typeof request.email !== 'string' ||
           request.email.trim() === '' ||

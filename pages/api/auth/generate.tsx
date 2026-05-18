@@ -46,8 +46,7 @@ const endpoint: NextApiHandler = async (
   }
 
   // Backend treats a null email as an unhandled exception (ArgumentNullException
-  // in SHA256Helper) and returns a 500. Fail fast here so we don't unnecessarily
-  // hit the API and so Sentry doesn't get noisy 500s for what is a client error.
+  // in SHA256Helper) and returns a 500 so fail fast here.
   if (
     !request ||
     typeof request.email !== 'string' ||

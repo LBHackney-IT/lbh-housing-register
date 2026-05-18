@@ -72,7 +72,7 @@ The React components are built using the [TypeScript](https://www.typescriptlang
 
 ## 💻 Getting started
 
-As a prerequisite to run this app you will need to install [Node.js](https://nodejs.org/en/download)(version 20.17.0 is currently used in local development and in the pipeline) and [npm](https://docs.npmjs.com/cli/v10/commands/npm-install):
+As a prerequisite to run this app you will need to install [Node.js](https://nodejs.org/en/download)(version 24 is currently used in local development and in the pipeline) and [npm](https://docs.npmjs.com/cli/v10/commands/npm-install):
 
 If you have Node Version manager you can set node to the correct version using the nvm command.
 
@@ -122,7 +122,11 @@ The scope and expectations around permissions have been kept fairly limited at t
 
 ### Pre-commit hooks
 
-Repository has a husky configuration to prevent staged files commits that fail linting, test suites and for scanning secrets. On commit it will run linting on staged files, jest and cypress components tests. Pre-push it will run cypress e2e tests.
+Repository has a husky configuration to prevent commits that fail linting or tests. The hooks run as follows:
+
+- **pre-commit:** runs `lint-staged` (linting and formatting on staged files), the Jest test suite, Cypress component tests, and a [ggshield](https://docs.gitguardian.com/ggshield-docs/getting-started) secret scan.
+- **commit-msg:** runs `commitlint` to enforce conventional commit format (see below).
+- **prepare-commit-msg:** launches the `czg` interactive commit helper when running `git commit`.
 
 ### Conventional commits
 
@@ -149,13 +153,21 @@ Failed runs record video (see `cypress.config.ts`).
 
 ## 🚀 Deployment
 
-Pushes to the development branch will be automatically build and deploy to our development environment.
+Pushes to the `development` branch are automatically built and deployed to the development environment.
 
 ### Release Please
 
 Automation uses **[`.github/workflows/release-please.yml`](.github/workflows/release-please.yml)** ([`googleapis/release-please-action`](https://github.com/googleapis/release-please-action)). Config lives in [`release-please-config.json`](release-please-config.json) and [`.release-please-manifest.json`](.release-please-manifest.json).
 
-Pushes to `main` run the workflow, which opens or updates a release PR. Merge that PR to create a version and tag; CircleCI will then deploy to staging (see `.circleci/config.yml` tag filters). For Release Please’s changelog, **what matters is conventional messages on `main`**. As above conventional commits are enforced.
+Pushes to `main` run the workflow, which opens or updates a release PR. Merging that PR creates a version tag; CircleCI then runs the following gated deployment pipeline (see `.circleci/config.yml` tag filters):
+
+1. **Unit and component tests** (`run-tests`) run against the tagged commit.
+2. **Build** (`build`) produces the Next.js standalone Lambda artifact.
+3. **Staging deploy** — the artifact is deployed to the staging environment automatically.
+4. **Manual approval gate** — a `permit-deploy-production` step in CircleCI must be approved by a team member before production is touched.
+5. **Production deploy** — runs only after approval.
+
+For Release Please’s changelog, **what matters is conventional commit messages on `main`**. Conventional commits are enforced as described above.
 
 ## Concepts
 

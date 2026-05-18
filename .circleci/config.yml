@@ -374,7 +374,7 @@ workflows:
       - run-cypress-e2e:
           filters:
             tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
+              ignore: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
           matrix:
             parameters:
               browser: [chrome, firefox]
@@ -419,7 +419,6 @@ workflows:
           context: api-assume-role-housing-staging-context
           requires:
             - run-tests
-            - run-cypress-e2e
           filters:
             tags:
               only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/

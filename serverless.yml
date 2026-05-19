@@ -2,15 +2,8 @@
 # OpenNext deployment for the Housing Register frontend.
 #
 # Build prerequisites (run before `serverless deploy --config serverless.yml`):
-#
-#   1. npm run build:opennext                # produces .open-next/
-#   2. mkdir -p build
-#   3. (cd .open-next/server-functions/default && zip -qr ../../../build/opennext-server.zip .)
-#   4. aws s3 sync .open-next/assets s3://<bucket-from-this-stack>/_assets \
-#        --cache-control "public,max-age=31536000,immutable"
-#
-# CI does all of the above — see `.circleci/config.yml` (`build` and
-# `deploy-lambda` commands).
+# see the "Build Next.js + OpenNext bundle", "Package Lambda artifact", and
+# "Sync static assets to S3 + invalidate CloudFront" steps in `.circleci/config.yml`.
 #
 # The handler entry inside the zip is `index.handler` (an ESM `.mjs` bundle that
 # OpenNext produces from the Next server adapter).
@@ -84,7 +77,8 @@ resources:
     # -------------------------------------------------------------------------
     AssetsBucket:
       Type: AWS::S3::Bucket
-      # Keep the bucket around if the stack is deleted or a failed update
+      # CloudFormation cannot delete buckets with files; Retain avoids a
+      # failed stack deletion.
       DeletionPolicy: Retain
       UpdateReplacePolicy: Retain
       Properties:
@@ -99,8 +93,9 @@ resources:
             - ObjectOwnership: BucketOwnerEnforced
         LifecycleConfiguration:
           Rules:
-            # This rule expires the accumulated old chunks after 30 days.
-            # This is long enough for any active session to complete.
+            # Expires old chunks after 30 days. Without --delete on the s3
+            # sync, old chunks accumulate across deploys. 30 days is enough for
+            # any user with an old version of the app open to do a full reload.
             - Id: expire-old-next-static-chunks
               Status: Enabled
               Prefix: '_assets/_next/static/'
@@ -181,12 +176,11 @@ resources:
 
           # Static asset behaviors. Ordered most-specific first.
           CacheBehaviors:
+            # Hashed filenames — pin TTL to 1 year at all three levels so
+            # CloudFront never serves a stale chunk regardless of origin headers.
             - PathPattern: '_next/static/*'
               TargetOriginId: assets-${self:provider.stage}
               ViewerProtocolPolicy: 'redirect-to-https'
-              AllowedMethods: [GET, HEAD]
-              CachedMethods: [GET, HEAD]
-              # Hashed filenames; safe to cache.
               DefaultTTL: 31536000
               MaxTTL: 31536000
               MinTTL: 31536000
@@ -195,27 +189,24 @@ resources:
                 Cookies:
                   Forward: none
               Compress: true
-            # Next reads /BUILD_ID client-side to detect new deploys. Short TTL
-            # so a fresh deploy is reflected quickly.
+            # Next reads /BUILD_ID client-side to detect new deploys; short TTL
+            # so clients pick up a fresh deploy within a minute.
             - PathPattern: 'BUILD_ID'
               TargetOriginId: assets-${self:provider.stage}
               ViewerProtocolPolicy: 'redirect-to-https'
-              AllowedMethods: [GET, HEAD]
-              CachedMethods: [GET, HEAD]
               DefaultTTL: 60
               MaxTTL: 60
-              MinTTL: 0
               ForwardedValues:
                 QueryString: false
                 Cookies:
                   Forward: none
               Compress: true
+            # Un-hashed files: cap at 1 day (MaxTTL) and force at least 1 day
+            # (MinTTL) so CloudFront always caches them, ignoring any origin
+            # headers. CloudFront invalidation on deploy handles stale content.
             - PathPattern: 'favicon.ico'
               TargetOriginId: assets-${self:provider.stage}
               ViewerProtocolPolicy: 'redirect-to-https'
-              AllowedMethods: [GET, HEAD]
-              CachedMethods: [GET, HEAD]
-              DefaultTTL: 86400
               MaxTTL: 86400
               MinTTL: 86400
               ForwardedValues:
@@ -226,9 +217,6 @@ resources:
             - PathPattern: 'images/*'
               TargetOriginId: assets-${self:provider.stage}
               ViewerProtocolPolicy: 'redirect-to-https'
-              AllowedMethods: [GET, HEAD]
-              CachedMethods: [GET, HEAD]
-              DefaultTTL: 86400
               MaxTTL: 86400
               MinTTL: 86400
               ForwardedValues:

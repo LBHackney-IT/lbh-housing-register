@@ -199,7 +199,6 @@ commands:
       - run:
           name: Deploy lambda + S3 bucket + CloudFront via Serverless
           command: |
-            set -e
             npx --yes serverless@4 deploy \
               --config serverless.yml \
               --stage <<parameters.stage>> \
@@ -220,7 +219,6 @@ commands:
       - run:
           name: Sync static assets to S3 + invalidate CloudFront
           command: |
-            set -e
             STACK_NAME="housing-register-frontend-<<parameters.stage>>"
             BUCKET=$(aws cloudformation describe-stacks \
               --stack-name "$STACK_NAME" \
@@ -281,9 +279,10 @@ jobs:
           # *inside* the directory rather than including the path prefix.
           name: Package Lambda artifact
           command: |
-            set -e
-            mkdir -p build
-            (cd .open-next/server-functions/default && zip -qr ../../../build/opennext-server.zip .)
+            mkdir build
+            cd .open-next/server-functions/default
+            zip -qr ../../../build/opennext-server.zip .
+            cd -
             ls -sh build/opennext-server.zip
       - persist_to_workspace:
           root: *workspace_root

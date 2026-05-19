@@ -17,10 +17,8 @@
  *  - We override `imageOptimization.install` so OpenNext's
  *    `installDependencies` short-circuits and skips the `npm install sharp`
  *    step that runs by default.
- *  - `dangerous.disableIncrementalCache` and `disableTagCache` strip the S3 /
- *    DynamoDB cache wiring from the server bundle. This app has no ISR /
- *    revalidateTag usage, so neither is needed and skipping them avoids
- *    requiring the cache bucket + DDB table at deploy time.
+ *  - `dangerous.disableIncrementalCache` and `disableTagCache` are set because
+ *    this app has no ISR or revalidateTag usage.
  */
 import type {
   InstallOptions,

@@ -1,9 +1,9 @@
 version: 2.1
 
 orbs:
-  aws-cli: circleci/aws-cli@4.0.0
+  aws-cli: circleci/aws-cli@5.4.1
   aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
-  cypress: cypress-io/cypress@3
+  cypress: cypress-io/cypress@6.1.0
   node: circleci/node@7.1.0
   sonarcloud: sonarsource/sonarcloud@2.0.0
 
@@ -17,11 +17,10 @@ executors:
       XVFB_TIMEOUT: 60
 
 references:
-  workspace_root: &workspace_root '.'
   attach_workspace: &attach_workspace
     attach_workspace:
-      at: *workspace_root
-  # assume_role write to ~/.aws, not under the repository
+      at: '.'
+  # assume_role writes to ~/.aws, not under the repository
   home_dir: &home_dir /home/circleci
   attach_aws_workspace: &attach_aws_workspace
     attach_workspace:
@@ -152,7 +151,7 @@ jobs:
       - store_artifacts:
           path: coverage
       - persist_to_workspace:
-          root: *workspace_root
+          root: '.'
           paths:
             - coverage
   sonar-scan:
@@ -171,7 +170,7 @@ jobs:
           name: Build Next application
           command: npm run build
       - persist_to_workspace:
-          root: *workspace_root
+          root: '.'
           paths:
             - build
             - node_modules
@@ -292,7 +291,7 @@ workflows:
             tags:
               only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
-              only: [development, main]
+              only: [development, main, bugfix/broken-auth]
           matrix:
             parameters:
               browser: [chrome, firefox]

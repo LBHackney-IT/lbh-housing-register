@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.2.1](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.2.0...hackney-housing-register-v2.2.1) (2026-05-21)
+
+
+### Bug Fixes
+
+* handle auth gracefully ([ce1aec6](https://github.com/LBHackney-IT/lbh-housing-register/commit/ce1aec65fa91de3351e768a93da25a7b4dbd4759))
+* revert testing branch ([7ba80e6](https://github.com/LBHackney-IT/lbh-housing-register/commit/7ba80e67e2d13b012b0ff8903eb3ab4b3f12e34b))
+
+
+### Reverts
+
+* revert branch used for ci testing ([c0448de](https://github.com/LBHackney-IT/lbh-housing-register/commit/c0448de07a2909aadf0394981f66c990998e28c0))
+
 ## [2.2.0](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.1.5...hackney-housing-register-v2.2.0) (2026-05-14)
 
 

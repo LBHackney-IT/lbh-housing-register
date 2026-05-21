@@ -28,9 +28,8 @@ const endpoint: NextApiHandler = async (
 
   let request: CreateAuthRequest;
   try {
-    // Behind API Gateway + serverless-http the body can arrive as a Buffer
-    // even when the client sets Content-Type: application/json, so normalise
-    // here. Standard Next dev/prod gives us a parsed object.
+    // The body can arrive as a Buffer even when the client sets
+    // Content-Type header to application/json, so normalise.
     if (typeof req.body === 'string') {
       request = JSON.parse(req.body) as CreateAuthRequest;
     } else if (Buffer.isBuffer(req.body)) {
@@ -57,13 +56,6 @@ const endpoint: NextApiHandler = async (
     typeof request.email !== 'string' ||
     request.email.trim() === ''
   ) {
-    if (process.env.JEST_WORKER_ID === undefined) {
-      console.error('[api/auth/generate] validation failed', {
-        bodyType: typeof req.body,
-        bodyIsBuffer: Buffer.isBuffer(req.body),
-        requestKeys: request ? Object.keys(request) : null,
-      });
-    }
     logE2eGenerateError({
       phase: 'validation failed',
       reason: 'missing or invalid email',

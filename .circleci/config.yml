@@ -1,9 +1,9 @@
 version: 2.1
 
 orbs:
-  aws-cli: circleci/aws-cli@4.0.0
+  aws-cli: circleci/aws-cli@5.4.1
   aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
-  cypress: cypress-io/cypress@3
+  cypress: cypress-io/cypress@6.1.0
   node: circleci/node@7.1.0
   sonarcloud: sonarsource/sonarcloud@2.0.0
 
@@ -17,11 +17,10 @@ executors:
       XVFB_TIMEOUT: 60
 
 references:
-  workspace_root: &workspace_root '.'
   attach_workspace: &attach_workspace
     attach_workspace:
-      at: *workspace_root
-  # assume_role write to ~/.aws, not under the repository
+      at: '.'
+  # assume_role writes to ~/.aws, not under the repository
   home_dir: &home_dir /home/circleci
   attach_aws_workspace: &attach_aws_workspace
     attach_workspace:
@@ -126,95 +125,11 @@ commands:
       - *attach_workspace
       - aws-cli/install
       - run:
-          name: Fetch SSM parameters from central account for serverless deployment
-          command: |
-            CENTRAL_ACCOUNT=${<<parameters.aws-central-parameter-account>>}
-            export APP_URL=$(aws ssm get-parameter \
-              --name arn:aws:ssm:eu-west-2:${CENTRAL_ACCOUNT}:parameter/housing-<<parameters.stage>>/housing-register-<<parameters.stage>>/housing-register/app-url \
-              --query Parameter.Value \
-              --output text)
-            export ACTIVITY_HISTORY_API=$(aws ssm get-parameter \
-              --name arn:aws:ssm:eu-west-2:${CENTRAL_ACCOUNT}:parameter/housing-<<parameters.stage>>/mtfh-housing-<<parameters.stage>>/mtfh-housing/activity-history-api-url \
-              --query Parameter.Value \
-              --output text)
-            export LOOKUP_API_URL=$(aws ssm get-parameter \
-              --name arn:aws:ssm:eu-west-2:${CENTRAL_ACCOUNT}:parameter/housing-<<parameters.stage>>/mtfh-housing-<<parameters.stage>>/mtfh-housing/lookup-api-url \
-              --query Parameter.Value \
-              --output text)
-            export AUTHORISED_ADMIN_GROUP=$(aws ssm get-parameter \
-              --name arn:aws:ssm:eu-west-2:${CENTRAL_ACCOUNT}:parameter/housing-<<parameters.stage>>/housing-register-<<parameters.stage>>/housing-register/authorised-admin-group \
-              --query Parameter.Value \
-              --output text)
-            export AUTHORISED_MANAGER_GROUP=$(aws ssm get-parameter \
-              --name arn:aws:ssm:eu-west-2:${CENTRAL_ACCOUNT}:parameter/housing-<<parameters.stage>>/housing-register-<<parameters.stage>>/housing-register/authorised-manager-group \
-              --query Parameter.Value \
-              --output text)
-            export AUTHORISED_OFFICER_GROUP=$(aws ssm get-parameter \
-              --name arn:aws:ssm:eu-west-2:${CENTRAL_ACCOUNT}:parameter/housing-<<parameters.stage>>/housing-register-<<parameters.stage>>/housing-register/authorised-officer-group \
-              --query Parameter.Value \
-              --output text)
-            export AUTHORISED_READONLY_GROUP=$(aws ssm get-parameter \
-              --name arn:aws:ssm:eu-west-2:${CENTRAL_ACCOUNT}:parameter/housing-<<parameters.stage>>/housing-register-<<parameters.stage>>/housing-register/authorised-readonly-group \
-              --query Parameter.Value \
-              --output text)
-            export HOUSING_REGISTER_API=$(aws ssm get-parameter \
-              --name arn:aws:ssm:eu-west-2:${CENTRAL_ACCOUNT}:parameter/housing-<<parameters.stage>>/housing-register-<<parameters.stage>>/housing-register/api-url \
-              --query Parameter.Value \
-              --output text)
-            export NOTIFY_TEMPLATE_NEW_APPLICATION=$(aws ssm get-parameter \
-              --name arn:aws:ssm:eu-west-2:${CENTRAL_ACCOUNT}:parameter/housing-<<parameters.stage>>/housing-register-<<parameters.stage>>/housing-register/notify-template-new-application \
-              --query Parameter.Value \
-              --output text)
-            export NOTIFY_TEMPLATE_DISQUALIFY=$(aws ssm get-parameter \
-              --name arn:aws:ssm:eu-west-2:${CENTRAL_ACCOUNT}:parameter/housing-<<parameters.stage>>/housing-register-<<parameters.stage>>/housing-register/notify-template-disqualify \
-              --query Parameter.Value \
-              --output text)
-            export NOTIFY_TEMPLATE_MEDICAL_NEED=$(aws ssm get-parameter \
-              --name arn:aws:ssm:eu-west-2:${CENTRAL_ACCOUNT}:parameter/housing-<<parameters.stage>>/housing-register-<<parameters.stage>>/housing-register/notify-template-medical-need \
-              --query Parameter.Value \
-              --output text)
-            export NEXT_PUBLIC_EVIDENCE_STORE=$(aws ssm get-parameter \
-              --name arn:aws:ssm:eu-west-2:${CENTRAL_ACCOUNT}:parameter/housing-<<parameters.stage>>/housing-register-<<parameters.stage>>/housing-register/evidence-store-url \
-              --query Parameter.Value \
-              --output text)              
-            export NEXT_PUBLIC_GTM_ID=$(aws ssm get-parameter \
-              --name arn:aws:ssm:eu-west-2:${CENTRAL_ACCOUNT}:parameter/housing-<<parameters.stage>>/housing-register-<<parameters.stage>>/housing-register/gtm-id \
-              --query Parameter.Value \
-              --output text)              
-              
-            echo "export APP_URL=${APP_URL}" >> $BASH_ENV
-            echo "export ACTIVITY_HISTORY_API=${ACTIVITY_HISTORY_API}" >> $BASH_ENV
-            echo "export LOOKUP_API_URL=${LOOKUP_API_URL}" >> $BASH_ENV
-            echo "export AUTHORISED_ADMIN_GROUP=${AUTHORISED_ADMIN_GROUP}" >> $BASH_ENV
-            echo "export AUTHORISED_MANAGER_GROUP=${AUTHORISED_MANAGER_GROUP}" >> $BASH_ENV
-            echo "export AUTHORISED_OFFICER_GROUP=${AUTHORISED_OFFICER_GROUP}" >> $BASH_ENV
-            echo "export AUTHORISED_READONLY_GROUP=${AUTHORISED_READONLY_GROUP}" >> $BASH_ENV
-            echo "export HOUSING_REGISTER_API=${HOUSING_REGISTER_API}" >> $BASH_ENV
-            echo "export NOTIFY_TEMPLATE_NEW_APPLICATION=${NOTIFY_TEMPLATE_NEW_APPLICATION}" >> $BASH_ENV
-            echo "export NOTIFY_TEMPLATE_DISQUALIFY=${NOTIFY_TEMPLATE_DISQUALIFY}" >> $BASH_ENV
-            echo "export NOTIFY_TEMPLATE_MEDICAL_NEED=${NOTIFY_TEMPLATE_MEDICAL_NEED}" >> $BASH_ENV
-            echo "export NEXT_PUBLIC_EVIDENCE_STORE=${NEXT_PUBLIC_EVIDENCE_STORE}" >> $BASH_ENV
-            echo "export NEXT_PUBLIC_GTM_ID=${NEXT_PUBLIC_GTM_ID}" >> $BASH_ENV
-
-      - run:
           name: Build and deploy lambda
           command: |
-            set -e
             npx --yes serverless@4 deploy \
               --stage <<parameters.stage>> \
-              --param="appUrl=${APP_URL}" \
-              --param="activityHistoryApi=${ACTIVITY_HISTORY_API}" \
-              --param="lookupApiUrl=${LOOKUP_API_URL}" \
-              --param="authorisedAdminGroup=${AUTHORISED_ADMIN_GROUP}" \
-              --param="authorisedManagerGroup=${AUTHORISED_MANAGER_GROUP}" \
-              --param="authorisedOfficerGroup=${AUTHORISED_OFFICER_GROUP}" \
-              --param="authorisedReadonlyGroup=${AUTHORISED_READONLY_GROUP}" \
-              --param="housingRegisterApi=${HOUSING_REGISTER_API}" \
-              --param="notifyTemplateNewApplication=${NOTIFY_TEMPLATE_NEW_APPLICATION}" \
-              --param="notifyTemplateDisqualify=${NOTIFY_TEMPLATE_DISQUALIFY}" \
-              --param="notifyTemplateMedicalNeed=${NOTIFY_TEMPLATE_MEDICAL_NEED}" \
-              --param="evidenceStoreUrl=${NEXT_PUBLIC_EVIDENCE_STORE}" \
-              --param="gtmId=${NEXT_PUBLIC_GTM_ID}" \
+              --param="centralAccount=${<<parameters.aws-central-parameter-account>>}" \
               --conceal
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Jobs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
@@ -236,7 +151,7 @@ jobs:
       - store_artifacts:
           path: coverage
       - persist_to_workspace:
-          root: *workspace_root
+          root: '.'
           paths:
             - coverage
   sonar-scan:
@@ -255,7 +170,7 @@ jobs:
           name: Build Next application
           command: npm run build
       - persist_to_workspace:
-          root: *workspace_root
+          root: '.'
           paths:
             - build
             - node_modules
@@ -375,6 +290,8 @@ workflows:
           filters:
             tags:
               only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
+            branches:
+              only: [development, main]
           matrix:
             parameters:
               browser: [chrome, firefox]
@@ -401,7 +318,7 @@ workflows:
             tags:
               ignore: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
-              only: development
+              only: [development]
       - deploy-to-development:
           context:
             - central-parameter-store-context
@@ -414,7 +331,7 @@ workflows:
             tags:
               ignore: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
-              only: development
+              only: [development]
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:
@@ -422,9 +339,9 @@ workflows:
             - run-cypress-e2e
           filters:
             tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
-            branches:
               ignore: /.*/
+            branches:
+              only: main
       - deploy-to-staging:
           context:
             - central-parameter-store-context
@@ -435,22 +352,15 @@ workflows:
             - build
           filters:
             tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
-            branches:
               ignore: /.*/
-      - permit-deploy-production:
-          type: approval
-          requires:
-            - deploy-to-staging
-          filters:
-            tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
-              ignore: /.*/
+              only: main
       - assume-role-production:
           context: api-assume-role-housing-production-context
           requires:
-            - permit-deploy-production
+            - run-tests
+            - run-cypress-e2e
+            - build
           filters:
             tags:
               only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/

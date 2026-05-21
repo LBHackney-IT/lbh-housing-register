@@ -26,22 +26,6 @@ const endpoint: NextApiHandler = async (
     return;
   }
 
-  // Temporary diagnostic: set LOG_BODY_TYPE=true on the Lambda to confirm
-  // how the body is being delivered by API Gateway + serverless-http.
-  // Logs on every request, success or failure. Remove once the question
-  // about Buffer-bodies is resolved.
-  if (
-    process.env.LOG_BODY_TYPE === 'true' &&
-    process.env.JEST_WORKER_ID === undefined
-  ) {
-    console.info('[api/auth/generate] body diagnostic', {
-      bodyType: typeof req.body,
-      bodyIsBuffer: Buffer.isBuffer(req.body),
-      contentType: req.headers['content-type'] ?? null,
-      contentLength: req.headers['content-length'] ?? null,
-    });
-  }
-
   let request: CreateAuthRequest;
   try {
     // Behind API Gateway + serverless-http the body can arrive as a Buffer

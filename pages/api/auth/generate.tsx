@@ -15,6 +15,21 @@ function logE2eGenerateError(payload: Record<string, unknown>): void {
   }
 }
 
+/**
+ * Read the raw request body from the stream.
+ * Used as a fallback when Next.js body-parser has not already populated
+ * req.body (e.g. in the Lambda/serverless-http environment where the parser
+ * may not fire for every content-type or runtime combination).
+ */
+function readRawBody(req: NextApiRequest): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const chunks: Buffer[] = [];
+    req.on('data', (chunk: Buffer) => chunks.push(chunk));
+    req.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+    req.on('error', reject);
+  });
+}
+
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse,
@@ -28,10 +43,24 @@ const endpoint: NextApiHandler = async (
 
   let request: CreateAuthRequest;
   try {
-    // body is usually an object when Next JSON body parsing runs but it can be a string in some test paths. So make sure both shapes are parsed before request.
+    // Resolve to a raw string regardless of how the Lambda/serverless-http
+    // environment delivered the body:
+    //   • object  — Next.js JSON body-parser already ran (normal dev/prod)
+    //   • string  — text/plain or test path
+    //   • Buffer  — binary Lambda payload not decoded by the framework
+    //   • undefined — body-parser did not fire; read from the stream directly
+    let rawBodyStr: string | undefined;
+    if (typeof req.body === 'string') {
+      rawBodyStr = req.body;
+    } else if (Buffer.isBuffer(req.body)) {
+      rawBodyStr = req.body.toString('utf8');
+    } else if (req.body === undefined || req.body === null) {
+      rawBodyStr = await readRawBody(req);
+    }
+
     request =
-      typeof req.body === 'string'
-        ? (JSON.parse(req.body) as CreateAuthRequest)
+      rawBodyStr !== undefined
+        ? (JSON.parse(rawBodyStr) as CreateAuthRequest)
         : (req.body as CreateAuthRequest);
   } catch (parseErr) {
     logE2eGenerateError({
@@ -52,6 +81,14 @@ const endpoint: NextApiHandler = async (
     typeof request.email !== 'string' ||
     request.email.trim() === ''
   ) {
+    // Always log — visible in CloudWatch on Lambda deployments, not just E2E.
+    if (process.env.JEST_WORKER_ID === undefined) {
+      console.error('[api/auth/generate] validation failed', {
+        reason: 'missing or invalid email',
+        bodyType: typeof req.body,
+        requestKeys: request ? Object.keys(request) : null,
+      });
+    }
     logE2eGenerateError({
       phase: 'validation failed',
       reason: 'missing or invalid email',

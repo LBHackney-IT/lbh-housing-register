@@ -33,7 +33,6 @@ export const updateApplication = createAsyncThunk(
   async (application: Application, { rejectWithValue }) => {
     const res = await fetch(`/api/applications/${application.id}`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(application),
     });
 
@@ -54,7 +53,6 @@ export const disqualifyApplication = createAsyncThunk(
     };
     const res = await fetch(`/api/applications/${id}`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(request),
     });
     if (res.ok) {
@@ -96,7 +94,6 @@ export const createEvidenceRequest = createAsyncThunk(
     };
     const res = await fetch(`/api/applications/${application.id}/evidence`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(request),
     });
     if (res.ok) {
@@ -122,7 +119,6 @@ export const sendConfirmation = createAsyncThunk(
 
     const res = await fetch(`/api/notify/new-application`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(notifyRequest),
     });
 
@@ -151,7 +147,6 @@ export const sendMedicalNeed = createAsyncThunk(
 
     const res = await fetch(`/api/notify/medical`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(notifyRequest),
     });
 
@@ -181,7 +176,6 @@ export const sendDisqualifyEmail = createAsyncThunk(
 
     const res = await fetch(`/api/notify/disqualify`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(notifyRequest),
     });
 

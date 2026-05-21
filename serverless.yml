@@ -1,3 +1,22 @@
+# =============================================================================
+# OpenNext deployment for the Housing Register frontend.
+#
+# Build prerequisites (run before `serverless deploy --config serverless.yml`):
+# see the "Build Next.js + OpenNext bundle", "Package Lambda artifact", and
+# "Sync static assets to S3 + invalidate CloudFront" steps in `.circleci/config.yml`.
+#
+# The handler entry inside the zip is `index.handler` (an ESM `.mjs` bundle that
+# OpenNext produces from the Next server adapter).
+#
+# Notes:
+#   - `package.artifact` points at a pre-built zip rather than using
+#     `package.patterns`, because the OpenNext output expects to be unpacked
+#     at the zip root (`index.mjs` next to `node_modules/`), and sls
+#     `patterns` can't easily strip a directory prefix.
+#   - Static assets are not packaged with the function — they live in S3 and
+#     are routed via CloudFront (two origins: API Gateway for SSR, S3 for
+#     `_next/static/*`, `BUILD_ID`, `favicon.ico`, `images/*`).
+# =============================================================================
 service: housing-register-frontend
 
 provider:
@@ -9,27 +28,16 @@ provider:
 
 package:
   individually: true
-  exclude:
-    - ./**
 
 functions:
   housing-register-frontend:
     name: ${self:service}-${self:provider.stage}
-    handler: lambda.handler
-    # API Gateway REST integration limit is 29s; stay below to avoid confusing timeouts.
+    handler: index.handler
     timeout: 29
+    # OpenNext recommends 1024 MB+ for Next 13/14/15. Bump from default.
+    memorySize: 1024
     package:
-      patterns:
-        - lambda.js
-        # Standalone trace + postbuild deps (server runtime).
-        - build/_next/standalone/**
-        - '!build/_next/standalone/**/*.map'
-        # Client-side static assets — standalone output does NOT include these; they live
-        # at the distDir root and must be packaged separately so /_next/static/** resolves.
-        - build/_next/static/**
-        - '!build/_next/static/**/*.map'
-        # Public directory (favicon, images) — served directly by lambda.js.
-        - public/**
+      artifact: build/opennext-server.zip
     events:
       - http: ANY /
       - http: ANY /{proxy+}
@@ -59,6 +67,79 @@ functions:
 
 resources:
   Resources:
+    # -------------------------------------------------------------------------
+    # Static assets bucket holds:
+    #   /_assets/BUILD_ID
+    #   /_assets/_next/static/...
+    #   /_assets/favicon.ico
+    #   /_assets/images/...           (formerly from public/images)
+    # CloudFront reaches it via an Origin Access Control (OAC)
+    # -------------------------------------------------------------------------
+    AssetsBucket:
+      Type: AWS::S3::Bucket
+      # CloudFormation cannot delete buckets with files; Retain avoids a
+      # failed stack deletion.
+      DeletionPolicy: Retain
+      UpdateReplacePolicy: Retain
+      Properties:
+        BucketName: ${self:service}-${self:provider.stage}-assets
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: true
+          BlockPublicPolicy: true
+          IgnorePublicAcls: true
+          RestrictPublicBuckets: true
+        OwnershipControls:
+          Rules:
+            - ObjectOwnership: BucketOwnerEnforced
+        LifecycleConfiguration:
+          Rules:
+            # Expires old chunks after 30 days. Without --delete on the s3
+            # sync, old chunks accumulate across deploys. 30 days is enough for
+            # any user with an old version of the app open to do a full reload.
+            - Id: expire-old-next-static-chunks
+              Status: Enabled
+              Prefix: '_assets/_next/static/'
+              ExpirationInDays: 30
+
+    AssetsBucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket:
+          Ref: AssetsBucket
+        PolicyDocument:
+          Statement:
+            - Sid: AllowSSLRequestsOnly
+              Effect: Deny
+              Principal:
+                AWS: '*'
+              Action: 's3:*'
+              Resource:
+                - Fn::GetAtt: [AssetsBucket, Arn]
+                - Fn::Sub: '${AssetsBucket.Arn}/*'
+              Condition:
+                Bool:
+                  aws:SecureTransport: 'false'
+            - Sid: AllowCloudFrontServicePrincipalReadOnly
+              Effect: Allow
+              Principal:
+                Service: cloudfront.amazonaws.com
+              Action: s3:GetObject
+              Resource:
+                Fn::Sub: '${AssetsBucket.Arn}/*'
+              Condition:
+                StringLike:
+                  AWS:SourceArn:
+                    Fn::Sub: 'arn:aws:cloudfront::${AWS::AccountId}:distribution/*'
+
+    AssetsOriginAccessControl:
+      Type: AWS::CloudFront::OriginAccessControl
+      Properties:
+        OriginAccessControlConfig:
+          Name: ${self:service}-${self:provider.stage}-assets-oac
+          OriginAccessControlOriginType: s3
+          SigningBehavior: always
+          SigningProtocol: sigv4
+
     CloudFrontDistribution:
       Type: AWS::CloudFront::Distribution
       Properties:
@@ -70,8 +151,11 @@ resources:
             AcmCertificateArn: ${self:custom.certificate-arn.${self:provider.stage}}
             MinimumProtocolVersion: TLSv1.2_2018
             SslSupportMethod: sni-only
+          Enabled: true
+
+          # Default = SSR (Lambda via API Gateway).
           DefaultCacheBehavior:
-            TargetOriginId: ${self:service}-${self:provider.stage}-custom-origin
+            TargetOriginId: api-gw-${self:provider.stage}
             ViewerProtocolPolicy: 'redirect-to-https'
             AllowedMethods:
               - GET
@@ -84,19 +168,96 @@ resources:
             DefaultTTL: 0
             MaxTTL: 0
             MinTTL: 0
+            # SSR needs query strings + cookies forwarded for auth + Next data.
             ForwardedValues:
               QueryString: true
               Cookies:
                 Forward: all
-          Enabled: true
+
+          # Static asset behaviors. Ordered most-specific first.
+          CacheBehaviors:
+            # Hashed filenames — pin TTL to 1 year at all three levels so
+            # CloudFront never serves a stale chunk regardless of origin headers.
+            - PathPattern: '_next/static/*'
+              TargetOriginId: assets-${self:provider.stage}
+              ViewerProtocolPolicy: 'redirect-to-https'
+              DefaultTTL: 31536000
+              MaxTTL: 31536000
+              MinTTL: 31536000
+              ForwardedValues:
+                QueryString: false
+                Cookies:
+                  Forward: none
+              Compress: true
+            # Next reads /BUILD_ID client-side to detect new deploys; short TTL
+            # so clients pick up a fresh deploy within a minute.
+            - PathPattern: 'BUILD_ID'
+              TargetOriginId: assets-${self:provider.stage}
+              ViewerProtocolPolicy: 'redirect-to-https'
+              DefaultTTL: 60
+              MaxTTL: 60
+              ForwardedValues:
+                QueryString: false
+                Cookies:
+                  Forward: none
+              Compress: true
+            # Un-hashed files: cap at 1 day (MaxTTL) and force at least 1 day
+            # (MinTTL) so CloudFront always caches them, ignoring any origin
+            # headers. CloudFront invalidation on deploy handles stale content.
+            - PathPattern: 'favicon.ico'
+              TargetOriginId: assets-${self:provider.stage}
+              ViewerProtocolPolicy: 'redirect-to-https'
+              MaxTTL: 86400
+              MinTTL: 86400
+              ForwardedValues:
+                QueryString: false
+                Cookies:
+                  Forward: none
+              Compress: true
+            - PathPattern: 'images/*'
+              TargetOriginId: assets-${self:provider.stage}
+              ViewerProtocolPolicy: 'redirect-to-https'
+              MaxTTL: 86400
+              MinTTL: 86400
+              ForwardedValues:
+                QueryString: false
+                Cookies:
+                  Forward: none
+              Compress: true
+
           Origins:
-            - Id: ${self:service}-${self:provider.stage}-custom-origin
+            # SSR origin — API Gateway, stage-prefixed (unchanged from legacy stack).
+            - Id: api-gw-${self:provider.stage}
               DomainName: ${self:custom.domain-name}
               OriginPath: /${self:provider.stage}
               CustomOriginConfig:
                 HTTPPort: 80
                 HTTPSPort: 443
                 OriginProtocolPolicy: https-only
+            # Static origin — private S3 bucket, accessed via OAC.
+            # OriginPath '/_assets' matches the prefix the build script writes to.
+            - Id: assets-${self:provider.stage}
+              DomainName:
+                Fn::GetAtt: [AssetsBucket, RegionalDomainName]
+              OriginPath: /_assets
+              S3OriginConfig:
+                OriginAccessIdentity: ''
+              OriginAccessControlId:
+                Fn::GetAtt: [AssetsOriginAccessControl, Id]
+
+  Outputs:
+    AssetsBucketName:
+      Description: 'S3 bucket holding OpenNext static assets (sync `.open-next/assets/` here in CI).'
+      Value:
+        Ref: AssetsBucket
+      Export:
+        Name: ${self:service}-${self:provider.stage}-AssetsBucket
+    CloudFrontDistributionId:
+      Description: 'Use for `aws cloudfront create-invalidation` after deploys.'
+      Value:
+        Ref: CloudFrontDistribution
+      Export:
+        Name: ${self:service}-${self:provider.stage}-CloudFrontDistribution
 
 custom:
   domain-name:

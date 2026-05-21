@@ -10,6 +10,10 @@ function parseVerifyBody(req: NextApiRequest): VerifyAuthRequest | null {
   try {
     if (typeof req.body === 'string') {
       return JSON.parse(req.body) as VerifyAuthRequest;
+    } else if (Buffer.isBuffer(req.body)) {
+      // The body can arrive as a Buffer even when the client sets
+      // Content-Type header to application/json, so normalise here.
+      return JSON.parse(req.body.toString('utf8')) as VerifyAuthRequest;
     } else if (req.body && typeof req.body === 'object') {
       return req.body as VerifyAuthRequest;
     }

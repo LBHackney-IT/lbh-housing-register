@@ -92,6 +92,33 @@ describe('POST', () => {
     expect(res._getJSONData()).toStrictEqual(expectedErrorMessage);
   });
 
+  describe.each([
+    ['empty object', {}],
+    ['email is undefined', { email: undefined }],
+    ['email is null', { email: null }],
+    ['email is empty string', { email: '' }],
+    ['email is whitespace only', { email: '   ' }],
+    ['email is not a string', { email: 12345 }],
+  ])(
+    'returns status code 400 without calling the backend when %s',
+    (_label, parsedBody) => {
+      it('responds with "Email is required"', async () => {
+        jsonParseSpy.mockReturnValueOnce(parsedBody);
+
+        const { req, res }: { req: ApiRequest; res: ApiResponse } =
+          createMocks(requestOptions);
+
+        await endpoint(req, res);
+
+        expect(createVerifyCodeMock).not.toHaveBeenCalled();
+        expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
+        expect(res._getJSONData()).toStrictEqual({
+          message: 'Email is required',
+        });
+      });
+    },
+  );
+
   it('returns status code 500 when createVerifyCode fails', async () => {
     jsonParseSpy.mockReturnValueOnce(mockCreateAuthRequest);
 

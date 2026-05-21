@@ -76,6 +76,11 @@ const ApplicationVerifyPage = (): JSX.Element => {
   };
 
   const resendCode = async () => {
+    if (!email) {
+      setUserError(Errors.SIGNIN_ERROR);
+      scrollToError();
+      return;
+    }
     dispatch(createVerifyCode(email));
     setCodeSent(true);
   };
@@ -124,6 +129,7 @@ const ApplicationVerifyPage = (): JSX.Element => {
                       type="button"
                       className="lbh-link lbh-link--announcement"
                       onClick={resendCode}
+                      disabled={!email}
                     >
                       Send a new code
                     </button>

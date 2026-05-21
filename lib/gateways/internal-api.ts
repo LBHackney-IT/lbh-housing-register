@@ -12,6 +12,7 @@ export const lookUpAddress = async (postCode: string) => {
 export const updateApplication = async (application: Application) => {
   const res = await fetch(`/api/applications/${application.id}`, {
     method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(application),
   });
 
@@ -25,6 +26,7 @@ export const updateApplication = async (application: Application) => {
 export const createApplication = async (application: Application) => {
   const res = await fetch(`/api/applications`, {
     method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(application),
   });
 
@@ -70,6 +72,7 @@ export const addNoteToHistory = async (
 ) => {
   const res = await fetch(`/api/applications/${applicationId}/note`, {
     method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(request),
   });
   return await res.json();

@@ -16,6 +16,7 @@ export const createVerifyCode = createAsyncThunk(
 
     const res = await fetch(`/api/auth/generate`, {
       method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(request),
     });
 
@@ -39,6 +40,7 @@ export const confirmVerifyCode = createAsyncThunk(
     };
     const res = await fetch(`/api/auth/verify`, {
       method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(request),
     });
 

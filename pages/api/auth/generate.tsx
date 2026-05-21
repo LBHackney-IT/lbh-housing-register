@@ -28,11 +28,15 @@ const endpoint: NextApiHandler = async (
 
   let request: CreateAuthRequest;
   try {
-    // body is usually an object when Next JSON body parsing runs but it can be a string in some test paths. So make sure both shapes are parsed before request.
-    request =
-      typeof req.body === 'string'
-        ? (JSON.parse(req.body) as CreateAuthRequest)
-        : (req.body as CreateAuthRequest);
+    // The body can arrive as a Buffer even when the client sets
+    // Content-Type header to application/json, so normalise.
+    if (typeof req.body === 'string') {
+      request = JSON.parse(req.body) as CreateAuthRequest;
+    } else if (Buffer.isBuffer(req.body)) {
+      request = JSON.parse(req.body.toString('utf8')) as CreateAuthRequest;
+    } else {
+      request = req.body as CreateAuthRequest;
+    }
   } catch (parseErr) {
     logE2eGenerateError({
       phase: 'body parse failed',

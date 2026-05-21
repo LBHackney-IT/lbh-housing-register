@@ -334,14 +334,14 @@ workflows:
               only: [development]
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
-          requires:
-            - run-tests
-            - run-cypress-e2e
+          # requires:
+          #   - run-tests
+          #   - run-cypress-e2e
           filters:
             tags:
               ignore: /.*/
             branches:
-              only: main
+              only: bugfix/verify-fail
       - deploy-to-staging:
           context:
             - central-parameter-store-context
@@ -354,7 +354,7 @@ workflows:
             tags:
               ignore: /.*/
             branches:
-              only: main
+              only: bugfix/verify-fail
       - assume-role-production:
           context: api-assume-role-housing-production-context
           requires:

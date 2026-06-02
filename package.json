@@ -89,7 +89,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "babel-jest": "^30.3.0",
-    "cypress": "^15.13.0",
+    "cypress": "^15.16.0",
     "cz-git": "^1.12.0",
     "czg": "^1.12.0",
     "eslint": "^9.17.0",

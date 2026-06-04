@@ -106,7 +106,7 @@ commands:
           paths:
             - .aws
   deploy-lambda:
-    description: 'Deploys lambda via Serverless'
+    description: 'Deploys OpenNext-built Lambda + S3 assets + CloudFront via Serverless'
     parameters:
       stage:
         type: enum
@@ -125,12 +125,33 @@ commands:
       - *attach_workspace
       - aws-cli/install
       - run:
-          name: Build and deploy lambda
+          name: Deploy lambda + S3 bucket + CloudFront via Serverless
           command: |
             npx --yes serverless@4 deploy \
+              --config serverless.yml \
               --stage <<parameters.stage>> \
               --param="centralAccount=${<<parameters.aws-central-parameter-account>>}" \
               --conceal
+      - run:
+          name: Sync static assets to S3 + invalidate CloudFront
+          command: |
+            STACK_NAME="housing-register-frontend-<<parameters.stage>>"
+            BUCKET=$(aws cloudformation describe-stacks \
+              --stack-name "$STACK_NAME" \
+              --query "Stacks[0].Outputs[?OutputKey=='AssetsBucketName'].OutputValue" \
+              --output text)
+            DIST=$(aws cloudformation describe-stacks \
+              --stack-name "$STACK_NAME" \
+              --query "Stacks[0].Outputs[?OutputKey=='CloudFrontDistributionId'].OutputValue" \
+              --output text)
+
+            aws s3 sync .open-next/assets "s3://$BUCKET/_assets" \
+              --cache-control "public,max-age=31536000,immutable" \
+              --no-progress
+
+            aws cloudfront create-invalidation \
+              --distribution-id "$DIST" \
+              --paths "/BUILD_ID" "/favicon.ico" "/images/*"
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Jobs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 jobs:
@@ -167,13 +188,25 @@ jobs:
       - checkout
       - node/install-packages
       - run:
-          name: Build Next application
-          command: npm run build
+          name: Build Next.js + OpenNext bundle
+          command: npm run build:opennext
+      - run:
+          # Lambda expects `index.handler` at the zip root, so we zip from
+          # *inside* the directory rather than including the path prefix.
+          name: Package Lambda artifact
+          command: |
+            mkdir build
+            cd .open-next/server-functions/default
+            zip -qr ../../../build/opennext-server.zip .
+            cd -
+            ls -sh build/opennext-server.zip
       - persist_to_workspace:
           root: '.'
           paths:
-            - build
-            - node_modules
+            - .next # used by run-cypress-e2e (next start)
+            - .open-next/assets # used by deploy (aws s3 sync)
+            - build/opennext-server.zip # used by deploy (serverless artifact)
+            - node_modules # used by run-cypress-e2e (next start)
   run-cypress-e2e:
     executor: node-executor
     resource_class: medium+

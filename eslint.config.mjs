@@ -20,7 +20,6 @@ export default tseslint.config(
       'next.config.js',
       'db/**',
       'mocks/**',
-      'lambda.js',
       'sentry.server.config.js',
       'sentry.edge.config.js',
       'commitlint.config.js',

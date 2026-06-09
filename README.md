@@ -155,6 +155,13 @@ Failed runs record video (see `cypress.config.ts`).
 
 Pushes to the `development` branch are automatically built and deployed to the development environment.
 
+### CI pipeline
+
+CircleCI (`.circleci/config.yml`) splits checks into **PR gates** and **post-merge integration gates**:
+
+- **PRs** (any branch): `build`, `run-tests` (Jest + Cypress component tests), and `sonar-scan`.
+- **After merge to `development` or `main`**, and on **release tags** (`hackney-housing-register-v*`): the full Cypress E2E matrix (`run-cypress-e2e`) runs before deploy. Deploy jobs require E2E to pass, but E2E is not a PR merge requirement.
+
 ### Release Please
 
 Automation uses **[`.github/workflows/release-please.yml`](.github/workflows/release-please.yml)** ([`googleapis/release-please-action`](https://github.com/googleapis/release-please-action)). Config lives in [`release-please-config.json`](release-please-config.json) and [`.release-please-manifest.json`](.release-please-manifest.json).

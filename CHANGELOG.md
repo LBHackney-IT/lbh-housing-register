@@ -1,5 +1,29 @@
 # Changelog
 
+## [2.2.1](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.2.0...hackney-housing-register-v2.2.1) (2026-06-02)
+
+
+### Bug Fixes
+
+* add headers to auth request ([90ee15f](https://github.com/LBHackney-IT/lbh-housing-register/commit/90ee15fffc9b4fcd4385f7ba351e555c5461a009))
+* handle auth gracefully ([ce1aec6](https://github.com/LBHackney-IT/lbh-housing-register/commit/ce1aec65fa91de3351e768a93da25a7b4dbd4759))
+* log body state ([7608d49](https://github.com/LBHackney-IT/lbh-housing-register/commit/7608d49d35637fccf1a105b8c47de2a149306e7e))
+* remove headers ([c5490da](https://github.com/LBHackney-IT/lbh-housing-register/commit/c5490da0a0b782aff03aac10e6b92a1493345d4e))
+* remove headers ([2f2272d](https://github.com/LBHackney-IT/lbh-housing-register/commit/2f2272d769f98c8915a5b231099503566ade3533))
+* remove testing branch ([a765c20](https://github.com/LBHackney-IT/lbh-housing-register/commit/a765c201192bbaea3c1d2076510a460992447d9f))
+* remove testing branch ([1e76007](https://github.com/LBHackney-IT/lbh-housing-register/commit/1e76007f4333941ce0a429a64ef0f9962f892720))
+* revert log used for testing ([45299a8](https://github.com/LBHackney-IT/lbh-housing-register/commit/45299a827c87c383f693f9f5a8a3c0be69759546))
+* revert testing branch ([7ba80e6](https://github.com/LBHackney-IT/lbh-housing-register/commit/7ba80e67e2d13b012b0ff8903eb3ab4b3f12e34b))
+* set headers on request ([b167e30](https://github.com/LBHackney-IT/lbh-housing-register/commit/b167e30707ae487205a43a7ced6519d979df3b2f))
+* temp log ([2ef938d](https://github.com/LBHackney-IT/lbh-housing-register/commit/2ef938dcb63c64fb1f37ff036bfce225f13b5d9f))
+* test for revert ([0baee74](https://github.com/LBHackney-IT/lbh-housing-register/commit/0baee74c58432cc949024263e63263e5eccfddaa))
+* test on branch ([8b35b7d](https://github.com/LBHackney-IT/lbh-housing-register/commit/8b35b7d8c9fea5e6be4fb037d33820e6d12d1e1a))
+
+
+### Reverts
+
+* revert branch used for ci testing ([c0448de](https://github.com/LBHackney-IT/lbh-housing-register/commit/c0448de07a2909aadf0394981f66c990998e28c0))
+
 ## [2.2.0](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.1.5...hackney-housing-register-v2.2.0) (2026-05-14)
 
 ### Features

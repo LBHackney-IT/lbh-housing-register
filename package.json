@@ -48,7 +48,7 @@
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
     "@reduxjs/toolkit": "^2.11.2",
-    "@sentry/nextjs": "^10.46.0",
+    "@sentry/nextjs": "^10.58.0",
     "axios": "^1.15.0",
     "cookie": "^1.1.1",
     "formik": "^2.4.9",

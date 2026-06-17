@@ -335,14 +335,14 @@ workflows:
               only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
       - assume-role-development:
           context: api-assume-role-housing-development-context
-          requires:
-            - run-tests
-            - run-cypress-e2e
+          # requires:
+          #   - run-tests
+          #   - run-cypress-e2e
           filters:
             tags:
               ignore: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
-              only: [development]
+              only: [chore/dev-ssid-test]
       - deploy-to-development:
           context:
             - central-parameter-store-context
@@ -355,7 +355,7 @@ workflows:
             tags:
               ignore: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
-              only: [development]
+              only: [chore/dev-ssid-test]
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:

@@ -108,7 +108,7 @@ resources:
           Ref: AssetsBucket
         PolicyDocument:
           Statement:
-            - Sid: TestAllowSSLRequestsOnly
+            - Sid: AllowSSLRequestsOnly
               Effect: Deny
               Principal:
                 AWS: '*'

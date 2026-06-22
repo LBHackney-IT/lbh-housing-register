@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.2](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.2.1...hackney-housing-register-v2.2.2) (2026-06-10)
+
+
+### Bug Fixes
+
+* use github action for node 24 ([28bd466](https://github.com/LBHackney-IT/lbh-housing-register/commit/28bd466b9ebb0803118d29fdcddfc928b2a86f8f))
+
 ## [2.2.1](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.2.0...hackney-housing-register-v2.2.1) (2026-06-02)
 
 

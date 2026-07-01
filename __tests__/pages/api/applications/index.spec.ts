@@ -4,6 +4,7 @@
 
 import { faker } from '@faker-js/faker';
 import { StatusCodes } from 'http-status-codes';
+import { createMocks, RequestOptions } from 'node-mocks-http';
 
 import { Application } from '../../../../domain/HousingApi';
 import * as applicationApi from '../../../../lib/gateways/applications-api';
@@ -50,15 +51,59 @@ const addApplicationSpy = jest
 
 describe('POST', () => {
   const parseSpy = jest.spyOn(JSON, 'parse');
-  const isStaffActionMock = (isStaffAction as jest.Mock).mockReturnValue(true);
-  const hasStaffPermissionsMock = (
-    hasStaffPermissions as jest.Mock
-  ).mockReturnValue(true);
-  const hasReadOnlyStaffPermissionsMock = (
-    hasReadOnlyStaffPermissions as jest.Mock
-  ).mockReturnValue(false);
+  const isStaffActionMock = isStaffAction as jest.Mock;
+  const hasStaffPermissionsMock = hasStaffPermissions as jest.Mock;
+  const hasReadOnlyStaffPermissionsMock =
+    hasReadOnlyStaffPermissions as jest.Mock;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    isStaffActionMock.mockReset();
+    hasStaffPermissionsMock.mockReset();
+    hasReadOnlyStaffPermissionsMock.mockReset();
+    isStaffActionMock.mockReturnValue(true);
+    hasStaffPermissionsMock.mockReturnValue(true);
+    hasReadOnlyStaffPermissionsMock.mockReturnValue(false);
+    addApplicationSpy.mockResolvedValue({ ...mockApplicationData });
+  });
 
   describe('authorization', () => {
+    it('returns 403 without calling the backend when the caller is not staff', async () => {
+      hasStaffPermissionsMock.mockReturnValue(false);
+
+      const { req, res } = createMocks({
+        method: 'POST',
+        body: mockRequestResponseParameters.requestBody as unknown as RequestOptions['body'],
+      });
+
+      await endpoint(req, res);
+
+      expect(addApplicationSpy).not.toHaveBeenCalled();
+      expect(parseSpy).not.toHaveBeenCalled();
+      expect(res.statusCode).toBe(StatusCodes.FORBIDDEN);
+      expect(res._getJSONData()).toStrictEqual({
+        message: 'Unable to add application',
+      });
+    });
+
+    it('returns 403 without calling the backend when the caller is read-only staff', async () => {
+      hasStaffPermissionsMock.mockReturnValue(true);
+      hasReadOnlyStaffPermissionsMock.mockReturnValue(true);
+
+      const { req, res } = generateMockRequestResponseWithHackneyToken(
+        mockRequestResponseParameters,
+      );
+
+      await endpoint(req, res);
+
+      expect(addApplicationSpy).not.toHaveBeenCalled();
+      expect(parseSpy).not.toHaveBeenCalled();
+      expect(res.statusCode).toBe(StatusCodes.FORBIDDEN);
+      expect(res._getJSONData()).toStrictEqual({
+        message: 'Unable to add application',
+      });
+    });
+
     it('calls parse on JSON with request body', async () => {
       const { req, res } = generateMockRequestResponseWithHackneyToken(
         mockRequestResponseParameters,
@@ -79,13 +124,13 @@ describe('POST', () => {
       await endpoint(req, res);
 
       expect(isStaffActionMock).toHaveBeenCalledWith(expectedApplication);
-      expect(hasStaffPermissionsMock).toHaveBeenCalledTimes(1);
+      expect(hasStaffPermissionsMock).toHaveBeenCalledTimes(2);
       expect(hasStaffPermissionsMock).toHaveBeenCalledWith(req);
-      expect(hasReadOnlyStaffPermissionsMock).toHaveBeenCalledTimes(1);
+      expect(hasReadOnlyStaffPermissionsMock).toHaveBeenCalledTimes(2);
       expect(hasReadOnlyStaffPermissionsMock).toHaveBeenCalledWith(req);
     });
 
-    it('sets response status code to 403 and adds an error message to the response when isStaffAction returns true and hasStaffPermissions returns false', async () => {
+    it('sets response status code to 403 when isStaffAction returns true and hasStaffPermissions returns false after parsing', async () => {
       const { req, res } = generateMockRequestResponseWithHackneyToken(
         mockRequestResponseParameters,
       );
@@ -94,7 +139,9 @@ describe('POST', () => {
       };
 
       isStaffActionMock.mockReturnValue(true);
-      hasStaffPermissionsMock.mockReturnValue(false);
+      hasStaffPermissionsMock
+        .mockReturnValueOnce(true)
+        .mockReturnValueOnce(false);
 
       await endpoint(req, res);
 
@@ -111,25 +158,12 @@ describe('POST', () => {
       };
 
       isStaffActionMock.mockReturnValue(true);
-      hasStaffPermissionsMock.mockReturnValue(false);
-      hasReadOnlyStaffPermissionsMock.mockReturnValue(true);
-
-      await endpoint(req, res);
-
-      expect(res.statusCode).toBe(StatusCodes.FORBIDDEN);
-      expect(res._getJSONData()).toStrictEqual(expectedErrorMessage);
-    });
-
-    it('sets response status code to 403 and adds an error message to the response when isStaffAction returns true and hasReadOnlyStaffPermissions returns true', async () => {
-      const { req, res } = generateMockRequestResponseWithHackneyToken(
-        mockRequestResponseParameters,
-      );
-      const expectedErrorMessage = {
-        message: 'Unable to add application with assessment',
-      };
-
-      isStaffActionMock.mockReturnValue(true);
-      hasReadOnlyStaffPermissionsMock.mockReturnValue(true);
+      hasStaffPermissionsMock
+        .mockReturnValueOnce(true)
+        .mockReturnValueOnce(false);
+      hasReadOnlyStaffPermissionsMock
+        .mockReturnValueOnce(false)
+        .mockReturnValueOnce(true);
 
       await endpoint(req, res);
 
@@ -150,7 +184,7 @@ describe('POST', () => {
       await endpoint(req, res);
 
       expect(addApplicationSpy).toHaveBeenCalledTimes(1);
-      expect(addApplicationSpy).toHaveBeenCalledWith(expectedApplication);
+      expect(addApplicationSpy).toHaveBeenCalledWith(expectedApplication, req);
     });
 
     it('sets response status code to 200 and returns application data when application was added successfully', async () => {

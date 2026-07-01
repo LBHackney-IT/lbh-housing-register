@@ -143,6 +143,21 @@ describe('POST /api/auth/verify', () => {
     });
   });
 
+  it('returns 400 when email format is invalid without calling the backend', async () => {
+    const { req, res }: { req: ApiRequest; res: ApiResponse } = createMocks({
+      method: 'POST',
+      body: { email: "' OR 1=1 --", code: '123456' },
+    });
+
+    await endpoint(req, res);
+
+    expect(confirmVerifyCodeMock).not.toHaveBeenCalled();
+    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
+    expect(res._getJSONData()).toStrictEqual({
+      message: 'Email address is not valid.',
+    });
+  });
+
   it('forwards the upstream status code when axios reports an error', async () => {
     const axiosError = new AxiosError(
       'Request failed with status code 404',

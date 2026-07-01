@@ -119,6 +119,21 @@ describe('POST', () => {
     },
   );
 
+  it('returns status code 400 without calling the backend when email format is invalid', async () => {
+    jsonParseSpy.mockReturnValueOnce({ email: "' OR 1=1 --" });
+
+    const { req, res }: { req: ApiRequest; res: ApiResponse } =
+      createMocks(requestOptions);
+
+    await endpoint(req, res);
+
+    expect(createVerifyCodeMock).not.toHaveBeenCalled();
+    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
+    expect(res._getJSONData()).toStrictEqual({
+      message: 'Email address is not valid.',
+    });
+  });
+
   it('preserves backend status code when createVerifyCode returns an axios error', async () => {
     jsonParseSpy.mockReturnValueOnce(mockCreateAuthRequest);
 

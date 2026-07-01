@@ -1,4 +1,5 @@
 import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
+import axios from 'axios';
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { CreateAuthRequest } from '../../../domain/HousingApi';
@@ -84,6 +85,14 @@ const endpoint: NextApiHandler = async (
       housingRegisterApiSet: Boolean(process.env.HOUSING_REGISTER_API),
       housingRegisterKeySet: Boolean(process.env.HOUSING_REGISTER_KEY),
     });
+
+    if (axios.isAxiosError(err) && err.response?.status) {
+      res
+        .status(err.response.status)
+        .json(err.response.data ?? { message: 'Unable to create verify code' });
+      return;
+    }
+
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ message: 'Unable to create verify code' });

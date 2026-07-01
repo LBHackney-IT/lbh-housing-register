@@ -17,11 +17,26 @@ const DISALLOWED_CHARACTERS = [
   ' ',
 ];
 
-/** Mirrors HousingRegisterApi AuthEmailValidator rules. */
-const EMAIL_FORMAT = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-
 function containsDisallowedCharacter(value: string): boolean {
   return DISALLOWED_CHARACTERS.some((character) => value.includes(character));
+}
+
+/** Mirrors HousingRegisterApi AuthEmailValidator + EmailAddressAttribute shape checks. */
+function hasValidEmailFormat(email: string): boolean {
+  const atIndex = email.indexOf('@');
+  const localPart = email.slice(0, atIndex);
+  const domainPart = email.slice(atIndex + 1);
+
+  if (localPart.length === 0 || domainPart.length === 0) {
+    return false;
+  }
+
+  const dotIndex = domainPart.indexOf('.');
+  if (dotIndex <= 0 || dotIndex >= domainPart.length - 1) {
+    return false;
+  }
+
+  return true;
 }
 
 export function isValidAuthEmail(email: unknown): email is string {
@@ -43,5 +58,5 @@ export function isValidAuthEmail(email: unknown): email is string {
     return false;
   }
 
-  return EMAIL_FORMAT.test(trimmed);
+  return hasValidEmailFormat(trimmed);
 }

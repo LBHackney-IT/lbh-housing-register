@@ -119,6 +119,38 @@ describe('POST', () => {
     },
   );
 
+  it('preserves backend status code when createVerifyCode returns an axios error', async () => {
+    jsonParseSpy.mockReturnValueOnce(mockCreateAuthRequest);
+
+    createVerifyCodeMock.mockRejectedValueOnce({
+      isAxiosError: true,
+      response: {
+        status: StatusCodes.NOT_FOUND,
+        data: {
+          message:
+            'Unable to generate a verification code for this email address.',
+        },
+      },
+    });
+
+    const reqOptions: RequestOptions = {
+      method: 'POST',
+      body: mockCreateAuthRequestBody as unknown as RequestOptions['body'],
+    };
+
+    const { req, res }: { req: ApiRequest; res: ApiResponse } =
+      createMocks(reqOptions);
+
+    await endpoint(req, res);
+
+    expect(jsonParseSpy).toHaveBeenCalledWith(req.body);
+    expect(createVerifyCodeMock).toHaveBeenCalledTimes(1);
+    expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
+    expect(res._getJSONData()).toEqual({
+      message: 'Unable to generate a verification code for this email address.',
+    });
+  });
+
   it('returns status code 500 when createVerifyCode fails', async () => {
     jsonParseSpy.mockReturnValueOnce(mockCreateAuthRequest);
 

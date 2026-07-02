@@ -7,8 +7,8 @@ import {
 import { Report } from './../../pages/applications/reports';
 import Paragraph from '../content/paragraph';
 import Announcement from '../announcement';
+import Dialog from 'lbh-frontend/dialog';
 import { HeadingTwo } from '../content/headings';
-import Dialog from '../dialog';
 
 interface NovaletReportsProps {
   reports: Report[];
@@ -148,8 +148,9 @@ export default function NovaletReports({
           <Dialog
             isOpen={confirmDialogOpen}
             title="Clicking the button below will sync the most recent report to novalet"
+            onDismiss={() => setConfirmDialogOpen(false)}
             onCancel={() => setConfirmDialogOpen(false)}
-            onCancelText="Cancel"
+            cancelText="Cancel"
           >
             <p className="lbh-body lbh-!-margin-top-1">
               Ensure you have reviewed{' '}

@@ -46,7 +46,6 @@
     ]
   },
   "dependencies": {
-    "@radix-ui/react-dialog": "^1.1.15",
     "@reduxjs/toolkit": "^2.11.2",
     "@sentry/nextjs": "^10.46.0",
     "axios": "^1.16.1",
@@ -54,7 +53,7 @@
     "formik": "^2.4.9",
     "http-status-codes": "^2.3.0",
     "jsonwebtoken": "^9.0.3",
-    "lbh-frontend": "^4.0.0",
+    "lbh-frontend": "^4.1.0",
     "lodash": "^4.17.21",
     "nested-object-diff": "^1.1.0",
     "next": "^16.2.6",

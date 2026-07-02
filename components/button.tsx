@@ -49,6 +49,8 @@ interface ButtonLinkProps extends ButtonProps {
   dataTestId?: string;
   svg?: ReactNode;
   additionalCssClasses?: string;
+  target?: string;
+  rel?: string;
 }
 
 export function ButtonLink({
@@ -59,6 +61,8 @@ export function ButtonLink({
   secondary,
   svg,
   additionalCssClasses,
+  target,
+  rel,
 }: ButtonLinkProps) {
   let className = 'govuk-button lbh-button';
 
@@ -87,6 +91,8 @@ export function ButtonLink({
       className={mergedClass}
       data-testid={dataTestId}
       draggable={false}
+      target={target}
+      rel={rel}
     >
       {children}
       {svg}

@@ -10,7 +10,7 @@ import {
   HorizontalNavItem,
 } from '../../../../../components/admin/HorizontalNav';
 import MedicalDetail from '../../../../../components/admin/medical-details';
-import Button from '../../../../../components/button';
+import { ButtonLink } from '../../../../../components/button';
 import { HeadingOne } from '../../../../../components/content/headings';
 import Paragraph from '../../../../../components/content/paragraph';
 import Layout from '../../../../../components/layout/staff-layout';
@@ -123,23 +123,22 @@ export default function ApplicationPersonPage({
                     className="govuk-grid-column-one-third"
                     style={{ textAlign: 'right' }}
                   >
-                    <a
-                      href={`${evidenceLink}/deeplink?searchTerm=${fullName}&groupId=${cleanUpParams(
-                        applicant?.person?.id ?? '',
-                      )}&name=${fullName}&phone=${cleanUpParams(
-                        applicant?.contactInformation?.phoneNumber ?? '',
-                      )}&email=${cleanUpParams(
-                        applicant?.contactInformation?.emailAddress ?? '',
-                      )}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {!userHasReadOnlyPermissionOnly && (
-                        <Button dataTestId="test-view-documents-button">
-                          View Documents
-                        </Button>
-                      )}
-                    </a>
+                    {!userHasReadOnlyPermissionOnly && !evidenceLink ? (
+                      <ButtonLink
+                        href={`${evidenceLink}/deeplink?searchTerm=${fullName}&groupId=${cleanUpParams(
+                          applicant?.person?.id ?? '',
+                        )}&name=${fullName}&phone=${cleanUpParams(
+                          applicant?.contactInformation?.phoneNumber ?? '',
+                        )}&email=${cleanUpParams(
+                          applicant?.contactInformation?.emailAddress ?? '',
+                        )}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        dataTestId="test-view-documents-button"
+                      >
+                        View Documents
+                      </ButtonLink>
+                    ) : null}
                   </div>
                 </div>
 

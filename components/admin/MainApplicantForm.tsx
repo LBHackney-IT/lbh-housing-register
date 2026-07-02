@@ -1,4 +1,11 @@
-import { Form, Formik, FormikTouched, FormikValues } from 'formik';
+import { useEffect } from 'react';
+import {
+  Form,
+  Formik,
+  FormikTouched,
+  FormikValues,
+  useFormikContext,
+} from 'formik';
 import { UserContext } from '../../lib/contexts/user-context';
 import Button from '../../components/button';
 import ErrorSummary from '../../components/errors/error-summary';
@@ -11,6 +18,9 @@ import {
   generateInitialValues,
   generateEditInitialValues,
   mainApplicantSchema,
+  validateAddCaseAddressHistory,
+  ADDRESS_HISTORY_FIELD,
+  type Address,
 } from '../../lib/utils/adminHelpers';
 import { formatFormikFieldError } from '../../lib/utils/formatFormikFieldError';
 import AddCaseSection from '../../components/admin/AddCaseSection';
@@ -81,6 +91,20 @@ const ethnicityOtherSection = getSectionData(
 );
 const additionalQuestionsSection = getSectionData(FormID.ADDITIONAL_QUESTIONS);
 
+function RevalidateOnAddressHistoryChange({
+  addressHistory,
+}: {
+  addressHistory: Address[];
+}) {
+  const { validateForm } = useFormikContext();
+
+  useEffect(() => {
+    void validateForm();
+  }, [addressHistory, validateForm]);
+
+  return null;
+}
+
 interface PageProps {
   isEditing: boolean;
   user: HackneyGoogleUser;
@@ -139,23 +163,41 @@ export default function MainApplicantForm({
             initialValues={initialValues}
             onSubmit={onSubmit}
             validationSchema={mainApplicantSchema}
+            validate={() => validateAddCaseAddressHistory(addressHistory)}
           >
             {({ touched, isSubmitting, errors, isValid }) => {
               const isTouched = Object.keys(touched).length !== 0;
+              const visibleErrors = Object.entries(errors).filter(
+                ([key, value]) =>
+                  Boolean(value) &&
+                  (key !== ADDRESS_HISTORY_FIELD ||
+                    addressHistory.length === 0),
+              );
+              const showValidationErrors =
+                isSubmitted && isTouched && visibleErrors.length > 0;
+              const addressError =
+                showValidationErrors && addressHistory.length === 0
+                  ? formatFormikFieldError(errors.addressHistory)
+                  : undefined;
+
               return (
                 <>
-                  {!isValid && isTouched && isSubmitted ? (
-                    <ErrorSummary title="There is a problem">
+                  <RevalidateOnAddressHistoryChange
+                    addressHistory={addressHistory}
+                  />
+                  {showValidationErrors ? (
+                    <ErrorSummary
+                      title="There is a problem"
+                      dataTestId="test-edit-main-applicant-error-summary"
+                    >
                       <ul className="govuk-list govuk-error-summary__list">
-                        {Object.entries(errors).map(
-                          ([inputName, errorTitle]) => (
-                            <li key={inputName}>
-                              <a href={`#${inputName}`}>
-                                {formatFormikFieldError(errorTitle)}
-                              </a>
-                            </li>
-                          ),
-                        )}
+                        {visibleErrors.map(([inputName, errorTitle]) => (
+                          <li key={inputName}>
+                            <a href={`#${inputName}`}>
+                              {formatFormikFieldError(errorTitle)}
+                            </a>
+                          </li>
+                        ))}
                       </ul>
                     </ErrorSummary>
                   ) : null}
@@ -172,6 +214,7 @@ export default function MainApplicantForm({
                     <AddCaseAddress
                       addresses={addressHistory}
                       setAddresses={setAddressHistory}
+                      error={addressError}
                     />
 
                     {/* Current accommodation */}

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import Dialog from 'lbh-frontend/dialog';
 import { Applicant } from '../../domain/HousingApi';
 import capitalize from '../../lib/utils/capitalize';
 import { formatDob } from '../../lib/utils/dateOfBirth';
@@ -7,7 +8,6 @@ import { getGenderName } from '../../lib/utils/gender';
 import { ButtonLink } from '../button';
 import { HeadingThree } from '../content/headings';
 import Paragraph from '../content/paragraph';
-import Dialog from '../dialog';
 
 interface SummaryProps {
   heading: string;
@@ -81,9 +81,10 @@ export default function OtherMembers({
                 <Dialog
                   isOpen={showDeleteWarningDialog && !userError}
                   title="Confirm delete"
-                  onConfirmation={() => handleDelete(applicantToDelete)}
+                  onDismiss={() => setShowDeleteWarningDialog(false)}
+                  onConfirm={() => handleDelete(applicantToDelete)}
                   onCancel={() => setShowDeleteWarningDialog(false)}
-                  confirmationButtonTestId={`test-remove-household-member-confirmation-button-${applicant.person?.id}`}
+                  confirmButtonTestId={`test-remove-household-member-confirmation-button-${applicant.person?.id}`}
                 >
                   <Paragraph>
                     Are you sure you want to remove{' '}

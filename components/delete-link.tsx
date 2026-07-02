@@ -1,6 +1,6 @@
 import { useState } from 'react';
+import Dialog from 'lbh-frontend/dialog';
 import Paragraph from '../components/content/paragraph';
-import Dialog from './dialog';
 
 interface DeleteLinkProps {
   content: string;
@@ -34,9 +34,10 @@ export default function DeleteLink({
       <Dialog
         isOpen={open}
         title="Are you sure?"
-        onConfirmation={onDelete}
+        onDismiss={() => setOpen(false)}
+        onConfirm={onDelete}
         onCancel={() => setOpen(false)}
-        confirmationButtonTestId={dialogConfirmButtonDataTestId}
+        confirmButtonTestId={dialogConfirmButtonDataTestId}
       >
         <Paragraph>{details}</Paragraph>
       </Dialog>

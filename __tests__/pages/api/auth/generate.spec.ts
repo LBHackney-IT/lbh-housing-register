@@ -120,7 +120,7 @@ describe('POST', () => {
   );
 
   it('returns status code 400 without calling the backend when email format is invalid', async () => {
-    jsonParseSpy.mockReturnValueOnce({ email: "' OR 1=1 --" });
+    jsonParseSpy.mockReturnValueOnce({ email: "' OR 1=1; --" });
 
     const { req, res }: { req: ApiRequest; res: ApiResponse } =
       createMocks(requestOptions);

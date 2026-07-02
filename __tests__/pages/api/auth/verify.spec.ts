@@ -146,7 +146,7 @@ describe('POST /api/auth/verify', () => {
   it('returns 400 when email format is invalid without calling the backend', async () => {
     const { req, res }: { req: ApiRequest; res: ApiResponse } = createMocks({
       method: 'POST',
-      body: { email: "' OR 1=1 --", code: '123456' },
+      body: { email: "' OR 1=1; --", code: '123456' },
     });
 
     await endpoint(req, res);

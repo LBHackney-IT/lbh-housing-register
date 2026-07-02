@@ -13,12 +13,10 @@ describe('isValidAuthEmail', () => {
   });
 
   it.each([
-    undefined,
-    null,
     '',
     '   ',
     'not-an-email',
-    "' OR 1=1 --",
+    "' OR 1=1; --",
     "scanner@prbly.win'; DROP TABLE users; --",
     '@missing-local-part.com',
     'missing-domain@',

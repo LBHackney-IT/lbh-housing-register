@@ -48,6 +48,20 @@ const endpoint: NextApiHandler = async (
     }
     case 'POST':
       try {
+        if (!hasStaffPermissions(req)) {
+          res
+            .status(StatusCodes.FORBIDDEN)
+            .json({ message: 'Unable to add application' });
+          break;
+        }
+
+        if (hasReadOnlyStaffPermissions(req)) {
+          res
+            .status(StatusCodes.FORBIDDEN)
+            .json({ message: 'Unable to add application' });
+          break;
+        }
+
         const application: Application = JSON.parse(req.body);
         if (
           isStaffAction(application) &&
@@ -57,7 +71,7 @@ const endpoint: NextApiHandler = async (
             .status(StatusCodes.FORBIDDEN)
             .json({ message: 'Unable to add application with assessment' });
         } else {
-          const data = await addApplication(application);
+          const data = await addApplication(application, req);
           res.status(StatusCodes.OK).json(data);
         }
       } catch {

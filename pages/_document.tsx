@@ -1,12 +1,31 @@
-import Document, { Html, Head, Main, NextScript } from 'next/document';
+import Document, {
+  DocumentContext,
+  Head,
+  Html,
+  Main,
+  NextScript,
+} from 'next/document';
 import Script from 'next/script';
 
 import { ReactElement } from 'react';
 
-const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
+type AppDocumentProps = {
+  gtmId?: string;
+};
 
-export default class AppDocument extends Document {
+export default class AppDocument extends Document<AppDocumentProps> {
+  static async getInitialProps(
+    ctx: DocumentContext,
+  ): Promise<
+    AppDocumentProps & Awaited<ReturnType<typeof Document.getInitialProps>>
+  > {
+    const initialProps = await Document.getInitialProps(ctx);
+
+    return { ...initialProps, gtmId: process.env.GTM_ID };
+  }
+
   render(): ReactElement {
+    const { gtmId } = this.props;
     return (
       <Html id="root" lang="en">
         <Head />

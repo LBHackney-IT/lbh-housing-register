@@ -128,3 +128,39 @@ export const completedApplicationFormSections = [
     id: 'income-savings/sectionCompleted',
   },
 ];
+
+export const sampleMainApplicantAddressHistory = [
+  {
+    address: {
+      line1: '18 Pitchford Street',
+      line2: '',
+      town: 'London',
+      county: '',
+      postcode: 'E154RX',
+    },
+    date: '2020-01-01T00:00:00.000Z',
+    dateTo: '2024-01-01T00:00:00.000Z',
+  },
+];
+
+export const withMainApplicantAddressHistory = (
+  application: Application,
+): Application => {
+  if (!application.mainApplicant) {
+    return application;
+  }
+
+  return {
+    ...application,
+    mainApplicant: {
+      ...application.mainApplicant,
+      questions: [
+        ...(application.mainApplicant.questions ?? []),
+        {
+          id: 'address-history/addressHistory',
+          answer: JSON.stringify(sampleMainApplicantAddressHistory),
+        },
+      ],
+    },
+  };
+};

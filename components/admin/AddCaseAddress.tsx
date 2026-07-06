@@ -8,16 +8,18 @@ import {
   SummaryListValue,
 } from '../summary-list';
 import FormGroup from '../form/form-group';
-import Dialog from '../dialog';
+import Dialog from 'lbh-frontend/dialog';
 import Paragraph from '../content/paragraph';
 import { HeadingThree, HeadingFour } from '../content/headings';
 import Button from '../button';
+import ErrorMessage from '../form/error-message';
 import { Address } from '../../lib/utils/adminHelpers';
 
 interface PageProps {
   addresses: Address[];
   setAddresses: React.Dispatch<React.SetStateAction<Address[]>>;
   maximumAddresses?: number;
+  error?: string;
 }
 
 const emptyAddress = {
@@ -43,6 +45,7 @@ export default function AddCaseAddress({
   addresses,
   setAddresses,
   maximumAddresses = 0,
+  error,
 }: PageProps): JSX.Element {
   const [addressDialogOpen, setAddressDialogOpen] = useState(false);
   const [addressInDialog, setAddressInDialog] = useState(emptyAddress);
@@ -131,108 +134,114 @@ export default function AddCaseAddress({
 
   return (
     <>
-      <SummaryListNoBorder>
-        <SummaryListRow>
-          <SummaryListKey>Address history</SummaryListKey>
-          <SummaryListValue>
-            <label htmlFor="addressHistory_addressFinder">
-              Address history
-            </label>
-          </SummaryListValue>
-          <SummaryListActions wideActions={true}>
-            {addresses
-              ? addresses.map((addressItem, index) => (
-                  <FormGroup key={index}>
-                    {index === 0 ? (
-                      <HeadingThree content="Current address" />
-                    ) : null}
-                    {index === 1 ? (
-                      <HeadingThree content="Previous addresses" />
-                    ) : null}
-                    <p className="lbh-body-s">
-                      {addressItem.address.line1 && (
-                        <>
-                          {addressItem.address.line1}
-                          <br />
-                        </>
-                      )}
-                      {addressItem.address.line2 && (
-                        <>
-                          {addressItem.address.line2}
-                          <br />
-                        </>
-                      )}
-                      {addressItem.address.town && (
-                        <>
-                          {addressItem.address.town}
-                          <br />
-                        </>
-                      )}
-                      {addressItem.address.county && (
-                        <>
-                          {addressItem.address.county}
-                          <br />
-                        </>
-                      )}
-                      {addressItem.address.postcode && (
-                        <>
-                          {addressItem.address.postcode}
-                          <br />
-                        </>
-                      )}
-                    </p>
-
-                    {addressItem.date && addressItem.dateTo && (
-                      <p className="lbh-body-s lbh-!-margin-top-1">
-                        {`${formatIsoDate(addressItem.date)} to ${formatIsoDate(
-                          addressItem.dateTo,
-                        )}`}
+      <div id="addressHistory">
+        <SummaryListNoBorder>
+          <SummaryListRow>
+            <SummaryListKey>Address history</SummaryListKey>
+            <SummaryListValue>
+              <label htmlFor="addressHistory_addressFinder">
+                Address history
+              </label>
+            </SummaryListValue>
+            <SummaryListActions wideActions={true}>
+              {addresses
+                ? addresses.map((addressItem, index) => (
+                    <FormGroup key={index}>
+                      {index === 0 ? (
+                        <HeadingThree content="Current address" />
+                      ) : null}
+                      {index === 1 ? (
+                        <HeadingThree content="Previous addresses" />
+                      ) : null}
+                      <p className="lbh-body-s">
+                        {addressItem.address.line1 && (
+                          <>
+                            {addressItem.address.line1}
+                            <br />
+                          </>
+                        )}
+                        {addressItem.address.line2 && (
+                          <>
+                            {addressItem.address.line2}
+                            <br />
+                          </>
+                        )}
+                        {addressItem.address.town && (
+                          <>
+                            {addressItem.address.town}
+                            <br />
+                          </>
+                        )}
+                        {addressItem.address.county && (
+                          <>
+                            {addressItem.address.county}
+                            <br />
+                          </>
+                        )}
+                        {addressItem.address.postcode && (
+                          <>
+                            {addressItem.address.postcode}
+                            <br />
+                          </>
+                        )}
                       </p>
-                    )}
 
-                    <p className="lbh-!-margin-top-1">
-                      <a
-                        className="lbh-link lbh-link--no-visited-state"
-                        href="#edit"
-                        onClick={() => editAddress(index)}
-                      >
-                        Edit
-                      </a>
-                      {' | '}
-                      <a
-                        className="lbh-link lbh-link--no-visited-state"
-                        href="#delete"
-                        onClick={() => deleteAddress(index)}
-                      >
-                        Delete
-                      </a>
-                    </p>
-                  </FormGroup>
-                ))
-              : null}
+                      {addressItem.date && addressItem.dateTo && (
+                        <p className="lbh-body-s lbh-!-margin-top-1">
+                          {`${formatIsoDate(addressItem.date)} to ${formatIsoDate(
+                            addressItem.dateTo,
+                          )}`}
+                        </p>
+                      )}
 
-            {maximumAddresses === 0 || addresses.length < maximumAddresses ? (
-              <button
-                className={`govuk-button lbh-button govuk-secondary lbh-button--secondary ${
-                  addresses.length === 0
-                    ? 'lbh-!-margin-top-0 '
-                    : 'govuk-secondary lbh-button--secondary'
-                }`}
-                onClick={addNewAddress}
-                data-testid="test-add-case-address-button"
-              >
-                Add address
-              </button>
-            ) : null}
-          </SummaryListActions>
-        </SummaryListRow>
-      </SummaryListNoBorder>
+                      <p className="lbh-!-margin-top-1">
+                        <a
+                          className="lbh-link lbh-link--no-visited-state"
+                          href="#edit"
+                          onClick={() => editAddress(index)}
+                        >
+                          Edit
+                        </a>
+                        {' | '}
+                        <a
+                          className="lbh-link lbh-link--no-visited-state"
+                          href="#delete"
+                          onClick={() => deleteAddress(index)}
+                        >
+                          Delete
+                        </a>
+                      </p>
+                    </FormGroup>
+                  ))
+                : null}
+
+              {maximumAddresses === 0 || addresses.length < maximumAddresses ? (
+                <FormGroup error={!!error}>
+                  {error ? <ErrorMessage message={error} /> : null}
+                  <button
+                    className={`govuk-button lbh-button govuk-secondary lbh-button--secondary ${
+                      addresses.length === 0
+                        ? 'lbh-!-margin-top-0 '
+                        : 'govuk-secondary lbh-button--secondary'
+                    }${error ? ' govuk-input--error' : ''}`}
+                    onClick={addNewAddress}
+                    data-testid="test-add-case-address-button"
+                  >
+                    Add address
+                  </button>
+                </FormGroup>
+              ) : null}
+            </SummaryListActions>
+          </SummaryListRow>
+        </SummaryListNoBorder>
+      </div>
 
       <Dialog
         isOpen={addressDialogOpen}
         title={`${isEditing ? 'Edit' : 'Add'} address`}
+        onDismiss={() => setAddressDialogOpen(false)}
         onCancel={() => setAddressDialogOpen(false)}
-        onCancelText="Close"
+        cancelText="Close"
       >
         <>
           <FormGroup>

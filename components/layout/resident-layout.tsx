@@ -7,9 +7,9 @@ import { exit } from '../../lib/store/auth';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { hasPhaseBanner } from '../../lib/utils/phase-banner';
 import Breadcrumbs, { BreadcrumbItem } from '../breadcrumbs';
+import Dialog from 'lbh-frontend/dialog';
 import CookieBanner from '../content/CookieBanner';
 import Paragraph from '../content/paragraph';
-import Dialog from '../dialog';
 import Footer from '../footer';
 import Header from '../header';
 import Loading from '../loading';
@@ -139,8 +139,9 @@ export default function ResidentLayout({
       <Dialog
         isOpen={showSignOutDialog}
         title="Sign out"
-        onConfirmation={handleStayLoggedIn}
-        onConfirmationText="Stay logged in"
+        onDismiss={handleStayLoggedIn}
+        onConfirm={handleStayLoggedIn}
+        confirmText="Stay logged in"
       >
         <Paragraph>
           Because there has been no input from you in the last 30 minutes you

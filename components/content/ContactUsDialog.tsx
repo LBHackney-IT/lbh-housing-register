@@ -1,5 +1,5 @@
+import Dialog from 'lbh-frontend/dialog';
 import { HeadingTwo } from './headings';
-import Dialog from '../dialog';
 
 interface ContactUsDialogProps {
   contactUsDialogOpen: boolean;
@@ -14,8 +14,9 @@ export default function ContactUsDialog({
     <Dialog
       isOpen={contactUsDialogOpen}
       title="Contact us"
+      onDismiss={() => setContactUsDialogOpen(false)}
       onCancel={() => setContactUsDialogOpen(false)}
-      onCancelText="Close"
+      cancelText="Close"
     >
       <HeadingTwo content="Call 020 8356 2929" />
       <p className="lbh-body-m">Open Monday to Friday, from 9am to 5pm.</p>

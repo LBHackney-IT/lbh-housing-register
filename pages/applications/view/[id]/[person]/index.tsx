@@ -10,11 +10,11 @@ import {
   HorizontalNavItem,
 } from '../../../../../components/admin/HorizontalNav';
 import MedicalDetail from '../../../../../components/admin/medical-details';
-import Button from '../../../../../components/button';
+import { ButtonLink } from '../../../../../components/button';
 import { HeadingOne } from '../../../../../components/content/headings';
 import Paragraph from '../../../../../components/content/paragraph';
 import Layout from '../../../../../components/layout/staff-layout';
-import { Application } from '../../../../../domain/HousingApi';
+import { Application, Applicant } from '../../../../../domain/HousingApi';
 import { UserContext } from '../../../../../lib/contexts/user-context';
 import { getApplication } from '../../../../../lib/gateways/applications-api';
 import {
@@ -41,6 +41,22 @@ interface PageProps {
   data: Application;
   person: string;
   evidenceLink: string;
+}
+
+function buildEvidenceStoreDeeplinkUrl(
+  evidenceLink: string,
+  applicant: Applicant | undefined,
+): string {
+  const encodeParam = (value: string) => encodeURIComponent(value.trim());
+  const fullName = `${encodeParam(applicant?.person?.firstName ?? '')}%20${encodeParam(
+    applicant?.person?.surname ?? '',
+  )}`;
+
+  return `${evidenceLink}/deeplink?searchTerm=${fullName}&groupId=${encodeParam(
+    applicant?.person?.id ?? '',
+  )}&name=${fullName}&phone=${encodeParam(
+    applicant?.contactInformation?.phoneNumber ?? '',
+  )}&email=${encodeParam(applicant?.contactInformation?.emailAddress ?? '')}`;
 }
 
 export default function ApplicationPersonPage({
@@ -84,12 +100,9 @@ export default function ApplicationPersonPage({
   const incomeAndSavings = incomeAndSavingsCheckboxList(applicant);
   const userHasReadOnlyPermissionOnly = hasReadOnlyPermissionOnly(user);
 
-  const cleanUpParams = (string: string) => {
-    return encodeURIComponent(string.trim());
-  };
-  const fullName = `${cleanUpParams(
-    applicant?.person?.firstName ?? '',
-  )}%20${cleanUpParams(applicant?.person?.surname ?? '')}`;
+  const viewDocumentsUrl = evidenceLink
+    ? buildEvidenceStoreDeeplinkUrl(evidenceLink, applicant)
+    : undefined;
 
   return (
     <>
@@ -123,23 +136,16 @@ export default function ApplicationPersonPage({
                     className="govuk-grid-column-one-third"
                     style={{ textAlign: 'right' }}
                   >
-                    <a
-                      href={`${evidenceLink}/deeplink?searchTerm=${fullName}&groupId=${cleanUpParams(
-                        applicant?.person?.id ?? '',
-                      )}&name=${fullName}&phone=${cleanUpParams(
-                        applicant?.contactInformation?.phoneNumber ?? '',
-                      )}&email=${cleanUpParams(
-                        applicant?.contactInformation?.emailAddress ?? '',
-                      )}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {!userHasReadOnlyPermissionOnly && (
-                        <Button dataTestId="test-view-documents-button">
-                          View Documents
-                        </Button>
-                      )}
-                    </a>
+                    {!userHasReadOnlyPermissionOnly && viewDocumentsUrl ? (
+                      <ButtonLink
+                        href={viewDocumentsUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        dataTestId="test-view-documents-button"
+                      >
+                        View Documents
+                      </ButtonLink>
+                    ) : null}
                   </div>
                 </div>
 

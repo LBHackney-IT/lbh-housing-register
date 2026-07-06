@@ -12,6 +12,11 @@ class AddCasePage {
     return this.getAddCasePage().find('button[type=submit]');
   }
 
+  static getErrorSummary() {
+    const testId = 'test-edit-main-applicant-error-summary';
+    return cy.get(`[data-testid="${testId}"], .govuk-error-summary`);
+  }
+
   static getTitleDropdown() {
     return this.getAddCasePage().find('#personalDetails_title');
   }

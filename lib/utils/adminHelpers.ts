@@ -22,6 +22,16 @@ export interface SectionData {
   sectionHeading: string | undefined;
 }
 
+export const ADDRESS_HISTORY_FIELD = 'addressHistory';
+
+export const validateAddCaseAddressHistory = (addresses: Address[]) => {
+  if (addresses.length === 0) {
+    return { [ADDRESS_HISTORY_FIELD]: 'Address is a required field' };
+  }
+
+  return {};
+};
+
 export const convertAddressToPrimary = (addressHistoryItem: Address) => {
   const { line1, line2, town, county, postcode } = addressHistoryItem.address;
   return {

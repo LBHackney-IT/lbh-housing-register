@@ -99,7 +99,7 @@ function RevalidateOnAddressHistoryChange({
   const { validateForm } = useFormikContext();
 
   useEffect(() => {
-    void validateForm();
+    validateForm().catch(() => undefined);
   }, [addressHistory, validateForm]);
 
   return null;

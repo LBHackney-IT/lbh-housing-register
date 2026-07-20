@@ -38,6 +38,14 @@ jest.mock('../../../../lib/gateways/applications-api', () => ({
   createVerifyCode: jest.fn(),
 }));
 
+jest.mock('../../../../lib/utils/users', () => ({
+  getUser: jest.fn(),
+}));
+
+import { getUser } from '../../../../lib/utils/users';
+
+const getUserMock = getUser as jest.Mock;
+
 describe('POST', () => {
   const jsonParseSpy = jest.spyOn(JSON, 'parse');
 
@@ -46,6 +54,8 @@ describe('POST', () => {
   beforeEach(() => {
     createVerifyCodeMock.mockRestore();
     jsonParseSpy.mockClear();
+    getUserMock.mockReset();
+    getUserMock.mockReturnValue(undefined);
   });
 
   const requestOptions: RequestOptions = {
@@ -53,6 +63,70 @@ describe('POST', () => {
     // createMocks accepts a JSON string body; `Body` typings omit `string`.
     body: mockCreateAuthRequestBody as unknown as RequestOptions['body'],
   };
+
+  it('returns status code 200 when the body is already parsed as an object', async () => {
+    createVerifyCodeMock.mockReturnValueOnce(mockCreateAuthResponse);
+
+    const { req, res }: { req: ApiRequest; res: ApiResponse } = createMocks({
+      method: 'POST',
+      body: mockCreateAuthRequest,
+    });
+
+    await endpoint(req, res);
+
+    expect(jsonParseSpy).not.toHaveBeenCalled();
+    expect(createVerifyCodeMock).toHaveBeenCalledWith(mockCreateAuthRequest);
+    expect(res.statusCode).toBe(StatusCodes.OK);
+    expect(res._getJSONData()).toStrictEqual(mockCreateAuthResponse);
+  });
+
+  it('returns status code 200 when the body is a Buffer', async () => {
+    createVerifyCodeMock.mockReturnValueOnce(mockCreateAuthResponse);
+
+    const { req, res }: { req: ApiRequest; res: ApiResponse } = createMocks({
+      method: 'POST',
+      body: Buffer.from(mockCreateAuthRequestBody, 'utf8'),
+    });
+
+    await endpoint(req, res);
+
+    expect(createVerifyCodeMock).toHaveBeenCalledWith(mockCreateAuthRequest);
+    expect(res.statusCode).toBe(StatusCodes.OK);
+    expect(res._getJSONData()).toStrictEqual(mockCreateAuthResponse);
+  });
+
+  it('forwards applicationId from the resident cookie when omitted from the body', async () => {
+    getUserMock.mockReturnValueOnce({
+      application_id: 'cookie-application-id',
+    });
+    createVerifyCodeMock.mockReturnValueOnce(mockCreateAuthResponse);
+
+    const { req, res }: { req: ApiRequest; res: ApiResponse } = createMocks({
+      method: 'POST',
+      body: mockCreateAuthRequest,
+    });
+
+    await endpoint(req, res);
+
+    expect(createVerifyCodeMock).toHaveBeenCalledWith({
+      ...mockCreateAuthRequest,
+      applicationId: 'cookie-application-id',
+    });
+    expect(res.statusCode).toBe(StatusCodes.OK);
+  });
+
+  it('returns status code 400 when JSON.parse succeeds but the body is null', async () => {
+    jsonParseSpy.mockReturnValueOnce(null);
+
+    const { req, res }: { req: ApiRequest; res: ApiResponse } =
+      createMocks(requestOptions);
+
+    await endpoint(req, res);
+
+    expect(createVerifyCodeMock).not.toHaveBeenCalled();
+    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
+    expect(res._getJSONData()).toStrictEqual({ message: 'Email is required' });
+  });
 
   it('returns status code 200 when JSON.parse succeeds and verify code is created successfully', async () => {
     jsonParseSpy.mockReturnValueOnce(mockCreateAuthRequest);
@@ -118,6 +192,53 @@ describe('POST', () => {
       });
     },
   );
+
+  it('returns status code 400 without calling the backend when email format is invalid', async () => {
+    jsonParseSpy.mockReturnValueOnce({ email: "' OR 1=1; --" });
+
+    const { req, res }: { req: ApiRequest; res: ApiResponse } =
+      createMocks(requestOptions);
+
+    await endpoint(req, res);
+
+    expect(createVerifyCodeMock).not.toHaveBeenCalled();
+    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
+    expect(res._getJSONData()).toStrictEqual({
+      message: 'Email address is not valid.',
+    });
+  });
+
+  it('preserves backend status code when createVerifyCode returns an axios error', async () => {
+    jsonParseSpy.mockReturnValueOnce(mockCreateAuthRequest);
+
+    createVerifyCodeMock.mockRejectedValueOnce({
+      isAxiosError: true,
+      response: {
+        status: StatusCodes.NOT_FOUND,
+        data: {
+          message:
+            'Unable to generate a verification code for this email address.',
+        },
+      },
+    });
+
+    const reqOptions: RequestOptions = {
+      method: 'POST',
+      body: mockCreateAuthRequestBody as unknown as RequestOptions['body'],
+    };
+
+    const { req, res }: { req: ApiRequest; res: ApiResponse } =
+      createMocks(reqOptions);
+
+    await endpoint(req, res);
+
+    expect(jsonParseSpy).toHaveBeenCalledWith(req.body);
+    expect(createVerifyCodeMock).toHaveBeenCalledTimes(1);
+    expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
+    expect(res._getJSONData()).toEqual({
+      message: 'Unable to generate a verification code for this email address.',
+    });
+  });
 
   it('returns status code 500 when createVerifyCode fails', async () => {
     jsonParseSpy.mockReturnValueOnce(mockCreateAuthRequest);

@@ -1,7 +1,9 @@
 import { faker } from '@faker-js/faker';
+import { faker as fakerEnGB } from '@faker-js/faker/locale/en_GB';
 
 import { Application } from 'domain/HousingApi';
 
+import { type Address } from '../lib/utils/adminHelpers';
 import { generatePerson } from './personHelper';
 
 export const generateApplication = (
@@ -128,3 +130,44 @@ export const completedApplicationFormSections = [
     id: 'income-savings/sectionCompleted',
   },
 ];
+
+export const generateSampleMainApplicantAddressHistory = (): Address[] => {
+  const dateFrom = faker.date.past({ years: 10 });
+  const dateTo = faker.date.between({ from: dateFrom, to: new Date() });
+
+  return [
+    {
+      address: {
+        line1: fakerEnGB.location.streetAddress(),
+        line2: fakerEnGB.location.secondaryAddress(),
+        town: fakerEnGB.location.city(),
+        county: fakerEnGB.location.county(),
+        postcode: fakerEnGB.location.zipCode(),
+      },
+      date: dateFrom.toISOString(),
+      dateTo: dateTo.toISOString(),
+    },
+  ];
+};
+
+export const withMainApplicantAddressHistory = (
+  application: Application,
+): Application => {
+  if (!application.mainApplicant) {
+    return application;
+  }
+
+  return {
+    ...application,
+    mainApplicant: {
+      ...application.mainApplicant,
+      questions: [
+        ...(application.mainApplicant.questions ?? []),
+        {
+          id: 'address-history/addressHistory',
+          answer: JSON.stringify(generateSampleMainApplicantAddressHistory()),
+        },
+      ],
+    },
+  };
+};

@@ -1,8 +1,13 @@
 import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
+import axios from 'axios';
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { CreateAuthRequest } from '../../../domain/HousingApi';
 import { createVerifyCode } from '../../../lib/gateways/applications-api';
+import {
+  INVALID_AUTH_EMAIL_MESSAGE,
+  isValidAuthEmail,
+} from '../../../lib/utils/auth-email-validator';
 import { getUser } from '../../../lib/utils/users';
 
 /** Verbose API errors for mocked e2e / CI — not during Jest (avoids noise and spy interference). */
@@ -65,12 +70,26 @@ const endpoint: NextApiHandler = async (
     return;
   }
 
+  if (!isValidAuthEmail(request.email)) {
+    logE2eGenerateError({
+      phase: 'validation failed',
+      reason: 'invalid email format',
+      bodyType: typeof req.body,
+    });
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: INVALID_AUTH_EMAIL_MESSAGE });
+    return;
+  }
+
+  const email = request.email.trim();
+
   try {
     // In local Cypress we pre-seed a resident token cookie with application_id.
     // Forward it so API can create/verify against the same application record.
     const cookieApplicationId = getUser(req)?.application_id;
     const requestWithApplicationId: CreateAuthRequest = {
-      ...request,
+      email,
       applicationId: request.applicationId ?? cookieApplicationId,
     };
 
@@ -84,6 +103,14 @@ const endpoint: NextApiHandler = async (
       housingRegisterApiSet: Boolean(process.env.HOUSING_REGISTER_API),
       housingRegisterKeySet: Boolean(process.env.HOUSING_REGISTER_KEY),
     });
+
+    if (axios.isAxiosError(err) && err.response?.status) {
+      res
+        .status(err.response.status)
+        .json(err.response.data ?? { message: 'Unable to create verify code' });
+      return;
+    }
+
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ message: 'Unable to create verify code' });

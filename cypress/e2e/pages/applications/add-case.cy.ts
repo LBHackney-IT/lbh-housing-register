@@ -38,6 +38,23 @@ describe('Add case', () => {
     cy.mockHousingRegisterApiGetApplications(applicationId, application);
   });
 
+  it('shows a validation error when address is missing', () => {
+    AddCasePage.visit();
+    AddCasePage.getTitleDropdown().select(title);
+    AddCasePage.getFirstNameInput().type(person.firstName);
+    AddCasePage.getLastNameInput().type(person.surname);
+    AddCasePage.getDoBDayInput().type(birthDate.getDate().toString());
+    AddCasePage.getDoBMonthInput().type((birthDate.getMonth() + 1).toString());
+    AddCasePage.getDoBYearInput().type(birthDate.getFullYear().toString());
+    AddCasePage.getGenderDropdown().select(person.gender);
+    AddCasePage.getLivingSituationDropdown().select('private-rental');
+    AddCasePage.getCitizenshipDropdown().select('british');
+    AddCasePage.getSubmitButton().click();
+
+    AddCasePage.getErrorSummary().should('be.visible');
+    cy.contains('Address is a required field');
+  });
+
   it('shows access denied page for user with read only permissions', () => {
     cy.clearAllCookies();
     cy.loginAsUser('readOnly');

@@ -33,7 +33,6 @@ describe('Sign in page, user not logged in', () => {
     SignInPage.getEmailInput().scrollIntoView().type(email);
     SignInPage.getSubmitButton().scrollIntoView().click();
 
-    //currently the API layer returns 500 regardless of the HR API response status
-    cy.contains('Unable to create verify code (500)');
+    cy.contains('Unable to create verify code (400)');
   });
 });

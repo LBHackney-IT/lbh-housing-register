@@ -121,9 +121,10 @@ export const getApplication = async (
 
 export const addApplication = async (
   application: Partial<Application>,
+  req: IncomingMessage,
 ): Promise<Application | null> => {
   const url = `applications`;
-  const { data } = await housingAxios().post(url, application);
+  const { data } = await authenticatedHousingAxios(req).post(url, application);
   return data;
 };
 

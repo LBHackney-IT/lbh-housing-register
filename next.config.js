@@ -8,6 +8,7 @@ const { withSentryConfig } = require('@sentry/nextjs');
 // @ts-check
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  transpilePackages: ['lbh-frontend'],
   // Disable compression at the Next level to avoid NS_ERROR_CORRUPTED_CONTENT.
   // CloudFront handles compression.
   compress: false,

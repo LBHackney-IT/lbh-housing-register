@@ -1,19 +1,17 @@
 import { faker } from '@faker-js/faker';
 import ApplicationEditPersonPage from '../../../../../../pages/applications/edit/[id]/person';
-import { generateApplication } from '../../../../../../../testUtils/applicationHelper';
+import {
+  generateApplication,
+  withMainApplicantAddressHistory,
+} from '../../../../../../../testUtils/applicationHelper';
 import ViewApplicationPage from '../../../../../../pages/viewApplication';
 import { StatusCodes } from 'http-status-codes';
 
 const applicationId = faker.string.uuid();
 const personId = faker.string.uuid();
 const submittedAt = faker.date.recent().toISOString();
-const application = generateApplication(
-  applicationId,
-  personId,
-  true,
-  false,
-  false,
-  submittedAt,
+const application = withMainApplicantAddressHistory(
+  generateApplication(applicationId, personId, true, false, false, submittedAt),
 );
 
 describe('Edit person in application', () => {

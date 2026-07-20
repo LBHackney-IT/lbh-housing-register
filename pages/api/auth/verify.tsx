@@ -4,6 +4,10 @@ import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import type { VerifyAuthRequest } from '../../../domain/HousingApi';
 import { confirmVerifyCode } from '../../../lib/gateways/applications-api';
+import {
+  INVALID_AUTH_EMAIL_MESSAGE,
+  isValidAuthEmail,
+} from '../../../lib/utils/auth-email-validator';
 import { setAuthCookie } from '../../../lib/utils/users';
 
 function parseVerifyBody(req: NextApiRequest): VerifyAuthRequest | null {
@@ -51,7 +55,19 @@ const endpoint: NextApiHandler = async (
           return;
         }
 
-        const data = await confirmVerifyCode(request);
+        if (!isValidAuthEmail(request.email)) {
+          res
+            .status(StatusCodes.BAD_REQUEST)
+            .json({ message: INVALID_AUTH_EMAIL_MESSAGE });
+          return;
+        }
+
+        const verifyRequest: VerifyAuthRequest = {
+          email: request.email.trim(),
+          code: request.code.trim(),
+        };
+
+        const data = await confirmVerifyCode(verifyRequest);
 
         // set cookie with access token (JWT)
         if (data) {

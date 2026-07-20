@@ -16,6 +16,7 @@ const customJestConfig = {
   coveragePathIgnorePatterns: ['/node_modules/', '/testUtils'],
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+    '^components/(.*)$': '<rootDir>/components/$1',
   },
   testEnvironment: 'jsdom',
   // Override next/jest SWC transform: Babel keeps exports configurable so jest.spyOn works on gateway modules.

@@ -108,17 +108,17 @@ resources:
           Ref: AssetsBucket
         PolicyDocument:
           Statement:
-            - Sid: AllowSSLRequestsOnly
-              Effect: Deny
-              Principal:
-                AWS: '*'
-              Action: 's3:*'
-              Resource:
-                - Fn::GetAtt: [AssetsBucket, Arn]
-                - Fn::Sub: '${AssetsBucket.Arn}/*'
-              Condition:
-                Bool:
-                  aws:SecureTransport: 'false'
+            # - Sid: AllowSSLRequestsOnly
+            #   Effect: Deny
+            #   Principal:
+            #     AWS: '*'
+            #   Action: 's3:*'
+            #   Resource:
+            #     - Fn::GetAtt: [AssetsBucket, Arn]
+            #     - Fn::Sub: '${AssetsBucket.Arn}/*'
+            #   Condition:
+            #     Bool:
+            #       aws:SecureTransport: 'false'
             - Sid: AllowCloudFrontServicePrincipalReadOnly
               Effect: Allow
               Principal:

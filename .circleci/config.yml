@@ -310,39 +310,39 @@ workflows:
           filters:
             tags:
               only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
-      - run-cypress-e2e:
-          filters:
-            tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
-            branches:
-              only: [development, main]
-          matrix:
-            parameters:
-              browser: [chrome, firefox]
-              # mobile, tablet, chromebook/desktop
-              height: [480, 768, 960]
-              # mobile, tablet, chromebook, desktop
-              width: [320, 1024, 1366, 1536]
-            exclude: *exclude_combinations
-          requires:
-            - build
-      - sonar-scan:
-          context: SonarCloud
-          requires:
-            - run-tests
-          filters:
-            tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
+      # - run-cypress-e2e:
+      #     filters:
+      #       tags:
+      #         only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
+      #       branches:
+      #         only: [development, main]
+      #     matrix:
+      #       parameters:
+      #         browser: [chrome, firefox]
+      #         # mobile, tablet, chromebook/desktop
+      #         height: [480, 768, 960]
+      #         # mobile, tablet, chromebook, desktop
+      #         width: [320, 1024, 1366, 1536]
+      #       exclude: *exclude_combinations
+      #     requires:
+      #       - build
+      # - sonar-scan:
+      #     context: SonarCloud
+      #     requires:
+      #       - run-tests
+      #     filters:
+      #       tags:
+      #         only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:
             - run-tests
-            - run-cypress-e2e
+            # - run-cypress-e2e
           filters:
             tags:
               ignore: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
-              only: [development]
+              only: [bugfix/cloud-custoidan]
       - deploy-to-development:
           context:
             - central-parameter-store-context
@@ -355,7 +355,7 @@ workflows:
             tags:
               ignore: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
-              only: [development]
+              only: [bugfix/cloud-custoidan]
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:

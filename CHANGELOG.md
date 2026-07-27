@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.3.0](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.2.2...hackney-housing-register-v2.3.0) (2026-07-20)
+
+
+### Features
+
+* handle 403 email address not allowed ([6827757](https://github.com/LBHackney-IT/lbh-housing-register/commit/6827757f393f5daf628d35da2095b092b45c778d))
+* protect applications route ([929c7b2](https://github.com/LBHackney-IT/lbh-housing-register/commit/929c7b2d7afe8b7bae21d376f3c8f46bb787db83))
+* protect POST route for applications to staff only ([63f8655](https://github.com/LBHackney-IT/lbh-housing-register/commit/63f8655b7e041cb8c998b276dbad62809274ea1b))
+
+
+### Bug Fixes
+
+* fix broken address validation ([d926cf3](https://github.com/LBHackney-IT/lbh-housing-register/commit/d926cf3e16cdb5010bfeeacca8df7c5b4be7f6d9))
+* fix broken address validation ([a65e580](https://github.com/LBHackney-IT/lbh-housing-register/commit/a65e580e37d7a0590286a80dec5e0d49e29b4843))
+* load GTM correctlly at runtime ([eecedda](https://github.com/LBHackney-IT/lbh-housing-register/commit/eecedda1cd6f9fc8def9ff1f09520e0785cb9f1d))
+* remove void use ([bbce20a](https://github.com/LBHackney-IT/lbh-housing-register/commit/bbce20a1e93c22fc32f4e205120909b42a626bc7))
+* simplify email checking regex for runtime speed ([2096336](https://github.com/LBHackney-IT/lbh-housing-register/commit/2096336f3923c4308090376880e8b028fc7720ec))
+
 ## [2.2.2](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.2.1...hackney-housing-register-v2.2.2) (2026-06-10)
 
 

@@ -56,7 +56,7 @@
     "lbh-frontend": "^4.1.0",
     "lodash": "^4.17.21",
     "nested-object-diff": "^1.1.0",
-    "next": "^16.2.6",
+    "next": "^16.2.12",
     "next-redux-wrapper": "8.0.0",
     "notifications-node-client": "^8.4.0",
     "react": "^19.0.0",

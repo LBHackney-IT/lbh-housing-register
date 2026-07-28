@@ -59,7 +59,6 @@ functions:
       NOTIFY_TEMPLATE_DISQUALIFY: ${ssm:arn:aws:ssm:eu-west-2:${param:centralAccount}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/notify-template-disqualify}
       NOTIFY_TEMPLATE_MEDICAL_NEED: ${ssm:arn:aws:ssm:eu-west-2:${param:centralAccount}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/notify-template-medical-need}
       NEXT_PUBLIC_EVIDENCE_STORE: ${ssm:arn:aws:ssm:eu-west-2:${param:centralAccount}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/evidence-store-url}
-      GTM_ID: ${ssm:arn:aws:ssm:eu-west-2:${param:centralAccount}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/gtm-id}
       HOUSING_REGISTER_KEY: ${ssm:/housing-register/${self:provider.stage}/housing-register-api-key}
       HACKNEY_JWT_SECRET: ${ssm:/housing-register/${self:provider.stage}/hackney-jwt-secret}
       LOOKUP_API_TOKEN: ${ssm:/housing-register/${self:provider.stage}/lookup-api-key}

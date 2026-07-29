@@ -6,7 +6,19 @@ import {
   sendDisqualifyEmail,
   sendMedicalNeedEmail,
 } from '../../../lib/gateways/notify-api';
+import { getApplication } from '../../../lib/gateways/applications-api';
+import {
+  buildDisqualifyNotifyRequest,
+  buildMedicalNeedNotifyRequest,
+  buildNewApplicationNotifyRequest,
+} from '../../../lib/utils/notifyRequestBuilders';
+import { getUser } from '../../../lib/utils/users';
 
+// This endpoint sends real emails via GOV.UK Notify, so it must not trust
+// client-supplied email/personalisation/reference values - a caller could
+// otherwise trigger arbitrary Hackney-branded emails to any address. Instead,
+// it authorises the caller against their own application (via their session)
+// and builds the entire NotifyRequest server-side from that stored record.
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse,
@@ -14,25 +26,43 @@ const endpoint: NextApiHandler = async (
   switch (req.method) {
     case 'POST':
       try {
-        const notification = JSON.parse(req.body);
+        const applicationId = getUser(req)?.application_id;
+        if (!applicationId) {
+          res
+            .status(StatusCodes.UNAUTHORIZED)
+            .json({ message: 'Unauthorized' });
+          break;
+        }
+
+        const application = await getApplication(applicationId);
+        if (!application) {
+          res
+            .status(StatusCodes.NOT_FOUND)
+            .json({ message: 'Application not found' });
+          break;
+        }
+
         const template = req.query.template as string;
 
         switch (template) {
           case 'new-application': {
-            const sendNewApplicationData =
-              await sendNewApplicationEmail(notification);
+            const sendNewApplicationData = await sendNewApplicationEmail(
+              buildNewApplicationNotifyRequest(application),
+            );
             res.status(StatusCodes.OK).json(sendNewApplicationData);
             break;
           }
           case 'medical': {
-            const sendMedicalEmailData =
-              await sendMedicalNeedEmail(notification);
+            const sendMedicalEmailData = await sendMedicalNeedEmail(
+              buildMedicalNeedNotifyRequest(application),
+            );
             res.status(StatusCodes.OK).json(sendMedicalEmailData);
             break;
           }
           case 'disqualify': {
-            const sendDisqualifyEmailData =
-              await sendDisqualifyEmail(notification);
+            const sendDisqualifyEmailData = await sendDisqualifyEmail(
+              buildDisqualifyNotifyRequest(application),
+            );
             res.status(StatusCodes.OK).json(sendDisqualifyEmailData);
             break;
           }

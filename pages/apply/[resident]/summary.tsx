@@ -24,7 +24,6 @@ import { isOver18 } from '../../../lib/utils/dateOfBirth';
 import { FormID } from '../../../lib/utils/form-data';
 import withApplication from '../../../lib/hoc/withApplication';
 import { removeApplicant } from '../../../lib/store/otherMembers';
-import { getDisqualificationReasonOption } from '../../../lib/utils/disqualificationReasonOptions';
 import {
   disqualifyApplication,
   sendDisqualifyEmail,
@@ -80,16 +79,11 @@ const UserSummary = (): JSX.Element => {
   }
 
   const onConfirmData = async () => {
-    const [isEligible, reasons] = checkEligible(application);
+    const [isEligible] = checkEligible(application);
     if (!isEligible) {
-      const reasonStrings = reasons.map((reason) =>
-        getDisqualificationReasonOption(reason),
-      );
-      const reason = reasonStrings.join(',');
-
       try {
         setIsSaving(true);
-        await dispatch(sendDisqualifyEmail({ application, reason }));
+        await dispatch(sendDisqualifyEmail());
         await dispatch(disqualifyApplication(application.id!)).unwrap();
         router.push('/apply/not-eligible');
       } catch {

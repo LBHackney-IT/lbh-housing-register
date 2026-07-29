@@ -41,8 +41,24 @@ function normalizeHostname(hostname: string): string {
  * network, not to fail loudly - so mocks should match on path only (not on
  * request body) and rely on this capture log for body assertions, rather
  * than on registering a deliberately-non-matching interceptor.
+ *
+ * Stored on `globalThis` rather than as a module-level variable: each
+ * `pages/api/**` route is bundled by Next.js as its own server chunk, so a
+ * plain module-level array here would give `/api/e2e/nock` (where requests
+ * are captured) and `/api/e2e/captured-requests` (where they're read back)
+ * *different* instances of this module, despite running in the same Node.js
+ * process. `globalThis` is the one thing genuinely shared across bundles.
  */
-const capturedRequests: CapturedE2eRequest[] = [];
+declare global {
+  var __e2eCapturedRequests: CapturedE2eRequest[] | undefined;
+}
+
+function getCaptureStore(): CapturedE2eRequest[] {
+  if (!globalThis.__e2eCapturedRequests) {
+    globalThis.__e2eCapturedRequests = [];
+  }
+  return globalThis.__e2eCapturedRequests;
+}
 
 export function getCapturedE2eRequests(
   hostname: string,
@@ -51,7 +67,7 @@ export function getCapturedE2eRequests(
 ): CapturedE2eRequest[] {
   const normalizedHostname = normalizeHostname(hostname);
   const normalizedMethod = method.toLowerCase();
-  return capturedRequests.filter(
+  return getCaptureStore().filter(
     (request) =>
       request.hostname === normalizedHostname &&
       request.method === normalizedMethod &&
@@ -99,7 +115,7 @@ export function registerE2eNockMock(input: E2eNockRegisterPayload): void {
   interceptor
     .delay(delay)
     .reply(status, (_uri: string, requestBody: unknown) => {
-      capturedRequests.push({
+      getCaptureStore().push({
         hostname,
         method,
         path,
@@ -114,5 +130,5 @@ export function registerE2eNockMock(input: E2eNockRegisterPayload): void {
 export function clearE2eNockMocks(): void {
   nock.restore();
   nock.cleanAll();
-  capturedRequests.length = 0;
+  globalThis.__e2eCapturedRequests = [];
 }

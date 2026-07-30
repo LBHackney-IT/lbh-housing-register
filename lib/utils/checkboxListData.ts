@@ -140,15 +140,22 @@ const ethnicityExtendedCategoryString = (applicant?: Applicant) => {
     return 'N/A';
   }
 
+  // Answers are stored via JSON.stringify, so an unanswered question is
+  // persisted as the string "null" - truthy as a string, but JSON.parse
+  // returns the JS value `null`.
   const ethnicityExtendedCategory = JSON.parse(
     ethnicityExtendedCategoryQuestion.answer!,
   );
 
-  if (ethnicityExtendedCategory) {
-    return ethnicityCategoryOptions.filter(
-      (option) => option.value === ethnicityExtendedCategory,
-    )[0].label;
+  if (!ethnicityExtendedCategory) {
+    return 'N/A';
   }
+
+  return (
+    ethnicityCategoryOptions.find(
+      (option) => option.value === ethnicityExtendedCategory,
+    )?.label ?? 'N/A'
+  );
 };
 
 export const personalDetailsCheckboxList = (
@@ -307,12 +314,16 @@ export const residentialStatusCheckboxList = (
 ): CheckBoxListPageProps => {
   const institutions = questionLookup(
     QuestionKey.RESIDENTIAL_STATUS_INSTITUTIONS,
+    applicant,
   );
 
   let institutionsText = '';
-  if (institutions) {
-    const institutionsArray = JSON.parse(institutions);
-    institutionsArray.map((item: string) => {
+  // Answers are stored via JSON.stringify, so an unanswered question is
+  // persisted as the string "null" - truthy as a string, but JSON.parse
+  // returns the JS value `null`, not an array.
+  const institutionsArray = institutions ? JSON.parse(institutions) : null;
+  if (Array.isArray(institutionsArray) && institutionsArray.length > 0) {
+    institutionsArray.forEach((item: string) => {
       institutionsText += item;
     });
   } else {
@@ -458,10 +469,15 @@ export const addressHistoryCheckboxList = (
     data: [],
   };
 
-  if (addressHistory) {
-    //Address Line one, Hackney, London, E8 1AB, From Jan 2021 (6 months)
-    const addressHistorysArray = JSON.parse(addressHistory);
+  // Answers are stored via JSON.stringify, so an unanswered question is
+  // persisted as the string "null" - truthy as a string, but JSON.parse
+  // returns the JS value `null`, not an array.
+  const addressHistorysArray = addressHistory
+    ? JSON.parse(addressHistory)
+    : null;
 
+  if (Array.isArray(addressHistorysArray) && addressHistorysArray.length > 0) {
+    //Address Line one, Hackney, London, E8 1AB, From Jan 2021 (6 months)
     const durations = calculateDurations(addressHistorysArray);
     const history = addressHistorysArray.map(
       (historyEntry: AddressHistoryEntry, index: number) => {

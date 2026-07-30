@@ -3,6 +3,7 @@ import { CheckBoxListPageProps } from '../../components/admin/checkbox-list';
 import {
   questionLookup,
   getQuestionValue,
+  jsonParse,
 } from '../../lib/utils/applicationQuestions';
 import { QuestionKey } from './question-data';
 import {
@@ -121,7 +122,7 @@ const ethnicityExtendedCategoryString = (applicant?: Applicant) => {
   const JsonStringEthnicityCategory =
     questionLookup(QuestionKey.ETHNICITY_MAIN_CATEGORY, applicant) || '""';
 
-  const ethnicityCategory = JSON.parse(JsonStringEthnicityCategory);
+  const ethnicityCategory = jsonParse(JsonStringEthnicityCategory);
 
   if (!ethnicityCategory) {
     return 'N/A';
@@ -131,20 +132,21 @@ const ethnicityExtendedCategoryString = (applicant?: Applicant) => {
     return 'Prefer not to say';
   }
 
-  const ethnicityExtendedCategoryQuestion = applicant?.questions?.filter(
+  const ethnicityExtendedCategoryQuestion = applicant?.questions?.find(
     (question) =>
       question.id?.includes(`ethnicity-extended-category-${ethnicityCategory}`),
-  )[0];
+  );
 
   if (!ethnicityExtendedCategoryQuestion) {
     return 'N/A';
   }
 
   // Answers are stored via JSON.stringify, so an unanswered question is
-  // persisted as the string "null" - truthy as a string, but JSON.parse
-  // returns the JS value `null`.
-  const ethnicityExtendedCategory = JSON.parse(
-    ethnicityExtendedCategoryQuestion.answer!,
+  // persisted as the string "null" - truthy as a string, but parses back
+  // to the JS value `null`. jsonParse also tolerates a missing answer
+  // (Question.answer is optional) without the previous `answer!` assertion.
+  const ethnicityExtendedCategory = jsonParse(
+    ethnicityExtendedCategoryQuestion.answer,
   );
 
   if (!ethnicityExtendedCategory) {
@@ -319,9 +321,9 @@ export const residentialStatusCheckboxList = (
 
   let institutionsText = '';
   // Answers are stored via JSON.stringify, so an unanswered question is
-  // persisted as the string "null" - truthy as a string, but JSON.parse
-  // returns the JS value `null`, not an array.
-  const institutionsArray = institutions ? JSON.parse(institutions) : null;
+  // persisted as the string "null" - truthy as a string, but parses back
+  // to the JS value `null`, not an array. jsonParse also swallows invalid JSON.
+  const institutionsArray = institutions ? jsonParse(institutions) : null;
   if (Array.isArray(institutionsArray) && institutionsArray.length > 0) {
     institutionsArray.forEach((item: string) => {
       institutionsText += item;
@@ -470,10 +472,10 @@ export const addressHistoryCheckboxList = (
   };
 
   // Answers are stored via JSON.stringify, so an unanswered question is
-  // persisted as the string "null" - truthy as a string, but JSON.parse
-  // returns the JS value `null`, not an array.
+  // persisted as the string "null" - truthy as a string, but parses back
+  // to the JS value `null`, not an array. jsonParse also swallows invalid JSON.
   const addressHistorysArray = addressHistory
-    ? JSON.parse(addressHistory)
+    ? jsonParse(addressHistory)
     : null;
 
   if (Array.isArray(addressHistorysArray) && addressHistorysArray.length > 0) {

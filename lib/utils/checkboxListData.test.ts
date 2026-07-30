@@ -113,6 +113,32 @@ describe('personalDetailsCheckboxList - ethnicity', () => {
     expect(rowValue(list, 'Ethnicity')).toBe('N/A');
   });
 
+  test('renders N/A rather than throwing when the extended category answer is missing', () => {
+    const applicant = {
+      questions: [
+        { id: QuestionKey.ETHNICITY_MAIN_CATEGORY, answer: '"asian"' },
+        // Domain type allows answer to be optional - previously forced through
+        // with `answer!` which would make JSON.parse(undefined) throw.
+        { id: 'ethnicity-extended-category-asian' },
+      ],
+    } as Applicant;
+    expect(() => personalDetailsCheckboxList(applicant)).not.toThrow();
+    expect(rowValue(personalDetailsCheckboxList(applicant), 'Ethnicity')).toBe(
+      'N/A',
+    );
+  });
+
+  test('renders N/A rather than throwing when the extended category answer is invalid JSON', () => {
+    const applicant = applicantWithQuestions([
+      { id: QuestionKey.ETHNICITY_MAIN_CATEGORY, answer: '"asian"' },
+      { id: 'ethnicity-extended-category-asian', answer: 'not-valid-json' },
+    ]);
+    expect(() => personalDetailsCheckboxList(applicant)).not.toThrow();
+    expect(rowValue(personalDetailsCheckboxList(applicant), 'Ethnicity')).toBe(
+      'N/A',
+    );
+  });
+
   test('renders N/A rather than throwing when the extended category answer does not match any known option', () => {
     const applicant = applicantWithQuestions([
       { id: QuestionKey.ETHNICITY_MAIN_CATEGORY, answer: '"asian"' },

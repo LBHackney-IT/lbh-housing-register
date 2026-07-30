@@ -21,6 +21,12 @@ describe('jsonParse', () => {
   test('falls back to an empty string on invalid JSON', () => {
     expect(jsonParse('not valid json')).toBe('');
   });
+
+  test('falls back to an empty string when the input is nullish or empty', () => {
+    expect(jsonParse(undefined)).toBe('');
+    expect(jsonParse(null)).toBe('');
+    expect(jsonParse('')).toBe('');
+  });
 });
 
 describe('getQuestionValue', () => {

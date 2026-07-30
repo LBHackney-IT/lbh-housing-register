@@ -16,7 +16,14 @@ export const questionLookup = (
   return applicant?.questions?.find((q) => q.id === questionId)?.answer;
 };
 
-export const jsonParse = (parseItem: string): unknown => {
+export const jsonParse = (parseItem: string | undefined | null): unknown => {
+  // Question.answer is optional on the domain type, and callers previously
+  // papered over that with `answer!` before handing it to JSON.parse - which
+  // would coerce undefined to the string "undefined" and throw a SyntaxError.
+  if (parseItem == null || parseItem === '') {
+    return '';
+  }
+
   try {
     return JSON.parse(parseItem);
   } catch {

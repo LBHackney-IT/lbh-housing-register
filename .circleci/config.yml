@@ -227,6 +227,7 @@ jobs:
       AUTHORISED_MANAGER_GROUP: 'cypress-authorised-manager-group'
       AUTHORISED_OFFICER_GROUP: 'cypress-authorised-officer-group'
       AUTHORISED_READONLY_GROUP: 'cypress-authorised-readonly-group'
+      NOTIFY_API_KEY: 'testing'
       # 127.0.0.1 avoids IPv6 localhost (::1) vs nock/axios scope mismatches in Docker.
       HOUSING_REGISTER_API: 'http://127.0.0.1:3910/api/v1/'
       HOUSING_REGISTER_KEY: 'testing'

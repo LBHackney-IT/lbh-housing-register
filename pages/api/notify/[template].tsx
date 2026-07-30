@@ -6,33 +6,83 @@ import {
   sendDisqualifyEmail,
   sendMedicalNeedEmail,
 } from '../../../lib/gateways/notify-api';
+import { getApplication } from '../../../lib/gateways/applications-api';
+import {
+  buildDisqualifyNotifyRequest,
+  buildMedicalNeedNotifyRequest,
+  buildNewApplicationNotifyRequest,
+} from '../../../lib/utils/notifyRequestBuilders';
+import { getUser } from '../../../lib/utils/users';
 
+// This endpoint sends real emails via GOV.UK Notify, so it must not trust
+// client-supplied email/personalisation/reference values - a caller could
+// otherwise trigger arbitrary Hackney-branded emails to any address. Instead,
+// it authorises the caller against their own application (via their session)
+// and builds the entire NotifyRequest server-side from that stored record.
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
   switch (req.method) {
-    case 'POST':
+    case 'POST': {
+      let application: Awaited<ReturnType<typeof getApplication>>;
+
       try {
-        const notification = JSON.parse(req.body);
+        const applicationId = getUser(req)?.application_id;
+        if (!applicationId) {
+          res
+            .status(StatusCodes.UNAUTHORIZED)
+            .json({ message: 'Unauthorized' });
+          break;
+        }
+
+        application = await getApplication(applicationId);
+      } catch (error) {
+        console.error('Unable to load application for Notify', error);
+        res
+          .status(StatusCodes.INTERNAL_SERVER_ERROR)
+          .json({ message: 'Unable to load application' });
+        break;
+      }
+
+      if (!application) {
+        res
+          .status(StatusCodes.NOT_FOUND)
+          .json({ message: 'Application not found' });
+        break;
+      }
+
+      const emailAddress =
+        application.mainApplicant?.contactInformation?.emailAddress;
+      if (!emailAddress?.trim()) {
+        res
+          .status(StatusCodes.UNPROCESSABLE_ENTITY)
+          .json({ message: 'Application has no email address' });
+        break;
+      }
+
+      try {
         const template = req.query.template as string;
 
         switch (template) {
           case 'new-application': {
-            const sendNewApplicationData =
-              await sendNewApplicationEmail(notification);
+            const sendNewApplicationData = await sendNewApplicationEmail(
+              buildNewApplicationNotifyRequest(application),
+            );
             res.status(StatusCodes.OK).json(sendNewApplicationData);
             break;
           }
           case 'medical': {
-            const sendMedicalEmailData =
-              await sendMedicalNeedEmail(notification);
+            const sendMedicalEmailData = await sendMedicalNeedEmail(
+              buildMedicalNeedNotifyRequest(application),
+            );
             res.status(StatusCodes.OK).json(sendMedicalEmailData);
             break;
           }
           case 'disqualify': {
-            const sendDisqualifyEmailData =
-              await sendDisqualifyEmail(notification);
+            const sendDisqualifyEmailData = await sendDisqualifyEmail(
+              buildDisqualifyNotifyRequest(application),
+            );
             res.status(StatusCodes.OK).json(sendDisqualifyEmailData);
             break;
           }
@@ -43,17 +93,19 @@ const endpoint: NextApiHandler = async (
             break;
         }
       } catch (error) {
-        console.error(error);
+        console.error('Unable to send Notify email', error);
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
           .json({ message: 'Unable to send email' });
       }
       break;
+    }
 
     default:
       res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: 'Invalid request method' });
+        .setHeader('Allow', 'POST')
+        .status(StatusCodes.METHOD_NOT_ALLOWED)
+        .json({ message: 'Method not allowed' });
   }
 };
 

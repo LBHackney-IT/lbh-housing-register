@@ -1,5 +1,14 @@
+import * as Sentry from '@sentry/nextjs';
 import { NotifyRequest, NotifyResponse } from '../../domain/govukNotify';
 import { NotifyClient } from 'notifications-node-client';
+
+// Attaches the exact NotifyRequest that was sent to the failing exception
+// itself (rather than relying on `console.error` + breadcrumbs), so the
+// payload that caused a Notify failure is always visible on the event,
+// regardless of breadcrumb/scope isolation health.
+function captureNotifyError(err: unknown, request: NotifyRequest) {
+  Sentry.captureException(err, { extra: { notifyRequest: request } });
+}
 
 export const sendNewApplicationEmail = async (
   request: NotifyRequest,
@@ -15,7 +24,7 @@ export const sendNewApplicationEmail = async (
       },
     )
     .then((response: NotifyResponse) => console.log(response))
-    .catch((err: NotifyResponse) => console.error(err));
+    .catch((err: NotifyResponse) => captureNotifyError(err, request));
 
   return response as NotifyResponse;
 };
@@ -30,7 +39,7 @@ export const sendMedicalNeedEmail = async (
       reference: request.reference,
     })
     .then((response: NotifyResponse) => console.log(response))
-    .catch((err: NotifyResponse) => console.error(err));
+    .catch((err: NotifyResponse) => captureNotifyError(err, request));
 
   return response as NotifyResponse;
 };
@@ -45,7 +54,7 @@ export const sendDisqualifyEmail = async (
       reference: request.reference,
     })
     .then((response: NotifyResponse) => console.log(response))
-    .catch((err: NotifyResponse) => console.error(err));
+    .catch((err: NotifyResponse) => captureNotifyError(err, request));
 
   return response as NotifyResponse;
 };

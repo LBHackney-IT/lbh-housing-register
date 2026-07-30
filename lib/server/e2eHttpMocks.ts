@@ -12,12 +12,67 @@ export type E2eNockRegisterPayload = {
   delay?: number;
 };
 
+export type CapturedE2eRequest = {
+  hostname: string;
+  method: string;
+  path: string;
+  body: unknown;
+  at: number;
+};
+
 function normalizeHostname(hostname: string): string {
   const trimmed = hostname.trim().replaceAll(/^['"]|['"]$/g, '');
   if (!trimmed) {
     throw new TypeError('E2E nock: hostname is required');
   }
   return trimmed;
+}
+
+/**
+ * Requests matched by any registered mock, most-recent last. Lets tests
+ * assert on *what* the server actually sent to a mocked dependency (e.g.
+ * GOV.UK Notify) rather than only on the response status. This matters
+ * because some callers (see `lib/gateways/notify-api.ts`) deliberately
+ * swallow the downstream response/error and always report success upstream,
+ * so the caller's HTTP status can't be used to infer what was sent.
+ *
+ * Note: nock's default behaviour for a request that doesn't match *any*
+ * registered interceptor for a mocked host is to fall through to the real
+ * network, not to fail loudly - so mocks should match on path only (not on
+ * request body) and rely on this capture log for body assertions, rather
+ * than on registering a deliberately-non-matching interceptor.
+ *
+ * Stored on `globalThis` rather than as a module-level variable: each
+ * `pages/api/**` route is bundled by Next.js as its own server chunk, so a
+ * plain module-level array here would give `/api/e2e/nock` (where requests
+ * are captured) and `/api/e2e/captured-requests` (where they're read back)
+ * *different* instances of this module, despite running in the same Node.js
+ * process. `globalThis` is the one thing genuinely shared across bundles.
+ */
+declare global {
+  var __e2eCapturedRequests: CapturedE2eRequest[] | undefined;
+}
+
+function getCaptureStore(): CapturedE2eRequest[] {
+  if (!globalThis.__e2eCapturedRequests) {
+    globalThis.__e2eCapturedRequests = [];
+  }
+  return globalThis.__e2eCapturedRequests;
+}
+
+export function getCapturedE2eRequests(
+  hostname: string,
+  method: string,
+  path: string,
+): CapturedE2eRequest[] {
+  const normalizedHostname = normalizeHostname(hostname);
+  const normalizedMethod = method.toLowerCase();
+  return getCaptureStore().filter(
+    (request) =>
+      request.hostname === normalizedHostname &&
+      request.method === normalizedMethod &&
+      request.path === path,
+  );
 }
 
 /**
@@ -59,11 +114,21 @@ export function registerE2eNockMock(input: E2eNockRegisterPayload): void {
 
   interceptor
     .delay(delay)
-    .reply(status, input.body as nock.Body)
+    .reply(status, (_uri: string, requestBody: unknown) => {
+      getCaptureStore().push({
+        hostname,
+        method,
+        path,
+        body: requestBody,
+        at: Date.now(),
+      });
+      return input.body as nock.Body;
+    })
     .persist(!!input.persist);
 }
 
 export function clearE2eNockMocks(): void {
   nock.restore();
   nock.cleanAll();
+  globalThis.__e2eCapturedRequests = [];
 }

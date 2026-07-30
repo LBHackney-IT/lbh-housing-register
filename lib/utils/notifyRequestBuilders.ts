@@ -14,7 +14,7 @@ function baseNotifyRequest(
   return {
     emailAddress:
       application.mainApplicant?.contactInformation?.emailAddress ?? '',
-    reference: `${application.reference}`,
+    reference: application.reference ?? '',
   };
 }
 

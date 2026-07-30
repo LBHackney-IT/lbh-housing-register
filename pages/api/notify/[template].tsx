@@ -24,7 +24,9 @@ const endpoint: NextApiHandler = async (
   res: NextApiResponse,
 ) => {
   switch (req.method) {
-    case 'POST':
+    case 'POST': {
+      let application: Awaited<ReturnType<typeof getApplication>>;
+
       try {
         const applicationId = getUser(req)?.application_id;
         if (!applicationId) {
@@ -34,14 +36,32 @@ const endpoint: NextApiHandler = async (
           break;
         }
 
-        const application = await getApplication(applicationId);
-        if (!application) {
-          res
-            .status(StatusCodes.NOT_FOUND)
-            .json({ message: 'Application not found' });
-          break;
-        }
+        application = await getApplication(applicationId);
+      } catch (error) {
+        console.error('Unable to load application for Notify', error);
+        res
+          .status(StatusCodes.INTERNAL_SERVER_ERROR)
+          .json({ message: 'Unable to load application' });
+        break;
+      }
 
+      if (!application) {
+        res
+          .status(StatusCodes.NOT_FOUND)
+          .json({ message: 'Application not found' });
+        break;
+      }
+
+      const emailAddress =
+        application.mainApplicant?.contactInformation?.emailAddress;
+      if (!emailAddress?.trim()) {
+        res
+          .status(StatusCodes.UNPROCESSABLE_ENTITY)
+          .json({ message: 'Application has no email address' });
+        break;
+      }
+
+      try {
         const template = req.query.template as string;
 
         switch (template) {
@@ -73,17 +93,19 @@ const endpoint: NextApiHandler = async (
             break;
         }
       } catch (error) {
-        console.error(error);
+        console.error('Unable to send Notify email', error);
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
           .json({ message: 'Unable to send email' });
       }
       break;
+    }
 
     default:
       res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: 'Invalid request method' });
+        .setHeader('Allow', 'POST')
+        .status(StatusCodes.METHOD_NOT_ALLOWED)
+        .json({ message: 'Method not allowed' });
   }
 };
 

@@ -64,7 +64,7 @@ describe('notifyRequestBuilders', () => {
 
       expect(buildNewApplicationNotifyRequest(application)).toStrictEqual({
         emailAddress: '',
-        reference: 'undefined',
+        reference: '',
         personalisation: {
           ref_number: '',
           resident_name: '',

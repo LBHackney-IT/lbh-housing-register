@@ -107,15 +107,16 @@ describe('/api/notify/[template]', () => {
     sendDisqualifyEmailMock.mockResolvedValue(mockNotifyResponse);
   });
 
-  it('returns 400 for non-POST methods without checking the session', async () => {
+  it('returns 405 for non-POST methods without checking the session', async () => {
     const { req, res } = mockRequest('new-application', 'GET');
 
     await endpoint(req, res);
 
     expect(getUserMock).not.toHaveBeenCalled();
-    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
+    expect(res.statusCode).toBe(StatusCodes.METHOD_NOT_ALLOWED);
+    expect(res.getHeader('Allow')).toBe('POST');
     expect(res._getJSONData()).toStrictEqual({
-      message: 'Invalid request method',
+      message: 'Method not allowed',
     });
   });
 
@@ -155,6 +156,27 @@ describe('/api/notify/[template]', () => {
       expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
       expect(res._getJSONData()).toStrictEqual({
         message: 'Application not found',
+      });
+    });
+
+    it('returns 422 and never calls Notify when the application has no email address', async () => {
+      getApplicationMock.mockResolvedValue({
+        ...mockApplication,
+        mainApplicant: {
+          ...mockApplication.mainApplicant,
+          contactInformation: { emailAddress: '   ' },
+        },
+      });
+
+      const { req, res } = mockRequest('disqualify');
+
+      await endpoint(req, res);
+
+      expect(buildDisqualifyNotifyRequestMock).not.toHaveBeenCalled();
+      expect(sendDisqualifyEmailMock).not.toHaveBeenCalled();
+      expect(res.statusCode).toBe(StatusCodes.UNPROCESSABLE_ENTITY);
+      expect(res._getJSONData()).toStrictEqual({
+        message: 'Application has no email address',
       });
     });
 
@@ -234,7 +256,7 @@ describe('/api/notify/[template]', () => {
 
     expect(res.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
     expect(res._getJSONData()).toStrictEqual({
-      message: 'Unable to send email',
+      message: 'Unable to load application',
     });
   });
 

@@ -1,6 +1,6 @@
 {
   "name": "hackney-housing-register",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "private": true,
   "engines": {
     "node": ">=24"
@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.2",
+    "@sentry/aws-serverless": "^10.62.0",
     "@sentry/nextjs": "^10.46.0",
     "axios": "^1.16.1",
     "cookie": "^1.1.1",

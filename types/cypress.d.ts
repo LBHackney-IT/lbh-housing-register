@@ -72,6 +72,11 @@ declare global {
         statusCode?: number,
       ): Chainable<void>;
       mockNotifyEmailResponse(statusCode?: number): Chainable<void>;
+      getE2eCapturedRequests(
+        hostname: string,
+        method: string,
+        path: string,
+      ): Chainable<object[]>;
     }
   }
 }

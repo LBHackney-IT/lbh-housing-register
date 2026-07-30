@@ -16,7 +16,6 @@ import Form from '../../../components/form/form';
 import Layout from '../../../components/layout/resident-layout';
 import { HeadingOne } from '../../../components/content/headings';
 import Paragraph from '../../../components/content/paragraph';
-import { getDisqualificationReasonOption } from '../../../lib/utils/disqualificationReasonOptions';
 import Custom404 from '../../404';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -35,15 +34,11 @@ const Declaration = (): JSX.Element => {
   const [userError, setUserError] = useState<string | null>(null);
 
   const submitApplication = async () => {
-    const [isEligible, reasons] = checkEligible(application);
+    const [isEligible] = checkEligible(application);
     setUserError(null);
 
     if (!isEligible) {
-      const reasonStrings = reasons.map((reason) =>
-        getDisqualificationReasonOption(reason),
-      );
-      const reason = reasonStrings.join(',');
-      await dispatch(sendDisqualifyEmail({ application, reason }));
+      await dispatch(sendDisqualifyEmail());
 
       try {
         setLoading(true);
@@ -57,11 +52,11 @@ const Declaration = (): JSX.Element => {
         setLoading(false);
       }
     } else {
-      await dispatch(sendConfirmation(application));
+      await dispatch(sendConfirmation());
 
       const medicalNeeds = applicantsWithMedicalNeed(application);
       if (medicalNeeds > 0) {
-        await dispatch(sendMedicalNeed({ application, medicalNeeds }));
+        await dispatch(sendMedicalNeed());
       }
       try {
         setLoading(true);

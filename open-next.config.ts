@@ -34,7 +34,11 @@ const config: OpenNextConfig = {
       // AWS API Gateway v1 (REST API) is what the existing Serverless Framework
       // setup uses.
       converter: 'aws-apigw-v1',
-      wrapper: 'aws-lambda',
+      // Wraps the default `aws-lambda` wrapper with `Sentry.wrapHandler` so
+      // each invocation gets its own isolation scope — see
+      // open-next-sentry-wrapper.ts for why this is necessary.
+      wrapper: () =>
+        import('./open-next-sentry-wrapper').then((mod) => mod.default),
     },
   },
   imageOptimization: {

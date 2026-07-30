@@ -13,6 +13,12 @@ class ReviewApplicantPage {
     return cy.get(`[data-testid="${testId}"]`);
   }
 
+  static getLivingSituationSectionNavLink() {
+    // No dataTestId prop is passed for this nav item, but HorizontalNavItem
+    // always sets a `test-nav-item-${itemName}` testid on its button.
+    return cy.get('[data-testid="test-nav-item-livingsituation"]');
+  }
+
   static getViewDocumentsButton() {
     const testId = 'test-view-documents-button';
     return cy.get(`[data-testid="${testId}"]`);

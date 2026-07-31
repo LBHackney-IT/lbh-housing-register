@@ -32,19 +32,6 @@
     ],
     "!(*.js|*.jsx|*.ts|*.tsx|package-lock.json)": "prettier --ignore-unknown --write"
   },
-  "browserslist": {
-    "production": [
-      ">0.1% in GB",
-      "last 2 Safari versions",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.2",
     "@sentry/aws-serverless": "^10.62.0",

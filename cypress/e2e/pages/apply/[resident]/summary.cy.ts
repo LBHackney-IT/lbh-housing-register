@@ -98,11 +98,18 @@ describe('Apply resident summary page', () => {
       true,
     );
 
+    cy.intercept('POST', '**/api/notify/disqualify').as('sendDisqualify');
+
     ApplyHouseholdPage.visit();
     ApplyHouseholdPage.getContinueToNextStepLink().scrollIntoView().click();
     ApplyExpectPage.getContinueToNextStepButton().click();
     ApplyOverviewPage.getApplicantButton(personId).click();
     ApplyResidentSummaryPage.getConfirmDetailsButton().click();
+
+    // Proves /api/notify/disqualify authorised the request and successfully
+    // looked up the application server-side (not silently failing now that
+    // the endpoint requires a session and looks the application up itself).
+    cy.wait('@sendDisqualify').its('response.statusCode').should('eq', 200);
 
     cy.contains('Saving...');
   });

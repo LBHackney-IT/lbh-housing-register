@@ -74,6 +74,15 @@ describe('Declaration', () => {
       applicationWithMainApplicant,
     );
 
+    // /api/notify/new-application now looks up the application itself
+    // (rather than trusting the client-supplied body), so it makes its own
+    // GET /applications/{id} call - this covers that, in addition to the
+    // page's own load above.
+    cy.mockHousingRegisterApiGetApplications(
+      applicationId,
+      applicationWithMainApplicant,
+    );
+
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,
       applicationWithMainApplicant,
@@ -90,6 +99,10 @@ describe('Declaration', () => {
       apiResponseDelay,
     );
 
+    cy.intercept('POST', '**/api/notify/new-application').as(
+      'sendConfirmation',
+    );
+
     DeclarationPage.visit();
     DeclarationPage.getDeclarationPage().should('be.visible');
 
@@ -103,6 +116,12 @@ describe('Declaration', () => {
     );
 
     cy.contains('Saving...');
+
+    // Proves /api/notify/new-application authorised the request and
+    // successfully looked up the application server-side, rather than
+    // failing (e.g. because a mocked backend call ran out) and silently
+    // being swallowed by code that never checks the dispatch result.
+    cy.wait('@sendConfirmation').its('response.statusCode').should('eq', 200);
 
     ConfirmationPage.getConfirmationPage().should('be.visible');
     Components.getLoadingSpinner().should('not.exist');
@@ -121,11 +140,21 @@ describe('Declaration', () => {
       applicationWithNoNeed,
     );
 
+    cy.intercept('POST', '**/api/notify/disqualify').as('sendDisqualify');
+
     DeclarationPage.visit();
     DeclarationPage.getDeclarationPage().should('be.visible');
 
     Components.getCheckboxes().first().click();
 
+    // Two GETs are needed from here: one made by /api/notify/disqualify
+    // itself (it now looks up the application server-side rather than
+    // trusting the client body) and one for the RejectionPage load after
+    // redirect.
+    cy.mockHousingRegisterApiGetApplications(
+      applicationId,
+      applicationWithNoNeed,
+    );
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithNoNeed,
@@ -133,6 +162,12 @@ describe('Declaration', () => {
 
     Components.getSaveButton().click();
     Components.getLoadingSpinner().should('be.visible');
+
+    // Proves /api/notify/disqualify authorised the request and successfully
+    // looked up the application server-side, rather than failing (e.g.
+    // because a mocked backend call ran out) and silently being swallowed
+    // by code that never checks the dispatch result.
+    cy.wait('@sendDisqualify').its('response.statusCode').should('eq', 200);
 
     RejectionPage.getRejectionPage().should('be.visible');
     Components.getLoadingSpinner().should('be.visible');

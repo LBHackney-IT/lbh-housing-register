@@ -422,6 +422,29 @@ Cypress.Commands.add(
   },
 );
 
+/**
+ * Returns every request the Next.js server process has sent to a mocked
+ * dependency (registered via one of the `mock*` commands above), most-recent
+ * last. Useful for asserting on *what* was sent - e.g. that Notify received
+ * the resident's real email/personalisation rather than anything supplied by
+ * the caller - in cases where the response status alone doesn't tell you
+ * (some gateways intentionally swallow the downstream response/error and
+ * always report success upstream).
+ */
+Cypress.Commands.add(
+  'getE2eCapturedRequests',
+  (hostname: string, method: string, path: string) => {
+    return cy
+      .request({
+        method: 'POST',
+        url: '/api/e2e/captured-requests',
+        body: { hostname, method, path },
+        failOnStatusCode: true,
+      })
+      .then((res) => (res.body as { requests: object[] }).requests);
+  },
+);
+
 Cypress.Commands.add('mockAddressAPISearchByPostcode', (postcode: string) => {
   e2eRegisterNock({
     hostname: exposed('LOOKUP_API_URL'),

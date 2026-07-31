@@ -217,6 +217,17 @@ jobs:
     environment:
       E2E_HTTP_MOCKS: 'true'
       PORT: '3000'
+      # Cypress signs test JWTs with a dummy secret (see cypress/support/commands.ts),
+      # so verification must be skipped for the app to accept them. Must be 'true'
+      # here even though serverless.yml hardcodes it to false for real deploys.
+      SKIP_VERIFY_TOKEN: 'true'
+      # Group names are arbitrary for testing - value is not important, must just
+      # match cypress.config.ts's exposed defaults for the same vars.
+      AUTHORISED_ADMIN_GROUP: 'cypress-authorised-admin-group'
+      AUTHORISED_MANAGER_GROUP: 'cypress-authorised-manager-group'
+      AUTHORISED_OFFICER_GROUP: 'cypress-authorised-officer-group'
+      AUTHORISED_READONLY_GROUP: 'cypress-authorised-readonly-group'
+      NOTIFY_API_KEY: 'testing'
       # 127.0.0.1 avoids IPv6 localhost (::1) vs nock/axios scope mismatches in Docker.
       HOUSING_REGISTER_API: 'http://127.0.0.1:3910/api/v1/'
       HOUSING_REGISTER_KEY: 'testing'

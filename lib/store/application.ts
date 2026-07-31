@@ -10,7 +10,7 @@ import {
 import { exit } from './auth';
 import mainApplicant from './mainApplicant';
 import otherMembers from './otherMembers';
-import { NotifyRequest, NotifyResponse } from '../../domain/govukNotify';
+import { NotifyResponse } from '../../domain/govukNotify';
 import { getRequiredDocumentsForApplication } from '../utils/evidence';
 import { ApplicationStatus } from '../types/application-status';
 
@@ -104,22 +104,15 @@ export const createEvidenceRequest = createAsyncThunk(
   },
 );
 
+// The server derives the NotifyRequest (email address, reference,
+// personalisation) entirely from the caller's own stored application record
+// - see pages/api/notify/[template].tsx - so these thunks don't send a body.
+
 export const sendConfirmation = createAsyncThunk(
   'application/confirmation',
-  async (application: Application) => {
-    const notifyRequest: NotifyRequest = {
-      emailAddress:
-        application.mainApplicant?.contactInformation?.emailAddress ?? '',
-      personalisation: {
-        ref_number: application.reference ?? '',
-        resident_name: application.mainApplicant?.person?.firstName ?? '',
-      },
-      reference: `${application.reference}`,
-    };
-
+  async () => {
     const res = await fetch(`/api/notify/new-application`, {
       method: 'POST',
-      body: JSON.stringify(notifyRequest),
     });
 
     return (await res.json()) as NotifyResponse;
@@ -128,26 +121,9 @@ export const sendConfirmation = createAsyncThunk(
 
 export const sendMedicalNeed = createAsyncThunk(
   'application/medical',
-  async ({
-    application,
-    medicalNeeds,
-  }: {
-    application: Application;
-    medicalNeeds: number;
-  }) => {
-    const notifyRequest: NotifyRequest = {
-      emailAddress:
-        application.mainApplicant?.contactInformation?.emailAddress ?? '',
-      personalisation: {
-        household_members_with_medical_need: medicalNeeds.toString(),
-        resident_name: application.mainApplicant?.person?.firstName ?? '',
-      },
-      reference: `${application.reference}`,
-    };
-
+  async () => {
     const res = await fetch(`/api/notify/medical`, {
       method: 'POST',
-      body: JSON.stringify(notifyRequest),
     });
 
     return (await res.json()) as NotifyResponse;
@@ -156,27 +132,9 @@ export const sendMedicalNeed = createAsyncThunk(
 
 export const sendDisqualifyEmail = createAsyncThunk(
   'application/disqualify',
-  async ({
-    application,
-    reason,
-  }: {
-    application: Application;
-    reason: string;
-  }) => {
-    const notifyRequest: NotifyRequest = {
-      emailAddress:
-        application.mainApplicant?.contactInformation?.emailAddress ?? '',
-      personalisation: {
-        ref_number: application.reference ?? '',
-        resident_name: application.mainApplicant?.person?.firstName ?? '',
-        reason: reason,
-      },
-      reference: `${application.reference}`,
-    };
-
+  async () => {
     const res = await fetch(`/api/notify/disqualify`, {
       method: 'POST',
-      body: JSON.stringify(notifyRequest),
     });
 
     return (await res.json()) as NotifyResponse;

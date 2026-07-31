@@ -160,6 +160,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const evidenceLink = process.env.NEXT_PUBLIC_EVIDENCE_STORE || null;
+  const evidenceLink = process.env.EVIDENCE_STORE_URL || null;
   return { props: { user, data, person, evidenceLink } };
 };

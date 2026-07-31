@@ -179,6 +179,20 @@ jobs:
       - checkout
       - node/install-packages
       - run:
+          name: Resolve NEXT_PUBLIC_ENV for the stage this build deploys to
+          command: |
+            if [ -n "${CIRCLE_TAG}" ]; then
+              STAGE=production
+            elif [ "${CIRCLE_BRANCH}" = "main" ]; then
+              STAGE=staging
+            elif [ "${CIRCLE_BRANCH}" = "development" ]; then
+              STAGE=development
+            else
+              STAGE=ci
+            fi
+            echo "export NEXT_PUBLIC_ENV=${STAGE}" >> "$BASH_ENV"
+            echo "NEXT_PUBLIC_ENV=${STAGE}"
+      - run:
           name: Build Next.js + OpenNext bundle
           command: npm run build:opennext
       - run:

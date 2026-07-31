@@ -3,6 +3,7 @@ import Script from 'next/script';
 
 import { ReactElement } from 'react';
 
+// NEXT_PUBLIC_GTM_ID is set in the build context during the build process.
 const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
 
 export default class AppDocument extends Document {

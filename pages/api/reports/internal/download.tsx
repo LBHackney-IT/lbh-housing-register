@@ -76,10 +76,11 @@ const endpoint: NextApiHandler = async (
             });
           }
         } catch (error) {
+          // Previously the raw Axios response and error were included in the
+          // response body, leaking internal details to the client.
+          console.error('Unable to download report', error);
           res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            message: 'Request error: Unable to download report: ',
-            response: fileResponse,
-            error: error,
+            message: 'Unable to download report',
           });
         }
       }
@@ -87,8 +88,9 @@ const endpoint: NextApiHandler = async (
 
     default:
       res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: 'Invalid request method' });
+        .setHeader('Allow', 'POST')
+        .status(StatusCodes.METHOD_NOT_ALLOWED)
+        .json({ message: 'Method not allowed' });
   }
 };
 

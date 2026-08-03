@@ -13,13 +13,13 @@ import { generatePerson } from '../../../../../testUtils/personHelper';
 //   2. a request with a valid session sends the *server's* application
 //      record to Notify, ignoring any client-supplied email/personalisation.
 //
-// Note: `lib/gateways/notify-api.ts` deliberately swallows Notify's
-// response/error and always reports success upstream (so a failed send
-// doesn't block a resident's application), so the endpoint's HTTP status
-// can't be used to infer what was sent to Notify. These tests instead use
-// `cy.getE2eCapturedRequests` to inspect the actual request body the server
-// sent, and always register `cy.mockNotifyEmailResponse()` so a bug can
-// never cause a real call to the live GOV.UK Notify API.
+// Note: a 200 here only proves the request was authorised, the application
+// was found, and Notify accepted the call - it doesn't on its own prove
+// *what* was sent (an attacker-controlled body sent to Notify unchanged
+// would also come back 200). These tests use `cy.getE2eCapturedRequests` to
+// inspect the actual request body the server sent to Notify, and always
+// register `cy.mockNotifyEmailResponse()` so a bug can never cause a real
+// call to the live GOV.UK Notify API.
 
 const notifyHostname = 'https://api.notifications.service.gov.uk';
 const notifyPath = '/v2/notifications/email';

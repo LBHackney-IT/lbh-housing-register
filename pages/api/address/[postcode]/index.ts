@@ -27,8 +27,9 @@ const endpoint: NextApiHandler = async (
 
     default:
       res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: 'Invalid request method' });
+        .setHeader('Allow', 'GET')
+        .status(StatusCodes.METHOD_NOT_ALLOWED)
+        .json({ message: 'Method not allowed' });
   }
 };
 

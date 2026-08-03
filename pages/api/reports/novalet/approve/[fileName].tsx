@@ -23,21 +23,34 @@ const endpoint: NextApiHandler = async (
           return;
         }
 
-        const fileName = req.query.fileName as string;
-        const response = await approveNovaletExport(fileName);
+        try {
+          const fileName = req.query.fileName as string;
+          const response = await approveNovaletExport(fileName);
 
-        if (response) {
-          res.status(response.status);
+          if (response) {
+            res.status(response.status);
 
-          if (response.status == StatusCodes.OK) {
-            res.send({
-              message: 'Export file approved successfully',
-            });
+            if (response.status == StatusCodes.OK) {
+              res.send({
+                message: 'Export file approved successfully',
+              });
+            } else {
+              res.send({
+                message: 'Unable to approve export file',
+              });
+            }
           } else {
-            res.send({
-              message: 'Unable to approve export file',
-            });
+            // Previously fell through here with no response ever written,
+            // leaving the caller's request to hang.
+            res
+              .status(StatusCodes.INTERNAL_SERVER_ERROR)
+              .json({ message: 'Unable to approve export file' });
           }
+        } catch (error) {
+          console.error('Unable to approve export file', error);
+          res
+            .status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ message: 'Unable to approve export file' });
         }
       }
 
@@ -45,8 +58,9 @@ const endpoint: NextApiHandler = async (
 
     default:
       res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: 'Invalid request method' });
+        .setHeader('Allow', 'POST')
+        .status(StatusCodes.METHOD_NOT_ALLOWED)
+        .json({ message: 'Method not allowed' });
   }
 };
 

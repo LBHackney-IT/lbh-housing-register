@@ -23,18 +23,25 @@ const endpoint: NextApiHandler = async (
           return;
         }
 
-        const response = await generateNovaletExport();
+        try {
+          const response = await generateNovaletExport();
 
-        res.status(response.status);
+          res.status(response.status);
 
-        if (response.status == StatusCodes.OK) {
-          res.send({
-            message: 'Export file generated successfully',
-          });
-        } else {
-          res.send({
-            message: 'Unable to generate export file',
-          });
+          if (response.status == StatusCodes.OK) {
+            res.send({
+              message: 'Export file generated successfully',
+            });
+          } else {
+            res.send({
+              message: 'Unable to generate export file',
+            });
+          }
+        } catch (error) {
+          console.error('Unable to generate export file', error);
+          res
+            .status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ message: 'Unable to generate export file' });
         }
       }
 
@@ -42,8 +49,9 @@ const endpoint: NextApiHandler = async (
 
     default:
       res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: 'Invalid request method' });
+        .setHeader('Allow', 'POST')
+        .status(StatusCodes.METHOD_NOT_ALLOWED)
+        .json({ message: 'Method not allowed' });
   }
 };
 

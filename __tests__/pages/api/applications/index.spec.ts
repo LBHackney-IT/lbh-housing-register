@@ -202,11 +202,11 @@ describe('POST', () => {
       expect(res._getJSONData()).toStrictEqual(expectedApplication);
     });
 
-    it('sets correct response status code (500) and error message when exception is thrown', async () => {
+    it('sets response status code to 400 when the request body cannot be parsed', async () => {
       const { req, res } = generateMockRequestResponseWithHackneyToken(
         mockRequestResponseParameters,
       );
-      const expectedErrorMessage = { message: 'Unable to add application' };
+      const expectedErrorMessage = { message: 'Unable to parse request' };
       const mockErrorMessage = 'parse error';
 
       parseSpy.mockImplementationOnce(() => {
@@ -215,8 +215,43 @@ describe('POST', () => {
 
       await endpoint(req, res);
 
+      expect(addApplicationSpy).not.toHaveBeenCalled();
+      expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
+      expect(res._getJSONData()).toStrictEqual(expectedErrorMessage);
+    });
+
+    it('sets correct response status code (500) and error message when addApplication throws a non-axios error', async () => {
+      const { req, res } = generateMockRequestResponseWithHackneyToken(
+        mockRequestResponseParameters,
+      );
+      const expectedErrorMessage = { message: 'Unable to add application' };
+
+      addApplicationSpy.mockImplementationOnce(() => {
+        throw new Error('boom');
+      });
+
+      await endpoint(req, res);
+
       expect(res.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
       expect(res._getJSONData()).toStrictEqual(expectedErrorMessage);
+    });
+  });
+});
+
+describe('unsupported request methods', () => {
+  it('returns 405 and advertises both supported methods', async () => {
+    const { req, res } = generateMockRequestResponseWithHackneyToken({
+      ...mockRequestResponseParameters,
+      method: 'DELETE',
+    });
+
+    await endpoint(req, res);
+
+    expect(addApplicationSpy).not.toHaveBeenCalled();
+    expect(res.statusCode).toBe(StatusCodes.METHOD_NOT_ALLOWED);
+    expect(res.getHeader('Allow')).toBe('GET, POST');
+    expect(res._getJSONData()).toStrictEqual({
+      message: 'Method not allowed',
     });
   });
 });

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { completeApplication } from '../../../../lib/gateways/applications-api';
@@ -22,17 +23,22 @@ const endpoint: NextApiHandler = async (
             .json({ message: 'Unable to update application' });
         }
       } catch (error) {
-        console.error(error);
-        res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Unable to update application' });
+        if (axios.isAxiosError(error) && error.response) {
+          res.status(error.response.status).json(error.response.data);
+        } else {
+          console.error(error);
+          res
+            .status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ message: 'Unable to update application' });
+        }
       }
       break;
 
     default:
       res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: 'Invalid request method' });
+        .setHeader('Allow', 'PATCH')
+        .status(StatusCodes.METHOD_NOT_ALLOWED)
+        .json({ message: 'Method not allowed' });
   }
 };
 

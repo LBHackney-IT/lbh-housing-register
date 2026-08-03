@@ -31,10 +31,9 @@ function normalizeHostname(hostname: string): string {
 /**
  * Requests matched by any registered mock, most-recent last. Lets tests
  * assert on *what* the server actually sent to a mocked dependency (e.g.
- * GOV.UK Notify) rather than only on the response status. This matters
- * because some callers (see `lib/gateways/notify-api.ts`) deliberately
- * swallow the downstream response/error and always report success upstream,
- * so the caller's HTTP status can't be used to infer what was sent.
+ * GOV.UK Notify), which is the only way to tell the real application data
+ * apart from an attacker-supplied body when both would otherwise produce
+ * the same HTTP status.
  *
  * Note: nock's default behaviour for a request that doesn't match *any*
  * registered interceptor for a mocked host is to fall through to the real

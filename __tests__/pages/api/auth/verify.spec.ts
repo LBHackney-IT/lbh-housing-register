@@ -206,7 +206,7 @@ describe('POST /api/auth/verify', () => {
   });
 
   it.each(invalidRequestMethods)(
-    'returns 400 when the request method is %p',
+    'returns 405 when the request method is %p',
     async (requestMethod) => {
       const { req, res }: { req: ApiRequest; res: ApiResponse } = createMocks({
         method: requestMethod as RequestMethod,
@@ -215,9 +215,10 @@ describe('POST /api/auth/verify', () => {
 
       await endpoint(req, res);
 
-      expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
+      expect(res.statusCode).toBe(StatusCodes.METHOD_NOT_ALLOWED);
+      expect(res.getHeader('Allow')).toBe('POST');
       expect(res._getJSONData()).toStrictEqual({
-        message: 'Invalid request method',
+        message: 'Method not allowed',
       });
     },
   );

@@ -24,6 +24,12 @@ const endpoint: NextApiHandler = async (
           .json({ message: 'Unable to sign out' });
       }
       break;
+
+    default:
+      res
+        .setHeader('Allow', 'GET')
+        .status(StatusCodes.METHOD_NOT_ALLOWED)
+        .json({ message: 'Method not allowed' });
   }
 };
 

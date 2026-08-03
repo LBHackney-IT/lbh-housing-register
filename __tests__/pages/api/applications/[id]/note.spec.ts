@@ -8,7 +8,7 @@ import { StatusCodes } from 'http-status-codes';
 
 import * as applicationApi from '../../../../../lib/gateways/applications-api';
 import * as requestAuth from '../../../../../lib/utils/requestAuth';
-import endpoint from '../../../../../pages/api/applications/[id]/evidence';
+import endpoint from '../../../../../pages/api/applications/[id]/note';
 import { generateMockRequestResponseWithHackneyToken } from '../../../../../testUtils/apiHelper';
 import {
   UserRole,
@@ -26,7 +26,7 @@ const applicationId = faker.string.uuid();
 describe('authorization', () => {
   //claims in the token don't matter in these tests, it just need to exist
   const { signedToken } = generateSignedTokenByRole(UserRole.Officer);
-  jest.spyOn(applicationApi, 'createEvidenceRequest').mockResolvedValue(null);
+  jest.spyOn(applicationApi, 'addNoteToHistory').mockResolvedValue(null);
 
   it('returns status code 403 and error message when canUpdateApplication returns false', async () => {
     jest.spyOn(requestAuth, 'canUpdateApplication').mockReturnValue(false);
@@ -39,12 +39,10 @@ describe('authorization', () => {
 
     req.query.id = applicationId;
 
-    const expectedErrorMessage = { message: 'Unable to update application' };
-
     await endpoint(req, res);
 
     expect(res.statusCode).toBe(StatusCodes.FORBIDDEN);
-    expect(res._getJSONData()).toStrictEqual(expectedErrorMessage);
+    expect(res._getJSONData()).toStrictEqual({ message: 'Unable to add note' });
   });
 
   it('returns status code 200 when canUpdateApplication returns true', async () => {
@@ -86,7 +84,7 @@ describe('authorization', () => {
     });
   });
 
-  it('forwards the backend status and body when createEvidenceRequest fails with an axios error', async () => {
+  it('forwards the backend status and body when addNoteToHistory fails with an axios error', async () => {
     jest.spyOn(requestAuth, 'canUpdateApplication').mockReturnValue(true);
 
     const axiosErrorStatusCode = StatusCodes.BAD_GATEWAY;
@@ -96,7 +94,7 @@ describe('authorization', () => {
     } as AxiosError;
 
     jest
-      .spyOn(applicationApi, 'createEvidenceRequest')
+      .spyOn(applicationApi, 'addNoteToHistory')
       .mockImplementationOnce(() => {
         throw mockAxiosError;
       });
@@ -114,5 +112,18 @@ describe('authorization', () => {
 
     expect(res.statusCode).toBe(axiosErrorStatusCode);
     expect(res._getJSONData()).toStrictEqual(axiosErrorData);
+  });
+
+  it('returns 405 for methods other than POST', async () => {
+    const { req, res } = generateMockRequestResponseWithHackneyToken({
+      hackneyToken: signedToken,
+      method: 'GET',
+    });
+
+    await endpoint(req, res);
+
+    expect(res.statusCode).toBe(StatusCodes.METHOD_NOT_ALLOWED);
+    expect(res.getHeader('Allow')).toBe('POST');
+    expect(res._getJSONData()).toStrictEqual({ message: 'Method not allowed' });
   });
 });

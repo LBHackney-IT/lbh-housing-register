@@ -266,7 +266,7 @@ describe('POST', () => {
   });
 
   it.each(invalidRequestMethods)(
-    'returns status code 400 when request method is %p',
+    'returns status code 405 when request method is %p',
     async (requestMethod) => {
       const reqOptions: RequestOptions = {
         method: requestMethod as RequestMethod,
@@ -277,8 +277,9 @@ describe('POST', () => {
         createMocks(reqOptions);
 
       await endpoint(req, res);
-      expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
-      expect(res._getJSONData()).toEqual({ message: 'Invalid request method' });
+      expect(res.statusCode).toBe(StatusCodes.METHOD_NOT_ALLOWED);
+      expect(res.getHeader('Allow')).toBe('POST');
+      expect(res._getJSONData()).toEqual({ message: 'Method not allowed' });
     },
   );
 });

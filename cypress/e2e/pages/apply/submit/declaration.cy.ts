@@ -170,7 +170,7 @@ describe('Declaration', () => {
     cy.wait('@sendDisqualify').its('response.statusCode').should('eq', 200);
 
     RejectionPage.getRejectionPage().should('be.visible');
-    Components.getLoadingSpinner().should('be.visible');
+    Components.getLoadingSpinner().should('not.exist');
   });
 
   it('shows an error message when cannot complete successful application', () => {

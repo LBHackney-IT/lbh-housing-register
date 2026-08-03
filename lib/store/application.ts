@@ -10,7 +10,6 @@ import {
 import { exit } from './auth';
 import mainApplicant from './mainApplicant';
 import otherMembers from './otherMembers';
-import { NotifyResponse } from '../../domain/govukNotify';
 import { getRequiredDocumentsForApplication } from '../utils/evidence';
 import { ApplicationStatus } from '../types/application-status';
 
@@ -107,37 +106,50 @@ export const createEvidenceRequest = createAsyncThunk(
 // The server derives the NotifyRequest (email address, reference,
 // personalisation) entirely from the caller's own stored application record
 // - see pages/api/notify/[template].tsx - so these thunks don't send a body.
-
 export const sendConfirmation = createAsyncThunk(
   'application/confirmation',
-  async () => {
+  async (_: void, { rejectWithValue }) => {
     const res = await fetch(`/api/notify/new-application`, {
       method: 'POST',
     });
 
-    return (await res.json()) as NotifyResponse;
+    if (!res.ok) {
+      const message = `Unable to send confirmation email (${res.status})`;
+      console.error(message);
+      return rejectWithValue(message);
+    }
   },
 );
 
 export const sendMedicalNeed = createAsyncThunk(
   'application/medical',
-  async () => {
+  async (_: void, { rejectWithValue }) => {
     const res = await fetch(`/api/notify/medical`, {
       method: 'POST',
     });
 
-    return (await res.json()) as NotifyResponse;
+    if (!res.ok) {
+      const message = `Unable to send medical need email (${res.status})`;
+      console.error(message);
+      return rejectWithValue(message);
+    }
   },
 );
 
+// Must not share `disqualifyApplication`'s type prefix: these are different
+// actions, and that case replaces the whole application state with its payload.
 export const sendDisqualifyEmail = createAsyncThunk(
-  'application/disqualify',
-  async () => {
+  'application/disqualifyEmail',
+  async (_: void, { rejectWithValue }) => {
     const res = await fetch(`/api/notify/disqualify`, {
       method: 'POST',
     });
 
-    return (await res.json()) as NotifyResponse;
+    if (!res.ok) {
+      const message = `Unable to send disqualify email (${res.status})`;
+      console.error(message);
+      return rejectWithValue(message);
+    }
   },
 );
 

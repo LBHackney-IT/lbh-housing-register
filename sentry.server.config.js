@@ -23,13 +23,10 @@ Sentry.init({
     ENVIRONMENT === 'staging' ||
     ENVIRONMENT === 'development',
 
-  // Next's own API body parser throws these *before* any of our route code
-  // runs, when a request has a `application/json` Content-Type but a body
+  // When a request has a `application/json` Content-Type but a body
   // that isn't valid JSON (or exceeds the size limit) - Next already catches
-  // this itself and correctly responds 400/413, so it's not something our
-  // code can fix. In practice this is almost always automated scanners
-  // (e.g. Probely) fuzzing endpoints with malformed bodies, so it's noise
-  // rather than a signal worth alerting on.
+  // this itself and correctly responds 400/413.
+  // Ignore these errors from automated scanners (e.g. Probely) fuzzing endpoints with malformed bodies.
   ignoreErrors: [
     /^Invalid JSON$/,
     /^Invalid body$/,

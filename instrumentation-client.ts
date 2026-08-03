@@ -5,6 +5,12 @@ import * as Sentry from '@sentry/nextjs';
 
 const ENVIRONMENT = process.env.NEXT_PUBLIC_ENV;
 
+// The CI e2e job serves a deploy-targeted build (stage inlined at build time) from
+// localhost, which would otherwise switch Sentry on for every test run.
+const isLocalHost =
+  typeof window !== 'undefined' &&
+  ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+
 Sentry.init({
   dsn: 'https://6fb0dd07e0fc4a75b0ab84b8e1f36460@o183917.ingest.us.sentry.io/6292602',
   tracesSampler: () => {
@@ -15,9 +21,10 @@ Sentry.init({
   environment: ENVIRONMENT,
   integrations: [Sentry.captureConsoleIntegration()],
   enabled:
-    ENVIRONMENT === 'production' ||
-    ENVIRONMENT === 'staging' ||
-    ENVIRONMENT === 'development',
+    !isLocalHost &&
+    (ENVIRONMENT === 'production' ||
+      ENVIRONMENT === 'staging' ||
+      ENVIRONMENT === 'development'),
 
   beforeSend(event) {
     if (event.request?.cookies?.['hackneyToken']) {

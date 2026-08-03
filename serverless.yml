@@ -45,7 +45,7 @@ functions:
       securityGroupIds: ${self:custom.securityGroups.${self:provider.stage}}
       subnetIds: ${self:custom.subnets.${self:provider.stage}}
     environment:
-      NEXT_PUBLIC_ENV: ${opt:stage}
+      SENTRY_ENVIRONMENT: ${opt:stage}
       SKIP_VERIFY_TOKEN: false
       APP_URL: ${ssm:arn:aws:ssm:eu-west-2:${param:centralAccount}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/app-url}
       ACTIVITY_HISTORY_API: ${ssm:arn:aws:ssm:eu-west-2:${param:centralAccount}:parameter/housing-${self:provider.stage}/mtfh-housing-${self:provider.stage}/mtfh-housing/activity-history-api-url}
@@ -58,8 +58,7 @@ functions:
       NOTIFY_TEMPLATE_NEW_APPLICATION: ${ssm:arn:aws:ssm:eu-west-2:${param:centralAccount}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/notify-template-new-application}
       NOTIFY_TEMPLATE_DISQUALIFY: ${ssm:arn:aws:ssm:eu-west-2:${param:centralAccount}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/notify-template-disqualify}
       NOTIFY_TEMPLATE_MEDICAL_NEED: ${ssm:arn:aws:ssm:eu-west-2:${param:centralAccount}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/notify-template-medical-need}
-      NEXT_PUBLIC_EVIDENCE_STORE: ${ssm:arn:aws:ssm:eu-west-2:${param:centralAccount}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/evidence-store-url}
-      GTM_ID: ${ssm:arn:aws:ssm:eu-west-2:${param:centralAccount}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/gtm-id}
+      EVIDENCE_STORE_URL: ${ssm:arn:aws:ssm:eu-west-2:${param:centralAccount}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/evidence-store-url}
       HOUSING_REGISTER_KEY: ${ssm:/housing-register/${self:provider.stage}/housing-register-api-key}
       HACKNEY_JWT_SECRET: ${ssm:/housing-register/${self:provider.stage}/hackney-jwt-secret}
       LOOKUP_API_TOKEN: ${ssm:/housing-register/${self:provider.stage}/lookup-api-key}

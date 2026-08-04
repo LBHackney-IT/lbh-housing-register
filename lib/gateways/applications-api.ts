@@ -192,7 +192,7 @@ export const listNovaletExports = async (
 
 export const downloadNovaletExport = async (
   filename: string,
-): Promise<AxiosResponse | null> => {
+): Promise<AxiosResponse> => {
   const url = `reporting/novaletexport/${filename}`;
   return await housingAxios().get(url, {
     responseType: 'blob',
@@ -207,15 +207,14 @@ export const generateNovaletExport = async (): Promise<AxiosResponse> => {
 export const downloadInternalReport = async (
   reportDetails: InternalReportRequest,
   req: NextApiRequest,
-): Promise<AxiosResponse | null> => {
+): Promise<AxiosResponse> => {
   const url = `reporting/export`;
-  const data = await authenticatedHousingAxios(req).post(url, reportDetails, {
+  return await authenticatedHousingAxios(req).post(url, reportDetails, {
     headers: {
       'Content-Type': 'application/json',
     },
     responseType: 'blob',
   });
-  return data;
 };
 
 export const approveNovaletExport = async (

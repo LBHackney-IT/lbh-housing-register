@@ -39,7 +39,7 @@ describe('authorization', () => {
 
     req.query.id = applicationId;
 
-    const expectedErrorMessage = { message: 'Unable to update application' };
+    const expectedErrorMessage = { message: 'Access denied' };
 
     await endpoint(req, res);
 

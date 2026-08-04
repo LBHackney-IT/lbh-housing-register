@@ -126,7 +126,7 @@ describe('PATCH', () => {
       });
       canUpdateApplicationSpy.mockReturnValue(false);
       isStaffActionMock.mockReturnValue(false);
-      const expectedError = { message: 'Unable to update application' };
+      const expectedError = { message: 'Access denied' };
 
       //res.status().json() is using the same mock parser as JSON.parse, so need to override the default mock here
       jest.spyOn(JSON, 'parse').mockReturnValue(expectedError);

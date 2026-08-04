@@ -42,7 +42,7 @@ describe('authorization', () => {
     await endpoint(req, res);
 
     expect(res.statusCode).toBe(StatusCodes.FORBIDDEN);
-    expect(res._getJSONData()).toStrictEqual({ message: 'Unable to add note' });
+    expect(res._getJSONData()).toStrictEqual({ message: 'Access denied' });
   });
 
   it('returns status code 200 when canUpdateApplication returns true', async () => {

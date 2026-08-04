@@ -7,29 +7,27 @@ const endpoint: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
+  if (req.method !== 'GET') {
+    res
+      .setHeader('Allow', 'GET')
+      .status(StatusCodes.METHOD_NOT_ALLOWED)
+      .json({ message: 'Method not allowed' });
+    return;
+  }
+
   const isAdminUser = !!getSession(req);
 
-  switch (req.method) {
-    case 'GET':
-      try {
-        if (isAdminUser) {
-          removeHackneyToken(res);
-        }
+  try {
+    if (isAdminUser) {
+      removeHackneyToken(res);
+    }
 
-        res.status(StatusCodes.OK).json({ message: 'Admin sign out' });
-      } catch (error) {
-        console.error(error);
-        res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Unable to sign out' });
-      }
-      break;
-
-    default:
-      res
-        .setHeader('Allow', 'GET')
-        .status(StatusCodes.METHOD_NOT_ALLOWED)
-        .json({ message: 'Method not allowed' });
+    res.status(StatusCodes.OK).json({ message: 'Admin sign out' });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: 'Unable to sign out' });
   }
 };
 

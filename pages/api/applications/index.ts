@@ -47,20 +47,9 @@ const endpoint: NextApiHandler = async (
       break;
     }
     case 'POST': {
-      if (!hasStaffPermissions(req)) {
-        res
-          .status(StatusCodes.FORBIDDEN)
-          .json({ message: 'Unable to add application' });
-        break;
-      }
-
-      if (hasReadOnlyStaffPermissions(req)) {
-        res
-          .status(StatusCodes.FORBIDDEN)
-          .json({ message: 'Unable to add application' });
-        break;
-      }
-
+      // Staff-write-only (add-case). Parse first so isStaffAction can pick a
+      // more specific 403 message when the body includes privileged fields;
+      // it is not a second auth gate.
       let application: Application;
       try {
         application = JSON.parse(req.body);
@@ -72,18 +61,18 @@ const endpoint: NextApiHandler = async (
         break;
       }
 
+      if (!hasStaffPermissions(req) || hasReadOnlyStaffPermissions(req)) {
+        res.status(StatusCodes.FORBIDDEN).json({
+          message: isStaffAction(application)
+            ? 'Unable to add application with assessment'
+            : 'Unable to add application',
+        });
+        break;
+      }
+
       try {
-        if (
-          isStaffAction(application) &&
-          (!hasStaffPermissions(req) || hasReadOnlyStaffPermissions(req))
-        ) {
-          res
-            .status(StatusCodes.FORBIDDEN)
-            .json({ message: 'Unable to add application with assessment' });
-        } else {
-          const data = await addApplication(application, req);
-          res.status(StatusCodes.OK).json(data);
-        }
+        const data = await addApplication(application, req);
+        res.status(StatusCodes.OK).json(data);
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
           res.status(error.response.status).json(error.response.data);

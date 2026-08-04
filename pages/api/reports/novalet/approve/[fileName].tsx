@@ -8,59 +8,58 @@ const endpoint: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  switch (req.method) {
-    case 'POST':
-      {
-        const user = getSession(req);
+  if (req.method !== 'POST') {
+    res
+      .setHeader('Allow', 'POST')
+      .status(StatusCodes.METHOD_NOT_ALLOWED)
+      .json({ message: 'Method not allowed' });
+    return;
+  }
 
-        const auth = getAuth(
-          process.env.AUTHORISED_MANAGER_GROUP as string,
-          user,
-        );
+  const user = getSession(req);
 
-        if (!('user' in auth)) {
-          res.status(StatusCodes.FORBIDDEN).json({ message: 'access denied' });
-          return;
-        }
+  const auth = getAuth(process.env.AUTHORISED_MANAGER_GROUP as string, user);
 
-        try {
-          const fileName = req.query.fileName as string;
-          const response = await approveNovaletExport(fileName);
+  if (!('user' in auth)) {
+    res.status(StatusCodes.FORBIDDEN).json({ message: 'access denied' });
+    return;
+  }
 
-          if (response) {
-            res.status(response.status);
+  try {
+    const fileName = req.query.fileName as string;
+    const response = await approveNovaletExport(fileName);
 
-            if (response.status == StatusCodes.OK) {
-              res.send({
-                message: 'Export file approved successfully',
-              });
-            } else {
-              res.send({
-                message: 'Unable to approve export file',
-              });
-            }
-          } else {
-            // Previously fell through here with no response ever written,
-            // leaving the caller's request to hang.
-            res
-              .status(StatusCodes.INTERNAL_SERVER_ERROR)
-              .json({ message: 'Unable to approve export file' });
-          }
-        } catch (error) {
-          console.error('Unable to approve export file', error);
-          res
-            .status(StatusCodes.INTERNAL_SERVER_ERROR)
-            .json({ message: 'Unable to approve export file' });
-        }
+    if (response) {
+      res.status(response.status);
+
+      if (response.status == StatusCodes.OK) {
+        res.send({
+          message: 'Export file approved successfully',
+        });
+      } else {
+        // Status tells you where to look: 4xx = request/auth, 5xx = upstream.
+        console.error('Unable to approve export file', {
+          fileName,
+          status: response.status,
+          data: response.data,
+        });
+        res.send({
+          message: 'Unable to approve export file',
+        });
       }
-
-      break;
-
-    default:
+    } else {
+      // Previously fell through here with no response ever written,
+      // leaving the caller's request to hang.
+      console.error('Unable to approve export file: empty response');
       res
-        .setHeader('Allow', 'POST')
-        .status(StatusCodes.METHOD_NOT_ALLOWED)
-        .json({ message: 'Method not allowed' });
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ message: 'Unable to approve export file' });
+    }
+  } catch (error) {
+    console.error('Unable to approve export file', error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: 'Unable to approve export file' });
   }
 };
 

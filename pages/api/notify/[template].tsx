@@ -23,89 +23,84 @@ const endpoint: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  switch (req.method) {
-    case 'POST': {
-      let application: Awaited<ReturnType<typeof getApplication>>;
+  if (req.method !== 'POST') {
+    res
+      .setHeader('Allow', 'POST')
+      .status(StatusCodes.METHOD_NOT_ALLOWED)
+      .json({ message: 'Method not allowed' });
+    return;
+  }
 
-      try {
-        const applicationId = getUser(req)?.application_id;
-        if (!applicationId) {
-          res
-            .status(StatusCodes.UNAUTHORIZED)
-            .json({ message: 'Unauthorized' });
-          break;
-        }
+  let application: Awaited<ReturnType<typeof getApplication>>;
 
-        application = await getApplication(applicationId);
-      } catch (error) {
-        console.error('Unable to load application for Notify', error);
-        res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Unable to load application' });
-        break;
-      }
-
-      if (!application) {
-        res
-          .status(StatusCodes.NOT_FOUND)
-          .json({ message: 'Application not found' });
-        break;
-      }
-
-      const emailAddress =
-        application.mainApplicant?.contactInformation?.emailAddress;
-      if (!emailAddress?.trim()) {
-        res
-          .status(StatusCodes.UNPROCESSABLE_ENTITY)
-          .json({ message: 'Application has no email address' });
-        break;
-      }
-
-      try {
-        const template = req.query.template as string;
-
-        switch (template) {
-          case 'new-application': {
-            const sendNewApplicationData = await sendNewApplicationEmail(
-              buildNewApplicationNotifyRequest(application),
-            );
-            res.status(StatusCodes.OK).json(sendNewApplicationData);
-            break;
-          }
-          case 'medical': {
-            const sendMedicalEmailData = await sendMedicalNeedEmail(
-              buildMedicalNeedNotifyRequest(application),
-            );
-            res.status(StatusCodes.OK).json(sendMedicalEmailData);
-            break;
-          }
-          case 'disqualify': {
-            const sendDisqualifyEmailData = await sendDisqualifyEmail(
-              buildDisqualifyNotifyRequest(application),
-            );
-            res.status(StatusCodes.OK).json(sendDisqualifyEmailData);
-            break;
-          }
-          default:
-            res
-              .status(StatusCodes.BAD_REQUEST)
-              .json({ message: 'Invalid template request' });
-            break;
-        }
-      } catch (error) {
-        console.error('Unable to send Notify email', error);
-        res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Unable to send email' });
-      }
-      break;
+  try {
+    const applicationId = getUser(req)?.application_id;
+    if (!applicationId) {
+      res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Unauthorized' });
+      return;
     }
 
-    default:
-      res
-        .setHeader('Allow', 'POST')
-        .status(StatusCodes.METHOD_NOT_ALLOWED)
-        .json({ message: 'Method not allowed' });
+    application = await getApplication(applicationId);
+  } catch (error) {
+    console.error('Unable to load application for Notify', error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: 'Unable to load application' });
+    return;
+  }
+
+  if (!application) {
+    res
+      .status(StatusCodes.NOT_FOUND)
+      .json({ message: 'Application not found' });
+    return;
+  }
+
+  const emailAddress =
+    application.mainApplicant?.contactInformation?.emailAddress;
+  if (!emailAddress?.trim()) {
+    res
+      .status(StatusCodes.UNPROCESSABLE_ENTITY)
+      .json({ message: 'Application has no email address' });
+    return;
+  }
+
+  try {
+    const template = req.query.template as string;
+
+    switch (template) {
+      case 'new-application': {
+        const sendNewApplicationData = await sendNewApplicationEmail(
+          buildNewApplicationNotifyRequest(application),
+        );
+        res.status(StatusCodes.OK).json(sendNewApplicationData);
+        break;
+      }
+      case 'medical': {
+        const sendMedicalEmailData = await sendMedicalNeedEmail(
+          buildMedicalNeedNotifyRequest(application),
+        );
+        res.status(StatusCodes.OK).json(sendMedicalEmailData);
+        break;
+      }
+      case 'disqualify': {
+        const sendDisqualifyEmailData = await sendDisqualifyEmail(
+          buildDisqualifyNotifyRequest(application),
+        );
+        res.status(StatusCodes.OK).json(sendDisqualifyEmailData);
+        break;
+      }
+      default:
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ message: 'Invalid template request' });
+        break;
+    }
+  } catch (error) {
+    console.error('Unable to send Notify email', error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: 'Unable to send email' });
   }
 };
 

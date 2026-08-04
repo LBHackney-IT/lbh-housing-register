@@ -179,6 +179,22 @@ jobs:
       - checkout
       - node/install-packages
       - run:
+          # NEXT_PUBLIC_* values are inlined by Webpack at `next build` time, so the
+          # client-side Sentry init (instrumentation-client.ts) can only know the stage
+          # if it's set here - the Lambda runtime env serverless.yml sets at deploy time
+          # is too late. Mapping must be kept in sync with the branch/tag filters on the
+          # deploy-to-* jobs further down this file - if those change, update this too.
+          name: Resolve NEXT_PUBLIC_ENV for the stage this build deploys to
+          command: |
+            case "${CIRCLE_BRANCH}" in
+              main) STAGE=staging ;;
+              development) STAGE=development ;;
+              *) STAGE=ci ;;
+            esac
+            [ -n "${CIRCLE_TAG}" ] && STAGE=production
+
+            echo "export NEXT_PUBLIC_ENV=${STAGE}" | tee -a "$BASH_ENV"
+      - run:
           name: Build Next.js + OpenNext bundle
           command: npm run build:opennext
       - run:
@@ -318,6 +334,8 @@ workflows:
             tags:
               only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
       - build:
+          context:
+            - housing-register-fe-build-context
           filters:
             tags:
               only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/

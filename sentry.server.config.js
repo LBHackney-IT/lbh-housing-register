@@ -4,7 +4,7 @@
 
 import * as Sentry from '@sentry/nextjs';
 
-const ENVIRONMENT = process.env.NEXT_PUBLIC_ENV;
+const ENVIRONMENT = process.env.SENTRY_ENVIRONMENT;
 
 Sentry.init({
   dsn: 'https://6fb0dd07e0fc4a75b0ab84b8e1f36460@o183917.ingest.us.sentry.io/6292602',
@@ -22,6 +22,16 @@ Sentry.init({
     ENVIRONMENT === 'production' ||
     ENVIRONMENT === 'staging' ||
     ENVIRONMENT === 'development',
+
+  // When a request has a `application/json` Content-Type but a body
+  // that isn't valid JSON (or exceeds the size limit) - Next already catches
+  // this itself and correctly responds 400/413.
+  // Ignore these errors from automated scanners (e.g. Probely) fuzzing endpoints with malformed bodies.
+  ignoreErrors: [
+    /^Invalid JSON$/,
+    /^Invalid body$/,
+    /^Body exceeded .* limit$/,
+  ],
 
   // remove cookies from the event before sending
   beforeSend(event) {

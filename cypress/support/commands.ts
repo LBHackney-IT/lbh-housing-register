@@ -427,9 +427,8 @@ Cypress.Commands.add(
  * dependency (registered via one of the `mock*` commands above), most-recent
  * last. Useful for asserting on *what* was sent - e.g. that Notify received
  * the resident's real email/personalisation rather than anything supplied by
- * the caller - in cases where the response status alone doesn't tell you
- * (some gateways intentionally swallow the downstream response/error and
- * always report success upstream).
+ * the caller - since the response status alone can't distinguish "sent the
+ * real data" from "sent the attacker-supplied data" when both succeed.
  */
 Cypress.Commands.add(
   'getE2eCapturedRequests',

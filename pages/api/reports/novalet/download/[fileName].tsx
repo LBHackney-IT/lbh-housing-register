@@ -8,60 +8,54 @@ const endpoint: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  switch (req.method) {
-    case 'GET':
-      {
-        const user = getSession(req);
+  if (req.method !== 'GET') {
+    res
+      .setHeader('Allow', 'GET')
+      .status(StatusCodes.METHOD_NOT_ALLOWED)
+      .json({ message: 'Method not allowed' });
+    return;
+  }
 
-        const auth = getAuth(
-          process.env.AUTHORISED_MANAGER_GROUP as string,
-          user,
-        );
+  const user = getSession(req);
 
-        if (!('user' in auth)) {
-          res.status(StatusCodes.FORBIDDEN).json({ message: 'access denied' });
-          return;
-        }
+  const auth = getAuth(process.env.AUTHORISED_MANAGER_GROUP as string, user);
 
-        try {
-          const fileName = req.query.fileName as string;
-          const file = await downloadNovaletExport(fileName);
+  if (!('user' in auth)) {
+    res.status(StatusCodes.FORBIDDEN).json({ message: 'access denied' });
+    return;
+  }
 
-          if (file) {
-            res.status(file.status);
-            const contentType = file.headers['content-type'];
-            res.setHeader(
-              'Content-Type',
-              typeof contentType === 'string'
-                ? contentType
-                : 'application/octet-stream',
-            );
-            const contentDisposition = file.headers['content-disposition'];
-            res.setHeader(
-              'Content-Disposition',
-              typeof contentDisposition === 'string'
-                ? contentDisposition
-                : 'attachment',
-            );
-            res.send(file.data);
-          } else {
-            res.status(404);
-            res.send({
-              message: 'Unable to download report',
-            });
-          }
-        } catch {
-          res
-            .status(StatusCodes.INTERNAL_SERVER_ERROR)
-            .json({ message: 'Unable to download report' });
-        }
-      }
-      break;
+  try {
+    const fileName = req.query.fileName as string;
+    // Axios rejects non-2xx into the catch below - a resolved response is
+    // always a real AxiosResponse (the gateway's `| null` return type was
+    // inaccurate), so the old `if (file)` / 404 else was unreachable.
+    const file = await downloadNovaletExport(fileName);
 
-    default:
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: 'Invalid request method' });
+    res.status(file.status);
+    const contentType = file.headers['content-type'];
+    res.setHeader(
+      'Content-Type',
+      typeof contentType === 'string'
+        ? contentType
+        : 'application/octet-stream',
+    );
+    const contentDisposition = file.headers['content-disposition'];
+    res.setHeader(
+      'Content-Disposition',
+      typeof contentDisposition === 'string'
+        ? contentDisposition
+        : 'attachment',
+    );
+    res.send(file.data);
+  } catch (error) {
+    console.error('Unable to download report', {
+      fileName: req.query.fileName,
+      error,
+    });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: 'Unable to download report' });
   }
 };
 

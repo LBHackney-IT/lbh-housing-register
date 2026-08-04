@@ -46,45 +46,51 @@ const endpoint: NextApiHandler = async (
 
       break;
     }
-    case 'POST':
+    case 'POST': {
+      // Staff-write-only (add-case). Parse first so isStaffAction can pick a
+      // more specific 403 message when the body includes privileged fields;
+      // it is not a second auth gate.
+      let application: Application;
       try {
-        if (!hasStaffPermissions(req)) {
-          res
-            .status(StatusCodes.FORBIDDEN)
-            .json({ message: 'Unable to add application' });
-          break;
-        }
-
-        if (hasReadOnlyStaffPermissions(req)) {
-          res
-            .status(StatusCodes.FORBIDDEN)
-            .json({ message: 'Unable to add application' });
-          break;
-        }
-
-        const application: Application = JSON.parse(req.body);
-        if (
-          isStaffAction(application) &&
-          (!hasStaffPermissions(req) || hasReadOnlyStaffPermissions(req))
-        ) {
-          res
-            .status(StatusCodes.FORBIDDEN)
-            .json({ message: 'Unable to add application with assessment' });
-        } else {
-          const data = await addApplication(application, req);
-          res.status(StatusCodes.OK).json(data);
-        }
-      } catch {
+        application = JSON.parse(req.body);
+      } catch (error) {
+        console.error('Unable to parse application request body', error);
         res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Unable to add application' });
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ message: 'Unable to parse request' });
+        break;
+      }
+
+      if (!hasStaffPermissions(req) || hasReadOnlyStaffPermissions(req)) {
+        res.status(StatusCodes.FORBIDDEN).json({
+          message: isStaffAction(application)
+            ? 'Unable to add application with assessment'
+            : 'Unable to add application',
+        });
+        break;
+      }
+
+      try {
+        const data = await addApplication(application, req);
+        res.status(StatusCodes.OK).json(data);
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          res.status(error.response.status).json(error.response.data);
+        } else {
+          console.error(error);
+          res
+            .status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ message: 'Unable to add application' });
+        }
       }
       break;
+    }
 
     default:
       res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: 'Invalid request method' });
+        .setHeader('Allow', 'GET, POST')
+        .status(StatusCodes.METHOD_NOT_ALLOWED)
+        .json({ message: 'Method not allowed' });
   }
 };
 

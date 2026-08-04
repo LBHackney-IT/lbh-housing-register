@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.3.2](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.3.1...hackney-housing-register-v2.3.2) (2026-08-04)
+
+
+### Bug Fixes
+
+* display correct HTTP error code for error ([7405f42](https://github.com/LBHackney-IT/lbh-housing-register/commit/7405f4272f008e9e986a02bb82c4d316c3942a96))
+* remove switch cases on api with single method ([bb98afe](https://github.com/LBHackney-IT/lbh-housing-register/commit/bb98afe8f3ed9216f794be57bd4a61e838384c49))
+* surface notify errors without blocking application flow ([9b845ea](https://github.com/LBHackney-IT/lbh-housing-register/commit/9b845ead42df6919ce2e104978ebdb1b4287fbb0))
+
 ## [2.3.1](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.3.0...hackney-housing-register-v2.3.1) (2026-07-31)
 
 

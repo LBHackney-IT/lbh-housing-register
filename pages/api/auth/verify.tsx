@@ -31,69 +31,68 @@ const endpoint: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  switch (req.method) {
-    case 'POST':
-      try {
-        const request = parseVerifyBody(req);
-        if (!request) {
-          res
-            .status(StatusCodes.BAD_REQUEST)
-            .json({ message: 'Unable to parse request' });
-          return;
-        }
+  if (req.method !== 'POST') {
+    res
+      .setHeader('Allow', 'POST')
+      .status(StatusCodes.METHOD_NOT_ALLOWED)
+      .json({ message: 'Method not allowed' });
+    return;
+  }
 
-        // Fail here on missing fields so we don't trigger a backend 500
-        if (
-          typeof request.email !== 'string' ||
-          request.email.trim() === '' ||
-          typeof request.code !== 'string' ||
-          request.code.trim() === ''
-        ) {
-          res
-            .status(StatusCodes.BAD_REQUEST)
-            .json({ message: 'Email and code are required' });
-          return;
-        }
-
-        if (!isValidAuthEmail(request.email)) {
-          res
-            .status(StatusCodes.BAD_REQUEST)
-            .json({ message: INVALID_AUTH_EMAIL_MESSAGE });
-          return;
-        }
-
-        const verifyRequest: VerifyAuthRequest = {
-          email: request.email.trim(),
-          code: request.code.trim(),
-        };
-
-        const data = await confirmVerifyCode(verifyRequest);
-
-        // set cookie with access token (JWT)
-        if (data) {
-          setAuthCookie(res, data);
-        }
-
-        res.status(StatusCodes.OK).json(data);
-      } catch (error) {
-        if (axios.isAxiosError(error) && error.response?.status) {
-          res
-            .status(error.response.status)
-            .json({ message: 'Unable to confirm verify code' });
-          return;
-        }
-
-        console.error(error);
-        res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Unable to confirm verify code' });
-      }
-      break;
-
-    default:
+  try {
+    const request = parseVerifyBody(req);
+    if (!request) {
       res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ message: 'Invalid request method' });
+        .json({ message: 'Unable to parse request' });
+      return;
+    }
+
+    // Fail here on missing fields so we don't trigger a backend 500
+    if (
+      typeof request.email !== 'string' ||
+      request.email.trim() === '' ||
+      typeof request.code !== 'string' ||
+      request.code.trim() === ''
+    ) {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: 'Email and code are required' });
+      return;
+    }
+
+    if (!isValidAuthEmail(request.email)) {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: INVALID_AUTH_EMAIL_MESSAGE });
+      return;
+    }
+
+    const verifyRequest: VerifyAuthRequest = {
+      email: request.email.trim(),
+      code: request.code.trim(),
+    };
+
+    const data = await confirmVerifyCode(verifyRequest);
+
+    // set cookie with access token (JWT)
+    if (data) {
+      setAuthCookie(res, data);
+    }
+
+    res.status(StatusCodes.OK).json(data);
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status) {
+      res
+        .status(error.response.status)
+        .json({ message: 'Unable to confirm verify code' });
+      return;
+    }
+
+    console.error(error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: 'Unable to confirm verify code' });
   }
 };
 

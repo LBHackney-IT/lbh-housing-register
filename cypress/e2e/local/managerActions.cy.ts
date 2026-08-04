@@ -360,8 +360,13 @@ describe('Manager actions', () => {
       cy.contains(`${childFirstName} ${childLastName}`);
 
       //remove partner and check
-      cy.contains('Remove household member').first().click();
-      cy.contains('Yes').click({ force: true });
+      cy.contains('tr', `${partnerFirstName} ${partnerLastName}`)
+        .find('[data-testid^="test-remove-household-member-button-"]')
+        .click();
+      cy.contains('Confirm delete');
+      cy.get(
+        '[data-testid^="test-remove-household-member-confirmation-button-"]',
+      ).click();
 
       cy.contains(
         `${mainApplicantTitle} ${mainApplicantFirstName} ${mainApplicantLastName} (+1)`,

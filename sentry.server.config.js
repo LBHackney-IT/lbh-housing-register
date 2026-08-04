@@ -23,6 +23,16 @@ Sentry.init({
     ENVIRONMENT === 'staging' ||
     ENVIRONMENT === 'development',
 
+  // When a request has a `application/json` Content-Type but a body
+  // that isn't valid JSON (or exceeds the size limit) - Next already catches
+  // this itself and correctly responds 400/413.
+  // Ignore these errors from automated scanners (e.g. Probely) fuzzing endpoints with malformed bodies.
+  ignoreErrors: [
+    /^Invalid JSON$/,
+    /^Invalid body$/,
+    /^Body exceeded .* limit$/,
+  ],
+
   // remove cookies from the event before sending
   beforeSend(event) {
     if (event.request?.cookies['hackneyToken']) {

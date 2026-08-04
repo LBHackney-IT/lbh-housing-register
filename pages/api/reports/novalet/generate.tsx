@@ -8,42 +8,47 @@ const endpoint: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  switch (req.method) {
-    case 'POST':
-      {
-        const user = getSession(req);
+  if (req.method !== 'POST') {
+    res
+      .setHeader('Allow', 'POST')
+      .status(StatusCodes.METHOD_NOT_ALLOWED)
+      .json({ message: 'Method not allowed' });
+    return;
+  }
 
-        const auth = getAuth(
-          process.env.AUTHORISED_MANAGER_GROUP as string,
-          user,
-        );
+  const user = getSession(req);
 
-        if (!('user' in auth)) {
-          res.status(StatusCodes.FORBIDDEN).json({ message: 'access denied' });
-          return;
-        }
+  const auth = getAuth(process.env.AUTHORISED_MANAGER_GROUP as string, user);
 
-        const response = await generateNovaletExport();
+  if (!('user' in auth)) {
+    res.status(StatusCodes.FORBIDDEN).json({ message: 'access denied' });
+    return;
+  }
 
-        res.status(response.status);
+  try {
+    const response = await generateNovaletExport();
 
-        if (response.status == StatusCodes.OK) {
-          res.send({
-            message: 'Export file generated successfully',
-          });
-        } else {
-          res.send({
-            message: 'Unable to generate export file',
-          });
-        }
-      }
+    res.status(response.status);
 
-      break;
-
-    default:
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: 'Invalid request method' });
+    if (response.status == StatusCodes.OK) {
+      res.send({
+        message: 'Export file generated successfully',
+      });
+    } else {
+      // Status tells you where to look: 4xx = request/auth, 5xx = upstream.
+      console.error('Unable to generate export file', {
+        status: response.status,
+        data: response.data,
+      });
+      res.send({
+        message: 'Unable to generate export file',
+      });
+    }
+  } catch (error) {
+    console.error('Unable to generate export file', error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: 'Unable to generate export file' });
   }
 };
 

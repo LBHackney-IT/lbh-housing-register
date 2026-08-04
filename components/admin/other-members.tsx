@@ -77,22 +77,6 @@ export default function OtherMembers({
                     Remove household member
                   </button>
                 )}
-
-                <Dialog
-                  isOpen={showDeleteWarningDialog && !userError}
-                  title="Confirm delete"
-                  onDismiss={() => setShowDeleteWarningDialog(false)}
-                  onConfirm={() => handleDelete(applicantToDelete)}
-                  onCancel={() => setShowDeleteWarningDialog(false)}
-                  confirmButtonTestId={`test-remove-household-member-confirmation-button-${applicant.person?.id}`}
-                >
-                  <Paragraph>
-                    Are you sure you want to remove{' '}
-                    {applicantToDelete.person?.title}{' '}
-                    {applicantToDelete.person?.firstName}{' '}
-                    {applicantToDelete.person?.surname}?
-                  </Paragraph>
-                </Dialog>
               </td>
               <td className="govuk-table__cell govuk-table__cell--numeric">
                 {canEdit && (
@@ -115,6 +99,20 @@ export default function OtherMembers({
           ))}
         </tbody>
       </table>
+      <Dialog
+        isOpen={showDeleteWarningDialog && !userError}
+        title="Confirm delete"
+        onDismiss={() => setShowDeleteWarningDialog(false)}
+        onConfirm={() => handleDelete(applicantToDelete)}
+        onCancel={() => setShowDeleteWarningDialog(false)}
+        confirmButtonTestId={`test-remove-household-member-confirmation-button-${applicantToDelete.person?.id}`}
+      >
+        <Paragraph>
+          Are you sure you want to remove {applicantToDelete.person?.title}{' '}
+          {applicantToDelete.person?.firstName}{' '}
+          {applicantToDelete.person?.surname}?
+        </Paragraph>
+      </Dialog>
     </>
   );
 }

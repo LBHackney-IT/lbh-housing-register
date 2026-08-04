@@ -1,6 +1,8 @@
+import axios from 'axios';
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
+import { AddNoteToHistoryRequest } from '../../../../domain/HousingApi';
 import { addNoteToHistory } from '../../../../lib/gateways/applications-api';
 import { canUpdateApplication } from '../../../../lib/utils/requestAuth';
 
@@ -8,32 +10,44 @@ const endpoint: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  switch (req.method) {
-    case 'POST':
-      try {
-        const request = JSON.parse(req.body);
-        const id = req.query.id as string;
+  if (req.method !== 'POST') {
+    res
+      .setHeader('Allow', 'POST')
+      .status(StatusCodes.METHOD_NOT_ALLOWED)
+      .json({ message: 'Method not allowed' });
+    return;
+  }
 
-        if (canUpdateApplication(req, id)) {
-          const data = await addNoteToHistory(id, request, req);
-          res.status(StatusCodes.OK).json(data);
-        } else {
-          res
-            .status(StatusCodes.FORBIDDEN)
-            .json({ message: 'Unable to add note' });
-        }
-      } catch (error) {
-        console.error(error);
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-          message: 'Unable to add note to activity history',
-        });
-      }
-      break;
+  let request: AddNoteToHistoryRequest;
+  try {
+    request = JSON.parse(req.body);
+  } catch (error) {
+    console.error('Unable to parse note request body', error);
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: 'Unable to parse request' });
+    return;
+  }
 
-    default:
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: 'Invalid request method' });
+  const id = req.query.id as string;
+
+  if (!canUpdateApplication(req, id)) {
+    res.status(StatusCodes.FORBIDDEN).json({ message: 'Access denied' });
+    return;
+  }
+
+  try {
+    const data = await addNoteToHistory(id, request, req);
+    res.status(StatusCodes.OK).json(data);
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      res.status(error.response.status).json(error.response.data);
+    } else {
+      console.error(error);
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: 'Unable to add note to activity history',
+      });
+    }
   }
 };
 

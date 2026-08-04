@@ -7,28 +7,27 @@ const endpoint: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  switch (req.method) {
-    case 'GET':
-      try {
-        const { postcode } = req.query;
-        if (!postcode) {
-          res.status(StatusCodes.BAD_REQUEST).send('Missing postcode');
-          return;
-        }
-        const data = await lookUpAddress(postcode);
-        res.status(StatusCodes.OK).json(data);
-      } catch (error) {
-        console.error(error);
-        res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Unable to look up address' });
-      }
-      break;
+  if (req.method !== 'GET') {
+    res
+      .setHeader('Allow', 'GET')
+      .status(StatusCodes.METHOD_NOT_ALLOWED)
+      .json({ message: 'Method not allowed' });
+    return;
+  }
 
-    default:
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: 'Invalid request method' });
+  try {
+    const { postcode } = req.query;
+    if (!postcode) {
+      res.status(StatusCodes.BAD_REQUEST).send('Missing postcode');
+      return;
+    }
+    const data = await lookUpAddress(postcode);
+    res.status(StatusCodes.OK).json(data);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: 'Unable to look up address' });
   }
 };
 

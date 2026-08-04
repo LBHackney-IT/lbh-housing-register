@@ -7,26 +7,23 @@ const endpoint: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  switch (req.method) {
-    case 'POST':
-      try {
-        removeAuthCookie(res);
+  if (req.method !== 'POST') {
+    res
+      .setHeader('Allow', 'POST')
+      .status(StatusCodes.METHOD_NOT_ALLOWED)
+      .json({ message: 'Method not allowed' });
+    return;
+  }
 
-        res
-          .status(StatusCodes.OK)
-          .json({ message: 'Application form sign out' });
-      } catch (error) {
-        console.error(error);
-        res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Unable to sign out' });
-      }
-      break;
+  try {
+    removeAuthCookie(res);
 
-    default:
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: 'Invalid request method' });
+    res.status(StatusCodes.OK).json({ message: 'Application form sign out' });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: 'Unable to sign out' });
   }
 };
 

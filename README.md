@@ -126,7 +126,6 @@ Repository has a husky configuration to prevent commits that fail linting or tes
 
 - **pre-commit:** runs `lint-staged` (linting and formatting on staged files), the Jest test suite, Cypress component tests, and a [ggshield](https://docs.gitguardian.com/ggshield-docs/getting-started) secret scan.
 - **commit-msg:** runs `commitlint` to enforce conventional commit format (see below).
-- **prepare-commit-msg:** launches the `czg` interactive commit helper when running `git commit`.
 
 ### Conventional commits
 

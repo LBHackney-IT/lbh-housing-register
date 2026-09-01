@@ -75,10 +75,10 @@ export const getClaimsByRole = (role?: UserRole): Permissions => {
 export const generateHRUserWithPermissions = (
   role?: UserRole,
 ): StaffUserWithPermissions => {
-  const userRole = role ? getGroupByRole(role) : '';
+  const userRole = role !== undefined ? getGroupByRole(role) : '';
 
   return {
-    ...generateJWTTokenTestData([userRole]),
+    ...generateJWTTokenTestData(userRole ? [userRole] : []),
     ...getClaimsByRole(role),
   };
 };

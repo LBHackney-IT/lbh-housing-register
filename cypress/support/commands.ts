@@ -256,6 +256,10 @@ Cypress.Commands.add('loginAsUser', (userType: string) => {
     manager: generateUser('AUTHORISED_MANAGER_GROUP'),
     admin: generateUser('AUTHORISED_ADMIN_GROUP'),
     readOnly: generateUser('AUTHORISED_READONLY_GROUP'),
+    noGroup: {
+      ...generateUser('AUTHORISED_OFFICER_GROUP'),
+      groups: [],
+    },
   };
 
   const user = users[userType as keyof typeof users];
@@ -281,15 +285,17 @@ Cypress.Commands.add('loginAsUser', (userType: string) => {
       cookies: Array<{ name: string; value: string }>;
       user: typeof user;
     };
-    const groupVariable = isLocalE2e
-      ? 'E2E_AUTHORISED_MANAGER_GROUP'
-      : `AUTHORISED_${userType.toUpperCase()}_GROUP`;
-    const expectedGroup = exposed(groupVariable);
-    if (!authenticatedUser.groups.includes(expectedGroup)) {
-      throw new Error(
-        `Signed-in staff groups do not include "${expectedGroup}" from ${groupVariable}. ` +
-          `Groups present: ${authenticatedUser.groups.join(', ') || '(none)'}`,
-      );
+    if (userType !== 'noGroup') {
+      const groupVariable = isLocalE2e
+        ? 'E2E_AUTHORISED_MANAGER_GROUP'
+        : `AUTHORISED_${userType.toUpperCase()}_GROUP`;
+      const expectedGroup = exposed(groupVariable);
+      if (!authenticatedUser.groups.includes(expectedGroup)) {
+        throw new Error(
+          `Signed-in staff groups do not include "${expectedGroup}" from ${groupVariable}. ` +
+            `Groups present: ${authenticatedUser.groups.join(', ') || '(none)'}`,
+        );
+      }
     }
 
     cy.getCookies().should('be.empty');

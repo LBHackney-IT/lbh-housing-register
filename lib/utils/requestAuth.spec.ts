@@ -11,11 +11,8 @@ import { canUpdateApplication, getApplicationAccess } from './requestAuth';
 import { getUser } from './users';
 
 jest.mock('../auth/staff', () => ({
+  ...jest.requireActual('../auth/staff'),
   getSession: jest.fn(),
-  hasAnyPermissions: (user: { hasOfficerPermissions?: boolean }) =>
-    Boolean(user.hasOfficerPermissions),
-  hasReadOnlyPermissionOnly: (user: { hasReadOnlyPermissions?: boolean }) =>
-    Boolean(user.hasReadOnlyPermissions),
 }));
 jest.mock('./users', () => ({ getUser: jest.fn() }));
 
@@ -27,14 +24,15 @@ describe('getApplicationAccess', () => {
     jest.clearAllMocks();
   });
 
-  it('allows staff with write permissions', async () => {
-    getSessionMock.mockResolvedValue(
-      generateHRUserWithPermissions(UserRole.Officer),
-    );
-    expect(await getApplicationAccess(createRequest(), 'app-id')).toBe(
-      'allowed',
-    );
-  });
+  it.each([UserRole.Admin, UserRole.Manager, UserRole.Officer])(
+    'allows writable staff role %s',
+    async (role) => {
+      getSessionMock.mockResolvedValue(generateHRUserWithPermissions(role));
+      expect(await getApplicationAccess(createRequest(), 'app-id')).toBe(
+        'allowed',
+      );
+    },
+  );
 
   it('checks the staff session with the request and skips resident auth for writable staff', async () => {
     const req = createRequest();
@@ -53,6 +51,15 @@ describe('getApplicationAccess', () => {
     getSessionMock.mockResolvedValue(
       generateHRUserWithPermissions(UserRole.ReadOnly),
     );
+    expect(await getApplicationAccess(createRequest(), 'app-id')).toBe(
+      'forbidden',
+    );
+  });
+
+  it('forbids authenticated staff without an authorised role', async () => {
+    getSessionMock.mockResolvedValue(generateHRUserWithPermissions());
+    getUserMock.mockReturnValue(undefined);
+
     expect(await getApplicationAccess(createRequest(), 'app-id')).toBe(
       'forbidden',
     );

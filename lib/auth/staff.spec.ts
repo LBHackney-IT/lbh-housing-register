@@ -406,12 +406,25 @@ describe('canEditApplications', () => {
     ).toBe(true);
   });
 
-  it('allows permitted staff to edit a manual draft', () => {
+  it.each([
+    UserRole.Admin,
+    UserRole.Manager,
+    UserRole.Officer,
+    UserRole.ReadOnly,
+  ])('allows permitted role %s to edit a manual draft', (role) => {
     expect(
-      canEditApplications(generateHRUserWithPermissions(UserRole.Officer), {
+      canEditApplications(generateHRUserWithPermissions(role), {
         status: ApplicationStatus.MANUAL_DRAFT,
       }),
     ).toBe(true);
+  });
+
+  it('does not implicitly give an admin the manager edit-all rule', () => {
+    expect(
+      canEditApplications(generateHRUserWithPermissions(UserRole.Admin), {
+        status: ApplicationStatus.ACTIVE,
+      }),
+    ).toBe(false);
   });
 
   it.each([

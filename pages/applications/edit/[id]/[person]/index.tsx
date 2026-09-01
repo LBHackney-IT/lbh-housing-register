@@ -5,7 +5,8 @@ import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 
 import MainApplicantForm from '../../../../../components/admin/MainApplicantForm';
-import { HackneyGoogleUser } from '../../../../../domain/HackneyGoogleUser';
+import { StaffUser } from '../../../../../domain/StaffUser';
+import { authorizeStaffPage } from '../../../../../lib/auth/page';
 import {
   Address as ApiAddress,
   Application,
@@ -17,13 +18,12 @@ import {
   convertAddressToPrimary,
   generateQuestionArray,
 } from '../../../../../lib/utils/adminHelpers';
-import { getRedirect, getSession } from '../../../../../lib/utils/googleAuth';
 import { scrollToError, scrollToTop } from '../../../../../lib/utils/scroll';
 import Custom404 from '../../../../404';
 import { isAssignableToError } from 'lib/utils/errorHelper';
 
 interface PageProps {
-  user: HackneyGoogleUser;
+  user: StaffUser;
   data: Application;
   person: string;
   evidenceLink: string;
@@ -142,16 +142,9 @@ export default function EditApplicant({ user, data }: PageProps): JSX.Element {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const user = getSession(context.req);
-  const redirect = getRedirect(user, true);
-  if (redirect) {
-    return {
-      props: {},
-      redirect: {
-        destination: redirect,
-      },
-    };
-  }
+  const authorization = await authorizeStaffPage(context, { write: true });
+  if ('redirect' in authorization) return authorization;
+  const { user } = authorization;
 
   const { id, person } = context.params as {
     id: string;

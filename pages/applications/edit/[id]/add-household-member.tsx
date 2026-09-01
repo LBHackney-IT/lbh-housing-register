@@ -5,7 +5,8 @@ import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 
 import HouseholdMemberForm from '../../../../components/admin/HouseholdMemberForm';
-import { HackneyGoogleUser } from '../../../../domain/HackneyGoogleUser';
+import { StaffUser } from '../../../../domain/StaffUser';
+import { authorizeStaffPage } from '../../../../lib/auth/page';
 import { Application } from '../../../../domain/HousingApi';
 import { getApplication } from '../../../../lib/gateways/applications-api';
 import { updateApplication } from '../../../../lib/gateways/internal-api';
@@ -13,13 +14,12 @@ import {
   Address,
   generateQuestionArray,
 } from '../../../../lib/utils/adminHelpers';
-import { getRedirect, getSession } from '../../../../lib/utils/googleAuth';
 import { scrollToError, scrollToTop } from '../../../../lib/utils/scroll';
 import Custom404 from '../../../404';
 import { isAssignableToError } from 'lib/utils/errorHelper';
 
 interface PageProps {
-  user: HackneyGoogleUser;
+  user: StaffUser;
   data: Application;
 }
 
@@ -120,16 +120,9 @@ export default function AddHouseholdMember({
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const user = getSession(context.req);
-  const redirect = getRedirect(user, true);
-  if (redirect) {
-    return {
-      props: {},
-      redirect: {
-        destination: redirect,
-      },
-    };
-  }
+  const authorization = await authorizeStaffPage(context, { write: true });
+  if ('redirect' in authorization) return authorization;
+  const { user } = authorization;
 
   const { id } = context.params as {
     id: string;

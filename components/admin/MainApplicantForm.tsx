@@ -10,7 +10,7 @@ import { UserContext } from '../../lib/contexts/user-context';
 import Button from '../../components/button';
 import ErrorSummary from '../../components/errors/error-summary';
 import { FormID } from '../../lib/utils/form-data';
-import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
+import { StaffUser } from '../../domain/StaffUser';
 import { Application } from '../../domain/HousingApi';
 import {
   allFormSections,
@@ -107,7 +107,7 @@ function RevalidateOnAddressHistoryChange({
 
 interface PageProps {
   isEditing: boolean;
-  user: HackneyGoogleUser;
+  user: StaffUser;
   onSubmit: (values: FormikValues) => void;
   isSubmitted: boolean;
   addressHistory: any; // eslint-disable-line @typescript-eslint/no-explicit-any

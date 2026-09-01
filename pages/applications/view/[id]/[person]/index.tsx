@@ -15,6 +15,7 @@ import { HeadingOne } from '../../../../../components/content/headings';
 import Paragraph from '../../../../../components/content/paragraph';
 import Layout from '../../../../../components/layout/staff-layout';
 import { Application, Applicant } from '../../../../../domain/HousingApi';
+import { authorizeStaffPage } from '../../../../../lib/auth/page';
 import { UserContext } from '../../../../../lib/contexts/user-context';
 import { getApplication } from '../../../../../lib/gateways/applications-api';
 import {
@@ -28,16 +29,14 @@ import {
   situationCheckboxList,
 } from '../../../../../lib/utils/checkboxListData';
 import {
-  HackneyGoogleUserWithPermissions,
+  StaffUserWithPermissions,
   canViewSensitiveApplication,
-  getRedirect,
-  getSession,
   hasReadOnlyPermissionOnly,
-} from '../../../../../lib/utils/googleAuth';
+} from '../../../../../lib/auth/staff';
 import Custom404 from '../../../../404';
 
 interface PageProps {
-  user: HackneyGoogleUserWithPermissions;
+  user: StaffUserWithPermissions;
   data: Application;
   person: string;
   evidenceLink: string;
@@ -239,16 +238,9 @@ export default function ApplicationPersonPage({
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const user = getSession(context.req);
-  const redirect = getRedirect(user);
-  if (redirect) {
-    return {
-      props: {},
-      redirect: {
-        destination: redirect,
-      },
-    };
-  }
+  const authorization = await authorizeStaffPage(context);
+  if ('redirect' in authorization) return authorization;
+  const { user } = authorization;
 
   const { id, person } = context.params as {
     id: string;

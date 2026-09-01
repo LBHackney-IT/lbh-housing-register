@@ -4,7 +4,7 @@ import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 import { AddNoteToHistoryRequest } from '../../../../domain/HousingApi';
 import { addNoteToHistory } from '../../../../lib/gateways/applications-api';
-import { canUpdateApplication } from '../../../../lib/utils/requestAuth';
+import { getApplicationAccess } from '../../../../lib/utils/requestAuth';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -31,8 +31,18 @@ const endpoint: NextApiHandler = async (
 
   const id = req.query.id as string;
 
-  if (!canUpdateApplication(req, id)) {
-    res.status(StatusCodes.FORBIDDEN).json({ message: 'Access denied' });
+  const access = await getApplicationAccess(req, id);
+  if (access !== 'allowed') {
+    res
+      .status(
+        access === 'unauthenticated'
+          ? StatusCodes.UNAUTHORIZED
+          : StatusCodes.FORBIDDEN,
+      )
+      .json({
+        message:
+          access === 'unauthenticated' ? 'Unauthorized' : 'Access denied',
+      });
     return;
   }
 

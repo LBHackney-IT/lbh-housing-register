@@ -1,344 +1,174 @@
-/**
- * @jest-environment node
- */
-import { faker } from '@faker-js/faker';
-import axios, { AxiosError } from 'axios';
-import { StatusCodes } from 'http-status-codes';
+/** @jest-environment node */
 
-import { Application } from '../../../../../domain/HousingApi';
+import axios, { type AxiosError } from 'axios';
+import { StatusCodes } from 'http-status-codes';
+import {
+  createMocks,
+  type RequestMethod,
+  type RequestOptions,
+} from 'node-mocks-http';
+
 import * as applicationApi from '../../../../../lib/gateways/applications-api';
-import { hasReadOnlyStaffPermissions } from '../../../../../lib/utils/hasReadOnlyStaffPermissions';
-import { hasStaffPermissions } from '../../../../../lib/utils/hasStaffPermissions';
-import { isStaffAction } from '../../../../../lib/utils/isStaffAction';
 import * as requestAuth from '../../../../../lib/utils/requestAuth';
 import endpoint from '../../../../../pages/api/applications/[id]/index';
-import { generateMockRequestResponseWithHackneyToken } from '../../../../../testUtils/apiHelper';
-import {
-  UserRole,
-  generateSignedTokenByRole,
-} from '../../../../../testUtils/userHelper';
 
-const applicationId = faker.string.uuid();
-const mockApplicationData: Application = {
-  id: applicationId,
-};
+const applicationId = 'application-id';
 
-const { signedToken } = generateSignedTokenByRole(UserRole.Manager);
+function request(method: RequestMethod = 'PATCH') {
+  const { req, res } = createMocks({
+    method,
+    query: { id: applicationId },
+    body: JSON.stringify({
+      id: applicationId,
+    }) as unknown as RequestOptions['body'],
+  });
+  return { req, res };
+}
 
-jest.mock('../../../../../lib/utils/isStaffAction', () => ({
-  isStaffAction: jest.fn(),
-}));
-
-jest.mock('../../../../../lib/utils/hasStaffPermissions', () => ({
-  hasStaffPermissions: jest.fn(),
-}));
-
-jest.mock('../../../../../lib/utils/hasReadOnlyStaffPermissions', () => ({
-  hasReadOnlyStaffPermissions: jest.fn(),
-}));
-
-jest.mock('axios');
-const mockAxiosInstance = axios as jest.Mocked<typeof axios>;
-
-describe('PATCH', () => {
-  describe('authorization', () => {
-    const jsonParseSpy = jest
-      .spyOn(JSON, 'parse')
-      .mockReturnValue(mockApplicationData);
-
-    const canUpdateApplicationSpy = jest
-      .spyOn(requestAuth, 'canUpdateApplication')
-      .mockReturnValue(true);
-
-    jest
-      .spyOn(applicationApi, 'updateApplication')
-      .mockResolvedValue({ ...mockApplicationData });
-
-    const isStaffActionMock = (isStaffAction as jest.Mock).mockReturnValue(
-      true,
-    );
-    const hasStaffPermissionsMock = (
-      hasStaffPermissions as jest.Mock
-    ).mockReturnValue(true);
-    const hasReadOnlyStaffPermissionsMock = (
-      hasReadOnlyStaffPermissions as jest.Mock
-    ).mockReturnValue(false);
-
-    it('calls parse on JSON with the request body', async () => {
-      const { req, res } = generateMockRequestResponseWithHackneyToken({
-        hackneyToken: signedToken,
-        requestBody: undefined,
-        method: 'PATCH',
-      });
-
-      await endpoint(req, res);
-
-      expect(jsonParseSpy).toHaveBeenCalledTimes(1);
-      expect(jsonParseSpy).toHaveBeenCalledWith(req.body);
-    });
-
-    it('calls canUpdateApplication with request and application id from the query', async () => {
-      const { req, res } = generateMockRequestResponseWithHackneyToken({
-        hackneyToken: signedToken,
-        method: 'PATCH',
-      });
-      req.query.id = applicationId;
-
-      await endpoint(req, res);
-
-      expect(canUpdateApplicationSpy).toHaveBeenCalledTimes(1);
-      expect(canUpdateApplicationSpy).toHaveBeenCalledWith(req, applicationId);
-    });
-
-    it('calls isStaffAction with application, hasStaffPermissions and hasReadOnlyStaffPermissions with the request when canUpdateApplication returns false', async () => {
-      const { req, res } = generateMockRequestResponseWithHackneyToken({
-        hackneyToken: signedToken,
-        method: 'PATCH',
-      });
-      canUpdateApplicationSpy.mockReturnValueOnce(false);
-
-      await endpoint(req, res);
-
-      expect(isStaffActionMock).toHaveBeenCalledTimes(1);
-      expect(isStaffActionMock).toHaveBeenCalledWith(mockApplicationData);
-      expect(hasStaffPermissionsMock).toHaveBeenCalledTimes(1);
-      expect(hasStaffPermissionsMock).toHaveBeenCalledWith(req);
-      expect(hasReadOnlyStaffPermissionsMock).toHaveBeenCalledTimes(1);
-      expect(hasReadOnlyStaffPermissionsMock).toHaveBeenCalledWith(req);
-    });
-
-    it('returns status code 200 and application data when application is updated is successfully', async () => {
-      const { req, res } = generateMockRequestResponseWithHackneyToken({
-        hackneyToken: signedToken,
-        method: 'PATCH',
-      });
-
-      await endpoint(req, res);
-
-      expect(res.statusCode).toBe(StatusCodes.OK);
-      expect(res._getJSONData()).toStrictEqual(mockApplicationData);
-    });
-
-    it('sets response status code to 403 and json response to correct error message when user is not authorized to update the application', async () => {
-      const { req, res } = generateMockRequestResponseWithHackneyToken({
-        hackneyToken: signedToken,
-        method: 'PATCH',
-      });
-      canUpdateApplicationSpy.mockReturnValue(false);
-      isStaffActionMock.mockReturnValue(false);
-      const expectedError = { message: 'Access denied' };
-
-      //res.status().json() is using the same mock parser as JSON.parse, so need to override the default mock here
-      jest.spyOn(JSON, 'parse').mockReturnValue(expectedError);
-
-      await endpoint(req, res);
-
-      expect(res.statusCode).toBe(StatusCodes.FORBIDDEN);
-      expect(res._getJSONData()).toStrictEqual(expectedError);
-    });
-
-    //staff member with read only permissions
-    it('sets response status to 403 when canUpdateApplication returns false and isStaffAction, hasStaffPermissions, hasReadOnlyStaffPermissions return true', async () => {
-      const { req, res } = generateMockRequestResponseWithHackneyToken({
-        hackneyToken: signedToken,
-        method: 'PATCH',
-      });
-      canUpdateApplicationSpy.mockReturnValue(false);
-      isStaffActionMock.mockReturnValue(true);
-      hasStaffPermissionsMock.mockReturnValue(true);
-      hasReadOnlyStaffPermissionsMock.mockReturnValue(true);
-
-      await endpoint(req, res);
-
-      expect(res.statusCode).toBe(StatusCodes.FORBIDDEN);
-    });
+describe('PATCH /api/applications/[id]', () => {
+  beforeEach(() => {
+    jest.restoreAllMocks();
   });
 
-  describe('error handing', () => {
-    afterEach(() => {
-      jest.restoreAllMocks();
-    });
+  it('updates an application when access is allowed', async () => {
+    jest
+      .spyOn(requestAuth, 'getApplicationAccess')
+      .mockResolvedValue('allowed');
+    const update = jest
+      .spyOn(applicationApi, 'updateApplication')
+      .mockResolvedValue({ id: applicationId });
+    const { req, res } = request();
 
-    jest.mock('axios', () => ({
-      create: jest.fn(),
-    }));
+    await endpoint(req, res);
 
-    it('sets response status code to 400 when the request body cannot be parsed', async () => {
-      const { req, res } = generateMockRequestResponseWithHackneyToken({
-        hackneyToken: signedToken,
-        method: 'PATCH',
-      });
-      const expectedErrorMessage = { message: 'Unable to parse request' };
+    expect(res.statusCode).toBe(StatusCodes.OK);
+    expect(update).toHaveBeenCalledWith(
+      { id: applicationId },
+      applicationId,
+      req,
+    );
+    expect(res._getJSONData()).toEqual({ id: applicationId });
+  });
 
-      // The first call (ours, on req.body) throws; res.json() internally
-      // re-parses the body through this same mocked JSON.parse to power
-      // _getJSONData(), so the fallback also needs to resolve to what we
-      // expect the response body to be (see similar note further down).
-      jest.spyOn(JSON, 'parse').mockImplementationOnce(() => {
-        throw new Error();
-      });
-      jest.spyOn(JSON, 'parse').mockReturnValue(expectedErrorMessage);
+  it('parses the request body before checking application access', async () => {
+    const parse = jest.spyOn(JSON, 'parse');
+    const access = jest
+      .spyOn(requestAuth, 'getApplicationAccess')
+      .mockResolvedValue('allowed');
+    jest
+      .spyOn(applicationApi, 'updateApplication')
+      .mockResolvedValue({ id: applicationId });
+    const { req, res } = request();
+
+    await endpoint(req, res);
+
+    expect(parse).toHaveBeenCalledWith(req.body);
+    expect(access).toHaveBeenCalledWith(req, applicationId);
+  });
+
+  it.each([
+    ['unauthenticated', StatusCodes.UNAUTHORIZED, 'Unauthorized'],
+    ['forbidden', StatusCodes.FORBIDDEN, 'Access denied'],
+  ] as const)(
+    'returns the correct status for %s access',
+    async (access, status, message) => {
+      jest.spyOn(requestAuth, 'getApplicationAccess').mockResolvedValue(access);
+      const update = jest.spyOn(applicationApi, 'updateApplication');
+      const { req, res } = request();
+
+      await endpoint(req, res);
+
+      expect(res.statusCode).toBe(status);
+      expect(res._getJSONData()).toEqual({ message });
+      expect(update).not.toHaveBeenCalled();
+    },
+  );
+
+  it('rejects unsupported methods before authorization', async () => {
+    const access = jest.spyOn(requestAuth, 'getApplicationAccess');
+    const { req, res } = request('GET');
+
+    await endpoint(req, res);
+
+    expect(res.statusCode).toBe(StatusCodes.METHOD_NOT_ALLOWED);
+    expect(res.getHeader('Allow')).toBe('PATCH');
+    expect(access).not.toHaveBeenCalled();
+  });
+
+  describe('error handling', () => {
+    it('returns 400 when the request body cannot be parsed', async () => {
+      const access = jest.spyOn(requestAuth, 'getApplicationAccess');
+      const update = jest.spyOn(applicationApi, 'updateApplication');
+      const { req, res } = request();
+      req.body = 'not-json';
+      jest.spyOn(console, 'error').mockImplementation();
 
       await endpoint(req, res);
 
       expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
-      expect(res._getJSONData()).toStrictEqual(expectedErrorMessage);
-    });
-
-    it('sets response status code to 500 and returns correct error message when non AxiosError is thrown while updating', async () => {
-      const { req, res } = generateMockRequestResponseWithHackneyToken({
-        hackneyToken: signedToken,
-        method: 'PATCH',
+      expect(res._getJSONData()).toEqual({
+        message: 'Unable to parse request',
       });
-      jest.spyOn(JSON, 'parse').mockReturnValueOnce(mockApplicationData);
-      jest.spyOn(requestAuth, 'canUpdateApplication').mockReturnValue(true);
-      jest
-        .spyOn(applicationApi, 'updateApplication')
-        .mockImplementationOnce(() => {
-          throw new Error('boom');
-        });
-
-      const expectedErrorMessage = { message: 'Unable to update application' };
-      await endpoint(req, res);
-
-      expect(res.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
-      expect(res._getJSONData()).toStrictEqual(expectedErrorMessage);
+      expect(access).not.toHaveBeenCalled();
+      expect(update).not.toHaveBeenCalled();
     });
 
-    it('set correct response status and message when axios response error is thrown', async () => {
-      const axiosErrorStatusCode = StatusCodes.BAD_GATEWAY;
-      const axiosErrorMessage = 'Bad gateway error thrown by axios';
-
-      const mockAxiosError = {
+    it('forwards the status and body from an Axios response error', async () => {
+      const upstreamBody = { message: 'Bad gateway error thrown by axios' };
+      const axiosError = {
         response: {
-          status: axiosErrorStatusCode,
-          data: axiosErrorMessage,
+          status: StatusCodes.BAD_GATEWAY,
+          data: upstreamBody,
         },
       } as AxiosError;
-
-      const { req, res } = generateMockRequestResponseWithHackneyToken({
-        hackneyToken: signedToken,
-        method: 'PATCH',
-      });
-
-      //mock json parse to return two different values on consecutive calls. This is because the same parser is used in JSON.parse() and res.status().json()
-      const jsonParseSpy = jest
-        .spyOn(JSON, 'parse')
-        .mockReturnValueOnce(mockApplicationData);
-
-      jest.spyOn(JSON, 'parse').mockReturnValue(axiosErrorMessage);
-      jest.spyOn(requestAuth, 'canUpdateApplication').mockReturnValue(true);
-
-      //mock updateApplication to throw axios error. isAxiosError is mocked too separately to ensure correct flow is triggered
+      jest
+        .spyOn(requestAuth, 'getApplicationAccess')
+        .mockResolvedValue('allowed');
       jest
         .spyOn(applicationApi, 'updateApplication')
-        .mockImplementationOnce(() => {
-          throw mockAxiosError;
-        });
-
-      mockAxiosInstance.isAxiosError.mockReturnValueOnce(true);
+        .mockRejectedValue(axiosError);
+      jest.spyOn(axios, 'isAxiosError').mockReturnValue(true);
+      const { req, res } = request();
 
       await endpoint(req, res);
 
-      expect(res.statusCode).toBe(axiosErrorStatusCode);
-      expect(res._getJSONData()).toBe(axiosErrorMessage);
-
-      //JSON.parse(req.body) and res.status(error.response.status).json(error.response.data) calls the same JSON parse,
-      // so this is to demonstrate that behavior
-      expect(jsonParseSpy).toHaveBeenCalledTimes(2);
-      expect(jsonParseSpy).toHaveBeenCalledWith(req.body);
-      expect(jsonParseSpy).toHaveBeenCalledWith(
-        JSON.stringify(axiosErrorMessage),
-      );
+      expect(res.statusCode).toBe(StatusCodes.BAD_GATEWAY);
+      expect(res._getJSONData()).toEqual(upstreamBody);
     });
 
-    it('logs and returns a 500 when an axios error has no response (request made, none received)', async () => {
-      const axiosErrorMessage = 'request error from axios';
-
-      const mockAxiosError = {
-        request: {
-          data: axiosErrorMessage,
-        },
-      } as AxiosError;
-
-      const { req, res } = generateMockRequestResponseWithHackneyToken({
-        hackneyToken: signedToken,
-        method: 'PATCH',
-      });
-
-      jest.spyOn(JSON, 'parse').mockReturnValueOnce(mockApplicationData);
-      jest.spyOn(requestAuth, 'canUpdateApplication').mockReturnValue(true);
-
+    it.each([
+      [
+        'an Axios request error with no response',
+        { request: { data: 'request error from axios' } } as AxiosError,
+      ],
+      [
+        'an Axios setup error with neither request nor response',
+        { message: 'error code from axios' } as AxiosError,
+      ],
+      ['a non-Axios error', new Error('boom')],
+    ])('logs and returns 500 for %s', async (_description, thrownError) => {
+      jest
+        .spyOn(requestAuth, 'getApplicationAccess')
+        .mockResolvedValue('allowed');
       jest
         .spyOn(applicationApi, 'updateApplication')
-        .mockImplementationOnce(() => {
-          throw mockAxiosError;
-        });
-
-      const consoleErrorSpy = jest.spyOn(console, 'error');
-
-      mockAxiosInstance.isAxiosError.mockReturnValueOnce(true);
+        .mockRejectedValue(thrownError);
+      jest
+        .spyOn(axios, 'isAxiosError')
+        .mockReturnValue(!(thrownError instanceof Error));
+      const consoleError = jest.spyOn(console, 'error').mockImplementation();
+      const { req, res } = request();
 
       await endpoint(req, res);
 
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect(consoleError).toHaveBeenCalledWith(
         'Unable to update application',
-        mockAxiosError,
+        thrownError,
       );
       expect(res.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
-      expect(res._getJSONData()).toStrictEqual({
+      expect(res._getJSONData()).toEqual({
         message: 'Unable to update application',
       });
-    });
-
-    it('logs and returns a 500 when an axios error is thrown with neither request nor response', async () => {
-      const mockAxiosError = {
-        message: 'error code from axios',
-      } as AxiosError;
-
-      const { req, res } = generateMockRequestResponseWithHackneyToken({
-        hackneyToken: signedToken,
-        method: 'PATCH',
-      });
-
-      jest.spyOn(JSON, 'parse').mockReturnValueOnce(mockApplicationData);
-      jest.spyOn(requestAuth, 'canUpdateApplication').mockReturnValue(true);
-
-      jest
-        .spyOn(applicationApi, 'updateApplication')
-        .mockImplementationOnce(() => {
-          throw mockAxiosError;
-        });
-
-      const consoleErrorSpy = jest.spyOn(console, 'error');
-
-      mockAxiosInstance.isAxiosError.mockReturnValueOnce(true);
-
-      await endpoint(req, res);
-
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'Unable to update application',
-        mockAxiosError,
-      );
-      expect(res.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
-      expect(res._getJSONData()).toStrictEqual({
-        message: 'Unable to update application',
-      });
-    });
-
-    it('sets response status to 405 and returns correct error message when wrong request method is used', async () => {
-      const { req, res } = generateMockRequestResponseWithHackneyToken({
-        hackneyToken: signedToken,
-        method: 'GET',
-      });
-
-      await endpoint(req, res);
-
-      const expectedError = { message: 'Method not allowed' };
-
-      expect(res.statusCode).toBe(StatusCodes.METHOD_NOT_ALLOWED);
-      expect(res.getHeader('Allow')).toBe('PATCH');
-      expect(res._getJSONData()).toStrictEqual(expectedError);
     });
   });
 });

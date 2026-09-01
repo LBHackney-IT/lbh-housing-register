@@ -4,13 +4,13 @@ import { useRouter } from 'next/router';
 
 import { Application } from '../../domain/HousingApi';
 import { updateApplication } from '../../lib/gateways/internal-api';
-import { HackneyGoogleUserWithPermissions } from '../../lib/utils/googleAuth';
+import { StaffUserWithPermissions } from '../../lib/auth/staff';
 import { HeadingFour } from '../content/headings';
 
 interface SensitiveDataPageProps {
   id: string;
   isSensitive: boolean;
-  user: HackneyGoogleUserWithPermissions;
+  user: StaffUserWithPermissions;
 }
 
 export default function SensitiveData({

@@ -1,6 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { IncomingMessage } from 'http';
-import { NextApiRequest } from 'next';
+import { GetServerSidePropsContext, NextApiRequest } from 'next';
 import { ActivityHistoryPagedResult } from '../../domain/ActivityHistoryApi';
 import {
   AddNoteToHistoryRequest,
@@ -24,6 +23,8 @@ import {
 } from '../utils/axiosClients';
 
 asssertServerOnly();
+
+type AuthenticatedRequest = NextApiRequest | GetServerSidePropsContext['req'];
 
 const emptyActivityHistoryPagedResult: ActivityHistoryPagedResult =
   Object.freeze({
@@ -121,29 +122,35 @@ export const getApplication = async (
 
 export const addApplication = async (
   application: Partial<Application>,
-  req: IncomingMessage,
+  req: AuthenticatedRequest,
 ): Promise<Application | null> => {
   const url = `applications`;
-  const { data } = await authenticatedHousingAxios(req).post(url, application);
+  const { data } = await (
+    await authenticatedHousingAxios(req)
+  ).post(url, application);
   return data;
 };
 
 export const updateApplication = async (
   application: Partial<Application>,
   id: string,
-  req: IncomingMessage,
+  req: AuthenticatedRequest,
 ): Promise<Application | null> => {
   const url = `applications/${id}`;
-  const { data } = await authenticatedHousingAxios(req).patch(url, application);
+  const { data } = await (
+    await authenticatedHousingAxios(req)
+  ).patch(url, application);
   return data;
 };
 
 export const completeApplication = async (
   id: string,
-  req: IncomingMessage,
+  req: AuthenticatedRequest,
 ): Promise<Application | null> => {
   const url = `applications/${id}/complete`;
-  const { data } = await authenticatedHousingAxios(req).patch(url, null);
+  const { data } = await (
+    await authenticatedHousingAxios(req)
+  ).patch(url, null);
   return data;
 };
 
@@ -209,7 +216,9 @@ export const downloadInternalReport = async (
   req: NextApiRequest,
 ): Promise<AxiosResponse> => {
   const url = `reporting/export`;
-  return await authenticatedHousingAxios(req).post(url, reportDetails, {
+  return await (
+    await authenticatedHousingAxios(req)
+  ).post(url, reportDetails, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -228,11 +237,11 @@ export const approveNovaletExport = async (
 
 export const getApplicationHistory = async (
   id: string,
-  req: IncomingMessage,
+  req: AuthenticatedRequest,
 ): Promise<ActivityHistoryPagedResult | null> => {
   const url = `activityhistory?targetId=${id}&pageSize=100`;
   try {
-    const { data } = await activityAxios(req).get(url);
+    const { data } = await (await activityAxios(req)).get(url);
     return data;
   } catch (ex) {
     // TODO API shoudln't make us do this
@@ -247,9 +256,9 @@ export const getApplicationHistory = async (
 export const addNoteToHistory = async (
   id: string,
   note: AddNoteToHistoryRequest,
-  req: IncomingMessage,
+  req: AuthenticatedRequest,
 ): Promise<Array<AddNoteToHistoryRequest> | null> => {
   const url = `applications/${id}/note`;
-  const { data } = await authenticatedHousingAxios(req).post(url, note);
+  const { data } = await (await authenticatedHousingAxios(req)).post(url, note);
   return data;
 };

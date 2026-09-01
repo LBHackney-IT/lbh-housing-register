@@ -84,13 +84,11 @@ nvm use
 
 Copy the .env sample to the root of your application and get the variables from AWS params store or the password manager.
 
-Next, you need to tell your computer to run the app from a hackney.gov.uk domain. Add this line to your hosts file (Windows: `C:\Windows\System32\drivers\etc\hosts`, Mac: `/etc/hosts`):
-
-```
-127.0.0.1   localdev.hackney.gov.uk
-```
-
-If necassary update the `APP_URL` variable in the `.env` file to match. When you next launch the app, it should be on `http://localdev.hackney.gov.uk:3000`.
+Cognito only permits HTTP callback URLs on `localhost`. Set
+`NEXTAUTH_URL=http://localhost:3000` in `.env`, and add the matching callback
+and logout URLs on the Cognito app client (see
+[Cognito staff authentication](docs/cognito-staff-auth.md)). When you next
+launch the app, it should be on `http://localhost:3000`.
 
 If you have the right configuration setup within the `.env` file, you should be able to access the staff dashboard.
 
@@ -103,7 +101,12 @@ To run the backend, please refer to [Housing Register Local Backend](https://git
 
 ### Logging in
 
-The staff dashboard is using [LBH Google Auth](https://github.com/LBHackney-IT/LBH-Google-auth) for authentication. Permissions to what a user is authorised to do, is managed by mapping Google groups.
+The staff dashboard uses an AWS Cognito confidential app client. Google
+Workspace authentication is federated through Cognito, and permissions are
+mapped from the trusted `custom:groups` claim added by the Cognito
+pre-token-generation Lambda. See
+[Cognito staff authentication](docs/cognito-staff-auth.md) for the required
+AWS, Google, environment, session, and logout configuration.
 
 You need a **@hackney.gov.uk** Google account to sign in. Speak to Hackney IT if you don't have this.
 
@@ -139,14 +142,28 @@ End-to-end tests use Cypress. Set env vars for **AUTHORISED\_\*** groups (and th
 **How it works**
 
 - Run Next with `npm run dev` or use `npm run build` / `npm run start` if you prefer a production build.
-- **Standard** specs live under `cypress/e2e/` (excluding `local/`). They rely on **server-side HTTP mocks**: Cypress registers mocks via `/api/e2e/nock`, and the Next server must run with **`E2E_HTTP_MOCKS=true`** so those routes and in-process nock are enabled. CI sets this in CircleCI; locally add it to `.env` or export it when starting Next.
+- **Standard** specs live under `cypress/e2e/` (excluding `local/`). They rely on **server-side HTTP mocks**: Cypress registers mocks via `/api/e2e/nock`, and the Next server must run with **`E2E_HTTP_MOCKS=true`** so those routes and in-process nock are enabled. CI sets this in CircleCI; locally add it to `.env` or export it when starting Next. Staff sessions are created by a Cypress Node task and deliberately contain no Cognito ID token, so no fake bearer token is sent to the mocked APIs.
 - **`npm run cypress:open`** / **`npm run e2e:run`** set `E2E_HTTP_MOCKS=true` for the Cypress process; your Next process still needs the same flag if tests register mocks.
 
 **Local e2e** (`cypress/e2e/local/`)
 
 - Set **`LOCAL_E2E=true`** so Cypress includes the `local` folder (see `cypress.config.ts` `excludeSpecPattern`). Use **`npm run cypress:open:local`** or **`npm run e2e:run:local`**.
-- Check your env vars for **AUTHORISED\_\*** groups, as these are largely testing public user behaviour - you'll need to have empty groups in your token.
+- Configure `COGNITO_E2E_CLIENT_ID`, `COGNITO_E2E_USERNAME`, and
+  `COGNITO_E2E_PASSWORD` for a dedicated native E2E app client/user. That client
+  must be public (no client secret), allow `USER_PASSWORD_AUTH`, and use the pool
+  in `COGNITO_ISSUER`. Cognito login runs in Cypress's Node process, so
+  credentials are never exposed to browser code.
+- Map that user's test group to manager with
+  **`E2E_AUTHORISED_MANAGER_GROUP`**, for example
+  `E2E_AUTHORISED_MANAGER_GROUP=e2e-testing-production-t-and-l`. It is additive
+  to `AUTHORISED_MANAGER_GROUP`, so you can keep the real group name in `.env`
+  and still sign in with your own claims. It applies only while
+  `LOCAL_E2E=true` outside a deployment, and `serverless.yml` never passes it,
+  so it cannot affect a deployed build. `managerActions.cy.ts` is the only spec
+  that needs it.
 - Run a [local backend](https://github.com/LBHackney-IT/housing-register-local-backend) (Housing Register API, DynamoDB, LocalStack, etc.) and point `.env` at it (`HOUSING_REGISTER_API`). This will also need a modification as detailed in the README.md to avoid hitting GovUK Notify.
+- Do not set `E2E_HTTP_MOCKS` for local-backend tests. Their staff journey sends
+  the real Cognito ID token to the real API.
 - Local flows hit the real API for almost everything. For declaration submit, **`POST /api/applications/:id/evidence`** is **stubbed in the browser** (`cypress/support/e2e.ts` when running with `LOCAL_E2E=true`) so you do not need a real Evidence API or server-side nock for that call.
 
 Failed runs record video (see `cypress.config.ts`).

@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { downloadInternalReport } from '../../../../lib/gateways/applications-api';
-import { getAuth, getSession } from '../../../../lib/utils/googleAuth';
+import { requireApiStaffGroup } from '../../../../lib/auth/api';
 import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 import { InternalReportRequest } from '../../../../domain/HousingApi';
 
@@ -17,12 +17,13 @@ const endpoint: NextApiHandler = async (
     return;
   }
 
-  const user = getSession(req);
-
-  const auth = getAuth(process.env.AUTHORISED_MANAGER_GROUP as string, user);
-
-  if (!('user' in auth)) {
-    res.status(StatusCodes.FORBIDDEN).json({ message: 'access denied' });
+  if (
+    !(await requireApiStaffGroup(
+      req,
+      res,
+      process.env.AUTHORISED_MANAGER_GROUP as string,
+    ))
+  ) {
     return;
   }
 

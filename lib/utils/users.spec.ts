@@ -191,55 +191,59 @@ describe('users', () => {
 
   describe('setAuthCookie', () => {
     const cookieName = 'housing_user';
-    const { signedToken } = generateSignedResidentToken();
-    const domain = '.hackney.gov.uk';
     const path = '/';
+    const { signedToken } = generateSignedResidentToken();
     const verifyAuthResponse: VerifyAuthResponse = {
       accessToken: signedToken,
     };
     const res: ApiResponse = createResponse();
 
-    it('calls serialize on cookie with correct values', () => {
+    it('omits Domain on localhost so the browser will store the cookie', () => {
+      const origin = envVarsFixture('NEXTAUTH_URL');
+      origin.mock('http://localhost:3000');
       const serializeSpy = jest.spyOn(cookie, 'serialize');
 
       setAuthCookie(res, verifyAuthResponse);
 
-      expect(serializeSpy).toHaveBeenCalledTimes(1);
+      expect(serializeSpy).toHaveBeenCalledWith(
+        cookieName,
+        verifyAuthResponse.accessToken,
+        { path },
+      );
+      origin.restore();
+    });
+
+    it('sets Domain=.hackney.gov.uk on deployed Hackney hosts', () => {
+      const origin = envVarsFixture('NEXTAUTH_URL');
+      origin.mock('https://housing-register.hackney.gov.uk');
+      const serializeSpy = jest.spyOn(cookie, 'serialize');
+
+      setAuthCookie(res, verifyAuthResponse);
+
       expect(serializeSpy).toHaveBeenCalledWith(
         cookieName,
         verifyAuthResponse.accessToken,
         {
-          domain,
+          domain: '.hackney.gov.uk',
           path,
         },
       );
-    });
-
-    it('sets Set-Cookie header with correct jwt cookie value', () => {
-      const expectedJWTToken = cookie.serialize(
-        'housing_user',
-        verifyAuthResponse.accessToken,
-        {
-          domain: '.hackney.gov.uk',
-          path: '/',
-        },
-      );
-      setAuthCookie(res, verifyAuthResponse);
-      expect(res.getHeader('Set-Cookie')).toBe(expectedJWTToken);
+      origin.restore();
     });
   });
 
   describe('removeAuthCookie', () => {
-    it('sets correct Set-cookie header', () => {
+    it('sets a host-only expiry cookie on localhost', () => {
+      const origin = envVarsFixture('NEXTAUTH_URL');
+      origin.mock('http://localhost:3000');
       const exp = 'Thu, 01 Jan 1970 00:00:00 GMT';
-
-      const expectedCookie = `housing_user=; Domain=.hackney.gov.uk; Path=/; Expires=${exp}`;
+      const expectedCookie = `housing_user=; Path=/; Expires=${exp}`;
       const res: ApiResponse = createResponse();
 
       removeAuthCookie(res);
 
-      const newCookieHeader = res.getHeader('Set-Cookie');
-      expect(newCookieHeader).toBe(expectedCookie);
+      expect(res.getHeader('Set-Cookie')).toBe(expectedCookie);
+      origin.restore();
     });
   });
 });

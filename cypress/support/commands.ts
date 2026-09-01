@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker/locale/en_GB';
 import { mount } from 'cypress/react';
 
 import { Application } from '../../domain/HousingApi';
-import { HackneyGoogleUserWithPermissions } from '../../lib/utils/googleAuth';
+import { StaffUserWithPermissions } from '../../lib/auth/staff';
 import { StatusCodes } from 'http-status-codes';
 import { ActivityHistoryResponse } from '../../domain/ActivityHistoryApi';
 
@@ -32,8 +32,6 @@ import { ActivityHistoryResponse } from '../../domain/ActivityHistoryApi';
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 // ***********************************************
-
-const secret = 'aDummySecret';
 
 /** Public values from `cypress.config.ts` `expose` (avoids deprecated `Cypress.env`). */
 function exposed(key: string): string {
@@ -112,7 +110,7 @@ Cypress.Commands.add(
 
 Cypress.Commands.add(
   'mockHousingRegisterApiGetApplicationsByStatusAndAssignedTo',
-  (user: HackneyGoogleUserWithPermissions) => {
+  (user: StaffUserWithPermissions) => {
     e2eRegisterNock({
       hostname: exposed('HOUSING_REGISTER_API'),
       method: 'GET',
@@ -260,26 +258,63 @@ Cypress.Commands.add('loginAsUser', (userType: string) => {
     readOnly: generateUser('AUTHORISED_READONLY_GROUP'),
   };
 
-  const user = users[userType];
+  const user = users[userType as keyof typeof users];
 
   if (!user) {
     throw new Error(`No user data found for user type "${userType}"`);
   }
 
-  cy.request({
-    method: 'POST',
-    url: '/api/e2e/generate-token',
-    body: { user, secret },
-    failOnStatusCode: true,
-  }).then((res) => {
-    const token = (res.body as { token: string }).token;
-    const cookieName = 'hackneyToken';
+  const isLocalE2e = Cypress.expose('LOCAL_E2E') === 'true';
+  if (isLocalE2e && userType !== 'manager') {
+    throw new Error(
+      'LOCAL_E2E Cognito sign-in only supports the manager role. ' +
+        "Set E2E_AUTHORISED_MANAGER_GROUP to the dedicated user's test group.",
+    );
+  }
+
+  const session = isLocalE2e
+    ? cy.task('createCognitoStaffSession', null, { log: false })
+    : cy.task('createMockStaffSession', user, { log: false });
+
+  session.then((result) => {
+    const { cookies, user: authenticatedUser } = result as {
+      cookies: Array<{ name: string; value: string }>;
+      user: typeof user;
+    };
+    const groupVariable = isLocalE2e
+      ? 'E2E_AUTHORISED_MANAGER_GROUP'
+      : `AUTHORISED_${userType.toUpperCase()}_GROUP`;
+    const expectedGroup = exposed(groupVariable);
+    if (!authenticatedUser.groups.includes(expectedGroup)) {
+      throw new Error(
+        `Signed-in staff groups do not include "${expectedGroup}" from ${groupVariable}. ` +
+          `Groups present: ${authenticatedUser.groups.join(', ') || '(none)'}`,
+      );
+    }
+
     cy.getCookies().should('be.empty');
-    cy.setCookie(cookieName, token);
-    cy.getCookie(cookieName).should('have.property', 'value', token);
-    cy.wrap(user).as('currentUser');
+    cookies.forEach(({ name, value }) => {
+      cy.setCookie(name, value);
+      cy.getCookie(name).should('have.property', 'value', value);
+    });
+    cy.wrap(authenticatedUser).as('currentUser');
   });
 });
+
+/**
+ * Yields the application the resident session is actually signed in to, which
+ * the real verify step replaces with the one the backend created.
+ */
+Cypress.Commands.add('residentApplicationId', () =>
+  cy.getCookie('housing_user').then((residentCookie) => {
+    if (!residentCookie?.value) {
+      throw new Error('Resident session cookie "housing_user" is not set');
+    }
+    return cy.task<string>('readResidentApplicationId', residentCookie.value, {
+      log: false,
+    });
+  }),
+);
 
 Cypress.Commands.add(
   'loginAsResident',
@@ -288,38 +323,40 @@ Cypress.Commands.add(
     setSeenCookieMessage?: boolean,
     seenCookieMessageAlreadySet?: boolean,
   ) => {
-    const user = {
-      application_id: applicationId,
-    };
+    cy.task('createResidentSession', applicationId, { log: false }).then(
+      (result) => {
+        const {
+          cookies: [authCookie],
+          user,
+        } = result as {
+          cookies: Array<{ name: string; value: string }>;
+          user: { application_id: string };
+        };
+        const cookieMessageCookieName = 'seen_cookie_message';
 
-    cy.request({
-      method: 'POST',
-      url: '/api/e2e/generate-token',
-      body: { user, secret },
-      failOnStatusCode: true,
-    }).then((res) => {
-      const token = (res.body as { token: string }).token;
-      const authCookieName = 'housing_user';
-      const cookieMessageCookieName = 'seen_cookie_message';
+        if (!seenCookieMessageAlreadySet) {
+          cy.getCookies().should('be.empty');
+        }
 
-      if (!seenCookieMessageAlreadySet) {
-        cy.getCookies().should('be.empty');
-      }
-
-      cy.setCookie(authCookieName, token);
-      cy.getCookie(authCookieName).should('have.property', 'value', token);
-
-      if (setSeenCookieMessage) {
-        cy.setCookie(cookieMessageCookieName, 'true');
-        cy.getCookie(cookieMessageCookieName).should(
-          'have.a.property',
+        cy.setCookie(authCookie.name, authCookie.value);
+        cy.getCookie(authCookie.name).should(
+          'have.property',
           'value',
-          'true',
+          authCookie.value,
         );
-      }
 
-      cy.wrap(user).as('currentUser');
-    });
+        if (setSeenCookieMessage) {
+          cy.setCookie(cookieMessageCookieName, 'true');
+          cy.getCookie(cookieMessageCookieName).should(
+            'have.a.property',
+            'value',
+            'true',
+          );
+        }
+
+        cy.wrap(user).as('currentUser');
+      },
+    );
   },
 );
 
@@ -351,28 +388,21 @@ Cypress.Commands.add(
     delay: number = 0,
     statusCode: number = StatusCodes.OK,
   ) => {
-    const user = {
-      application_id: applicationId,
-    };
-
-    cy.request({
-      method: 'POST',
-      url: '/api/e2e/generate-token',
-      body: { user, secret },
-      failOnStatusCode: true,
-    }).then((res) => {
-      const token = (res.body as { token: string }).token;
-      e2eRegisterNock({
-        hostname: exposed('HOUSING_REGISTER_API'),
-        method: 'POST',
-        path: `/auth/verify`,
-        statusCode,
-        body: {
-          accessToken: token,
-        },
-        delay,
-      });
-    });
+    cy.task('createResidentSession', applicationId, { log: false }).then(
+      (result) => {
+        const token = (result as { token: string }).token;
+        e2eRegisterNock({
+          hostname: exposed('HOUSING_REGISTER_API'),
+          method: 'POST',
+          path: `/auth/verify`,
+          statusCode,
+          body: {
+            accessToken: token,
+          },
+          delay,
+        });
+      },
+    );
   },
 );
 

@@ -129,7 +129,7 @@ Repository has a husky configuration to prevent commits that fail linting or tes
 
 ### Conventional commits
 
-Repository enforces [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) using [cz-git](https://cz-git.qbb.sh/) via the [czg](https://www.npmjs.com/package/czg) CLI (`npm run commit`, or the `prepare-commit-msg` hook when you run `git commit`). [Commitlint](https://commitlint.js.org/) validates messages on commit.
+Repository enforces [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) using [Commitlint](https://commitlint.js.org/) for validation.
 
 ### E2E tests
 

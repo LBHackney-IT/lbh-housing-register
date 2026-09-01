@@ -2,15 +2,13 @@ import { AddressLookupResult } from '../../domain/addressLookup';
 import { AddNoteToHistoryRequest, Application } from '../../domain/HousingApi';
 
 export class CreateApplicationError extends Error {
-  status: number;
-  applicationIds: string[];
-
-  constructor(message: string, status: number, applicationIds: string[] = []) {
+  constructor(
+    message: string,
+    readonly status: number,
+    readonly applicationIds: string[] = [],
+  ) {
     super(message);
     this.name = 'CreateApplicationError';
-    this.status = status;
-    this.applicationIds = applicationIds;
-    Object.setPrototypeOf(this, new.target.prototype);
   }
 }
 
@@ -22,7 +20,8 @@ type ApiErrorBody = {
 const readApiErrorBody = async (res: Response): Promise<ApiErrorBody> => {
   try {
     return (await res.json()) as ApiErrorBody;
-  } catch {
+  } catch (error) {
+    console.error('Unkown create application error response', error);
     return {};
   }
 };

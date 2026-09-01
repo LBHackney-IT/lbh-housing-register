@@ -71,6 +71,7 @@ describe('createApplication', () => {
   });
 
   it('falls back to a status message when the error body is not JSON', async () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation();
     mockFetch({
       ok: false,
       status: 502,
@@ -83,5 +84,7 @@ describe('createApplication', () => {
       status: 502,
       message: 'Unable to create application (502)',
     });
+    expect(consoleError).toHaveBeenCalled();
+    consoleError.mockRestore();
   });
 });

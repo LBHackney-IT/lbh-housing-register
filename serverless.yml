@@ -49,10 +49,10 @@ functions:
       SKIP_VERIFY_TOKEN: false
       NEXTAUTH_URL: ${ssm:arn:aws:ssm:eu-west-2:${param:centralAccount}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/app-url}
       NEXTAUTH_SECRET: ${ssm:/housing-register/${self:provider.stage}/nextauth-secret}
-      COGNITO_ISSUER: ${ssm:/housing-register/${self:provider.stage}/cognito-issuer}
-      COGNITO_CLIENT_ID: ${ssm:/housing-register/${self:provider.stage}/cognito-client-id}
+      COGNITO_ISSUER: ${ssm:arn:aws:ssm:eu-west-2:${param:centralAccount}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/cognito-issuer}
+      COGNITO_CLIENT_ID: ${ssm:arn:aws:ssm:eu-west-2:${param:centralAccount}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/cognito-client-id}
       COGNITO_CLIENT_SECRET: ${ssm:/housing-register/${self:provider.stage}/cognito-client-secret}
-      COGNITO_DOMAIN: ${ssm:/housing-register/${self:provider.stage}/cognito-domain}
+      COGNITO_DOMAIN: ${ssm:arn:aws:ssm:eu-west-2:${param:centralAccount}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/cognito-domain}
       ACTIVITY_HISTORY_API: ${ssm:arn:aws:ssm:eu-west-2:${param:centralAccount}:parameter/housing-${self:provider.stage}/mtfh-housing-${self:provider.stage}/mtfh-housing/activity-history-api-url}
       LOOKUP_API_URL: ${ssm:arn:aws:ssm:eu-west-2:${param:centralAccount}:parameter/housing-${self:provider.stage}/mtfh-housing-${self:provider.stage}/mtfh-housing/lookup-api-url}
       AUTHORISED_ADMIN_GROUP: ${ssm:arn:aws:ssm:eu-west-2:${param:centralAccount}:parameter/housing-${self:provider.stage}/housing-register-${self:provider.stage}/housing-register/authorised-admin-group}

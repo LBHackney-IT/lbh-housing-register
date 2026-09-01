@@ -18,7 +18,7 @@ import {
   generateQuestionArray,
 } from '../../../../../lib/utils/adminHelpers';
 import { getRedirect, getSession } from '../../../../../lib/utils/googleAuth';
-import { scrollToError, scrollToTop } from '../../../../../lib/utils/scroll';
+import { scrollToTop } from '../../../../../lib/utils/scroll';
 import Custom404 from '../../../../404';
 import { isAssignableToError } from 'lib/utils/errorHelper';
 
@@ -88,7 +88,7 @@ export default function EditApplicant({ user, data }: PageProps): JSX.Element {
 
     setIsSaving(true);
 
-    updateApplication(request)
+    return updateApplication(request)
       .then(() => {
         setIsSaving(false);
         router.push({
@@ -104,7 +104,7 @@ export default function EditApplicant({ user, data }: PageProps): JSX.Element {
           setUserError('Unable to update application');
         }
 
-        scrollToError();
+        scrollToTop();
       });
   };
   /* eslint-disable @typescript-eslint/no-explicit-any */

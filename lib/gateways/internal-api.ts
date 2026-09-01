@@ -32,20 +32,13 @@ const createApplicationErrorMessage = (
   status: number,
   body: ApiErrorBody,
 ): string => {
-  if (status === 409) {
-    const ids = body.applicationIds ?? [];
-    if (ids.length === 1) {
-      return 'An application already exists for this email address.';
-    }
-    if (ids.length > 1) {
-      return 'Applications already exist for this email address.';
-    }
-    return (
-      body.message ?? 'An application already exists for this email address.'
-    );
+  if (status !== 409) {
+    return body.message ?? `Unable to create application (${status})`;
   }
 
-  return body.message ?? `Unable to create application (${status})`;
+  return (body.applicationIds?.length ?? 0) > 1
+    ? 'Applications already exist for this email address.'
+    : 'An application already exists for this email address.';
 };
 
 export const lookUpAddress = async (postCode: string) => {

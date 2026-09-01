@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.0](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.3.2...hackney-housing-register-v2.4.0) (2026-09-01)
+
+
+### Features
+
+* handle 409 errors without losing state ([bb91dd9](https://github.com/LBHackney-IT/lbh-housing-register/commit/bb91dd952a8bb3ba8979c13c9ca8270dbb8ac386))
+
 ## [2.3.2](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.3.1...hackney-housing-register-v2.3.2) (2026-08-04)
 
 

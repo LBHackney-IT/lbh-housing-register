@@ -11,6 +11,8 @@ type InputProps = Omit<TextFormField, 'label'> &
   InputHTMLAttributes<HTMLInputElement> & {
     person?: string;
     label?: ReactNode;
+    /** Error raised outside of Formik validation, e.g. by a failed submit. */
+    error?: string;
   };
 
 export default function Input({
@@ -22,6 +24,7 @@ export default function Input({
   type,
   person,
   hideLabel,
+  error,
   ...additionalInputProps
 }: InputProps): JSX.Element {
   const { conditionalDisplay, ...otherValues } = additionalInputProps;
@@ -39,41 +42,43 @@ export default function Input({
         }: {
           field: FieldInputProps<string>;
           meta: FieldMetaProps<string>;
-        }) => (
-          <FormGroup error={!!meta.touched && !!meta.error}>
-            {person && (
-              <Paragraph>
-                <strong>{person}</strong>
-              </Paragraph>
-            )}
-            {label && (
-              <Label
-                content={label}
-                htmlFor={name}
-                strong={true}
-                hideLabel={hideLabel}
+        }) => {
+          const fieldError = error ?? (meta.touched ? meta.error : undefined);
+
+          return (
+            <FormGroup error={!!fieldError}>
+              {person && (
+                <Paragraph>
+                  <strong>{person}</strong>
+                </Paragraph>
+              )}
+              {label && (
+                <Label
+                  content={label}
+                  htmlFor={name}
+                  strong={true}
+                  hideLabel={hideLabel}
+                />
+              )}
+              {hint && <Hint content={hint} />}
+              {fieldError && <ErrorMessage message={fieldError} />}
+              <input
+                // Lowest priority to prevent accidental override of component defined props
+                {...additionalInputPropsWithConditionalDisplay}
+                className={`govuk-input lbh-input ${className ? className : ''} ${
+                  fieldError ? 'govuk-input--error' : ''
+                }`}
+                id={name}
+                placeholder={placeholder}
+                type={type ? type : 'text'}
+                {...field}
+                maxLength={500}
+                data-testid={`test-input-${name}`}
+                value={field.value ?? ''}
               />
-            )}
-            {hint && <Hint content={hint} />}
-            {meta.touched && meta.error && (
-              <ErrorMessage message={meta.error} />
-            )}
-            <input
-              // Lowest priority to prevent accidental override of component defined props
-              {...additionalInputPropsWithConditionalDisplay}
-              className={`govuk-input lbh-input ${className ? className : ''} ${
-                meta.touched && meta.error ? 'govuk-input--error' : ''
-              }`}
-              id={name}
-              placeholder={placeholder}
-              type={type ? type : 'text'}
-              {...field}
-              maxLength={500}
-              data-testid={`test-input-${name}`}
-              value={field.value ?? ''}
-            />
-          </FormGroup>
-        )}
+            </FormGroup>
+          );
+        }}
       </Field>
     </div>
   );

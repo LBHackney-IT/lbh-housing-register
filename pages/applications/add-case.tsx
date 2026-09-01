@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useCallback, useState, type ReactNode } from 'react';
 
 import { FormikValues } from 'formik';
 import { GetServerSideProps } from 'next';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import MainApplicantForm from '../../components/admin/MainApplicantForm';
@@ -9,6 +10,7 @@ import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { Address as ApiAddress, Application } from '../../domain/HousingApi';
 import {
   completeApplication,
+  CreateApplicationError,
   createApplication,
   updateApplication,
 } from '../../lib/gateways/internal-api';
@@ -19,12 +21,16 @@ import {
   generateQuestionArray,
 } from '../../lib/utils/adminHelpers';
 import { getRedirect, getSession } from '../../lib/utils/googleAuth';
-import { scrollToError, scrollToTop } from '../../lib/utils/scroll';
+import { scrollToTop } from '../../lib/utils/scroll';
 import { isAssignableToError } from 'lib/utils/errorHelper';
 
 interface PageProps {
   user: HackneyGoogleUser;
 }
+
+const EMAIL_FIELD_NAME = 'personalDetails_emailAddress';
+const DUPLICATE_EMAIL_FIELD_ERROR =
+  'An application already exists for this email address. Enter a different email address, or leave it blank.';
 
 export default function AddCasePage({ user }: PageProps): JSX.Element {
   const router = useRouter();
@@ -32,10 +38,17 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
   const [ethnicity, setEthnicity] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
-  const [userError, setUserError] = useState<string | undefined>(undefined);
+  const [userError, setUserError] = useState<ReactNode>(null);
+  const [emailError, setEmailError] = useState<string | undefined>(undefined);
+
+  const clearSubmitErrors = useCallback(() => {
+    setUserError(null);
+    setEmailError(undefined);
+  }, []);
 
   const createManualApplication = async (request: Application) => {
     setIsSaving(true);
+    clearSubmitErrors();
 
     try {
       const newApplication = await createApplication(request);
@@ -49,12 +62,41 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
       router.push(`/applications/view/${setToManualDraft.id}`);
     } catch (err) {
       setIsSaving(false);
-      if (isAssignableToError(err)) {
+      // Handle 409 error responses which may have multiple historic applications with the same email address.
+      if (
+        err instanceof CreateApplicationError &&
+        err.status === 409 &&
+        err.applicationIds.length > 0
+      ) {
+        setEmailError(DUPLICATE_EMAIL_FIELD_ERROR);
+        setUserError(
+          <>
+            {err.message}{' '}
+            <a href={`#${EMAIL_FIELD_NAME}`}>Change the email address</a> or
+            leave it blank to create an application without one.{' '}
+            {err.applicationIds.map((id, index) => (
+              <span key={id}>
+                {index > 0 ? ', ' : ''}
+                <Link
+                  href={`/applications/view/${id}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {err.applicationIds.length === 1
+                    ? 'View existing case'
+                    : `View case ${index + 1}`}
+                </Link>
+              </span>
+            ))}
+            {' (opens in a new tab).'}
+          </>,
+        );
+      } else if (isAssignableToError(err)) {
         setUserError((err as Error).message);
       } else {
         setUserError('Unable to create application');
       }
-      scrollToError();
+      scrollToTop();
     }
   };
 
@@ -83,7 +125,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
         },
         address: primaryAddress as ApiAddress,
         contactInformation: {
-          emailAddress: values.personalDetails_emailAddress,
+          emailAddress: values[EMAIL_FIELD_NAME],
           phoneNumber: values.personalDetails_phoneNumber,
         },
         questions: questionValues,
@@ -92,7 +134,7 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
       assignedTo: user.email,
     };
 
-    createManualApplication(request);
+    return createManualApplication(request);
   };
   /*  eslint-disable @typescript-eslint/no-explicit-any */
   const handleSaveApplication = (isValid: any, touched: any) => {
@@ -118,6 +160,8 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
       dataTestId="test-add-case-page"
       isSaving={isSaving}
       userError={userError}
+      fieldErrors={{ [EMAIL_FIELD_NAME]: emailError }}
+      onClearSubmitErrors={clearSubmitErrors}
     />
   );
 }

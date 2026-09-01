@@ -25,7 +25,11 @@ jest.mock('./AddCaseSection', () => {
 
   return {
     __esModule: true,
-    default: function MockAddCaseSection() {
+    default: function MockAddCaseSection({
+      fieldErrors,
+    }: {
+      fieldErrors?: Record<string, string | undefined>;
+    }) {
       return (
         <div>
           <label htmlFor="personalDetails_gender">Gender</label>
@@ -37,6 +41,11 @@ jest.mock('./AddCaseSection', () => {
             <option value="">Select an option</option>
             <option value="female">Female</option>
           </Field>
+          {fieldErrors ? (
+            <div data-testid="gender-submit-error">
+              {fieldErrors.personalDetails_gender ?? ''}
+            </div>
+          ) : null}
         </div>
       );
     },
@@ -103,6 +112,97 @@ function MainApplicantFormHarness({
     </>
   );
 }
+
+function ApplicationInSaveState({
+  isSaving,
+  userError,
+}: {
+  isSaving: boolean;
+  userError?: string;
+}) {
+  return (
+    <MainApplicantForm
+      isEditing={false}
+      user={user}
+      onSubmit={jest.fn()}
+      isSubmitted={false}
+      addressHistory={[sampleAddress]}
+      setAddressHistory={jest.fn()}
+      handleSaveApplication={jest.fn()}
+      ethnicity=""
+      setEthnicity={jest.fn()}
+      isSaving={isSaving}
+      userError={userError}
+    />
+  );
+}
+
+describe('MainApplicantForm failed save', () => {
+  it('keeps entered values while saving and after the save fails', () => {
+    const { rerender } = render(<ApplicationInSaveState isSaving={false} />);
+
+    fireEvent.change(screen.getByLabelText('Gender'), {
+      target: { value: 'female' },
+    });
+
+    rerender(<ApplicationInSaveState isSaving={true} />);
+
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
+    expect(screen.getByLabelText('Gender')).toHaveValue('female');
+
+    rerender(
+      <ApplicationInSaveState
+        isSaving={false}
+        userError="An application already exists for this email."
+      />,
+    );
+
+    expect(
+      screen.getByText('An application already exists for this email.'),
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText('Gender')).toHaveValue('female');
+  });
+});
+
+function ApplicationWithSubmitError() {
+  const [fieldError, setFieldError] = useState<string | undefined>(
+    'An application already exists for this email address.',
+  );
+
+  return (
+    <MainApplicantForm
+      isEditing={false}
+      user={user}
+      onSubmit={jest.fn()}
+      isSubmitted={false}
+      addressHistory={[sampleAddress]}
+      setAddressHistory={jest.fn()}
+      handleSaveApplication={jest.fn()}
+      ethnicity=""
+      setEthnicity={jest.fn()}
+      fieldErrors={{ personalDetails_gender: fieldError }}
+      onClearSubmitErrors={() => setFieldError(undefined)}
+    />
+  );
+}
+
+describe('MainApplicantForm submit errors', () => {
+  it('clears a submit error when the offending field changes', async () => {
+    render(<ApplicationWithSubmitError />);
+
+    expect(screen.getByTestId('gender-submit-error')).toHaveTextContent(
+      'An application already exists for this email address.',
+    );
+
+    fireEvent.change(screen.getByLabelText('Gender'), {
+      target: { value: 'female' },
+    });
+
+    await waitFor(() => {
+      expect(screen.getByTestId('gender-submit-error')).toHaveTextContent('');
+    });
+  });
+});
 
 describe('MainApplicantForm address validation', () => {
   it('shows an address error after submit when address history is empty', async () => {

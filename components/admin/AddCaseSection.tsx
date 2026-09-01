@@ -18,9 +18,13 @@ import {
 
 interface PageProps {
   section: SectionData;
+  fieldErrors?: Record<string, string | undefined>;
 }
 
-export default function AddCaseSection({ section }: PageProps): JSX.Element {
+export default function AddCaseSection({
+  section,
+  fieldErrors,
+}: PageProps): JSX.Element {
   // Field shapes vary by `as`; runtime branches narrow behaviour, not types.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const markup = section.fields.map((field: any, index: number) => {
@@ -43,7 +47,12 @@ export default function AddCaseSection({ section }: PageProps): JSX.Element {
     let inputField: JSX.Element = <></>;
 
     if (inputType === 'text') {
-      inputField = <Input name={generatedInputName} />;
+      inputField = (
+        <Input
+          name={generatedInputName}
+          error={fieldErrors?.[generatedInputName]}
+        />
+      );
     }
 
     if (inputType === 'textarea') {

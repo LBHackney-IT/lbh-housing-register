@@ -1,13 +1,13 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { FormikValues } from 'formik';
 
-import { updateApplication } from '../../../../../lib/gateways/internal-api';
-import { scrollToTop } from '../../../../../lib/utils/scroll';
+import { updateApplication } from '../../../lib/gateways/internal-api';
+import { scrollToTop } from '../../../lib/utils/scroll';
 import {
   generateHRUserWithPermissions,
   UserRole,
-} from '../../../../../testUtils/userHelper';
-import EditApplicant from './index';
+} from '../../../testUtils/userHelper';
+import EditApplicant from '../../../pages/applications/edit/[id]/[person]/index';
 
 const mockPush = jest.fn();
 
@@ -15,24 +15,24 @@ jest.mock('next/router', () => ({
   useRouter: () => ({ push: mockPush }),
 }));
 
-jest.mock('../../../../../lib/utils/scroll', () => ({
+jest.mock('../../../lib/utils/scroll', () => ({
   scrollToTop: jest.fn(),
 }));
 
-jest.mock('../../../../../lib/utils/adminHelpers', () => ({
+jest.mock('../../../lib/utils/adminHelpers', () => ({
   generateQuestionArray: jest.fn(() => []),
   convertAddressToPrimary: jest.fn(() => ({})),
 }));
 
-jest.mock('../../../../../lib/gateways/applications-api', () => ({
+jest.mock('../../../lib/gateways/applications-api', () => ({
   getApplication: jest.fn(),
 }));
 
-jest.mock('../../../../../lib/gateways/internal-api', () => ({
+jest.mock('../../../lib/gateways/internal-api', () => ({
   updateApplication: jest.fn(),
 }));
 
-jest.mock('../../../../../components/admin/MainApplicantForm', () => ({
+jest.mock('../../../components/admin/MainApplicantForm', () => ({
   __esModule: true,
   default: ({
     onSubmit,

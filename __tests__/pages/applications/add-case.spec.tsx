@@ -7,13 +7,13 @@ import {
   completeApplication,
   createApplication,
   updateApplication,
-} from '../../lib/gateways/internal-api';
-import { scrollToTop } from '../../lib/utils/scroll';
+} from '../../../lib/gateways/internal-api';
+import { scrollToTop } from '../../../lib/utils/scroll';
 import {
   generateHRUserWithPermissions,
   UserRole,
-} from '../../testUtils/userHelper';
-import AddCasePage from './add-case';
+} from '../../../testUtils/userHelper';
+import AddCasePage from '../../../pages/applications/add-case';
 
 const mockPush = jest.fn();
 
@@ -21,17 +21,17 @@ jest.mock('next/router', () => ({
   useRouter: () => ({ push: mockPush }),
 }));
 
-jest.mock('../../lib/utils/scroll', () => ({
+jest.mock('../../../lib/utils/scroll', () => ({
   scrollToTop: jest.fn(),
 }));
 
-jest.mock('../../lib/utils/adminHelpers', () => ({
+jest.mock('../../../lib/utils/adminHelpers', () => ({
   generateQuestionArray: jest.fn(() => []),
   convertAddressToPrimary: jest.fn(() => ({})),
 }));
 
-jest.mock('../../lib/gateways/internal-api', () => {
-  const actual = jest.requireActual('../../lib/gateways/internal-api');
+jest.mock('../../../lib/gateways/internal-api', () => {
+  const actual = jest.requireActual('../../../lib/gateways/internal-api');
   return {
     ...actual,
     createApplication: jest.fn(),
@@ -40,7 +40,7 @@ jest.mock('../../lib/gateways/internal-api', () => {
   };
 });
 
-jest.mock('../../components/admin/MainApplicantForm', () => ({
+jest.mock('../../../components/admin/MainApplicantForm', () => ({
   __esModule: true,
   default: ({
     onSubmit,

@@ -35,7 +35,7 @@ export function assertStaffAuthEnvironment(): void {
 
 // Must match the Cognito app-client ID-token validity. There is no refresh
 // token, so staff sign in again when either this cookie or the ID token expires.
-export const staffSessionMaxAgeSeconds = 8 * 60 * 60;
+export const staffSessionMaxAgeSeconds = 4 * 60 * 60;
 
 type AuthErrorMetadata = {
   error?: unknown;

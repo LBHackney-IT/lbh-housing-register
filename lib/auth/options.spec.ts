@@ -20,8 +20,8 @@ describe('staff Auth.js configuration', () => {
     });
   });
 
-  it('keeps the NextAuth session aligned with an 8-hour Cognito ID token', () => {
-    expect(staffSessionMaxAgeSeconds).toBe(8 * 60 * 60);
+  it('keeps the NextAuth session aligned with a 4-hour Cognito ID token', () => {
+    expect(staffSessionMaxAgeSeconds).toBe(4 * 60 * 60);
     expect(authOptions.session).toMatchObject({
       strategy: 'jwt',
       maxAge: staffSessionMaxAgeSeconds,

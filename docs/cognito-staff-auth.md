@@ -17,7 +17,7 @@ Configure one **confidential** user-pool app client per environment:
 - enable the Google identity provider;
 - allow only `openid`, `email`, and `profile`;
 - do not enable `aws.cognito.signin.user.admin` or resource-server scopes;
-- set ID-token expiry to 8 hours, matching `staffSessionMaxAgeSeconds` in
+- set ID-token expiry to 4 hours, matching `staffSessionMaxAgeSeconds` in
   `lib/auth/options.ts`;
 - do not use wildcard callback or logout URLs.
 
@@ -71,9 +71,9 @@ is forwarded server-to-server only to the Housing Register and Activity
 History APIs. Refresh and access tokens are not persisted.
 
 The application rejects the session as soon as the Cognito ID token expires.
-The NextAuth session maximum is also 8 hours. Staff then authenticate again.
+The NextAuth session maximum is also 4 hours. Staff then authenticate again.
 This intentionally avoids refresh-token storage and refresh races. Keep the
-Cognito app-client ID-token validity at 8 hours so the two clocks stay in
+Cognito app-client ID-token validity at 4 hours so the two clocks stay in
 sync; whichever expires first ends the session.
 
 Application logout first clears the local NextAuth session using NextAuth's

@@ -78,7 +78,7 @@ async function encodeStaffSession(
       name: user.name,
       groups: user.groups,
     },
-    maxAge: 8 * 60 * 60,
+    maxAge: 4 * 60 * 60,
   });
 
   return { token, cookies: nextAuthCookies(token), user };

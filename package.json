@@ -1,6 +1,6 @@
 {
   "name": "hackney-housing-register",
-  "version": "2.3.0",
+  "version": "2.3.2",
   "private": true,
   "engines": {
     "node": ">=24"
@@ -17,7 +17,6 @@
     "test:ci": "jest --ci --coverage --reporters=default --reporters=jest-junit && tsc --noEmit",
     "test": "jest && tsc --noEmit",
     "test:watch": "jest --watch",
-    "commit": "czg",
     "prepare": "husky || true",
     "cypress:open": "E2E_HTTP_MOCKS=true cypress open --browser chrome",
     "cypress:open:local": "LOCAL_E2E=true cypress open --browser chrome",
@@ -77,8 +76,6 @@
     "@types/react-dom": "^19.0.0",
     "babel-jest": "^30.3.0",
     "cypress": "^15.18.0",
-    "cz-git": "^1.12.0",
-    "czg": "^1.12.0",
     "eslint": "^9.17.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-cypress": "^3.6.0",
@@ -102,10 +99,5 @@
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.18.0",
     "xml2js": "^0.6.2"
-  },
-  "config": {
-    "commitizen": {
-      "path": "node_modules/cz-git"
-    }
   }
 }

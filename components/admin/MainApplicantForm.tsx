@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import {
   Form,
   Formik,
@@ -105,10 +105,38 @@ function RevalidateOnAddressHistoryChange({
   return null;
 }
 
+/**
+ * Special handling for 409 submit errors.
+ * These errors come from the API rather than Formik, so they are not cleared
+ * by revalidation even though they appear in the same way as Formik errors.
+ * This is to clear them as soon as the user edits the field.
+ */
+function ClearSubmitErrorsOnChange({
+  fields,
+  onChange,
+}: {
+  fields: string[];
+  onChange: () => void;
+}) {
+  const { values } = useFormikContext<FormikValues>();
+  const watched = JSON.stringify(fields.map((field) => values[field]));
+  const previous = useRef(watched);
+
+  useEffect(() => {
+    if (previous.current !== watched) {
+      previous.current = watched;
+      onChange();
+    }
+  }, [watched, onChange]);
+
+  return null;
+}
+
 interface PageProps {
   isEditing: boolean;
   user: StaffUser;
-  onSubmit: (values: FormikValues) => void;
+  // Returning the promise lets Formik clear isSubmitting once the save settles.
+  onSubmit: (values: FormikValues) => void | Promise<void>;
   isSubmitted: boolean;
   addressHistory: any; // eslint-disable-line @typescript-eslint/no-explicit-any
   setAddressHistory: (addresses: any) => void; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -121,7 +149,9 @@ interface PageProps {
   data?: Application;
   dataTestId?: string;
   isSaving?: boolean;
-  userError?: string;
+  userError?: ReactNode;
+  fieldErrors?: Record<string, string | undefined>;
+  onClearSubmitErrors?: () => void;
 }
 
 export default function MainApplicantForm({
@@ -138,10 +168,16 @@ export default function MainApplicantForm({
   dataTestId,
   isSaving,
   userError,
+  fieldErrors,
+  onClearSubmitErrors,
 }: PageProps) {
   const initialValues = isEditing
     ? generateEditInitialValues(data, true)
     : generateInitialValues(sections);
+
+  const erroredFields = Object.entries(fieldErrors ?? {})
+    .filter(([, error]) => Boolean(error))
+    .map(([field]) => field);
 
   const isEditingCopy = isEditing ? 'Edit' : 'Add new';
   return (
@@ -156,123 +192,131 @@ export default function MainApplicantForm({
             {userError}
           </ErrorSummary>
         )}
-        {isSaving ? (
-          <Loading text="Saving..." />
-        ) : (
-          <Formik
-            initialValues={initialValues}
-            onSubmit={onSubmit}
-            validationSchema={mainApplicantSchema}
-            validate={() => validateAddCaseAddressHistory(addressHistory)}
-          >
-            {({ touched, isSubmitting, errors, isValid }) => {
-              const isTouched = Object.keys(touched).length !== 0;
-              const visibleErrors = Object.entries(errors).filter(
-                ([key, value]) =>
-                  Boolean(value) &&
-                  (key !== ADDRESS_HISTORY_FIELD ||
-                    addressHistory.length === 0),
-              );
-              const showValidationErrors =
-                isSubmitted && isTouched && visibleErrors.length > 0;
-              const addressError =
-                showValidationErrors && addressHistory.length === 0
-                  ? formatFormikFieldError(errors.addressHistory)
-                  : undefined;
+        <Formik
+          initialValues={initialValues}
+          onSubmit={onSubmit}
+          validationSchema={mainApplicantSchema}
+          validate={() => validateAddCaseAddressHistory(addressHistory)}
+        >
+          {({ touched, isSubmitting, errors, isValid }) => {
+            const isTouched = Object.keys(touched).length !== 0;
+            const visibleErrors = Object.entries(errors).filter(
+              ([key, value]) =>
+                Boolean(value) &&
+                (key !== ADDRESS_HISTORY_FIELD || addressHistory.length === 0),
+            );
+            const showValidationErrors =
+              isSubmitted && isTouched && visibleErrors.length > 0;
+            const addressError =
+              showValidationErrors && addressHistory.length === 0
+                ? formatFormikFieldError(errors.addressHistory)
+                : undefined;
 
-              return (
-                <>
-                  <RevalidateOnAddressHistoryChange
-                    addressHistory={addressHistory}
+            return (
+              <>
+                <RevalidateOnAddressHistoryChange
+                  addressHistory={addressHistory}
+                />
+                {erroredFields.length > 0 && onClearSubmitErrors ? (
+                  <ClearSubmitErrorsOnChange
+                    fields={erroredFields}
+                    onChange={onClearSubmitErrors}
                   />
-                  {showValidationErrors ? (
-                    <ErrorSummary
-                      title="There is a problem"
-                      dataTestId="test-edit-main-applicant-error-summary"
-                    >
-                      <ul className="govuk-list govuk-error-summary__list">
-                        {visibleErrors.map(([inputName, errorTitle]) => (
-                          <li key={inputName}>
-                            <a href={`#${inputName}`}>
-                              {formatFormikFieldError(errorTitle)}
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    </ErrorSummary>
+                ) : null}
+                {showValidationErrors ? (
+                  <ErrorSummary
+                    title="There is a problem"
+                    dataTestId="test-edit-main-applicant-error-summary"
+                  >
+                    <ul className="govuk-list govuk-error-summary__list">
+                      {visibleErrors.map(([inputName, errorTitle]) => (
+                        <li key={inputName}>
+                          <a href={`#${inputName}`}>
+                            {formatFormikFieldError(errorTitle)}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </ErrorSummary>
+                ) : null}
+                <Form>
+                  {/* Identity */}
+                  <AddCaseSection
+                    section={personalDetailsSection}
+                    fieldErrors={fieldErrors}
+                  />
+                  <AddCaseSection section={immigrationStatusSection} />
+
+                  {/* Health */}
+                  <AddCaseSection section={medicalNeedsSection} />
+
+                  {/* Living situation */}
+                  <AddCaseSection section={residentialStatusSection} />
+                  <AddCaseAddress
+                    addresses={addressHistory}
+                    setAddresses={setAddressHistory}
+                    error={addressError}
+                  />
+
+                  {/* Current accommodation */}
+                  <AddCaseSection section={currentAccommodationSection} />
+                  <AddCaseSection section={currentAccommodationHostSection} />
+                  <AddCaseSection
+                    section={currentAccommodationLandlordSection}
+                  />
+
+                  {/* Your situation */}
+                  <AddCaseSection section={armedForcesSection} />
+                  <AddCaseSection section={courtOrderSection} />
+                  <AddCaseSection section={accomodationTypeSection} />
+                  <AddCaseSection section={sublettingSection} />
+                  <AddCaseSection section={domesticViolenceSection} />
+                  <AddCaseSection section={homelessnessSection} />
+                  <AddCaseSection section={propertyOwnwershipSection} />
+                  <AddCaseSection section={soldPropertySection} />
+                  <AddCaseSection section={medicalNeedSection} />
+                  <AddCaseSection section={purchasingPropertySection} />
+                  <AddCaseSection section={arrearsSection} />
+                  <AddCaseSection section={underOccupyingSection} />
+                  <AddCaseSection section={otherHousingRegisterSection} />
+                  <AddCaseSection section={breachOfTenancySection} />
+                  <AddCaseSection section={legalRestrictionsSection} />
+                  <AddCaseSection section={unspentConvictionsSection} />
+                  <AddCaseSection section={employmentSection} />
+                  <AddCaseSection section={incomeSavingsSection} />
+                  <AddCaseSection section={additionalQuestionsSection} />
+
+                  {/* Ethnicity */}
+                  {/* <AddCaseSection section={ethnicitySection} /> */}
+                  <AddCaseEthnicity
+                    section={ethnicitySection}
+                    ethnicity={ethnicity}
+                    setEthnicity={setEthnicity}
+                  />
+
+                  {ethnicity === 'asian-asian-british' ? (
+                    <AddCaseSection section={ethnicityAsianSection} />
                   ) : null}
-                  <Form>
-                    {/* Identity */}
-                    <AddCaseSection section={personalDetailsSection} />
-                    <AddCaseSection section={immigrationStatusSection} />
 
-                    {/* Health */}
-                    <AddCaseSection section={medicalNeedsSection} />
+                  {ethnicity === 'black-black-british' ? (
+                    <AddCaseSection section={ethnicityBlackSection} />
+                  ) : null}
+                  {ethnicity === 'mixed-or-multiple-background' ? (
+                    <AddCaseSection section={ethnicityMixedSection} />
+                  ) : null}
 
-                    {/* Living situation */}
-                    <AddCaseSection section={residentialStatusSection} />
-                    <AddCaseAddress
-                      addresses={addressHistory}
-                      setAddresses={setAddressHistory}
-                      error={addressError}
-                    />
+                  {ethnicity === 'white' ? (
+                    <AddCaseSection section={ethnicityWhiteSection} />
+                  ) : null}
 
-                    {/* Current accommodation */}
-                    <AddCaseSection section={currentAccommodationSection} />
-                    <AddCaseSection section={currentAccommodationHostSection} />
-                    <AddCaseSection
-                      section={currentAccommodationLandlordSection}
-                    />
+                  {ethnicity === 'other-ethnic-group' ? (
+                    <AddCaseSection section={ethnicityOtherSection} />
+                  ) : null}
 
-                    {/* Your situation */}
-                    <AddCaseSection section={armedForcesSection} />
-                    <AddCaseSection section={courtOrderSection} />
-                    <AddCaseSection section={accomodationTypeSection} />
-                    <AddCaseSection section={sublettingSection} />
-                    <AddCaseSection section={domesticViolenceSection} />
-                    <AddCaseSection section={homelessnessSection} />
-                    <AddCaseSection section={propertyOwnwershipSection} />
-                    <AddCaseSection section={soldPropertySection} />
-                    <AddCaseSection section={medicalNeedSection} />
-                    <AddCaseSection section={purchasingPropertySection} />
-                    <AddCaseSection section={arrearsSection} />
-                    <AddCaseSection section={underOccupyingSection} />
-                    <AddCaseSection section={otherHousingRegisterSection} />
-                    <AddCaseSection section={breachOfTenancySection} />
-                    <AddCaseSection section={legalRestrictionsSection} />
-                    <AddCaseSection section={unspentConvictionsSection} />
-                    <AddCaseSection section={employmentSection} />
-                    <AddCaseSection section={incomeSavingsSection} />
-                    <AddCaseSection section={additionalQuestionsSection} />
-
-                    {/* Ethnicity */}
-                    {/* <AddCaseSection section={ethnicitySection} /> */}
-                    <AddCaseEthnicity
-                      section={ethnicitySection}
-                      ethnicity={ethnicity}
-                      setEthnicity={setEthnicity}
-                    />
-
-                    {ethnicity === 'asian-asian-british' ? (
-                      <AddCaseSection section={ethnicityAsianSection} />
-                    ) : null}
-
-                    {ethnicity === 'black-black-british' ? (
-                      <AddCaseSection section={ethnicityBlackSection} />
-                    ) : null}
-                    {ethnicity === 'mixed-or-multiple-background' ? (
-                      <AddCaseSection section={ethnicityMixedSection} />
-                    ) : null}
-
-                    {ethnicity === 'white' ? (
-                      <AddCaseSection section={ethnicityWhiteSection} />
-                    ) : null}
-
-                    {ethnicity === 'other-ethnic-group' ? (
-                      <AddCaseSection section={ethnicityOtherSection} />
-                    ) : null}
-
-                    <div className="c-flex__1 text-right">
+                  <div className="c-flex__1 text-right">
+                    {isSaving ? (
+                      <Loading text="Saving..." />
+                    ) : (
                       <Button
                         onClick={() => handleSaveApplication(isValid, touched)}
                         disabled={isSubmitting}
@@ -283,13 +327,13 @@ export default function MainApplicantForm({
                           ? 'Update application'
                           : 'Save new application'}
                       </Button>
-                    </div>
-                  </Form>
-                </>
-              );
-            }}
-          </Formik>
-        )}
+                    )}
+                  </div>
+                </Form>
+              </>
+            );
+          }}
+        </Formik>
       </Layout>
     </UserContext.Provider>
   );

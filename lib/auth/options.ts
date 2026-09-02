@@ -37,6 +37,40 @@ export function assertStaffAuthEnvironment(): void {
 // token, so staff sign in again when either this cookie or the ID token expires.
 export const staffSessionMaxAgeSeconds = 8 * 60 * 60;
 
+type AuthErrorMetadata = {
+  error?: unknown;
+  error_description?: unknown;
+  providerId?: unknown;
+};
+
+// NextAuth hands the logger whole OAuth profiles, ID tokens, and provider
+// responses. Only these named scalars may be read out of the metadata; the
+// metadata object itself must never be passed to console.
+function describeAuthError(metadata: unknown): string {
+  const container = (metadata ?? {}) as AuthErrorMetadata;
+  const cause = (container.error ?? metadata) as
+    | (Error & AuthErrorMetadata)
+    | undefined;
+
+  const details: string[] = [];
+
+  if (cause instanceof Error) {
+    details.push(`${cause.name}: ${cause.message}`);
+  }
+  if (typeof cause?.error === 'string') {
+    details.push(`oauth_error=${cause.error}`);
+  }
+  const description = container.error_description ?? cause?.error_description;
+  if (typeof description === 'string') {
+    details.push(`oauth_error_description=${description}`);
+  }
+  if (typeof container.providerId === 'string') {
+    details.push(`provider=${container.providerId}`);
+  }
+
+  return details.join(' | ');
+}
+
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
@@ -80,10 +114,12 @@ export const authOptions: NextAuthOptions = {
     error: '/login',
   },
   logger: {
-    error() {
-      // NextAuth's default logger can include OAuth profiles and tokens.
+    error(code, metadata) {
+      console.error(`NextAuth error ${code}`, describeAuthError(metadata));
     },
-    warn() {},
+    warn(code) {
+      console.warn(`NextAuth warning ${code}`);
+    },
     debug() {},
   },
   callbacks: {

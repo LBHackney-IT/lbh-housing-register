@@ -57,7 +57,7 @@ describe('staff Auth.js configuration', () => {
     expect(JSON.stringify(result)).not.toContain('secret-id-token');
   });
 
-  it('does not log OAuth callback metadata or sign-in events', () => {
+  it('logs OAuth error codes without profiles or tokens', () => {
     expect(authOptions.events).toBeUndefined();
     const { error: logError, warn, debug } = authOptions.logger ?? {};
     expect(logError).toBeDefined();
@@ -70,14 +70,29 @@ describe('staff Auth.js configuration', () => {
     const consoleDebug = jest.spyOn(console, 'debug').mockImplementation();
 
     logError?.('OAUTH_CALLBACK_ERROR', {
-      error: new Error('nonce mismatch'),
+      error: Object.assign(new Error('nonce mismatch'), {
+        error: 'invalid_client',
+        error_description: 'client secret rejected',
+      }),
+      providerId: 'cognito',
       id_token: 'must-not-be-logged',
+      profile: { email: 'officer@hackney.gov.uk' },
     });
     warn?.('NEXTAUTH_URL');
     debug?.('PROFILE_DATA', { OAuthProfile: { email: 'x' } });
 
-    expect(consoleError).not.toHaveBeenCalled();
-    expect(consoleWarn).not.toHaveBeenCalled();
+    const logged = JSON.stringify([
+      ...consoleError.mock.calls,
+      ...consoleWarn.mock.calls,
+    ]);
+    expect(logged).toContain('OAUTH_CALLBACK_ERROR');
+    expect(logged).toContain('nonce mismatch');
+    expect(logged).toContain('invalid_client');
+    expect(logged).toContain('client secret rejected');
+    expect(logged).toContain('cognito');
+    expect(logged).toContain('NEXTAUTH_URL');
+    expect(logged).not.toContain('must-not-be-logged');
+    expect(logged).not.toContain('officer@hackney.gov.uk');
     expect(consoleInfo).not.toHaveBeenCalled();
     expect(consoleDebug).not.toHaveBeenCalled();
 

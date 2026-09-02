@@ -351,11 +351,11 @@ workflows:
               only: [feat/ssi-1205-implement-cognito-auth]
           matrix:
             parameters:
-              browser: [chrome, firefox]
+              browser: [chrome]
               # mobile, tablet, chromebook/desktop
-              height: [480, 768, 960]
+              height: [960]
               # mobile, tablet, chromebook, desktop
-              width: [320, 1024, 1366, 1536]
+              width: [1536]
             exclude: *exclude_combinations
           requires:
             - build

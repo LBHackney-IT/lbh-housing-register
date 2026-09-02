@@ -336,8 +336,9 @@ workflows:
   continuous-delivery:
     jobs:
       - run-tests:
-          branches:
-            only: [feat/ssi-1205-implement-cognito-auth]
+          filters:
+            branches:
+              only: [feat/ssi-1205-implement-cognito-auth]
       - build:
           context:
             - housing-register-fe-build-context

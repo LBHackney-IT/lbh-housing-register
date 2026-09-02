@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Form, Formik, FormikValues } from 'formik';
 import router from 'next/router';
@@ -6,8 +6,10 @@ import * as Yup from 'yup';
 
 import { ActivityHistoryPagedResult } from '../../domain/ActivityHistoryApi';
 import { addNoteToHistory } from '../../lib/gateways/internal-api';
+import { toUserErrorMessage } from '../../lib/utils/errorHelper';
 import Button from '../button';
 import { HeadingFour, HeadingThree } from '../content/headings';
+import ErrorSummary from '../errors/error-summary';
 import Textarea from '../form/textarea';
 import {
   SummaryListKey,
@@ -35,6 +37,8 @@ export default function ApplicationHistory({
   const initialValues: FormikValues = {
     note: '',
   };
+
+  const [userError, setUserError] = useState<string | undefined>(undefined);
 
   const addNoteSchema = Yup.object({
     note: Yup.string().label('Note').required(),
@@ -66,9 +70,15 @@ export default function ApplicationHistory({
     : null;
 
   const onSubmit = (values: FormikValues) => {
-    addNoteToHistory(id, { Note: values.note }).then(() => {
-      router.reload();
-    });
+    setUserError(undefined);
+
+    return addNoteToHistory(id, { Note: values.note })
+      .then(() => {
+        router.reload();
+      })
+      .catch((error) => {
+        setUserError(toUserErrorMessage(error, 'Unable to add note'));
+      });
   };
 
   return (
@@ -84,12 +94,14 @@ export default function ApplicationHistory({
               onSubmit={onSubmit}
               validationSchema={addNoteSchema}
             >
-              {({
-                isSubmitting,
-                // , errors, isValid
-              }) => {
+              {({ isSubmitting }) => {
                 return (
                   <Form>
+                    {userError ? (
+                      <ErrorSummary dataTestId="test-add-note-error-summary">
+                        {userError}
+                      </ErrorSummary>
+                    ) : null}
                     <Textarea name="note" label="" as="textarea" />
                     <Button disabled={isSubmitting} type="submit">
                       Save note

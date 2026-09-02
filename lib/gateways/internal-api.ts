@@ -21,7 +21,7 @@ const readApiErrorBody = async (res: Response): Promise<ApiErrorBody> => {
   try {
     return (await res.json()) as ApiErrorBody;
   } catch (error) {
-    console.error('Unkown create application error response', error);
+    console.error('Unable to parse API error response', error);
     return {};
   }
 };
@@ -56,9 +56,11 @@ export const updateApplication = async (application: Application) => {
 
   if (res.ok) {
     return (await res.json()) as Application;
-  } else {
-    throw Error(`Unable to update application (${res.status})`);
   }
+
+  // Surface validation messages, e.g. duplicate bidding number.
+  const body = await readApiErrorBody(res);
+  throw Error(body.message ?? `Unable to update application (${res.status})`);
 };
 
 export const createApplication = async (application: Application) => {
@@ -116,5 +118,11 @@ export const addNoteToHistory = async (
     method: 'POST',
     body: JSON.stringify(request),
   });
-  return await res.json();
+
+  if (res.ok) {
+    return await res.json();
+  }
+
+  const body = await readApiErrorBody(res);
+  throw Error(body.message ?? `Unable to add note (${res.status})`);
 };

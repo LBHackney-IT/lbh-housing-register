@@ -12,3 +12,24 @@ export const isAssignableToError = (error: unknown): boolean => {
     'stack' in error
   );
 };
+
+/**
+ * React will crash if an Error (or similar object) is rendered as a child.
+ * Catch callbacks often receive that shape, so always return a string.
+ */
+export const toUserErrorMessage = (
+  error: unknown,
+  fallback: string,
+): string => {
+  const message =
+    typeof error === 'string'
+      ? error
+      : error &&
+          typeof error === 'object' &&
+          'message' in error &&
+          typeof error.message === 'string'
+        ? error.message
+        : '';
+
+  return message || fallback;
+};

@@ -21,6 +21,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import ErrorSummary from 'components/errors/error-summary';
 import Loading from 'components/loading';
+import { toUserErrorMessage } from 'lib/utils/errorHelper';
 import { scrollToError } from 'lib/utils/scroll';
 
 const Declaration = (): JSX.Element => {
@@ -45,7 +46,9 @@ const Declaration = (): JSX.Element => {
         await dispatch(disqualifyApplication(application.id!)).unwrap();
         router.push('/apply/not-eligible');
       } catch (error) {
-        setUserError(error as string);
+        setUserError(
+          toUserErrorMessage(error, 'Unable to complete application'),
+        );
         console.error('Error completing the application:', error);
         scrollToError();
       } finally {
@@ -64,7 +67,9 @@ const Declaration = (): JSX.Element => {
         await dispatch(createEvidenceRequest(application)).unwrap();
         router.push('/apply/confirmation');
       } catch (error) {
-        setUserError(error as string);
+        setUserError(
+          toUserErrorMessage(error, 'Unable to complete application'),
+        );
         console.error('Error completing the application:', error);
         scrollToError();
       } finally {

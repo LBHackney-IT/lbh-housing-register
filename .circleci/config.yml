@@ -336,21 +336,18 @@ workflows:
   continuous-delivery:
     jobs:
       - run-tests:
-          filters:
-            tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
+          branches:
+            only: [feat/ssi-1205-implement-cognito-auth]
       - build:
           context:
             - housing-register-fe-build-context
           filters:
-            tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
+            branches:
+              only: [feat/ssi-1205-implement-cognito-auth]
       - run-cypress-e2e:
           filters:
-            tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
-              only: [development, main]
+              only: [feat/ssi-1205-implement-cognito-auth]
           matrix:
             parameters:
               browser: [chrome, firefox]
@@ -366,18 +363,16 @@ workflows:
           requires:
             - run-tests
           filters:
-            tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
+            branches:
+              only: [feat/ssi-1205-implement-cognito-auth]
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:
             - run-tests
             - run-cypress-e2e
           filters:
-            tags:
-              ignore: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
-              only: [development]
+              only: [feat/ssi-1205-implement-cognito-auth]
       - deploy-to-development:
           context:
             - central-parameter-store-context
@@ -387,54 +382,5 @@ workflows:
             - assume-role-development
             - build
           filters:
-            tags:
-              ignore: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
             branches:
-              only: [development]
-      - assume-role-staging:
-          context: api-assume-role-housing-staging-context
-          requires:
-            - run-tests
-            - run-cypress-e2e
-          filters:
-            tags:
-              ignore: /.*/
-            branches:
-              only: main
-      - deploy-to-staging:
-          context:
-            - central-parameter-store-context
-            - housing-register-fe-build-context
-            - Serverless Framework
-          requires:
-            - assume-role-staging
-            - build
-          filters:
-            tags:
-              ignore: /.*/
-            branches:
-              only: main
-      - assume-role-production:
-          context: api-assume-role-housing-production-context
-          requires:
-            - run-tests
-            - run-cypress-e2e
-            - build
-          filters:
-            tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
-            branches:
-              ignore: /.*/
-      - deploy-to-production:
-          context:
-            - central-parameter-store-context
-            - housing-register-fe-build-context
-            - Serverless Framework
-          requires:
-            - assume-role-production
-            - build
-          filters:
-            tags:
-              only: /^hackney-housing-register-v[0-9]+(\.[0-9]+)*$/
-            branches:
-              ignore: /.*/
+              only: [feat/ssi-1205-implement-cognito-auth]

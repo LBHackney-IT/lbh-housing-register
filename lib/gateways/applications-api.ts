@@ -115,7 +115,7 @@ export const searchAllApplications = async (
 export const getApplication = async (
   id: string,
 ): Promise<Application | null> => {
-  const url = `applications/${id}`;
+  const url = `applications/${encodeURIComponent(id)}`;
   const { data } = await housingAxios().get(url);
   return data;
 };
@@ -136,7 +136,7 @@ export const updateApplication = async (
   id: string,
   req: AuthenticatedRequest,
 ): Promise<Application | null> => {
-  const url = `applications/${id}`;
+  const url = `applications/${encodeURIComponent(id)}`;
   const { data } = await (
     await authenticatedHousingAxios(req)
   ).patch(url, application);
@@ -147,7 +147,7 @@ export const completeApplication = async (
   id: string,
   req: AuthenticatedRequest,
 ): Promise<Application | null> => {
-  const url = `applications/${id}/complete`;
+  const url = `applications/${encodeURIComponent(id)}/complete`;
   const { data } = await (
     await authenticatedHousingAxios(req)
   ).patch(url, null);
@@ -160,7 +160,7 @@ export const createEvidenceRequest = async (
   id: string,
   request: CreateEvidenceRequest,
 ): Promise<Array<EvidenceRequestResponse> | null> => {
-  const url = `applications/${id}/evidence`;
+  const url = `applications/${encodeURIComponent(id)}/evidence`;
   const { data } = await housingAxios().post(url, request);
   return data;
 };
@@ -239,9 +239,12 @@ export const getApplicationHistory = async (
   id: string,
   req: AuthenticatedRequest,
 ): Promise<ActivityHistoryPagedResult | null> => {
-  const url = `activityhistory?targetId=${id}&pageSize=100`;
   try {
-    const { data } = await (await activityAxios(req)).get(url);
+    const { data } = await (
+      await activityAxios(req)
+    ).get('activityhistory', {
+      params: { targetId: id, pageSize: 100 },
+    });
     return data;
   } catch (ex) {
     // TODO API shoudln't make us do this
@@ -258,7 +261,7 @@ export const addNoteToHistory = async (
   note: AddNoteToHistoryRequest,
   req: AuthenticatedRequest,
 ): Promise<Array<AddNoteToHistoryRequest> | null> => {
-  const url = `applications/${id}/note`;
+  const url = `applications/${encodeURIComponent(id)}/note`;
   const { data } = await (await authenticatedHousingAxios(req)).post(url, note);
   return data;
 };

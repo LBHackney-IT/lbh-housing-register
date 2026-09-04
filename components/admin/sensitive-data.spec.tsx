@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import SensitiveData from './sensitive-data';
 import { updateApplication } from '../../lib/gateways/internal-api';
+import { UserFacingError } from '../../lib/utils/errorHelper';
 import {
   generateHRUserWithPermissions,
   UserRole,
@@ -37,7 +38,7 @@ describe('SensitiveData', () => {
 
   it('shows an error and re-enables the button when the update fails', async () => {
     updateApplicationMock.mockRejectedValue(
-      new Error('Unable to update application (500)'),
+      new UserFacingError('Unable to update application (500)'),
     );
 
     render(<SensitiveData id="app-1" isSensitive={false} user={user} />);

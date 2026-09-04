@@ -22,7 +22,7 @@ import {
 } from '../../lib/utils/adminHelpers';
 import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 import { scrollToTop } from '../../lib/utils/scroll';
-import { isAssignableToError } from 'lib/utils/errorHelper';
+import { toUserErrorMessage } from 'lib/utils/errorHelper';
 
 interface PageProps {
   user: HackneyGoogleUser;
@@ -91,10 +91,8 @@ export default function AddCasePage({ user }: PageProps): JSX.Element {
             {' (opens in a new tab).'}
           </>,
         );
-      } else if (isAssignableToError(err)) {
-        setUserError((err as Error).message);
       } else {
-        setUserError('Unable to create application');
+        setUserError(toUserErrorMessage(err, 'Unable to create application'));
       }
       scrollToTop();
     }

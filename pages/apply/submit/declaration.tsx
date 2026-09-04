@@ -49,7 +49,6 @@ const Declaration = (): JSX.Element => {
         setUserError(
           toUserErrorMessage(error, 'Unable to complete application'),
         );
-        console.error('Error completing the application:', error);
         scrollToError();
       } finally {
         setLoading(false);
@@ -70,7 +69,6 @@ const Declaration = (): JSX.Element => {
         setUserError(
           toUserErrorMessage(error, 'Unable to complete application'),
         );
-        console.error('Error completing the application:', error);
         scrollToError();
       } finally {
         setLoading(false);

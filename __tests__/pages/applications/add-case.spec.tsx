@@ -159,21 +159,25 @@ describe('AddCasePage', () => {
     );
   });
 
-  it('shows the thrown message for other errors', async () => {
-    createApplicationMock.mockRejectedValue(new Error('Network down'));
+  it('shows the thrown message for other API errors', async () => {
+    createApplicationMock.mockRejectedValue(
+      new CreateApplicationError('Downstream failed', 500),
+    );
 
     render(<AddCasePage user={user} />);
     formValuesSubmit();
 
     await waitFor(() => {
       expect(screen.getByTestId('user-error')).toHaveTextContent(
-        'Network down',
+        'Downstream failed',
       );
     });
   });
 
-  it('shows a generic message when the failure is not an Error', async () => {
-    createApplicationMock.mockRejectedValue('nope');
+  it('logs a dropped connection and shows a generic message instead', async () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation();
+    const networkError = new TypeError('Failed to fetch');
+    createApplicationMock.mockRejectedValue(networkError);
 
     render(<AddCasePage user={user} />);
     formValuesSubmit();
@@ -183,5 +187,13 @@ describe('AddCasePage', () => {
         'Unable to create application',
       );
     });
+    expect(screen.getByTestId('user-error')).not.toHaveTextContent(
+      'Failed to fetch',
+    );
+    expect(consoleError).toHaveBeenCalledWith(
+      'Unable to create application',
+      networkError,
+    );
+    consoleError.mockRestore();
   });
 });

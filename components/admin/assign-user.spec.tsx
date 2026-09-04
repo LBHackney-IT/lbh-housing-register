@@ -3,6 +3,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import AssignUser from './assign-user';
 import { APPLICATION_UNNASIGNED } from '../../domain/HousingApi';
 import { updateApplication } from '../../lib/gateways/internal-api';
+import { UserFacingError } from '../../lib/utils/errorHelper';
 import {
   generateHRUserWithPermissions,
   UserRole,
@@ -40,7 +41,7 @@ describe('AssignUser', () => {
 
   it('shows an error and re-enables controls when assignment fails', async () => {
     updateApplicationMock.mockRejectedValue(
-      new Error('Unable to update application (403)'),
+      new UserFacingError('Unable to update application (403)'),
     );
 
     render(

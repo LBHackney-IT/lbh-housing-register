@@ -6,6 +6,7 @@ import Actions from './actions';
 import { Application } from '../../domain/HousingApi';
 import { updateApplication } from '../../lib/gateways/internal-api';
 import { ApplicationStatus } from '../../lib/types/application-status';
+import { UserFacingError } from '../../lib/utils/errorHelper';
 
 jest.mock('next/router', () => ({
   __esModule: true,
@@ -70,7 +71,7 @@ describe('Actions assessment form', () => {
 
   it('shows the API message when the update is rejected', async () => {
     updateApplicationMock.mockRejectedValue(
-      new Error(
+      new UserFacingError(
         'Supplied bidding number "1234567" is reserved for auto-generation.',
       ),
     );
@@ -88,8 +89,10 @@ describe('Actions assessment form', () => {
     expect(screen.getByText('There is a problem')).toBeInTheDocument();
   });
 
-  it('shows a fallback message when the rejection is not an Error', async () => {
-    updateApplicationMock.mockRejectedValue('nope');
+  it('logs a dropped connection and shows a fallback message instead', async () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation();
+    const networkError = new TypeError('Failed to fetch');
+    updateApplicationMock.mockRejectedValue(networkError);
 
     render(<Actions data={application} />);
     submit();
@@ -99,10 +102,16 @@ describe('Actions assessment form', () => {
         screen.getByText('Unable to update assessment'),
       ).toBeInTheDocument();
     });
+    expect(screen.queryByText('Failed to fetch')).not.toBeInTheDocument();
+    expect(consoleError).toHaveBeenCalledWith(
+      'Unable to update assessment',
+      networkError,
+    );
+    consoleError.mockRestore();
   });
 
   it('re-enables the form after a failed update', async () => {
-    updateApplicationMock.mockRejectedValue(new Error('Bad request'));
+    updateApplicationMock.mockRejectedValue(new UserFacingError('Bad request'));
 
     render(<Actions data={application} />);
     submit();

@@ -3,6 +3,7 @@ import router from 'next/router';
 
 import ApplicationHistory from './ApplicationHistory';
 import { addNoteToHistory } from '../../lib/gateways/internal-api';
+import { UserFacingError } from '../../lib/utils/errorHelper';
 
 jest.mock('next/router', () => ({
   __esModule: true,
@@ -44,7 +45,7 @@ describe('ApplicationHistory', () => {
 
   it('shows an error and does not reload when saving a note fails', async () => {
     addNoteToHistoryMock.mockRejectedValue(
-      new Error('Unable to add note (500)'),
+      new UserFacingError('Unable to add note (500)'),
     );
 
     render(<ApplicationHistory history={emptyHistory} id="app-1" />);

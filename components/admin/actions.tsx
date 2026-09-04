@@ -14,6 +14,7 @@ import {
   reasonOptions,
 } from '../../lib/utils/assessmentActionsData';
 import { formatFormikFieldError } from '../../lib/utils/formatFormikFieldError';
+import { toUserErrorMessage } from '../../lib/utils/errorHelper';
 
 import Button from '../button';
 import DateInput, { INVALID_DATE } from '../form/dateinput';
@@ -144,9 +145,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
         return router.replace(router.asPath);
       })
       .catch((err) => {
-        setSubmitError(
-          err instanceof Error ? err.message : 'Unable to update assessment',
-        );
+        setSubmitError(toUserErrorMessage(err, 'Unable to update assessment'));
       });
   }
 

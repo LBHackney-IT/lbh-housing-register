@@ -3,6 +3,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import MedicalDetail from './medical-details';
 import { Application } from '../../domain/HousingApi';
 import { updateApplication } from '../../lib/gateways/internal-api';
+import { UserFacingError } from '../../lib/utils/errorHelper';
 import { FormID } from '../../lib/utils/form-data';
 
 const mockReload = jest.fn();
@@ -72,7 +73,7 @@ describe('MedicalDetail', () => {
 
   it('shows an error and does not reload when the update fails', async () => {
     updateApplicationMock.mockRejectedValue(
-      new Error('Unable to update application (400)'),
+      new UserFacingError('Unable to update application (400)'),
     );
 
     render(

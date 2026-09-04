@@ -119,9 +119,10 @@ describe('updateApplication', () => {
       }),
     });
 
-    await expect(updateApplication(application)).rejects.toThrow(
-      'Supplied bidding number "1234567" is reserved',
-    );
+    await expect(updateApplication(application)).rejects.toMatchObject({
+      isUserFacing: true,
+      message: 'Supplied bidding number "1234567" is reserved',
+    });
   });
 
   it('falls back to a status message when the body has no message', async () => {
@@ -161,8 +162,11 @@ describe('addNoteToHistory', () => {
       json: async () => ({ message: 'Unable to add note to activity history' }),
     });
 
-    await expect(addNoteToHistory('app-1', { Note: 'hello' })).rejects.toThrow(
-      'Unable to add note to activity history',
-    );
+    await expect(
+      addNoteToHistory('app-1', { Note: 'hello' }),
+    ).rejects.toMatchObject({
+      isUserFacing: true,
+      message: 'Unable to add note to activity history',
+    });
   });
 });

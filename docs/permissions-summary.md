@@ -1,6 +1,8 @@
 # Staff permissions (current implementation)
 
-This describes what this Next.js app allows today. Roles come from Cognito `custom:groups` matched against `AUTHORISED_*_GROUP` env vars (`lib/auth/staff.ts`). They are **independent flags**, not a hierarchy: admin is not a superset of manager.
+This describes what this Next.js app allows today. The Cognito/NextAuth cutover changed how staff authenticate, not who can do what. Role checks below are the same rules as the pre-Cognito Google JWT app.
+
+Roles come from Cognito `custom:groups` matched against `AUTHORISED_*_GROUP` env vars (`lib/auth/staff.ts`). They are **independent flags**, not a hierarchy: admin is not a superset of manager.
 
 A user in more than one group gets the union of flags. `hasReadOnlyPermissionOnly` is true only when the read-only group is present **and** admin, manager, and officer are all absent.
 
@@ -21,18 +23,18 @@ Staff with none of these groups are treated as authenticated-but-unauthorised an
 
 `authorizeStaffPage` (`lib/auth/page.ts`) is the SSR gate. `{ write: true }` blocks read-only-only users. `{ requiredGroup }` checks the **raw group list**, not the derived flags.
 
-| Page                                           | Read-only                                                 | Officer                                                      | Admin                                                      | Manager                                                    |
-| ---------------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------ | ---------------------------------------------------------- | ---------------------------------------------------------- |
-| `/applications` (worktray + search)            | Yes (worktray and sidebar hidden)                         | Yes                                                          | Yes                                                        | Yes                                                        |
-| `/applications/search-results`                 | Yes (sidebar hidden)                                      | Yes                                                          | Yes                                                        | Yes                                                        |
-| `/applications/view/[id]`                      | Yes, unless the case is sensitive and they cannot view it | Yes, with the same sensitive-data rule                       | Yes                                                        | Yes                                                        |
-| `/applications/view/[id]/[person]`             | Same as view                                              | Same as view                                                 | Same as view                                               | Same as view                                               |
-| `/applications/unassigned`                     | No (`write: true`)                                        | Yes                                                          | Yes                                                        | Yes                                                        |
-| `/applications/view-register`                  | No (`write: true`)                                        | Yes                                                          | Yes                                                        | Yes                                                        |
-| `/applications/add-case`                       | No (`write: true`)                                        | Yes                                                          | Yes                                                        | Yes                                                        |
-| Edit person / household / add household member | No (`write: true`)                                        | Yes (page loads; mutations still need `canEditApplications`) | Yes (same)                                                 | Yes                                                        |
-| `/applications/reports`                        | No                                                        | No                                                           | **No**, unless they are also in `AUTHORISED_MANAGER_GROUP` | Yes, only if `AUTHORISED_MANAGER_GROUP` is in their claims |
-| `/applications/throw-error`                    | Page loads but UI is empty                                | Same                                                         | Yes (Sentry test buttons)                                  | Same as officer                                            |
+| Page                                           | Read-only                                                 | Officer                                | Admin                                                      | Manager                                                    |
+| ---------------------------------------------- | --------------------------------------------------------- | -------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------- |
+| `/applications` (worktray + search)            | Yes (worktray and sidebar hidden)                         | Yes                                    | Yes                                                        | Yes                                                        |
+| `/applications/search-results`                 | Yes (sidebar hidden)                                      | Yes                                    | Yes                                                        | Yes                                                        |
+| `/applications/view/[id]`                      | Yes, unless the case is sensitive and they cannot view it | Yes, with the same sensitive-data rule | Yes                                                        | Yes                                                        |
+| `/applications/view/[id]/[person]`             | Same as view                                              | Same as view                           | Same as view                                               | Same as view                                               |
+| `/applications/unassigned`                     | No (`write: true`)                                        | Yes                                    | Yes                                                        | Yes                                                        |
+| `/applications/view-register`                  | No (`write: true`)                                        | Yes                                    | Yes                                                        | Yes                                                        |
+| `/applications/add-case`                       | No (`write: true`)                                        | Yes                                    | Yes                                                        | Yes                                                        |
+| Edit person / household / add household member | No (`write: true`)                                        | Yes                                    | Yes                                                        | Yes                                                        |
+| `/applications/reports`                        | No                                                        | No                                     | **No**, unless they are also in `AUTHORISED_MANAGER_GROUP` | Yes, only if `AUTHORISED_MANAGER_GROUP` is in their claims |
+| `/applications/throw-error`                    | Page loads but UI is empty                                | Same                                   | Yes (Sentry test buttons)                                  | Same as officer                                            |
 
 Worktray, group worktray, all-applications, and reports links in the sidebar are not role-filtered. Read-only users simply do not see that sidebar. Officer and admin still see Reports and will be denied if they open it.
 
@@ -61,7 +63,7 @@ On `/applications/view/[id]`, sensitive cases with an assignee are hidden behind
 4. Officer or admin → can edit `Submitted` or `AwaitingReassessment` **only when `assignedTo` equals their email**.
 5. Otherwise → cannot edit (so admin **cannot** edit `Active` / `Pending` / etc. unless they also have the manager group).
 
-That is why an officer can open an unassigned submitted case and see it, but applicant edit controls stay hidden. Some other write controls (assessment, add household) are still shown; the PATCH then fails with 403.
+That is why an officer can open an unassigned submitted case and see it, but applicant edit links stay hidden. Assessment, add household, assign, and change status stay available. Those actions succeed at this BFF for any writable staff — the same as before Cognito. Do not re-apply `canEditApplications` on write APIs in an attempt to “match the UI”: the view page itself uses two different rules, and tightening the API broke assign-to-me / status changes for officers.
 
 ## API mutations (this app)
 
@@ -75,22 +77,16 @@ Requires any authorised staff role, then rejects read-only-only. Officer, admin,
 
 ### Update case, notes, complete, evidence
 
-`PATCH /api/applications/[id]`, `POST /api/applications/[id]/note`, `PATCH /api/applications/[id]/complete`, and `POST /api/applications/[id]/evidence` all use `getApplicationAccess` (`lib/utils/requestAuth.ts`):
+`PATCH /api/applications/[id]`, `POST /api/applications/[id]/note`, `PATCH /api/applications/[id]/complete`, and `POST /api/applications/[id]/evidence` all use `getApplicationAccess` (`lib/utils/requestAuth.ts`). This matches the pre-Cognito BFF: it does **not** re-apply `canEditApplications` or sensitive-view rules.
 
 1. Unauthenticated → 401.
-2. Read-only-only, or no authorised role → 403 (application is not loaded).
-3. Sensitive case the user cannot view → 403.
-4. `canEditApplications` false → 403.
-5. Otherwise → allowed, then forwarded to the Housing Register API.
+2. Read-only-only, or no authorised role → 403.
+3. Officer, admin, or manager → allowed for any application id, then forwarded to the Housing Register API.
 
-| Scenario                                                     | Read-only | Officer | Admin                                      | Manager |
-| ------------------------------------------------------------ | --------- | ------- | ------------------------------------------ | ------- |
-| Create case                                                  | 403       | Yes     | Yes                                        | Yes     |
-| Mutate `ManualDraft`                                         | 403       | Yes     | Yes                                        | Yes     |
-| Mutate `Submitted` / `AwaitingReassessment` assigned to self | 403       | Yes     | Yes                                        | Yes     |
-| Mutate those statuses assigned to someone else / unassigned  | 403       | 403     | 403                                        | Yes     |
-| Mutate `Active` and other statuses                           | 403       | 403     | 403                                        | Yes     |
-| Mutate a sensitive case they cannot view                     | 403       | 403     | Yes (and they can edit per the rows above) | Yes     |
+| Scenario                                                                   | Read-only | Officer | Admin | Manager |
+| -------------------------------------------------------------------------- | --------- | ------- | ----- | ------- |
+| Create case                                                                | 403       | Yes     | Yes   | Yes     |
+| Mutate any application (including unassigned / someone else’s / sensitive) | 403       | Yes     | Yes   | Yes     |
 
 A resident may mutate **only** the application id in their own cookie; that path does not use staff roles.
 
@@ -114,8 +110,8 @@ A resident may mutate **only** the application id in their own cookie; that path
 
 ## Quirks worth knowing
 
-- **Admin ≠ manager.** Admin can see others’ sensitive cases and can mark sensitivity, but does not get manager’s “edit any status” rule.
+- **Admin ≠ manager** on the view page only. Admin can see others’ sensitive cases and can mark sensitivity; applicant edit links still follow `canEditApplications` (admin does not get manager’s “edit any status” rule). The BFF still lets admin PATCH like other writable staff.
 - **Reports use the manager group string**, not `hasManagerPermissions`.
-- **Some view-page write controls ignore `canEditApplications`** (assessment, add household, change status). The API is the real gate.
+- **`canEditApplications` is a UI helper** (edit applicant / household member links). Writable staff mutations are not limited by it at this BFF layer.
 - **`canEditApplications` returns true for read-only on `ManualDraft`**, but write pages and `getApplicationAccess` still deny read-only.
 - This file is the **front-end / BFF** model. The Housing Register API may apply further checks on the forwarded Cognito token.

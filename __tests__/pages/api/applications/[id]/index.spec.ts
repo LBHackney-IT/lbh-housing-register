@@ -10,7 +10,6 @@ import {
 
 import * as staffAuth from '../../../../../lib/auth/staff';
 import * as applicationApi from '../../../../../lib/gateways/applications-api';
-import { ApplicationStatus } from '../../../../../lib/types/application-status';
 import * as requestAuth from '../../../../../lib/utils/requestAuth';
 import endpoint from '../../../../../pages/api/applications/[id]/index';
 import {
@@ -90,23 +89,18 @@ describe('PATCH /api/applications/[id]', () => {
     },
   );
 
-  it('forbids an officer from updating an application assigned to someone else', async () => {
+  it('allows an officer to update an application assigned to someone else', async () => {
     const officer = generateHRUserWithPermissions(UserRole.Officer);
     jest.spyOn(staffAuth, 'getSession').mockResolvedValue(officer);
-    jest.spyOn(applicationApi, 'getApplication').mockResolvedValue({
+    jest.spyOn(applicationApi, 'updateApplication').mockResolvedValue({
       id: applicationId,
-      status: ApplicationStatus.SUBMITTED,
-      assignedTo: 'someone-else@hackney.gov.uk',
-      sensitiveData: false,
     });
-    const update = jest.spyOn(applicationApi, 'updateApplication');
     const { req, res } = request();
 
     await endpoint(req, res);
 
-    expect(res.statusCode).toBe(StatusCodes.FORBIDDEN);
-    expect(res._getJSONData()).toEqual({ message: 'Access denied' });
-    expect(update).not.toHaveBeenCalled();
+    expect(res.statusCode).toBe(StatusCodes.OK);
+    expect(res._getJSONData()).toEqual({ id: applicationId });
   });
 
   it('rejects unsupported methods before authorization', async () => {

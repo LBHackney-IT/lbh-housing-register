@@ -1,7 +1,7 @@
 import router from 'next/router';
 import { useState } from 'react';
 import * as Yup from 'yup';
-import { Formik, Form, FormikValues, FormikProps } from 'formik';
+import { Formik, Form, FormikValues } from 'formik';
 
 import { Application } from '../../domain/HousingApi';
 import { updateApplication } from '../../lib/gateways/internal-api';
@@ -14,6 +14,7 @@ import {
   reasonOptions,
 } from '../../lib/utils/assessmentActionsData';
 import { formatFormikFieldError } from '../../lib/utils/formatFormikFieldError';
+import { toUserErrorMessage } from '../../lib/utils/errorHelper';
 
 import Button from '../button';
 import DateInput, { INVALID_DATE } from '../form/dateinput';
@@ -26,7 +27,6 @@ import List, { ListItem } from '../content/list';
 import ErrorSummary from '../errors/error-summary';
 import Loading from '../loading';
 import Announcement from '../announcement';
-import { useRef } from 'react';
 
 interface PageProps {
   data: Application;
@@ -37,10 +37,8 @@ export default function Actions({ data }: PageProps): JSX.Element {
   const wasDisqualified = isEligible[0] === false;
   const disqualificationReasons = wasDisqualified ? isEligible[1] : [];
   const firstReason = disqualificationReasons[0];
-  const formRef = useRef<FormikProps<FormikValues>>(null);
 
-  const [reservedBiddingNumberError, setReservedBiddingNumberError] =
-    useState(null);
+  const [submitError, setSubmitError] = useState<string | undefined>(undefined);
 
   const schema = Yup.object({
     status: Yup.string()
@@ -142,15 +140,12 @@ export default function Actions({ data }: PageProps): JSX.Element {
         values.biddingNumberType === 'generate';
     }
 
-    updateApplication(request)
+    return updateApplication(request)
       .then(() => {
-        router.reload();
+        return router.replace(router.asPath);
       })
       .catch((err) => {
-        setReservedBiddingNumberError(err);
-        if (formRef.current) {
-          formRef.current.setSubmitting(false);
-        }
+        setSubmitError(toUserErrorMessage(err, 'Unable to update assessment'));
       });
   }
 
@@ -182,14 +177,13 @@ export default function Actions({ data }: PageProps): JSX.Element {
           initialValues={initialValues}
           validationSchema={schema}
           onSubmit={onSubmit}
-          innerRef={formRef}
+          enableReinitialize
         >
           {({ touched, isSubmitting, values, errors, isValid }) => {
             const isTouched = Object.keys(touched).length !== 0;
             return (
               <>
-                {(!isValid && isTouched && !isSubmitting) ||
-                reservedBiddingNumberError ? (
+                {(!isValid && isTouched && !isSubmitting) || submitError ? (
                   <ErrorSummary title="There is a problem">
                     <ul className="govuk-list govuk-error-summary__list">
                       {Object.entries(errors).map(([inputName, errorTitle]) => (
@@ -199,13 +193,7 @@ export default function Actions({ data }: PageProps): JSX.Element {
                           </a>
                         </li>
                       ))}
-                      {reservedBiddingNumberError ? (
-                        <li>
-                          <a href="#biddingNumber">
-                            {reservedBiddingNumberError}
-                          </a>
-                        </li>
-                      ) : null}
+                      {submitError ? <li>{submitError}</li> : null}
                     </ul>
                   </ErrorSummary>
                 ) : null}

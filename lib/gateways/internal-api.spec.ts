@@ -1,5 +1,10 @@
 import { Application } from '../../domain/HousingApi';
-import { CreateApplicationError, createApplication } from './internal-api';
+import {
+  CreateApplicationError,
+  addNoteToHistory,
+  createApplication,
+  updateApplication,
+} from './internal-api';
 
 const application = { id: 'app-1' } as Application;
 
@@ -86,5 +91,82 @@ describe('createApplication', () => {
     });
     expect(consoleError).toHaveBeenCalled();
     consoleError.mockRestore();
+  });
+});
+
+describe('updateApplication', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('returns the updated application when the request succeeds', async () => {
+    mockFetch({
+      ok: true,
+      status: 200,
+      json: async () => application,
+    });
+
+    await expect(updateApplication(application)).resolves.toEqual(application);
+  });
+
+  it('throws the API message when the request fails', async () => {
+    mockFetch({
+      ok: false,
+      status: 400,
+      json: async () => ({
+        message: 'Supplied bidding number "1234567" is reserved',
+        type: 'InvalidBiddingNumberException',
+      }),
+    });
+
+    await expect(updateApplication(application)).rejects.toMatchObject({
+      isUserFacing: true,
+      message: 'Supplied bidding number "1234567" is reserved',
+    });
+  });
+
+  it('falls back to a status message when the body has no message', async () => {
+    mockFetch({
+      ok: false,
+      status: 400,
+      json: async () => application,
+    });
+
+    await expect(updateApplication(application)).rejects.toThrow(
+      'Unable to update application (400)',
+    );
+  });
+});
+
+describe('addNoteToHistory', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('returns the response body when the request succeeds', async () => {
+    mockFetch({
+      ok: true,
+      status: 200,
+      json: async () => [{ Note: 'hello' }],
+    });
+
+    await expect(addNoteToHistory('app-1', { Note: 'hello' })).resolves.toEqual(
+      [{ Note: 'hello' }],
+    );
+  });
+
+  it('throws the API message when the request fails', async () => {
+    mockFetch({
+      ok: false,
+      status: 500,
+      json: async () => ({ message: 'Unable to add note to activity history' }),
+    });
+
+    await expect(
+      addNoteToHistory('app-1', { Note: 'hello' }),
+    ).rejects.toMatchObject({
+      isUserFacing: true,
+      message: 'Unable to add note to activity history',
+    });
   });
 });

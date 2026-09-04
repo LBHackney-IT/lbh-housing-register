@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { FormikValues } from 'formik';
 
 import { updateApplication } from '../../../lib/gateways/internal-api';
+import { UserFacingError } from '../../../lib/utils/errorHelper';
 import { scrollToTop } from '../../../lib/utils/scroll';
 import {
   generateHRUserWithPermissions,
@@ -75,7 +76,9 @@ describe('EditApplicant', () => {
   });
 
   it('scrolls to the top when the update fails', async () => {
-    updateApplicationMock.mockRejectedValue(new Error('Unable to update'));
+    updateApplicationMock.mockRejectedValue(
+      new UserFacingError('Unable to update'),
+    );
 
     render(
       <EditApplicant

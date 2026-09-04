@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 
 import { APPLICATION_UNNASIGNED, Application } from '../../domain/HousingApi';
 import { updateApplication } from '../../lib/gateways/internal-api';
+import { toUserErrorMessage } from '../../lib/utils/errorHelper';
 import { HackneyGoogleUserWithPermissions } from '../../lib/utils/googleAuth';
 import ErrorMessage from '../form/error-message';
 
@@ -23,6 +24,7 @@ export default function AssignUser({
   const [showControls, setShowControls] = useState(false);
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [disableControls, setDisableControls] = useState(false);
+  const [userError, setUserError] = useState<string | undefined>(undefined);
 
   const handleAssigneeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (
@@ -50,6 +52,7 @@ export default function AssignUser({
     }
 
     setDisableControls(true);
+    setUserError(undefined);
 
     const request: Application = {
       id,
@@ -59,8 +62,9 @@ export default function AssignUser({
     try {
       await updateApplication(request);
       router.reload();
-    } catch {
+    } catch (error) {
       setDisableControls(false);
+      setUserError(toUserErrorMessage(error, 'Unable to update assignment'));
     }
   };
 
@@ -75,6 +79,7 @@ export default function AssignUser({
 
   return (
     <div data-testid="test-assign-user">
+      {userError ? <ErrorMessage message={userError} /> : null}
       <label className="govuk-label lbh-label" htmlFor="input-assignee">
         <ul className="lbh-list lbh-list--compressed">
           <li>

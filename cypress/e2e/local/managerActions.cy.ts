@@ -415,6 +415,7 @@ describe('Manager actions', () => {
       //change status and check
       cy.get(`[data-testid="test-change-application-status-button"]`).click();
       cy.get(`[data-testid="test-select-status"]`).select('Pending');
+      cy.contains('button', 'Save changes').click();
       cy.get(`[data-testid="test-nav-item-overview"]`).click();
       cy.contains('Pending');
 

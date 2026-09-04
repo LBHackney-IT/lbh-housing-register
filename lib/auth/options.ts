@@ -81,6 +81,10 @@ export const authOptions: NextAuthOptions = {
       authorization: {
         params: {
           scope: 'openid email profile',
+          // Without this Cognito renders its managed-login provider chooser,
+          // which holds a single Google button. The value must match the
+          // provider name in the user pool.
+          identity_provider: 'Google',
         },
       },
       checks: ['pkce', 'state', 'nonce'],

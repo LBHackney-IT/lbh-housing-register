@@ -65,6 +65,13 @@ The flow uses:
 - OAuth state and OIDC nonce checks;
 - exact callback URLs.
 
+The authorization request also sends `identity_provider=Google`. Without it,
+Cognito renders its managed-login provider chooser, which holds a single Google
+button because Google is the only federated provider on the app client. The
+value must match the provider name in the user pool exactly; Cognito rejects
+the authorization request if it does not. Rename it here if the pool ever uses
+a name other than the built-in `Google` social provider.
+
 The Cognito ID token is retained only inside NextAuth's encrypted (JWE),
 HttpOnly session cookie. It is omitted from the browser-readable session and
 is forwarded server-to-server only to the Housing Register and Activity

@@ -20,6 +20,19 @@ describe('staff Auth.js configuration', () => {
     });
   });
 
+  it('sends staff straight to Google instead of the Cognito provider chooser', () => {
+    expect(authOptions.providers[0]).toMatchObject({
+      options: {
+        authorization: {
+          params: {
+            scope: 'openid email profile',
+            identity_provider: 'Google',
+          },
+        },
+      },
+    });
+  });
+
   it('keeps the NextAuth session aligned with a 4-hour Cognito ID token', () => {
     expect(staffSessionMaxAgeSeconds).toBe(4 * 60 * 60);
     expect(authOptions.session).toMatchObject({

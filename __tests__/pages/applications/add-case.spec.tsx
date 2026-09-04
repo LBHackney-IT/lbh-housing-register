@@ -21,6 +21,10 @@ jest.mock('next/router', () => ({
   useRouter: () => ({ push: mockPush }),
 }));
 
+jest.mock('../../../lib/auth/page', () => ({
+  authorizeStaffPage: jest.fn(),
+}));
+
 jest.mock('../../../lib/utils/scroll', () => ({
   scrollToTop: jest.fn(),
 }));

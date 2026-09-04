@@ -302,9 +302,13 @@ describe('Manager actions', () => {
       cy.contains(`${childFirstName} ${childLastName}`);
 
       ApplyResidentIndexPage.getPersonalDetailsSectionLink().click();
+      // The form assumes over 16 until it has read the date of birth. Submitting
+      // before National Insurance disappears fails validation with no visible error.
+      ApplyResidentPersonalDetailsPage.getNINumberInput().should('not.exist');
       ApplyResidentPersonalDetailsPage.getSubmitButton()
         .scrollIntoView()
         .click();
+      ApplyResidentIndexPage.getApplyResidentIndexPage().should('be.visible');
 
       //medical needs
       cy.get('.lbh-link').contains('Medical needs').click();
@@ -344,12 +348,20 @@ describe('Manager actions', () => {
       cy.get(`[data-testid="test-checkbox-declaration-0"]`).check();
       DeclarationPage.getSubmitButton().click();
       cy.contains('Application complete');
+
+      // Signing in for real moves the resident onto the application the backend
+      // created, so read that id before signing out clears the session.
+      let submittedApplicationId: string;
+      cy.residentApplicationId().then((id) => {
+        submittedApplicationId = id;
+      });
+
       cy.contains('Sign out').click();
 
       //switch to manager
       cy.clearAllCookies();
       cy.loginAsUser('manager');
-      cy.visit(`/applications/view/${applicationId}`);
+      cy.then(() => cy.visit(`/applications/view/${submittedApplicationId}`));
 
       //check household
       cy.contains(
@@ -415,6 +427,9 @@ describe('Manager actions', () => {
       //change status and check
       cy.get(`[data-testid="test-change-application-status-button"]`).click();
       cy.get(`[data-testid="test-select-status"]`).select('Pending');
+      cy.intercept('PATCH', '**/api/applications/*').as('saveAssessment');
+      cy.contains('button', 'Save changes').click();
+      cy.wait('@saveAssessment').its('response.statusCode').should('eq', 200);
       cy.get(`[data-testid="test-nav-item-overview"]`).click();
       cy.contains('Pending');
 

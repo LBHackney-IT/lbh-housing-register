@@ -301,9 +301,13 @@ describe('Add and remove household members', () => {
       cy.contains(`${childFirstName} ${childLastName}`);
 
       ApplyResidentIndexPage.getPersonalDetailsSectionLink().click();
+      // The form assumes over 16 until it has read the date of birth. Submitting
+      // before National Insurance disappears fails validation with no visible error.
+      ApplyResidentPersonalDetailsPage.getNINumberInput().should('not.exist');
       ApplyResidentPersonalDetailsPage.getSubmitButton()
         .scrollIntoView()
         .click();
+      ApplyResidentIndexPage.getApplyResidentIndexPage().should('be.visible');
 
       //medical needs
       cy.get('.lbh-link').contains('Medical needs').click();

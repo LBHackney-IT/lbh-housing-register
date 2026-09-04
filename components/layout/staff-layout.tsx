@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { signOut } from 'next-auth/react';
 
 import { useUser } from '../../lib/contexts/user-context';
 import { hasPhaseBanner } from '../../lib/utils/phase-banner';
@@ -28,9 +29,8 @@ export default function StaffLayout({
     person: string;
   };
 
-  const signOut = async () => {
-    await fetch(`/api/admin/logout`);
-    router.reload();
+  const handleSignOut = async () => {
+    await signOut({ callbackUrl: '/api/admin/logout' });
   };
 
   const applicationId = Array.isArray(id) ? id[0] : id;
@@ -44,7 +44,7 @@ export default function StaffLayout({
         logoLink="/applications"
         serviceName="Housing Register admin"
         signOutText="Sign out"
-        onSignOut={signOut}
+        onSignOut={handleSignOut}
       />
       {hasPhaseBanner() && <PhaseBanner />}
 

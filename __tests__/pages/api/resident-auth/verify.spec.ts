@@ -12,7 +12,7 @@ import {
 } from '../../../../domain/HousingApi';
 import { confirmVerifyCode } from '../../../../lib/gateways/applications-api';
 import { setAuthCookie } from '../../../../lib/utils/users';
-import endpoint from '../../../../pages/api/auth/verify';
+import endpoint from '../../../../pages/api/resident-auth/verify';
 import { generateEmailAddress } from '../../../../testUtils/personHelper';
 import { ApiRequest, ApiResponse } from '../../../../testUtils/types';
 
@@ -49,7 +49,7 @@ jest.mock('../../../../lib/utils/users', () => ({
 const confirmVerifyCodeMock = confirmVerifyCode as jest.Mock;
 const setAuthCookieMock = setAuthCookie as jest.Mock;
 
-describe('POST /api/auth/verify', () => {
+describe('POST /api/resident-auth/verify', () => {
   beforeEach(() => {
     confirmVerifyCodeMock.mockReset();
     setAuthCookieMock.mockReset();

@@ -1,8 +1,8 @@
 import { GetServerSideProps, GetServerSidePropsResult } from 'next';
 import React, { MouseEvent, useState } from 'react';
-import { HackneyGoogleUser } from '../../../domain/HackneyGoogleUser';
+import { StaffUser } from '../../../domain/StaffUser';
+import { authorizeStaffPage } from '../../../lib/auth/page';
 import { UserContext } from '../../../lib/contexts/user-context';
-import { getAuth, getSession } from '../../../lib/utils/googleAuth';
 import Layout from '../../../components/layout/staff-layout';
 import Sidebar from '../../../components/admin/sidebar';
 import { HeadingOne } from '../../../components/content/headings';
@@ -29,7 +29,7 @@ export interface Report {
 }
 
 interface ReportsProps {
-  user: HackneyGoogleUser;
+  user: StaffUser;
   reportsData: Report[];
 }
 
@@ -97,17 +97,15 @@ export default function Reports({
 export const getServerSideProps: GetServerSideProps = async (
   context,
 ): Promise<GetServerSidePropsResult<ReportsProps>> => {
-  const user = getSession(context.req);
-
-  const auth = getAuth(process.env.AUTHORISED_MANAGER_GROUP as string, user);
-
-  if ('redirect' in auth) {
-    return { redirect: auth.redirect };
-  }
+  const authorization = await authorizeStaffPage(context, {
+    requiredGroup: process.env.AUTHORISED_MANAGER_GROUP as string,
+  });
+  if ('redirect' in authorization) return authorization;
+  const { user } = authorization;
 
   const reportNames = (await listNovaletExports(30)) as Report[];
 
   return {
-    props: { user: auth.user, reportsData: reportNames },
+    props: { user, reportsData: reportNames },
   };
 };

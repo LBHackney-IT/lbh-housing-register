@@ -41,6 +41,31 @@ const emptyDate = {
   dateToYear: '',
 };
 
+const dateFieldNames = [
+  'dateMonth',
+  'dateYear',
+  'dateToMonth',
+  'dateToYear',
+] as const;
+
+type DateFieldName = (typeof dateFieldNames)[number];
+
+const isDateFieldName = (name: string): name is DateFieldName =>
+  (dateFieldNames as readonly string[]).includes(name);
+
+export const firstOfMonthIso = (year: string, month: string): string => {
+  if (!year || !month) return '';
+
+  const parsed = new Date(Number(year), Number(month) - 1, 1);
+  const yearNumber = parsed.getFullYear();
+
+  if (Number.isNaN(+parsed) || yearNumber < 0 || yearNumber > 9999) {
+    return '';
+  }
+
+  return parsed.toISOString();
+};
+
 export default function AddCaseAddress({
   addresses,
   setAddresses,
@@ -53,21 +78,12 @@ export default function AddCaseAddress({
   const [editAddressIndex, setEditAddressIndex] = useState(0);
   const [date, setDate] = useState(emptyDate);
 
-  const fromDate =
-    date.dateToYear && date.dateToMonth
-      ? new Date(Number(date.dateYear), Number(date.dateMonth) - 1, 1)
-      : null;
-  const toDate =
-    date.dateToYear && date.dateToMonth
-      ? new Date(Number(date.dateToYear), Number(date.dateToMonth) - 1, 1)
-      : null;
-
   useEffect(() => {
-    setAddressInDialog({
-      ...addressInDialog,
-      date: fromDate ? fromDate.toISOString() : '',
-      dateTo: toDate ? toDate.toISOString() : '',
-    });
+    setAddressInDialog((current) => ({
+      ...current,
+      date: firstOfMonthIso(date.dateYear, date.dateMonth),
+      dateTo: firstOfMonthIso(date.dateToYear, date.dateToMonth),
+    }));
   }, [date]);
 
   const addNewAddress = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -81,11 +97,12 @@ export default function AddCaseAddress({
   const editAddress = (addressIndex: number) => {
     setIsEditing(true);
     setAddressInDialog(addresses[addressIndex]);
+    const { date: from = '', dateTo: to = '' } = addresses[addressIndex];
     setDate({
-      dateMonth: addresses[addressIndex].date.split('-')[1],
-      dateYear: addresses[addressIndex].date.split('-')[0],
-      dateToMonth: addresses[addressIndex].dateTo.split('-')[1],
-      dateToYear: addresses[addressIndex].dateTo.split('-')[0],
+      dateMonth: from.split('-')[1] || '',
+      dateYear: from.split('-')[0] || '',
+      dateToMonth: to.split('-')[1] || '',
+      dateToYear: to.split('-')[0] || '',
     });
     setEditAddressIndex(addressIndex);
     setAddressDialogOpen(true);
@@ -105,18 +122,19 @@ export default function AddCaseAddress({
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setDate({
-      ...date,
-      [name]: value,
-    });
 
-    setAddressInDialog({
-      ...addressInDialog,
+    if (isDateFieldName(name)) {
+      setDate((current) => ({ ...current, [name]: value }));
+      return;
+    }
+
+    setAddressInDialog((current) => ({
+      ...current,
       address: {
-        ...addressInDialog.address,
+        ...current.address,
         [name]: value,
       },
-    });
+    }));
   };
 
   const deleteAddress = (addressIndex: number) => {

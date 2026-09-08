@@ -93,25 +93,25 @@ const currentMonthIso = (now = new Date()): string =>
   new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1)).toISOString();
 
 const datePairMessage = (
-  from: DatePairResult,
-  to: DatePairResult,
+  startDate: DatePairResult,
+  endDate: DatePairResult,
 ): string | undefined => {
   if (
-    (!from.ok && from.reason === 'invalid') ||
-    (!to.ok && to.reason === 'invalid')
+    (!startDate.ok && startDate.reason === 'invalid') ||
+    (!endDate.ok && endDate.reason === 'invalid')
   ) {
     return 'Invalid date';
   }
   if (
-    (!from.ok && from.reason === 'partial') ||
-    (!to.ok && to.reason === 'partial')
+    (!startDate.ok && startDate.reason === 'partial') ||
+    (!endDate.ok && endDate.reason === 'partial')
   ) {
     return 'Enter a month and year';
   }
-  if (from.ok && to.ok && from.iso > to.iso) {
+  if (startDate.ok && endDate.ok && startDate.iso > endDate.iso) {
     return 'The end date must be after the start date';
   }
-  if (to.ok && to.iso > currentMonthIso()) {
+  if (endDate.ok && endDate.iso > currentMonthIso()) {
     return 'The end date must not be in the future';
   }
 };
@@ -149,12 +149,13 @@ export default function AddCaseAddress({
   const editAddress = (addressIndex: number) => {
     setIsEditing(true);
     setAddressInDialog(addresses[addressIndex]);
-    const { date: from = '', dateTo: to = '' } = addresses[addressIndex];
+    const { date: startDate = '', dateTo: endDate = '' } =
+      addresses[addressIndex];
     setDate({
-      dateMonth: from.split('-')[1] || '',
-      dateYear: from.split('-')[0] || '',
-      dateToMonth: to.split('-')[1] || '',
-      dateToYear: to.split('-')[0] || '',
+      dateMonth: startDate.split('-')[1] || '',
+      dateYear: startDate.split('-')[0] || '',
+      dateToMonth: endDate.split('-')[1] || '',
+      dateToYear: endDate.split('-')[0] || '',
     });
     setEditAddressIndex(addressIndex);
     setDateError(undefined);
@@ -162,9 +163,9 @@ export default function AddCaseAddress({
   };
 
   const saveAddress = () => {
-    const from = parseMonthYear(date.dateYear, date.dateMonth);
-    const to = parseMonthYear(date.dateToYear, date.dateToMonth);
-    const message = datePairMessage(from, to);
+    const startDate = parseMonthYear(date.dateYear, date.dateMonth);
+    const endDate = parseMonthYear(date.dateToYear, date.dateToMonth);
+    const message = datePairMessage(startDate, endDate);
 
     if (message) {
       setDateError(message);
@@ -173,8 +174,8 @@ export default function AddCaseAddress({
 
     const toSave = {
       ...addressInDialog,
-      date: from.ok ? from.iso : '',
-      dateTo: to.ok ? to.iso : '',
+      date: startDate.ok ? startDate.iso : '',
+      dateTo: endDate.ok ? endDate.iso : '',
     };
 
     if (isEditing) {

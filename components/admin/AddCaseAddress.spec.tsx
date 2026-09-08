@@ -48,11 +48,12 @@ describe('firstOfMonthIso', () => {
 
   it('returns empty for values that are not a real calendar month', () => {
     expect(firstOfMonthIso('2020', 'x')).toBe('');
+    expect(firstOfMonthIso('1999', '13')).toBe('');
     expect(() => firstOfMonthIso('2020', 'x')).not.toThrow();
   });
 
   it('returns an ISO string for a real month and year', () => {
-    expect(firstOfMonthIso('2020', '1')).toMatch(/^2020-01/);
+    expect(firstOfMonthIso('2020', '1')).toBe('2020-01-01T00:00:00.000Z');
   });
 });
 
@@ -108,14 +109,127 @@ describe('AddCaseAddress', () => {
 
     expect(setAddresses).toHaveBeenCalledWith([
       expect.objectContaining({
-        date: expect.stringMatching(/^2019-0[56]/),
-        dateTo: expect.stringMatching(/^2020-01/),
+        date: '2019-06-01T00:00:00.000Z',
+        dateTo: '2020-01-01T00:00:00.000Z',
         address: expect.not.objectContaining({
           dateMonth: expect.anything(),
           dateYear: expect.anything(),
           dateToMonth: expect.anything(),
           dateToYear: expect.anything(),
         }),
+      }),
+    ]);
+  });
+
+  it('does not save a month without a year', () => {
+    const setAddresses = jest.fn();
+
+    render(<AddCaseAddress addresses={[]} setAddresses={setAddresses} />);
+
+    fireEvent.click(screen.getByTestId('test-add-case-address-button'));
+    typeNamed('dateToMonth', '1');
+    fireEvent.click(screen.getByTestId('test-save-case-address-button'));
+
+    expect(setAddresses).not.toHaveBeenCalled();
+    expect(screen.getByText('Enter a month and year')).toBeInTheDocument();
+  });
+
+  it('does not overflow month 13 into the next year', () => {
+    const setAddresses = jest.fn();
+
+    render(<AddCaseAddress addresses={[]} setAddresses={setAddresses} />);
+
+    fireEvent.click(screen.getByTestId('test-add-case-address-button'));
+    typeNamed('dateToMonth', '13');
+    typeNamed('dateToYear', '1999');
+    fireEvent.click(screen.getByTestId('test-save-case-address-button'));
+
+    expect(setAddresses).not.toHaveBeenCalled();
+    expect(screen.getByText('Invalid date')).toBeInTheDocument();
+  });
+
+  it('does not save when the end date is before the start date', () => {
+    const setAddresses = jest.fn();
+
+    render(<AddCaseAddress addresses={[]} setAddresses={setAddresses} />);
+
+    fireEvent.click(screen.getByTestId('test-add-case-address-button'));
+    typeNamed('dateMonth', '6');
+    typeNamed('dateYear', '2020');
+    typeNamed('dateToMonth', '1');
+    typeNamed('dateToYear', '2020');
+    fireEvent.click(screen.getByTestId('test-save-case-address-button'));
+
+    expect(setAddresses).not.toHaveBeenCalled();
+    expect(
+      screen.getByText('The end date must be after the start date'),
+    ).toBeInTheDocument();
+  });
+
+  it('does not save when the end date is in the future', () => {
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date('2026-09-08T12:00:00'));
+
+    try {
+      const setAddresses = jest.fn();
+
+      render(<AddCaseAddress addresses={[]} setAddresses={setAddresses} />);
+
+      fireEvent.click(screen.getByTestId('test-add-case-address-button'));
+      typeNamed('dateToMonth', '10');
+      typeNamed('dateToYear', '2026');
+      fireEvent.click(screen.getByTestId('test-save-case-address-button'));
+
+      expect(setAddresses).not.toHaveBeenCalled();
+      expect(
+        screen.getByText('The end date must not be in the future'),
+      ).toBeInTheDocument();
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
+  it('allows the end date to be the current month', () => {
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date('2026-09-08T12:00:00'));
+
+    try {
+      const setAddresses = jest.fn();
+
+      render(<AddCaseAddress addresses={[]} setAddresses={setAddresses} />);
+
+      fireEvent.click(screen.getByTestId('test-add-case-address-button'));
+      typeNamed('dateToMonth', '9');
+      typeNamed('dateToYear', '2026');
+      fireEvent.click(screen.getByTestId('test-save-case-address-button'));
+
+      expect(setAddresses).toHaveBeenCalledWith([
+        expect.objectContaining({
+          date: '',
+          dateTo: '2026-09-01T00:00:00.000Z',
+        }),
+      ]);
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
+  it('allows the start and end month to be the same', () => {
+    const setAddresses = jest.fn();
+
+    render(<AddCaseAddress addresses={[]} setAddresses={setAddresses} />);
+
+    fireEvent.click(screen.getByTestId('test-add-case-address-button'));
+    typeNamed('dateMonth', '6');
+    typeNamed('dateYear', '2019');
+    typeNamed('dateToMonth', '6');
+    typeNamed('dateToYear', '2019');
+    fireEvent.click(screen.getByTestId('test-save-case-address-button'));
+
+    expect(setAddresses).toHaveBeenCalledWith([
+      expect.objectContaining({
+        date: '2019-06-01T00:00:00.000Z',
+        dateTo: '2019-06-01T00:00:00.000Z',
       }),
     ]);
   });

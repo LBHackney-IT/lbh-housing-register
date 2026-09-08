@@ -53,17 +53,67 @@ type DateFieldName = (typeof dateFieldNames)[number];
 const isDateFieldName = (name: string): name is DateFieldName =>
   (dateFieldNames as readonly string[]).includes(name);
 
-export const firstOfMonthIso = (year: string, month: string): string => {
-  if (!year || !month) return '';
+type DatePairResult =
+  | { ok: true; iso: string }
+  | { ok: false; reason: 'empty' | 'partial' | 'invalid' };
 
-  const parsed = new Date(Number(year), Number(month) - 1, 1);
-  const yearNumber = parsed.getFullYear();
+export const parseMonthYear = (year: string, month: string): DatePairResult => {
+  const hasYear = year.trim() !== '';
+  const hasMonth = month.trim() !== '';
 
-  if (Number.isNaN(+parsed) || yearNumber < 0 || yearNumber > 9999) {
-    return '';
+  if (!hasYear && !hasMonth) {
+    return { ok: false, reason: 'empty' };
   }
 
-  return parsed.toISOString();
+  if (hasYear !== hasMonth) {
+    return { ok: false, reason: 'partial' };
+  }
+
+  const yearNumber = Number(year);
+  const monthNumber = Number(month);
+  const parsed = new Date(Date.UTC(yearNumber, monthNumber - 1, 1));
+
+  if (
+    Number.isNaN(+parsed) ||
+    parsed.getUTCFullYear() !== yearNumber ||
+    parsed.getUTCMonth() !== monthNumber - 1
+  ) {
+    return { ok: false, reason: 'invalid' };
+  }
+
+  return { ok: true, iso: parsed.toISOString() };
+};
+
+export const firstOfMonthIso = (year: string, month: string): string => {
+  const parsed = parseMonthYear(year, month);
+  return parsed.ok ? parsed.iso : '';
+};
+
+const currentMonthIso = (now = new Date()): string =>
+  new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1)).toISOString();
+
+const datePairMessage = (
+  from: DatePairResult,
+  to: DatePairResult,
+): string | undefined => {
+  if (
+    (!from.ok && from.reason === 'invalid') ||
+    (!to.ok && to.reason === 'invalid')
+  ) {
+    return 'Invalid date';
+  }
+  if (
+    (!from.ok && from.reason === 'partial') ||
+    (!to.ok && to.reason === 'partial')
+  ) {
+    return 'Enter a month and year';
+  }
+  if (from.ok && to.ok && from.iso > to.iso) {
+    return 'The end date must be after the start date';
+  }
+  if (to.ok && to.iso > currentMonthIso()) {
+    return 'The end date must not be in the future';
+  }
 };
 
 export default function AddCaseAddress({
@@ -77,6 +127,7 @@ export default function AddCaseAddress({
   const [isEditing, setIsEditing] = useState(false);
   const [editAddressIndex, setEditAddressIndex] = useState(0);
   const [date, setDate] = useState(emptyDate);
+  const [dateError, setDateError] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     setAddressInDialog((current) => ({
@@ -91,6 +142,7 @@ export default function AddCaseAddress({
     setIsEditing(false);
     setAddressInDialog(emptyAddress);
     setDate(emptyDate);
+    setDateError(undefined);
     setAddressDialogOpen(true);
   };
 
@@ -105,16 +157,32 @@ export default function AddCaseAddress({
       dateToYear: to.split('-')[0] || '',
     });
     setEditAddressIndex(addressIndex);
+    setDateError(undefined);
     setAddressDialogOpen(true);
   };
 
   const saveAddress = () => {
+    const from = parseMonthYear(date.dateYear, date.dateMonth);
+    const to = parseMonthYear(date.dateToYear, date.dateToMonth);
+    const message = datePairMessage(from, to);
+
+    if (message) {
+      setDateError(message);
+      return;
+    }
+
+    const toSave = {
+      ...addressInDialog,
+      date: from.ok ? from.iso : '',
+      dateTo: to.ok ? to.iso : '',
+    };
+
     if (isEditing) {
       const newAddresses = [...addresses];
-      newAddresses[editAddressIndex] = addressInDialog;
+      newAddresses[editAddressIndex] = toSave;
       setAddresses(newAddresses);
     } else {
-      setAddresses([...addresses, addressInDialog]);
+      setAddresses([...addresses, toSave]);
     }
 
     setAddressDialogOpen(false);
@@ -125,6 +193,7 @@ export default function AddCaseAddress({
 
     if (isDateFieldName(name)) {
       setDate((current) => ({ ...current, [name]: value }));
+      setDateError(undefined);
       return;
     }
 
@@ -327,6 +396,7 @@ export default function AddCaseAddress({
           </FormGroup>
 
           <HeadingFour content="Dates at address" />
+          {dateError ? <ErrorMessage message={dateError} /> : null}
 
           <div style={{ display: 'inline-block', padding: '0 20px 0 0' }}>
             <label

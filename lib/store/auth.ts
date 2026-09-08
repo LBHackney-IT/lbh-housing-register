@@ -14,7 +14,7 @@ export const createVerifyCode = createAsyncThunk(
       email: emailAddress,
     };
 
-    const res = await fetch(`/api/auth/generate`, {
+    const res = await fetch(`/api/resident-auth/generate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(request),
@@ -38,7 +38,7 @@ export const confirmVerifyCode = createAsyncThunk(
       email,
       code,
     };
-    const res = await fetch(`/api/auth/verify`, {
+    const res = await fetch(`/api/resident-auth/verify`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(request),
@@ -55,7 +55,7 @@ export const confirmVerifyCode = createAsyncThunk(
 );
 
 export const exit = createAsyncThunk('auth/exit', async () => {
-  const res = await fetch(`/api/auth/exit`, {
+  const res = await fetch(`/api/resident-auth/exit`, {
     method: 'POST',
   });
   return (await res.json()) as VerifyAuthResponse;

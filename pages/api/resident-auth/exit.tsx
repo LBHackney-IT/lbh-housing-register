@@ -27,4 +27,4 @@ const endpoint: NextApiHandler = async (
   }
 };
 
-export default wrapApiHandlerWithSentry(endpoint, '/api/auth/exit');
+export default wrapApiHandlerWithSentry(endpoint, '/api/resident-auth/exit');

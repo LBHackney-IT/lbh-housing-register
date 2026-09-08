@@ -1,6 +1,6 @@
 import { ActivityHistoryResponse } from 'domain/ActivityHistoryApi';
 import { Application } from 'domain/HousingApi';
-import { HackneyGoogleUserWithPermissions } from 'lib/utils/googleAuth';
+import { StaffUserWithPermissions } from 'lib/auth/staff';
 
 declare global {
   namespace Cypress {
@@ -13,8 +13,9 @@ declare global {
         setSeenCookieMessage?: boolean,
         seenCookieMessageAlreadySet?: boolean,
       ): Chainable<void>;
+      residentApplicationId(): Chainable<string>;
       mockHousingRegisterApiGetApplicationsByStatusAndAssignedTo(
-        user: HackneyGoogleUserWithPermissions,
+        user: StaffUserWithPermissions,
       ): Chainable<void>;
       mockActivityHistoryApiEmptyResponse(
         targetId: string,

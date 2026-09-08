@@ -11,7 +11,7 @@ import { Application } from 'domain/HousingApi';
 import * as applicationApi from '../../../../../lib/gateways/applications-api';
 import * as requestAuth from '../../../../../lib/utils/requestAuth';
 import endpoint from '../../../../../pages/api/applications/[id]/complete';
-import { generateMockRequestResponseWithHackneyToken } from '../../../../../testUtils/apiHelper';
+import { generateMockRequestResponseWithStaffSession } from '../../../../../testUtils/apiHelper';
 import {
   UserRole,
   generateSignedTokenByRole,
@@ -35,11 +35,13 @@ describe('authorization', () => {
     .spyOn(applicationApi, 'completeApplication')
     .mockResolvedValue({ ...mockApplicationData });
 
-  it('returns status code 403 and error message when canUpdateApplication returns false', async () => {
-    jest.spyOn(requestAuth, 'canUpdateApplication').mockReturnValue(false);
+  it('returns status code 403 and error message when access is forbidden', async () => {
+    jest
+      .spyOn(requestAuth, 'getApplicationAccess')
+      .mockResolvedValue('forbidden');
 
-    const { req, res } = generateMockRequestResponseWithHackneyToken({
-      hackneyToken: signedToken,
+    const { req, res } = generateMockRequestResponseWithStaffSession({
+      sessionToken: signedToken,
       requestBody: undefined,
       method: 'PATCH',
     });
@@ -55,10 +57,12 @@ describe('authorization', () => {
   });
 
   it('returns status code 200 when canUpdateApplication returns true', async () => {
-    jest.spyOn(requestAuth, 'canUpdateApplication').mockReturnValue(true);
+    jest
+      .spyOn(requestAuth, 'getApplicationAccess')
+      .mockResolvedValue('allowed');
 
-    const { req, res } = generateMockRequestResponseWithHackneyToken({
-      hackneyToken: signedToken,
+    const { req, res } = generateMockRequestResponseWithStaffSession({
+      sessionToken: signedToken,
       requestBody: undefined,
       method: 'PATCH',
     });
@@ -71,7 +75,9 @@ describe('authorization', () => {
   });
 
   it('forwards the backend status and body when completeApplication fails with an axios error', async () => {
-    jest.spyOn(requestAuth, 'canUpdateApplication').mockReturnValue(true);
+    jest
+      .spyOn(requestAuth, 'getApplicationAccess')
+      .mockResolvedValue('allowed');
 
     const axiosErrorStatusCode = StatusCodes.BAD_GATEWAY;
     const axiosErrorData = { message: 'upstream failure' };
@@ -86,8 +92,8 @@ describe('authorization', () => {
       });
     mockAxiosInstance.isAxiosError.mockReturnValueOnce(true);
 
-    const { req, res } = generateMockRequestResponseWithHackneyToken({
-      hackneyToken: signedToken,
+    const { req, res } = generateMockRequestResponseWithStaffSession({
+      sessionToken: signedToken,
       requestBody: undefined,
       method: 'PATCH',
     });
@@ -101,7 +107,9 @@ describe('authorization', () => {
   });
 
   it('returns a 500 when completeApplication fails with a non-axios error', async () => {
-    jest.spyOn(requestAuth, 'canUpdateApplication').mockReturnValue(true);
+    jest
+      .spyOn(requestAuth, 'getApplicationAccess')
+      .mockResolvedValue('allowed');
 
     jest
       .spyOn(applicationApi, 'completeApplication')
@@ -109,8 +117,8 @@ describe('authorization', () => {
         throw new Error('boom');
       });
 
-    const { req, res } = generateMockRequestResponseWithHackneyToken({
-      hackneyToken: signedToken,
+    const { req, res } = generateMockRequestResponseWithStaffSession({
+      sessionToken: signedToken,
       requestBody: undefined,
       method: 'PATCH',
     });
@@ -126,10 +134,12 @@ describe('authorization', () => {
   });
 
   it('returns status code 405 when the request method is not PATCH', async () => {
-    jest.spyOn(requestAuth, 'canUpdateApplication').mockReturnValue(true);
+    jest
+      .spyOn(requestAuth, 'getApplicationAccess')
+      .mockResolvedValue('allowed');
 
-    const { req, res } = generateMockRequestResponseWithHackneyToken({
-      hackneyToken: signedToken,
+    const { req, res } = generateMockRequestResponseWithStaffSession({
+      sessionToken: signedToken,
       requestBody: undefined,
       method: 'POST',
     });

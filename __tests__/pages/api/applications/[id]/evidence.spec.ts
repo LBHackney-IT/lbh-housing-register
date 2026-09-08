@@ -9,7 +9,7 @@ import { StatusCodes } from 'http-status-codes';
 import * as applicationApi from '../../../../../lib/gateways/applications-api';
 import * as requestAuth from '../../../../../lib/utils/requestAuth';
 import endpoint from '../../../../../pages/api/applications/[id]/evidence';
-import { generateMockRequestResponseWithHackneyToken } from '../../../../../testUtils/apiHelper';
+import { generateMockRequestResponseWithStaffSession } from '../../../../../testUtils/apiHelper';
 import {
   UserRole,
   generateSignedTokenByRole,
@@ -28,11 +28,13 @@ describe('authorization', () => {
   const { signedToken } = generateSignedTokenByRole(UserRole.Officer);
   jest.spyOn(applicationApi, 'createEvidenceRequest').mockResolvedValue(null);
 
-  it('returns status code 403 and error message when canUpdateApplication returns false', async () => {
-    jest.spyOn(requestAuth, 'canUpdateApplication').mockReturnValue(false);
+  it('returns status code 403 and error message when access is forbidden', async () => {
+    jest
+      .spyOn(requestAuth, 'getApplicationAccess')
+      .mockResolvedValue('forbidden');
 
-    const { req, res } = generateMockRequestResponseWithHackneyToken({
-      hackneyToken: signedToken,
+    const { req, res } = generateMockRequestResponseWithStaffSession({
+      sessionToken: signedToken,
       requestBody: undefined,
       method: 'POST',
     });
@@ -47,11 +49,13 @@ describe('authorization', () => {
     expect(res._getJSONData()).toStrictEqual(expectedErrorMessage);
   });
 
-  it('returns status code 200 when canUpdateApplication returns true', async () => {
-    jest.spyOn(requestAuth, 'canUpdateApplication').mockReturnValue(true);
+  it('returns status code 200 when access is allowed', async () => {
+    jest
+      .spyOn(requestAuth, 'getApplicationAccess')
+      .mockResolvedValue('allowed');
 
-    const { req, res } = generateMockRequestResponseWithHackneyToken({
-      hackneyToken: signedToken,
+    const { req, res } = generateMockRequestResponseWithStaffSession({
+      sessionToken: signedToken,
       requestBody: undefined,
       method: 'POST',
     });
@@ -64,13 +68,13 @@ describe('authorization', () => {
   });
 
   it('returns 400 without checking authorisation when the request body cannot be parsed', async () => {
-    const canUpdateApplicationSpy = jest.spyOn(
+    const getApplicationAccessSpy = jest.spyOn(
       requestAuth,
-      'canUpdateApplication',
+      'getApplicationAccess',
     );
 
-    const { req, res } = generateMockRequestResponseWithHackneyToken({
-      hackneyToken: signedToken,
+    const { req, res } = generateMockRequestResponseWithStaffSession({
+      sessionToken: signedToken,
       requestBody: 'not-json',
       method: 'POST',
     });
@@ -79,7 +83,7 @@ describe('authorization', () => {
 
     await endpoint(req, res);
 
-    expect(canUpdateApplicationSpy).not.toHaveBeenCalled();
+    expect(getApplicationAccessSpy).not.toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
     expect(res._getJSONData()).toStrictEqual({
       message: 'Unable to parse request',
@@ -87,7 +91,9 @@ describe('authorization', () => {
   });
 
   it('forwards the backend status and body when createEvidenceRequest fails with an axios error', async () => {
-    jest.spyOn(requestAuth, 'canUpdateApplication').mockReturnValue(true);
+    jest
+      .spyOn(requestAuth, 'getApplicationAccess')
+      .mockResolvedValue('allowed');
 
     const axiosErrorStatusCode = StatusCodes.BAD_GATEWAY;
     const axiosErrorData = { message: 'upstream failure' };
@@ -102,8 +108,8 @@ describe('authorization', () => {
       });
     mockAxiosInstance.isAxiosError.mockReturnValueOnce(true);
 
-    const { req, res } = generateMockRequestResponseWithHackneyToken({
-      hackneyToken: signedToken,
+    const { req, res } = generateMockRequestResponseWithStaffSession({
+      sessionToken: signedToken,
       requestBody: undefined,
       method: 'POST',
     });

@@ -32,8 +32,10 @@ const config: OpenNextConfig = {
   default: {
     override: {
       // AWS API Gateway v1 (REST API) is what the existing Serverless Framework
-      // setup uses.
-      converter: 'aws-apigw-v1',
+      // setup uses. Wrapped to keep multiple Set-Cookie headers intact through
+      // API Gateway and CloudFront — see open-next-apigw-cookie-converter.ts.
+      converter: () =>
+        import('./open-next-apigw-cookie-converter').then((mod) => mod.default),
       // Wraps the default `aws-lambda` wrapper with `Sentry.wrapHandler` so
       // each invocation gets its own isolation scope — see
       // open-next-sentry-wrapper.ts for why this is necessary.

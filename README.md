@@ -158,8 +158,8 @@ Pushes to the `development` branch are automatically built and deployed to the d
 
 CircleCI (`.circleci/config.yml`) splits checks into **PR gates** and **post-merge integration gates**:
 
-- **PRs** (any branch): `build`, `run-tests` (Jest + Cypress component tests), and `sonar-scan`.
-- **After merge to `development` or `main`**, and on **release tags** (`hackney-housing-register-v*`): the full Cypress E2E matrix (`run-cypress-e2e`) runs before deploy. Deploy jobs require E2E to pass, but E2E is not a PR merge requirement.
+- **PRs** (any branch): `build`, `run-tests` (Jest + Cypress component tests), and `sonar-scan`. Branches named `sentry/*` also run a slim Cypress E2E job (Chrome, one viewport).
+- **After merge to `development` or `main`**, and on **release tags** (`hackney-housing-register-v*`): the full Cypress E2E matrix (`run-cypress-e2e`) runs before deploy. Deploy jobs require that matrix to pass.
 
 ### Release Please
 

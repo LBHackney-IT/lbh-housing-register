@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Run before `gh pr create` (playbook). Checks lockfile churn, secret-like diffs,
- * and GitGuardian (ggshield) when files are staged.
+ * and GitGuardian (ggshield) when files are staged. Also runs the 80%
+ * new-code coverage gate after tests.
  */
 import { execSync } from 'node:child_process';
 
@@ -88,6 +89,14 @@ try {
   fail('.env must not be tracked.');
 } catch {
   // not tracked
+}
+
+try {
+  execSync('node scripts/agent/new-code-coverage.mjs', { stdio: 'inherit' });
+} catch {
+  fail(
+    'New production source is under 80% Jest coverage (statements and branches). Add tests, then re-run npm test.',
+  );
 }
 
 if (failed) {

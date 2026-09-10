@@ -355,6 +355,17 @@ workflows:
             exclude: *exclude_combinations
           requires:
             - build
+      # Sentry autofix PRs: one Chrome viewport, same job as e2e (file parallelism).
+      # Do not use the development/main browser×viewport matrix here.
+      - run-cypress-e2e:
+          name: run-cypress-e2e-sentry-pr
+          filters:
+            tags:
+              ignore: /.*/
+            branches:
+              only: /^sentry\/.*/
+          requires:
+            - build
       - sonar-scan:
           context: SonarCloud
           requires:

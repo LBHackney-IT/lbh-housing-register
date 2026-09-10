@@ -1,14 +1,31 @@
 # Sentry issue to draft PR
 
-Manual, on-machine workflow. Paste a Sentry issue or event into an agent. The agent implements on a `sentry/*` branch, tests, and opens a **draft** pull request. No webhooks, no unattended daemon, no merge.
+Manual, on-machine workflow. A Sentry issue URL or pasted event goes into an agent. The agent implements on a `sentry/*` branch, tests, and opens a **draft** pull request. No webhooks, no unattended daemon, no merge.
 
 This document is the contract. [`AGENTS.md`](../../AGENTS.md) points here so any agent that reads repository agent notes follows the same steps with no extra IDE config.
 
 Before `gh pr create`, run `node scripts/agent/pre-pr-scan.mjs` and the [Agent B](#agent-b-review-only) review.
 
+## Triggering
+
+When this workflow starts, if Sentry MCP is **not** connected, **tell the developer once** (information only — not a gate): fetching issue details, stack, and breadcrumbs via MCP is more reliable than a paste or a `/share/issue/` link. They can add the official server from [mcp.sentry.dev](https://mcp.sentry.dev) (`url`: `https://mcp.sentry.dev/mcp`) in their agent/IDE MCP settings and sign in to the Hackney Sentry org. **Do not wait** for them to install it. Continue with paste or the URL they gave.
+
+## Evidence ingest
+
+**If Sentry MCP (or equivalent issue tools) is connected**, fetch — do not scrape HTML, and do not rely on `sentry.io/share/issue/…` (that page is for humans). Use an org issue URL (`https://<org>.sentry.io/issues/…`) or `organizationSlug` + issue id.
+
+1. **Allowlisted reads only:** `get_issue_details`, then if the stack is thin `get_event_stacktrace`, then `get_issue_breadcrumbs` for **one** event (`latest` unless the human named an event id). Do not pull replays, profiles, or a list of events unless that one event is not enough to triage.
+2. **Do not** resolve, assign, comment, update, or delete issues unless the human explicitly asks.
+3. **Triage before coding.** Stop with no PR if there is no in-app / repo frame, the throwing symbol is not in this repository, or the failure looks like an extension, injected script, or third-party webview. Record that in **Issues for Review** if the human still wants a write-up.
+4. **Then redact** (next section) before analysis, tests, or the PR body. MCP returns more PII than a curated paste.
+
+**If MCP is missing, unauthenticated, or the fetch fails**, fall back to a human paste of stack / breadcrumbs. Same redaction and stop rules. Mention the MCP install note under [Triggering](#triggering) once; never block the run on it.
+
+Shell and file hooks ([`.cursor/hooks.json`](../../.cursor/hooks.json)) do not wrap MCP calls. The allowlist above is the guard.
+
 ## Agent A (implement)
 
-1. **Redact the payload before using it.** Keep stack traces, routes, breadcrumbs (`from` / `to`, HTTP status). Strip emails, cookies, `Authorization`, session tokens, and any `.env` values. Do not read `.env` or `.env.*`.
+1. **Redact before using the payload.** Keep stack traces, routes, breadcrumbs (`from` / `to`, HTTP status), `in_app` / `abs_path` when present. Strip emails, cookies, `Authorization`, session tokens, request bodies, and any `.env` values. Do not read `.env` or `.env.*`. Do not paste raw MCP JSON into the PR.
 
 2. **Reproduce in a test first** when the failure is deterministic (invalid date, empty form steps, missing query).
 
@@ -33,6 +50,8 @@ Before `gh pr create`, run `node scripts/agent/pre-pr-scan.mjs` and the [Agent B
 ## Agent B (review only)
 
 Agent A launches this — it is not a human step and not optional. Use a review subagent on a **different model** from the implementer (for example Claude Sonnet 5 or GPT-5.6 when the implementer was Grok), with **no edits**. Give it the diff, the Sentry URL, and this document, and tell it to return a verdict of approve or reject with reasons.
+
+If Sentry MCP is connected, B **re-fetches** the same issue (details / stack / breadcrumbs, then redact) and must not take the implementer’s summary as the only evidence. If MCP is not connected, B uses the pasted payload in the thread.
 
 Check that **Issue** and **Changes** are short and evidenced, the patch is no larger than the brief, and **Issues for Review** is notes only (not extra commits). Also require **Steps to Reproduce**, **Tests**, and **Agent run**. Reject if new production source is under 80% Jest coverage (statements and branches), or if **Tests** does not record the coverage gate.
 

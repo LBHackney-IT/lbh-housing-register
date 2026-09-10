@@ -4,9 +4,10 @@
 
 ## Sentry
 
-- Issue:
+- Issue URL / id:
 - Event:
 - Fingerprint:
+- Evidence source: MCP (`get_issue_details` / stack / breadcrumbs) / human paste:
 
 ## Issue
 

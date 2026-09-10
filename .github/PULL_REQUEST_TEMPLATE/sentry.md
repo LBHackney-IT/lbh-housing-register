@@ -36,6 +36,7 @@ Anything this PR leaves broken, plus issues noticed while working that are outsi
 - [ ] New-code coverage — `node scripts/agent/new-code-coverage.mjs` (≥80% statements and branches on added production source / added lines):
 - [ ] Cypress with HTTP mocks — `npm run e2e:run -- --spec …`:
 - [ ] Slim CI on `sentry/*` (Chrome 768×1366):
+- [ ] Sonar / PR checks on **new code** (ingest after the check returns; fix issues on this diff only):
 - [ ] **Human only — LocalStack / local backend** ([housing-register-local-backend](https://github.com/LBHackney-IT/housing-register-local-backend)): `npm run dev` with `HOUSING_REGISTER_API` pointing at the local API, then the reproduce steps (or `npm run e2e:run:local` / `npm run cypress:open:local` when a local spec exists). The implementing agent must not run this.
 
 ## Agent run

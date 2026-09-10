@@ -33,7 +33,9 @@ Shell and file hooks ([`.cursor/hooks.json`](../../.cursor/hooks.json)) do not w
 
 4. **Write the analysis for humans.** Fill **Issue** (what threw or failed, with the stack / breadcrumb / code path as evidence, and why that happens in this code path) and **Changes** (what the patch does and what it solves) in plain language. Short beats clever. A reviewer must be able to verify the story from the PR + diff alone.
 
-5. **Branch** `sentry/<short-issue-id>-<slug>` from the repository default branch (`gh repo view --json defaultBranchRef --jq .defaultBranchRef.name`). Never commit to `main` or `development`.
+5. **Branch** `sentry/<short-issue-id>-<slug>` from **`origin/development`**, and open the PR **into `development`**. GitHub’s default branch is `main` (Release Please / staging); do not use it as the merge-base or `--base`. Never commit to `main` or `development`.
+
+   Cut from the branch you merge into so the PR is only this fix. Promotion to `main` (staging UAT, then Release Please) is a **human** step after development is happy — cherry-pick this fix or a controlled `development` → `main` PR. Agents never open a draft to `main`.
 
 6. **Jest:** run targeted specs for files you touch, then `npm test` (Jest + `tsc --noEmit`). **New code must have at least 80% Jest coverage** (statements and branches): whole file for added production source, added lines only for modified production source. After `npm test`, run `node scripts/agent/new-code-coverage.mjs`. If it fails, add tests and stop — do not open a PR. Specs, Cypress, docs, and `testUtils` are excluded.
 
@@ -65,11 +67,25 @@ Cursor does not expose the model, token count, or cost to the agent, so **Agent 
 
 Apply the `agent-generated` label so agent PRs can be filtered in GitHub (create it once with `gh label create agent-generated --description "Raised by an agent" --color ededed`).
 
+Always target **`development`**:
+
 ```bash
-gh pr create --draft --label agent-generated --title "…" --body-file .github/PULL_REQUEST_TEMPLATE/sentry.md
+gh pr create --draft --base development --label agent-generated --title "…" --body-file .github/PULL_REQUEST_TEMPLATE/sentry.md
 ```
 
-Never merge.
+Never `--base main`. Never merge.
+
+## After CI (Sonar and other checks)
+
+Opening the draft does **not** wait for CircleCI or Sonar. Once **SonarCloud Code Analysis** (and other PR checks) have finished, **ingest findings on this PR’s new/changed lines only**.
+
+- **Do fix** new issues and security hotspots on lines this patch introduced or changed (example: `Use new Error() instead of Error()` on [#583](https://github.com/LBHackney-IT/lbh-housing-register/pull/583)). Use `gh pr checks` and the Sonar/GitHub comments on the diff — not a whole-project debt scan.
+- **Quality gate failed** because of this PR’s new code: must fix, new conventional commit, Husky still applies.
+- **Do not** drive-by-fix pre-existing issues on untouched lines. Note them under **Issues for Review** if useful.
+- One ingest pass. Style-only Sonar fixes do not require a full Agent B re-review. If the follow-up commit changes behaviour, run Agent B once more.
+- If checks have not finished before the session ends, say so in **Tests** (`Sonar: awaiting`) and stop. Do not poll for a long time.
+
+Husky and Jest do not replace Sonar. Ingesting the check closes the loop; it is not a reason to delay the first draft.
 
 ## Cypress vs CI
 

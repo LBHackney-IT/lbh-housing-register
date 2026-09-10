@@ -9,6 +9,10 @@
 - Fingerprint:
 - Evidence source: MCP (`get_issue_details` / stack / breadcrumbs) / human paste:
 
+## Overlapping open PRs
+
+Open PRs into `development` that touch the same files as this stack, or mention this Sentry issue. `none` if the check found nothing. Do not stack on those branches.
+
 ## Issue
 
 What failed, the evidence (stack, breadcrumb, file/function), and why that happens in this code path. Evidence, not speculation.

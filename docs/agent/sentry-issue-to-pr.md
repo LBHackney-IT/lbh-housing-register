@@ -18,10 +18,24 @@ When this workflow starts, if Sentry MCP is **not** connected, **tell the develo
 2. **Do not** resolve, assign, comment, update, or delete issues unless the human explicitly asks.
 3. **Triage before coding.** Stop with no PR if there is no in-app / repo frame, the throwing symbol is not in this repository, or the failure looks like an extension, injected script, or third-party webview. Record that in **Issues for Review** if the human still wants a write-up.
 4. **Then redact** (next section) before analysis, tests, or the PR body. MCP returns more PII than a curated paste.
+5. **Then** run the [open PR overlap](#open-pr-overlap) check — stop-or-note, not a new merge-base.
 
 **If MCP is missing, unauthenticated, or the fetch fails**, fall back to a human paste of stack / breadcrumbs. Same redaction and stop rules. Mention the MCP install note under [Triggering](#triggering) once; never block the run on it.
 
 Shell and file hooks ([`.cursor/hooks.json`](../../.cursor/hooks.json)) do not wrap MCP calls. The allowlist above is the guard.
+
+## Open PR overlap
+
+Unmerged PRs into `development` are not landed truth — the Sentry error can still be real on `origin/development`. Check them so this run does not duplicate or fight an upstream fix. Do not treat them as a stack to build on.
+
+After the in-app files are known (and the Sentry payload is redacted):
+
+1. List open PRs targeting `development` (`gh pr list --base development --state open`). Keep those whose changed files intersect the stack’s in-app paths, or whose title/body mentions this Sentry issue id. Do not review every open PR. A human hint (“same as #583”, “wait for #584”) overrides the list.
+2. **Same failure already patched in an open PR:** stop. No new PR. Point at the existing one.
+3. **Same files, different bug:** proceed from `origin/development`. Name the other PR under **Overlapping open PRs** / **Issues for Review** so a human can sequence merges.
+4. **Would need that other branch to compile or to make the fix:** stop. Do not checkout, rebase onto, cherry-pick, or combine unmerged work unless the human explicitly says to.
+
+Give Agent B the same short list. Duplicate-of-open-PR is a reject. Related files with a distinct fix is not.
 
 ## Agent A (implement)
 
@@ -54,6 +68,8 @@ Shell and file hooks ([`.cursor/hooks.json`](../../.cursor/hooks.json)) do not w
 Agent A launches this — it is not a human step and not optional. Use a review subagent on a **different model** from the implementer (for example Claude Sonnet 5 or GPT-5.6 when the implementer was Grok), with **no edits**. Give it the diff, the Sentry URL, and this document, and tell it to return a verdict of approve or reject with reasons.
 
 If Sentry MCP is connected, B **re-fetches** the same issue (details / stack / breadcrumbs, then redact) and must not take the implementer’s summary as the only evidence. If MCP is not connected, B uses the pasted payload in the thread.
+
+Give B the overlap list from [Open PR overlap](#open-pr-overlap). Reject if this patch duplicates an open PR that already addresses the same failure, or if A rebased onto / combined unmerged work. Related files with a distinct fix must appear under **Overlapping open PRs**.
 
 Check that **Issue** and **Changes** are short and evidenced, the patch is no larger than the brief, and **Issues for Review** is notes only (not extra commits). Also require **Steps to Reproduce**, **Tests**, and **Agent run**. Reject if new production source is under 80% Jest coverage (statements and branches), or if **Tests** does not record the coverage gate.
 

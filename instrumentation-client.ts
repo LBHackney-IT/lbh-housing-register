@@ -2,6 +2,7 @@
 // https://nextjs.org/docs/app/api-reference/file-conventions/instrumentation-client
 
 import * as Sentry from '@sentry/nextjs';
+import { shouldDropEmptyUnhandledRejection } from './lib/sentry/shouldDropEmptyUnhandledRejection';
 
 const ENVIRONMENT = process.env.NEXT_PUBLIC_ENV;
 
@@ -27,6 +28,9 @@ Sentry.init({
       ENVIRONMENT === 'development'),
 
   beforeSend(event) {
+    if (shouldDropEmptyUnhandledRejection(event)) {
+      return null;
+    }
     if (event.request?.cookies?.['hackneyToken']) {
       delete event.request.cookies['hackneyToken'];
     }

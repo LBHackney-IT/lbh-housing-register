@@ -21,13 +21,27 @@ Sentry.init({
     ENVIRONMENT === 'staging' ||
     ENVIRONMENT === 'development',
 
-  // remove cookies from the event before sending
+  // Never send inbound credentials or request bodies to Sentry.
   beforeSend(event) {
-    if (event.request?.cookies['hackneyToken']) {
-      delete event.request.cookies['hackneyToken'];
+    if (event.request) {
+      delete event.request.cookies;
+      delete event.request.data;
+
+      for (const header of Object.keys(event.request.headers ?? {})) {
+        if (
+          ['authorization', 'cookie', 'set-cookie', 'x-api-key'].includes(
+            header.toLowerCase(),
+          )
+        ) {
+          delete event.request.headers[header];
+        }
+      }
     }
-    if (event.request?.cookies['housing_user']) {
-      delete event.request.cookies['housing_user'];
+    if (event.extra) {
+      delete event.extra.arguments;
+      delete event.extra.body;
+      delete event.extra.request_body;
+      delete event.extra.response_body;
     }
     return event;
   },

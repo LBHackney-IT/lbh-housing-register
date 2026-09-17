@@ -2,6 +2,10 @@
 // https://nextjs.org/docs/app/api-reference/file-conventions/instrumentation-client
 
 import * as Sentry from '@sentry/nextjs';
+import {
+  sanitiseSentryBreadcrumb,
+  sanitiseSentryEvent,
+} from './lib/utils/sentry-privacy';
 
 const ENVIRONMENT = process.env.NEXT_PUBLIC_ENV;
 
@@ -19,22 +23,33 @@ Sentry.init({
     return 1.0; // development / local
   },
   environment: ENVIRONMENT,
-  integrations: [Sentry.captureConsoleIntegration()],
+  integrations: [
+    Sentry.extraErrorDataIntegration({
+      depth: 5,
+      captureErrorCause: true,
+    }),
+    Sentry.httpClientIntegration({
+      failedRequestStatusCodes: [[500, 599]],
+      failedRequestTargets: [/\/api\//],
+    }),
+  ],
+  ignoreErrors: [
+    /^ResizeObserver loop limit exceeded$/,
+    /^ResizeObserver loop completed with undelivered notifications\.?$/,
+  ],
+  denyUrls: [
+    /^chrome-extension:\/\//,
+    /^moz-extension:\/\//,
+    /^safari-extension:\/\//,
+  ],
   enabled:
     !isLocalHost &&
     (ENVIRONMENT === 'production' ||
       ENVIRONMENT === 'staging' ||
       ENVIRONMENT === 'development'),
 
-  beforeSend(event) {
-    if (event.request?.cookies?.['hackneyToken']) {
-      delete event.request.cookies['hackneyToken'];
-    }
-    if (event.request?.cookies?.['housing_user']) {
-      delete event.request.cookies['housing_user'];
-    }
-    return event;
-  },
+  beforeBreadcrumb: sanitiseSentryBreadcrumb,
+  beforeSend: sanitiseSentryEvent,
 });
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;

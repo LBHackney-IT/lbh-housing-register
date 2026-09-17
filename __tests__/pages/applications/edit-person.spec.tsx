@@ -11,6 +11,11 @@ import EditApplicant from '../../../pages/applications/edit/[id]/[person]/index'
 
 const mockPush = jest.fn();
 
+jest.mock('@sentry/nextjs', () => ({
+  addBreadcrumb: jest.fn(),
+  captureException: jest.fn(),
+}));
+
 jest.mock('next/router', () => ({
   useRouter: () => ({ push: mockPush }),
 }));

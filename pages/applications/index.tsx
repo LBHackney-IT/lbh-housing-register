@@ -1,6 +1,7 @@
 import React, { MouseEvent, useEffect, useState } from 'react';
 
 import { GetServerSideProps } from 'next';
+import * as Sentry from '@sentry/nextjs';
 import { useRouter } from 'next/router';
 
 import ApplicationsTable from '../../components/admin/ApplicationsTable';
@@ -18,6 +19,7 @@ import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
 import { PaginatedSearchResultsResponse } from '../../domain/HousingApi';
 import { UserContext } from '../../lib/contexts/user-context';
 import { getApplicationsByStatusAndAssignedTo } from '../../lib/gateways/applications-api';
+import { createSafeSentryError } from '../../lib/utils/sentry';
 import {
   HackneyGoogleUserWithPermissions,
   getRedirect,
@@ -164,9 +166,15 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
       pageSize,
     );
   } catch (err) {
-    console.error(
-      '[applications/index] getApplicationsByStatusAndAssignedTo failed',
-      err,
+    Sentry.captureException(
+      createSafeSentryError(err, 'Unable to load staff worktray'),
+      {
+        tags: {
+          operation: 'load_staff_worktray',
+          surface: 'staff',
+          route: '/applications',
+        },
+      },
     );
     worktrayLoadError =
       'Unable to load your worktray. The Housing Register API returned an error — check the service is running and HOUSING_REGISTER_API / key are correct.';

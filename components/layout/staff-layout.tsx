@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { useUser } from '../../lib/contexts/user-context';
+import { fetchWithSentry } from '../../lib/utils/sentry';
 import { hasPhaseBanner } from '../../lib/utils/phase-banner';
 import Header from '../header';
 import PhaseBanner from '../phase-banner';
@@ -29,7 +30,14 @@ export default function StaffLayout({
   };
 
   const signOut = async () => {
-    await fetch(`/api/admin/logout`);
+    await fetchWithSentry(
+      '/api/admin/logout',
+      {},
+      {
+        operation: 'staff_sign_out',
+        route: '/api/admin/logout',
+      },
+    );
     router.reload();
   };
 

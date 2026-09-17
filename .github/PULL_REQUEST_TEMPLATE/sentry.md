@@ -7,11 +7,12 @@
 - Issue URL / id:
 - Event:
 - Fingerprint:
-- Evidence source: MCP (`get_issue_details` / stack / breadcrumbs) / human paste:
+- Evidence source: pasted raw JSON / public URL / issue id / event / stack / breadcrumbs:
+- Evidence gaps requested from developer:
 
 ## Overlapping open PRs
 
-Open PRs into `development` that touch the same files as this stack, or mention this Sentry issue. `none` if the check found nothing. Do not stack on those branches.
+Open PRs into `development` that touch the same files as this stack, or mention this Sentry issue. `none` if the check found nothing; `not checked — GitHub preflight warning` if credentials were unavailable. Do not stack on those branches.
 
 ## Issue
 
@@ -45,6 +46,7 @@ Anything this PR leaves broken, plus issues noticed while working that are outsi
 
 ## Agent run
 
+- GitHub preflight:
 - Implementer model (self-reported):
 - Reviewer model (self-reported):
 - Review verdict:

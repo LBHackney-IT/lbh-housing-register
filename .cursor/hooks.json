@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeShellExecution": [
+      {
+        "command": "node scripts/agent/deny-dangerous-shell.mjs",
+        "failClosed": true
+      }
+    ],
+    "beforeReadFile": [
+      {
+        "command": "node scripts/agent/secret-path-gate.mjs",
+        "failClosed": true
+      }
+    ]
+  }
+}

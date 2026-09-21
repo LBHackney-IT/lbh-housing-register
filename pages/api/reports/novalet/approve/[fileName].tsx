@@ -1,4 +1,3 @@
-import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { approveNovaletExport } from '../../../../../lib/gateways/applications-api';
@@ -64,7 +63,4 @@ const endpoint: NextApiHandler = async (
   }
 };
 
-export default wrapApiHandlerWithSentry(
-  endpoint,
-  '/api/reports/novalet/approve/[fileName]',
-);
+export default endpoint;

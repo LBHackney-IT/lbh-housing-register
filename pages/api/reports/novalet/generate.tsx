@@ -1,4 +1,3 @@
-import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { generateNovaletExport } from '../../../../lib/gateways/applications-api';
@@ -53,7 +52,4 @@ const endpoint: NextApiHandler = async (
   }
 };
 
-export default wrapApiHandlerWithSentry(
-  endpoint,
-  '/api/reports/novalet/generate',
-);
+export default endpoint;

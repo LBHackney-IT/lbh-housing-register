@@ -23,9 +23,12 @@ function App(props: AppPropsWithError): ReactElement {
   const { store, props: combinedProps } = wrapper.useWrappedStore(props);
   const { Component, pageProps } = combinedProps;
   const router = useRouter();
-  const staffUserId = pageProps.user?.sub;
-  const applicationId =
-    typeof router.query.id === 'string' ? router.query.id : undefined;
+  const staffCognitoSub = pageProps.user?.sub;
+  const surface = getSentrySurface(router.pathname);
+  const staffApplicationId =
+    surface === 'staff' && typeof router.query.id === 'string'
+      ? router.query.id
+      : undefined;
 
   return (
     <>
@@ -37,13 +40,25 @@ function App(props: AppPropsWithError): ReactElement {
         fallback={<NextErrorComponent statusCode={500} />}
         beforeCapture={(scope) => {
           scope.setTag('route', router.pathname);
-          scope.setTag('surface', getSentrySurface(router.pathname));
-          scope.setTag('application_id', applicationId);
-          scope.setUser(staffUserId ? { id: staffUserId } : null);
+          scope.setTag('surface', surface);
+          scope.setTag(
+            'auth_provider',
+            surface === 'staff'
+              ? 'cognito'
+              : surface === 'resident'
+                ? 'hackney-jwt'
+                : 'none',
+          );
+          scope.setTag('application_id', staffApplicationId);
+          scope.setUser(
+            surface === 'staff' && staffCognitoSub
+              ? { id: `cognito:${staffCognitoSub}` }
+              : null,
+          );
         }}
       >
         <Provider store={store}>
-          <SentryContext staffUserId={staffUserId} />
+          <SentryContext staffCognitoSub={staffCognitoSub} />
           <Component {...pageProps} err={props.err} />
         </Provider>
       </Sentry.ErrorBoundary>

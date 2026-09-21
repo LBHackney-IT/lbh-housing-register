@@ -16,9 +16,50 @@ const nextConfig = {
   reactStrictMode: true,
   async headers() {
     return [
+      // Staff pages can include session cookies. Do not let browsers or
+      // CloudFront reuse a previous user's dashboard response.
+      {
+        source: '/applications/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'private, no-store, max-age=0',
+          },
+        ],
+      },
+      // NextAuth callback/session responses must not be cached.
+      {
+        source: '/api/auth/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'private, no-store, max-age=0',
+          },
+        ],
+      },
+      // Resident OTP generate/verify/exit set the housing_user cookie.
+      {
+        source: '/api/resident-auth/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'private, no-store, max-age=0',
+          },
+        ],
+      },
       {
         source: '/(.*)',
         headers: [
+          // Restrict embedding. Complements X-Frame-Options for modern browsers.
+          {
+            key: 'Content-Security-Policy',
+            value: "frame-ancestors 'self'",
+          },
+          // Do not leak the full URL (including OAuth query strings) to other origins.
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
           {
             key: 'X-Frame-Options',
             value: 'SAMEORIGIN',

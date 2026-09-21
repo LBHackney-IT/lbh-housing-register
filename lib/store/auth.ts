@@ -16,7 +16,7 @@ export const createVerifyCode = createAsyncThunk(
     };
 
     const res = await fetchWithSentry(
-      '/api/auth/generate',
+      '/api/resident-auth/generate',
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -24,7 +24,7 @@ export const createVerifyCode = createAsyncThunk(
       },
       {
         operation: 'create_verify_code',
-        route: '/api/auth/generate',
+        route: '/api/resident-auth/generate',
       },
     );
 
@@ -47,7 +47,7 @@ export const confirmVerifyCode = createAsyncThunk(
       code,
     };
     const res = await fetchWithSentry(
-      '/api/auth/verify',
+      '/api/resident-auth/verify',
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -55,7 +55,7 @@ export const confirmVerifyCode = createAsyncThunk(
       },
       {
         operation: 'confirm_verify_code',
-        route: '/api/auth/verify',
+        route: '/api/resident-auth/verify',
       },
     );
 
@@ -71,13 +71,13 @@ export const confirmVerifyCode = createAsyncThunk(
 
 export const exit = createAsyncThunk('auth/exit', async () => {
   const res = await fetchWithSentry(
-    '/api/auth/exit',
+    '/api/resident-auth/exit',
     {
       method: 'POST',
     },
     {
       operation: 'resident_sign_out',
-      route: '/api/auth/exit',
+      route: '/api/resident-auth/exit',
     },
   );
   return (await res.json()) as VerifyAuthResponse;

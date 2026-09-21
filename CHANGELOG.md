@@ -2,74 +2,67 @@
 
 ## [2.3.2](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.3.1...hackney-housing-register-v2.3.2) (2026-08-04)
 
-
 ### Bug Fixes
 
-* display correct HTTP error code for error ([7405f42](https://github.com/LBHackney-IT/lbh-housing-register/commit/7405f4272f008e9e986a02bb82c4d316c3942a96))
-* remove switch cases on api with single method ([bb98afe](https://github.com/LBHackney-IT/lbh-housing-register/commit/bb98afe8f3ed9216f794be57bd4a61e838384c49))
-* surface notify errors without blocking application flow ([9b845ea](https://github.com/LBHackney-IT/lbh-housing-register/commit/9b845ead42df6919ce2e104978ebdb1b4287fbb0))
+- display correct HTTP error code for error ([7405f42](https://github.com/LBHackney-IT/lbh-housing-register/commit/7405f4272f008e9e986a02bb82c4d316c3942a96))
+- remove switch cases on api with single method ([bb98afe](https://github.com/LBHackney-IT/lbh-housing-register/commit/bb98afe8f3ed9216f794be57bd4a61e838384c49))
+- surface notify errors without blocking application flow ([9b845ea](https://github.com/LBHackney-IT/lbh-housing-register/commit/9b845ead42df6919ce2e104978ebdb1b4287fbb0))
 
 ## [2.3.1](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.3.0...hackney-housing-register-v2.3.1) (2026-07-31)
 
-
 ### Bug Fixes
 
-* authorise notify endpoint against caller's own application ([1a92033](https://github.com/LBHackney-IT/lbh-housing-register/commit/1a92033c9e1c433c3f87af7863ff0627c35efe47))
-* checkbox use parse helper ([37819d9](https://github.com/LBHackney-IT/lbh-housing-register/commit/37819d9ec8265f6dc11b56f2e711c8064a28ae39))
-* detail HTTPS code for 405 error ([caceb77](https://github.com/LBHackney-IT/lbh-housing-register/commit/caceb77b42d822fac524b78ed99c16f24e7c4b58))
-* guard checkbox-list data against unanswered questions ([c985390](https://github.com/LBHackney-IT/lbh-housing-register/commit/c985390ea65f6f9c6b730d54939e0a729e0a8b31))
-* guard checkbox-list data against unanswered questions stored as "null" ([9c5e1f1](https://github.com/LBHackney-IT/lbh-housing-register/commit/9c5e1f17d4a25c7cf9b2d1a58d31be16f0ea1988))
-* isolate Sentry scopes per Lambda invocation under OpenNext ([ce53cb1](https://github.com/LBHackney-IT/lbh-housing-register/commit/ce53cb15c6329a7b444a98ab66dbf8fee428af95))
-* require authentication on /api/notify/[template] and stop trusting client-supplied email data ([e65824c](https://github.com/LBHackney-IT/lbh-housing-register/commit/e65824c1fbebf8453964a9bbceb60b8e65bb1a19))
+- authorise notify endpoint against caller's own application ([1a92033](https://github.com/LBHackney-IT/lbh-housing-register/commit/1a92033c9e1c433c3f87af7863ff0627c35efe47))
+- checkbox use parse helper ([37819d9](https://github.com/LBHackney-IT/lbh-housing-register/commit/37819d9ec8265f6dc11b56f2e711c8064a28ae39))
+- detail HTTPS code for 405 error ([caceb77](https://github.com/LBHackney-IT/lbh-housing-register/commit/caceb77b42d822fac524b78ed99c16f24e7c4b58))
+- guard checkbox-list data against unanswered questions ([c985390](https://github.com/LBHackney-IT/lbh-housing-register/commit/c985390ea65f6f9c6b730d54939e0a729e0a8b31))
+- guard checkbox-list data against unanswered questions stored as "null" ([9c5e1f1](https://github.com/LBHackney-IT/lbh-housing-register/commit/9c5e1f17d4a25c7cf9b2d1a58d31be16f0ea1988))
+- isolate Sentry scopes per Lambda invocation under OpenNext ([ce53cb1](https://github.com/LBHackney-IT/lbh-housing-register/commit/ce53cb15c6329a7b444a98ab66dbf8fee428af95))
+- require authentication on /api/notify/[template] and stop trusting client-supplied email data ([e65824c](https://github.com/LBHackney-IT/lbh-housing-register/commit/e65824c1fbebf8453964a9bbceb60b8e65bb1a19))
 
 ## [2.3.0](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.2.2...hackney-housing-register-v2.3.0) (2026-07-20)
 
-
 ### Features
 
-* handle 403 email address not allowed ([6827757](https://github.com/LBHackney-IT/lbh-housing-register/commit/6827757f393f5daf628d35da2095b092b45c778d))
-* protect applications route ([929c7b2](https://github.com/LBHackney-IT/lbh-housing-register/commit/929c7b2d7afe8b7bae21d376f3c8f46bb787db83))
-* protect POST route for applications to staff only ([63f8655](https://github.com/LBHackney-IT/lbh-housing-register/commit/63f8655b7e041cb8c998b276dbad62809274ea1b))
-
+- handle 403 email address not allowed ([6827757](https://github.com/LBHackney-IT/lbh-housing-register/commit/6827757f393f5daf628d35da2095b092b45c778d))
+- protect applications route ([929c7b2](https://github.com/LBHackney-IT/lbh-housing-register/commit/929c7b2d7afe8b7bae21d376f3c8f46bb787db83))
+- protect POST route for applications to staff only ([63f8655](https://github.com/LBHackney-IT/lbh-housing-register/commit/63f8655b7e041cb8c998b276dbad62809274ea1b))
 
 ### Bug Fixes
 
-* fix broken address validation ([d926cf3](https://github.com/LBHackney-IT/lbh-housing-register/commit/d926cf3e16cdb5010bfeeacca8df7c5b4be7f6d9))
-* fix broken address validation ([a65e580](https://github.com/LBHackney-IT/lbh-housing-register/commit/a65e580e37d7a0590286a80dec5e0d49e29b4843))
-* load GTM correctlly at runtime ([eecedda](https://github.com/LBHackney-IT/lbh-housing-register/commit/eecedda1cd6f9fc8def9ff1f09520e0785cb9f1d))
-* remove void use ([bbce20a](https://github.com/LBHackney-IT/lbh-housing-register/commit/bbce20a1e93c22fc32f4e205120909b42a626bc7))
-* simplify email checking regex for runtime speed ([2096336](https://github.com/LBHackney-IT/lbh-housing-register/commit/2096336f3923c4308090376880e8b028fc7720ec))
+- fix broken address validation ([d926cf3](https://github.com/LBHackney-IT/lbh-housing-register/commit/d926cf3e16cdb5010bfeeacca8df7c5b4be7f6d9))
+- fix broken address validation ([a65e580](https://github.com/LBHackney-IT/lbh-housing-register/commit/a65e580e37d7a0590286a80dec5e0d49e29b4843))
+- load GTM correctlly at runtime ([eecedda](https://github.com/LBHackney-IT/lbh-housing-register/commit/eecedda1cd6f9fc8def9ff1f09520e0785cb9f1d))
+- remove void use ([bbce20a](https://github.com/LBHackney-IT/lbh-housing-register/commit/bbce20a1e93c22fc32f4e205120909b42a626bc7))
+- simplify email checking regex for runtime speed ([2096336](https://github.com/LBHackney-IT/lbh-housing-register/commit/2096336f3923c4308090376880e8b028fc7720ec))
 
 ## [2.2.2](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.2.1...hackney-housing-register-v2.2.2) (2026-06-10)
 
-
 ### Bug Fixes
 
-* use github action for node 24 ([28bd466](https://github.com/LBHackney-IT/lbh-housing-register/commit/28bd466b9ebb0803118d29fdcddfc928b2a86f8f))
+- use github action for node 24 ([28bd466](https://github.com/LBHackney-IT/lbh-housing-register/commit/28bd466b9ebb0803118d29fdcddfc928b2a86f8f))
 
 ## [2.2.1](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.2.0...hackney-housing-register-v2.2.1) (2026-06-02)
 
-
 ### Bug Fixes
 
-* add headers to auth request ([90ee15f](https://github.com/LBHackney-IT/lbh-housing-register/commit/90ee15fffc9b4fcd4385f7ba351e555c5461a009))
-* handle auth gracefully ([ce1aec6](https://github.com/LBHackney-IT/lbh-housing-register/commit/ce1aec65fa91de3351e768a93da25a7b4dbd4759))
-* log body state ([7608d49](https://github.com/LBHackney-IT/lbh-housing-register/commit/7608d49d35637fccf1a105b8c47de2a149306e7e))
-* remove headers ([c5490da](https://github.com/LBHackney-IT/lbh-housing-register/commit/c5490da0a0b782aff03aac10e6b92a1493345d4e))
-* remove headers ([2f2272d](https://github.com/LBHackney-IT/lbh-housing-register/commit/2f2272d769f98c8915a5b231099503566ade3533))
-* remove testing branch ([a765c20](https://github.com/LBHackney-IT/lbh-housing-register/commit/a765c201192bbaea3c1d2076510a460992447d9f))
-* remove testing branch ([1e76007](https://github.com/LBHackney-IT/lbh-housing-register/commit/1e76007f4333941ce0a429a64ef0f9962f892720))
-* revert log used for testing ([45299a8](https://github.com/LBHackney-IT/lbh-housing-register/commit/45299a827c87c383f693f9f5a8a3c0be69759546))
-* revert testing branch ([7ba80e6](https://github.com/LBHackney-IT/lbh-housing-register/commit/7ba80e67e2d13b012b0ff8903eb3ab4b3f12e34b))
-* set headers on request ([b167e30](https://github.com/LBHackney-IT/lbh-housing-register/commit/b167e30707ae487205a43a7ced6519d979df3b2f))
-* temp log ([2ef938d](https://github.com/LBHackney-IT/lbh-housing-register/commit/2ef938dcb63c64fb1f37ff036bfce225f13b5d9f))
-* test for revert ([0baee74](https://github.com/LBHackney-IT/lbh-housing-register/commit/0baee74c58432cc949024263e63263e5eccfddaa))
-* test on branch ([8b35b7d](https://github.com/LBHackney-IT/lbh-housing-register/commit/8b35b7d8c9fea5e6be4fb037d33820e6d12d1e1a))
-
+- add headers to auth request ([90ee15f](https://github.com/LBHackney-IT/lbh-housing-register/commit/90ee15fffc9b4fcd4385f7ba351e555c5461a009))
+- handle auth gracefully ([ce1aec6](https://github.com/LBHackney-IT/lbh-housing-register/commit/ce1aec65fa91de3351e768a93da25a7b4dbd4759))
+- log body state ([7608d49](https://github.com/LBHackney-IT/lbh-housing-register/commit/7608d49d35637fccf1a105b8c47de2a149306e7e))
+- remove headers ([c5490da](https://github.com/LBHackney-IT/lbh-housing-register/commit/c5490da0a0b782aff03aac10e6b92a1493345d4e))
+- remove headers ([2f2272d](https://github.com/LBHackney-IT/lbh-housing-register/commit/2f2272d769f98c8915a5b231099503566ade3533))
+- remove testing branch ([a765c20](https://github.com/LBHackney-IT/lbh-housing-register/commit/a765c201192bbaea3c1d2076510a460992447d9f))
+- remove testing branch ([1e76007](https://github.com/LBHackney-IT/lbh-housing-register/commit/1e76007f4333941ce0a429a64ef0f9962f892720))
+- revert log used for testing ([45299a8](https://github.com/LBHackney-IT/lbh-housing-register/commit/45299a827c87c383f693f9f5a8a3c0be69759546))
+- revert testing branch ([7ba80e6](https://github.com/LBHackney-IT/lbh-housing-register/commit/7ba80e67e2d13b012b0ff8903eb3ab4b3f12e34b))
+- set headers on request ([b167e30](https://github.com/LBHackney-IT/lbh-housing-register/commit/b167e30707ae487205a43a7ced6519d979df3b2f))
+- temp log ([2ef938d](https://github.com/LBHackney-IT/lbh-housing-register/commit/2ef938dcb63c64fb1f37ff036bfce225f13b5d9f))
+- test for revert ([0baee74](https://github.com/LBHackney-IT/lbh-housing-register/commit/0baee74c58432cc949024263e63263e5eccfddaa))
+- test on branch ([8b35b7d](https://github.com/LBHackney-IT/lbh-housing-register/commit/8b35b7d8c9fea5e6be4fb037d33820e6d12d1e1a))
 
 ### Reverts
 
-* revert branch used for ci testing ([c0448de](https://github.com/LBHackney-IT/lbh-housing-register/commit/c0448de07a2909aadf0394981f66c990998e28c0))
+- revert branch used for ci testing ([c0448de](https://github.com/LBHackney-IT/lbh-housing-register/commit/c0448de07a2909aadf0394981f66c990998e28c0))
 
 ## [2.2.0](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.1.5...hackney-housing-register-v2.2.0) (2026-05-14)
 

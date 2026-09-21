@@ -45,17 +45,20 @@ describe('SentryContext', () => {
       query: { id: 'staff-app-id' },
     });
 
-    render(<SentryContext staffUserId="opaque-google-sub" />);
+    render(<SentryContext staffCognitoSub="opaque-cognito-sub" />);
 
     await waitFor(() => {
       expect(setTag).toHaveBeenCalledWith('route', '/applications/view/[id]');
     });
     expect(setTag).toHaveBeenCalledWith('surface', 'staff');
+    expect(setTag).toHaveBeenCalledWith('auth_provider', 'cognito');
     expect(setTag).toHaveBeenCalledWith('application_id', 'staff-app-id');
-    expect(setUser).toHaveBeenCalledWith({ id: 'opaque-google-sub' });
+    expect(setUser).toHaveBeenCalledWith({
+      id: 'cognito:opaque-cognito-sub',
+    });
   });
 
-  it('uses Redux application context and clears user identity for residents', async () => {
+  it('uses Hackney JWT application context for resident identity', async () => {
     useRouterMock.mockReturnValue({
       pathname: '/apply/overview',
       query: {},
@@ -66,7 +69,10 @@ describe('SentryContext', () => {
     await waitFor(() => {
       expect(setTag).toHaveBeenCalledWith('surface', 'resident');
     });
+    expect(setTag).toHaveBeenCalledWith('auth_provider', 'hackney-jwt');
     expect(setTag).toHaveBeenCalledWith('application_id', 'resident-app-id');
-    expect(setUser).toHaveBeenCalledWith(null);
+    expect(setUser).toHaveBeenCalledWith({
+      id: 'resident-application:resident-app-id',
+    });
   });
 });

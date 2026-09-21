@@ -3,6 +3,14 @@ import { existsSync, unlinkSync } from 'fs';
 import { loadEnvConfig } from '@next/env';
 import { defineConfig } from 'cypress';
 
+import {
+  createCognitoStaffSession,
+  createMockStaffSession,
+  createResidentSession,
+  readResidentApplicationId,
+  type CypressStaffUser,
+} from './cypress/support/node/auth';
+
 const baseUrl = 'http://localhost:3000';
 
 // Populate process.env from .env when Cypress loads this file (e2e and component).
@@ -35,6 +43,10 @@ function buildCypressExpose(): Record<string, string | undefined> {
     AUTHORISED_READONLY_GROUP:
       process.env.AUTHORISED_READONLY_GROUP?.trim() ||
       'cypress-authorised-readonly-group',
+    // Group the dedicated Cognito E2E user actually carries. No default: a
+    // local run must fail loudly rather than assert against a made-up group.
+    E2E_AUTHORISED_MANAGER_GROUP:
+      process.env.E2E_AUTHORISED_MANAGER_GROUP?.trim(),
   };
 }
 
@@ -49,6 +61,21 @@ export default defineConfig({
   e2e: {
     allowCypressEnv: false,
     setupNodeEvents(on, config) {
+      on('task', {
+        createMockStaffSession(user: CypressStaffUser) {
+          return createMockStaffSession(user);
+        },
+        createCognitoStaffSession() {
+          return createCognitoStaffSession();
+        },
+        createResidentSession(applicationId: string) {
+          return createResidentSession(applicationId);
+        },
+        readResidentApplicationId(token: string) {
+          return readResidentApplicationId(token);
+        },
+      });
+
       on(
         'after:spec',
         (_spec: Cypress.Spec, results: CypressCommandLine.RunResult) => {

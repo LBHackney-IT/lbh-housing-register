@@ -1,4 +1,4 @@
-export interface HackneyGoogleUser {
+export interface StaffUser {
   sub: string;
   email: string;
   iss: string;

@@ -145,7 +145,7 @@ describe('Sentry privacy filters', () => {
       sanitiseSentryBreadcrumb({
         category: 'fetch',
         data: {
-          url: '/api/auth/verify',
+          url: '/api/resident-auth/verify',
           status_code: 404,
         },
       }),

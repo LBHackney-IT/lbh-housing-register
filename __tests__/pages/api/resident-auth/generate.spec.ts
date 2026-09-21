@@ -8,7 +8,7 @@ import {
 } from '../../../../domain/HousingApi';
 import { createVerifyCode } from '../../../../lib/gateways/applications-api';
 import { generateEmailAddress } from '../../../../testUtils/personHelper';
-import endpoint from '../../../../pages/api/auth/generate';
+import endpoint from '../../../../pages/api/resident-auth/generate';
 import { ApiRequest, ApiResponse } from '../../../../testUtils/types';
 import { createMocks, RequestMethod, RequestOptions } from 'node-mocks-http';
 import { StatusCodes } from 'http-status-codes';

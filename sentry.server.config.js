@@ -36,6 +36,16 @@ Sentry.init({
   // Never send inbound credentials or request bodies to Sentry.
   beforeSend(event) {
     if (event.request) {
+      if (event.request.url) {
+        try {
+          event.request.url = new URL(
+            event.request.url,
+            process.env.NEXTAUTH_URL ?? 'https://sentry.local',
+          ).pathname;
+        } catch {
+          event.request.url = event.request.url.split(/[?#]/)[0];
+        }
+      }
       delete event.request.cookies;
       delete event.request.data;
 

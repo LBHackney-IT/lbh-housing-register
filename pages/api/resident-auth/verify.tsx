@@ -96,4 +96,4 @@ const endpoint: NextApiHandler = async (
   }
 };
 
-export default wrapApiHandlerWithSentry(endpoint, '/api/auth/verify');
+export default wrapApiHandlerWithSentry(endpoint, '/api/resident-auth/verify');

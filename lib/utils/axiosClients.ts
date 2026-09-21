@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
-import * as cookie from 'cookie';
-import { IncomingMessage } from 'http';
+import type { GetServerSidePropsContext, NextApiRequest } from 'next';
 import asssertServerOnly from './assertServerOnly';
+import { getCognitoIdToken } from '../auth/staff';
 
 asssertServerOnly();
 
@@ -18,20 +18,24 @@ export function housingAxios() {
   });
 }
 
-export function authenticatedHousingAxios(
-  httpRequest: IncomingMessage,
-): AxiosInstance {
+type AuthenticatedRequest = NextApiRequest | GetServerSidePropsContext['req'];
+
+export async function authenticatedHousingAxios(
+  httpRequest: AuthenticatedRequest,
+): Promise<AxiosInstance> {
   const client = housingAxios();
 
-  const cookies = cookie.parse(httpRequest.headers.cookie ?? '');
-  const parsedToken = cookies['hackneyToken'];
-
-  client.defaults.headers.common['Authorization'] = 'Bearer ' + parsedToken;
+  const idToken = await getCognitoIdToken(httpRequest);
+  if (idToken) {
+    client.defaults.headers.common['Authorization'] = `Bearer ${idToken}`;
+  }
 
   return client;
 }
 
-export function activityAxios(httpRequest: IncomingMessage): AxiosInstance {
+export async function activityAxios(
+  httpRequest: AuthenticatedRequest,
+): Promise<AxiosInstance> {
   const client = axios.create({
     baseURL: process.env.ACTIVITY_HISTORY_API,
     headers: {
@@ -39,10 +43,9 @@ export function activityAxios(httpRequest: IncomingMessage): AxiosInstance {
     },
   });
 
-  const cookies = cookie.parse(httpRequest.headers.cookie ?? '');
-  const parsedToken = cookies['hackneyToken'];
-  if (parsedToken) {
-    client.defaults.headers.common['Authorization'] = 'Bearer ' + parsedToken;
+  const idToken = await getCognitoIdToken(httpRequest);
+  if (idToken) {
+    client.defaults.headers.common['Authorization'] = `Bearer ${idToken}`;
   }
 
   return client;

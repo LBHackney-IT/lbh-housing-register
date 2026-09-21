@@ -5,9 +5,10 @@ import {
   registerE2eNockMock,
   type E2eNockRegisterPayload,
 } from '../../../lib/server/e2eHttpMocks';
+import { areE2eRoutesEnabled } from '../../../lib/server/e2eAccess';
 
 const endpoint: NextApiHandler = (req, res) => {
-  if (process.env.E2E_HTTP_MOCKS !== 'true') {
+  if (!areE2eRoutesEnabled()) {
     res.status(StatusCodes.NOT_FOUND).end();
     return;
   }

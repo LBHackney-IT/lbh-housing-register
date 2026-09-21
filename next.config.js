@@ -94,4 +94,17 @@ module.exports = withSentryConfig(nextConfig, {
     // Never publish source maps with the OpenNext static assets.
     deleteSourcemapsAfterUpload: true,
   },
+  webpack: {
+    // Strip Sentry SDK debug logging from the production bundle. Does not
+    // affect application console output or Sentry event capture.
+    treeshake: {
+      removeDebugLogging: true,
+    },
+    // Annotate React elements with data-sentry-* so UI breadcrumbs (and
+    // Replay, if enabled later) name the component instead of a generic DOM
+    // selector. Source-file attributes are component paths, not user data.
+    reactComponentAnnotation: {
+      enabled: true,
+    },
+  },
 });

@@ -41,6 +41,81 @@ const emptyDate = {
   dateToYear: '',
 };
 
+const dateFieldNames = [
+  'dateMonth',
+  'dateYear',
+  'dateToMonth',
+  'dateToYear',
+] as const;
+
+type DateFieldName = (typeof dateFieldNames)[number];
+
+const isDateFieldName = (name: string): name is DateFieldName =>
+  (dateFieldNames as readonly string[]).includes(name);
+
+type DatePairResult =
+  | { ok: true; iso: string }
+  | { ok: false; reason: 'empty' | 'partial' | 'invalid' };
+
+export const parseMonthYear = (year: string, month: string): DatePairResult => {
+  const hasYear = year.trim() !== '';
+  const hasMonth = month.trim() !== '';
+
+  if (!hasYear && !hasMonth) {
+    return { ok: false, reason: 'empty' };
+  }
+
+  if (hasYear !== hasMonth) {
+    return { ok: false, reason: 'partial' };
+  }
+
+  const yearNumber = Number(year);
+  const monthNumber = Number(month);
+  const parsed = new Date(Date.UTC(yearNumber, monthNumber - 1, 1));
+
+  if (
+    Number.isNaN(+parsed) ||
+    parsed.getUTCFullYear() !== yearNumber ||
+    parsed.getUTCMonth() !== monthNumber - 1
+  ) {
+    return { ok: false, reason: 'invalid' };
+  }
+
+  return { ok: true, iso: parsed.toISOString() };
+};
+
+export const firstOfMonthIso = (year: string, month: string): string => {
+  const parsed = parseMonthYear(year, month);
+  return parsed.ok ? parsed.iso : '';
+};
+
+const currentMonthIso = (now = new Date()): string =>
+  new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1)).toISOString();
+
+const datePairMessage = (
+  startDate: DatePairResult,
+  endDate: DatePairResult,
+): string | undefined => {
+  if (
+    (!startDate.ok && startDate.reason === 'invalid') ||
+    (!endDate.ok && endDate.reason === 'invalid')
+  ) {
+    return 'Invalid date';
+  }
+  if (
+    (!startDate.ok && startDate.reason === 'partial') ||
+    (!endDate.ok && endDate.reason === 'partial')
+  ) {
+    return 'Enter a month and year';
+  }
+  if (startDate.ok && endDate.ok && startDate.iso > endDate.iso) {
+    return 'The end date must be after the start date';
+  }
+  if (endDate.ok && endDate.iso > currentMonthIso()) {
+    return 'The end date must not be in the future';
+  }
+};
+
 export default function AddCaseAddress({
   addresses,
   setAddresses,
@@ -52,22 +127,14 @@ export default function AddCaseAddress({
   const [isEditing, setIsEditing] = useState(false);
   const [editAddressIndex, setEditAddressIndex] = useState(0);
   const [date, setDate] = useState(emptyDate);
-
-  const fromDate =
-    date.dateToYear && date.dateToMonth
-      ? new Date(Number(date.dateYear), Number(date.dateMonth) - 1, 1)
-      : null;
-  const toDate =
-    date.dateToYear && date.dateToMonth
-      ? new Date(Number(date.dateToYear), Number(date.dateToMonth) - 1, 1)
-      : null;
+  const [dateError, setDateError] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    setAddressInDialog({
-      ...addressInDialog,
-      date: fromDate ? fromDate.toISOString() : '',
-      dateTo: toDate ? toDate.toISOString() : '',
-    });
+    setAddressInDialog((current) => ({
+      ...current,
+      date: firstOfMonthIso(date.dateYear, date.dateMonth),
+      dateTo: firstOfMonthIso(date.dateToYear, date.dateToMonth),
+    }));
   }, [date]);
 
   const addNewAddress = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -75,29 +142,48 @@ export default function AddCaseAddress({
     setIsEditing(false);
     setAddressInDialog(emptyAddress);
     setDate(emptyDate);
+    setDateError(undefined);
     setAddressDialogOpen(true);
   };
 
   const editAddress = (addressIndex: number) => {
     setIsEditing(true);
     setAddressInDialog(addresses[addressIndex]);
+    const { date: startDate = '', dateTo: endDate = '' } =
+      addresses[addressIndex];
     setDate({
-      dateMonth: addresses[addressIndex].date.split('-')[1],
-      dateYear: addresses[addressIndex].date.split('-')[0],
-      dateToMonth: addresses[addressIndex].dateTo.split('-')[1],
-      dateToYear: addresses[addressIndex].dateTo.split('-')[0],
+      dateMonth: startDate.split('-')[1] || '',
+      dateYear: startDate.split('-')[0] || '',
+      dateToMonth: endDate.split('-')[1] || '',
+      dateToYear: endDate.split('-')[0] || '',
     });
     setEditAddressIndex(addressIndex);
+    setDateError(undefined);
     setAddressDialogOpen(true);
   };
 
   const saveAddress = () => {
+    const startDate = parseMonthYear(date.dateYear, date.dateMonth);
+    const endDate = parseMonthYear(date.dateToYear, date.dateToMonth);
+    const message = datePairMessage(startDate, endDate);
+
+    if (message) {
+      setDateError(message);
+      return;
+    }
+
+    const toSave = {
+      ...addressInDialog,
+      date: startDate.ok ? startDate.iso : '',
+      dateTo: endDate.ok ? endDate.iso : '',
+    };
+
     if (isEditing) {
       const newAddresses = [...addresses];
-      newAddresses[editAddressIndex] = addressInDialog;
+      newAddresses[editAddressIndex] = toSave;
       setAddresses(newAddresses);
     } else {
-      setAddresses([...addresses, addressInDialog]);
+      setAddresses([...addresses, toSave]);
     }
 
     setAddressDialogOpen(false);
@@ -105,18 +191,20 @@ export default function AddCaseAddress({
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setDate({
-      ...date,
-      [name]: value,
-    });
 
-    setAddressInDialog({
-      ...addressInDialog,
+    if (isDateFieldName(name)) {
+      setDate((current) => ({ ...current, [name]: value }));
+      setDateError(undefined);
+      return;
+    }
+
+    setAddressInDialog((current) => ({
+      ...current,
       address: {
-        ...addressInDialog.address,
+        ...current.address,
         [name]: value,
       },
-    });
+    }));
   };
 
   const deleteAddress = (addressIndex: number) => {
@@ -309,6 +397,7 @@ export default function AddCaseAddress({
           </FormGroup>
 
           <HeadingFour content="Dates at address" />
+          {dateError ? <ErrorMessage message={dateError} /> : null}
 
           <div style={{ display: 'inline-block', padding: '0 20px 0 0' }}>
             <label

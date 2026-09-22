@@ -1,19 +1,32 @@
 # Changelog
 
-## [2.4.1](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.4.0...hackney-housing-register-v2.4.1) (2026-09-22)
+## [3.0.0](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.4.0...hackney-housing-register-v3.0.0) (2026-09-22)
 
+### ⚠ BREAKING CHANGES
 
-### Bug Fixes
-
-* unblock release-please after unparseable merge commits ([37932fb](https://github.com/LBHackney-IT/lbh-housing-register/commit/37932fb5f73b8892a6aaa0e92696a1c6b6b28d4b))
-* unblock release-please after unparseable merge commits ([2247d2e](https://github.com/LBHackney-IT/lbh-housing-register/commit/2247d2ee0f6a1ccc02ec24be941277298561a1db))
-
-## [2.4.0](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.3.2...hackney-housing-register-v2.4.0) (2026-09-01)
-
+- Staff sign-in no longer uses the custom Google OAuth flow or the `hackneyToken` cookie. Staff now authenticate via AWS Cognito (still federated to Google Workspace) through NextAuth, with the session held in an encrypted `next-auth.session-token` cookie. This is a hard cutover: existing `hackneyToken` cookies are ignored and every staff member must sign in again. Resident email-code login (`housing_user` cookie) is unaffected. ([01f6860](https://github.com/LBHackney-IT/lbh-housing-register/commit/01f686017006e4a0a8beaf9df21f4229949d5b3b))
 
 ### Features
 
-* handle 409 errors without losing state ([bb91dd9](https://github.com/LBHackney-IT/lbh-housing-register/commit/bb91dd952a8bb3ba8979c13c9ca8270dbb8ac386))
+- migrate staff authentication from Google OAuth JWT to AWS Cognito + NextAuth ([01f6860](https://github.com/LBHackney-IT/lbh-housing-register/commit/01f686017006e4a0a8beaf9df21f4229949d5b3b))
+- remove the IdP selection popup by routing straight to the Google identity provider ([ba32005](https://github.com/LBHackney-IT/lbh-housing-register/commit/ba3200516c24098493e2a7950045c64c62fbb9de))
+- match pre-migration role-based authorization rules in staff write APIs ([e788ba3](https://github.com/LBHackney-IT/lbh-housing-register/commit/e788ba36f50e2bf0a76569a8bb609e46eb8efb04))
+- add a permissions summary doc for the new auth model ([9c89997](https://github.com/LBHackney-IT/lbh-housing-register/commit/9c899978645b70502e74e862a5af1736f1d381ef))
+- set staff session expiry to 4 hours, matching the Cognito ID token lifetime ([e5ae711](https://github.com/LBHackney-IT/lbh-housing-register/commit/e5ae711ce7789d865f2e5fe0e72b4140536484d8))
+- fix OpenNext/API Gateway cookie handling so Cognito's PKCE, state and nonce cookies survive the hop through Lambda ([00c5566](https://github.com/LBHackney-IT/lbh-housing-register/commit/00c55660428f1b9d2cf22038f049dc0a706fbecc), [7239456](https://github.com/LBHackney-IT/lbh-housing-register/commit/723945b6656664498930ba737fe27bd5f98630fc))
+- match UI authorization rules in the corresponding API routes ([a2ca24c](https://github.com/LBHackney-IT/lbh-housing-register/commit/a2ca24c05eaf30d48e5220156858ec226a871b59))
+- improve auth test coverage for the Cognito migration ([0ce3a47](https://github.com/LBHackney-IT/lbh-housing-register/commit/0ce3a47393fec18ad5831f31d3c4df38b082229e))
+
+### Bug Fixes
+
+- resolve SSRF issues ([bd74df4](https://github.com/LBHackney-IT/lbh-housing-register/commit/bd74df4c6e0dfdd7ed789dee619e0300919fe2b6))
+- unblock release-please after unparseable merge commits from #587/#581 ([37932fb](https://github.com/LBHackney-IT/lbh-housing-register/commit/37932fb5f73b8892a6aaa0e92696a1c6b6b28d4b))
+
+## [2.4.0](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.3.2...hackney-housing-register-v2.4.0) (2026-09-01)
+
+### Features
+
+- handle 409 errors without losing state ([bb91dd9](https://github.com/LBHackney-IT/lbh-housing-register/commit/bb91dd952a8bb3ba8979c13c9ca8270dbb8ac386))
 
 ## [2.3.2](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.3.1...hackney-housing-register-v2.3.2) (2026-08-04)
 

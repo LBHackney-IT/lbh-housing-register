@@ -1,13 +1,10 @@
-import {
-  getRedirect,
-  getSession,
-  HackneyGoogleUserWithPermissions,
-} from 'lib/utils/googleAuth';
+import { authorizeStaffPage } from 'lib/auth/page';
+import { StaffUserWithPermissions } from 'lib/auth/staff';
 import { GetServerSideProps } from 'next';
 
 interface Props {
   header: string;
-  user: HackneyGoogleUserWithPermissions;
+  user: StaffUserWithPermissions;
 }
 
 const ErrorThrowingPage = ({
@@ -48,16 +45,9 @@ const ErrorThrowingPage = ({
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const user = getSession(context.req);
-  const redirect = getRedirect(user);
-  if (redirect) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: redirect,
-      },
-    };
-  }
+  const authorization = await authorizeStaffPage(context);
+  if ('redirect' in authorization) return authorization;
+  const { user } = authorization;
 
   if (context.query.server) {
     throw new Error('ErrorThrowingPage getServerSideProps error');

@@ -4,12 +4,12 @@ import { useRouter } from 'next/router';
 
 import { APPLICATION_UNNASIGNED, Application } from '../../domain/HousingApi';
 import { updateApplication } from '../../lib/gateways/internal-api';
-import { HackneyGoogleUserWithPermissions } from '../../lib/utils/googleAuth';
+import { StaffUserWithPermissions } from '../../lib/auth/staff';
 import ErrorMessage from '../form/error-message';
 
 interface AssignUserProps {
   id: string;
-  user: HackneyGoogleUserWithPermissions;
+  user: StaffUserWithPermissions;
   assignee?: string;
 }
 

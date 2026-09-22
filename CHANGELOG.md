@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.4.1](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.4.0...hackney-housing-register-v2.4.1) (2026-09-22)
+
+
+### Bug Fixes
+
+* unblock release-please after unparseable merge commits ([37932fb](https://github.com/LBHackney-IT/lbh-housing-register/commit/37932fb5f73b8892a6aaa0e92696a1c6b6b28d4b))
+* unblock release-please after unparseable merge commits ([2247d2e](https://github.com/LBHackney-IT/lbh-housing-register/commit/2247d2ee0f6a1ccc02ec24be941277298561a1db))
+
 ## [2.4.0](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.3.2...hackney-housing-register-v2.4.0) (2026-09-01)
 
 

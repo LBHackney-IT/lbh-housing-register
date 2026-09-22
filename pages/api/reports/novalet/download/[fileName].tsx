@@ -1,6 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 import { downloadNovaletExport } from '../../../../../lib/gateways/applications-api';
 import { requireApiStaffGroup } from '../../../../../lib/auth/api';
 
@@ -60,7 +59,4 @@ const endpoint: NextApiHandler = async (
   }
 };
 
-export default wrapApiHandlerWithSentry(
-  endpoint,
-  '/api/reports/novalet/download/[fileName]',
-);
+export default endpoint;

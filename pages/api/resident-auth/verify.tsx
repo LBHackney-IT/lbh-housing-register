@@ -1,4 +1,3 @@
-import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 import axios from 'axios';
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
@@ -96,4 +95,4 @@ const endpoint: NextApiHandler = async (
   }
 };
 
-export default wrapApiHandlerWithSentry(endpoint, '/api/resident-auth/verify');
+export default endpoint;

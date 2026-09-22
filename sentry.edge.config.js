@@ -15,25 +15,42 @@ Sentry.init({
     return 1.0; // development / local
   },
   environment: ENVIRONMENT,
-  integrations: [Sentry.captureConsoleIntegration()],
   enabled:
     ENVIRONMENT === 'production' ||
     ENVIRONMENT === 'staging' ||
     ENVIRONMENT === 'development',
 
-  // remove cookies from the event before sending
+  // Never send inbound credentials or request bodies to Sentry.
   beforeSend(event) {
-    for (const cookieName of Object.keys(event.request?.cookies ?? {})) {
-      if (cookieName.includes('next-auth')) {
-        delete event.request.cookies[cookieName];
+    if (event.request) {
+      if (event.request.url) {
+        try {
+          event.request.url = new URL(
+            event.request.url,
+            process.env.NEXTAUTH_URL ?? 'https://sentry.local',
+          ).pathname;
+        } catch {
+          event.request.url = event.request.url.split(/[?#]/)[0];
+        }
+      }
+      delete event.request.cookies;
+      delete event.request.data;
+
+      for (const header of Object.keys(event.request.headers ?? {})) {
+        if (
+          ['authorization', 'cookie', 'set-cookie', 'x-api-key'].includes(
+            header.toLowerCase(),
+          )
+        ) {
+          delete event.request.headers[header];
+        }
       }
     }
-    if (event.request?.cookies['hackneyToken']) {
-      // Pre-migration staff cookie. Strip it if a leftover copy is still sent.
-      delete event.request.cookies['hackneyToken'];
-    }
-    if (event.request?.cookies['housing_user']) {
-      delete event.request.cookies['housing_user'];
+    if (event.extra) {
+      delete event.extra.arguments;
+      delete event.extra.body;
+      delete event.extra.request_body;
+      delete event.extra.response_body;
     }
     return event;
   },

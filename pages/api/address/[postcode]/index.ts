@@ -1,7 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { lookUpAddress } from '../../../../lib/gateways/address-api';
-import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -31,4 +30,4 @@ const endpoint: NextApiHandler = async (
   }
 };
 
-export default wrapApiHandlerWithSentry(endpoint, '/api/address/[postcode]');
+export default endpoint;

@@ -12,11 +12,19 @@ import mainApplicant from './mainApplicant';
 import otherMembers from './otherMembers';
 import { getRequiredDocumentsForApplication } from '../utils/evidence';
 import { ApplicationStatus } from '../types/application-status';
+import { fetchWithSentry } from '../utils/sentry';
 
 export const loadApplication = createAsyncThunk(
   'application/load',
   async (_: void, { rejectWithValue }) => {
-    const res = await fetch(`/api/applications`);
+    const res = await fetchWithSentry(
+      '/api/applications',
+      {},
+      {
+        operation: 'load_application',
+        route: '/api/applications',
+      },
+    );
 
     if (res.ok) {
       const application = (await res.json()) as Application;
@@ -30,10 +38,17 @@ export const loadApplication = createAsyncThunk(
 export const updateApplication = createAsyncThunk(
   'application/update',
   async (application: Application, { rejectWithValue }) => {
-    const res = await fetch(`/api/applications/${application.id}`, {
-      method: 'PATCH',
-      body: JSON.stringify(application),
-    });
+    const res = await fetchWithSentry(
+      `/api/applications/${application.id}`,
+      {
+        method: 'PATCH',
+        body: JSON.stringify(application),
+      },
+      {
+        operation: 'update_application',
+        route: '/api/applications/[applicationId]',
+      },
+    );
 
     if (res.ok) {
       return (await res.json()) as Application;
@@ -50,10 +65,17 @@ export const disqualifyApplication = createAsyncThunk(
       id: id,
       status: ApplicationStatus.DISQUALIFIED,
     };
-    const res = await fetch(`/api/applications/${id}`, {
-      method: 'PATCH',
-      body: JSON.stringify(request),
-    });
+    const res = await fetchWithSentry(
+      `/api/applications/${id}`,
+      {
+        method: 'PATCH',
+        body: JSON.stringify(request),
+      },
+      {
+        operation: 'disqualify_application',
+        route: '/api/applications/[applicationId]',
+      },
+    );
     if (res.ok) {
       return (await res.json()) as EvidenceRequestResponse;
     } else {
@@ -69,9 +91,16 @@ export const completeApplication = createAsyncThunk<
 >(
   'application/complete',
   async (application: Application, { rejectWithValue }) => {
-    const res = await fetch(`/api/applications/${application.id}/complete`, {
-      method: 'PATCH',
-    });
+    const res = await fetchWithSentry(
+      `/api/applications/${application.id}/complete`,
+      {
+        method: 'PATCH',
+      },
+      {
+        operation: 'complete_application',
+        route: '/api/applications/[applicationId]/complete',
+      },
+    );
     if (!res.ok) {
       return rejectWithValue(`Unable to complete application (${res.status})`);
     }
@@ -91,10 +120,17 @@ export const createEvidenceRequest = createAsyncThunk(
         application.mainApplicant,
       ),
     };
-    const res = await fetch(`/api/applications/${application.id}/evidence`, {
-      method: 'POST',
-      body: JSON.stringify(request),
-    });
+    const res = await fetchWithSentry(
+      `/api/applications/${application.id}/evidence`,
+      {
+        method: 'POST',
+        body: JSON.stringify(request),
+      },
+      {
+        operation: 'create_evidence_request',
+        route: '/api/applications/[applicationId]/evidence',
+      },
+    );
     if (res.ok) {
       return (await res.json()) as EvidenceRequestResponse;
     } else {
@@ -109,9 +145,16 @@ export const createEvidenceRequest = createAsyncThunk(
 export const sendConfirmation = createAsyncThunk(
   'application/confirmation',
   async (_: void, { rejectWithValue }) => {
-    const res = await fetch(`/api/notify/new-application`, {
-      method: 'POST',
-    });
+    const res = await fetchWithSentry(
+      '/api/notify/new-application',
+      {
+        method: 'POST',
+      },
+      {
+        operation: 'send_confirmation_email',
+        route: '/api/notify/new-application',
+      },
+    );
 
     if (!res.ok) {
       const message = `Unable to send confirmation email (${res.status})`;
@@ -124,9 +167,16 @@ export const sendConfirmation = createAsyncThunk(
 export const sendMedicalNeed = createAsyncThunk(
   'application/medical',
   async (_: void, { rejectWithValue }) => {
-    const res = await fetch(`/api/notify/medical`, {
-      method: 'POST',
-    });
+    const res = await fetchWithSentry(
+      '/api/notify/medical',
+      {
+        method: 'POST',
+      },
+      {
+        operation: 'send_medical_need_email',
+        route: '/api/notify/medical',
+      },
+    );
 
     if (!res.ok) {
       const message = `Unable to send medical need email (${res.status})`;
@@ -141,9 +191,16 @@ export const sendMedicalNeed = createAsyncThunk(
 export const sendDisqualifyEmail = createAsyncThunk(
   'application/disqualifyEmail',
   async (_: void, { rejectWithValue }) => {
-    const res = await fetch(`/api/notify/disqualify`, {
-      method: 'POST',
-    });
+    const res = await fetchWithSentry(
+      '/api/notify/disqualify',
+      {
+        method: 'POST',
+      },
+      {
+        operation: 'send_disqualification_email',
+        route: '/api/notify/disqualify',
+      },
+    );
 
     if (!res.ok) {
       const message = `Unable to send disqualify email (${res.status})`;

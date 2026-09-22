@@ -1,0 +1,41 @@
+name: PR title lint
+
+# Enforces Conventional Commit-shaped PR titles for PRs merging into `main`.
+#
+# Why: this repo only allows "Create a merge commit" (squash/rebase disabled),
+# and the repo's merge-commit title is configured to use the PR title
+# (Settings > General > Pull Requests > "Default commit message"). That means
+# the PR title becomes the literal commit message release-please reads to
+# decide whether/how to cut a release. A non-conventional PR title merged
+# into main can silently block release-please from creating a release PR.
+# See: https://github.com/LBHackney-IT/lbh-housing-register/pull/590
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+    branches: [main]
+
+permissions:
+  pull-requests: read
+  statuses: write
+
+jobs:
+  check-title:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            chore
+            docs
+            style
+            refactor
+            perf
+            test
+            build
+            ci
+            revert

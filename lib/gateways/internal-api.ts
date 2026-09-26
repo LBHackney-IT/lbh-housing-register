@@ -41,9 +41,13 @@ const createApplicationErrorMessage = (
 };
 
 export const lookUpAddress = async (postCode: string) => {
-  const res = await fetch(`/api/address/${postCode}`, {
+  const res = await fetch(`/api/address/${encodeURIComponent(postCode)}`, {
     method: 'GET',
   });
+
+  if (!res.ok) {
+    throw Error(`Unable to look up address (${res.status})`);
+  }
 
   return (await res.json()) as AddressLookupResult;
 };

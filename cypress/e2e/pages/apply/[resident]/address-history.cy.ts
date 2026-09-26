@@ -80,4 +80,27 @@ describe('Apply resident address history page', () => {
     ApplyResidentAddressHistoryPage.getGetSaveAndContinueButton().click();
     cy.contains('Unable to update application (409)');
   });
+
+  it('falls back to manual address entry when postcode lookup fails', () => {
+    cy.intercept('GET', '/api/address/*', {
+      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+      body: { message: 'Unable to look up address' },
+    }).as('failedAddressLookup');
+
+    ApplyHouseholdPage.visit();
+    ApplyHouseholdPage.getContinueToNextStepLink().scrollIntoView().click();
+    ApplyExpectPage.getContinueToNextStepButton().click();
+    ApplyOverviewPage.getApplicantButton(personId).click();
+    ApplyResidentIndexPage.getAddressHistorySectionLink().click();
+
+    ApplyResidentAddressHistoryPage.getPostcodeInputField().type(
+      'not a UK postcode',
+    );
+    ApplyResidentAddressHistoryPage.getFindAddressButton().click();
+    cy.wait('@failedAddressLookup');
+    ApplyResidentAddressHistoryPage.getManualAddressHeading().should(
+      'be.visible',
+    );
+    cy.contains('Select an address').should('not.exist');
+  });
 });

@@ -21,6 +21,10 @@ class ApplyResidentAddressHistoryPage {
   static getMovingDateYear() {
     return cy.get('#date-year');
   }
+
+  static getManualAddressHeading() {
+    return cy.contains('What is your address?');
+  }
 }
 
 export default ApplyResidentAddressHistoryPage;

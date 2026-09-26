@@ -294,14 +294,18 @@ const ApplicationStep = (): JSX.Element => {
       case 'postcode-entry':
         try {
           const r = await lookUpAddress(values.postcode);
-          setPostcodeResults(r.address);
+          const addresses = r.address ?? [];
+          if (addresses.length === 0) {
+            setState('manual-entry');
+            break;
+          }
+          setPostcodeResults(addresses);
           formikHelpers.setValues({
             ...values,
-            uprn: r.address[0]?.UPRN.toString(),
+            uprn: addresses[0].UPRN.toString(),
           });
           setState('choose-address');
-        } catch (e) {
-          console.error(e);
+        } catch {
           setState('manual-entry');
         }
 

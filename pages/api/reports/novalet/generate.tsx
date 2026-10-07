@@ -1,4 +1,3 @@
-import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { generateNovaletExport } from '../../../../lib/gateways/applications-api';
@@ -37,10 +36,7 @@ const endpoint: NextApiHandler = async (
       });
     } else {
       // Status tells you where to look: 4xx = request/auth, 5xx = upstream.
-      console.error('Unable to generate export file', {
-        status: response.status,
-        data: response.data,
-      });
+      console.error(`Unable to generate export file (${response.status})`);
       res.send({
         message: 'Unable to generate export file',
       });
@@ -53,7 +49,4 @@ const endpoint: NextApiHandler = async (
   }
 };
 
-export default wrapApiHandlerWithSentry(
-  endpoint,
-  '/api/reports/novalet/generate',
-);
+export default endpoint;

@@ -2,6 +2,13 @@
 // https://nextjs.org/docs/app/api-reference/file-conventions/instrumentation-client
 
 import * as Sentry from '@sentry/nextjs';
+import {
+  sanitiseSentryBreadcrumb,
+  sanitiseSentryEvent,
+  sanitiseSentrySpan,
+  sanitiseSentryTransaction,
+  sentryDataCollection,
+} from './lib/utils/sentry-privacy';
 
 const ENVIRONMENT = process.env.NEXT_PUBLIC_ENV;
 
@@ -19,28 +26,30 @@ Sentry.init({
     return 1.0; // development / local
   },
   environment: ENVIRONMENT,
-  integrations: [Sentry.captureConsoleIntegration()],
+  // Console capture stays on the server and edge only. On the client, React
+  // logs a render error before the error boundary runs, and capturing that
+  // console call marks the error sent before the boundary can keep the
+  // component stack.
+  dataCollection: sentryDataCollection,
+  ignoreErrors: [
+    /^ResizeObserver loop limit exceeded$/,
+    /^ResizeObserver loop completed with undelivered notifications\.?$/,
+  ],
+  denyUrls: [
+    /^chrome-extension:\/\//,
+    /^moz-extension:\/\//,
+    /^safari-(web-)?extension:\/\//i,
+  ],
   enabled:
     !isLocalHost &&
     (ENVIRONMENT === 'production' ||
       ENVIRONMENT === 'staging' ||
       ENVIRONMENT === 'development'),
 
-  beforeSend(event) {
-    for (const cookieName of Object.keys(event.request?.cookies ?? {})) {
-      if (cookieName.includes('next-auth')) {
-        delete event.request?.cookies?.[cookieName];
-      }
-    }
-    if (event.request?.cookies?.['hackneyToken']) {
-      // Pre-migration staff cookie. Strip it if a leftover copy is still sent.
-      delete event.request.cookies['hackneyToken'];
-    }
-    if (event.request?.cookies?.['housing_user']) {
-      delete event.request.cookies['housing_user'];
-    }
-    return event;
-  },
+  beforeBreadcrumb: sanitiseSentryBreadcrumb,
+  beforeSend: sanitiseSentryEvent,
+  beforeSendTransaction: sanitiseSentryTransaction,
+  beforeSendSpan: sanitiseSentrySpan,
 });
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;

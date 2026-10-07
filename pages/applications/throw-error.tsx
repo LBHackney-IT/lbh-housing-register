@@ -1,5 +1,6 @@
 import { authorizeStaffPage } from 'lib/auth/page';
 import { StaffUserWithPermissions } from 'lib/auth/staff';
+import { fetchWithSentry } from 'lib/utils/sentry';
 import { GetServerSideProps } from 'next';
 
 interface Props {
@@ -31,7 +32,14 @@ const ErrorThrowingPage = ({
 
           <button
             onClick={() => {
-              fetch('/api/applications/throw-error', {}).catch((e) => {
+              fetchWithSentry(
+                '/api/applications/throw-error',
+                { method: 'GET' },
+                {
+                  operation: 'sentry_test_api_error',
+                  route: '/api/applications/throw-error',
+                },
+              ).catch((e) => {
                 console.log(e);
               });
             }}

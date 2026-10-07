@@ -4,6 +4,13 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from '@sentry/nextjs';
+import {
+  sanitiseSentryBreadcrumb,
+  sanitiseSentryEvent,
+  sanitiseSentrySpan,
+  sanitiseSentryTransaction,
+  sentryDataCollection,
+} from './lib/utils/sentry-privacy';
 
 const ENVIRONMENT = process.env.SENTRY_ENVIRONMENT;
 
@@ -15,26 +22,15 @@ Sentry.init({
     return 1.0; // development / local
   },
   environment: ENVIRONMENT,
-  integrations: [Sentry.captureConsoleIntegration()],
+  integrations: [Sentry.captureConsoleIntegration({ levels: ['error'] })],
+  dataCollection: sentryDataCollection,
   enabled:
     ENVIRONMENT === 'production' ||
     ENVIRONMENT === 'staging' ||
     ENVIRONMENT === 'development',
 
-  // remove cookies from the event before sending
-  beforeSend(event) {
-    for (const cookieName of Object.keys(event.request?.cookies ?? {})) {
-      if (cookieName.includes('next-auth')) {
-        delete event.request.cookies[cookieName];
-      }
-    }
-    if (event.request?.cookies['hackneyToken']) {
-      // Pre-migration staff cookie. Strip it if a leftover copy is still sent.
-      delete event.request.cookies['hackneyToken'];
-    }
-    if (event.request?.cookies['housing_user']) {
-      delete event.request.cookies['housing_user'];
-    }
-    return event;
-  },
+  beforeBreadcrumb: sanitiseSentryBreadcrumb,
+  beforeSend: sanitiseSentryEvent,
+  beforeSendTransaction: sanitiseSentryTransaction,
+  beforeSendSpan: sanitiseSentrySpan,
 });

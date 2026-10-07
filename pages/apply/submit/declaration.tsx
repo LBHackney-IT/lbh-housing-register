@@ -46,7 +46,6 @@ const Declaration = (): JSX.Element => {
         router.push('/apply/not-eligible');
       } catch (error) {
         setUserError(error as string);
-        console.error('Error completing the application:', error);
         scrollToError();
       } finally {
         setLoading(false);
@@ -65,7 +64,6 @@ const Declaration = (): JSX.Element => {
         router.push('/apply/confirmation');
       } catch (error) {
         setUserError(error as string);
-        console.error('Error completing the application:', error);
         scrollToError();
       } finally {
         setLoading(false);

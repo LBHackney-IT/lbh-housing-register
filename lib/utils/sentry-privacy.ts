@@ -27,11 +27,16 @@ const QUERY_ATTRIBUTE = /(^|\.)(query|fragment)$/i;
 
 // captureConsole joins non-Error arguments into the message. Drop inline
 // objects so a response body cannot become the event or breadcrumb text.
-const scrubConsoleMessage = (message: string): string =>
-  message
-    .replace(/\{[\s\S]*\}/g, '')
-    .replace(/\s{2,}/g, ' ')
-    .trim();
+const scrubConsoleMessage = (message: string): string => {
+  const start = message.indexOf('{');
+  const end = message.lastIndexOf('}');
+  const withoutObject =
+    start >= 0 && end > start
+      ? `${message.slice(0, start)}${message.slice(end + 1)}`
+      : message;
+
+  return withoutObject.replace(/\s{2,}/g, ' ').trim();
+};
 
 const scrubEmbeddedUrls = (value: string): string =>
   value.replace(/https?:\/\/\S+|\/\S+/g, (token) => safeRoute(token));

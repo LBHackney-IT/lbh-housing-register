@@ -42,8 +42,12 @@ const applySentryContext = (
   }
 };
 
-const staffApplicationIdFromPath = (path: string): string | undefined =>
-  path.match(/^\/applications\/view\/([^/]+)/)?.[1];
+const STAFF_APPLICATION_PATH = /^\/applications\/view\/([^/]+)/;
+
+const staffApplicationIdFromPath = (path: string): string | undefined => {
+  const match = STAFF_APPLICATION_PATH.exec(path);
+  return match?.[1];
+};
 
 export default function SentryContext({
   staffCognitoSub,

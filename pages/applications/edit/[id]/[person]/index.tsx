@@ -20,7 +20,7 @@ import {
 } from '../../../../../lib/utils/adminHelpers';
 import { scrollToTop } from '../../../../../lib/utils/scroll';
 import Custom404 from '../../../../404';
-import { isAssignableToError } from 'lib/utils/errorHelper';
+import { toUserErrorMessage } from 'lib/utils/errorHelper';
 
 interface PageProps {
   user: StaffUser;
@@ -98,11 +98,7 @@ export default function EditApplicant({ user, data }: PageProps): JSX.Element {
       .catch((err) => {
         setIsSaving(false);
 
-        if (isAssignableToError(err)) {
-          setUserError(err.message);
-        } else {
-          setUserError('Unable to update application');
-        }
+        setUserError(toUserErrorMessage(err, 'Unable to update application'));
 
         scrollToTop();
       });

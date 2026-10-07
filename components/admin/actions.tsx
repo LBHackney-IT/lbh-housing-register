@@ -32,6 +32,22 @@ interface PageProps {
   data: Application;
 }
 
+function showDecisionOptions(values: FormikValues): boolean {
+  return (
+    values.status === ApplicationStatus.ACTIVE ||
+    values.status === ApplicationStatus.ACTIVE_UNDER_APPEAL
+  );
+}
+
+function showInformationReceived(values: FormikValues): boolean {
+  return (
+    values.status === ApplicationStatus.ACTIVE ||
+    values.status === ApplicationStatus.ACTIVE_UNDER_APPEAL ||
+    values.status === ApplicationStatus.REJECTED ||
+    values.status === ApplicationStatus.CANCELLED
+  );
+}
+
 export default function Actions({ data }: PageProps): JSX.Element {
   const isEligible = checkEligible(data);
   const wasDisqualified = isEligible[0] === false;
@@ -99,22 +115,6 @@ export default function Actions({ data }: PageProps): JSX.Element {
     biddingNumberType: data.assessment?.biddingNumber ? 'manual' : 'generate',
     biddingNumber: data.assessment?.biddingNumber ?? '',
   };
-
-  function showDecisionOptions(values: FormikValues): boolean {
-    return (
-      values.status === ApplicationStatus.ACTIVE ||
-      values.status === ApplicationStatus.ACTIVE_UNDER_APPEAL
-    );
-  }
-
-  function showInformationReceived(values: FormikValues): boolean {
-    return (
-      values.status === ApplicationStatus.ACTIVE ||
-      values.status === ApplicationStatus.ACTIVE_UNDER_APPEAL ||
-      values.status === ApplicationStatus.REJECTED ||
-      values.status === ApplicationStatus.CANCELLED
-    );
-  }
 
   function onSubmit(values: FormikValues) {
     const request: Application = {

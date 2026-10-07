@@ -38,11 +38,7 @@ const endpoint: NextApiHandler = async (
         });
       } else {
         // Status tells you where to look: 4xx = request/auth, 5xx = upstream.
-        console.error('Unable to approve export file', {
-          fileName,
-          status: response.status,
-          data: response.data,
-        });
+        console.error(`Unable to approve export file (${response.status})`);
         res.send({
           message: 'Unable to approve export file',
         });

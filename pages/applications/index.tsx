@@ -20,7 +20,7 @@ import { PaginatedSearchResultsResponse } from '../../domain/HousingApi';
 import { authorizeStaffPage } from '../../lib/auth/page';
 import { UserContext } from '../../lib/contexts/user-context';
 import { getApplicationsByStatusAndAssignedTo } from '../../lib/gateways/applications-api';
-import { createSafeSentryError } from '../../lib/utils/sentry';
+import { getErrorStatusCode } from '../../lib/utils/sentry';
 import {
   StaffUserWithPermissions,
   hasReadOnlyPermissionOnly,
@@ -156,16 +156,15 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
       pageSize,
     );
   } catch (err) {
-    Sentry.captureException(
-      createSafeSentryError(err, 'Unable to load staff worktray'),
-      {
-        tags: {
-          operation: 'load_staff_worktray',
-          surface: 'staff',
-          route: '/applications',
-        },
+    const status = getErrorStatusCode(err);
+    Sentry.captureException(err, {
+      tags: {
+        operation: 'load_staff_worktray',
+        surface: 'staff',
+        route: '/applications',
+        ...(status !== undefined ? { 'http.status_code': String(status) } : {}),
       },
-    );
+    });
     worktrayLoadError =
       'Unable to load your worktray. The Housing Register API returned an error — check the service is running and HOUSING_REGISTER_API / key are correct.';
   }

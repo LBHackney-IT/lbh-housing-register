@@ -3,6 +3,13 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from '@sentry/nextjs';
+import {
+  sanitiseSentryBreadcrumb,
+  sanitiseSentryEvent,
+  sanitiseSentrySpan,
+  sanitiseSentryTransaction,
+  sentryDataCollection,
+} from './lib/utils/sentry-privacy';
 
 const ENVIRONMENT = process.env.SENTRY_ENVIRONMENT;
 
@@ -17,6 +24,8 @@ Sentry.init({
     return 1.0; // development / local
   },
   environment: ENVIRONMENT,
+  integrations: [Sentry.captureConsoleIntegration({ levels: ['error'] })],
+  dataCollection: sentryDataCollection,
   enabled:
     ENVIRONMENT === 'production' ||
     ENVIRONMENT === 'staging' ||
@@ -32,38 +41,8 @@ Sentry.init({
     /^Body exceeded .* limit$/,
   ],
 
-  // Never send inbound credentials or request bodies to Sentry.
-  beforeSend(event) {
-    if (event.request) {
-      if (event.request.url) {
-        try {
-          event.request.url = new URL(
-            event.request.url,
-            process.env.NEXTAUTH_URL ?? 'https://sentry.local',
-          ).pathname;
-        } catch {
-          event.request.url = event.request.url.split(/[?#]/)[0];
-        }
-      }
-      delete event.request.cookies;
-      delete event.request.data;
-
-      for (const header of Object.keys(event.request.headers ?? {})) {
-        if (
-          ['authorization', 'cookie', 'set-cookie', 'x-api-key'].includes(
-            header.toLowerCase(),
-          )
-        ) {
-          delete event.request.headers[header];
-        }
-      }
-    }
-    if (event.extra) {
-      delete event.extra.arguments;
-      delete event.extra.body;
-      delete event.extra.request_body;
-      delete event.extra.response_body;
-    }
-    return event;
-  },
+  beforeBreadcrumb: sanitiseSentryBreadcrumb,
+  beforeSend: sanitiseSentryEvent,
+  beforeSendTransaction: sanitiseSentryTransaction,
+  beforeSendSpan: sanitiseSentrySpan,
 });

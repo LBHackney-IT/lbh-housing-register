@@ -46,7 +46,7 @@ export const updateApplication = createAsyncThunk(
       },
       {
         operation: 'update_application',
-        route: '/api/applications/[applicationId]',
+        route: '/api/applications/[id]',
       },
     );
 
@@ -73,7 +73,7 @@ export const disqualifyApplication = createAsyncThunk(
       },
       {
         operation: 'disqualify_application',
-        route: '/api/applications/[applicationId]',
+        route: '/api/applications/[id]',
       },
     );
     if (res.ok) {
@@ -98,7 +98,7 @@ export const completeApplication = createAsyncThunk<
       },
       {
         operation: 'complete_application',
-        route: '/api/applications/[applicationId]/complete',
+        route: '/api/applications/[id]/complete',
       },
     );
     if (!res.ok) {
@@ -128,7 +128,7 @@ export const createEvidenceRequest = createAsyncThunk(
       },
       {
         operation: 'create_evidence_request',
-        route: '/api/applications/[applicationId]/evidence',
+        route: '/api/applications/[id]/evidence',
       },
     );
     if (res.ok) {
@@ -157,9 +157,9 @@ export const sendConfirmation = createAsyncThunk(
     );
 
     if (!res.ok) {
-      const message = `Unable to send confirmation email (${res.status})`;
-      console.error(message);
-      return rejectWithValue(message);
+      return rejectWithValue(
+        `Unable to send confirmation email (${res.status})`,
+      );
     }
   },
 );
@@ -179,9 +179,9 @@ export const sendMedicalNeed = createAsyncThunk(
     );
 
     if (!res.ok) {
-      const message = `Unable to send medical need email (${res.status})`;
-      console.error(message);
-      return rejectWithValue(message);
+      return rejectWithValue(
+        `Unable to send medical need email (${res.status})`,
+      );
     }
   },
 );
@@ -203,9 +203,7 @@ export const sendDisqualifyEmail = createAsyncThunk(
     );
 
     if (!res.ok) {
-      const message = `Unable to send disqualify email (${res.status})`;
-      console.error(message);
-      return rejectWithValue(message);
+      return rejectWithValue(`Unable to send disqualify email (${res.status})`);
     }
   },
 );

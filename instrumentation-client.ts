@@ -5,6 +5,9 @@ import * as Sentry from '@sentry/nextjs';
 import {
   sanitiseSentryBreadcrumb,
   sanitiseSentryEvent,
+  sanitiseSentrySpan,
+  sanitiseSentryTransaction,
+  sentryDataCollection,
 } from './lib/utils/sentry-privacy';
 
 const ENVIRONMENT = process.env.NEXT_PUBLIC_ENV;
@@ -23,16 +26,11 @@ Sentry.init({
     return 1.0; // development / local
   },
   environment: ENVIRONMENT,
-  integrations: [
-    Sentry.extraErrorDataIntegration({
-      depth: 5,
-      captureErrorCause: true,
-    }),
-    Sentry.httpClientIntegration({
-      failedRequestStatusCodes: [[500, 599]],
-      failedRequestTargets: [/\/api\//],
-    }),
-  ],
+  // Console capture stays on the server and edge only. On the client, React
+  // logs a render error before the error boundary runs, and capturing that
+  // console call marks the error sent before the boundary can keep the
+  // component stack.
+  dataCollection: sentryDataCollection,
   ignoreErrors: [
     /^ResizeObserver loop limit exceeded$/,
     /^ResizeObserver loop completed with undelivered notifications\.?$/,
@@ -40,7 +38,7 @@ Sentry.init({
   denyUrls: [
     /^chrome-extension:\/\//,
     /^moz-extension:\/\//,
-    /^safari-extension:\/\//,
+    /^safari-(web-)?extension:\/\//i,
   ],
   enabled:
     !isLocalHost &&
@@ -50,6 +48,8 @@ Sentry.init({
 
   beforeBreadcrumb: sanitiseSentryBreadcrumb,
   beforeSend: sanitiseSentryEvent,
+  beforeSendTransaction: sanitiseSentryTransaction,
+  beforeSendSpan: sanitiseSentrySpan,
 });
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;

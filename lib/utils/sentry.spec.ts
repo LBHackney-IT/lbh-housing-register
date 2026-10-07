@@ -1,28 +1,34 @@
 import * as Sentry from '@sentry/nextjs';
 import {
-  createSafeSentryError,
   fetchWithSentry,
+  getErrorStatusCode,
   normaliseApiRoute,
 } from './sentry';
 
 jest.mock('@sentry/nextjs', () => ({
-  addBreadcrumb: jest.fn(),
   captureException: jest.fn(),
 }));
 
-const addBreadcrumb = Sentry.addBreadcrumb as jest.Mock;
 const captureException = Sentry.captureException as jest.Mock;
 
 describe('Sentry fetch instrumentation', () => {
+  const originalVisibility = Object.getOwnPropertyDescriptor(
+    document,
+    'visibilityState',
+  );
+
   afterEach(() => {
     jest.clearAllMocks();
     jest.restoreAllMocks();
+    if (originalVisibility) {
+      Object.defineProperty(document, 'visibilityState', originalVisibility);
+    }
   });
 
   it.each([
     [
       '/api/applications/abc-123/evidence?token=secret',
-      '/api/applications/[applicationId]/evidence',
+      '/api/applications/[id]/evidence',
     ],
     [
       'https://example.test/api/address/E8%201AA?lookup=true',
@@ -36,28 +42,20 @@ describe('Sentry fetch instrumentation', () => {
     expect(normaliseApiRoute(url)).toBe(expected);
   });
 
-  it('retains debugging stack data without copying sensitive error fields', () => {
-    const original = Object.assign(new Error('Request failed'), {
+  it('reads an upstream HTTP status without copying the error payload', () => {
+    const error = Object.assign(new Error('Request failed'), {
+      response: { status: 503 },
       config: {
         headers: { 'x-api-key': 'secret' },
         data: { email: 'resident@example.test' },
       },
     });
 
-    const safeError = createSafeSentryError(
-      original,
-      'Unable to load staff worktray',
-    );
-
-    expect(safeError).toMatchObject({
-      name: 'Error',
-      message: 'Unable to load staff worktray',
-      stack: original.stack,
-    });
-    expect(safeError).not.toHaveProperty('config');
+    expect(getErrorStatusCode(error)).toBe(503);
+    expect(getErrorStatusCode(new Error('no status'))).toBeUndefined();
   });
 
-  it('records expected 4xx responses as breadcrumbs', async () => {
+  it('leaves 4xx responses to breadcrumbs', async () => {
     global.fetch = jest.fn().mockResolvedValue({
       ok: false,
       status: 409,
@@ -72,20 +70,28 @@ describe('Sentry fetch instrumentation', () => {
       },
     );
 
-    expect(addBreadcrumb).toHaveBeenCalledWith({
-      category: 'http.client',
-      level: 'warning',
-      message: 'staff_create_application returned an expected client error',
-      data: {
-        method: 'POST',
-        route: '/api/applications',
-        status: 409,
-      },
-    });
     expect(captureException).not.toHaveBeenCalled();
   });
 
-  it('leaves 5xx responses to the HTTP integration to avoid duplicates', async () => {
+  it('does not treat a 304 as a client error', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: false,
+      status: 304,
+    });
+
+    await fetchWithSentry(
+      '/api/applications',
+      { method: 'GET' },
+      {
+        operation: 'load_application',
+        route: '/api/applications',
+      },
+    );
+
+    expect(captureException).not.toHaveBeenCalled();
+  });
+
+  it('captures 5xx responses once, using the call-site operation', async () => {
     global.fetch = jest.fn().mockResolvedValue({
       ok: false,
       status: 503,
@@ -93,15 +99,31 @@ describe('Sentry fetch instrumentation', () => {
 
     await fetchWithSentry(
       '/api/applications/app-1',
-      { method: 'PATCH' },
+      { method: 'PATCH', body: 'private application data' },
       {
-        operation: 'update_application',
-        route: '/api/applications/[applicationId]',
+        operation: 'disqualify_application',
+        route: '/api/applications/[id]',
       },
     );
 
-    expect(addBreadcrumb).not.toHaveBeenCalled();
-    expect(captureException).not.toHaveBeenCalled();
+    expect(captureException).toHaveBeenCalledTimes(1);
+    expect(captureException).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: 'disqualify_application failed with status 503',
+      }),
+      {
+        fingerprint: ['http-client', 'PATCH', '/api/applications/[id]', '503'],
+        tags: {
+          operation: 'disqualify_application',
+          'http.method': 'PATCH',
+          'http.route': '/api/applications/[id]',
+          'http.status_code': '503',
+        },
+      },
+    );
+    expect(JSON.stringify(captureException.mock.calls[0])).not.toContain(
+      'private application data',
+    );
   });
 
   it('captures failures which occur before a response exists', async () => {
@@ -114,20 +136,60 @@ describe('Sentry fetch instrumentation', () => {
         { method: 'PATCH', body: 'private application data' },
         {
           operation: 'update_application',
-          route: '/api/applications/[applicationId]',
+          route: '/api/applications/[id]',
         },
       ),
     ).rejects.toBe(error);
 
     expect(captureException).toHaveBeenCalledWith(error, {
+      fingerprint: ['network-error', 'update_application'],
       tags: {
         operation: 'update_application',
         'http.method': 'PATCH',
-        'http.route': '/api/applications/[applicationId]',
+        'http.route': '/api/applications/[id]',
       },
     });
-    expect(captureException.mock.calls[0]).not.toContain(
+    expect(JSON.stringify(captureException.mock.calls[0])).not.toContain(
       'private application data',
     );
+  });
+
+  it('skips aborts and requests made while the tab is hidden', async () => {
+    const abortError = new DOMException(
+      'The operation was aborted',
+      'AbortError',
+    );
+    global.fetch = jest.fn().mockRejectedValue(abortError);
+
+    await expect(
+      fetchWithSentry(
+        '/api/applications/app-1',
+        { method: 'PATCH' },
+        {
+          operation: 'update_application',
+          route: '/api/applications/[id]',
+        },
+      ),
+    ).rejects.toBe(abortError);
+    expect(captureException).not.toHaveBeenCalled();
+
+    Object.defineProperty(document, 'visibilityState', {
+      configurable: true,
+      get: () => 'hidden',
+    });
+    const networkError = new TypeError('Failed to fetch');
+    global.fetch = jest.fn().mockRejectedValue(networkError);
+
+    await expect(
+      fetchWithSentry(
+        '/api/applications/app-1',
+        { method: 'PATCH' },
+        {
+          operation: 'update_application',
+          route: '/api/applications/[id]',
+        },
+      ),
+    ).rejects.toBe(networkError);
+    expect(captureException).not.toHaveBeenCalled();
   });
 });

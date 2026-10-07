@@ -53,6 +53,10 @@ export const lookUpAddress = async (postCode: string) => {
     },
   );
 
+  if (!res.ok) {
+    throw new Error(`Unable to look up address (${res.status})`);
+  }
+
   return (await res.json()) as AddressLookupResult;
 };
 
@@ -65,7 +69,7 @@ export const updateApplication = async (application: Application) => {
     },
     {
       operation: 'staff_update_application',
-      route: '/api/applications/[applicationId]',
+      route: '/api/applications/[id]',
     },
   );
 
@@ -110,7 +114,7 @@ export const completeApplication = async (application: Application) => {
     },
     {
       operation: 'staff_complete_application',
-      route: '/api/applications/[applicationId]/complete',
+      route: '/api/applications/[id]/complete',
     },
   );
   if (res.ok) {
@@ -163,7 +167,7 @@ export const addNoteToHistory = async (
     },
     {
       operation: 'add_application_note',
-      route: '/api/applications/[applicationId]/note',
+      route: '/api/applications/[id]/note',
     },
   );
   return await res.json();

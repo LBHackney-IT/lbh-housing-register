@@ -37,8 +37,7 @@ export type DisqualificationReason = keyof typeof disqualificationReasonOptions;
 export function getDisqualificationReasonOption(
   reason: DisqualificationReason,
 ): string {
-  if (!disqualificationReasonOptions[reason]) {
-    console.error('Unkown disqualification reason: ' + reason);
-  }
-  return disqualificationReasonOptions[reason];
+  return (
+    disqualificationReasonOptions[reason] ?? 'Unknown disqualification reason'
+  );
 }

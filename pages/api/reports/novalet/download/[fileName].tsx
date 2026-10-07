@@ -49,10 +49,10 @@ const endpoint: NextApiHandler = async (
     );
     res.send(file.data);
   } catch (error) {
-    console.error('Unable to download report', {
-      fileName: req.query.fileName,
-      error,
-    });
+    console.error(
+      'Unable to download report',
+      error instanceof Error ? error : new Error('Unable to download report'),
+    );
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ message: 'Unable to download report' });

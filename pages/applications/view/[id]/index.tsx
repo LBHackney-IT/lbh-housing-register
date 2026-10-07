@@ -47,7 +47,7 @@ import {
   hasReadOnlyPermissionOnly,
 } from '../../../../lib/auth/staff';
 import { getPersonName } from '../../../../lib/utils/person';
-import { createSafeSentryError } from '../../../../lib/utils/sentry';
+import { getErrorStatusCode } from '../../../../lib/utils/sentry';
 import Custom404 from '../../../404';
 import { scrollToError } from 'lib/utils/scroll';
 import ErrorSummary from 'components/errors/error-summary';
@@ -361,16 +361,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     return { props: { user, data, history } };
   } catch (e) {
-    Sentry.captureException(
-      createSafeSentryError(e, 'Unable to load staff application'),
-      {
-        tags: {
-          operation: 'load_staff_application',
-          surface: 'staff',
-          route: '/applications/view/[applicationId]',
-        },
+    const status = getErrorStatusCode(e);
+    Sentry.captureException(e, {
+      tags: {
+        operation: 'load_staff_application',
+        surface: 'staff',
+        route: '/applications/view/[id]',
+        ...(status !== undefined ? { 'http.status_code': String(status) } : {}),
       },
-    );
+    });
     return { props: {} };
   }
 };

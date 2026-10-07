@@ -1,22 +1,15 @@
+import type { TransactionEvent } from '@sentry/core';
 import type { Breadcrumb, Event } from '@sentry/nextjs';
 import {
   sanitiseSentryBreadcrumb,
   sanitiseSentryEvent,
+  sanitiseSentrySpan,
+  sanitiseSentryTransaction,
 } from './sentry-privacy';
 
 describe('Sentry privacy filters', () => {
-  it('removes secrets and enriches HTTP client errors with safe tags', () => {
+  it('removes secrets, query strings and referrers from events', () => {
     const event: Event = {
-      exception: {
-        values: [
-          {
-            mechanism: {
-              type: 'auto.http.client.fetch',
-              handled: false,
-            },
-          },
-        ],
-      },
       request: {
         url: 'https://housing.test/api/applications/app-123/evidence?token=secret',
         method: 'POST',
@@ -27,15 +20,12 @@ describe('Sentry privacy filters', () => {
         headers: {
           Authorization: 'Bearer secret',
           Cookie: 'hackneyToken=secret',
+          Referer:
+            'https://housing.test/api/auth/callback/cognito?code=secret&state=secret',
           'Content-Type': 'application/json',
         },
         data: {
           medicalInformation: 'private',
-        },
-      },
-      contexts: {
-        response: {
-          status_code: 503,
         },
       },
       extra: {
@@ -48,53 +38,14 @@ describe('Sentry privacy filters', () => {
     const result = sanitiseSentryEvent(event);
 
     expect(result.request).toEqual({
-      url: '/api/applications/[applicationId]/evidence',
+      url: 'https://housing.test/api/applications/[id]/evidence',
       method: 'POST',
       headers: {
+        Referer: 'https://housing.test/api/auth/callback/cognito',
         'Content-Type': 'application/json',
       },
     });
-    expect(result.tags).toEqual({
-      operation: 'create_evidence_request',
-      'http.method': 'POST',
-      'http.route': '/api/applications/[applicationId]/evidence',
-      'http.status_code': '503',
-    });
-    expect(result.fingerprint).toEqual([
-      'http-client',
-      'POST',
-      '/api/applications/[applicationId]/evidence',
-      '503',
-    ]);
     expect(result.extra).toEqual({ correlationId: 'safe-id' });
-  });
-
-  it('allows only known-safe custom error fields', () => {
-    const event: Event = {
-      exception: {
-        values: [
-          { type: 'CreateApplicationError' },
-          { type: 'SensitiveFormError' },
-        ],
-      },
-      contexts: {
-        CreateApplicationError: {
-          status: 409,
-          applicationIds: ['app-1'],
-          email: 'resident@example.test',
-        },
-        SensitiveFormError: {
-          answers: { medicalNeed: true },
-        },
-      },
-    };
-
-    expect(sanitiseSentryEvent(event).contexts).toEqual({
-      CreateApplicationError: {
-        status: 409,
-        applicationIds: ['app-1'],
-      },
-    });
   });
 
   it('removes bodies, arguments and query strings from breadcrumbs', () => {
@@ -102,12 +53,15 @@ describe('Sentry privacy filters', () => {
       category: 'fetch',
       data: {
         url: '/api/address/E8%201AA?uprn=secret',
+        'http.query': '?assignedTo=staff@hackney.gov.uk',
+        'http.fragment': '#secret',
         body: 'private',
         request_body: 'private',
         response_body: 'private',
         arguments: ['private'],
         headers: {
           authorization: 'secret',
+          Referer: '/apply/overview?token=secret',
           Accept: 'application/json',
         },
       },
@@ -118,13 +72,76 @@ describe('Sentry privacy filters', () => {
       data: {
         url: '/api/address/[postcode]',
         headers: {
+          Referer: '/apply/overview',
           Accept: 'application/json',
         },
       },
     });
   });
 
-  it('sanitises navigation URLs and removes duplicate 4xx fetch breadcrumbs', () => {
+  it('keeps 4xx fetch breadcrumbs and console messages', () => {
+    expect(
+      sanitiseSentryBreadcrumb({
+        category: 'fetch',
+        data: {
+          url: '/api/auth/session?next=/applications',
+          status_code: 401,
+        },
+      }),
+    ).toEqual({
+      category: 'fetch',
+      data: {
+        url: '/api/auth/session',
+        status_code: 401,
+      },
+    });
+
+    expect(
+      sanitiseSentryBreadcrumb({
+        category: 'console',
+        message: 'Unable to save application for resident@example.test',
+        data: {
+          arguments: ['Unable to save application for resident@example.test'],
+        },
+      }),
+    ).toEqual({
+      category: 'console',
+      message: 'Unable to save application for resident@example.test',
+      data: {},
+    });
+  });
+
+  it('keeps the host on external urls and labels page events from the transaction', () => {
+    expect(
+      sanitiseSentryBreadcrumb({
+        category: 'fetch',
+        data: {
+          url: 'https://www.google-analytics.com/collect?tid=UA-1',
+        },
+      }),
+    ).toEqual({
+      category: 'fetch',
+      data: {
+        url: 'https://www.google-analytics.com/collect',
+      },
+    });
+
+    expect(
+      sanitiseSentryEvent({
+        transaction: '/applications/view/[id]',
+        tags: { application_id: 'staff-app-id' },
+      }).tags,
+    ).toEqual({
+      application_id: 'staff-app-id',
+      route: '/applications/view/[id]',
+      surface: 'staff',
+    });
+
+    const apiEvent: Event = { transaction: '/api/applications/[id]' };
+    expect(sanitiseSentryEvent(apiEvent).tags).toBeUndefined();
+  });
+
+  it('sanitises navigation URLs', () => {
     expect(
       sanitiseSentryBreadcrumb({
         category: 'navigation',
@@ -140,15 +157,102 @@ describe('Sentry privacy filters', () => {
         to: '/applications/view/app-1',
       },
     });
+  });
 
-    expect(
-      sanitiseSentryBreadcrumb({
-        category: 'fetch',
-        data: {
-          url: '/api/resident-auth/verify',
-          status_code: 404,
+  it('removes resident details from console messages and notify payloads', () => {
+    const event: Event = {
+      logger: 'console',
+      message:
+        'Unable to generate export file {"status":500,"data":{"email":"resident@example.test"}}',
+      extra: {
+        notifyRequest: {
+          emailAddress: 'resident@example.test',
+          personalisation: { household_members_with_medical_need: 1 },
+          reference: 'APP-1',
         },
-      }),
-    ).toBeNull();
+        correlationId: 'safe-id',
+      },
+    };
+
+    const result = sanitiseSentryEvent(event);
+
+    expect(result.message).toBe('Unable to generate export file');
+    expect(result.extra).toEqual({
+      notifyRequest: { reference: 'APP-1' },
+      correlationId: 'safe-id',
+    });
+    expect(JSON.stringify(result)).not.toContain('resident@example.test');
+    expect(JSON.stringify(result)).not.toContain('medical');
+  });
+
+  it('strips query strings from transactions and span attributes', () => {
+    const event: TransactionEvent = {
+      type: 'transaction',
+      transaction: '/apply/verify',
+      request: {
+        url: 'https://housing.test/apply/verify?email=resident@example.test',
+        query_string: 'email=resident@example.test',
+        headers: {
+          Referer:
+            'https://housing.test/api/auth/callback/cognito?code=secret&state=secret',
+        },
+      },
+      spans: [
+        {
+          span_id: 'span',
+          trace_id: 'trace',
+          start_timestamp: 0,
+          description: 'GET /apply/verify?email=resident@example.test',
+          data: {
+            'url.full':
+              'https://housing.test/apply/verify?email=resident@example.test',
+            'url.query': '?email=resident@example.test',
+            'http.query': '?assignedTo=staff@hackney.gov.uk',
+            'http.fragment': '#section',
+            'http.request.header.referer':
+              'https://housing.test/api/auth/callback/cognito?code=secret',
+            'http.request.header.cookie': 'housing_user=secret',
+          },
+        },
+      ],
+    };
+
+    const result = sanitiseSentryTransaction(event);
+
+    expect(result.request).toEqual({
+      url: 'https://housing.test/apply/verify',
+      headers: {
+        Referer: 'https://housing.test/api/auth/callback/cognito',
+      },
+    });
+    expect(result.spans?.[0]).toMatchObject({
+      description: 'GET /apply/verify',
+      data: {
+        'url.full': 'https://housing.test/apply/verify',
+        'http.request.header.referer':
+          'https://housing.test/api/auth/callback/cognito',
+      },
+    });
+    expect(
+      result.spans?.[0].data?.['http.request.header.cookie'],
+    ).toBeUndefined();
+    expect(result.spans?.[0].data?.['url.query']).toBeUndefined();
+    expect(result.spans?.[0].data?.['http.query']).toBeUndefined();
+    expect(result.spans?.[0].data?.['http.fragment']).toBeUndefined();
+    expect(JSON.stringify(result)).not.toContain('resident@example.test');
+    expect(JSON.stringify(result)).not.toContain('staff@hackney.gov.uk');
+    expect(JSON.stringify(result)).not.toContain('code=secret');
+
+    const span = sanitiseSentrySpan({
+      span_id: 'span',
+      trace_id: 'trace',
+      start_timestamp: 0,
+      data: {
+        'url.full': 'https://www.google-analytics.com/collect?tid=UA-1',
+      },
+    });
+    expect(span.data?.['url.full']).toBe(
+      'https://www.google-analytics.com/collect',
+    );
   });
 });

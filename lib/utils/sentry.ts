@@ -1,11 +1,15 @@
 import * as Sentry from '@sentry/nextjs';
 
+export const getSentrySurface = (route: string): string => {
+  if (route.startsWith('/applications')) return 'staff';
+  if (route.startsWith('/apply')) return 'resident';
+  return 'public';
+};
+
 type FetchContext = {
   operation: string;
   route: string;
 };
-
-const APPLICATION_ID_SEGMENT = '[applicationId]';
 
 export const normaliseApiRoute = (url: string): string => {
   const withoutQuery = url.split(/[?#]/)[0];
@@ -18,10 +22,7 @@ export const normaliseApiRoute = (url: string): string => {
   }
 
   return path
-    .replace(
-      /\/api\/applications\/[^/]+/,
-      `/api/applications/${APPLICATION_ID_SEGMENT}`,
-    )
+    .replace(/\/api\/applications\/[^/]+/, '/api/applications/[id]')
     .replace(/\/api\/address\/[^/]+/, '/api/address/[postcode]')
     .replace(
       /\/api\/reports\/novalet\/(approve|download)\/[^/]+/,
@@ -29,18 +30,41 @@ export const normaliseApiRoute = (url: string): string => {
     );
 };
 
-export const createSafeSentryError = (
-  error: unknown,
-  message: string,
-): Error => {
-  const safeError = new Error(message);
-
-  if (error instanceof Error) {
-    safeError.name = error.name;
-    safeError.stack = error.stack;
+export const getErrorStatusCode = (error: unknown): number | undefined => {
+  if (typeof error !== 'object' || error === null || !('response' in error)) {
+    return undefined;
   }
 
-  return safeError;
+  const status = (error as { response?: { status?: unknown } }).response
+    ?.status;
+  return typeof status === 'number' ? status : undefined;
+};
+
+const isAbortError = (error: unknown): boolean =>
+  error instanceof Error && error.name === 'AbortError';
+
+const pageIsHidden = (): boolean =>
+  typeof document !== 'undefined' && document.visibilityState === 'hidden';
+
+const captureHttpFailure = (
+  error: unknown,
+  method: string,
+  context: FetchContext,
+  status?: number,
+): void => {
+  const statusCode = status === undefined ? undefined : String(status);
+
+  Sentry.captureException(error, {
+    fingerprint: statusCode
+      ? ['http-client', method, context.route, statusCode]
+      : ['network-error', context.operation],
+    tags: {
+      operation: context.operation,
+      'http.method': method,
+      'http.route': context.route,
+      ...(statusCode ? { 'http.status_code': statusCode } : {}),
+    },
+  });
 };
 
 export async function fetchWithSentry(
@@ -53,33 +77,23 @@ export async function fetchWithSentry(
   try {
     const response = await fetch(url, init);
 
-    if (!response.ok && response.status < 500) {
-      Sentry.addBreadcrumb({
-        category: 'http.client',
-        level: 'warning',
-        message: `${context.operation} returned an expected client error`,
-        data: {
-          method,
-          route: context.route,
-          status: response.status,
-        },
-      });
+    // Call sites name the operation. Capturing here, instead of the HTTP
+    // client integration, keeps that name on the event.
+    if (response.status >= 500) {
+      captureHttpFailure(
+        new Error(`${context.operation} failed with status ${response.status}`),
+        method,
+        context,
+        response.status,
+      );
     }
 
-    // 5xx responses are captured once by httpClientIntegration. It produces
-    // the event before fetch resolves, and beforeSend adds the safe route,
-    // method and status tags.
     return response;
   } catch (error) {
-    // httpClientIntegration only reports requests with a response. Capture
-    // network failures here so offline/DNS/connection errors are not lost.
-    Sentry.captureException(error, {
-      tags: {
-        operation: context.operation,
-        'http.method': method,
-        'http.route': context.route,
-      },
-    });
+    // Aborts and background-tab failures are routine on the resident journey.
+    if (!isAbortError(error) && !pageIsHidden()) {
+      captureHttpFailure(error, method, context);
+    }
     throw error;
   }
 }

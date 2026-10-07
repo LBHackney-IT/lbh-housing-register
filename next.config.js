@@ -89,11 +89,14 @@ module.exports = withSentryConfig(nextConfig, {
   widenClientFileUpload: true,
   // Proxy browser events through the app to avoid client-side blockers.
   // CloudFront's default behaviour forwards this route to the SSR Lambda.
+  // When that Lambda is throttled or failing, browser envelopes stop as well.
   tunnelRoute: '/monitoring',
   sourcemaps: {
     // Never publish source maps with the OpenNext static assets.
     deleteSourcemapsAfterUpload: true,
   },
+  // `build` and `dev` pass `--webpack`. Next 16 defaults to Turbopack, and
+  // the Sentry loader that instruments Pages API routes does not run there.
   webpack: {
     // Strip Sentry SDK debug logging from the production bundle. Does not
     // affect application console output or Sentry event capture.

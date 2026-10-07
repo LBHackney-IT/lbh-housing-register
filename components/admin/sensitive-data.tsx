@@ -4,15 +4,15 @@ import { useRouter } from 'next/router';
 
 import { Application } from '../../domain/HousingApi';
 import { updateApplication } from '../../lib/gateways/internal-api';
+import { StaffUserWithPermissions } from '../../lib/auth/staff';
 import { toUserErrorMessage } from '../../lib/utils/errorHelper';
-import { HackneyGoogleUserWithPermissions } from '../../lib/utils/googleAuth';
 import { HeadingFour } from '../content/headings';
 import ErrorMessage from '../form/error-message';
 
 interface SensitiveDataPageProps {
   id: string;
   isSensitive: boolean;
-  user: HackneyGoogleUserWithPermissions;
+  user: StaffUserWithPermissions;
 }
 
 export default function SensitiveData({

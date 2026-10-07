@@ -1,238 +1,199 @@
-/**
- * @jest-environment node
- */
+/** @jest-environment node */
 
-import { faker } from '@faker-js/faker';
+import axios, { type AxiosError } from 'axios';
 import { StatusCodes } from 'http-status-codes';
-import { createMocks, RequestOptions } from 'node-mocks-http';
+import { createMocks, type RequestOptions } from 'node-mocks-http';
 
-import { Application } from '../../../../domain/HousingApi';
+import * as apiAuth from '../../../../lib/auth/api';
 import * as applicationApi from '../../../../lib/gateways/applications-api';
-import { hasReadOnlyStaffPermissions } from '../../../../lib/utils/hasReadOnlyStaffPermissions';
-import { hasStaffPermissions } from '../../../../lib/utils/hasStaffPermissions';
 import endpoint from '../../../../pages/api/applications/index';
 import {
-  MockRequestResponseParams,
-  generateMockRequestResponseWithHackneyToken,
-} from '../../../../testUtils/apiHelper';
-import {
+  generateHRUserWithPermissions,
   UserRole,
-  generateSignedTokenByRole,
 } from '../../../../testUtils/userHelper';
 
-const { signedToken } = generateSignedTokenByRole(UserRole.Manager);
-const applicationId = faker.string.uuid();
-const mockApplicationData: Application = {
-  id: applicationId,
-};
-const mockApplicationWithAssessment: Application = {
-  id: applicationId,
+const application = { id: 'application-id' };
+const applicationWithAssessment = {
+  ...application,
   assessment: { reason: 'test' },
 };
 
-const mockRequestResponseParameters: MockRequestResponseParams = {
-  hackneyToken: signedToken,
-  method: 'POST',
-  requestBody: JSON.stringify(mockApplicationData),
-};
-
-jest.mock('../../../../lib/utils/hasStaffPermissions', () => ({
-  hasStaffPermissions: jest.fn(),
-}));
-
-jest.mock('../../../../lib/utils/hasReadOnlyStaffPermissions', () => ({
-  hasReadOnlyStaffPermissions: jest.fn(),
-}));
-
-const addApplicationSpy = jest
-  .spyOn(applicationApi, 'addApplication')
-  .mockResolvedValue({ ...mockApplicationData });
-
-describe('POST', () => {
-  const parseSpy = jest.spyOn(JSON, 'parse');
-  const hasStaffPermissionsMock = hasStaffPermissions as jest.Mock;
-  const hasReadOnlyStaffPermissionsMock =
-    hasReadOnlyStaffPermissions as jest.Mock;
-
+describe('POST /api/applications', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-    hasStaffPermissionsMock.mockReset();
-    hasReadOnlyStaffPermissionsMock.mockReset();
-    hasStaffPermissionsMock.mockReturnValue(true);
-    hasReadOnlyStaffPermissionsMock.mockReturnValue(false);
-    addApplicationSpy.mockResolvedValue({ ...mockApplicationData });
+    jest.restoreAllMocks();
   });
 
-  describe('authorization', () => {
-    it('returns 403 without calling the backend when the caller is not staff', async () => {
-      hasStaffPermissionsMock.mockReturnValue(false);
+  it('returns 401 and does not call the backend without a staff session', async () => {
+    jest
+      .spyOn(apiAuth, 'requireApiStaff')
+      .mockImplementation(async (_req, res) => {
+        res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Unauthorized' });
+        return undefined;
+      });
+    const add = jest.spyOn(applicationApi, 'addApplication');
+    const { req, res } = createMocks({
+      method: 'POST',
+      body: JSON.stringify(application) as unknown as RequestOptions['body'],
+    });
 
+    await endpoint(req, res);
+
+    expect(res.statusCode).toBe(StatusCodes.UNAUTHORIZED);
+    expect(add).not.toHaveBeenCalled();
+  });
+
+  it('returns 403 for read-only staff', async () => {
+    jest
+      .spyOn(apiAuth, 'requireApiStaff')
+      .mockResolvedValue(generateHRUserWithPermissions(UserRole.ReadOnly));
+    const { req, res } = createMocks({
+      method: 'POST',
+      body: JSON.stringify(application) as unknown as RequestOptions['body'],
+    });
+
+    await endpoint(req, res);
+
+    expect(res.statusCode).toBe(StatusCodes.FORBIDDEN);
+  });
+
+  it('returns the assessment-specific 403 for a read-only staff action', async () => {
+    jest
+      .spyOn(apiAuth, 'requireApiStaff')
+      .mockResolvedValue(generateHRUserWithPermissions(UserRole.ReadOnly));
+    const add = jest.spyOn(applicationApi, 'addApplication');
+    const { req, res } = createMocks({
+      method: 'POST',
+      body: JSON.stringify(
+        applicationWithAssessment,
+      ) as unknown as RequestOptions['body'],
+    });
+
+    await endpoint(req, res);
+
+    expect(res.statusCode).toBe(StatusCodes.FORBIDDEN);
+    expect(res._getJSONData()).toEqual({
+      message: 'Unable to add application with assessment',
+    });
+    expect(add).not.toHaveBeenCalled();
+  });
+
+  it('adds an application for staff with write access', async () => {
+    jest
+      .spyOn(apiAuth, 'requireApiStaff')
+      .mockResolvedValue(generateHRUserWithPermissions(UserRole.Officer));
+    const add = jest
+      .spyOn(applicationApi, 'addApplication')
+      .mockResolvedValue(application);
+    const { req, res } = createMocks({
+      method: 'POST',
+      body: JSON.stringify(application) as unknown as RequestOptions['body'],
+    });
+
+    await endpoint(req, res);
+
+    expect(res.statusCode).toBe(StatusCodes.OK);
+    expect(add).toHaveBeenCalledWith(application, req);
+  });
+
+  it('parses the body and checks staff authentication once', async () => {
+    const parse = jest.spyOn(JSON, 'parse');
+    const requireStaff = jest
+      .spyOn(apiAuth, 'requireApiStaff')
+      .mockResolvedValue(generateHRUserWithPermissions(UserRole.Officer));
+    jest.spyOn(applicationApi, 'addApplication').mockResolvedValue(application);
+    const { req, res } = createMocks({
+      method: 'POST',
+      body: JSON.stringify(application) as unknown as RequestOptions['body'],
+    });
+
+    await endpoint(req, res);
+
+    expect(parse).toHaveBeenCalledWith(req.body);
+    expect(requireStaff).toHaveBeenCalledTimes(1);
+    expect(requireStaff).toHaveBeenCalledWith(req, res);
+  });
+
+  it('rejects malformed request bodies before calling the backend', async () => {
+    const add = jest.spyOn(applicationApi, 'addApplication');
+    jest.spyOn(console, 'error').mockImplementation();
+    const { req, res } = createMocks({
+      method: 'POST',
+      body: '{' as unknown as RequestOptions['body'],
+    });
+
+    await endpoint(req, res);
+
+    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
+    expect(add).not.toHaveBeenCalled();
+  });
+
+  it('forwards the status and body from an Axios response error', async () => {
+    const upstreamBody = { message: 'upstream failure' };
+    const axiosError = {
+      response: {
+        status: StatusCodes.BAD_GATEWAY,
+        data: upstreamBody,
+      },
+    } as AxiosError;
+    jest
+      .spyOn(apiAuth, 'requireApiStaff')
+      .mockResolvedValue(generateHRUserWithPermissions(UserRole.Officer));
+    jest.spyOn(applicationApi, 'addApplication').mockRejectedValue(axiosError);
+    jest.spyOn(axios, 'isAxiosError').mockReturnValue(true);
+    const { req, res } = createMocks({
+      method: 'POST',
+      body: JSON.stringify(application) as unknown as RequestOptions['body'],
+    });
+
+    await endpoint(req, res);
+
+    expect(res.statusCode).toBe(StatusCodes.BAD_GATEWAY);
+    expect(res._getJSONData()).toEqual(upstreamBody);
+  });
+
+  it.each([
+    ['an Axios error without a response', { request: {} } as AxiosError],
+    ['a non-Axios error', new Error('boom')],
+  ])(
+    'returns 500 when addApplication throws %s',
+    async (_description, error) => {
+      jest
+        .spyOn(apiAuth, 'requireApiStaff')
+        .mockResolvedValue(generateHRUserWithPermissions(UserRole.Officer));
+      jest.spyOn(applicationApi, 'addApplication').mockRejectedValue(error);
+      jest
+        .spyOn(axios, 'isAxiosError')
+        .mockReturnValue(!(error instanceof Error));
+      jest.spyOn(console, 'error').mockImplementation();
       const { req, res } = createMocks({
         method: 'POST',
-        body: mockRequestResponseParameters.requestBody as unknown as RequestOptions['body'],
-      });
-
-      await endpoint(req, res);
-
-      expect(addApplicationSpy).not.toHaveBeenCalled();
-      expect(res.statusCode).toBe(StatusCodes.FORBIDDEN);
-      expect(res._getJSONData()).toStrictEqual({
-        message: 'Unable to add application',
-      });
-    });
-
-    it('returns 403 with the assessment message when the body is a staff action and the caller is not staff', async () => {
-      hasStaffPermissionsMock.mockReturnValue(false);
-
-      const { req, res } = createMocks({
-        method: 'POST',
-        body: JSON.stringify(
-          mockApplicationWithAssessment,
-        ) as unknown as RequestOptions['body'],
-      });
-
-      await endpoint(req, res);
-
-      expect(addApplicationSpy).not.toHaveBeenCalled();
-      expect(res.statusCode).toBe(StatusCodes.FORBIDDEN);
-      expect(res._getJSONData()).toStrictEqual({
-        message: 'Unable to add application with assessment',
-      });
-    });
-
-    it('returns 403 without calling the backend when the caller is read-only staff', async () => {
-      hasStaffPermissionsMock.mockReturnValue(true);
-      hasReadOnlyStaffPermissionsMock.mockReturnValue(true);
-
-      const { req, res } = generateMockRequestResponseWithHackneyToken(
-        mockRequestResponseParameters,
-      );
-
-      await endpoint(req, res);
-
-      expect(addApplicationSpy).not.toHaveBeenCalled();
-      expect(res.statusCode).toBe(StatusCodes.FORBIDDEN);
-      expect(res._getJSONData()).toStrictEqual({
-        message: 'Unable to add application',
-      });
-    });
-
-    it('returns 403 with the assessment message when the body is a staff action and the caller is read-only staff', async () => {
-      hasStaffPermissionsMock.mockReturnValue(true);
-      hasReadOnlyStaffPermissionsMock.mockReturnValue(true);
-
-      const { req, res } = generateMockRequestResponseWithHackneyToken({
-        ...mockRequestResponseParameters,
-        requestBody: JSON.stringify(mockApplicationWithAssessment),
-      });
-
-      await endpoint(req, res);
-
-      expect(addApplicationSpy).not.toHaveBeenCalled();
-      expect(res.statusCode).toBe(StatusCodes.FORBIDDEN);
-      expect(res._getJSONData()).toStrictEqual({
-        message: 'Unable to add application with assessment',
-      });
-    });
-
-    it('calls parse on JSON with request body', async () => {
-      const { req, res } = generateMockRequestResponseWithHackneyToken(
-        mockRequestResponseParameters,
-      );
-
-      await endpoint(req, res);
-
-      expect(parseSpy).toHaveBeenCalledTimes(1);
-      expect(parseSpy).toHaveBeenCalledWith(req.body);
-    });
-
-    it('checks staff permissions once after parsing the body', async () => {
-      const { req, res } = generateMockRequestResponseWithHackneyToken(
-        mockRequestResponseParameters,
-      );
-
-      await endpoint(req, res);
-
-      expect(hasStaffPermissionsMock).toHaveBeenCalledTimes(1);
-      expect(hasStaffPermissionsMock).toHaveBeenCalledWith(req);
-      expect(hasReadOnlyStaffPermissionsMock).toHaveBeenCalledTimes(1);
-      expect(hasReadOnlyStaffPermissionsMock).toHaveBeenCalledWith(req);
-    });
-
-    it('calls addApplication with application from the request body when the caller has write access', async () => {
-      const { req, res } = generateMockRequestResponseWithHackneyToken(
-        mockRequestResponseParameters,
-      );
-      const expectedApplication = JSON.parse(req.body);
-
-      await endpoint(req, res);
-
-      expect(addApplicationSpy).toHaveBeenCalledTimes(1);
-      expect(addApplicationSpy).toHaveBeenCalledWith(expectedApplication, req);
-    });
-
-    it('sets response status code to 200 and returns application data when application was added successfully', async () => {
-      const { req, res } = generateMockRequestResponseWithHackneyToken(
-        mockRequestResponseParameters,
-      );
-      const expectedApplication = JSON.parse(req.body);
-
-      await endpoint(req, res);
-
-      expect(res.statusCode).toBe(StatusCodes.OK);
-      expect(res._getJSONData()).toStrictEqual(expectedApplication);
-    });
-
-    it('sets response status code to 400 when the request body cannot be parsed', async () => {
-      const { req, res } = generateMockRequestResponseWithHackneyToken(
-        mockRequestResponseParameters,
-      );
-      const expectedErrorMessage = { message: 'Unable to parse request' };
-      const mockErrorMessage = 'parse error';
-
-      parseSpy.mockImplementationOnce(() => {
-        throw Error(mockErrorMessage);
-      });
-
-      await endpoint(req, res);
-
-      expect(addApplicationSpy).not.toHaveBeenCalled();
-      expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
-      expect(res._getJSONData()).toStrictEqual(expectedErrorMessage);
-    });
-
-    it('sets correct response status code (500) and error message when addApplication throws a non-axios error', async () => {
-      const { req, res } = generateMockRequestResponseWithHackneyToken(
-        mockRequestResponseParameters,
-      );
-      const expectedErrorMessage = { message: 'Unable to add application' };
-
-      addApplicationSpy.mockImplementationOnce(() => {
-        throw new Error('boom');
+        body: JSON.stringify(application) as unknown as RequestOptions['body'],
       });
 
       await endpoint(req, res);
 
       expect(res.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
-      expect(res._getJSONData()).toStrictEqual(expectedErrorMessage);
-    });
-  });
+      expect(res._getJSONData()).toEqual({
+        message: 'Unable to add application',
+      });
+    },
+  );
 });
 
-describe('unsupported request methods', () => {
+describe('unsupported application request methods', () => {
+  beforeEach(() => {
+    jest.restoreAllMocks();
+  });
+
   it('returns 405 and advertises both supported methods', async () => {
-    const { req, res } = generateMockRequestResponseWithHackneyToken({
-      ...mockRequestResponseParameters,
-      method: 'DELETE',
-    });
+    const add = jest.spyOn(applicationApi, 'addApplication');
+    const { req, res } = createMocks({ method: 'DELETE' });
 
     await endpoint(req, res);
 
-    expect(addApplicationSpy).not.toHaveBeenCalled();
+    expect(add).not.toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.METHOD_NOT_ALLOWED);
     expect(res.getHeader('Allow')).toBe('GET, POST');
-    expect(res._getJSONData()).toStrictEqual({
-      message: 'Method not allowed',
-    });
+    expect(res._getJSONData()).toEqual({ message: 'Method not allowed' });
   });
 });

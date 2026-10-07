@@ -27,7 +27,13 @@ Sentry.init({
       ENVIRONMENT === 'development'),
 
   beforeSend(event) {
+    for (const cookieName of Object.keys(event.request?.cookies ?? {})) {
+      if (cookieName.includes('next-auth')) {
+        delete event.request?.cookies?.[cookieName];
+      }
+    }
     if (event.request?.cookies?.['hackneyToken']) {
+      // Pre-migration staff cookie. Strip it if a leftover copy is still sent.
       delete event.request.cookies['hackneyToken'];
     }
     if (event.request?.cookies?.['housing_user']) {

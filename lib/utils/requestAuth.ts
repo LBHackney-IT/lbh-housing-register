@@ -1,16 +1,32 @@
 import { NextApiRequest } from 'next';
 
-import { hasReadOnlyStaffPermissions } from './hasReadOnlyStaffPermissions';
-import { hasStaffPermissions } from './hasStaffPermissions';
+import {
+  getSession,
+  hasAnyPermissions,
+  hasReadOnlyPermissionOnly,
+} from '../auth/staff';
 import { getUser } from './users';
 
-export const canUpdateApplication = (
+export type ApplicationAccess = 'allowed' | 'unauthenticated' | 'forbidden';
+
+export const getApplicationAccess = async (
   req: NextApiRequest,
   id: string,
-): boolean => {
-  if (hasStaffPermissions(req) && !hasReadOnlyStaffPermissions(req))
-    return true;
+): Promise<ApplicationAccess> => {
+  const staff = await getSession(req);
+  if (staff && hasAnyPermissions(staff) && !hasReadOnlyPermissionOnly(staff)) {
+    return 'allowed';
+  }
 
-  const user = getUser(req);
-  return user?.application_id === id;
+  const resident = getUser(req);
+  if (resident?.application_id === id) return 'allowed';
+  if (!staff && !resident) return 'unauthenticated';
+  return 'forbidden';
+};
+
+export const canUpdateApplication = async (
+  req: NextApiRequest,
+  id: string,
+): Promise<boolean> => {
+  return (await getApplicationAccess(req, id)) === 'allowed';
 };

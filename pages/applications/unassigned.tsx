@@ -13,17 +13,17 @@ import Sidebar from '../../components/admin/sidebar';
 import { HeadingOne } from '../../components/content/headings';
 import Layout from '../../components/layout/staff-layout';
 import SimplePaginationSearch from '../../components/SimplePaginationSearch';
-import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
+import { StaffUser } from '../../domain/StaffUser';
+import { authorizeStaffPage } from '../../lib/auth/page';
 import {
   APPLICATION_UNNASIGNED,
   PaginatedSearchResultsResponse,
 } from '../../domain/HousingApi';
 import { UserContext } from '../../lib/contexts/user-context';
 import { getApplicationsByStatusAndAssignedTo } from '../../lib/gateways/applications-api';
-import { getRedirect, getSession } from '../../lib/utils/googleAuth';
 
 interface PageProps {
-  user?: HackneyGoogleUser;
+  user?: StaffUser;
   applications: PaginatedSearchResultsResponse | null;
   page: string;
   pageSize: string;
@@ -106,16 +106,9 @@ export default function ApplicationListPage({
 export const getServerSideProps: GetServerSideProps<PageProps> = async (
   context,
 ) => {
-  const user = getSession(context.req);
-  const redirect = getRedirect(user, true);
-  if (redirect) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: redirect,
-      },
-    };
-  }
+  const authorization = await authorizeStaffPage(context, { write: true });
+  if ('redirect' in authorization) return authorization;
+  const { user } = authorization;
 
   const {
     status = 'Submitted',

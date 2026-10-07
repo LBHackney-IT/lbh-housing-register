@@ -10,7 +10,7 @@ import { UserContext } from '../../lib/contexts/user-context';
 import Button from '../../components/button';
 import ErrorSummary from '../../components/errors/error-summary';
 import { FormID } from '../../lib/utils/form-data';
-import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
+import { StaffUser } from '../../domain/StaffUser';
 import { Application } from '../../domain/HousingApi';
 import {
   allFormSections,
@@ -134,7 +134,7 @@ function ClearSubmitErrorsOnChange({
 
 interface PageProps {
   isEditing: boolean;
-  user: HackneyGoogleUser;
+  user: StaffUser;
   // Returning the promise lets Formik clear isSubmitting once the save settles.
   onSubmit: (values: FormikValues) => void | Promise<void>;
   isSubmitted: boolean;

@@ -16,24 +16,30 @@ const applySentryContext = (
   staffCognitoSub: string | undefined,
 ): void => {
   const surface = getSentrySurface(route);
-  const authProvider =
-    surface === 'staff'
-      ? 'cognito'
-      : surface === 'resident'
-        ? 'hackney-jwt'
-        : 'none';
-  const sentryUserId =
-    surface === 'staff' && staffCognitoSub
-      ? `cognito:${staffCognitoSub}`
-      : surface === 'resident' && applicationId
-        ? `resident-application:${applicationId}`
-        : undefined;
+
+  let authProvider = 'none';
+  if (surface === 'staff') {
+    authProvider = 'cognito';
+  } else if (surface === 'resident') {
+    authProvider = 'hackney-jwt';
+  }
+
+  let sentryUserId: string | undefined;
+  if (surface === 'staff' && staffCognitoSub) {
+    sentryUserId = `cognito:${staffCognitoSub}`;
+  } else if (surface === 'resident' && applicationId) {
+    sentryUserId = `resident-application:${applicationId}`;
+  }
 
   Sentry.setTag('route', route);
   Sentry.setTag('surface', surface);
   Sentry.setTag('auth_provider', authProvider);
   Sentry.setTag('application_id', applicationId);
-  Sentry.setUser(sentryUserId ? { id: sentryUserId } : null);
+  if (sentryUserId) {
+    Sentry.setUser({ id: sentryUserId });
+  } else {
+    Sentry.setUser(null);
+  }
 };
 
 const staffApplicationIdFromPath = (path: string): string | undefined =>
@@ -44,15 +50,17 @@ export default function SentryContext({
 }: SentryContextProps): null {
   const router = useRouter();
   const residentApplicationId = useAppSelector((state) => state.application.id);
-  const staffApplicationId =
-    typeof router.query.id === 'string' ? router.query.id : undefined;
+  let staffApplicationId: string | undefined;
+  if (typeof router.query.id === 'string') {
+    staffApplicationId = router.query.id;
+  }
   const surface = getSentrySurface(router.pathname);
-  const applicationId =
-    surface === 'staff'
-      ? staffApplicationId
-      : surface === 'resident'
-        ? residentApplicationId
-        : undefined;
+  let applicationId: string | undefined;
+  if (surface === 'staff') {
+    applicationId = staffApplicationId;
+  } else if (surface === 'resident') {
+    applicationId = residentApplicationId;
+  }
 
   useLayoutEffect(() => {
     applySentryContext(router.pathname, applicationId, staffCognitoSub);

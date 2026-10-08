@@ -81,3 +81,31 @@ describe('Apply resident address history page', () => {
     cy.contains('Unable to update application (409)');
   });
 });
+
+describe('address history when the session is missing', () => {
+  beforeEach(() => {
+    cy.clearAllCookies();
+  });
+
+  it('sends a signed-out resident to sign in', () => {
+    cy.visit(`/apply/${personId}/address-history`);
+    cy.location('pathname').should('eq', '/apply/sign-in');
+    cy.get('body').should('not.contain', '404 Page not found');
+    cy.get('body').should('not.contain', 'Checking information');
+  });
+
+  it('shows the form again after a signed-in refresh', () => {
+    cy.loginAsResident(applicationId, true);
+    cy.mockHousingRegisterApiGetApplications(
+      applicationId,
+      applicationWithCompletedMainApplicantSections,
+      true,
+    );
+
+    cy.visit(`/apply/${personId}/address-history`);
+    cy.contains('Address history');
+    cy.reload();
+    cy.contains('Address history');
+    cy.get('body').should('not.contain', '404 Page not found');
+  });
+});

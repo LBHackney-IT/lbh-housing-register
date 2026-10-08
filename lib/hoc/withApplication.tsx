@@ -5,6 +5,8 @@ import { NextRouter, useRouter } from 'next/router';
 import { Application } from 'domain/HousingApi';
 import { AppDispatch } from 'lib/store';
 
+import ResidentLayout from '../../components/layout/resident-layout';
+import { selectApplicationLoadStatus } from '../store/application-load';
 import { exit } from '../store/auth';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { ApplicationStatus } from '../types/application-status';
@@ -41,9 +43,17 @@ export default function withApplication<P>(
     const router = useRouter();
     const dispatch = useAppDispatch();
     const application = useAppSelector((store) => store.application);
+    const loadStatus = useAppSelector(selectApplicationLoadStatus);
 
     handleNoApplication(application, router, dispatch);
     useApplicationRedirect(application);
+
+    // The page underneath decides 404s from the resident and section. That is
+    // only safe once an application with an id has loaded. Until then the
+    // layout owns loading, sign-in, and retry.
+    if (loadStatus !== 'loaded') {
+      return <ResidentLayout pageName="" />;
+    }
 
     return <WrappedComponent {...props} />;
   };

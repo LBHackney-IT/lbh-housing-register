@@ -3,13 +3,16 @@ import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { loadApplication } from '../../lib/store/application';
+import { selectApplicationLoadStatus } from '../../lib/store/application-load';
 import { exit } from '../../lib/store/auth';
 import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { hasPhaseBanner } from '../../lib/utils/phase-banner';
 import Breadcrumbs, { BreadcrumbItem } from '../breadcrumbs';
 import Dialog from 'lbh-frontend/dialog';
+import Button from '../button';
 import CookieBanner from '../content/CookieBanner';
 import Paragraph from '../content/paragraph';
+import ErrorSummary from '../errors/error-summary';
 import Footer from '../footer';
 import Header from '../header';
 import Loading from '../loading';
@@ -21,12 +24,29 @@ interface ResidentLayoutProps {
   pageName?: string;
   breadcrumbs?: BreadcrumbItem[];
   pageLoadsApplication?: boolean;
-  children: ReactNode;
+  children?: ReactNode;
   dataTestId?: string;
 }
 
 const INACTIVITY_TIME_BEFORE_WARNING_DIALOG = 30 * 1000 * 60; // 30 minutes
 const TIME_TO_SHOW_DIALOG_BEFORE_SIGN_OUT = 30 * 1000; // 30 seconds
+const SIGN_IN_PATH = '/apply/sign-in';
+
+function ApplicationLoadError({ onRetry }: { onRetry: () => void }) {
+  return (
+    <>
+      <ErrorSummary
+        title="There is a problem"
+        dataTestId="application-load-error"
+      >
+        <p>We could not load your application. Please try again.</p>
+      </ErrorSummary>
+      <Button onClick={onRetry} className="" type="button">
+        Try again
+      </Button>
+    </>
+  );
+}
 
 export default function ResidentLayout({
   pageName,
@@ -38,24 +58,27 @@ export default function ResidentLayout({
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const [loaded, setLoaded] = useState(false);
   const [showSignOutDialog, setShowSignOutDialog] = useState(false);
 
   const signOutRef = useRef<HTMLAnchorElement | null>(null);
   const application = useAppSelector((store) => store.application);
+  const loadStatus = useAppSelector(selectApplicationLoadStatus);
 
   useEffect(() => {
     if (!pageLoadsApplication) {
-      setLoaded(true);
       return;
     }
 
-    dispatch(loadApplication()).then(() => setLoaded(true));
+    dispatch(loadApplication());
+  }, [dispatch, pageLoadsApplication]);
 
-    return () => {
-      setLoaded(false);
-    };
-  }, []);
+  useEffect(() => {
+    if (!pageLoadsApplication || loadStatus !== 'unauthenticated') {
+      return;
+    }
+
+    router.replace(SIGN_IN_PATH);
+  }, [loadStatus, pageLoadsApplication, router]);
 
   const onSignOut = async () => {
     router.push('/');
@@ -106,6 +129,17 @@ export default function ResidentLayout({
     };
   }, [application.id]);
 
+  let content = children;
+  if (pageLoadsApplication) {
+    if (loadStatus === 'failed') {
+      content = (
+        <ApplicationLoadError onRetry={() => dispatch(loadApplication())} />
+      );
+    } else if (loadStatus !== 'loaded') {
+      content = <Loading text="Checking information…" />;
+    }
+  }
+
   return (
     <div className="lbh-resident-layout-shell">
       {pageName && <Seo title={pageName} />}
@@ -129,7 +163,7 @@ export default function ResidentLayout({
         className="lbh-main-wrapper lbh-resident-layout-shell__main"
       >
         <div className="lbh-container" data-testid={dataTestId}>
-          {loaded ? children : <Loading text="Checking information…" />}
+          {content}
         </div>
       </main>
 

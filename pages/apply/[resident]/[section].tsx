@@ -2,11 +2,11 @@ import { useRouter } from 'next/router';
 import ApplicationForms from '../../../components/application/application-forms';
 import Layout from '../../../components/layout/resident-layout';
 import withApplication from '../../../lib/hoc/withApplication';
-import { selectApplicant } from '../../../lib/store/applicant';
-import { Applicant } from '../../../domain/HousingApi';
+import { applicantHasId, selectApplicant } from '../../../lib/store/applicant';
 import { useAppSelector } from '../../../lib/store/hooks';
 import { getApplicationSectionFromId } from '../../../lib/utils/application-forms';
 import { isOver18 } from '../../../lib/utils/dateOfBirth';
+import { FormID } from '../../../lib/utils/form-data';
 import { getApplicationSectionsForResident } from '../../../lib/utils/resident';
 import { useState } from 'react';
 import { selectSaveApplicationStatus } from 'lib/store/apiCallsStatus';
@@ -14,15 +14,26 @@ import useApiCallStatus from 'lib/hooks/useApiCallStatus';
 import { scrollToError } from 'lib/utils/scroll';
 import Loading from 'components/loading';
 import ErrorSummary from 'components/errors/error-summary';
+import Custom404 from '../../404';
+
+const formIds = new Set<string>(Object.values(FormID));
+
+function queryValue(value: string | string[] | undefined): string {
+  if (typeof value === 'string') return value;
+  if (Array.isArray(value) && value[0]) return value[0];
+  return '';
+}
+
+function isFormId(value: string): value is FormID {
+  return formIds.has(value);
+}
 
 const ApplicationSection = (): JSX.Element => {
   const router = useRouter();
-  const { resident, section } = router.query as {
-    resident: string;
-    section: string;
-  };
+  const resident = queryValue(router.query.resident);
+  const section = queryValue(router.query.section);
 
-  const applicant = useAppSelector(selectApplicant(resident)) as Applicant;
+  const applicant = useAppSelector(selectApplicant(resident));
   const mainResident = useAppSelector((s) => s.application.mainApplicant);
 
   const baseHref = `/apply/${applicant?.person?.id}`;
@@ -41,16 +52,19 @@ const ApplicationSection = (): JSX.Element => {
     pathToPush: baseHref,
   });
 
-  const sectionGroups = applicant
-    ? getApplicationSectionsForResident(
-        applicant === mainResident,
-        isOver18(applicant),
-        applicant.person?.relationshipType === 'partner',
-      )
-    : [];
+  const sectionGroups =
+    applicantHasId(applicant) && isFormId(section)
+      ? getApplicationSectionsForResident(
+          applicant === mainResident,
+          isOver18(applicant),
+          applicant.person?.relationshipType === 'partner',
+        )
+      : [];
 
-  const sectionName =
-    getApplicationSectionFromId(section, sectionGroups)?.heading || '';
+  const sectionInfo = isFormId(section)
+    ? getApplicationSectionFromId(section, sectionGroups)
+    : undefined;
+  const sectionName = sectionInfo?.heading || '';
 
   const breadcrumbs = [
     {
@@ -74,6 +88,18 @@ const ApplicationSection = (): JSX.Element => {
     setHasSubmitted(true);
     setIsSavingToDatabase(true);
   };
+
+  if (!router.isReady) {
+    return (
+      <Layout pageName="">
+        <Loading text="Checking information…" />
+      </Layout>
+    );
+  }
+
+  if (!applicantHasId(applicant) || !sectionInfo || !isFormId(section)) {
+    return <Custom404 />;
+  }
 
   return (
     <>

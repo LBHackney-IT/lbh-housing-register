@@ -1,7 +1,23 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { lookUpAddress } from '../../../../lib/gateways/address-api';
+import {
+  isUkPostcode,
+  UK_POSTCODE_ERROR,
+} from '../../../../lib/utils/postcode';
 import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
+
+const readPostcode = (
+  postcode: string | string[] | undefined,
+): string | undefined => {
+  if (typeof postcode === 'string' && postcode.trim()) {
+    return postcode;
+  }
+  if (Array.isArray(postcode) && postcode.length === 1 && postcode[0].trim()) {
+    return postcode[0];
+  }
+  return undefined;
+};
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -15,12 +31,18 @@ const endpoint: NextApiHandler = async (
     return;
   }
 
+  const postcode = readPostcode(req.query.postcode);
+  if (!postcode) {
+    res.status(StatusCodes.BAD_REQUEST).json({ message: 'Missing postcode' });
+    return;
+  }
+
+  if (!isUkPostcode(postcode)) {
+    res.status(StatusCodes.BAD_REQUEST).json({ message: UK_POSTCODE_ERROR });
+    return;
+  }
+
   try {
-    const { postcode } = req.query;
-    if (!postcode) {
-      res.status(StatusCodes.BAD_REQUEST).send('Missing postcode');
-      return;
-    }
     const data = await lookUpAddress(postcode);
     res.status(StatusCodes.OK).json(data);
   } catch (error) {

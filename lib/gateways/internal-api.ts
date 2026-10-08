@@ -46,7 +46,7 @@ export const lookUpAddress = async (postCode: string) => {
   });
 
   if (!res.ok) {
-    throw Error(`Unable to look up address (${res.status})`);
+    throw new Error(`Unable to look up address (${res.status})`);
   }
 
   return (await res.json()) as AddressLookupResult;

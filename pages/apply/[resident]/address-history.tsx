@@ -31,6 +31,7 @@ import {
   formatDate,
 } from '../../../lib/utils/addressHistory';
 import { FormID } from '../../../lib/utils/form-data';
+import { isUkPostcode, UK_POSTCODE_ERROR } from '../../../lib/utils/postcode';
 import Custom404 from '../../404';
 import useApiCallStatus from 'lib/hooks/useApiCallStatus';
 import {
@@ -42,6 +43,12 @@ import Loading from 'components/loading';
 import ErrorSummary from 'components/errors/error-summary';
 
 type State = 'postcode-entry' | 'manual-entry' | 'choose-address' | 'review';
+
+const POSTCODE_NOT_FOUND =
+  'We could not find any addresses for that postcode. Enter a known postcode, or enter the address manually.';
+
+const POSTCODE_LOOKUP_FAILED =
+  'We could not look up that postcode. Enter a known postcode, or enter the address manually.';
 
 function generateValidationSchema(
   state: State,
@@ -83,7 +90,15 @@ function generateValidationSchema(
           return d <= min;
         },
       ),
-    postcode: Yup.string().label('Postcode').required(),
+    postcode: Yup.string()
+      .label('Postcode')
+      .required()
+      .test('uk-postcode', UK_POSTCODE_ERROR, (value) => {
+        if (!value) {
+          return true;
+        }
+        return isUkPostcode(value);
+      }),
     uprn: Yup.string().label('Address').required(),
     address: Yup.object({
       line1: Yup.string().label('Building and street').required(),
@@ -98,8 +113,8 @@ function generateValidationSchema(
       return schema.pick(['postcode']);
     case 'manual-entry':
       return addressHistory.length === 0
-        ? schema.pick(['postcode', 'address', 'date'])
-        : schema.pick(['postcode', 'address', 'date', 'dateTo']);
+        ? schema.pick(['address', 'date'])
+        : schema.pick(['address', 'date', 'dateTo']);
     case 'choose-address':
       return addressHistory.length === 0
         ? schema.pick(['uprn', 'date'])
@@ -150,7 +165,7 @@ function ManualEntry() {
       <Input
         name="postcode"
         autoComplete="postal-code"
-        label={'Postcode'}
+        label={'Postcode (optional)'}
         className={'govuk-input--width-10'}
       />
     </fieldset>
@@ -172,16 +187,20 @@ function Summary({
             <h2 className="lbh-heading-h2">Previous address {index}</h2>
           )}
           <InsetText>
-            <Label content={'Postcode'} strong />
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'baseline',
-                gap: '1rem',
-              }}
-            >
-              <Paragraph>{entry.postcode}</Paragraph>
-            </div>
+            {entry.postcode && (
+              <>
+                <Label content={'Postcode'} strong />
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'baseline',
+                    gap: '1rem',
+                  }}
+                >
+                  <Paragraph>{entry.postcode}</Paragraph>
+                </div>
+              </>
+            )}
 
             <Label content={'Address'} strong />
             <Paragraph>
@@ -265,6 +284,9 @@ const ApplicationStep = (): JSX.Element => {
   const [postcodeResults, setPostcodeResults] = useState<
     AddressLookupAddress[]
   >([]);
+  const [postcodeLookupError, setPostcodeLookupError] = useState<string | null>(
+    null,
+  );
 
   const [addressHistory, setAddressHistory] = useState<AddressHistoryEntry[]>(
     savedAddressHistory ?? [],
@@ -292,11 +314,12 @@ const ApplicationStep = (): JSX.Element => {
 
     switch (state) {
       case 'postcode-entry':
+        setPostcodeLookupError(null);
         try {
           const r = await lookUpAddress(values.postcode);
           const addresses = r.address ?? [];
           if (addresses.length === 0) {
-            setState('manual-entry');
+            setPostcodeLookupError(POSTCODE_NOT_FOUND);
             break;
           }
           setPostcodeResults(addresses);
@@ -304,9 +327,12 @@ const ApplicationStep = (): JSX.Element => {
             ...values,
             uprn: addresses[0].UPRN.toString(),
           });
+          // Continue marks every initial value as touched, including the move
+          // date. Clear that so choosing an address does not show the date error.
+          formikHelpers.setTouched({}, false);
           setState('choose-address');
         } catch {
-          setState('manual-entry');
+          setPostcodeLookupError(POSTCODE_LOOKUP_FAILED);
         }
 
         break;
@@ -393,7 +419,6 @@ const ApplicationStep = (): JSX.Element => {
               ) : (
                 <HeadingOne content="Address" />
               )}
-              <h2 className="lbh-heading-h2">Current address</h2>
               <Details summary="Help with your address">
                 If you have no fixed abode or if you are sofa surfing, use the
                 address where you sleep for the majority of the week. If you are
@@ -404,7 +429,9 @@ const ApplicationStep = (): JSX.Element => {
                 >
                   housing officer
                 </a>
+                .
               </Details>
+              <h2 className="lbh-heading-h2">Current address</h2>
 
               <Summary addressHistory={addressHistory} />
               <Formik
@@ -426,12 +453,26 @@ const ApplicationStep = (): JSX.Element => {
                           name="postcode"
                           label="Postcode"
                           autoComplete="postal-code"
+                          error={postcodeLookupError ?? undefined}
                         />
+                        <p className="lbh-body">
+                          <a
+                            href="#"
+                            className="lbh-link lbh-link--no-visited-state"
+                            onClick={(event) => {
+                              event.preventDefault();
+                              setPostcodeLookupError(null);
+                              setState('manual-entry');
+                            }}
+                          >
+                            Enter your address manually
+                          </a>
+                        </p>
                         <Button
                           type="submit"
                           dataTestId="test-apply-resident-address-history-find-address-button"
                         >
-                          Find address
+                          Continue
                         </Button>
                       </>
                     )}
@@ -505,25 +546,43 @@ const ApplicationStep = (): JSX.Element => {
                       </InsetText>
                     )}
 
-                    <div className="c-flex lbh-simple-pagination">
-                      {state === 'review' && (
-                        <div className="c-flex__1">
-                          <Button onClick={restart} secondary={true}>
-                            Update address
+                    {state === 'manual-entry' && (
+                      <p className="lbh-body">
+                        <a
+                          href="#"
+                          className="lbh-link lbh-link--no-visited-state"
+                          onClick={(event) => {
+                            event.preventDefault();
+                            setPostcodeLookupError(null);
+                            setState('postcode-entry');
+                          }}
+                        >
+                          Search for an address using a postcode
+                        </a>
+                      </p>
+                    )}
+
+                    {state !== 'postcode-entry' && (
+                      <div className="c-flex lbh-simple-pagination">
+                        {state === 'review' && (
+                          <div className="c-flex__1">
+                            <Button onClick={restart} secondary={true}>
+                              Update address
+                            </Button>
+                          </div>
+                        )}
+
+                        <div className="c-flex__1 text-right">
+                          <Button
+                            disabled={isSubmitting}
+                            type="submit"
+                            dataTestId="test-apply-resident-address-history-save-and-continue-button"
+                          >
+                            Save and continue
                           </Button>
                         </div>
-                      )}
-
-                      <div className="c-flex__1 text-right">
-                        <Button
-                          disabled={isSubmitting}
-                          type="submit"
-                          dataTestId="test-apply-resident-address-history-save-and-continue-button"
-                        >
-                          Save and continue
-                        </Button>
                       </div>
-                    </div>
+                    )}
                   </Form>
                 )}
               </Formik>

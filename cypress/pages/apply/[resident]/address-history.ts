@@ -8,6 +8,10 @@ class ApplyResidentAddressHistoryPage {
     return cy.get(`[data-testid="${testId}"]`);
   }
 
+  static getEnterAddressManuallyLink() {
+    return cy.contains('a', 'Enter your address manually');
+  }
+
   static getGetSaveAndContinueButton() {
     const testId =
       'test-apply-resident-address-history-save-and-continue-button';

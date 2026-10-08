@@ -15,11 +15,13 @@ const lookUpAddressMock = lookUpAddress as jest.MockedFunction<
   typeof lookUpAddress
 >;
 
+const mockRouter = {
+  push: jest.fn(),
+  query: { resident: 'person-1' } as { resident?: string },
+};
+
 jest.mock('next/router', () => ({
-  useRouter: () => ({
-    push: jest.fn(),
-    query: { resident: 'person-1' },
-  }),
+  useRouter: () => mockRouter,
 }));
 
 jest.mock('../../../lib/gateways/internal-api', () => ({
@@ -27,6 +29,11 @@ jest.mock('../../../lib/gateways/internal-api', () => ({
 }));
 
 jest.mock('../../../components/application/ApplicantStep', () => ({
+  __esModule: true,
+  default: ({ children }: { children: ReactNode }) => <>{children}</>,
+}));
+
+jest.mock('../../../components/layout/resident-layout', () => ({
   __esModule: true,
   default: ({ children }: { children: ReactNode }) => <>{children}</>,
 }));
@@ -77,20 +84,36 @@ const submitPostcode = (postcode = 'E9 6PT') => {
 describe('Apply resident address history page', () => {
   afterEach(() => {
     lookUpAddressMock.mockReset();
+    mockRouter.query = { resident: 'person-1' };
   });
 
-  it('falls back to manual entry when lookup throws', async () => {
+  it('shows a 404 when the loaded application does not include the resident', () => {
+    mockRouter.query = { resident: 'someone-else' };
+
+    renderPage();
+
+    expect(
+      screen.getByRole('heading', { name: '404 Page not found' }),
+    ).toBeInTheDocument();
+  });
+
+  it('stays on postcode entry when lookup throws', async () => {
     const consoleError = jest.spyOn(console, 'error').mockImplementation();
     lookUpAddressMock.mockRejectedValue(
       new Error('Unable to look up address (500)'),
     );
 
     renderPage();
-    submitPostcode('not a UK postcode');
+    submitPostcode('E9 6PT');
 
     expect(
-      await screen.findByRole('heading', { name: 'What is your address?' }),
+      await screen.findByText(
+        'We could not look up that postcode. Enter a known postcode, or enter the address manually.',
+      ),
     ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('heading', { name: 'What is your address?' }),
+    ).not.toBeInTheDocument();
     expect(
       screen.queryByLabelText('Select an address'),
     ).not.toBeInTheDocument();
@@ -98,7 +121,7 @@ describe('Apply resident address history page', () => {
     consoleError.mockRestore();
   });
 
-  it('falls back to manual entry when lookup returns no address list', async () => {
+  it('stays on postcode entry when lookup returns no address list', async () => {
     lookUpAddressMock.mockResolvedValue({
       page_count: 0,
       total_count: 0,
@@ -108,14 +131,19 @@ describe('Apply resident address history page', () => {
     submitPostcode();
 
     expect(
-      await screen.findByRole('heading', { name: 'What is your address?' }),
+      await screen.findByText(
+        'We could not find any addresses for that postcode. Enter a known postcode, or enter the address manually.',
+      ),
     ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('heading', { name: 'What is your address?' }),
+    ).not.toBeInTheDocument();
     expect(
       screen.queryByLabelText('Select an address'),
     ).not.toBeInTheDocument();
   });
 
-  it('falls back to manual entry when lookup returns an empty address list', async () => {
+  it('stays on postcode entry when lookup returns an empty address list', async () => {
     lookUpAddressMock.mockResolvedValue({
       address: [],
       page_count: 0,
@@ -126,7 +154,140 @@ describe('Apply resident address history page', () => {
     submitPostcode();
 
     expect(
+      await screen.findByText(
+        'We could not find any addresses for that postcode. Enter a known postcode, or enter the address manually.',
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('heading', { name: 'What is your address?' }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('opens manual entry without requiring a postcode', async () => {
+    renderPage();
+    expect(
+      screen.queryByRole('button', { name: 'Save and continue' }),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getByRole('link', { name: 'Enter your address manually' }),
+    );
+
+    expect(
       await screen.findByRole('heading', { name: 'What is your address?' }),
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText('Postcode (optional)')).toHaveValue('');
+    expect(lookUpAddressMock).not.toHaveBeenCalled();
+
+    fireEvent.click(
+      screen.getByTestId(
+        'test-apply-resident-address-history-save-and-continue-button',
+      ),
+    );
+
+    expect(
+      await screen.findByText('Building and street is a required field'),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText('Postcode is a required field'),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('Enter a full UK postcode'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('returns to postcode lookup from manual entry', async () => {
+    renderPage();
+    fireEvent.click(
+      screen.getByRole('link', { name: 'Enter your address manually' }),
+    );
+
+    expect(
+      await screen.findByRole('heading', { name: 'What is your address?' }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getByRole('link', {
+        name: 'Search for an address using a postcode',
+      }),
+    );
+
+    expect(await screen.findByLabelText('Postcode')).toBeInTheDocument();
+    expect(
+      screen.getByTestId(
+        'test-apply-resident-address-history-find-address-button',
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Save and continue' }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('heading', { name: 'What is your address?' }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('shows a field error and does not look up a partial postcode', async () => {
+    renderPage();
+    submitPostcode('E8');
+
+    expect(
+      await screen.findByText('Enter a full UK postcode'),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('heading', { name: 'What is your address?' }),
+    ).not.toBeInTheDocument();
+    expect(lookUpAddressMock).not.toHaveBeenCalled();
+  });
+
+  it('looks up a postcode written with different case and punctuation', async () => {
+    lookUpAddressMock.mockResolvedValue({
+      address: [foundAddress],
+      page_count: 1,
+      total_count: 1,
+    });
+
+    renderPage();
+    submitPostcode('(e9) 6pt');
+
+    expect(
+      await screen.findByLabelText('Select an address'),
+    ).toBeInTheDocument();
+    expect(lookUpAddressMock).toHaveBeenCalledWith('(e9) 6pt');
+  });
+
+  it('validates the move date when saving an address, not when selecting one', async () => {
+    lookUpAddressMock.mockResolvedValue({
+      address: [
+        foundAddress,
+        { ...foundAddress, UPRN: 456, line1: '2 Test Street' },
+      ],
+      page_count: 1,
+      total_count: 2,
+    });
+
+    renderPage();
+    submitPostcode();
+
+    fireEvent.change(await screen.findByLabelText('Select an address'), {
+      target: { value: '456' },
+    });
+
+    expect(
+      screen.queryByText(
+        'When did you move to this address is a required field',
+      ),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getByTestId(
+        'test-apply-resident-address-history-save-and-continue-button',
+      ),
+    );
+
+    expect(
+      await screen.findByText(
+        'When did you move to this address is a required field',
+      ),
     ).toBeInTheDocument();
   });
 

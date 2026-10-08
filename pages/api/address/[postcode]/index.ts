@@ -7,17 +7,8 @@ import {
 } from '../../../../lib/utils/postcode';
 import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 
-const readPostcode = (
-  postcode: string | string[] | undefined,
-): string | undefined => {
-  if (typeof postcode === 'string' && postcode.trim()) {
-    return postcode;
-  }
-  if (Array.isArray(postcode) && postcode.length === 1 && postcode[0].trim()) {
-    return postcode[0];
-  }
-  return undefined;
-};
+const readPostcode = (postcode: string | undefined): string | undefined =>
+  postcode?.trim() ? postcode : undefined;
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -31,7 +22,9 @@ const endpoint: NextApiHandler = async (
     return;
   }
 
-  const postcode = readPostcode(req.query.postcode);
+  const postcode = readPostcode(
+    typeof req.query.postcode === 'string' ? req.query.postcode : undefined,
+  );
   if (!postcode) {
     res.status(StatusCodes.BAD_REQUEST).json({ message: 'Missing postcode' });
     return;

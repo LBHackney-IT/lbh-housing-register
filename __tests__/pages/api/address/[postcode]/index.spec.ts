@@ -19,7 +19,7 @@ const lookUpAddressMock = lookUpAddress as jest.MockedFunction<
 >;
 
 const callEndpoint = async (
-  postcode?: string | string[],
+  postcode?: string,
   method: RequestMethod = 'GET',
 ) => {
   const { req, res }: { req: ApiRequest; res: ApiResponse } = createMocks({

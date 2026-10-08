@@ -16,7 +16,7 @@ function logE2eGenerateError(payload: Record<string, unknown>): void {
     process.env.E2E_HTTP_MOCKS === 'true' &&
     process.env.JEST_WORKER_ID === undefined
   ) {
-    console.error('[api/auth/generate]', payload);
+    console.error('[api/resident-auth/generate]', payload);
   }
 }
 
@@ -118,4 +118,7 @@ const endpoint: NextApiHandler = async (
   }
 };
 
-export default wrapApiHandlerWithSentry(endpoint, '/api/auth/generate');
+export default wrapApiHandlerWithSentry(
+  endpoint,
+  '/api/resident-auth/generate',
+);

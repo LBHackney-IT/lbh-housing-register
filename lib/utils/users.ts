@@ -28,23 +28,45 @@ export function getUser(req: any) {
   }
 }
 
+function residentCookieOptions(
+  extras: cookie.SerializeOptions = {},
+): cookie.SerializeOptions {
+  const origin = process.env.NEXTAUTH_URL;
+  let hostname: string | undefined;
+  try {
+    hostname = origin ? new URL(origin).hostname : undefined;
+  } catch {
+    hostname = undefined;
+  }
+
+  const isHackneyHost =
+    hostname === 'hackney.gov.uk' || hostname?.endsWith('.hackney.gov.uk');
+
+  return {
+    path: '/',
+    ...(isHackneyHost ? { domain: '.hackney.gov.uk' } : {}),
+    ...extras,
+  };
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const setAuthCookie = (res: any, data: VerifyAuthResponse): void => {
-  const jwtCookie = cookie.serialize('housing_user', data.accessToken, {
-    domain: '.hackney.gov.uk',
-    path: '/',
-  });
+  const jwtCookie = cookie.serialize(
+    'housing_user',
+    data.accessToken,
+    residentCookieOptions(),
+  );
 
   res.setHeader('Set-Cookie', jwtCookie);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const removeAuthCookie = (res: any): void => {
-  const jwtCookie = cookie.serialize('housing_user', '', {
-    expires: new Date(0),
-    domain: '.hackney.gov.uk',
-    path: '/',
-  });
+  const jwtCookie = cookie.serialize(
+    'housing_user',
+    '',
+    residentCookieOptions({ expires: new Date(0) }),
+  );
 
   res.setHeader('Set-Cookie', jwtCookie);
 };

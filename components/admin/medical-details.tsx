@@ -5,13 +5,16 @@ import { Application } from '../../domain/HousingApi';
 import { applicantHasId } from '../../lib/store/applicant';
 import DateInput, { INVALID_DATE } from '../form/dateinput';
 import { updateApplication } from '../../lib/gateways/internal-api';
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '../button';
 import Select from '../form/select';
 import { HeadingThree } from '../content/headings';
 import Paragraph from '../content/paragraph';
 import Textarea from '../form/textarea';
 import { applicantHasMedicalNeed } from '../../lib/utils/medicalNeed';
+import ErrorSummary from '../errors/error-summary';
+import { toUserErrorMessage } from '../../lib/utils/errorHelper';
+import { scrollToTop } from '../../lib/utils/scroll';
 
 export interface MedicalDetailPageProps {
   data: Application;
@@ -23,6 +26,7 @@ export default function MedicalDetail({
   memberIndex,
 }: MedicalDetailPageProps): JSX.Element {
   const router = useRouter();
+  const [userError, setUserError] = useState<string | undefined>(undefined);
 
   const outcomeOptions = [
     {
@@ -148,7 +152,10 @@ export default function MedicalDetail({
   ];
 
   const schema = Yup.object({
-    dateFormRecieved: Yup.string().notOneOf([INVALID_DATE], 'Invalid date'),
+    dateFormRecieved: Yup.string()
+      .label('Date form received')
+      .notOneOf([INVALID_DATE], 'Invalid date')
+      .required(),
     assessmentDate: Yup.string().notOneOf([INVALID_DATE], 'Invalid date'),
     outcome: Yup.string()
       .label('Outcome')
@@ -176,44 +183,43 @@ export default function MedicalDetail({
     additionalInformation: applicant?.medicalNeed?.additionalInformaton ?? '',
   };
 
-  function onSubmit(values: FormikValues) {
-    if (applicantHasId(applicant)) {
-      // update household member or main applicant
-      if (data.otherMembers && memberIndex > -1) {
-        data.otherMembers[memberIndex].medicalNeed = {
-          formRecieved: values.dateFormRecieved,
-          assessmentDate:
-            values.assessmentDate !== '' ? values.assessmentDate : null,
-          outcome: values.outcome,
-          accessibileHousingRegister: values.accessibleHousingRegister,
-          disability: values.disability,
-          additionalInformaton: values.additionalInformation,
-        };
-        const request: Application = {
-          id: data.id,
-          otherMembers: data.otherMembers,
-        };
-        updateApplication(request);
-      } else {
-        const request: Application = {
-          id: data.id,
-          mainApplicant: {
-            ...data.mainApplicant,
-            medicalNeed: {
-              formRecieved: values.dateFormRecieved,
-              assessmentDate:
-                values.assessmentDate !== '' ? values.assessmentDate : null,
-              outcome: values.outcome,
-              accessibileHousingRegister: values.accessibleHousingRegister,
-              disability: values.disability,
-              additionalInformaton: values.additionalInformation,
-            },
-          },
-        };
-        updateApplication(request);
-      }
+  async function onSubmit(values: FormikValues) {
+    if (!applicantHasId(applicant)) {
+      return;
+    }
 
-      setTimeout(() => router.reload(), 500);
+    const medicalNeed = {
+      formRecieved: values.dateFormRecieved,
+      assessmentDate:
+        values.assessmentDate !== '' ? values.assessmentDate : null,
+      outcome: values.outcome,
+      accessibileHousingRegister: values.accessibleHousingRegister,
+      disability: values.disability,
+      additionalInformaton: values.additionalInformation,
+    };
+
+    // update household member or main applicant
+    const request: Application =
+      data.otherMembers && memberIndex > -1
+        ? {
+            id: data.id,
+            otherMembers: data.otherMembers.map((member, index) =>
+              index === memberIndex ? { ...member, medicalNeed } : member,
+            ),
+          }
+        : {
+            id: data.id,
+            mainApplicant: { ...data.mainApplicant, medicalNeed },
+          };
+
+    setUserError(undefined);
+
+    try {
+      await updateApplication(request);
+      router.reload();
+    } catch (error) {
+      setUserError(toUserErrorMessage(error, 'Unable to save medical details'));
+      scrollToTop();
     }
   }
 
@@ -226,6 +232,11 @@ export default function MedicalDetail({
     >
       {({ isSubmitting, values }) => (
         <Form>
+          {userError && (
+            <ErrorSummary dataTestId="test-medical-details-error-summary">
+              {userError}
+            </ErrorSummary>
+          )}
           <div className="govuk-grid-row">
             <div className="govuk-grid-column-one-third">
               <HeadingThree content="Medical need" />

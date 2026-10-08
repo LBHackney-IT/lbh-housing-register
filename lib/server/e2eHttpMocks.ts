@@ -35,11 +35,12 @@ function normalizeHostname(hostname: string): string {
  * apart from an attacker-supplied body when both would otherwise produce
  * the same HTTP status.
  *
- * Note: nock's default behaviour for a request that doesn't match *any*
- * registered interceptor for a mocked host is to fall through to the real
- * network, not to fail loudly - so mocks should match on path only (not on
- * request body) and rely on this capture log for body assertions, rather
- * than on registering a deliberately-non-matching interceptor.
+ * Note: nock's default for a host that already has interceptors is to
+ * reject unmatched paths. We pass `allowUnmocked: true` so local E2E can
+ * still reach real Housing Register routes (e.g. POST auth/generate) when
+ * leftover GET mocks exist for the same host. Mocks should match on path
+ * only (not on request body) and rely on this capture log for body
+ * assertions.
  *
  * Stored on `globalThis` rather than as a module-level variable: each
  * `pages/api/**` route is bundled by Next.js as its own server chunk, so a
@@ -89,7 +90,7 @@ export function registerE2eNockMock(input: E2eNockRegisterPayload): void {
     nock.activate();
   }
 
-  const scope = nock(hostname);
+  const scope = nock(hostname, { allowUnmocked: true });
   const verb = method as
     | 'get'
     | 'post'

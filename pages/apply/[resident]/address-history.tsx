@@ -331,8 +331,15 @@ const ApplicationStep = (): JSX.Element => {
           // date. Clear that so choosing an address does not show the date error.
           formikHelpers.setTouched({}, false);
           setState('choose-address');
-        } catch {
-          setPostcodeLookupError(POSTCODE_LOOKUP_FAILED);
+        } catch (error) {
+          if (
+            error instanceof Error &&
+            error.message.startsWith('Unable to look up address')
+          ) {
+            setPostcodeLookupError(POSTCODE_LOOKUP_FAILED);
+            break;
+          }
+          throw error;
         }
 
         break;

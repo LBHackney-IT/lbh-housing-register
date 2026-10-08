@@ -121,6 +121,25 @@ describe('Apply resident address history page', () => {
     consoleError.mockRestore();
   });
 
+  it('does not treat an unexpected error as a failed lookup', async () => {
+    const consoleWarn = jest.spyOn(console, 'warn').mockImplementation();
+    lookUpAddressMock.mockRejectedValue(new Error('UPRN is missing'));
+
+    renderPage();
+    submitPostcode('E9 6PT');
+
+    await waitFor(() => {
+      expect(consoleWarn).toHaveBeenCalled();
+    });
+    expect(
+      screen.queryByText(
+        'We could not look up that postcode. Enter a known postcode, or enter the address manually.',
+      ),
+    ).not.toBeInTheDocument();
+    expect(screen.getByLabelText('Postcode')).toBeInTheDocument();
+    consoleWarn.mockRestore();
+  });
+
   it('stays on postcode entry when lookup returns no address list', async () => {
     lookUpAddressMock.mockResolvedValue({
       page_count: 0,

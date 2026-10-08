@@ -189,7 +189,7 @@ describe('Apply resident address history page', () => {
     ).not.toBeInTheDocument();
 
     fireEvent.click(
-      screen.getByRole('link', { name: 'Enter your address manually' }),
+      screen.getByRole('button', { name: 'Enter your address manually' }),
     );
 
     expect(
@@ -218,7 +218,7 @@ describe('Apply resident address history page', () => {
   it('returns to postcode lookup from manual entry', async () => {
     renderPage();
     fireEvent.click(
-      screen.getByRole('link', { name: 'Enter your address manually' }),
+      screen.getByRole('button', { name: 'Enter your address manually' }),
     );
 
     expect(
@@ -226,7 +226,7 @@ describe('Apply resident address history page', () => {
     ).toBeInTheDocument();
 
     fireEvent.click(
-      screen.getByRole('link', {
+      screen.getByRole('button', {
         name: 'Search for an address using a postcode',
       }),
     );

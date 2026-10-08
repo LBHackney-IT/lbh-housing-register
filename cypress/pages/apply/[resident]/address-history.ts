@@ -9,7 +9,7 @@ class ApplyResidentAddressHistoryPage {
   }
 
   static getEnterAddressManuallyLink() {
-    return cy.contains('a', 'Enter your address manually');
+    return cy.contains('button', 'Enter your address manually');
   }
 
   static getGetSaveAndContinueButton() {

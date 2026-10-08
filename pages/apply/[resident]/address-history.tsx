@@ -436,6 +436,8 @@ const ApplicationStep = (): JSX.Element => {
                 >
                   housing officer
                 </a>
+                {/*
+                 */}
                 .
               </Details>
               <h2 className="lbh-heading-h2">Current address</h2>
@@ -463,17 +465,16 @@ const ApplicationStep = (): JSX.Element => {
                           error={postcodeLookupError ?? undefined}
                         />
                         <p className="lbh-body">
-                          <a
-                            href="#"
+                          <button
+                            type="button"
                             className="lbh-link lbh-link--no-visited-state"
-                            onClick={(event) => {
-                              event.preventDefault();
+                            onClick={() => {
                               setPostcodeLookupError(null);
                               setState('manual-entry');
                             }}
                           >
                             Enter your address manually
-                          </a>
+                          </button>
                         </p>
                         <Button
                           type="submit"
@@ -509,16 +510,15 @@ const ApplicationStep = (): JSX.Element => {
                         <div>
                           {values.postcode}
                           &nbsp;&nbsp;&nbsp;
-                          <a
-                            role="button"
-                            href="#"
+                          <button
+                            type="button"
                             className="lbh-link lbh-link--no-visited-state"
                             onClick={() => {
                               setState('postcode-entry');
                             }}
                           >
                             Change
-                          </a>
+                          </button>
                         </div>
 
                         <Select
@@ -530,14 +530,13 @@ const ApplicationStep = (): JSX.Element => {
                           }))}
                         />
 
-                        <a
-                          role="button"
-                          href="#"
+                        <button
+                          type="button"
                           className="lbh-link lbh-link--no-visited-state"
                           onClick={() => setState('manual-entry')}
                         >
                           I can't find my address in the list
-                        </a>
+                        </button>
                         <DateInput
                           name={'date'}
                           label={'When did you move to this address?'}
@@ -555,17 +554,16 @@ const ApplicationStep = (): JSX.Element => {
 
                     {state === 'manual-entry' && (
                       <p className="lbh-body">
-                        <a
-                          href="#"
+                        <button
+                          type="button"
                           className="lbh-link lbh-link--no-visited-state"
-                          onClick={(event) => {
-                            event.preventDefault();
+                          onClick={() => {
                             setPostcodeLookupError(null);
                             setState('postcode-entry');
                           }}
                         >
                           Search for an address using a postcode
-                        </a>
+                        </button>
                       </p>
                     )}
 

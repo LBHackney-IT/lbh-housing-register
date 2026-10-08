@@ -3,7 +3,7 @@ import asssertServerOnly from '../utils/assertServerOnly';
 
 asssertServerOnly();
 
-export const lookUpAddress = async (postcode: string | string[]) => {
+export const lookUpAddress = async (postcode: string) => {
   const { data } = await axios.get(
     `${process.env.LOOKUP_API_URL}/?postcode=${postcode}`,
     {

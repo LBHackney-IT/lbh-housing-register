@@ -148,6 +148,17 @@ describe('loaded application section guards', () => {
     cy.visit(`/apply/${personId}/medical-needs`);
     cy.contains('We could not load your application. Please try again.');
     cy.location('pathname').should('eq', `/apply/${personId}/medical-needs`);
-    cy.contains('Try again');
+
+    cy.clearE2eNock();
+    cy.mockHousingRegisterApiGetApplications(
+      applicationId,
+      applicationWithCompletedMainApplicantSections,
+      true,
+    );
+
+    cy.contains('button', 'Try again').click();
+    cy.contains('Medical needs');
+    cy.location('pathname').should('eq', `/apply/${personId}/medical-needs`);
+    cy.get('body').should('not.contain', 'Unknown form step');
   });
 });

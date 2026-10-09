@@ -3,6 +3,7 @@ import {
   CreateApplicationError,
   addNoteToHistory,
   createApplication,
+  lookUpAddress,
   updateApplication,
 } from './internal-api';
 
@@ -91,6 +92,42 @@ describe('createApplication', () => {
     });
     expect(consoleError).toHaveBeenCalled();
     consoleError.mockRestore();
+  });
+});
+
+describe('lookUpAddress', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('returns lookup results when the request succeeds', async () => {
+    const result = {
+      address: [{ UPRN: 1, line1: '1 Test Street' }],
+      page_count: 1,
+      total_count: 1,
+    };
+    mockFetch({
+      ok: true,
+      status: 200,
+      json: async () => result,
+    });
+
+    await expect(lookUpAddress('E9 6PT')).resolves.toEqual(result);
+    expect(global.fetch).toHaveBeenCalledWith('/api/address/E9%206PT', {
+      method: 'GET',
+    });
+  });
+
+  it('throws when the lookup API returns an error body without addresses', async () => {
+    mockFetch({
+      ok: false,
+      status: 500,
+      json: async () => ({ message: 'Unable to look up address' }),
+    });
+
+    await expect(lookUpAddress('not a UK postcode')).rejects.toThrow(
+      'Unable to look up address (500)',
+    );
   });
 });
 

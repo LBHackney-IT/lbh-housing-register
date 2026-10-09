@@ -69,9 +69,12 @@ describe('Declaration', () => {
   it('lets user accept declaration when signed in', () => {
     cy.loginAsResident(applicationId, true);
 
+    // The page fetches again after the first load. Keep this response
+    // available so that second fetch does not replace the form.
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithMainApplicant,
+      true,
     );
 
     // /api/notify/new-application now looks up the application itself
@@ -133,11 +136,13 @@ describe('Declaration', () => {
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithNoNeed,
+      true,
     );
 
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,
       applicationWithNoNeed,
+      apiResponseDelay,
     );
 
     cy.intercept('POST', '**/api/notify/disqualify').as('sendDisqualify');
@@ -227,6 +232,7 @@ describe('Declaration', () => {
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithNoNeed,
+      true,
     );
 
     const errorStatusCode = StatusCodes.INTERNAL_SERVER_ERROR;

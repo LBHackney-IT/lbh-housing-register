@@ -34,17 +34,19 @@ export default function ApplicationForms({
   applicant,
   sectionGroups,
 }: ApplicationFormsProps): JSX.Element | null {
+  const dispatch = useAppDispatch();
   const formSteps = getFormIdsFromApplicationSections(sectionGroups);
+  const activeStepId = formSteps.find((step) => step === activeStep);
 
-  const activeStepId =
-    formSteps.find((step) => step === activeStep) ?? formSteps[0];
+  if (!activeStepId) {
+    return null;
+  }
+
   const formData = getFormData(activeStepId);
   const initialValues: FormikValues = getQuestionsForFormAsValues(
     activeStepId,
     applicant,
   );
-
-  const dispatch = useAppDispatch();
   const onSave = (values: FormikValues) => {
     // TODO store eligibility answer.
     if (applicantHasId(applicant)) {

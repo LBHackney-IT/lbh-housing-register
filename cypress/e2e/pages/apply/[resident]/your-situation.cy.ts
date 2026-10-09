@@ -117,8 +117,12 @@ describe('Apply resident your situation page', () => {
     cy.contains('Saving...');
   });
 
-  it('shows page not found when accessed directly', () => {
+  it('shows your situation when opened directly', () => {
     ApplyResidentYourSituationPage.visit(personId);
-    cy.contains('404 Page not found');
+
+    cy.contains('Your situation');
+    ApplyResidentYourSituationPage.getServedInArmedForcesRadioButton(1).should(
+      'exist',
+    );
   });
 });

@@ -52,9 +52,12 @@ describe('Ethnicity questions', () => {
   it('lets user fill in and submit their personal details when logged in', () => {
     cy.loginAsResident(applicationId, true);
 
+    // The page fetches again after the first load. Keep this response
+    // available so that second fetch does not replace the form.
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithMainApplicant,
+      true,
     );
 
     cy.mockHousingRegisterApiPatchApplication(
@@ -103,6 +106,7 @@ describe('Ethnicity questions', () => {
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithMainApplicant,
+      true,
     );
 
     const errorStatusCode = StatusCodes.BAD_REQUEST;
@@ -129,7 +133,7 @@ describe('Ethnicity questions', () => {
   });
   it('shows an error message when dispatch fails', () => {
     cy.loginAsResident(applicationId, true);
-    cy.mockHousingRegisterApiGetApplications(applicationId, application);
+    cy.mockHousingRegisterApiGetApplications(applicationId, application, true);
 
     const errorStatusCode = StatusCodes.BAD_REQUEST;
 

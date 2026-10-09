@@ -83,3 +83,82 @@ describe('Apply resident [section] page', () => {
     cy.contains(`Unable to update application (${errorCode})`);
   });
 });
+
+describe('signed-out and failed application loads', () => {
+  const personId = faker.string.uuid();
+
+  beforeEach(() => {
+    cy.clearAllCookies();
+  });
+
+  it('sends a signed-out resident from residential status to sign in', () => {
+    cy.visit(`/apply/${personId}/residential-status`);
+    cy.location('pathname').should('eq', '/apply/sign-in');
+    cy.get('body').should('not.contain', 'Unknown form step');
+  });
+
+  it('sends a signed-out resident from medical needs to sign in', () => {
+    cy.visit(`/apply/${personId}/medical-needs`);
+    cy.location('pathname').should('eq', '/apply/sign-in');
+    cy.get('body').should('not.contain', 'Checking information');
+  });
+});
+
+describe('loaded application section guards', () => {
+  beforeEach(() => {
+    cy.clearAllCookies();
+    cy.loginAsResident(applicationId, true);
+    cy.clearE2eNock();
+    cy.mockHousingRegisterApiGetApplications(
+      applicationId,
+      applicationWithCompletedMainApplicantSections,
+      true,
+    );
+  });
+
+  it('still shows residential status after a refresh', () => {
+    cy.visit(`/apply/${personId}/residential-status`);
+    cy.contains('Residential status');
+    cy.reload();
+    cy.contains('Residential status');
+    cy.get('body').should('not.contain', '404 Page not found');
+  });
+
+  it('shows a 404 for an unknown section', () => {
+    cy.visit(`/apply/${personId}/navigation-status`);
+    cy.contains('404 Page not found');
+    cy.get('body').should('not.contain', 'Unknown form step');
+  });
+
+  it('shows a 404 when the resident is not on the application', () => {
+    cy.visit(`/apply/${faker.string.uuid()}/residential-status`);
+    cy.contains('404 Page not found');
+  });
+
+  it('shows a retry when the application load fails', () => {
+    cy.clearE2eNock();
+    cy.mockHousingRegisterApiGetApplications(
+      applicationId,
+      application,
+      true,
+      0,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+    );
+
+    cy.visit(`/apply/${personId}/medical-needs`);
+    cy.contains('We could not load your application. Please try again.');
+    cy.location('pathname').should('eq', `/apply/${personId}/medical-needs`);
+
+    cy.clearE2eNock();
+    cy.mockHousingRegisterApiGetApplications(
+      applicationId,
+      applicationWithCompletedMainApplicantSections,
+      true,
+    );
+
+    cy.contains('button', 'Try again').click();
+    cy.contains('Medical needs');
+    cy.location('pathname').should('eq', `/apply/${personId}/medical-needs`);
+    cy.get('body').should('not.contain', 'Unknown form step');
+  });
+});

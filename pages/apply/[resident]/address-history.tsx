@@ -14,8 +14,10 @@ import Label from '../../../components/form/label';
 import Select from '../../../components/form/select';
 import { AddressLookupAddress } from '../../../domain/addressLookup';
 import { Applicant, AddressType } from '../../../domain/HousingApi';
+import Layout from '../../../components/layout/resident-layout';
 import { lookUpAddress } from '../../../lib/gateways/internal-api';
 import withApplication from '../../../lib/hoc/withApplication';
+import { selectApplicationLoadStatus } from '../../../lib/store/application-load';
 import {
   applicantHasId,
   getQuestionValue,
@@ -231,7 +233,7 @@ function Summary({
   );
 }
 
-const ApplicationStep = (): JSX.Element => {
+export const ApplicationStep = (): JSX.Element => {
   const router = useRouter();
   const { resident } = router.query as { resident: string };
   const applicant = useAppSelector(selectApplicant(resident)) as Applicant;
@@ -253,6 +255,8 @@ const ApplicationStep = (): JSX.Element => {
     scrollToError,
     pathToPush: `/apply/${resident}`,
   });
+
+  const loadStatus = useAppSelector(selectApplicationLoadStatus);
 
   const requiredYears = isMainResidentOrPartner ? 5 : 0;
 
@@ -395,6 +399,14 @@ const ApplicationStep = (): JSX.Element => {
       }
     }
   };
+
+  if (!router.isReady || loadStatus !== 'loaded') {
+    return (
+      <Layout pageName="Address history">
+        <Loading text="Checking information…" />
+      </Layout>
+    );
+  }
 
   return (
     <>

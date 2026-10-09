@@ -115,11 +115,10 @@ describe('Apply resident index page', () => {
     cy.contains('Unable to delete household member. Please try again.');
   });
 
-  it('shows page not found when accessing the page directly', () => {
+  it('shows the resident page when opened directly', () => {
     ApplyResidentIndexPage.visit(personId);
 
-    //expect 404 since the page won't have correct state
-    cy.contains('404 Page not found');
+    ApplyResidentIndexPage.getApplyResidentIndexPage().should('be.visible');
   });
 
   it('redirects to summary page when applicant is not eligible to apply', () => {
@@ -133,7 +132,7 @@ describe('Apply resident index page', () => {
       mainApplicant: {
         ...applicationWithHouseholdMemberRemoved.mainApplicant,
         person: {
-          ...applicationWithHouseholdMemberRemoved.mainApplicant.person,
+          ...applicationWithHouseholdMemberRemoved?.mainApplicant?.person,
           dateOfBirth: dateOfBirth,
         },
       },

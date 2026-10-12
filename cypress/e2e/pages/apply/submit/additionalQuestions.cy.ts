@@ -44,9 +44,9 @@ describe('Additional questions', () => {
     );
 
     AdditionalQuestionsPage.visit();
-    AdditionalQuestionsPage.getAdditionalQuestionsPage().should('be.visible');
-
     cy.contains('Checking information…');
+    AdditionalQuestionsPage.getAdditionalQuestionsPage().should('be.visible');
+    cy.contains('Checking information…').should('not.exist');
   });
 
   it('lets user fill in and submit their personal details when logged in', () => {

@@ -54,9 +54,9 @@ describe('Agree terms', () => {
     );
 
     AgreeTermsPage.visit();
-    AgreeTermsPage.getAgreeTermsPage().should('be.visible');
-
     cy.contains('Checking information…');
+    AgreeTermsPage.getAgreeTermsPage().should('be.visible');
+    cy.contains('Checking information…').should('not.exist');
   });
 
   it('lets user agree to terms when logged in', () => {
@@ -90,7 +90,6 @@ describe('Agree terms', () => {
 
   it('shows an error message when application update fails', () => {
     cy.loginAsResident(applicationId, true);
-    cy.mockHousingRegisterApiGetApplications(applicationId, application);
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithMainApplicant,

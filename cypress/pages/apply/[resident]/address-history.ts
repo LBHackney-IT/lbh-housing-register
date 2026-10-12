@@ -8,6 +8,10 @@ class ApplyResidentAddressHistoryPage {
     return cy.get(`[data-testid="${testId}"]`);
   }
 
+  static getEnterAddressManuallyLink() {
+    return cy.contains('button', 'Enter your address manually');
+  }
+
   static getGetSaveAndContinueButton() {
     const testId =
       'test-apply-resident-address-history-save-and-continue-button';
@@ -20,6 +24,10 @@ class ApplyResidentAddressHistoryPage {
 
   static getMovingDateYear() {
     return cy.get('#date-year');
+  }
+
+  static getManualAddressHeading() {
+    return cy.contains('What is your address?');
   }
 }
 

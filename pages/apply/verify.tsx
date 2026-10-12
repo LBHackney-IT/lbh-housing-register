@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from '../../lib/store/hooks';
 import { Errors } from '../../lib/types/errors';
 import { FormData } from '../../lib/types/form';
 import { FormID, getFormData } from '../../lib/utils/form-data';
+import { toUserErrorMessage } from '../../lib/utils/errorHelper';
 import { scrollToError } from '../../lib/utils/scroll';
 import Loading from 'components/loading';
 
@@ -60,13 +61,13 @@ const ApplicationVerifyPage = (): JSX.Element => {
           dispatch(loadApplication())
             .unwrap()
             .catch((err) => {
-              setUserError(err);
+              setUserError(toUserErrorMessage(err, Errors.VERIFY_ERROR));
               scrollToError();
             });
         })
         .catch((err) => {
           setIsSaving(false);
-          setUserError(err);
+          setUserError(toUserErrorMessage(err, Errors.VERIFY_ERROR));
           scrollToError();
         });
     } catch {

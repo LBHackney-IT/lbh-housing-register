@@ -65,12 +65,12 @@ export default function ResidentLayout({
   const loadStatus = useAppSelector(selectApplicationLoadStatus);
 
   useEffect(() => {
-    if (!pageLoadsApplication) {
+    if (!pageLoadsApplication || loadStatus !== 'idle') {
       return;
     }
 
     dispatch(loadApplication());
-  }, [dispatch, pageLoadsApplication]);
+  }, [dispatch, loadStatus, pageLoadsApplication]);
 
   useEffect(() => {
     if (!pageLoadsApplication || loadStatus !== 'unauthenticated') {

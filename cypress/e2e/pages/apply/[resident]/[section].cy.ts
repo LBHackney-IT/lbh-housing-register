@@ -137,10 +137,11 @@ describe('loaded application section guards', () => {
 
   it('shows a retry when the application load fails', () => {
     cy.clearE2eNock();
+    cy.intercept('GET', '/api/applications').as('loadApplication');
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       application,
-      true,
+      false,
       0,
       StatusCodes.INTERNAL_SERVER_ERROR,
     );
@@ -148,17 +149,19 @@ describe('loaded application section guards', () => {
     cy.visit(`/apply/${personId}/medical-needs`);
     cy.contains('We could not load your application. Please try again.');
     cy.location('pathname').should('eq', `/apply/${personId}/medical-needs`);
+    cy.get('@loadApplication.all').should('have.length', 1);
 
     cy.clearE2eNock();
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithCompletedMainApplicantSections,
-      true,
+      false,
     );
 
     cy.contains('button', 'Try again').click();
     cy.contains('Medical needs');
     cy.location('pathname').should('eq', `/apply/${personId}/medical-needs`);
     cy.get('body').should('not.contain', 'Unknown form step');
+    cy.get('@loadApplication.all').should('have.length', 2);
   });
 });

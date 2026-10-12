@@ -103,6 +103,7 @@ describe('protected resident forms', () => {
     expect(
       await screen.findByRole('heading', { name: 'Residential status' }),
     ).toBeInTheDocument();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(mockReplace).not.toHaveBeenCalled();
   });
 

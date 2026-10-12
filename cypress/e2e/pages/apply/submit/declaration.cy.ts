@@ -61,20 +61,17 @@ describe('Declaration', () => {
     );
 
     DeclarationPage.visit();
-    DeclarationPage.getDeclarationPage().should('be.visible');
-
     cy.contains('Checking information…');
+    DeclarationPage.getDeclarationPage().should('be.visible');
+    cy.contains('Checking information…').should('not.exist');
   });
 
   it('lets user accept declaration when signed in', () => {
     cy.loginAsResident(applicationId, true);
 
-    // The page fetches again after the first load. Keep this response
-    // available so that second fetch does not replace the form.
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithMainApplicant,
-      true,
     );
 
     // /api/notify/new-application now looks up the application itself
@@ -136,7 +133,6 @@ describe('Declaration', () => {
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithNoNeed,
-      true,
     );
 
     cy.mockHousingRegisterApiPatchApplication(
@@ -232,7 +228,6 @@ describe('Declaration', () => {
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithNoNeed,
-      true,
     );
 
     const errorStatusCode = StatusCodes.INTERNAL_SERVER_ERROR;

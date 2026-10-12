@@ -54,20 +54,17 @@ describe('Agree terms', () => {
     );
 
     AgreeTermsPage.visit();
-    AgreeTermsPage.getAgreeTermsPage().should('be.visible');
-
     cy.contains('Checking information…');
+    AgreeTermsPage.getAgreeTermsPage().should('be.visible');
+    cy.contains('Checking information…').should('not.exist');
   });
 
   it('lets user agree to terms when logged in', () => {
     cy.loginAsResident(applicationId, true);
 
-    // The page fetches again after the first load. Keep this response
-    // available so that second fetch does not replace the form.
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithMainApplicant,
-      true,
     );
 
     cy.mockHousingRegisterApiPatchApplication(
@@ -96,7 +93,6 @@ describe('Agree terms', () => {
     cy.mockHousingRegisterApiGetApplications(
       applicationId,
       applicationWithMainApplicant,
-      true,
     );
 
     const errorStatusCode = StatusCodes.BAD_REQUEST;

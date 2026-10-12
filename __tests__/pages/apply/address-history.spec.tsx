@@ -17,6 +17,7 @@ const lookUpAddressMock = lookUpAddress as jest.MockedFunction<
 
 const mockRouter = {
   push: jest.fn(),
+  isReady: true,
   query: { resident: 'person-1' } as { resident?: string },
 };
 
@@ -52,6 +53,7 @@ const renderPage = () => {
   const store = configureStore({
     reducer: {
       application: (state = application) => state,
+      applicationLoad: (state = { status: 'loaded' }) => state,
       hrApiCallsStatus: (
         state = {
           updateApplication: {

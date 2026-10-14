@@ -4,10 +4,6 @@ import { useRouter } from 'next/router';
 import { useAppSelector } from '../lib/store/hooks';
 import SentryContext, { getSentrySurface } from './sentry-context';
 
-jest.mock('@sentry/nextjs', () => ({
-  setTag: jest.fn(),
-  setUser: jest.fn(),
-}));
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));

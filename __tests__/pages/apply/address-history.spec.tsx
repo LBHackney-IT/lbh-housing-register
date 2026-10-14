@@ -21,11 +21,6 @@ const mockRouter = {
   query: { resident: 'person-1' } as { resident?: string },
 };
 
-jest.mock('@sentry/nextjs', () => ({
-  addBreadcrumb: jest.fn(),
-  captureException: jest.fn(),
-}));
-
 jest.mock('next/router', () => ({
   useRouter: () => mockRouter,
 }));

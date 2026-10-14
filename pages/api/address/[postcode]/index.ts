@@ -5,7 +5,6 @@ import {
   isUkPostcode,
   UK_POSTCODE_ERROR,
 } from '../../../../lib/utils/postcode';
-import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -41,4 +40,4 @@ const endpoint: NextApiHandler = async (
   }
 };
 
-export default wrapApiHandlerWithSentry(endpoint, '/api/address/[postcode]');
+export default endpoint;

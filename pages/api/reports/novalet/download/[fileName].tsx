@@ -1,6 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 import { downloadNovaletExport } from '../../../../../lib/gateways/applications-api';
 import { requireApiStaffGroup } from '../../../../../lib/auth/api';
 
@@ -50,17 +49,14 @@ const endpoint: NextApiHandler = async (
     );
     res.send(file.data);
   } catch (error) {
-    console.error('Unable to download report', {
-      fileName: req.query.fileName,
-      error,
-    });
+    console.error(
+      'Unable to download report',
+      error instanceof Error ? error : new Error('Unable to download report'),
+    );
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ message: 'Unable to download report' });
   }
 };
 
-export default wrapApiHandlerWithSentry(
-  endpoint,
-  '/api/reports/novalet/download/[fileName]',
-);
+export default endpoint;

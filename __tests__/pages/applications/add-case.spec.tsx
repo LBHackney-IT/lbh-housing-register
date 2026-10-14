@@ -17,6 +17,11 @@ import AddCasePage from '../../../pages/applications/add-case';
 
 const mockPush = jest.fn();
 
+jest.mock('@sentry/nextjs', () => ({
+  addBreadcrumb: jest.fn(),
+  captureException: jest.fn(),
+}));
+
 jest.mock('next/router', () => ({
   useRouter: () => ({ push: mockPush }),
 }));

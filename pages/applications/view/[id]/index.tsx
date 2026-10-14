@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import { GetServerSideProps } from 'next';
+import * as Sentry from '@sentry/nextjs';
 import { useRouter } from 'next/router';
 
 import Actions from '../../../../components/admin/actions';
@@ -46,6 +47,7 @@ import {
   hasReadOnlyPermissionOnly,
 } from '../../../../lib/auth/staff';
 import { getPersonName } from '../../../../lib/utils/person';
+import { getErrorStatusCode } from '../../../../lib/utils/sentry';
 import Custom404 from '../../../404';
 import { scrollToError } from 'lib/utils/scroll';
 import ErrorSummary from 'components/errors/error-summary';
@@ -359,11 +361,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     return { props: { user, data, history } };
   } catch (e) {
-    if (e instanceof Error) {
-      console.error(e.message);
-    } else {
-      console.error('An unknown error occurred');
-    }
+    const status = getErrorStatusCode(e);
+    Sentry.captureException(e, {
+      tags: {
+        operation: 'load_staff_application',
+        surface: 'staff',
+        route: '/applications/view/[id]',
+        ...(status !== undefined ? { 'http.status_code': String(status) } : {}),
+      },
+    });
     return { props: {} };
   }
 };

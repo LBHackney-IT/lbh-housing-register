@@ -2,7 +2,6 @@ import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { downloadInternalReport } from '../../../../lib/gateways/applications-api';
 import { requireApiStaffGroup } from '../../../../lib/auth/api';
-import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 import { InternalReportRequest } from '../../../../domain/HousingApi';
 
 const endpoint: NextApiHandler = async (
@@ -79,7 +78,4 @@ const endpoint: NextApiHandler = async (
   }
 };
 
-export default wrapApiHandlerWithSentry(
-  endpoint,
-  '/api/reports/internal/download',
-);
+export default endpoint;

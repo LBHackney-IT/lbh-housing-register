@@ -1,5 +1,4 @@
 import { StatusCodes } from 'http-status-codes';
-import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { removeAuthCookie } from '../../../lib/utils/users';
 
@@ -27,4 +26,4 @@ const endpoint: NextApiHandler = async (
   }
 };
 
-export default wrapApiHandlerWithSentry(endpoint, '/api/resident-auth/exit');
+export default endpoint;

@@ -84,5 +84,30 @@ module.exports = withSentryConfig(nextConfig, {
   // SENTRY_AUTH_TOKEN, SENTRY_PROJECT, and SENTRY_ORG are all set in the housing-register-fe-build-context during the build proceess and are not necassary to be set here.
   // Verbose in CI so upload/warning logs are visible there; quiet for local dev builds.
   silent: !process.env.CI,
-  hideSourceMaps: true, // Will make sourcemaps invisible to the browser.
+  // Upload shared/framework chunks as well as page chunks so client stack
+  // traces can always be symbolicated.
+  widenClientFileUpload: true,
+  // Proxy browser events through the app to avoid client-side blockers.
+  // CloudFront's default behaviour forwards this route to the SSR Lambda.
+  // When that Lambda is throttled or failing, browser envelopes stop as well.
+  tunnelRoute: '/monitoring',
+  sourcemaps: {
+    // Never publish source maps with the OpenNext static assets.
+    deleteSourcemapsAfterUpload: true,
+  },
+  // `build` and `dev` pass `--webpack`. Next 16 defaults to Turbopack, and
+  // the Sentry loader that instruments Pages API routes does not run there.
+  webpack: {
+    // Strip Sentry SDK debug logging from the production bundle. Does not
+    // affect application console output or Sentry event capture.
+    treeshake: {
+      removeDebugLogging: true,
+    },
+    // Annotate React elements with data-sentry-* so UI breadcrumbs (and
+    // Replay, if enabled later) name the component instead of a generic DOM
+    // selector. Source-file attributes are component paths, not user data.
+    reactComponentAnnotation: {
+      enabled: true,
+    },
+  },
 });

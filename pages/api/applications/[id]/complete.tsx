@@ -3,7 +3,6 @@ import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { completeApplication } from '../../../../lib/gateways/applications-api';
 import { getApplicationAccess } from '../../../../lib/utils/requestAuth';
-import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -48,7 +47,4 @@ const endpoint: NextApiHandler = async (
   }
 };
 
-export default wrapApiHandlerWithSentry(
-  endpoint,
-  '/api/applications/[id]/complete',
-);
+export default endpoint;

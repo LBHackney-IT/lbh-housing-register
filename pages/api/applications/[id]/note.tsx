@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 import { AddNoteToHistoryRequest } from '../../../../domain/HousingApi';
 import { addNoteToHistory } from '../../../../lib/gateways/applications-api';
 import { getApplicationAccess } from '../../../../lib/utils/requestAuth';
@@ -61,7 +60,4 @@ const endpoint: NextApiHandler = async (
   }
 };
 
-export default wrapApiHandlerWithSentry(
-  endpoint,
-  '/api/applications/[id]/note',
-);
+export default endpoint;

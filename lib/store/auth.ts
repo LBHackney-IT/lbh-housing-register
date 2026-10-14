@@ -6,6 +6,7 @@ import {
   VerifyAuthResponse,
 } from '../../domain/HousingApi';
 import { Errors } from '../types/errors';
+import { fetchWithSentry } from '../utils/sentry';
 
 export const createVerifyCode = createAsyncThunk(
   'auth/create',
@@ -14,11 +15,18 @@ export const createVerifyCode = createAsyncThunk(
       email: emailAddress,
     };
 
-    const res = await fetch(`/api/resident-auth/generate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(request),
-    });
+    const res = await fetchWithSentry(
+      '/api/resident-auth/generate',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(request),
+      },
+      {
+        operation: 'create_verify_code',
+        route: '/api/resident-auth/generate',
+      },
+    );
 
     if (res.ok) {
       return (await res.json()) as CreateAuthResponse;
@@ -38,11 +46,18 @@ export const confirmVerifyCode = createAsyncThunk(
       email,
       code,
     };
-    const res = await fetch(`/api/resident-auth/verify`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(request),
-    });
+    const res = await fetchWithSentry(
+      '/api/resident-auth/verify',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(request),
+      },
+      {
+        operation: 'confirm_verify_code',
+        route: '/api/resident-auth/verify',
+      },
+    );
 
     if (res.ok) {
       return (await res.json()) as VerifyAuthResponse;
@@ -55,9 +70,16 @@ export const confirmVerifyCode = createAsyncThunk(
 );
 
 export const exit = createAsyncThunk('auth/exit', async () => {
-  const res = await fetch(`/api/resident-auth/exit`, {
-    method: 'POST',
-  });
+  const res = await fetchWithSentry(
+    '/api/resident-auth/exit',
+    {
+      method: 'POST',
+    },
+    {
+      operation: 'resident_sign_out',
+      route: '/api/resident-auth/exit',
+    },
+  );
   return (await res.json()) as VerifyAuthResponse;
 });
 

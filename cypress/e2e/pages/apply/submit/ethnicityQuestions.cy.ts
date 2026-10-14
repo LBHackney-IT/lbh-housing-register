@@ -44,9 +44,9 @@ describe('Ethnicity questions', () => {
     );
 
     EthnicityPage.visit();
-    EthnicityPage.getEthnicityPage().should('be.visible');
-
     cy.contains('Checking information…');
+    EthnicityPage.getEthnicityPage().should('be.visible');
+    cy.contains('Checking information…').should('not.exist');
   });
 
   it('lets user fill in and submit their personal details when logged in', () => {

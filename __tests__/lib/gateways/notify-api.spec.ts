@@ -16,10 +16,6 @@ jest.mock('notifications-node-client', () => ({
   NotifyClient: jest.fn(),
 }));
 
-jest.mock('@sentry/nextjs', () => ({
-  captureException: jest.fn(),
-}));
-
 const NotifyClientMock = NotifyClient as unknown as jest.Mock;
 const captureExceptionMock = Sentry.captureException as jest.Mock;
 
@@ -88,7 +84,13 @@ describe('notify-api gateway', () => {
     await expect(sendDisqualifyEmail(mockRequest)).rejects.toThrow(notifyError);
 
     expect(captureExceptionMock).toHaveBeenCalledWith(notifyError, {
-      extra: { notifyRequest: mockRequest },
+      tags: {
+        notify_template: 'template-disqualify',
+        notify_reference: 'REF123',
+      },
     });
+    expect(JSON.stringify(captureExceptionMock.mock.calls)).not.toContain(
+      'jane@example.com',
+    );
   });
 });

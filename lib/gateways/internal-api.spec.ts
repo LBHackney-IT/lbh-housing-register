@@ -1,5 +1,11 @@
 import { Application } from '../../domain/HousingApi';
-import { CreateApplicationError, createApplication } from './internal-api';
+import {
+  CreateApplicationError,
+  addNoteToHistory,
+  createApplication,
+  lookUpAddress,
+  updateApplication,
+} from './internal-api';
 
 const application = { id: 'app-1' } as Application;
 
@@ -86,5 +92,118 @@ describe('createApplication', () => {
     });
     expect(consoleError).toHaveBeenCalled();
     consoleError.mockRestore();
+  });
+});
+
+describe('lookUpAddress', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('returns lookup results when the request succeeds', async () => {
+    const result = {
+      address: [{ UPRN: 1, line1: '1 Test Street' }],
+      page_count: 1,
+      total_count: 1,
+    };
+    mockFetch({
+      ok: true,
+      status: 200,
+      json: async () => result,
+    });
+
+    await expect(lookUpAddress('E9 6PT')).resolves.toEqual(result);
+    expect(global.fetch).toHaveBeenCalledWith('/api/address/E9%206PT', {
+      method: 'GET',
+    });
+  });
+
+  it('throws when the lookup API returns an error body without addresses', async () => {
+    mockFetch({
+      ok: false,
+      status: 500,
+      json: async () => ({ message: 'Unable to look up address' }),
+    });
+
+    await expect(lookUpAddress('not a UK postcode')).rejects.toThrow(
+      'Unable to look up address (500)',
+    );
+  });
+});
+
+describe('updateApplication', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('returns the updated application when the request succeeds', async () => {
+    mockFetch({
+      ok: true,
+      status: 200,
+      json: async () => application,
+    });
+
+    await expect(updateApplication(application)).resolves.toEqual(application);
+  });
+
+  it('throws the API message when the request fails', async () => {
+    mockFetch({
+      ok: false,
+      status: 400,
+      json: async () => ({
+        message: 'Supplied bidding number "1234567" is reserved',
+        type: 'InvalidBiddingNumberException',
+      }),
+    });
+
+    await expect(updateApplication(application)).rejects.toMatchObject({
+      isUserFacing: true,
+      message: 'Supplied bidding number "1234567" is reserved',
+    });
+  });
+
+  it('falls back to a status message when the body has no message', async () => {
+    mockFetch({
+      ok: false,
+      status: 400,
+      json: async () => application,
+    });
+
+    await expect(updateApplication(application)).rejects.toThrow(
+      'Unable to update application (400)',
+    );
+  });
+});
+
+describe('addNoteToHistory', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('returns the response body when the request succeeds', async () => {
+    mockFetch({
+      ok: true,
+      status: 200,
+      json: async () => [{ Note: 'hello' }],
+    });
+
+    await expect(addNoteToHistory('app-1', { Note: 'hello' })).resolves.toEqual(
+      [{ Note: 'hello' }],
+    );
+  });
+
+  it('throws the API message when the request fails', async () => {
+    mockFetch({
+      ok: false,
+      status: 500,
+      json: async () => ({ message: 'Unable to add note to activity history' }),
+    });
+
+    await expect(
+      addNoteToHistory('app-1', { Note: 'hello' }),
+    ).rejects.toMatchObject({
+      isUserFacing: true,
+      message: 'Unable to add note to activity history',
+    });
   });
 });

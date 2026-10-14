@@ -2,15 +2,18 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
 import { Application } from '../../domain/HousingApi';
 import application, { autoSaveMiddleware } from './application';
+import applicationLoad, { ApplicationLoadState } from './application-load';
 import { hrApiCallsStatus, HRApiCallsStatusState } from './apiCallsStatus';
 
 export interface Store {
   application: Application;
+  applicationLoad: ApplicationLoadState;
   hrApiCallsStatus: HRApiCallsStatusState;
 }
 
 const reducer = combineReducers({
   application: application.reducer,
+  applicationLoad: applicationLoad.reducer,
   hrApiCallsStatus: hrApiCallsStatus.reducer,
 });
 

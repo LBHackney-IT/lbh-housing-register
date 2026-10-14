@@ -61,9 +61,9 @@ describe('Declaration', () => {
     );
 
     DeclarationPage.visit();
-    DeclarationPage.getDeclarationPage().should('be.visible');
-
     cy.contains('Checking information…');
+    DeclarationPage.getDeclarationPage().should('be.visible');
+    cy.contains('Checking information…').should('not.exist');
   });
 
   it('lets user accept declaration when signed in', () => {
@@ -138,6 +138,7 @@ describe('Declaration', () => {
     cy.mockHousingRegisterApiPatchApplication(
       applicationId,
       applicationWithNoNeed,
+      apiResponseDelay,
     );
 
     cy.intercept('POST', '**/api/notify/disqualify').as('sendDisqualify');

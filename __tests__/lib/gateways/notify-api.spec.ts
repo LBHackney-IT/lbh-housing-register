@@ -16,10 +16,6 @@ jest.mock('notifications-node-client', () => ({
   NotifyClient: jest.fn(),
 }));
 
-jest.mock('@sentry/nextjs', () => ({
-  captureException: jest.fn(),
-}));
-
 const NotifyClientMock = NotifyClient as unknown as jest.Mock;
 const captureExceptionMock = Sentry.captureException as jest.Mock;
 

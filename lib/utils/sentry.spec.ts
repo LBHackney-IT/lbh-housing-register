@@ -5,10 +5,6 @@ import {
   normaliseApiRoute,
 } from './sentry';
 
-jest.mock('@sentry/nextjs', () => ({
-  captureException: jest.fn(),
-}));
-
 const captureException = Sentry.captureException as jest.Mock;
 
 describe('Sentry fetch instrumentation', () => {

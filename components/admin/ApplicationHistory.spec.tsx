@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import router from 'next/router';
 
 import ApplicationHistory from './ApplicationHistory';
+import { ActivityHistoryResponse } from '../../domain/ActivityHistoryApi';
 import { addNoteToHistory } from '../../lib/gateways/internal-api';
 import { UserFacingError } from '../../lib/utils/errorHelper';
 
@@ -20,6 +21,21 @@ const emptyHistory = {
   results: [],
   paginationDetails: { hasNext: false, nextToken: '' },
 };
+
+const historyItem = (
+  overrides: Partial<ActivityHistoryResponse> = {},
+): ActivityHistoryResponse => ({
+  id: 'activity-1',
+  targetId: 'app-1',
+  createdAt: '2024-01-15T10:00:00.000Z',
+  oldData: {},
+  newData: {},
+  authorDetails: {
+    fullName: 'Case Officer',
+    email: 'officer@hackney.gov.uk',
+  },
+  ...overrides,
+});
 
 const saveNote = async () => {
   fireEvent.change(screen.getByRole('textbox'), {
@@ -56,5 +72,59 @@ describe('ApplicationHistory', () => {
     });
     expect(router.reload).not.toHaveBeenCalled();
     expect(screen.getByRole('button', { name: 'Save note' })).toBeEnabled();
+  });
+
+  it('renders a submitted application heading', () => {
+    render(
+      <ApplicationHistory
+        history={{
+          results: [
+            historyItem({
+              newData: { _activityType: 'submittedByResident' },
+            }),
+          ],
+          paginationDetails: { hasNext: false, nextToken: '' },
+        }}
+        id="app-1"
+        showDetails
+      />,
+    );
+
+    expect(
+      screen.getByText('Application submitted by Case Officer'),
+    ).toBeInTheDocument();
+  });
+
+  it('renders a fallback heading when an activity has no type', () => {
+    render(
+      <ApplicationHistory
+        history={{
+          results: [historyItem()],
+          paginationDetails: { hasNext: false, nextToken: '' },
+        }}
+        id="app-1"
+        showDetails
+      />,
+    );
+
+    expect(screen.getByText('Activity recorded')).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'History' }),
+    ).toBeInTheDocument();
+  });
+
+  it('renders a fallback heading when activity data is missing', () => {
+    render(
+      <ApplicationHistory
+        history={{
+          results: [historyItem({ oldData: null, newData: null })],
+          paginationDetails: { hasNext: false, nextToken: '' },
+        }}
+        id="app-1"
+        showDetails
+      />,
+    );
+
+    expect(screen.getByText('Activity recorded')).toBeInTheDocument();
   });
 });

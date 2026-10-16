@@ -32,9 +32,15 @@ const getReasonFromActivity = (reason: string | undefined) => {
   )?.label;
 };
 
-const capitalizeFirstLetter = (string: string): ApplicationActivityType => {
-  return (string.charAt(0).toUpperCase() +
-    string.slice(1)) as ApplicationActivityType;
+const capitalizeFirstLetter = (
+  value: unknown,
+): ApplicationActivityType | undefined => {
+  if (typeof value !== 'string' || value.length === 0) {
+    return undefined;
+  }
+
+  return (value.charAt(0).toUpperCase() +
+    value.slice(1)) as ApplicationActivityType;
 };
 
 const assignedToChangedByUser = (activity: IActivityEntity) => {
@@ -233,17 +239,27 @@ export function renderHeading(item: ActivityHistoryResponse) {
     [ApplicationActivityType.SubmittedByResident]: submittedByResident,
   };
 
-  const functionDelegate =
-    activityText[capitalizeFirstLetter(historyItem.activityType)];
+  const activityType = capitalizeFirstLetter(historyItem.activityType);
+
+  if (!activityType) {
+    return <>Activity recorded</>;
+  }
+
+  const functionDelegate = activityText[activityType];
 
   if (functionDelegate) {
     return functionDelegate(historyItem);
   }
+
+  return <>{activityType}</>;
 }
 
 export function renderBody(item: ActivityHistoryResponse) {
-  const rawActivityType = (item.newData as Record<string, unknown>)
-    ._activityType;
+  const newDataRecord =
+    item.newData != null && typeof item.newData === 'object'
+      ? (item.newData as Record<string, unknown>)
+      : undefined;
+  const rawActivityType = newDataRecord?._activityType;
   const activityType =
     typeof rawActivityType === 'string' ? rawActivityType : '';
   const skipActivityType = [
@@ -251,7 +267,7 @@ export function renderBody(item: ActivityHistoryResponse) {
     'SensitivityChangedByUser',
     'StatusChangedByUser',
     'SubmittedByResident',
-  ].includes(capitalizeFirstLetter(activityType));
+  ].includes(capitalizeFirstLetter(activityType) ?? '');
 
   if (skipActivityType) return;
 

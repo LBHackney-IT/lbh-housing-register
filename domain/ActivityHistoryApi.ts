@@ -72,7 +72,7 @@ export class ActivityEntity implements IActivityEntity {
   oldData: ActivityHistoryData;
   newData: ActivityHistoryData;
   authorDetails: ActivityHistoryAuthor;
-  activityType: ApplicationActivityType;
+  activityType: ApplicationActivityType | undefined;
 
   constructor(source: ActivityHistoryResponse) {
     this.id = source.id;
@@ -86,8 +86,16 @@ export class ActivityEntity implements IActivityEntity {
       source.newData,
     ) as ActivityHistoryData;
 
-    this.activityType = (source.newData as { _activityType?: string })
-      ._activityType as ApplicationActivityType;
+    const rawNewData =
+      source.newData != null && typeof source.newData === 'object'
+        ? (source.newData as { _activityType?: unknown })
+        : undefined;
+    const rawActivityType = rawNewData?._activityType;
+
+    this.activityType =
+      typeof rawActivityType === 'string'
+        ? (rawActivityType as ApplicationActivityType)
+        : undefined;
   }
 
   mapDotNotationToObject(source: unknown): ActivityHistoryData {

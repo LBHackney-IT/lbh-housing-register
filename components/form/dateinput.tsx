@@ -10,6 +10,7 @@ export const INVALID_DATE = 'invalid date';
 
 type DateInputProps = DateFormField & {
   showDay?: boolean;
+  validateOnSubmitOnly?: boolean;
 };
 
 export default function DateInput({
@@ -18,6 +19,7 @@ export default function DateInput({
   name,
   showDay = true,
   hideLabel,
+  validateOnSubmitOnly = false,
 }: Omit<DateInputProps, 'as'>): JSX.Element {
   const [field, meta, helpers] = useField<string>({
     name,
@@ -60,13 +62,19 @@ export default function DateInput({
       isNaN(+newDate)
     ) {
       helpers.setValue(INVALID_DATE);
-      helpers.setTouched(true);
+      if (!validateOnSubmitOnly) {
+        helpers.setTouched(true);
+      }
       return;
     }
     helpers.setValue(newDate.toISOString());
   }
 
   function onBlur(e: FocusEvent) {
+    if (validateOnSubmitOnly) {
+      return;
+    }
+
     if (
       e.relatedTarget !== dRef.current &&
       e.relatedTarget !== mRef.current &&

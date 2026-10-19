@@ -5,9 +5,18 @@
  */
 const UK_POSTCODE = /^(?:GIR0AA|[A-Z]{1,2}\d[A-Z\d]?\d[A-Z]{2})$/;
 
-export const UK_POSTCODE_ERROR = 'Enter a full UK postcode';
+export const UK_POSTCODE_ERROR = 'Enter a valid UK postcode';
 
-export const isUkPostcode = (value: string): boolean => {
-  const normalised = value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-  return UK_POSTCODE.test(normalised);
+const normalisePostcode = (value: string): string =>
+  value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+
+export const isUkPostcode = (value: string): boolean =>
+  UK_POSTCODE.test(normalisePostcode(value));
+
+export const formatPostcode = (value: string): string => {
+  const normalised = normalisePostcode(value);
+  if (!UK_POSTCODE.test(normalised)) {
+    return value.toUpperCase();
+  }
+  return `${normalised.slice(0, -3)} ${normalised.slice(-3)}`;
 };

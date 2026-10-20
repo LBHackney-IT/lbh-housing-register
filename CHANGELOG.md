@@ -1,5 +1,34 @@
 # Changelog
 
+## [3.1.0](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v3.0.0...hackney-housing-register-v3.1.0) (2026-10-19)
+
+
+### Features
+
+* handle addressess ([e15ee15](https://github.com/LBHackney-IT/lbh-housing-register/commit/e15ee153de9ac451f686c2e5527939189f05cbee))
+* handle addressess ([#600](https://github.com/LBHackney-IT/lbh-housing-register/issues/600)) ([9e5f4e1](https://github.com/LBHackney-IT/lbh-housing-register/commit/9e5f4e16a246cecb748cd8f68ad96c5f7ab33388))
+* log other error types ([63b73ff](https://github.com/LBHackney-IT/lbh-housing-register/commit/63b73ffddaa3fc02c73e29c51433695e77c04fb1))
+* simplify the sentry reimplementation ([98e85f6](https://github.com/LBHackney-IT/lbh-housing-register/commit/98e85f6ada5b2d8d467b4948e6e75f54e00a6fb3))
+* stop indexing and crawling ([6099e72](https://github.com/LBHackney-IT/lbh-housing-register/commit/6099e728ef751d838feac52e397ed4d7ac6a25fb))
+* stop indexing and crawling ([#602](https://github.com/LBHackney-IT/lbh-housing-register/issues/602)) ([22edcce](https://github.com/LBHackney-IT/lbh-housing-register/commit/22edcced15afa6ea30d5de382a2d9d3375ce6ac4))
+* strengthen frontend Sentry observability ([#586](https://github.com/LBHackney-IT/lbh-housing-register/issues/586)) ([fd5f78b](https://github.com/LBHackney-IT/lbh-housing-register/commit/fd5f78bc1cc6d339a4e697acb466091f56c2f3c8))
+* validate postcodes ([aace3b8](https://github.com/LBHackney-IT/lbh-housing-register/commit/aace3b807c64e5c80af23d0799286d27efe20570))
+
+
+### Bug Fixes
+
+* add loaded to state to test object ([80ee9e0](https://github.com/LBHackney-IT/lbh-housing-register/commit/80ee9e0905b7a4d761193751ee0bc08004e4a72e))
+* add loaded to state to test object ([#596](https://github.com/LBHackney-IT/lbh-housing-register/issues/596)) ([0cf5f47](https://github.com/LBHackney-IT/lbh-housing-register/commit/0cf5f47607602614db2104ec51fb2a4b8f1fdd0f))
+* address from date ([#582](https://github.com/LBHackney-IT/lbh-housing-register/issues/582)) ([4e4f579](https://github.com/LBHackney-IT/lbh-housing-register/commit/4e4f5791c2f271632938217ba7ab4ed3dd286f6f))
+* hr objects are not valid as a react child found object error ([#580](https://github.com/LBHackney-IT/lbh-housing-register/issues/580)) ([7866437](https://github.com/LBHackney-IT/lbh-housing-register/commit/7866437ab643ca352ec2a8d067a1f15d596fe364))
+* keep apply forms usable after refresh ([2919cb3](https://github.com/LBHackney-IT/lbh-housing-register/commit/2919cb3ebc845e580d5af1e4081bbcbe51573953))
+* keep apply forms usable after refresh ([#594](https://github.com/LBHackney-IT/lbh-housing-register/issues/594)) ([118beb9](https://github.com/LBHackney-IT/lbh-housing-register/commit/118beb9db905926fdb89b4ae200ff87311c244b7))
+* log unknown disqualified reason ([c6d54b3](https://github.com/LBHackney-IT/lbh-housing-register/commit/c6d54b3442a51ce45e9d467b9b401211f64d5ac2))
+* remove functions from inner scope ([d6e5019](https://github.com/LBHackney-IT/lbh-housing-register/commit/d6e5019b13effaa545c56e484d42efc597867e7d))
+* set senty mock at top level ([1666b3f](https://github.com/LBHackney-IT/lbh-housing-register/commit/1666b3f759dd911f034260571eef906281eea3a3))
+* set senty mock at top level ([#597](https://github.com/LBHackney-IT/lbh-housing-register/issues/597)) ([fd9833b](https://github.com/LBHackney-IT/lbh-housing-register/commit/fd9833b5355a92055b4a1bc3336345037b672bbd))
+* validate postcodes before calls ([#583](https://github.com/LBHackney-IT/lbh-housing-register/issues/583)) ([7db856c](https://github.com/LBHackney-IT/lbh-housing-register/commit/7db856c666a1d35895e9ed5c4dd82a60b8acba5e))
+
 ## [3.0.0](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.4.0...hackney-housing-register-v3.0.0) (2026-09-22)
 
 ### ⚠ BREAKING CHANGES

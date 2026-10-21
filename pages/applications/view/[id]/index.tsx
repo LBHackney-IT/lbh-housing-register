@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import { GetServerSideProps } from 'next';
+import * as Sentry from '@sentry/nextjs';
 import { useRouter } from 'next/router';
 
 import Actions from '../../../../components/admin/actions';
@@ -28,6 +29,7 @@ import Layout from '../../../../components/layout/staff-layout';
 import { ActivityHistoryPagedResult } from '../../../../domain/ActivityHistoryApi';
 import { Applicant, Application } from '../../../../domain/HousingApi';
 import { UserContext } from '../../../../lib/contexts/user-context';
+import { authorizeStaffPage } from '../../../../lib/auth/page';
 import {
   getApplication,
   getApplicationHistory,
@@ -39,20 +41,19 @@ import {
 } from '../../../../lib/types/application-status';
 import { formatDate } from '../../../../lib/utils/dateOfBirth';
 import {
-  HackneyGoogleUserWithPermissions,
+  StaffUserWithPermissions,
   canEditApplications,
   canViewSensitiveApplication,
-  getRedirect,
-  getSession,
   hasReadOnlyPermissionOnly,
-} from '../../../../lib/utils/googleAuth';
+} from '../../../../lib/auth/staff';
 import { getPersonName } from '../../../../lib/utils/person';
+import { getErrorStatusCode } from '../../../../lib/utils/sentry';
 import Custom404 from '../../../404';
 import { scrollToError } from 'lib/utils/scroll';
 import ErrorSummary from 'components/errors/error-summary';
 
 export interface PageProps {
-  user: HackneyGoogleUserWithPermissions;
+  user: StaffUserWithPermissions;
   data: Application;
   history: ActivityHistoryPagedResult;
 }
@@ -340,16 +341,9 @@ export default function ApplicationPage({
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const user = getSession(context.req);
-  const redirect = getRedirect(user);
-  if (redirect) {
-    return {
-      props: {},
-      redirect: {
-        destination: redirect,
-      },
-    };
-  }
+  const authorization = await authorizeStaffPage(context);
+  if ('redirect' in authorization) return authorization;
+  const { user } = authorization;
 
   try {
     const { id } = context.params as {
@@ -367,11 +361,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     return { props: { user, data, history } };
   } catch (e) {
-    if (e instanceof Error) {
-      console.error(e.message);
-    } else {
-      console.error('An unknown error occurred');
-    }
+    const status = getErrorStatusCode(e);
+    Sentry.captureException(e, {
+      tags: {
+        operation: 'load_staff_application',
+        surface: 'staff',
+        route: '/applications/view/[id]',
+        ...(status !== undefined ? { 'http.status_code': String(status) } : {}),
+      },
+    });
     return { props: {} };
   }
 };

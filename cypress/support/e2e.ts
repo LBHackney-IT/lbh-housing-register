@@ -23,6 +23,13 @@ import { interceptLocalE2eApplicationEvidencePost } from './intercepts';
 beforeEach(() => {
   if (Cypress.expose('LOCAL_E2E') === 'true') {
     interceptLocalE2eApplicationEvidencePost();
+    // Drop persist Housing Register nocks left by mocked Cypress on the same
+    // Next process. 404 is fine when E2E_HTTP_MOCKS is off.
+    cy.request({
+      method: 'POST',
+      url: '/api/e2e/clear-nock',
+      failOnStatusCode: false,
+    });
   }
 });
 

@@ -228,14 +228,20 @@ jobs:
       width:
         type: integer
         default: 1366
-    # Next.js must expose /api/e2e/* for app-process Nock. This job has no Circle context for API URLs,
-    # so set server env here — must match what Cypress registers via /api/e2e/nock (see .env.sample).
+    # Next.js must expose the three /api/e2e/* Nock-control routes. Session
+    # cookies are created in the Cypress Node process, not by an app route.
     environment:
       E2E_HTTP_MOCKS: 'true'
       PORT: '3000'
-      # Cypress signs test JWTs with a dummy secret (see cypress/support/commands.ts),
-      # so verification must be skipped for the app to accept them. Must be 'true'
-      # here even though serverless.yml hardcodes it to false for real deploys.
+      NEXTAUTH_URL: 'http://localhost:3000'
+      NEXTAUTH_SECRET: 'ci-only-nextauth-secret-with-at-least-32-bytes'
+      COGNITO_ISSUER: 'https://cognito-idp.eu-west-2.amazonaws.com/eu-west-2_ci'
+      COGNITO_CLIENT_ID: 'ci-client-id'
+      COGNITO_CLIENT_SECRET: 'ci-client-secret'
+      COGNITO_DOMAIN: 'https://ci.auth.eu-west-2.amazoncognito.com'
+      # Cypress signs resident test cookies with a hardcoded dummy secret.
+      # SKIP_VERIFY_TOKEN stays true in CI so those cookies are decoded, not
+      # verified. serverless.yml hardcodes it to false for deployments.
       SKIP_VERIFY_TOKEN: 'true'
       # Group names are arbitrary for testing - value is not important, must just
       # match cypress.config.ts's exposed defaults for the same vars.

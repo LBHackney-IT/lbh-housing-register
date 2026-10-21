@@ -1,7 +1,9 @@
 import { AddressLookupResult } from '../../domain/addressLookup';
 import { AddNoteToHistoryRequest, Application } from '../../domain/HousingApi';
+import { UserFacingError } from '../utils/errorHelper';
+import { fetchWithSentry } from '../utils/sentry';
 
-export class CreateApplicationError extends Error {
+export class CreateApplicationError extends UserFacingError {
   constructor(
     message: string,
     readonly status: number,
@@ -21,7 +23,7 @@ const readApiErrorBody = async (res: Response): Promise<ApiErrorBody> => {
   try {
     return (await res.json()) as ApiErrorBody;
   } catch (error) {
-    console.error('Unkown create application error response', error);
+    console.error('Unable to parse API error response', error);
     return {};
   }
 };
@@ -41,31 +43,60 @@ const createApplicationErrorMessage = (
 };
 
 export const lookUpAddress = async (postCode: string) => {
-  const res = await fetch(`/api/address/${postCode}`, {
-    method: 'GET',
-  });
+  const res = await fetchWithSentry(
+    `/api/address/${encodeURIComponent(postCode)}`,
+    {
+      method: 'GET',
+    },
+    {
+      operation: 'look_up_address',
+      route: '/api/address/[postcode]',
+    },
+  );
+
+  if (!res.ok) {
+    throw new Error(`Unable to look up address (${res.status})`);
+  }
 
   return (await res.json()) as AddressLookupResult;
 };
 
 export const updateApplication = async (application: Application) => {
-  const res = await fetch(`/api/applications/${application.id}`, {
-    method: 'PATCH',
-    body: JSON.stringify(application),
-  });
+  const res = await fetchWithSentry(
+    `/api/applications/${application.id}`,
+    {
+      method: 'PATCH',
+      body: JSON.stringify(application),
+    },
+    {
+      operation: 'staff_update_application',
+      route: '/api/applications/[id]',
+    },
+  );
 
   if (res.ok) {
     return (await res.json()) as Application;
-  } else {
-    throw Error(`Unable to update application (${res.status})`);
   }
+
+  // Surface validation messages, e.g. duplicate bidding number.
+  const body = await readApiErrorBody(res);
+  throw new UserFacingError(
+    body.message ?? `Unable to update application (${res.status})`,
+  );
 };
 
 export const createApplication = async (application: Application) => {
-  const res = await fetch(`/api/applications`, {
-    method: 'POST',
-    body: JSON.stringify(application),
-  });
+  const res = await fetchWithSentry(
+    '/api/applications',
+    {
+      method: 'POST',
+      body: JSON.stringify(application),
+    },
+    {
+      operation: 'staff_create_application',
+      route: '/api/applications',
+    },
+  );
 
   if (res.ok) {
     return (await res.json()) as Application;
@@ -80,30 +111,51 @@ export const createApplication = async (application: Application) => {
 };
 
 export const completeApplication = async (application: Application) => {
-  const res = await fetch(`/api/applications/${application.id}/complete`, {
-    method: 'PATCH',
-    body: JSON.stringify(application),
-  });
+  const res = await fetchWithSentry(
+    `/api/applications/${application.id}/complete`,
+    {
+      method: 'PATCH',
+      body: JSON.stringify(application),
+    },
+    {
+      operation: 'staff_complete_application',
+      route: '/api/applications/[id]/complete',
+    },
+  );
   if (res.ok) {
     return (await res.json()) as Application;
   } else {
-    throw Error(`Unable to complete application (${res.status})`);
+    throw new UserFacingError(`Unable to complete application (${res.status})`);
   }
 };
 
 export const generateNovaletExport = async () => {
-  const res = await fetch(`/api/reports/novalet/generate`, {
-    method: 'POST',
-    body: null,
-  });
+  const res = await fetchWithSentry(
+    '/api/reports/novalet/generate',
+    {
+      method: 'POST',
+      body: null,
+    },
+    {
+      operation: 'generate_novalet_export',
+      route: '/api/reports/novalet/generate',
+    },
+  );
   return res;
 };
 
 export const approveNovaletExport = async (fileName: string) => {
-  const res = await fetch(`/api/reports/novalet/approve/${fileName}`, {
-    method: 'POST',
-    body: null,
-  });
+  const res = await fetchWithSentry(
+    `/api/reports/novalet/approve/${fileName}`,
+    {
+      method: 'POST',
+      body: null,
+    },
+    {
+      operation: 'approve_novalet_export',
+      route: '/api/reports/novalet/approve/[fileName]',
+    },
+  );
 
   return res;
 };
@@ -112,9 +164,24 @@ export const addNoteToHistory = async (
   applicationId: string,
   request: AddNoteToHistoryRequest,
 ) => {
-  const res = await fetch(`/api/applications/${applicationId}/note`, {
-    method: 'POST',
-    body: JSON.stringify(request),
-  });
-  return await res.json();
+  const res = await fetchWithSentry(
+    `/api/applications/${applicationId}/note`,
+    {
+      method: 'POST',
+      body: JSON.stringify(request),
+    },
+    {
+      operation: 'add_application_note',
+      route: '/api/applications/[id]/note',
+    },
+  );
+
+  if (res.ok) {
+    return await res.json();
+  }
+
+  const body = await readApiErrorBody(res);
+  throw new UserFacingError(
+    body.message ?? `Unable to add note (${res.status})`,
+  );
 };

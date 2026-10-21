@@ -8,13 +8,13 @@ interface APIResponseRequest {
 }
 
 export interface MockRequestResponseParams {
-  hackneyToken: string;
+  sessionToken: string;
   requestBody?: string;
   method?: RequestMethod;
 }
 
-export const generateMockRequestResponseWithHackneyToken = ({
-  hackneyToken: token,
+export const generateMockRequestResponseWithStaffSession = ({
+  sessionToken: token,
   requestBody,
   method = 'GET',
 }: MockRequestResponseParams): APIResponseRequest => {
@@ -26,7 +26,7 @@ export const generateMockRequestResponseWithHackneyToken = ({
   // @ts-ignore
   req.headers = {
     'content-type': 'Application/json',
-    cookie: `hackneyToken=${token}`,
+    cookie: `next-auth.session-token=${token}`,
   };
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment

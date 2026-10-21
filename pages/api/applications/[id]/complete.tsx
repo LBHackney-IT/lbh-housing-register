@@ -2,8 +2,7 @@ import axios from 'axios';
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { completeApplication } from '../../../../lib/gateways/applications-api';
-import { canUpdateApplication } from '../../../../lib/utils/requestAuth';
-import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
+import { getApplicationAccess } from '../../../../lib/utils/requestAuth';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -20,11 +19,21 @@ const endpoint: NextApiHandler = async (
   try {
     const id = req.query.id as string;
 
-    if (canUpdateApplication(req, id)) {
+    const access = await getApplicationAccess(req, id);
+    if (access === 'allowed') {
       const data = await completeApplication(id, req);
       res.status(StatusCodes.OK).json(data);
     } else {
-      res.status(StatusCodes.FORBIDDEN).json({ message: 'Access denied' });
+      res
+        .status(
+          access === 'unauthenticated'
+            ? StatusCodes.UNAUTHORIZED
+            : StatusCodes.FORBIDDEN,
+        )
+        .json({
+          message:
+            access === 'unauthenticated' ? 'Unauthorized' : 'Access denied',
+        });
     }
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
@@ -38,7 +47,4 @@ const endpoint: NextApiHandler = async (
   }
 };
 
-export default wrapApiHandlerWithSentry(
-  endpoint,
-  '/api/applications/[id]/complete',
-);
+export default endpoint;

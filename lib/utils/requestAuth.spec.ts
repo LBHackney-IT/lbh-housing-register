@@ -1,104 +1,125 @@
-import { faker } from '@faker-js/faker';
+/** @jest-environment node */
+
 import { createRequest } from 'node-mocks-http';
 
-import { HackneyResident } from 'domain/HackneyResident';
-
-import { ApiRequest } from '../../testUtils/types';
-import { generateHRUserWithPermissions } from '../../testUtils/userHelper';
-import { HackneyGoogleUserWithPermissions } from './googleAuth';
-import { hasReadOnlyStaffPermissions } from './hasReadOnlyStaffPermissions';
-import { hasStaffPermissions } from './hasStaffPermissions';
-import { canUpdateApplication } from './requestAuth';
+import {
+  generateHRUserWithPermissions,
+  UserRole,
+} from '../../testUtils/userHelper';
+import { getSession } from '../auth/staff';
+import { canUpdateApplication, getApplicationAccess } from './requestAuth';
 import { getUser } from './users';
 
-const req: ApiRequest = createRequest();
-const applicationId = faker.string.uuid();
-const user: HackneyGoogleUserWithPermissions = generateHRUserWithPermissions();
-const resident: HackneyResident = {
-  application_id: applicationId,
-};
-
-jest.mock('../utils/hasStaffPermissions', () => ({
-  hasStaffPermissions: jest.fn(),
+jest.mock('../auth/staff', () => ({
+  ...jest.requireActual('../auth/staff'),
+  getSession: jest.fn(),
 }));
+jest.mock('./users', () => ({ getUser: jest.fn() }));
 
-jest.mock('../utils/hasReadOnlyStaffPermissions', () => ({
-  hasReadOnlyStaffPermissions: jest.fn(),
-}));
+const getSessionMock = getSession as jest.MockedFunction<typeof getSession>;
+const getUserMock = getUser as jest.MockedFunction<typeof getUser>;
 
-jest.mock('./users', () => ({
-  getUser: jest.fn(),
-}));
-
-describe('requestAuth', () => {
+describe('getApplicationAccess', () => {
   beforeEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
   });
 
-  describe('canUpdateApplication', () => {
-    //staff member
-    it('calls hasStaffPermissions with correct request', () => {
-      (hasStaffPermissions as jest.Mock).mockReturnValueOnce(true);
+  it.each([UserRole.Admin, UserRole.Manager, UserRole.Officer])(
+    'allows writable staff role %s',
+    async (role) => {
+      getSessionMock.mockResolvedValue(generateHRUserWithPermissions(role));
+      expect(await getApplicationAccess(createRequest(), 'app-id')).toBe(
+        'allowed',
+      );
+    },
+  );
 
-      canUpdateApplication(req, applicationId);
+  it('checks the staff session with the request and skips resident auth for writable staff', async () => {
+    const req = createRequest();
+    getSessionMock.mockResolvedValue(
+      generateHRUserWithPermissions(UserRole.Officer),
+    );
 
-      expect(hasStaffPermissions).toHaveBeenCalledTimes(1);
-      expect(hasStaffPermissions).toHaveBeenCalledWith(req);
-    });
+    await getApplicationAccess(req, 'app-id');
 
-    it('returns true when hasStaffPermissions returns true', () => {
-      (hasStaffPermissions as jest.Mock).mockReturnValueOnce(true);
-
-      expect(canUpdateApplication(req, applicationId)).toBeTruthy();
-    });
-
-    it('calls hasReadOnlyStaffPermission with correct request', () => {
-      (hasStaffPermissions as jest.Mock).mockReturnValueOnce(true);
-      (hasReadOnlyStaffPermissions as jest.Mock).mockReturnValueOnce(true);
-
-      canUpdateApplication(req, applicationId);
-
-      expect(hasReadOnlyStaffPermissions).toHaveBeenCalledTimes(1);
-      expect(hasReadOnlyStaffPermissions).toHaveBeenCalledWith(req);
-    });
-
-    it('returns true when hasStaffPermissions returns true and hasReadOnlyStaffPermissions returns false', () => {
-      (hasStaffPermissions as jest.Mock).mockReturnValueOnce(true);
-      (hasReadOnlyStaffPermissions as jest.Mock).mockReturnValueOnce(false);
-
-      expect(canUpdateApplication(req, applicationId)).toBeTruthy();
-    });
-
-    it('returns false when hasStaffPermissions returns true and hasReadOnlyStaffPermissions returns true', () => {
-      (hasStaffPermissions as jest.Mock).mockReturnValueOnce(true);
-      (hasReadOnlyStaffPermissions as jest.Mock).mockReturnValueOnce(true);
-
-      expect(canUpdateApplication(req, applicationId)).toBeFalsy();
-    });
-
-    it('calls getUser with request when hasStaffPermissions returns false', () => {
-      (hasStaffPermissions as jest.Mock).mockReturnValueOnce(false);
-      (getUser as jest.Mock).mockReturnValueOnce(user);
-
-      canUpdateApplication(req, applicationId);
-
-      expect(getUser).toHaveBeenCalledTimes(1);
-      expect(getUser).toHaveBeenCalledWith(req);
-    });
-
-    //resident
-    it('returns true when user returned by getUser has claims to the given application id', () => {
-      (hasStaffPermissions as jest.Mock).mockReturnValueOnce(false);
-      (getUser as jest.Mock).mockReturnValueOnce(resident);
-
-      expect(canUpdateApplication(req, applicationId)).toBeTruthy();
-    });
-
-    it('returns false  when user returned by getUser does not have claims to the given application id', () => {
-      (hasStaffPermissions as jest.Mock).mockReturnValueOnce(false);
-      (getUser as jest.Mock).mockReturnValueOnce(resident);
-
-      expect(canUpdateApplication(req, 'non-matching-id')).toBeFalsy();
-    });
+    expect(getSessionMock).toHaveBeenCalledTimes(1);
+    expect(getSessionMock).toHaveBeenCalledWith(req);
+    expect(getUserMock).not.toHaveBeenCalled();
   });
+
+  it('forbids read-only staff', async () => {
+    getSessionMock.mockResolvedValue(
+      generateHRUserWithPermissions(UserRole.ReadOnly),
+    );
+    expect(await getApplicationAccess(createRequest(), 'app-id')).toBe(
+      'forbidden',
+    );
+  });
+
+  it('forbids authenticated staff without an authorised role', async () => {
+    getSessionMock.mockResolvedValue(generateHRUserWithPermissions());
+    getUserMock.mockReturnValue(undefined);
+
+    expect(await getApplicationAccess(createRequest(), 'app-id')).toBe(
+      'forbidden',
+    );
+  });
+
+  it('checks resident authentication when staff lacks write permission', async () => {
+    const req = createRequest();
+    getSessionMock.mockResolvedValue(
+      generateHRUserWithPermissions(UserRole.ReadOnly),
+    );
+    getUserMock.mockReturnValue(undefined);
+
+    await getApplicationAccess(req, 'app-id');
+
+    expect(getUserMock).toHaveBeenCalledTimes(1);
+    expect(getUserMock).toHaveBeenCalledWith(req);
+  });
+
+  it('allows a resident to access only their own application', async () => {
+    getSessionMock.mockResolvedValue(undefined);
+    getUserMock.mockReturnValue({ application_id: 'app-id' });
+    expect(await getApplicationAccess(createRequest(), 'app-id')).toBe(
+      'allowed',
+    );
+    expect(await getApplicationAccess(createRequest(), 'another-id')).toBe(
+      'forbidden',
+    );
+  });
+
+  it('distinguishes an unauthenticated request', async () => {
+    getSessionMock.mockResolvedValue(undefined);
+    getUserMock.mockReturnValue(undefined);
+    expect(await getApplicationAccess(createRequest(), 'app-id')).toBe(
+      'unauthenticated',
+    );
+  });
+
+  it.each([
+    ['allowed', true],
+    ['forbidden', false],
+    ['unauthenticated', false],
+  ] as const)(
+    'maps %s application access to canUpdateApplication=%s',
+    async (access, expected) => {
+      if (access === 'allowed') {
+        getSessionMock.mockResolvedValue(
+          generateHRUserWithPermissions(UserRole.Officer),
+        );
+      } else if (access === 'forbidden') {
+        getSessionMock.mockResolvedValue(
+          generateHRUserWithPermissions(UserRole.ReadOnly),
+        );
+      } else {
+        getSessionMock.mockResolvedValue(undefined);
+      }
+      getUserMock.mockReturnValue(undefined);
+
+      await expect(
+        canUpdateApplication(createRequest(), 'app-id'),
+      ).resolves.toBe(expected);
+    },
+  );
 });

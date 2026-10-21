@@ -1,14 +1,13 @@
-import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 import axios from 'axios';
 import { StatusCodes } from 'http-status-codes';
 
 import { Application } from '../../../domain/HousingApi';
+import { requireApiStaff } from '../../../lib/auth/api';
 import {
   addApplication,
   getApplication,
 } from '../../../lib/gateways/applications-api';
-import { hasReadOnlyStaffPermissions } from '../../../lib/utils/hasReadOnlyStaffPermissions';
-import { hasStaffPermissions } from '../../../lib/utils/hasStaffPermissions';
+import { hasReadOnlyPermissionOnly } from '../../../lib/auth/staff';
 import { isStaffAction } from '../../../lib/utils/isStaffAction';
 import { getUser } from '../../../lib/utils/users';
 
@@ -28,8 +27,10 @@ const endpoint: NextApiHandler = async (
           res.status(StatusCodes.OK).json(data);
         } else {
           res
-            .status(StatusCodes.FORBIDDEN)
-            .json({ message: 'Unable to get application' });
+            .status(user ? StatusCodes.FORBIDDEN : StatusCodes.UNAUTHORIZED)
+            .json({
+              message: user ? 'Unable to get application' : 'Unauthorized',
+            });
         }
       } catch (error) {
         if (axios.isAxiosError(error) && error.response?.status) {
@@ -61,7 +62,10 @@ const endpoint: NextApiHandler = async (
         break;
       }
 
-      if (!hasStaffPermissions(req) || hasReadOnlyStaffPermissions(req)) {
+      const staff = await requireApiStaff(req, res);
+      if (!staff) break;
+
+      if (hasReadOnlyPermissionOnly(staff)) {
         res.status(StatusCodes.FORBIDDEN).json({
           message: isStaffAction(application)
             ? 'Unable to add application with assessment'
@@ -94,4 +98,4 @@ const endpoint: NextApiHandler = async (
   }
 };
 
-export default wrapApiHandlerWithSentry(endpoint, '/api/applications');
+export default endpoint;

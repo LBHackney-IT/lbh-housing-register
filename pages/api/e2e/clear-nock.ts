@@ -1,10 +1,11 @@
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler } from 'next';
 
+import { areE2eRoutesEnabled } from '../../../lib/server/e2eAccess';
 import { clearE2eNockMocks } from '../../../lib/server/e2eHttpMocks';
 
 const endpoint: NextApiHandler = (req, res) => {
-  if (process.env.E2E_HTTP_MOCKS !== 'true') {
+  if (!areE2eRoutesEnabled()) {
     res.status(StatusCodes.NOT_FOUND).end();
     return;
   }

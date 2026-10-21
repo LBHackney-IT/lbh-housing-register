@@ -4,6 +4,7 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 const { withSentryConfig } = require('@sentry/nextjs');
+const allowSearchIndexing = process.env.NEXT_PUBLIC_ENV === 'production';
 
 // @ts-check
 /** @type {import('next').NextConfig} */
@@ -16,9 +17,50 @@ const nextConfig = {
   reactStrictMode: true,
   async headers() {
     return [
+      // Staff pages can include session cookies. Do not let browsers or
+      // CloudFront reuse a previous user's dashboard response.
+      {
+        source: '/applications/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'private, no-store, max-age=0',
+          },
+        ],
+      },
+      // NextAuth callback/session responses must not be cached.
+      {
+        source: '/api/auth/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'private, no-store, max-age=0',
+          },
+        ],
+      },
+      // Resident OTP generate/verify/exit set the housing_user cookie.
+      {
+        source: '/api/resident-auth/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'private, no-store, max-age=0',
+          },
+        ],
+      },
       {
         source: '/(.*)',
         headers: [
+          // Restrict embedding. Complements X-Frame-Options for modern browsers.
+          {
+            key: 'Content-Security-Policy',
+            value: "frame-ancestors 'self'",
+          },
+          // Do not leak the full URL (including OAuth query strings) to other origins.
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
           {
             key: 'X-Frame-Options',
             value: 'SAMEORIGIN',
@@ -31,7 +73,26 @@ const nextConfig = {
             key: 'X-Content-Type-Options',
             value: 'nosniff',
           },
+          // Dev, staging, CI, and local responses must not be indexed.
+          ...(!allowSearchIndexing
+            ? [
+                {
+                  key: 'X-Robots-Tag',
+                  value: 'noindex, nofollow',
+                },
+              ]
+            : []),
         ],
+      },
+    ];
+  },
+  // CloudFront sends /robots.txt to this Lambda. public/robots.txt would sit in
+  // the assets bucket, which is only routed for hashed static files and images.
+  async rewrites() {
+    return [
+      {
+        source: '/robots.txt',
+        destination: '/api/robots',
       },
     ];
   },
@@ -43,5 +104,30 @@ module.exports = withSentryConfig(nextConfig, {
   // SENTRY_AUTH_TOKEN, SENTRY_PROJECT, and SENTRY_ORG are all set in the housing-register-fe-build-context during the build proceess and are not necassary to be set here.
   // Verbose in CI so upload/warning logs are visible there; quiet for local dev builds.
   silent: !process.env.CI,
-  hideSourceMaps: true, // Will make sourcemaps invisible to the browser.
+  // Upload shared/framework chunks as well as page chunks so client stack
+  // traces can always be symbolicated.
+  widenClientFileUpload: true,
+  // Proxy browser events through the app to avoid client-side blockers.
+  // CloudFront's default behaviour forwards this route to the SSR Lambda.
+  // When that Lambda is throttled or failing, browser envelopes stop as well.
+  tunnelRoute: '/monitoring',
+  sourcemaps: {
+    // Never publish source maps with the OpenNext static assets.
+    deleteSourcemapsAfterUpload: true,
+  },
+  // `build` and `dev` pass `--webpack`. Next 16 defaults to Turbopack, and
+  // the Sentry loader that instruments Pages API routes does not run there.
+  webpack: {
+    // Strip Sentry SDK debug logging from the production bundle. Does not
+    // affect application console output or Sentry event capture.
+    treeshake: {
+      removeDebugLogging: true,
+    },
+    // Annotate React elements with data-sentry-* so UI breadcrumbs (and
+    // Replay, if enabled later) name the component instead of a generic DOM
+    // selector. Source-file attributes are component paths, not user data.
+    reactComponentAnnotation: {
+      enabled: true,
+    },
+  },
 });

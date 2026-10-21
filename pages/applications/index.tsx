@@ -1,6 +1,7 @@
 import React, { MouseEvent, useEffect, useState } from 'react';
 
 import { GetServerSideProps } from 'next';
+import * as Sentry from '@sentry/nextjs';
 import { useRouter } from 'next/router';
 
 import ApplicationsTable from '../../components/admin/ApplicationsTable';
@@ -14,19 +15,19 @@ import { HeadingOne } from '../../components/content/headings';
 import ErrorSummary from '../../components/errors/error-summary';
 import Layout from '../../components/layout/staff-layout';
 import SimplePaginationSearch from '../../components/SimplePaginationSearch';
-import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
+import { StaffUser } from '../../domain/StaffUser';
 import { PaginatedSearchResultsResponse } from '../../domain/HousingApi';
+import { authorizeStaffPage } from '../../lib/auth/page';
 import { UserContext } from '../../lib/contexts/user-context';
 import { getApplicationsByStatusAndAssignedTo } from '../../lib/gateways/applications-api';
+import { getErrorStatusCode } from '../../lib/utils/sentry';
 import {
-  HackneyGoogleUserWithPermissions,
-  getRedirect,
-  getSession,
+  StaffUserWithPermissions,
   hasReadOnlyPermissionOnly,
-} from '../../lib/utils/googleAuth';
+} from '../../lib/auth/staff';
 
 interface PageProps {
-  user?: HackneyGoogleUser;
+  user?: StaffUser;
   applications: PaginatedSearchResultsResponse | null;
   page: string;
   pageSize: string;
@@ -65,9 +66,7 @@ export default function ApplicationListPage({
           buttonTitle="Search"
           watermark="Search all applications (name, reference, bidding number)"
         />
-        {!hasReadOnlyPermissionOnly(
-          user as HackneyGoogleUserWithPermissions,
-        ) && (
+        {!hasReadOnlyPermissionOnly(user as StaffUserWithPermissions) && (
           <div
             className="govuk-grid-row"
             data-testid="test-applications-worktray"
@@ -132,16 +131,9 @@ export default function ApplicationListPage({
 export const getServerSideProps: GetServerSideProps<PageProps> = async (
   context,
 ) => {
-  const user = getSession(context.req);
-  const redirect = getRedirect(user);
-  if (redirect) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: redirect,
-      },
-    };
-  }
+  const authorization = await authorizeStaffPage(context);
+  if ('redirect' in authorization) return authorization;
+  const { user } = authorization;
 
   const {
     status = 'Submitted',
@@ -164,10 +156,15 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
       pageSize,
     );
   } catch (err) {
-    console.error(
-      '[applications/index] getApplicationsByStatusAndAssignedTo failed',
-      err,
-    );
+    const status = getErrorStatusCode(err);
+    Sentry.captureException(err, {
+      tags: {
+        operation: 'load_staff_worktray',
+        surface: 'staff',
+        route: '/applications',
+        ...(status !== undefined ? { 'http.status_code': String(status) } : {}),
+      },
+    });
     worktrayLoadError =
       'Unable to load your worktray. The Housing Register API returned an error — check the service is running and HOUSING_REGISTER_API / key are correct.';
   }

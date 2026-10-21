@@ -2,12 +2,20 @@ import * as Sentry from '@sentry/nextjs';
 import { NotifyRequest, NotifyResponse } from '../../domain/govukNotify';
 import { NotifyClient } from 'notifications-node-client';
 
-// Attaches the exact NotifyRequest that was sent to the failing exception
-// itself (rather than relying on `console.error` + breadcrumbs), so the
-// payload that caused a Notify failure is always visible on the event,
-// regardless of breadcrumb/scope isolation health.
-function captureNotifyError(err: unknown, request: NotifyRequest): void {
-  Sentry.captureException(err, { extra: { notifyRequest: request } });
+// Reference and template id identify the failed send. The request also
+// contains the resident email, name, medical-need flag and disqualification
+// text, which must not be attached to the event.
+function captureNotifyError(
+  err: unknown,
+  templateId: string | undefined,
+  request: NotifyRequest,
+): void {
+  Sentry.captureException(err, {
+    tags: {
+      notify_template: templateId ?? 'unknown',
+      notify_reference: request.reference,
+    },
+  });
 }
 
 async function sendEmail(
@@ -32,10 +40,9 @@ async function sendEmail(
   } catch (err) {
     // Previously this was swallowed here (logged/captured then treated as a
     // successful, empty response), so the caller always got a 200 with no
-    // body regardless of whether the email actually sent. Capture to Sentry
-    // with the payload attached, then rethrow so /api/notify/[template] can
-    // return a proper error status to the client.
-    captureNotifyError(err, request);
+    // body regardless of whether the email actually sent. Capture to Sentry,
+    // then rethrow so /api/notify/[template] can return a proper error status.
+    captureNotifyError(err, templateId, request);
     throw err;
   }
 }

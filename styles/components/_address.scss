@@ -1,0 +1,15 @@
+// The global `* + *` rule adds space between every pair of elements.
+// Address lines should sit directly under each other.
+.lbh-address__line {
+  display: block;
+  margin-top: 0;
+}
+
+.lbh-address__actions {
+  display: flex;
+  gap: 20px;
+
+  > * {
+    margin-top: 0;
+  }
+}

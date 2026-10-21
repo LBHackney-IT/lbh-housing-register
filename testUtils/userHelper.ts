@@ -1,12 +1,9 @@
 import { faker } from '@faker-js/faker';
 import jwt from 'jsonwebtoken';
 
-import { HackneyGoogleUser } from '../domain/HackneyGoogleUser';
+import { StaffUser } from '../domain/StaffUser';
 import { HackneyResident } from '../domain/HackneyResident';
-import {
-  HackneyGoogleUserWithPermissions,
-  Permissions,
-} from '../lib/utils/googleAuth';
+import { StaffUserWithPermissions, Permissions } from '../lib/auth/staff';
 import { generateJWTTokenTestData } from './jwtTokenHelper';
 
 export const AUTHORISED_OFFICER_GROUP_TEST = 'authorized-officer-group';
@@ -77,18 +74,18 @@ export const getClaimsByRole = (role?: UserRole): Permissions => {
 
 export const generateHRUserWithPermissions = (
   role?: UserRole,
-): HackneyGoogleUserWithPermissions => {
-  const userRole = role ? getGroupByRole(role) : '';
+): StaffUserWithPermissions => {
+  const userRole = role !== undefined ? getGroupByRole(role) : '';
 
   return {
-    ...generateJWTTokenTestData([userRole]),
+    ...generateJWTTokenTestData(userRole ? [userRole] : []),
     ...getClaimsByRole(role),
   };
 };
 
 type SignedTokenWithDetails = {
   signedToken: string;
-  tokenData: HackneyGoogleUser;
+  tokenData: StaffUser;
 };
 
 export const generateSignedTokenByRole = (

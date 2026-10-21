@@ -1,8 +1,7 @@
-import { wrapApiHandlerWithSentry } from '@sentry/nextjs';
 import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { generateNovaletExport } from '../../../../lib/gateways/applications-api';
-import { getAuth, getSession } from '../../../../lib/utils/googleAuth';
+import { requireApiStaffGroup } from '../../../../lib/auth/api';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -16,12 +15,13 @@ const endpoint: NextApiHandler = async (
     return;
   }
 
-  const user = getSession(req);
-
-  const auth = getAuth(process.env.AUTHORISED_MANAGER_GROUP as string, user);
-
-  if (!('user' in auth)) {
-    res.status(StatusCodes.FORBIDDEN).json({ message: 'access denied' });
+  if (
+    !(await requireApiStaffGroup(
+      req,
+      res,
+      process.env.AUTHORISED_MANAGER_GROUP as string,
+    ))
+  ) {
     return;
   }
 
@@ -36,10 +36,7 @@ const endpoint: NextApiHandler = async (
       });
     } else {
       // Status tells you where to look: 4xx = request/auth, 5xx = upstream.
-      console.error('Unable to generate export file', {
-        status: response.status,
-        data: response.data,
-      });
+      console.error(`Unable to generate export file (${response.status})`);
       res.send({
         message: 'Unable to generate export file',
       });
@@ -52,7 +49,4 @@ const endpoint: NextApiHandler = async (
   }
 };
 
-export default wrapApiHandlerWithSentry(
-  endpoint,
-  '/api/reports/novalet/generate',
-);
+export default endpoint;

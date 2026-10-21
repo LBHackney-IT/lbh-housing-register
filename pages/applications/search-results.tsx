@@ -9,19 +9,18 @@ import { HeadingOne } from '../../components/content/headings';
 import Paragraph from '../../components/content/paragraph';
 import Layout from '../../components/layout/staff-layout';
 import SimplePaginationSearch from '../../components/SimplePaginationSearch';
-import { HackneyGoogleUser } from '../../domain/HackneyGoogleUser';
+import { StaffUser } from '../../domain/StaffUser';
 import { PaginatedSearchResultsResponse } from '../../domain/HousingApi';
+import { authorizeStaffPage } from '../../lib/auth/page';
 import { UserContext } from '../../lib/contexts/user-context';
 import { searchAllApplications } from '../../lib/gateways/applications-api';
 import {
-  HackneyGoogleUserWithPermissions,
-  getRedirect,
-  getSession,
+  StaffUserWithPermissions,
   hasReadOnlyPermissionOnly,
-} from '../../lib/utils/googleAuth';
+} from '../../lib/auth/staff';
 
 interface PageProps {
-  user?: HackneyGoogleUser;
+  user?: StaffUser;
   applications: PaginatedSearchResultsResponse | null;
   page: string;
   pageSize: string;
@@ -44,9 +43,7 @@ export default function ApplicationListPage({
           dataTestId="test-search-box"
         />
         <div className="govuk-grid-row">
-          {!hasReadOnlyPermissionOnly(
-            user as HackneyGoogleUserWithPermissions,
-          ) && (
+          {!hasReadOnlyPermissionOnly(user as StaffUserWithPermissions) && (
             <div className="govuk-grid-column-one-quarter">
               <Sidebar />
             </div>
@@ -85,16 +82,9 @@ export default function ApplicationListPage({
 export const getServerSideProps: GetServerSideProps<PageProps> = async (
   context,
 ) => {
-  const user = getSession(context.req);
-  const redirect = getRedirect(user);
-  if (redirect) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: redirect,
-      },
-    };
-  }
+  const authorization = await authorizeStaffPage(context);
+  if ('redirect' in authorization) return authorization;
+  const { user } = authorization;
 
   const {
     searchString = '',

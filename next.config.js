@@ -119,7 +119,7 @@ module.exports = withSentryConfig(nextConfig, {
   // `build` and `dev` pass `--webpack`. Next 16 defaults to Turbopack, and
   // the Sentry loader that instruments Pages API routes does not run there.
   webpack: {
-    // Envelope delivery is not an application failure. Leave it unwrapped so
+    // Sentry envelope delivery is not an application failure. Leave it unwrapped so
     // it does not create sampled transactions or a second Sentry error path.
     excludeServerRoutes: ['/api/monitoring'],
     // Strip Sentry SDK debug logging from the production bundle. Does not

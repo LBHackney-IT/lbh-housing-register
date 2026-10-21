@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.1.1](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v3.1.0...hackney-housing-register-v3.1.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* forward Sentry envelopes through an API route ([9787970](https://github.com/LBHackney-IT/lbh-housing-register/commit/978797096e1e1c657224385c639c3a0cb809b3a1))
+* forward Sentry envelopes through an API route ([#604](https://github.com/LBHackney-IT/lbh-housing-register/issues/604)) ([dd30730](https://github.com/LBHackney-IT/lbh-housing-register/commit/dd3073082e1c4854ace2c887d31094bc4e6f151b))
+
 ## [3.1.0](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v3.0.0...hackney-housing-register-v3.1.0) (2026-10-19)
 
 

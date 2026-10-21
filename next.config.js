@@ -94,6 +94,15 @@ const nextConfig = {
         source: '/robots.txt',
         destination: '/api/robots',
       },
+      // Browser Sentry envelopes. Internal rewrite to the API route below.
+      // Sentry's tunnelRoute rewrite is not used: OpenNext compiles its
+      // :orgid and :projectid destination with path-to-regexp and throws
+      // when those values are not strings, which this Lambda then serves
+      // as a 500.
+      {
+        source: '/monitoring',
+        destination: '/api/monitoring',
+      },
     ];
   },
 };
@@ -107,10 +116,6 @@ module.exports = withSentryConfig(nextConfig, {
   // Upload shared/framework chunks as well as page chunks so client stack
   // traces can always be symbolicated.
   widenClientFileUpload: true,
-  // Proxy browser events through the app to avoid client-side blockers.
-  // CloudFront's default behaviour forwards this route to the SSR Lambda.
-  // When that Lambda is throttled or failing, browser envelopes stop as well.
-  tunnelRoute: '/monitoring',
   sourcemaps: {
     // Never publish source maps with the OpenNext static assets.
     deleteSourcemapsAfterUpload: true,

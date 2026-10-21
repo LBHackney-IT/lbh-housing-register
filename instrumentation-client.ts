@@ -20,7 +20,6 @@ const isLocalHost =
 
 Sentry.init({
   dsn: 'https://6fb0dd07e0fc4a75b0ab84b8e1f36460@o183917.ingest.us.sentry.io/6292602',
-  // Same-origin POST target. next.config.js rewrites this to /api/monitoring.
   tunnel: '/monitoring',
   tracesSampler: () => {
     if (ENVIRONMENT === 'production') return 0.1;

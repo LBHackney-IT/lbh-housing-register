@@ -43,9 +43,15 @@ const endpoint: NextApiHandler = async (req, res) => {
 
   const tunnelResponse = await forwardSentryTunnel(body);
   const responseBody = Buffer.from(await tunnelResponse.arrayBuffer());
-  const contentType = tunnelResponse.headers.get('content-type');
-  if (contentType) {
-    res.setHeader('Content-Type', contentType);
+  for (const header of [
+    'Content-Type',
+    'Retry-After',
+    'X-Sentry-Rate-Limits',
+  ]) {
+    const value = tunnelResponse.headers.get(header);
+    if (value) {
+      res.setHeader(header, value);
+    }
   }
   res.status(tunnelResponse.status).send(responseBody);
 };

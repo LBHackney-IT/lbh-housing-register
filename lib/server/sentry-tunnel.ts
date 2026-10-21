@@ -9,7 +9,7 @@ export const SENTRY_DSN =
 
 export const SENTRY_TUNNEL_MAX_BODY_BYTES = 1_000_000;
 
-export async function forwardSentryTunnel(body: Uint8Array): Promise<Response> {
+export function forwardSentryTunnel(body: Uint8Array): Promise<Response> {
   const bytes = new ArrayBuffer(body.byteLength);
   new Uint8Array(bytes).set(body);
 

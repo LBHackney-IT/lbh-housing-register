@@ -21,6 +21,13 @@ type NextConfigModule = {
   rewrites: () => Promise<Rewrite[]>;
 };
 
+type SentryBuildOptions = {
+  tunnelRoute?: string;
+  webpack?: {
+    excludeServerRoutes?: string[];
+  };
+};
+
 const envelope = (dsn: string) =>
   Buffer.from(
     `${JSON.stringify({ dsn })}\n${JSON.stringify({ type: 'event' })}\n${JSON.stringify({})}\n`,
@@ -105,6 +112,25 @@ describe('Sentry tunnel', () => {
     expect(res._getData()).toEqual(Buffer.from('forwarded'));
   });
 
+  it('forwards Sentry rate-limit headers to the browser SDK', async () => {
+    fetchMock.mockResolvedValue(
+      new Response('limited', {
+        status: StatusCodes.TOO_MANY_REQUESTS,
+        headers: {
+          'content-type': 'text/plain',
+          'retry-after': '30',
+          'x-sentry-rate-limits': '30:error:organization',
+        },
+      }),
+    );
+
+    const res = await call('POST', envelope(SENTRY_DSN));
+
+    expect(res.statusCode).toBe(StatusCodes.TOO_MANY_REQUESTS);
+    expect(res.getHeader('Retry-After')).toBe('30');
+    expect(res.getHeader('X-Sentry-Rate-Limits')).toBe('30:error:organization');
+  });
+
   it('rejects a POST that is not an envelope', async () => {
     const res = await call('POST', Buffer.from('not-an-envelope'));
 
@@ -132,11 +158,12 @@ describe('Sentry tunnel', () => {
     const sentry = jest.requireMock('@sentry/nextjs') as {
       withSentryConfig: (
         config: NextConfigModule,
-        options: { tunnelRoute?: string },
+        options: SentryBuildOptions,
       ) => NextConfigModule;
     };
     sentry.withSentryConfig = (config, options) => {
       expect(options.tunnelRoute).toBeUndefined();
+      expect(options.webpack?.excludeServerRoutes).toEqual(['/api/monitoring']);
       return config;
     };
 

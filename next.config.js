@@ -94,11 +94,7 @@ const nextConfig = {
         source: '/robots.txt',
         destination: '/api/robots',
       },
-      // Browser Sentry envelopes. Internal rewrite to the API route below.
-      // Sentry's tunnelRoute rewrite is not used: OpenNext compiles its
-      // :orgid and :projectid destination with path-to-regexp and throws
-      // when those values are not strings, which this Lambda then serves
-      // as a 500.
+      // Browser Sentry envelopes.
       {
         source: '/monitoring',
         destination: '/api/monitoring',
@@ -123,6 +119,9 @@ module.exports = withSentryConfig(nextConfig, {
   // `build` and `dev` pass `--webpack`. Next 16 defaults to Turbopack, and
   // the Sentry loader that instruments Pages API routes does not run there.
   webpack: {
+    // Envelope delivery is not an application failure. Leave it unwrapped so
+    // it does not create sampled transactions or a second Sentry error path.
+    excludeServerRoutes: ['/api/monitoring'],
     // Strip Sentry SDK debug logging from the production bundle. Does not
     // affect application console output or Sentry event capture.
     treeshake: {

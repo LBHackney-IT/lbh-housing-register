@@ -1,5 +1,70 @@
 # Changelog
 
+## [3.1.1](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v3.1.0...hackney-housing-register-v3.1.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* forward Sentry envelopes through an API route ([9787970](https://github.com/LBHackney-IT/lbh-housing-register/commit/978797096e1e1c657224385c639c3a0cb809b3a1))
+* forward Sentry envelopes through an API route ([#604](https://github.com/LBHackney-IT/lbh-housing-register/issues/604)) ([dd30730](https://github.com/LBHackney-IT/lbh-housing-register/commit/dd3073082e1c4854ace2c887d31094bc4e6f151b))
+
+## [3.1.0](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v3.0.0...hackney-housing-register-v3.1.0) (2026-10-19)
+
+
+### Features
+
+* handle addressess ([e15ee15](https://github.com/LBHackney-IT/lbh-housing-register/commit/e15ee153de9ac451f686c2e5527939189f05cbee))
+* handle addressess ([#600](https://github.com/LBHackney-IT/lbh-housing-register/issues/600)) ([9e5f4e1](https://github.com/LBHackney-IT/lbh-housing-register/commit/9e5f4e16a246cecb748cd8f68ad96c5f7ab33388))
+* log other error types ([63b73ff](https://github.com/LBHackney-IT/lbh-housing-register/commit/63b73ffddaa3fc02c73e29c51433695e77c04fb1))
+* simplify the sentry reimplementation ([98e85f6](https://github.com/LBHackney-IT/lbh-housing-register/commit/98e85f6ada5b2d8d467b4948e6e75f54e00a6fb3))
+* stop indexing and crawling ([6099e72](https://github.com/LBHackney-IT/lbh-housing-register/commit/6099e728ef751d838feac52e397ed4d7ac6a25fb))
+* stop indexing and crawling ([#602](https://github.com/LBHackney-IT/lbh-housing-register/issues/602)) ([22edcce](https://github.com/LBHackney-IT/lbh-housing-register/commit/22edcced15afa6ea30d5de382a2d9d3375ce6ac4))
+* strengthen frontend Sentry observability ([#586](https://github.com/LBHackney-IT/lbh-housing-register/issues/586)) ([fd5f78b](https://github.com/LBHackney-IT/lbh-housing-register/commit/fd5f78bc1cc6d339a4e697acb466091f56c2f3c8))
+* validate postcodes ([aace3b8](https://github.com/LBHackney-IT/lbh-housing-register/commit/aace3b807c64e5c80af23d0799286d27efe20570))
+
+
+### Bug Fixes
+
+* add loaded to state to test object ([80ee9e0](https://github.com/LBHackney-IT/lbh-housing-register/commit/80ee9e0905b7a4d761193751ee0bc08004e4a72e))
+* add loaded to state to test object ([#596](https://github.com/LBHackney-IT/lbh-housing-register/issues/596)) ([0cf5f47](https://github.com/LBHackney-IT/lbh-housing-register/commit/0cf5f47607602614db2104ec51fb2a4b8f1fdd0f))
+* address from date ([#582](https://github.com/LBHackney-IT/lbh-housing-register/issues/582)) ([4e4f579](https://github.com/LBHackney-IT/lbh-housing-register/commit/4e4f5791c2f271632938217ba7ab4ed3dd286f6f))
+* hr objects are not valid as a react child found object error ([#580](https://github.com/LBHackney-IT/lbh-housing-register/issues/580)) ([7866437](https://github.com/LBHackney-IT/lbh-housing-register/commit/7866437ab643ca352ec2a8d067a1f15d596fe364))
+* keep apply forms usable after refresh ([2919cb3](https://github.com/LBHackney-IT/lbh-housing-register/commit/2919cb3ebc845e580d5af1e4081bbcbe51573953))
+* keep apply forms usable after refresh ([#594](https://github.com/LBHackney-IT/lbh-housing-register/issues/594)) ([118beb9](https://github.com/LBHackney-IT/lbh-housing-register/commit/118beb9db905926fdb89b4ae200ff87311c244b7))
+* log unknown disqualified reason ([c6d54b3](https://github.com/LBHackney-IT/lbh-housing-register/commit/c6d54b3442a51ce45e9d467b9b401211f64d5ac2))
+* remove functions from inner scope ([d6e5019](https://github.com/LBHackney-IT/lbh-housing-register/commit/d6e5019b13effaa545c56e484d42efc597867e7d))
+* set senty mock at top level ([1666b3f](https://github.com/LBHackney-IT/lbh-housing-register/commit/1666b3f759dd911f034260571eef906281eea3a3))
+* set senty mock at top level ([#597](https://github.com/LBHackney-IT/lbh-housing-register/issues/597)) ([fd9833b](https://github.com/LBHackney-IT/lbh-housing-register/commit/fd9833b5355a92055b4a1bc3336345037b672bbd))
+* validate postcodes before calls ([#583](https://github.com/LBHackney-IT/lbh-housing-register/issues/583)) ([7db856c](https://github.com/LBHackney-IT/lbh-housing-register/commit/7db856c666a1d35895e9ed5c4dd82a60b8acba5e))
+
+## [3.0.0](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.4.0...hackney-housing-register-v3.0.0) (2026-09-22)
+
+### ⚠ BREAKING CHANGES
+
+- Staff sign-in no longer uses the custom Google OAuth flow or the `hackneyToken` cookie. Staff now authenticate via AWS Cognito (still federated to Google Workspace) through NextAuth, with the session held in an encrypted `next-auth.session-token` cookie. This is a hard cutover: existing `hackneyToken` cookies are ignored and every staff member must sign in again. Resident email-code login (`housing_user` cookie) is unaffected. ([01f6860](https://github.com/LBHackney-IT/lbh-housing-register/commit/01f686017006e4a0a8beaf9df21f4229949d5b3b))
+
+### Features
+
+- migrate staff authentication from Google OAuth JWT to AWS Cognito + NextAuth ([01f6860](https://github.com/LBHackney-IT/lbh-housing-register/commit/01f686017006e4a0a8beaf9df21f4229949d5b3b))
+- remove the IdP selection popup by routing straight to the Google identity provider ([ba32005](https://github.com/LBHackney-IT/lbh-housing-register/commit/ba3200516c24098493e2a7950045c64c62fbb9de))
+- match pre-migration role-based authorization rules in staff write APIs ([e788ba3](https://github.com/LBHackney-IT/lbh-housing-register/commit/e788ba36f50e2bf0a76569a8bb609e46eb8efb04))
+- add a permissions summary doc for the new auth model ([9c89997](https://github.com/LBHackney-IT/lbh-housing-register/commit/9c899978645b70502e74e862a5af1736f1d381ef))
+- set staff session expiry to 4 hours, matching the Cognito ID token lifetime ([e5ae711](https://github.com/LBHackney-IT/lbh-housing-register/commit/e5ae711ce7789d865f2e5fe0e72b4140536484d8))
+- fix OpenNext/API Gateway cookie handling so Cognito's PKCE, state and nonce cookies survive the hop through Lambda ([00c5566](https://github.com/LBHackney-IT/lbh-housing-register/commit/00c55660428f1b9d2cf22038f049dc0a706fbecc), [7239456](https://github.com/LBHackney-IT/lbh-housing-register/commit/723945b6656664498930ba737fe27bd5f98630fc))
+- match UI authorization rules in the corresponding API routes ([a2ca24c](https://github.com/LBHackney-IT/lbh-housing-register/commit/a2ca24c05eaf30d48e5220156858ec226a871b59))
+- improve auth test coverage for the Cognito migration ([0ce3a47](https://github.com/LBHackney-IT/lbh-housing-register/commit/0ce3a47393fec18ad5831f31d3c4df38b082229e))
+
+### Bug Fixes
+
+- resolve SSRF issues ([bd74df4](https://github.com/LBHackney-IT/lbh-housing-register/commit/bd74df4c6e0dfdd7ed789dee619e0300919fe2b6))
+- unblock release-please after unparseable merge commits from #587/#581 ([37932fb](https://github.com/LBHackney-IT/lbh-housing-register/commit/37932fb5f73b8892a6aaa0e92696a1c6b6b28d4b))
+
+## [2.4.0](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.3.2...hackney-housing-register-v2.4.0) (2026-09-01)
+
+### Features
+
+- handle 409 errors without losing state ([bb91dd9](https://github.com/LBHackney-IT/lbh-housing-register/commit/bb91dd952a8bb3ba8979c13c9ca8270dbb8ac386))
+
 ## [2.3.2](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v2.3.1...hackney-housing-register-v2.3.2) (2026-08-04)
 
 ### Bug Fixes

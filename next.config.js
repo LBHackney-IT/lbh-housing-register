@@ -94,6 +94,11 @@ const nextConfig = {
         source: '/robots.txt',
         destination: '/api/robots',
       },
+      // Browser Sentry envelopes.
+      {
+        source: '/monitoring',
+        destination: '/api/monitoring',
+      },
     ];
   },
 };
@@ -107,10 +112,6 @@ module.exports = withSentryConfig(nextConfig, {
   // Upload shared/framework chunks as well as page chunks so client stack
   // traces can always be symbolicated.
   widenClientFileUpload: true,
-  // Proxy browser events through the app to avoid client-side blockers.
-  // CloudFront's default behaviour forwards this route to the SSR Lambda.
-  // When that Lambda is throttled or failing, browser envelopes stop as well.
-  tunnelRoute: '/monitoring',
   sourcemaps: {
     // Never publish source maps with the OpenNext static assets.
     deleteSourcemapsAfterUpload: true,
@@ -118,6 +119,9 @@ module.exports = withSentryConfig(nextConfig, {
   // `build` and `dev` pass `--webpack`. Next 16 defaults to Turbopack, and
   // the Sentry loader that instruments Pages API routes does not run there.
   webpack: {
+    // Sentry envelope delivery is not an application failure. Leave it unwrapped so
+    // it does not create sampled transactions or a second Sentry error path.
+    excludeServerRoutes: ['/api/monitoring'],
     // Strip Sentry SDK debug logging from the production bundle. Does not
     // affect application console output or Sentry event capture.
     treeshake: {

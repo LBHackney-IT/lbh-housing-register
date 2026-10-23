@@ -121,4 +121,36 @@ describe('aws-apigw-v1-multi-cookie converter', () => {
       { method: 'GET' },
     );
   });
+
+  it('drops X-Forwarded-Host before delegating request conversion', async () => {
+    const forwarded =
+      'housing-register.hackney.gov.uk, abcdef.execute-api.eu-west-2.amazonaws.com';
+    baseConvertFrom.mockResolvedValue({ method: 'GET' });
+
+    // OpenNext prefers this value to Host when constructing the request URL.
+    expect(() => new URL(`https://${forwarded}/apply`)).toThrow('Invalid URL');
+
+    await converter.convertFrom({
+      httpMethod: 'GET',
+      path: '/apply',
+      headers: {
+        Host: 'abcdef.execute-api.eu-west-2.amazonaws.com',
+        'X-Forwarded-Host': forwarded,
+        'X-Forwarded-For': '203.0.113.4',
+      },
+      multiValueHeaders: {
+        'X-Forwarded-Host': [forwarded],
+        cookie: ['housing_user=abc'],
+      },
+    });
+
+    const event = baseConvertFrom.mock.calls[0][0];
+    expect(event.headers['X-Forwarded-Host']).toBeUndefined();
+    expect(event.multiValueHeaders['X-Forwarded-Host']).toBeUndefined();
+    expect(event.headers.Host).toBe(
+      'abcdef.execute-api.eu-west-2.amazonaws.com',
+    );
+    expect(event.headers['X-Forwarded-For']).toBe('203.0.113.4');
+    expect(event.multiValueHeaders.cookie).toEqual(['housing_user=abc']);
+  });
 });

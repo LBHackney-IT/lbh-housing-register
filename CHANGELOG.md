@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.1.2](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v3.1.1...hackney-housing-register-v3.1.2) (2026-10-23)
+
+
+### Bug Fixes
+
+* update next to deal with critical ([d8ab8b2](https://github.com/LBHackney-IT/lbh-housing-register/commit/d8ab8b2bc9db9a4841169661c15a09639d2d2ff7))
+* update next to deal with critical ([#609](https://github.com/LBHackney-IT/lbh-housing-register/issues/609)) ([35a01ae](https://github.com/LBHackney-IT/lbh-housing-register/commit/35a01ae1330442e54162cfab94d30696e58fc661))
+
 ## [3.1.1](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v3.1.0...hackney-housing-register-v3.1.1) (2026-10-21)
 
 

@@ -75,6 +75,7 @@ export default function ApplicationHistory({
     return addNoteToHistory(id, { Note: values.note })
       .then(() => {
         router.reload();
+        return new Promise<void>(() => undefined);
       })
       .catch((error) => {
         setUserError(toUserErrorMessage(error, 'Unable to add note'));

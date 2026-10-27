@@ -217,6 +217,7 @@ export default function MedicalDetail({
     try {
       await updateApplication(request);
       router.reload();
+      await new Promise<void>(() => undefined);
     } catch (error) {
       setUserError(toUserErrorMessage(error, 'Unable to save medical details'));
       scrollToTop();

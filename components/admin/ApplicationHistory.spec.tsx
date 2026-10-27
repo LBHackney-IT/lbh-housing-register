@@ -57,6 +57,42 @@ describe('ApplicationHistory', () => {
     await saveNote();
 
     await waitFor(() => expect(router.reload).toHaveBeenCalled());
+    expect(screen.getByRole('button', { name: 'Save note' })).toBeDisabled();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Save note' }));
+    expect(addNoteToHistoryMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('disables save when it is clicked again in short succession', async () => {
+    let resolveSave: (value: unknown) => void = () => undefined;
+    addNoteToHistoryMock.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveSave = resolve;
+        }),
+    );
+
+    render(<ApplicationHistory history={emptyHistory} id="app-1" />);
+    fireEvent.change(screen.getByRole('textbox'), {
+      target: { value: 'A case note' },
+    });
+
+    const saveNoteButton = screen.getByRole('button', { name: 'Save note' });
+    fireEvent.click(saveNoteButton);
+
+    await waitFor(() => expect(saveNoteButton).toBeDisabled());
+    fireEvent.click(saveNoteButton);
+    fireEvent.click(saveNoteButton);
+
+    expect(addNoteToHistoryMock).toHaveBeenCalledTimes(1);
+    expect(saveNoteButton).toBeDisabled();
+
+    resolveSave([]);
+    await waitFor(() => expect(router.reload).toHaveBeenCalledTimes(1));
+    fireEvent.click(saveNoteButton);
+
+    expect(addNoteToHistoryMock).toHaveBeenCalledTimes(1);
+    expect(saveNoteButton).toBeDisabled();
   });
 
   it('shows an error and does not reload when saving a note fails', async () => {

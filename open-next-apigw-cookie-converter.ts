@@ -19,7 +19,14 @@
  * around this by re-splitting the joined string; only the v1 converter is
  * missing the equivalent. This wrapper adds it.
  *
+ * The request side also drops `X-Forwarded-Host`. CloudFront does not forward
+ * viewer headers in this stack, so one reaching the public API Gateway endpoint
+ * is untrusted. OpenNext prefers it over API Gateway's valid `Host` when it
+ * constructs the request URL, allowing a malformed value to crash routing with
+ * `TypeError: Invalid URL`.
+ *
  * https://github.com/nextauthjs/next-auth/issues/12833
+ * https://opennext.js.org/aws/config/custom_overrides#custom-converter
  */
 import baseConverter from '@opennextjs/aws/overrides/converters/aws-apigw-v1.js';
 import type { Converter } from '@opennextjs/aws/types/overrides.js';
@@ -68,9 +75,27 @@ function moveCookiesToMultiValueHeaders(result: ApiGatewayResult): void {
   result.multiValueHeaders = multiValueHeaders;
 }
 
+const FORWARDED_HOST = 'x-forwarded-host';
+
+function withoutForwardedHost<T>(
+  headers: Record<string, T> | null | undefined,
+): Record<string, T> {
+  return Object.fromEntries(
+    Object.entries(headers ?? {}).filter(
+      ([name]) => name.toLowerCase() !== FORWARDED_HOST,
+    ),
+  );
+}
+
 const converter: Converter = {
   name: 'aws-apigw-v1-multi-cookie',
-  convertFrom: baseConverter.convertFrom,
+  convertFrom: async (event) => {
+    return baseConverter.convertFrom({
+      ...event,
+      headers: withoutForwardedHost(event?.headers),
+      multiValueHeaders: withoutForwardedHost(event?.multiValueHeaders),
+    });
+  },
   convertTo: async (result, originalRequest) => {
     const converted = await baseConverter.convertTo(result, originalRequest);
     moveCookiesToMultiValueHeaders(converted as ApiGatewayResult);

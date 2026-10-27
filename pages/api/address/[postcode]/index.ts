@@ -34,8 +34,6 @@ const endpoint: NextApiHandler = async (
     const data = await lookUpAddress(postcode);
     res.status(StatusCodes.OK).json(data);
   } catch (error) {
-    // The address service uses 400 when it rejects the postcode. That is not
-    // a server failure, and reporting it as 500 is what the client sends to Sentry.
     if (getErrorStatusCode(error) === StatusCodes.BAD_REQUEST) {
       res
         .status(StatusCodes.BAD_REQUEST)

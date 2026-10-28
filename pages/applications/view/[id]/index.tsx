@@ -93,7 +93,7 @@ export default function ApplicationPage({
       .catch((error) => {
         setUserError('Unable to delete household member');
         scrollToError();
-        return Promise.reject(error);
+        throw error;
       });
   };
 

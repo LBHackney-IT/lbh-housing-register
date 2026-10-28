@@ -39,6 +39,7 @@ export default function ApplicationHistory({
   };
 
   const [userError, setUserError] = useState<string | undefined>(undefined);
+  const [isReloading, setIsReloading] = useState(false);
 
   const addNoteSchema = Yup.object({
     note: Yup.string().label('Note').required(),
@@ -74,8 +75,8 @@ export default function ApplicationHistory({
 
     return addNoteToHistory(id, { Note: values.note })
       .then(() => {
+        setIsReloading(true);
         router.reload();
-        return new Promise<void>(() => undefined);
       })
       .catch((error) => {
         setUserError(toUserErrorMessage(error, 'Unable to add note'));
@@ -104,7 +105,10 @@ export default function ApplicationHistory({
                       </ErrorSummary>
                     ) : null}
                     <Textarea name="note" label="" as="textarea" />
-                    <Button disabled={isSubmitting} type="submit">
+                    <Button
+                      disabled={isSubmitting || isReloading}
+                      type="submit"
+                    >
                       Save note
                     </Button>
                   </Form>

@@ -40,7 +40,7 @@ const member: Applicant = {
 };
 
 const renderMembers = (
-  handleDelete: (applicant: Applicant) => void | Promise<unknown>,
+  handleDelete: (applicant: Applicant) => void | Promise<void>,
 ) =>
   render(
     <OtherMembers

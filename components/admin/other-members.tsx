@@ -14,7 +14,7 @@ interface SummaryProps {
   others: Applicant[];
   applicationId: string;
   canEdit: boolean;
-  handleDelete: (applicant: Applicant) => void | Promise<unknown>;
+  handleDelete: (applicant: Applicant) => void | Promise<void>;
   userError?: string;
 }
 
@@ -29,6 +29,7 @@ export default function OtherMembers({
   const [showDeleteWarningDialog, setShowDeleteWarningDialog] = useState(false);
   const [applicantToDelete, setApplicantToDelete] = useState({} as Applicant);
   const deleteInFlight = useRef(false);
+  const reloadStarted = useRef(false);
 
   const handleDeleteDialog = (applicant: Applicant): void => {
     setApplicantToDelete(applicant);
@@ -36,14 +37,19 @@ export default function OtherMembers({
   };
 
   const confirmDelete = () => {
-    if (deleteInFlight.current) {
+    if (deleteInFlight.current || reloadStarted.current) {
       return;
     }
     deleteInFlight.current = true;
 
-    void Promise.resolve(handleDelete(applicantToDelete)).catch(() => {
-      deleteInFlight.current = false;
-    });
+    void Promise.resolve(handleDelete(applicantToDelete))
+      .then(() => {
+        reloadStarted.current = true;
+        deleteInFlight.current = false;
+      })
+      .catch(() => {
+        deleteInFlight.current = false;
+      });
   };
 
   return (

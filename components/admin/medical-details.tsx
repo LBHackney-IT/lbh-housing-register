@@ -27,6 +27,7 @@ export default function MedicalDetail({
 }: MedicalDetailPageProps): JSX.Element {
   const router = useRouter();
   const [userError, setUserError] = useState<string | undefined>(undefined);
+  const [isReloading, setIsReloading] = useState(false);
 
   const outcomeOptions = [
     {
@@ -216,8 +217,8 @@ export default function MedicalDetail({
 
     try {
       await updateApplication(request);
+      setIsReloading(true);
       router.reload();
-      await new Promise<void>(() => undefined);
     } catch (error) {
       setUserError(toUserErrorMessage(error, 'Unable to save medical details'));
       scrollToTop();
@@ -299,7 +300,7 @@ export default function MedicalDetail({
           {hasMedicalNeed && (
             <div className="c-flex lbh-simple-pagination">
               <div className="c-flex__1 text-right">
-                <Button disabled={isSubmitting} type="submit">
+                <Button disabled={isSubmitting || isReloading} type="submit">
                   Save changes
                 </Button>
               </div>

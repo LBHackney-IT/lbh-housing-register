@@ -80,6 +80,20 @@ describe('/api/address/[postcode]', () => {
     expect(lookUpAddressMock).toHaveBeenCalledWith('(e9) 6pt');
   });
 
+  it('returns 400 when the address service rejects the postcode', async () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation();
+    lookUpAddressMock.mockRejectedValue({ response: { status: 400 } });
+
+    const res = await callEndpoint('E9 6PT');
+
+    expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
+    expect(res._getJSONData()).toStrictEqual({
+      message: 'Unable to look up address',
+    });
+    expect(consoleError).not.toHaveBeenCalled();
+    consoleError.mockRestore();
+  });
+
   it('returns 500 when the lookup fails', async () => {
     const consoleError = jest.spyOn(console, 'error').mockImplementation();
     lookUpAddressMock.mockRejectedValue(new Error('lookup timed out'));
@@ -90,6 +104,7 @@ describe('/api/address/[postcode]', () => {
     expect(res._getJSONData()).toStrictEqual({
       message: 'Unable to look up address',
     });
+    expect(consoleError).toHaveBeenCalled();
     consoleError.mockRestore();
   });
 });

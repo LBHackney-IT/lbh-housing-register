@@ -81,6 +81,14 @@ describe('Apply resident address history page', () => {
     cy.contains('Unable to update application (409)');
   });
 
+  it('looks up a postcode entered with punctuation', () => {
+    cy.visit(`/apply/${personId}/address-history`);
+    cy.contains('Address history');
+    ApplyResidentAddressHistoryPage.getPostcodeInputField().type('A1-1AB');
+    ApplyResidentAddressHistoryPage.getFindAddressButton().click();
+    cy.contains('Select an address');
+  });
+
   it('keeps the resident on postcode entry when postcode lookup fails', () => {
     cy.intercept('GET', '/api/address/*', {
       statusCode: StatusCodes.INTERNAL_SERVER_ERROR,

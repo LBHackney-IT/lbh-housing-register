@@ -5,6 +5,7 @@ import {
   isUkPostcode,
   UK_POSTCODE_ERROR,
 } from '../../../../lib/utils/postcode';
+import { getErrorStatusCode } from '../../../../lib/utils/sentry';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -33,6 +34,13 @@ const endpoint: NextApiHandler = async (
     const data = await lookUpAddress(postcode);
     res.status(StatusCodes.OK).json(data);
   } catch (error) {
+    if (getErrorStatusCode(error) === StatusCodes.BAD_REQUEST) {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: 'Unable to look up address' });
+      return;
+    }
+
     console.error(error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)

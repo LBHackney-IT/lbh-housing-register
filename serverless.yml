@@ -144,6 +144,17 @@ resources:
           SigningBehavior: always
           SigningProtocol: sigv4
 
+    SecurityHeadersPolicy:
+      Type: AWS::CloudFront::ResponseHeadersPolicy
+      Properties:
+        ResponseHeadersPolicyConfig:
+          Name: ${self:service}-${self:provider.stage}-security-headers
+          SecurityHeadersConfig:
+            StrictTransportSecurity:
+              AccessControlMaxAgeSec: 31536000 # 1 year
+              IncludeSubdomains: true
+              Override: true # Override any existing STS headers
+
     CloudFrontDistribution:
       Type: AWS::CloudFront::Distribution
       Properties:
@@ -161,6 +172,8 @@ resources:
           DefaultCacheBehavior:
             TargetOriginId: api-gw-${self:provider.stage}
             ViewerProtocolPolicy: 'redirect-to-https'
+            ResponseHeadersPolicyId:
+              Ref: SecurityHeadersPolicy
             AllowedMethods:
               - GET
               - HEAD
@@ -185,6 +198,8 @@ resources:
             - PathPattern: '_next/static/*'
               TargetOriginId: assets-${self:provider.stage}
               ViewerProtocolPolicy: 'redirect-to-https'
+              ResponseHeadersPolicyId:
+                Ref: SecurityHeadersPolicy
               DefaultTTL: 31536000
               MaxTTL: 31536000
               MinTTL: 31536000
@@ -198,6 +213,8 @@ resources:
             - PathPattern: 'BUILD_ID'
               TargetOriginId: assets-${self:provider.stage}
               ViewerProtocolPolicy: 'redirect-to-https'
+              ResponseHeadersPolicyId:
+                Ref: SecurityHeadersPolicy
               DefaultTTL: 60
               MaxTTL: 60
               ForwardedValues:
@@ -211,6 +228,8 @@ resources:
             - PathPattern: 'favicon.ico'
               TargetOriginId: assets-${self:provider.stage}
               ViewerProtocolPolicy: 'redirect-to-https'
+              ResponseHeadersPolicyId:
+                Ref: SecurityHeadersPolicy
               MaxTTL: 86400
               MinTTL: 86400
               ForwardedValues:
@@ -221,6 +240,8 @@ resources:
             - PathPattern: 'images/*'
               TargetOriginId: assets-${self:provider.stage}
               ViewerProtocolPolicy: 'redirect-to-https'
+              ResponseHeadersPolicyId:
+                Ref: SecurityHeadersPolicy
               MaxTTL: 86400
               MinTTL: 86400
               ForwardedValues:

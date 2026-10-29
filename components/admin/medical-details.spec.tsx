@@ -69,6 +69,44 @@ describe('MedicalDetail', () => {
     submit();
 
     await waitFor(() => expect(mockReload).toHaveBeenCalled());
+    expect(screen.getByRole('button', { name: 'Save changes' })).toBeDisabled();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+    expect(updateApplicationMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('disables save when it is clicked again in short succession', async () => {
+    let resolveUpdate: (value: unknown) => void = () => undefined;
+    updateApplicationMock.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveUpdate = resolve;
+        }),
+    );
+
+    render(
+      <MedicalDetail
+        data={application('2026-01-02T00:00:00.000Z')}
+        memberIndex={-1}
+      />,
+    );
+
+    const saveButton = screen.getByRole('button', { name: 'Save changes' });
+    fireEvent.click(saveButton);
+
+    await waitFor(() => expect(saveButton).toBeDisabled());
+    fireEvent.click(saveButton);
+    fireEvent.click(saveButton);
+
+    expect(updateApplicationMock).toHaveBeenCalledTimes(1);
+    expect(saveButton).toBeDisabled();
+
+    resolveUpdate({});
+    await waitFor(() => expect(mockReload).toHaveBeenCalledTimes(1));
+    fireEvent.click(saveButton);
+
+    expect(updateApplicationMock).toHaveBeenCalledTimes(1);
+    expect(saveButton).toBeDisabled();
   });
 
   it('shows an error and does not reload when the update fails', async () => {
@@ -90,5 +128,6 @@ describe('MedicalDetail', () => {
       ).toBeInTheDocument();
     });
     expect(mockReload).not.toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: 'Save changes' })).toBeEnabled();
   });
 });

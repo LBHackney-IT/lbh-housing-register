@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.1.3](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v3.1.2...hackney-housing-register-v3.1.3) (2026-10-29)
+
+
+### Bug Fixes
+
+* handle multi click save attempts ([d757d16](https://github.com/LBHackney-IT/lbh-housing-register/commit/d757d1644a028aa00ae56af8cbe828a39cdc7072))
+* handle multi click save attempts ([#613](https://github.com/LBHackney-IT/lbh-housing-register/issues/613)) ([531c112](https://github.com/LBHackney-IT/lbh-housing-register/commit/531c1125660e8b934cd0914af58fd5c2b0c5e7d5))
+* look up postcodes the address form already accepts ([bdfc6c9](https://github.com/LBHackney-IT/lbh-housing-register/commit/bdfc6c9be619d582adfd40ac84cf13a0f389a7f8))
+* look up postcodes the address form already accepts ([#614](https://github.com/LBHackney-IT/lbh-housing-register/issues/614)) ([ea480e4](https://github.com/LBHackney-IT/lbh-housing-register/commit/ea480e4d9c1ca0b1a52b3a336b9086de825d62d7))
+* update cookie handler ([#608](https://github.com/LBHackney-IT/lbh-housing-register/issues/608)) ([0534bba](https://github.com/LBHackney-IT/lbh-housing-register/commit/0534bbadba3f2301597891677ed57104c9045ee7))
+
 ## [3.1.2](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v3.1.1...hackney-housing-register-v3.1.2) (2026-10-23)
 
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import Dialog from 'lbh-frontend/dialog';
 import { Applicant } from '../../domain/HousingApi';
@@ -14,7 +14,7 @@ interface SummaryProps {
   others: Applicant[];
   applicationId: string;
   canEdit: boolean;
-  handleDelete: (applicant: Applicant) => void;
+  handleDelete: (applicant: Applicant) => void | Promise<void>;
   userError?: string;
 }
 
@@ -28,10 +28,28 @@ export default function OtherMembers({
 }: SummaryProps): JSX.Element {
   const [showDeleteWarningDialog, setShowDeleteWarningDialog] = useState(false);
   const [applicantToDelete, setApplicantToDelete] = useState({} as Applicant);
+  const deleteInFlight = useRef(false);
+  const reloadStarted = useRef(false);
 
   const handleDeleteDialog = (applicant: Applicant): void => {
     setApplicantToDelete(applicant);
     setShowDeleteWarningDialog(true);
+  };
+
+  const confirmDelete = () => {
+    if (deleteInFlight.current || reloadStarted.current) {
+      return;
+    }
+    deleteInFlight.current = true;
+
+    void Promise.resolve(handleDelete(applicantToDelete))
+      .then(() => {
+        reloadStarted.current = true;
+        deleteInFlight.current = false;
+      })
+      .catch(() => {
+        deleteInFlight.current = false;
+      });
   };
 
   return (
@@ -103,7 +121,7 @@ export default function OtherMembers({
         isOpen={showDeleteWarningDialog && !userError}
         title="Confirm delete"
         onDismiss={() => setShowDeleteWarningDialog(false)}
-        onConfirm={() => handleDelete(applicantToDelete)}
+        onConfirm={confirmDelete}
         onCancel={() => setShowDeleteWarningDialog(false)}
         confirmButtonTestId={`test-remove-household-member-confirmation-button-${applicantToDelete.person?.id}`}
       >

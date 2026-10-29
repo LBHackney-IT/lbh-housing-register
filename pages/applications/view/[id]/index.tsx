@@ -86,13 +86,14 @@ export default function ApplicationPage({
       otherMembers: newHouseholdMembers,
     };
 
-    updateApplication(request)
+    return updateApplication(request)
       .then(() => {
         router.reload();
       })
-      .catch(() => {
+      .catch((error) => {
         setUserError('Unable to delete household member');
         scrollToError();
+        throw error;
       });
   };
 

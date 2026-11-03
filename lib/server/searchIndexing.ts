@@ -11,10 +11,10 @@ export function isSearchEngineIndexable(): boolean {
   return stage === 'production';
 }
 
-export function robotsTxt(): string {
-  if (isSearchEngineIndexable()) {
-    return 'User-agent: *\nAllow: /\n';
-  }
+export function robotsMetaContent(): 'noindex' | undefined {
+  return isSearchEngineIndexable() ? undefined : 'noindex';
+}
 
-  return 'User-agent: *\nDisallow: /\n';
+export function robotsTxt(): string {
+  return 'User-agent: *\nAllow: /\n';
 }

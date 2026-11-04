@@ -6,10 +6,13 @@ import { updateApplication } from '../../lib/gateways/internal-api';
 import { UserFacingError } from '../../lib/utils/errorHelper';
 import { FormID } from '../../lib/utils/form-data';
 
-const mockReload = jest.fn();
+const mockReplace = jest.fn();
 
 jest.mock('next/router', () => ({
-  useRouter: () => ({ reload: mockReload }),
+  useRouter: () => ({
+    replace: mockReplace,
+    asPath: '/applications/view/app-1/person-1?tab=health',
+  }),
 }));
 
 jest.mock('../../lib/gateways/internal-api', () => ({
@@ -42,7 +45,7 @@ const submit = () =>
 describe('MedicalDetail', () => {
   beforeEach(() => {
     updateApplicationMock.mockReset();
-    mockReload.mockReset();
+    mockReplace.mockReset().mockResolvedValue(true);
   });
 
   it('blocks submission when no form received date is set', async () => {
@@ -57,8 +60,14 @@ describe('MedicalDetail', () => {
     expect(updateApplicationMock).not.toHaveBeenCalled();
   });
 
-  it('reloads once the update succeeds', async () => {
-    updateApplicationMock.mockResolvedValue({});
+  it('shows a saving spinner until the current tab is refreshed', async () => {
+    let resolveUpdate: (value: unknown) => void = () => undefined;
+    updateApplicationMock.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveUpdate = resolve;
+        }),
+    );
 
     render(
       <MedicalDetail
@@ -68,14 +77,28 @@ describe('MedicalDetail', () => {
     );
     submit();
 
-    await waitFor(() => expect(mockReload).toHaveBeenCalled());
-    expect(screen.getByRole('button', { name: 'Save changes' })).toBeDisabled();
+    await waitFor(() => {
+      expect(screen.getByText('Saving...')).toBeInTheDocument();
+    });
+    expect(
+      screen.queryByRole('button', { name: 'Save changes' }),
+    ).not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+    resolveUpdate({});
+
+    await waitFor(() =>
+      expect(mockReplace).toHaveBeenCalledWith(
+        '/applications/view/app-1/person-1?tab=health',
+      ),
+    );
+    await waitFor(() => {
+      expect(screen.queryByText('Saving...')).not.toBeInTheDocument();
+    });
+    expect(screen.getByRole('button', { name: 'Save changes' })).toBeEnabled();
     expect(updateApplicationMock).toHaveBeenCalledTimes(1);
   });
 
-  it('disables save when it is clicked again in short succession', async () => {
+  it('ignores further clicks while a save is in progress', async () => {
     let resolveUpdate: (value: unknown) => void = () => undefined;
     updateApplicationMock.mockImplementation(
       () =>
@@ -93,20 +116,16 @@ describe('MedicalDetail', () => {
 
     const saveButton = screen.getByRole('button', { name: 'Save changes' });
     fireEvent.click(saveButton);
-
-    await waitFor(() => expect(saveButton).toBeDisabled());
     fireEvent.click(saveButton);
     fireEvent.click(saveButton);
 
+    await waitFor(() => {
+      expect(screen.getByText('Saving...')).toBeInTheDocument();
+    });
     expect(updateApplicationMock).toHaveBeenCalledTimes(1);
-    expect(saveButton).toBeDisabled();
 
     resolveUpdate({});
-    await waitFor(() => expect(mockReload).toHaveBeenCalledTimes(1));
-    fireEvent.click(saveButton);
-
-    expect(updateApplicationMock).toHaveBeenCalledTimes(1);
-    expect(saveButton).toBeDisabled();
+    await waitFor(() => expect(mockReplace).toHaveBeenCalledTimes(1));
   });
 
   it('shows an error and does not reload when the update fails', async () => {
@@ -127,7 +146,8 @@ describe('MedicalDetail', () => {
         screen.getByText('Unable to update application (400)'),
       ).toBeInTheDocument();
     });
-    expect(mockReload).not.toHaveBeenCalled();
+    expect(mockReplace).not.toHaveBeenCalled();
+    expect(screen.queryByText('Saving...')).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Save changes' })).toBeEnabled();
   });
 });

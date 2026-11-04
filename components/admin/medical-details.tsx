@@ -7,6 +7,7 @@ import DateInput, { INVALID_DATE } from '../form/dateinput';
 import { updateApplication } from '../../lib/gateways/internal-api';
 import React, { useState } from 'react';
 import Button from '../button';
+import Loading from '../loading';
 import Select from '../form/select';
 import { HeadingThree } from '../content/headings';
 import Paragraph from '../content/paragraph';
@@ -27,7 +28,6 @@ export default function MedicalDetail({
 }: MedicalDetailPageProps): JSX.Element {
   const router = useRouter();
   const [userError, setUserError] = useState<string | undefined>(undefined);
-  const [isReloading, setIsReloading] = useState(false);
 
   const outcomeOptions = [
     {
@@ -217,8 +217,7 @@ export default function MedicalDetail({
 
     try {
       await updateApplication(request);
-      setIsReloading(true);
-      router.reload();
+      await router.replace(router.asPath);
     } catch (error) {
       setUserError(toUserErrorMessage(error, 'Unable to save medical details'));
       scrollToTop();
@@ -231,83 +230,86 @@ export default function MedicalDetail({
       initialValues={initialValues}
       validationSchema={schema}
       onSubmit={onSubmit}
+      enableReinitialize
     >
-      {({ isSubmitting, values }) => (
-        <Form>
-          {userError && (
-            <ErrorSummary dataTestId="test-medical-details-error-summary">
-              {userError}
-            </ErrorSummary>
-          )}
-          <div className="govuk-grid-row">
-            <div className="govuk-grid-column-one-third">
-              <HeadingThree content="Medical need" />
-            </div>
-          </div>
-          <div className="govuk-grid-row">
-            <div className="govuk-grid-column-two-thirds">
-              <Paragraph>
-                <strong>Assessment requested:</strong>{' '}
-                {hasMedicalNeed ? 'Yes' : 'No'}
-              </Paragraph>
-              {hasMedicalNeed && (
-                <DateInput
-                  name={'dateFormRecieved'}
-                  label={'Date form received'}
-                />
-              )}
-            </div>
-          </div>
-
-          {hasMedicalNeed && values.dateFormRecieved && (
-            <>
-              <div className="govuk-grid-row">
-                <div className="govuk-grid-column-one-third">
-                  <HeadingThree content="Medical outcome" />
-                </div>
+      {({ isSubmitting, values }) =>
+        isSubmitting ? (
+          <Loading text="Saving..." />
+        ) : (
+          <Form>
+            {userError && (
+              <ErrorSummary dataTestId="test-medical-details-error-summary">
+                {userError}
+              </ErrorSummary>
+            )}
+            <div className="govuk-grid-row">
+              <div className="govuk-grid-column-one-third">
+                <HeadingThree content="Medical need" />
               </div>
-              <div className="govuk-grid-row">
-                <div className="govuk-grid-column-two-thirds">
+            </div>
+            <div className="govuk-grid-row">
+              <div className="govuk-grid-column-two-thirds">
+                <Paragraph>
+                  <strong>Assessment requested:</strong>{' '}
+                  {hasMedicalNeed ? 'Yes' : 'No'}
+                </Paragraph>
+                {hasMedicalNeed && (
                   <DateInput
-                    name={'assessmentDate'}
-                    label={'Assessment Date'}
+                    name={'dateFormRecieved'}
+                    label={'Date form received'}
                   />
-                  <Select
-                    label="Outcome"
-                    name="outcome"
-                    options={outcomeOptions}
-                  />
-                  <Select
-                    label="Accessible Housing Register"
-                    name="accessibleHousingRegister"
-                    options={accessibleHousingRegisterOptions}
-                  />
-                  <Select
-                    label="Disability"
-                    name="disability"
-                    options={disabilityOptions}
-                  />
-                  <Textarea
-                    label="Additional information"
-                    name="additionalInformation"
-                    as={'textarea'}
-                  />
-                </div>
-              </div>
-            </>
-          )}
-
-          {hasMedicalNeed && (
-            <div className="c-flex lbh-simple-pagination">
-              <div className="c-flex__1 text-right">
-                <Button disabled={isSubmitting || isReloading} type="submit">
-                  Save changes
-                </Button>
+                )}
               </div>
             </div>
-          )}
-        </Form>
-      )}
+
+            {hasMedicalNeed && values.dateFormRecieved && (
+              <>
+                <div className="govuk-grid-row">
+                  <div className="govuk-grid-column-one-third">
+                    <HeadingThree content="Medical outcome" />
+                  </div>
+                </div>
+                <div className="govuk-grid-row">
+                  <div className="govuk-grid-column-two-thirds">
+                    <DateInput
+                      name={'assessmentDate'}
+                      label={'Assessment Date'}
+                    />
+                    <Select
+                      label="Outcome"
+                      name="outcome"
+                      options={outcomeOptions}
+                    />
+                    <Select
+                      label="Accessible Housing Register"
+                      name="accessibleHousingRegister"
+                      options={accessibleHousingRegisterOptions}
+                    />
+                    <Select
+                      label="Disability"
+                      name="disability"
+                      options={disabilityOptions}
+                    />
+                    <Textarea
+                      label="Additional information"
+                      name="additionalInformation"
+                      as={'textarea'}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+
+            {hasMedicalNeed && (
+              <div className="c-flex lbh-simple-pagination">
+                <div className="c-flex__1 text-right">
+                  <Button type="submit">Save changes</Button>
+                </div>
+              </div>
+            )}
+          </Form>
+        )
+      }
     </Formik>
   );
 }

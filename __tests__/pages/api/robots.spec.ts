@@ -25,25 +25,19 @@ describe('/api/robots', () => {
     return res;
   };
 
-  it('disallows crawling outside production', async () => {
-    process.env = { ...originalEnvironment, SENTRY_ENVIRONMENT: 'staging' };
+  it.each(['staging', 'development', 'production'])(
+    'allows crawling in %s',
+    async (stage) => {
+      process.env = { ...originalEnvironment, SENTRY_ENVIRONMENT: stage };
 
-    const res = await callEndpoint();
+      const res = await callEndpoint();
 
-    expect(res.statusCode).toBe(StatusCodes.OK);
-    expect(res.getHeader('Content-Type')).toBe('text/plain; charset=utf-8');
-    expect(res.getHeader('Cache-Control')).toBe('no-store');
-    expect(res._getData()).toBe('User-agent: *\nDisallow: /\n');
-  });
-
-  it('allows crawling in production', async () => {
-    process.env = { ...originalEnvironment, SENTRY_ENVIRONMENT: 'production' };
-
-    const res = await callEndpoint();
-
-    expect(res.statusCode).toBe(StatusCodes.OK);
-    expect(res._getData()).toBe('User-agent: *\nAllow: /\n');
-  });
+      expect(res.statusCode).toBe(StatusCodes.OK);
+      expect(res.getHeader('Content-Type')).toBe('text/plain; charset=utf-8');
+      expect(res.getHeader('Cache-Control')).toBe('no-store');
+      expect(res._getData()).toBe('User-agent: *\nAllow: /\n');
+    },
+  );
 
   it('returns 405 for methods other than GET', async () => {
     const res = await callEndpoint('POST');

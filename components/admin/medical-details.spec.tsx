@@ -6,10 +6,13 @@ import { updateApplication } from '../../lib/gateways/internal-api';
 import { UserFacingError } from '../../lib/utils/errorHelper';
 import { FormID } from '../../lib/utils/form-data';
 
-const mockReload = jest.fn();
+const mockReplace = jest.fn();
 
 jest.mock('next/router', () => ({
-  useRouter: () => ({ reload: mockReload }),
+  useRouter: () => ({
+    replace: mockReplace,
+    asPath: '/applications/view/app-1/person-1?tab=health',
+  }),
 }));
 
 jest.mock('../../lib/gateways/internal-api', () => ({
@@ -36,17 +39,61 @@ const application = (formRecieved: string): Application => ({
   otherMembers: [],
 });
 
+const edit = () =>
+  fireEvent.click(screen.getByRole('button', { name: 'Edit' }));
+
 const submit = () =>
   fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
 
 describe('MedicalDetail', () => {
   beforeEach(() => {
     updateApplicationMock.mockReset();
-    mockReload.mockReset();
+    mockReplace.mockReset().mockResolvedValue(true);
+  });
+
+  it('shows the saved details until Edit is clicked', () => {
+    render(
+      <MedicalDetail
+        data={application('2026-01-02T00:00:00.000Z')}
+        memberIndex={-1}
+      />,
+    );
+
+    expect(screen.getByText('Assessment requested')).toBeInTheDocument();
+    expect(screen.getByText('Yes')).toBeInTheDocument();
+    expect(screen.getByText('2 Jan 2026')).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Save changes' }),
+    ).not.toBeInTheDocument();
+
+    edit();
+
+    expect(
+      screen.getByRole('button', { name: 'Save changes' }),
+    ).toBeInTheDocument();
+  });
+
+  it('returns to the saved details when editing is cancelled', () => {
+    render(
+      <MedicalDetail
+        data={application('2026-01-02T00:00:00.000Z')}
+        memberIndex={-1}
+      />,
+    );
+
+    edit();
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    expect(screen.getByRole('button', { name: 'Edit' })).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Save changes' }),
+    ).not.toBeInTheDocument();
+    expect(updateApplicationMock).not.toHaveBeenCalled();
   });
 
   it('blocks submission when no form received date is set', async () => {
     render(<MedicalDetail data={application('')} memberIndex={-1} />);
+    edit();
     submit();
 
     await waitFor(() => {
@@ -57,7 +104,7 @@ describe('MedicalDetail', () => {
     expect(updateApplicationMock).not.toHaveBeenCalled();
   });
 
-  it('reloads once the update succeeds', async () => {
+  it('returns to the saved details after a successful save', async () => {
     updateApplicationMock.mockResolvedValue({});
 
     render(
@@ -66,16 +113,26 @@ describe('MedicalDetail', () => {
         memberIndex={-1}
       />,
     );
+    edit();
+    fireEvent.change(screen.getByLabelText('Outcome'), {
+      target: { value: 'vulnerable' },
+    });
     submit();
 
-    await waitFor(() => expect(mockReload).toHaveBeenCalled());
-    expect(screen.getByRole('button', { name: 'Save changes' })).toBeDisabled();
-
-    fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
-    expect(updateApplicationMock).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Edit' })).toBeInTheDocument();
+    });
+    expect(screen.getByText('Vulnerable')).toBeInTheDocument();
+    expect(screen.queryByText('Saving...')).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Save changes' }),
+    ).not.toBeInTheDocument();
+    expect(mockReplace).toHaveBeenCalledWith(
+      '/applications/view/app-1/person-1?tab=health',
+    );
   });
 
-  it('disables save when it is clicked again in short succession', async () => {
+  it('ignores further clicks while a save is in progress', async () => {
     let resolveUpdate: (value: unknown) => void = () => undefined;
     updateApplicationMock.mockImplementation(
       () =>
@@ -90,23 +147,21 @@ describe('MedicalDetail', () => {
         memberIndex={-1}
       />,
     );
+    edit();
 
     const saveButton = screen.getByRole('button', { name: 'Save changes' });
     fireEvent.click(saveButton);
 
     await waitFor(() => expect(saveButton).toBeDisabled());
     fireEvent.click(saveButton);
-    fireEvent.click(saveButton);
 
     expect(updateApplicationMock).toHaveBeenCalledTimes(1);
-    expect(saveButton).toBeDisabled();
+    expect(screen.queryByText('Saving...')).not.toBeInTheDocument();
 
     resolveUpdate({});
-    await waitFor(() => expect(mockReload).toHaveBeenCalledTimes(1));
-    fireEvent.click(saveButton);
-
-    expect(updateApplicationMock).toHaveBeenCalledTimes(1);
-    expect(saveButton).toBeDisabled();
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Edit' })).toBeInTheDocument(),
+    );
   });
 
   it('shows an error and does not reload when the update fails', async () => {
@@ -120,6 +175,7 @@ describe('MedicalDetail', () => {
         memberIndex={-1}
       />,
     );
+    edit();
     submit();
 
     await waitFor(() => {
@@ -127,7 +183,10 @@ describe('MedicalDetail', () => {
         screen.getByText('Unable to update application (400)'),
       ).toBeInTheDocument();
     });
-    expect(mockReload).not.toHaveBeenCalled();
+    expect(mockReplace).not.toHaveBeenCalled();
     expect(screen.getByRole('button', { name: 'Save changes' })).toBeEnabled();
+    expect(
+      screen.queryByRole('button', { name: 'Edit' }),
+    ).not.toBeInTheDocument();
   });
 });

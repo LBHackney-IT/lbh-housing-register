@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 import { Form, Formik, FormikValues } from 'formik';
 import { Application } from '../../domain/HousingApi';
 import { applicantHasId } from '../../lib/store/applicant';
+import { formatDate } from '../../lib/utils/dateOfBirth';
 import DateInput, { INVALID_DATE } from '../form/dateinput';
 import { updateApplication } from '../../lib/gateways/internal-api';
 import React, { useState } from 'react';
@@ -21,13 +22,29 @@ export interface MedicalDetailPageProps {
   memberIndex: number;
 }
 
+function optionLabel(
+  options: { label: string; value: string }[],
+  value?: string | null,
+): string | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  return options.find((option) => option.value === value)?.label;
+}
+
 export default function MedicalDetail({
   data,
   memberIndex,
 }: MedicalDetailPageProps): JSX.Element {
   const router = useRouter();
+  const applicant =
+    data.otherMembers && memberIndex > -1
+      ? data.otherMembers[memberIndex]
+      : data.mainApplicant;
+  const [editing, setEditing] = useState(false);
+  const [medicalNeed, setMedicalNeed] = useState(applicant?.medicalNeed);
   const [userError, setUserError] = useState<string | undefined>(undefined);
-  const [isReloading, setIsReloading] = useState(false);
 
   const outcomeOptions = [
     {
@@ -170,18 +187,13 @@ export default function MedicalDetail({
     additionalInformation: Yup.string(),
   });
 
-  const applicant =
-    data.otherMembers && memberIndex > -1
-      ? data.otherMembers[memberIndex]
-      : data.mainApplicant;
   const initialValues: FormikValues = {
-    dateFormRecieved: applicant?.medicalNeed?.formRecieved ?? '',
-    assessmentDate: applicant?.medicalNeed?.assessmentDate ?? '',
-    outcome: applicant?.medicalNeed?.outcome ?? '',
-    accessibleHousingRegister:
-      applicant?.medicalNeed?.accessibileHousingRegister ?? '',
-    disability: applicant?.medicalNeed?.disability ?? '',
-    additionalInformation: applicant?.medicalNeed?.additionalInformaton ?? '',
+    dateFormRecieved: medicalNeed?.formRecieved ?? '',
+    assessmentDate: medicalNeed?.assessmentDate ?? '',
+    outcome: medicalNeed?.outcome ?? '',
+    accessibleHousingRegister: medicalNeed?.accessibileHousingRegister ?? '',
+    disability: medicalNeed?.disability ?? '',
+    additionalInformation: medicalNeed?.additionalInformaton ?? '',
   };
 
   async function onSubmit(values: FormikValues) {
@@ -189,7 +201,7 @@ export default function MedicalDetail({
       return;
     }
 
-    const medicalNeed = {
+    const nextMedicalNeed = {
       formRecieved: values.dateFormRecieved,
       assessmentDate:
         values.assessmentDate !== '' ? values.assessmentDate : null,
@@ -205,20 +217,29 @@ export default function MedicalDetail({
         ? {
             id: data.id,
             otherMembers: data.otherMembers.map((member, index) =>
-              index === memberIndex ? { ...member, medicalNeed } : member,
+              index === memberIndex
+                ? { ...member, medicalNeed: nextMedicalNeed }
+                : member,
             ),
           }
         : {
             id: data.id,
-            mainApplicant: { ...data.mainApplicant, medicalNeed },
+            mainApplicant: {
+              ...data.mainApplicant,
+              medicalNeed: nextMedicalNeed,
+            },
           };
 
     setUserError(undefined);
 
     try {
       await updateApplication(request);
-      setIsReloading(true);
-      router.reload();
+      setMedicalNeed({
+        ...nextMedicalNeed,
+        assessmentDate: nextMedicalNeed.assessmentDate ?? undefined,
+      });
+      setEditing(false);
+      await router.replace(router.asPath);
     } catch (error) {
       setUserError(toUserErrorMessage(error, 'Unable to save medical details'));
       scrollToTop();
@@ -226,6 +247,65 @@ export default function MedicalDetail({
   }
 
   const hasMedicalNeed = applicantHasMedicalNeed(applicant);
+  const savedDetails = [
+    {
+      title: 'Assessment requested',
+      value: hasMedicalNeed ? 'Yes' : 'No',
+    },
+    {
+      title: 'Date form received',
+      value: formatDate(medicalNeed?.formRecieved),
+    },
+    {
+      title: 'Assessment date',
+      value: formatDate(medicalNeed?.assessmentDate),
+    },
+    {
+      title: 'Outcome',
+      value: optionLabel(outcomeOptions, medicalNeed?.outcome),
+    },
+    {
+      title: 'Accessible Housing Register',
+      value: optionLabel(
+        accessibleHousingRegisterOptions,
+        medicalNeed?.accessibileHousingRegister,
+      ),
+    },
+    {
+      title: 'Disability',
+      value: optionLabel(disabilityOptions, medicalNeed?.disability),
+    },
+    {
+      title: 'Additional information',
+      value: medicalNeed?.additionalInformaton,
+    },
+  ].filter((detail) => detail.value);
+
+  if (!editing) {
+    return (
+      <>
+        <HeadingThree content="Medical need" />
+        <table className="govuk-table lbh-table">
+          <tbody className="govuk-table__body">
+            {savedDetails.map((detail) => (
+              <tr key={detail.title} className="govuk-table__row">
+                <th scope="row" className="govuk-table__header">
+                  {detail.title}
+                </th>
+                <td className="govuk-table__cell">{detail.value}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {hasMedicalNeed && (
+          <Button secondary type="button" onClick={() => setEditing(true)}>
+            Edit
+          </Button>
+        )}
+      </>
+    );
+  }
+
   return (
     <Formik
       initialValues={initialValues}
@@ -300,7 +380,19 @@ export default function MedicalDetail({
           {hasMedicalNeed && (
             <div className="c-flex lbh-simple-pagination">
               <div className="c-flex__1 text-right">
-                <Button disabled={isSubmitting || isReloading} type="submit">
+                <Button
+                  secondary
+                  className="lbh-button--inline"
+                  type="button"
+                  onClick={() => setEditing(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="lbh-button--inline"
+                  disabled={isSubmitting}
+                  type="submit"
+                >
                   Save changes
                 </Button>
               </div>

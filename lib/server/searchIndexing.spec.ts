@@ -1,4 +1,8 @@
-import { isSearchEngineIndexable, robotsTxt } from './searchIndexing';
+import {
+  isSearchEngineIndexable,
+  robotsMetaContent,
+  robotsTxt,
+} from './searchIndexing';
 
 describe('isSearchEngineIndexable', () => {
   const originalEnvironment = process.env;
@@ -25,6 +29,7 @@ describe('isSearchEngineIndexable', () => {
     withStage('production', 'staging');
 
     expect(isSearchEngineIndexable()).toBe(true);
+    expect(robotsMetaContent()).toBeUndefined();
     expect(robotsTxt()).toBe('User-agent: *\nAllow: /\n');
   });
 
@@ -32,15 +37,17 @@ describe('isSearchEngineIndexable', () => {
     withStage(undefined, 'production');
 
     expect(isSearchEngineIndexable()).toBe(true);
+    expect(robotsMetaContent()).toBeUndefined();
   });
 
   it.each(['development', 'staging', 'ci', 'localdev'])(
-    'blocks %s',
+    'keeps %s crawlable and noindex',
     (stage) => {
       withStage(stage, 'production');
 
       expect(isSearchEngineIndexable()).toBe(false);
-      expect(robotsTxt()).toBe('User-agent: *\nDisallow: /\n');
+      expect(robotsMetaContent()).toBe('noindex');
+      expect(robotsTxt()).toBe('User-agent: *\nAllow: /\n');
     },
   );
 
@@ -48,7 +55,8 @@ describe('isSearchEngineIndexable', () => {
     withStage();
 
     expect(isSearchEngineIndexable()).toBe(false);
-    expect(robotsTxt()).toBe('User-agent: *\nDisallow: /\n');
+    expect(robotsMetaContent()).toBe('noindex');
+    expect(robotsTxt()).toBe('User-agent: *\nAllow: /\n');
   });
 
   it('ignores a blank Lambda stage and uses the build-time stage', () => {

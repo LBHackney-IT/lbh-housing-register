@@ -6,7 +6,7 @@ interface Props {
 
 const Seo = ({ title }: Props): React.ReactElement => (
   <Head>
-    <title>{title} | Housing Register | Hackney Council</title>
+    <title>{`${title} | Housing Register | Hackney Council`}</title>
   </Head>
 );
 

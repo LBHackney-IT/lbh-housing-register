@@ -4,7 +4,6 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 const { withSentryConfig } = require('@sentry/nextjs');
-const allowSearchIndexing = process.env.NEXT_PUBLIC_ENV === 'production';
 
 // @ts-check
 /** @type {import('next').NextConfig} */
@@ -73,15 +72,6 @@ const nextConfig = {
             key: 'X-Content-Type-Options',
             value: 'nosniff',
           },
-          // Dev, staging, CI, and local responses must not be indexed.
-          ...(!allowSearchIndexing
-            ? [
-                {
-                  key: 'X-Robots-Tag',
-                  value: 'noindex, nofollow',
-                },
-              ]
-            : []),
         ],
       },
     ];

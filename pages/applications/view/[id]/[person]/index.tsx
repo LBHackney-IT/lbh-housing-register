@@ -1,6 +1,7 @@
-import React, { MouseEvent, useState } from 'react';
+import React, { MouseEvent } from 'react';
 
 import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
 
 import CheckBoxList, {
   CheckBoxListPageProps,
@@ -73,20 +74,18 @@ export default function ApplicationPersonPage({
     return x.person?.id === person;
   });
 
-  type ActiveNavItem =
-    | 'identity'
-    | 'livingsituation'
-    | 'money'
-    | 'health'
-    | 'checklist';
-
-  const [activeNavItem, setActiveNavItem] = useState<ActiveNavItem>('identity');
+  const router = useRouter();
+  const tabParam = router.query.tab;
+  const activeNavItem =
+    (Array.isArray(tabParam) ? tabParam[0] : tabParam) ?? 'identity';
 
   const handleSelectNavItem = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     // Using currentTarget so clicks on text still read the button's name
     const { name } = event.currentTarget;
-    setActiveNavItem(name as ActiveNavItem);
+    router.push({ query: { ...router.query, tab: name } }, undefined, {
+      shallow: true,
+    });
   };
 
   const personalDetails = personalDetailsCheckboxList(applicant);

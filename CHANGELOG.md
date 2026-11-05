@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.2.0](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v3.1.3...hackney-housing-register-v3.2.0) (2026-11-05)
+
+
+### Features
+
+* add edit mode to medical needs page ([3a1a2d3](https://github.com/LBHackney-IT/lbh-housing-register/commit/3a1a2d3ffb3bfcabc370d68be29a7a7be55243a5))
+* after save stay on medical needs tab ([82c17e9](https://github.com/LBHackney-IT/lbh-housing-register/commit/82c17e970ac1d5b7c8acf8edd68d16358c2ffa1d))
+
+
+### Bug Fixes
+
+* corrects string to remove react warning ([b1a1b7f](https://github.com/LBHackney-IT/lbh-housing-register/commit/b1a1b7f510df3e106c961c22bcfd7c70eb978bfc))
+* corrects string to remove react warning ([#621](https://github.com/LBHackney-IT/lbh-housing-register/issues/621)) ([7825699](https://github.com/LBHackney-IT/lbh-housing-register/commit/7825699e747e885637503f00d76e63862b607352))
+
 ## [3.1.3](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v3.1.2...hackney-housing-register-v3.1.3) (2026-10-29)
 
 

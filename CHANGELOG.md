@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.2.1](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v3.2.0...hackney-housing-register-v3.2.1) (2026-11-13)
+
+
+### Bug Fixes
+
+* add 20 s timeout on housing API Axios client ([e3ad848](https://github.com/LBHackney-IT/lbh-housing-register/commit/e3ad848cda4e7434a5e7ab091e299fa9f5a57641))
+* add 20 s timeout on housing API Axios client ([#624](https://github.com/LBHackney-IT/lbh-housing-register/issues/624)) ([9f3feb2](https://github.com/LBHackney-IT/lbh-housing-register/commit/9f3feb27ef908e5819993cacbd24497fdffaf133))
+
 ## [3.2.0](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v3.1.3...hackney-housing-register-v3.2.0) (2026-11-05)
 
 

@@ -27,6 +27,7 @@ describe('authenticatedHousingAxios', () => {
     expect(client.defaults.headers.common.Authorization).toBe(
       'Bearer cognito-id-token',
     );
+    expect(client.defaults.timeout).toBe(20_000);
   });
 
   it('does not create an Authorization header without a staff session', async () => {

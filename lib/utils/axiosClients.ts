@@ -10,6 +10,9 @@ export function housingAxios() {
   const url = new URL(apiUrlString);
   return axios.create({
     baseURL: process.env.HOUSING_REGISTER_API,
+    // Leave time to turn a stuck upstream call into a JSON error. API Gateway
+    // returns an empty 504 if this function is still waiting at 29 seconds.
+    timeout: 20_000,
     headers: {
       'x-api-key': process.env.HOUSING_REGISTER_KEY,
       'Content-Type': 'application/json',

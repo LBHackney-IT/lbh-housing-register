@@ -196,6 +196,23 @@ describe('Sentry tunnel', () => {
     );
   });
 
+  it('keeps an event when the navigation recovery flag is not set', () => {
+    const sentry = jest.requireMock('@sentry/nextjs') as { init: jest.Mock };
+
+    jest.isolateModules(() => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      require('../../../instrumentation-client');
+    });
+
+    const options = sentry.init.mock.calls.at(-1)?.[0] as {
+      beforeSend: (event: { message?: string }) => { message?: string };
+    };
+
+    expect(options.beforeSend({ message: 'kept' })).toMatchObject({
+      message: 'kept',
+    });
+  });
+
   it('rejects a body over the tunnel limit', async () => {
     const res = await call(
       'POST',

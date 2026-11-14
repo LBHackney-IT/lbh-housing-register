@@ -3,12 +3,20 @@
 
 import * as Sentry from '@sentry/nextjs';
 import {
+  installSameUrlHardNavigationRecovery,
+  shouldDropRecoveredHardNavigation,
+} from './lib/navigation/recover-same-url-hard-navigation';
+import {
   sanitiseSentryBreadcrumb,
   sanitiseSentryEvent,
   sanitiseSentrySpan,
   sanitiseSentryTransaction,
   sentryDataCollection,
 } from './lib/utils/sentry-privacy';
+
+// Register before Sentry.init so this listener runs before Sentry records
+// the rejection. beforeSend then drops only the reload we just started.
+installSameUrlHardNavigationRecovery();
 
 const ENVIRONMENT = process.env.NEXT_PUBLIC_ENV;
 
@@ -48,7 +56,12 @@ Sentry.init({
       ENVIRONMENT === 'development'),
 
   beforeBreadcrumb: sanitiseSentryBreadcrumb,
-  beforeSend: sanitiseSentryEvent,
+  beforeSend(event, hint) {
+    if (shouldDropRecoveredHardNavigation(event, hint?.originalException)) {
+      return null;
+    }
+    return sanitiseSentryEvent(event);
+  },
   beforeSendTransaction: sanitiseSentryTransaction,
   beforeSendSpan: sanitiseSentrySpan,
 });

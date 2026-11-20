@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.2.2](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v3.2.1...hackney-housing-register-v3.2.2) (2026-11-20)
+
+
+### Bug Fixes
+
+* bump cypress versions ([2508a65](https://github.com/LBHackney-IT/lbh-housing-register/commit/2508a65ee7a36a7a5cbb0417dc6d09cb84faa773))
+* bump cypress versions ([#627](https://github.com/LBHackney-IT/lbh-housing-register/issues/627)) ([7c6f53d](https://github.com/LBHackney-IT/lbh-housing-register/commit/7c6f53dbf941394de244fa2e4ce0e7c587a9cb01))
+
 ## [3.2.1](https://github.com/LBHackney-IT/lbh-housing-register/compare/hackney-housing-register-v3.2.0...hackney-housing-register-v3.2.1) (2026-11-13)
 
 

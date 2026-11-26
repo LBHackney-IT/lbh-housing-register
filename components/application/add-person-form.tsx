@@ -181,6 +181,8 @@ const AddPersonForm = ({
     phoneNumber: applicant.contactInformation?.phoneNumber ?? '',
     emailAddress: applicant.contactInformation?.emailAddress ?? '',
   };
+  const emailIsLocked =
+    isMainApplicant && Boolean(applicant.contactInformation?.emailAddress);
 
   useEffect(() => {
     setIsOver16State(isOver16Func(applicant));
@@ -317,7 +319,17 @@ const AddPersonForm = ({
               {isMainApplicant ? (
                 <>
                   <Input name="phoneNumber" label="Mobile number" />
-                  <Input name="emailAddress" label="Email" type="email" />
+                  <Input
+                    name="emailAddress"
+                    label="Email"
+                    type="email"
+                    hint={
+                      emailIsLocked
+                        ? 'You use this email address to sign in, so it cannot be changed.'
+                        : undefined
+                    }
+                    readOnly={emailIsLocked}
+                  />
                 </>
               ) : null}
             </>

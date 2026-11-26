@@ -1,8 +1,14 @@
 import throttle from 'lodash/throttle';
-import type { AnyAction, Middleware, ThunkDispatch } from '@reduxjs/toolkit';
+import type {
+  Middleware,
+  PayloadAction,
+  ThunkDispatch,
+  UnknownAction,
+} from '@reduxjs/toolkit';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Store } from '.';
 import {
+  Applicant,
   Application,
   CreateEvidenceRequest,
   EvidenceRequestResponse,
@@ -35,14 +41,34 @@ export const loadApplication = createAsyncThunk(
   },
 );
 
+const residentOwnedDetails = ({
+  person,
+  address,
+  contactInformation,
+  questions,
+}: Applicant): Applicant => ({
+  person,
+  address,
+  contactInformation,
+  questions,
+});
+
 export const updateApplication = createAsyncThunk(
   'application/update',
   async (application: Application, { rejectWithValue }) => {
+    // A resident can only change their household details.
+    const body: Application = {
+      id: application.id,
+      mainApplicant: application.mainApplicant
+        ? residentOwnedDetails(application.mainApplicant)
+        : undefined,
+      otherMembers: application.otherMembers?.map(residentOwnedDetails),
+    };
     const res = await fetchWithSentry(
       `/api/applications/${application.id}`,
       {
         method: 'PATCH',
-        body: JSON.stringify(application),
+        body: JSON.stringify(body),
       },
       {
         operation: 'update_application',
@@ -85,7 +111,7 @@ export const disqualifyApplication = createAsyncThunk(
 );
 
 export const completeApplication = createAsyncThunk<
-  void,
+  Application,
   Application,
   { rejectValue: string }
 >(
@@ -104,6 +130,15 @@ export const completeApplication = createAsyncThunk<
     if (!res.ok) {
       return rejectWithValue(`Unable to complete application (${res.status})`);
     }
+
+    const completed = (await res
+      .json()
+      .catch(() => null)) as Application | null;
+    if (!completed?.id) {
+      return rejectWithValue('Unexpected response when completing application');
+    }
+
+    return completed;
   },
 );
 
@@ -213,6 +248,8 @@ const slice = createSlice({
   initialState: {} as Application,
   reducers: {
     submit: () => {},
+    // Replaces the store with the application status as it was just submitted.
+    submitted: (state, action: PayloadAction<Application>) => action.payload,
   },
   extraReducers: (builder) => {
     builder
@@ -225,7 +262,6 @@ const slice = createSlice({
         disqualifyApplication.fulfilled,
         (state, action) => action.payload,
       )
-      .addCase(completeApplication.fulfilled, (state, action) => action.payload)
       .addCase(exit.fulfilled, (state, action) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
 
       .addDefaultCase((state, action) => {
@@ -241,7 +277,7 @@ const slice = createSlice({
 export const autoSaveMiddleware: Middleware<
   Record<string, never>,
   Store,
-  ThunkDispatch<Store, null, AnyAction>
+  ThunkDispatch<Store, null, UnknownAction>
 > = (storeAPI) => {
   // TODO This basic throttle batches up sequential changes in the store.
   // it doesn't deal with race conditions in communicating with the API.
@@ -261,12 +297,13 @@ export const autoSaveMiddleware: Middleware<
     const previousApplication = storeAPI.getState().application;
     const newAction = next(action);
     const newApplication = storeAPI.getState().application;
-    const typedAction = action as AnyAction;
+    const typedAction = action as UnknownAction;
     function blacklist(type: string) {
       return (
         type.startsWith(loadApplication.typePrefix) ||
         type.startsWith(updateApplication.typePrefix) ||
-        type.startsWith(disqualifyApplication.typePrefix)
+        type.startsWith(disqualifyApplication.typePrefix) ||
+        type === slice.actions.submitted.type
       );
     }
 
@@ -281,5 +318,7 @@ export const autoSaveMiddleware: Middleware<
     return newAction;
   };
 };
+
+export const applicationSubmitted = slice.actions.submitted;
 
 export default slice;

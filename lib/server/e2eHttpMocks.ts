@@ -12,11 +12,17 @@ export type E2eNockRegisterPayload = {
   delay?: number;
 };
 
+/**
+ * Only resident token request headers are recorded.
+ */
+const CAPTURED_HEADERS = ['x-resident-token'] as const;
+
 export type CapturedE2eRequest = {
   hostname: string;
   method: string;
   path: string;
   body: unknown;
+  headers: Record<string, string>;
   at: number;
 };
 
@@ -114,16 +120,27 @@ export function registerE2eNockMock(input: E2eNockRegisterPayload): void {
 
   interceptor
     .delay(delay)
-    .reply(status, (_uri: string, requestBody: unknown) => {
-      getCaptureStore().push({
-        hostname,
-        method,
-        path,
-        body: requestBody,
-        at: Date.now(),
-      });
-      return input.body as nock.Body;
-    })
+    .reply(
+      status,
+      function (this: nock.ReplyFnContext, _uri: string, requestBody: unknown) {
+        const headers: Record<string, string> = {};
+        for (const name of CAPTURED_HEADERS) {
+          const value = this.req.headers[name];
+          if (value) {
+            headers[name] = value;
+          }
+        }
+        getCaptureStore().push({
+          hostname,
+          method,
+          path,
+          body: requestBody,
+          headers,
+          at: Date.now(),
+        });
+        return input.body as nock.Body;
+      },
+    )
     .persist(!!input.persist);
 }
 

@@ -9,7 +9,7 @@ import ApplyOverviewPage from '../../../../pages/apply/overview';
 import ApplyResidentIndexPage from '../../../../pages/apply/[resident]';
 import { StatusCodes } from 'http-status-codes';
 import ApplyResidentSummaryPage from '../../../../pages/apply/[resident]/summary';
-import { Application, Person } from '../../../../../domain/HousingApi';
+import { Application } from '../../../../../domain/HousingApi';
 import { generatePerson } from '../../../../../testUtils/personHelper';
 import RejectionPage from '../../../../pages/rejection';
 
@@ -169,7 +169,7 @@ describe('Apply resident summary page', () => {
   it('shows saving message when user deletes a household member from the application', () => {
     //complete household member sections, so summary page is available
     cy.mockNotifyEmailResponse();
-    const householdMember: Person = generatePerson(personId + 1);
+    const householdMember = generatePerson(personId + 1);
 
     const eligibleApplicationWithHouseholdMemberCompleted: Application = {
       ...eligibleApplicationWithCompletedMainApplicantSections,

@@ -78,6 +78,31 @@ describe('/api/notify/[template] authorisation', () => {
     );
   });
 
+  ['Submitted', 'Cancelled'].forEach((status) => {
+    it(`does not send an email once the application is ${status}`, () => {
+      cy.loginAsResident(applicationId, true);
+      cy.mockHousingRegisterApiGetApplications(
+        applicationId,
+        { ...application, status },
+        true,
+      );
+
+      cy.request({
+        method: 'POST',
+        url: '/api/notify/new-application',
+        failOnStatusCode: false,
+      }).then((res) => {
+        expect(res.status).to.eq(StatusCodes.CONFLICT);
+      });
+
+      cy.getE2eCapturedRequests(notifyHostname, 'POST', notifyPath).then(
+        (requests) => {
+          expect(requests).to.have.length(0);
+        },
+      );
+    });
+  });
+
   it("sends the caller's own application data to Notify, ignoring any client-supplied body", () => {
     cy.loginAsResident(applicationId, true);
     cy.mockHousingRegisterApiGetApplications(applicationId, application, true);

@@ -37,7 +37,10 @@ describe('User views a resident application', () => {
         .first()
         .invoke('attr', 'href')
         .then((href) => {
-          const targetId = href.split('/').pop();
+          const targetId = href?.split('/').pop();
+          if (!targetId) {
+            throw new Error('View application link has no application id');
+          }
           cy.mockActivityHistoryApiEmptyResponse(targetId);
           ApplicationsPage.getViewApplicationLink().first().click();
         });
@@ -90,7 +93,10 @@ describe('User views a resident application', () => {
         .first()
         .invoke('attr', 'href')
         .then((href) => {
-          const targetId = href.split('/').pop();
+          const targetId = href?.split('/').pop();
+          if (!targetId) {
+            throw new Error('View application link has no application id');
+          }
           cy.mockActivityHistoryApiEmptyResponse(targetId);
           ApplicationsPage.getViewApplicationLink().first().click();
         });

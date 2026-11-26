@@ -77,7 +77,7 @@ Requires any authorised staff role, then rejects read-only-only. Officer, admin,
 
 ### Update case, notes, complete, evidence
 
-`PATCH /api/applications/[id]`, `POST /api/applications/[id]/note`, `PATCH /api/applications/[id]/complete`, and `POST /api/applications/[id]/evidence` all use `getApplicationAccess` (`lib/utils/requestAuth.ts`). This matches the pre-Cognito BFF: it does **not** re-apply `canEditApplications` or sensitive-view rules.
+`PATCH /api/applications/[id]` and `PATCH /api/applications/[id]/complete` use `getApplicationAccess` (`lib/utils/requestAuth.ts`). This matches the pre-Cognito BFF: it does **not** re-apply `canEditApplications` or sensitive-view rules. Notes and evidence use narrower checks, described below.
 
 1. Unauthenticated → 401.
 2. Read-only-only, or no authorised role → 403.
@@ -88,7 +88,11 @@ Requires any authorised staff role, then rejects read-only-only. Officer, admin,
 | Create case                                                                | 403       | Yes     | Yes   | Yes     |
 | Mutate any application (including unassigned / someone else’s / sensitive) | 403       | Yes     | Yes   | Yes     |
 
-A resident may mutate **only** the application id in their own cookie; that path does not use staff roles.
+A resident may mutate **only** the application id in their own cookie for `PATCH` and `complete`; that path does not use staff roles.
+
+**Notes** (`POST /api/applications/[id]/note`) use `getStaffWriteAccess`: writable staff only. Residents get 403 even for their own application, so a resident can't write entries into staff history. Read-only staff get 403, and no session gets 401. The Housing Register API checks again: it returns 403 unless the forwarded Cognito token is in an admin, manager or officer group.
+
+**Evidence** (`POST /api/applications/[id]/evidence`) use `getResidentApplicationAccess`: the resident's own application only. Staff get 401 because they have no resident session. The body is reduced to `documentTypes` from the list offered to residents, so `userRequestedBy` and other fields are dropped. The BFF passes the resident's own token to the backend in an `X-Resident-Token` header, and the backend returns 403 unless it is valid and belongs to that application. It also returns 409 unless the application is `Submitted`, and the step only runs during submission.
 
 ### Reports APIs
 
@@ -96,17 +100,17 @@ A resident may mutate **only** the application id in their own cookie; that path
 
 ### Other
 
-- `POST /api/notify/[template]` is resident-only.
+- `POST /api/notify/[template]` is resident-only, and returns 409 unless the application is `New` or `ManualDraft`. All three templates are sent while the resident is still submitting or being disqualified, so they can't be sent again once the application has moved on.
 - `/api/address/[postcode]` has no staff/resident check in this app.
 - `/api/applications/throw-error` has no auth check (Sentry probe).
 
 ## Staff vs resident
 
-|                                                | Staff session           | Resident session                                                                         |
-| ---------------------------------------------- | ----------------------- | ---------------------------------------------------------------------------------------- |
-| Staff pages (`/applications…`)                 | Role rules above        | Redirect to login                                                                        |
-| Resident apply pages / `GET /api/applications` | 401 on the resident API | Own application only                                                                     |
-| Staff write APIs                               | Role rules above        | 401 unless the application id matches the resident cookie (PATCH/note/complete/evidence) |
+|                                                | Staff session           | Resident session                                                                                         |
+| ---------------------------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------- |
+| Staff pages (`/applications…`)                 | Role rules above        | Redirect to login                                                                                        |
+| Resident apply pages / `GET /api/applications` | 401 on the resident API | Own application only                                                                                     |
+| Staff write APIs                               | Role rules above        | 401 unless the application id matches the resident cookie (PATCH/complete); 403 on note; 401 on evidence |
 
 ## Quirks worth knowing
 

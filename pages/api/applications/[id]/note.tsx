@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { AddNoteToHistoryRequest } from '../../../../domain/HousingApi';
 import { addNoteToHistory } from '../../../../lib/gateways/applications-api';
-import { getApplicationAccess } from '../../../../lib/utils/requestAuth';
+import { getStaffWriteAccess } from '../../../../lib/utils/requestAuth';
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -30,7 +30,7 @@ const endpoint: NextApiHandler = async (
 
   const id = req.query.id as string;
 
-  const access = await getApplicationAccess(req, id);
+  const access = await getStaffWriteAccess(req);
   if (access !== 'allowed') {
     res
       .status(

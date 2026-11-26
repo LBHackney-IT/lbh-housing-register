@@ -429,21 +429,18 @@ Cypress.Commands.add(
   },
 );
 Cypress.Commands.add(
-  'mockHousingRegisterApiPatchCompleteApplication',
-  (
-    applicationId: string,
-    delay: number = 0,
-    statusCode: number = StatusCodes.OK,
-  ) => {
+  'mockHousingRegisterApiPostNote',
+  (applicationId: string, statusCode: number = StatusCodes.OK) => {
     e2eRegisterNock({
       hostname: exposed('HOUSING_REGISTER_API'),
-      method: 'PATCH',
-      path: `/applications/${applicationId}/complete`,
+      method: 'POST',
+      path: `/applications/${applicationId}/note`,
       statusCode,
-      delay,
+      body: [],
     });
   },
 );
+
 Cypress.Commands.add(
   'mockNotifyEmailResponse',
   (statusCode: number = StatusCodes.OK) => {

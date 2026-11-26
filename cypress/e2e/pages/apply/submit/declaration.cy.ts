@@ -94,8 +94,11 @@ describe('Declaration', () => {
       apiResponseDelay,
     );
 
-    cy.mockHousingRegisterApiPatchCompleteApplication(
+    // The real API answers with the completed application, and the store
+    // relies on that to mark it submitted.
+    cy.mockHousingRegisterApiCompleteApplication(
       applicationId,
+      { ...applicationWithMainApplicant, status: 'Submitted' },
       apiResponseDelay,
     );
 
@@ -207,8 +210,9 @@ describe('Declaration', () => {
       errorStatusCode,
     );
 
-    cy.mockHousingRegisterApiPatchCompleteApplication(
+    cy.mockHousingRegisterApiCompleteApplication(
       applicationId,
+      undefined,
       apiResponseDelay,
       errorStatusCode,
     );
@@ -223,6 +227,37 @@ describe('Declaration', () => {
     DeclarationPage.getErrorSummary().should('be.visible');
     cy.contains(expectedErrorMessage);
   });
+
+  it('does not show the confirmation when completing succeeds without returning the application', () => {
+    cy.loginAsResident(applicationId, true);
+
+    cy.mockHousingRegisterApiGetApplications(
+      applicationId,
+      applicationWithMainApplicant,
+    );
+    cy.mockHousingRegisterApiGetApplications(
+      applicationId,
+      applicationWithMainApplicant,
+    );
+    cy.mockHousingRegisterApiPatchApplication(
+      applicationId,
+      applicationWithMainApplicant,
+    );
+    cy.mockHousingRegisterApiPostEvidenceRequest(applicationId);
+    // 200 with no body: the store has nothing to mark as submitted.
+    cy.mockHousingRegisterApiCompleteApplication(applicationId);
+
+    DeclarationPage.visit();
+    DeclarationPage.getDeclarationPage().should('be.visible');
+
+    Components.getCheckboxes().first().click();
+    Components.getSaveButton().click();
+
+    DeclarationPage.getErrorSummary().should('be.visible');
+    cy.contains('Unexpected response when completing application');
+    ConfirmationPage.getConfirmationPage().should('not.exist');
+  });
+
   it('shows an error message when cannot complete rejected application', () => {
     cy.loginAsResident(applicationId, true);
     cy.mockHousingRegisterApiGetApplications(

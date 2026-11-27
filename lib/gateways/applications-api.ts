@@ -161,12 +161,12 @@ export const completeApplication = async (
 // resident's own token is passed on in a header separate from Authorization.
 export const createEvidenceRequest = async (
   id: string,
-  request: CreateEvidenceRequest,
-  req: AuthenticatedRequest,
+  evidenceRequest: CreateEvidenceRequest,
+  httpRequest: AuthenticatedRequest,
 ): Promise<Array<EvidenceRequestResponse> | null> => {
   const url = `applications/${encodeURIComponent(id)}/evidence`;
-  const residentToken = getResidentToken(req);
-  const { data } = await housingAxios().post(url, request, {
+  const residentToken = getResidentToken(httpRequest);
+  const { data } = await housingAxios().post(url, evidenceRequest, {
     headers: residentToken ? { 'X-Resident-Token': residentToken } : {},
   });
   return data;

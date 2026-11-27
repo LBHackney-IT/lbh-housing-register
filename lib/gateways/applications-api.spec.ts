@@ -78,28 +78,28 @@ describe('application gateway URLs', () => {
   });
 
   it('encodes an application ID used in an evidence path', async () => {
-    const request = {} as Parameters<typeof createEvidenceRequest>[1];
+    const evidenceRequest = {} as Parameters<typeof createEvidenceRequest>[1];
 
-    await createEvidenceRequest(id, request, req);
+    await createEvidenceRequest(id, evidenceRequest, req);
 
     expect(post).toHaveBeenCalledWith(
       `applications/${encodedId}/evidence`,
-      request,
+      evidenceRequest,
       { headers: {} },
     );
   });
 
   it('passes the resident token in X-Resident-Token for evidence requests', async () => {
-    const request = {} as Parameters<typeof createEvidenceRequest>[1];
-    const residentReq = createRequest({
+    const evidenceRequest = {} as Parameters<typeof createEvidenceRequest>[1];
+    const httpRequest = createRequest({
       headers: { cookie: 'housing_user=resident.jwt.token' },
     });
 
-    await createEvidenceRequest(id, request, residentReq);
+    await createEvidenceRequest(id, evidenceRequest, httpRequest);
 
     expect(post).toHaveBeenCalledWith(
       `applications/${encodedId}/evidence`,
-      request,
+      evidenceRequest,
       { headers: { 'X-Resident-Token': 'resident.jwt.token' } },
     );
   });

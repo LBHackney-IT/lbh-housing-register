@@ -12,6 +12,10 @@ class ApplyResidentPersonalDetailsPage {
     return cy.get('#phoneNumber');
   }
 
+  static getEmailInput() {
+    return cy.get('#emailAddress');
+  }
+
   static getNINumberInput() {
     const testId = `test-input-nationalInsuranceNumber`;
     return cy.get(`[data-testid="${testId}"]`);

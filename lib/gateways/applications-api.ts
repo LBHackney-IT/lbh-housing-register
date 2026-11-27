@@ -16,6 +16,7 @@ import {
 } from '../../domain/HousingApi';
 import { Stat } from '../../domain/stat';
 import asssertServerOnly from '../utils/assertServerOnly';
+import { getResidentToken } from '../utils/users';
 import {
   activityAxios,
   authenticatedHousingAxios,
@@ -156,12 +157,18 @@ export const completeApplication = async (
 
 // Evidence requests
 
+// The backend only accepts this from the resident the application belongs to, so the
+// resident's own token is passed on in a header separate from Authorization.
 export const createEvidenceRequest = async (
   id: string,
-  request: CreateEvidenceRequest,
+  evidenceRequestBody: CreateEvidenceRequest,
+  httpRequest: AuthenticatedRequest,
 ): Promise<Array<EvidenceRequestResponse> | null> => {
   const url = `applications/${encodeURIComponent(id)}/evidence`;
-  const { data } = await housingAxios().post(url, request);
+  const residentToken = getResidentToken(httpRequest);
+  const { data } = await housingAxios().post(url, evidenceRequestBody, {
+    headers: residentToken ? { 'X-Resident-Token': residentToken } : {},
+  });
   return data;
 };
 

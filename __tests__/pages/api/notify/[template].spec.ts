@@ -60,6 +60,7 @@ const applicationId = 'application-id-1';
 const mockApplication: Application = {
   id: applicationId,
   reference: 'REF123',
+  status: 'New',
   mainApplicant: {
     person: { firstName: 'Jane' },
     contactInformation: { emailAddress: 'jane@example.com' },
@@ -230,6 +231,55 @@ describe('/api/notify/[template]', () => {
       expect(sendMock).toHaveBeenCalledWith(mockNotifyRequest);
       expect(res.statusCode).toBe(StatusCodes.OK);
       expect(res._getJSONData()).toStrictEqual(mockNotifyResponse);
+    });
+  });
+
+  describe('application status', () => {
+    it.each(['New', 'ManualDraft'])(
+      'sends email while the application is still a %s draft',
+      async (status) => {
+        getApplicationMock.mockResolvedValue({ ...mockApplication, status });
+
+        const { req, res } = mockRequest('new-application');
+
+        await endpoint(req, res);
+
+        expect(sendNewApplicationEmailMock).toHaveBeenCalledTimes(1);
+        expect(res.statusCode).toBe(StatusCodes.OK);
+      },
+    );
+
+    it.each(['Submitted', 'Cancelled', 'Disqualified', 'Active'])(
+      'returns 409 and never calls Notify once the application is %s',
+      async (status) => {
+        getApplicationMock.mockResolvedValue({ ...mockApplication, status });
+
+        const { req, res } = mockRequest('new-application');
+
+        await endpoint(req, res);
+
+        expect(sendNewApplicationEmailMock).not.toHaveBeenCalled();
+        expect(sendMedicalNeedEmailMock).not.toHaveBeenCalled();
+        expect(sendDisqualifyEmailMock).not.toHaveBeenCalled();
+        expect(res.statusCode).toBe(StatusCodes.CONFLICT);
+        expect(res._getJSONData()).toStrictEqual({
+          message: 'Application is not in a state to send this email',
+        });
+      },
+    );
+
+    it('returns 409 and never calls Notify when the application has no status', async () => {
+      getApplicationMock.mockResolvedValue({
+        ...mockApplication,
+        status: undefined,
+      });
+
+      const { req, res } = mockRequest('disqualify');
+
+      await endpoint(req, res);
+
+      expect(sendDisqualifyEmailMock).not.toHaveBeenCalled();
+      expect(res.statusCode).toBe(StatusCodes.CONFLICT);
     });
   });
 

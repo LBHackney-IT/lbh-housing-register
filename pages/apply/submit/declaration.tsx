@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useAppDispatch, useAppSelector } from '../../../lib/store/hooks';
 import {
+  applicationSubmitted,
   sendConfirmation,
   completeApplication,
   sendDisqualifyEmail,
@@ -62,8 +63,12 @@ const Declaration = (): JSX.Element => {
       }
       try {
         setLoading(true);
-        await dispatch(completeApplication(application)).unwrap();
+        const submitted = await dispatch(
+          completeApplication(application),
+        ).unwrap();
         await dispatch(createEvidenceRequest(application)).unwrap();
+        // Replace the state after successful submission in the store
+        dispatch(applicationSubmitted(submitted));
         router.push('/apply/confirmation');
       } catch (error) {
         setUserError(

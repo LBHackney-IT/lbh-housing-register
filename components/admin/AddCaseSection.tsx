@@ -19,11 +19,13 @@ import {
 interface PageProps {
   section: SectionData;
   fieldErrors?: Record<string, string | undefined>;
+  readOnlyFields?: Record<string, string>;
 }
 
 export default function AddCaseSection({
   section,
   fieldErrors,
+  readOnlyFields = {},
 }: PageProps): JSX.Element {
   // Field shapes vary by `as`; runtime branches narrow behaviour, not types.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -51,6 +53,8 @@ export default function AddCaseSection({
         <Input
           name={generatedInputName}
           error={fieldErrors?.[generatedInputName]}
+          readOnly={Object.hasOwn(readOnlyFields, field.name)}
+          hint={readOnlyFields[field.name]}
         />
       );
     }

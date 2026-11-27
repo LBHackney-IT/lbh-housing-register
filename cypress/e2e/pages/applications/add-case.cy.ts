@@ -38,6 +38,14 @@ describe('Add case', () => {
     cy.mockHousingRegisterApiGetApplications(applicationId, application);
   });
 
+  it('lets staff enter the email address for a new case', () => {
+    AddCasePage.visit();
+
+    AddCasePage.getEmailInput().should('not.have.attr', 'readonly');
+    AddCasePage.getEmailInput().type('applicant@example.com');
+    AddCasePage.getEmailInput().should('have.value', 'applicant@example.com');
+  });
+
   it('shows a validation error when address is missing', () => {
     AddCasePage.visit();
     AddCasePage.getTitleDropdown().select(title);

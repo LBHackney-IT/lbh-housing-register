@@ -30,7 +30,7 @@ describe('authorization', () => {
 
   it('returns status code 403 and error message when access is forbidden', async () => {
     jest
-      .spyOn(requestAuth, 'getApplicationAccess')
+      .spyOn(requestAuth, 'getStaffWriteAccess')
       .mockResolvedValue('forbidden');
 
     const { req, res } = generateMockRequestResponseWithStaffSession({
@@ -48,9 +48,7 @@ describe('authorization', () => {
   });
 
   it('returns status code 200 when access is allowed', async () => {
-    jest
-      .spyOn(requestAuth, 'getApplicationAccess')
-      .mockResolvedValue('allowed');
+    jest.spyOn(requestAuth, 'getStaffWriteAccess').mockResolvedValue('allowed');
 
     const { req, res } = generateMockRequestResponseWithStaffSession({
       sessionToken: signedToken,
@@ -66,9 +64,9 @@ describe('authorization', () => {
   });
 
   it('returns 400 without checking authorisation when the request body cannot be parsed', async () => {
-    const getApplicationAccessSpy = jest.spyOn(
+    const getStaffWriteAccessSpy = jest.spyOn(
       requestAuth,
-      'getApplicationAccess',
+      'getStaffWriteAccess',
     );
 
     const { req, res } = generateMockRequestResponseWithStaffSession({
@@ -81,7 +79,7 @@ describe('authorization', () => {
 
     await endpoint(req, res);
 
-    expect(getApplicationAccessSpy).not.toHaveBeenCalled();
+    expect(getStaffWriteAccessSpy).not.toHaveBeenCalled();
     expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
     expect(res._getJSONData()).toStrictEqual({
       message: 'Unable to parse request',
@@ -89,9 +87,7 @@ describe('authorization', () => {
   });
 
   it('forwards the backend status and body when addNoteToHistory fails with an axios error', async () => {
-    jest
-      .spyOn(requestAuth, 'getApplicationAccess')
-      .mockResolvedValue('allowed');
+    jest.spyOn(requestAuth, 'getStaffWriteAccess').mockResolvedValue('allowed');
 
     const axiosErrorStatusCode = StatusCodes.BAD_GATEWAY;
     const axiosErrorData = { message: 'upstream failure' };

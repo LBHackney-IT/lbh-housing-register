@@ -7,7 +7,7 @@ declare global {
     interface Chainable {
       clearE2eNock(): Chainable<void>;
       generateEmptyApplication(): Chainable<void>;
-      loginAsUser(userType: string): Chainable<void>;
+      loginAsUser(userType: string): Chainable<StaffUserWithPermissions>;
       loginAsResident(
         applicationId: string,
         setSeenCookieMessage?: boolean,
@@ -67,9 +67,8 @@ declare global {
         delay?: number,
         statusCode?: number,
       ): Chainable<void>;
-      mockHousingRegisterApiPatchCompleteApplication(
+      mockHousingRegisterApiPostNote(
         applicationId: string,
-        delay?: number,
         statusCode?: number,
       ): Chainable<void>;
       mockNotifyEmailResponse(statusCode?: number): Chainable<void>;

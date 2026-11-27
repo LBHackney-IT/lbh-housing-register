@@ -8,9 +8,29 @@ import { VerifyAuthResponse } from '../../domain/HousingApi';
 import { envVarsFixture } from '../../testUtils/envVarsHelper';
 import { ApiRequest, ApiResponse } from '../../testUtils/types';
 import { generateSignedResidentToken } from '../../testUtils/userHelper';
-import { getUser, removeAuthCookie, setAuthCookie } from './users';
+import {
+  getResidentToken,
+  getUser,
+  removeAuthCookie,
+  setAuthCookie,
+} from './users';
 
 describe('users', () => {
+  describe('getResidentToken', () => {
+    it('returns the housing_user cookie exactly as issued', () => {
+      const req = { headers: { cookie: 'other=1; housing_user=abc.def.ghi' } };
+
+      expect(getResidentToken(req)).toBe('abc.def.ghi');
+    });
+
+    it('returns undefined when there is no resident cookie', () => {
+      expect(
+        getResidentToken({ headers: { cookie: 'other=1' } }),
+      ).toBeUndefined();
+      expect(getResidentToken({ headers: {} })).toBeUndefined();
+    });
+  });
+
   beforeEach(() => {
     jest.restoreAllMocks();
   });

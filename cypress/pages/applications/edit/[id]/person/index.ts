@@ -15,6 +15,12 @@ class ApplicationEditPersonPage {
     );
   }
 
+  static getEmailInput() {
+    return this.getApplicationEditPersonPage().find(
+      '#personalDetails_emailAddress',
+    );
+  }
+
   static getLivingSituationDropdown() {
     return this.getApplicationEditPersonPage().find(
       '#currentAccommodation_livingSituation',

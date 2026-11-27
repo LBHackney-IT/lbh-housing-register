@@ -3,11 +3,28 @@ import jsonwebtoken from 'jsonwebtoken';
 import { HackneyResident } from '../../domain/HackneyResident';
 import { VerifyAuthResponse } from '../../domain/HousingApi';
 
+// The raw resident token from the cookie, unverified.
+function readResidentCookie(req: {
+  headers: { cookie?: string };
+}): string | undefined {
+  const cookies = cookie.parse(req.headers.cookie ?? '');
+  return cookies['housing_user'] || undefined;
+}
+
+/**
+ * The resident's token exactly as it was issued, for the backend to verify again. Use
+ * `getUser` to read claims; use this only to pass the token on.
+ */
+export function getResidentToken(req: {
+  headers: { cookie?: string };
+}): string | undefined {
+  return readResidentCookie(req);
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getUser(req: any) {
   try {
-    const cookies = cookie.parse(req.headers.cookie ?? '');
-    const parsedToken = cookies['housing_user'];
+    const parsedToken = readResidentCookie(req);
 
     if (!parsedToken) return;
 

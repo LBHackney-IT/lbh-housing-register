@@ -45,6 +45,10 @@ class AddCasePage {
     return this.getAddCasePage().find('#personalDetails_gender');
   }
 
+  static getEmailInput() {
+    return this.getAddCasePage().find('#personalDetails_emailAddress');
+  }
+
   static getLivingSituationDropdown() {
     return this.getAddCasePage().find('#currentAccommodation_livingSituation');
   }

@@ -175,6 +175,10 @@ export default function MainApplicantForm({
     ? generateEditInitialValues(data, true)
     : generateInitialValues(sections);
 
+  // The email is the resident's sign-in key, so it stays fixed once it has been saved
+  const emailIsLocked =
+    isEditing && Boolean(data?.mainApplicant?.contactInformation?.emailAddress);
+
   const erroredFields = Object.entries(fieldErrors ?? {})
     .filter(([, error]) => Boolean(error))
     .map(([field]) => field);
@@ -244,6 +248,14 @@ export default function MainApplicantForm({
                   <AddCaseSection
                     section={personalDetailsSection}
                     fieldErrors={fieldErrors}
+                    readOnlyFields={
+                      emailIsLocked
+                        ? {
+                            emailAddress:
+                              'The applicant signs in with this email address, so it cannot be changed.',
+                          }
+                        : {}
+                    }
                   />
                   <AddCaseSection section={immigrationStatusSection} />
 

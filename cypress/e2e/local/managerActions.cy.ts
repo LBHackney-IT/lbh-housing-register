@@ -145,6 +145,15 @@ describe('Manager actions', () => {
 
       ////main applicant details
       ApplyResidentIndexPage.getPersonalDetailsSectionLink().click();
+      ApplyResidentPersonalDetailsPage.getEmailInput().should(
+        'have.attr',
+        'readonly',
+      );
+      ApplyResidentPersonalDetailsPage.getEmailInput()
+        .invoke('val')
+        .then((shown) => {
+          expect(String(shown).toLowerCase()).to.eq(email.toLowerCase());
+        });
       ApplyResidentPersonalDetailsPage.getPhoneNumberInput().type(phoneNumber);
       ApplyResidentPersonalDetailsPage.getSubmitButton()
         .scrollIntoView()

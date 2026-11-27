@@ -46,6 +46,25 @@ describe('Edit person in application', () => {
     ViewApplicationPage.getViewApplicationPage().should('be.visible');
   });
 
+  it('locks the email address the applicant signs in with', () => {
+    cy.mockHousingRegisterApiGetApplications(applicationId, application, true);
+    cy.mockActivityHistoryApiEmptyResponse(applicationId);
+
+    ApplicationEditPersonPage.visit(applicationId, personId);
+    ApplicationEditPersonPage.getApplicationEditPersonPage().should(
+      'be.visible',
+    );
+
+    ApplicationEditPersonPage.getEmailInput().should('have.attr', 'readonly');
+    ApplicationEditPersonPage.getEmailInput().should(
+      'have.value',
+      application.mainApplicant.contactInformation.emailAddress,
+    );
+    cy.contains(
+      'The applicant signs in with this email address, so it cannot be changed.',
+    );
+  });
+
   it('shows an error message with correct status code when application update fails', () => {
     const errorCode = StatusCodes.BAD_REQUEST;
     cy.mockHousingRegisterApiGetApplications(applicationId, application, true);

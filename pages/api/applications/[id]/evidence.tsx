@@ -3,7 +3,25 @@ import { StatusCodes } from 'http-status-codes';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { CreateEvidenceRequest } from '../../../../domain/HousingApi';
 import { createEvidenceRequest } from '../../../../lib/gateways/applications-api';
-import { getApplicationAccess } from '../../../../lib/utils/requestAuth';
+import { EvidenceType } from '../../../../lib/types/evidence';
+import { getResidentApplicationAccess } from '../../../../lib/utils/requestAuth';
+
+const ALLOWED_DOCUMENT_TYPES: readonly string[] = Object.values(EvidenceType);
+
+const toEvidenceRequest = (body: unknown): CreateEvidenceRequest | null => {
+  const documentTypes = (body as Partial<CreateEvidenceRequest> | null)
+    ?.documentTypes;
+
+  if (
+    !Array.isArray(documentTypes) ||
+    documentTypes.length === 0 ||
+    !documentTypes.every((type) => ALLOWED_DOCUMENT_TYPES.includes(type))
+  ) {
+    return null;
+  }
+
+  return { documentTypes };
+};
 
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
@@ -30,7 +48,7 @@ const endpoint: NextApiHandler = async (
 
   const id = req.query.id as string;
 
-  const access = await getApplicationAccess(req, id);
+  const access = getResidentApplicationAccess(req, id);
   if (access !== 'allowed') {
     res
       .status(
@@ -45,8 +63,16 @@ const endpoint: NextApiHandler = async (
     return;
   }
 
+  const evidenceRequest = toEvidenceRequest(request);
+  if (!evidenceRequest) {
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: 'Invalid document types' });
+    return;
+  }
+
   try {
-    const data = await createEvidenceRequest(id, request);
+    const data = await createEvidenceRequest(id, evidenceRequest, req);
     res.status(StatusCodes.OK).json(data);
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {

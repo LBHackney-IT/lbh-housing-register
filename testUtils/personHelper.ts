@@ -32,7 +32,10 @@ export const calculateAge = (birthDate: Date): number => {
   return age;
 };
 
-export const generatePerson = (personId: string): Person => {
+export type GeneratedPerson = Person &
+  Required<Pick<Person, 'id' | 'firstName' | 'surname' | 'gender'>>;
+
+export const generatePerson = (personId: string): GeneratedPerson => {
   return {
     id: personId,
     title: faker.helpers.enumValue(Person.TitleEnum),

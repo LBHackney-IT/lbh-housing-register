@@ -12,12 +12,22 @@ import {
   buildNewApplicationNotifyRequest,
 } from '../../../lib/utils/notifyRequestBuilders';
 import { getUser } from '../../../lib/utils/users';
+import { ApplicationStatus } from '../../../lib/types/application-status';
 
 // This endpoint sends real emails via GOV.UK Notify, so it must not trust
 // client-supplied email/personalisation/reference values - a caller could
 // otherwise trigger arbitrary Hackney-branded emails to any address. Instead,
 // it authorises the caller against their own application (via their session)
 // and builds the entire NotifyRequest server-side from that stored record.
+//
+// Every template is sent while the resident is still completing or leaving
+// their application: new-application and medical before submission, and
+// disqualify before the status changes. Once the application is past draft
+// these emails must not be sent again, so the status is checked too.
+const STATUSES_ALLOWING_EMAILS: readonly string[] = [
+  ApplicationStatus.DRAFT,
+  ApplicationStatus.MANUAL_DRAFT,
+];
 const endpoint: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse,
@@ -52,6 +62,13 @@ const endpoint: NextApiHandler = async (
     res
       .status(StatusCodes.NOT_FOUND)
       .json({ message: 'Application not found' });
+    return;
+  }
+
+  if (!STATUSES_ALLOWING_EMAILS.includes(application.status ?? '')) {
+    res
+      .status(StatusCodes.CONFLICT)
+      .json({ message: 'Application is not in a state to send this email' });
     return;
   }
 

@@ -7,7 +7,12 @@ import {
   UserRole,
 } from '../../testUtils/userHelper';
 import { getSession } from '../auth/staff';
-import { canUpdateApplication, getApplicationAccess } from './requestAuth';
+import {
+  canUpdateApplication,
+  getApplicationAccess,
+  getResidentApplicationAccess,
+  getStaffWriteAccess,
+} from './requestAuth';
 import { getUser } from './users';
 
 jest.mock('../auth/staff', () => ({
@@ -122,4 +127,75 @@ describe('getApplicationAccess', () => {
       ).resolves.toBe(expected);
     },
   );
+});
+
+describe('getStaffWriteAccess', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it.each([UserRole.Admin, UserRole.Manager, UserRole.Officer])(
+    'allows writable staff role %s',
+    async (role) => {
+      getSessionMock.mockResolvedValue(generateHRUserWithPermissions(role));
+
+      expect(await getStaffWriteAccess(createRequest())).toBe('allowed');
+    },
+  );
+
+  it('refuses a resident, even for their own application', async () => {
+    getSessionMock.mockResolvedValue(undefined);
+    getUserMock.mockReturnValue({ application_id: 'app-id' });
+
+    expect(await getStaffWriteAccess(createRequest())).toBe('forbidden');
+  });
+
+  it('forbids read-only staff', async () => {
+    getSessionMock.mockResolvedValue(
+      generateHRUserWithPermissions(UserRole.ReadOnly),
+    );
+
+    expect(await getStaffWriteAccess(createRequest())).toBe('forbidden');
+  });
+
+  it('distinguishes an unauthenticated request', async () => {
+    getSessionMock.mockResolvedValue(undefined);
+    getUserMock.mockReturnValue(undefined);
+
+    expect(await getStaffWriteAccess(createRequest())).toBe('unauthenticated');
+  });
+});
+
+describe('getResidentApplicationAccess', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('allows a resident to access only their own application', () => {
+    getUserMock.mockReturnValue({ application_id: 'app-id' });
+
+    expect(getResidentApplicationAccess(createRequest(), 'app-id')).toBe(
+      'allowed',
+    );
+    expect(getResidentApplicationAccess(createRequest(), 'another-id')).toBe(
+      'forbidden',
+    );
+  });
+
+  it('refuses staff, even a writable role, who have no resident session', () => {
+    getUserMock.mockReturnValue(undefined);
+
+    expect(getResidentApplicationAccess(createRequest(), 'app-id')).toBe(
+      'unauthenticated',
+    );
+    expect(getSessionMock).not.toHaveBeenCalled();
+  });
+
+  it('distinguishes an unauthenticated request', () => {
+    getUserMock.mockReturnValue(undefined);
+
+    expect(getResidentApplicationAccess(createRequest(), 'app-id')).toBe(
+      'unauthenticated',
+    );
+  });
 });
